@@ -12,7 +12,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.document_loaders import TextLoader
 from langchain.vectorstores import Milvus
 
-import fitz
+import fitz  # this is PyMuPDF (PyPI pymupdf package, not fitz)
 
 
 class DocumentEmbedder:
