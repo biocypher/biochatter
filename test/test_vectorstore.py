@@ -37,7 +37,8 @@ def test_document_summariser():
 def test_load_txt():
     docsum = DocumentEmbedder()
     text_path = "test/bc_summary.txt"
-    document = docsum._load_document(text_path)
+    docsum._load_document(text_path)
+    document = docsum.document
     assert isinstance(document, list)
     assert isinstance(document[0], Document)
 
@@ -45,7 +46,8 @@ def test_load_txt():
 def test_load_pdf():
     docsum = DocumentEmbedder()
     pdf_path = "test/bc_summary.pdf"
-    document = docsum._load_document(pdf_path)
+    docsum._load_document(pdf_path)
+    document = docsum.document
     assert isinstance(document, list)
     assert isinstance(document[0], Document)
 

@@ -8,9 +8,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-langchain = "^0.0.200"
+langchain = "^0.0.146"
 openai = "^0.27.8"
 pymupdf = "^1.22.3"
+pymilvus = "2.2.8"
+tiktoken = "^0.4.0"
 
 
 [build-system]
