@@ -5,7 +5,10 @@
 # correct response
 # update usage stats
 
-import streamlit as st
+try:
+    import streamlit as st
+except ImportError:
+    st = None
 
 from abc import ABC, abstractmethod
 import openai
@@ -165,28 +168,36 @@ class Conversation(ABC):
             else "Correcting ..."
         )
 
-        with st.spinner(cor_msg):
-            corrections = []
-            if self.split_correction:
-                nltk.download("punkt")
-                tokenizer = nltk.data.load("tokenizers/punkt/english.pickle")
-                sentences = tokenizer.tokenize(msg)
-                for sentence in sentences:
-                    correction = self._correct_response(sentence)
-
-                    if not str(correction).lower() in ["ok", "ok."]:
-                        corrections.append(correction)
-            else:
-                correction = self._correct_response(msg)
-
-                if not str(correction).lower() in ["ok", "ok."]:
-                    corrections.append(correction)
+        if st:
+            with st.spinner(cor_msg):
+                corrections = self._correct_query(text)
+        else:
+            corrections = self._correct_query(text)
 
         if not corrections:
             return (msg, token_usage, None)
 
         correction = "\n".join(corrections)
         return (msg, token_usage, correction)
+
+    def _correct_query(self, msg: str):
+        corrections = []
+        if self.split_correction:
+            nltk.download("punkt")
+            tokenizer = nltk.data.load("tokenizers/punkt/english.pickle")
+            sentences = tokenizer.tokenize(msg)
+            for sentence in sentences:
+                correction = self._correct_response(sentence)
+
+                if not str(correction).lower() in ["ok", "ok."]:
+                    corrections.append(correction)
+        else:
+            correction = self._correct_response(msg)
+
+            if not str(correction).lower() in ["ok", "ok."]:
+                corrections.append(correction)
+
+        return corrections
 
     @abstractmethod
     def _primary_query(self, text: str):
@@ -209,7 +220,16 @@ class Conversation(ABC):
             " fragments ..."
         )
 
-        with st.spinner(sim_msg):
+        if st:
+            with st.spinner(sim_msg):
+                statements = [
+                    doc.page_content
+                    for doc in self.docsum.similarity_search(
+                        text,
+                        self.docsum.n_results,
+                    )
+                ]
+        else:
             statements = [
                 doc.page_content
                 for doc in self.docsum.similarity_search(
@@ -217,6 +237,7 @@ class Conversation(ABC):
                     self.docsum.n_results,
                 )
             ]
+
         prompts = self.prompts["docsum_prompts"]
         if statements:
             self.current_statements = statements
