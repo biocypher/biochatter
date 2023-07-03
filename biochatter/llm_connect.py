@@ -11,9 +11,10 @@ except ImportError:
     st = None
 
 from abc import ABC, abstractmethod
+from typing import Optional
 import openai
 
-from langchain.chat_models import ChatOpenAI
+from langchain.chat_models import ChatOpenAI, AzureChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 from langchain.llms import HuggingFaceHub
 
@@ -435,6 +436,82 @@ class GptConversation(Conversation):
                 f"usage:[date]:[user]",
                 {f"{k}:{model}": v for k, v in token_usage.items()},
             )
+
+
+class AzureGptConversation(GptConversation):
+    def __init__(
+        self,
+        model_name: str,
+        prompts: dict,
+        split_correction: bool,
+        docsum: DocumentEmbedder = None,
+        version: Optional[str] = None,
+        base: Optional[str] = None,
+    ):
+        """
+        Connect to Azure's GPT API and set up a conversation with the user.
+        Extends GptConversation.
+
+        Args:
+            model_name (str): The name of the model to use.
+
+            prompts (dict): A dictionary of prompts to use for the conversation.
+
+            split_correction (bool): Whether to correct the model output by
+                splitting the output into sentences and correcting each
+                sentence individually.
+
+            docsum (DocumentEmbedder): A document summariser to use for
+                document summarisation.
+
+            version (str): The version of the Azure API to use.
+
+            base (str): The base URL of the Azure API to use.
+        """
+        super().__init__(
+            model_name=model_name,
+            prompts=prompts,
+            split_correction=split_correction,
+            docsum=docsum,
+        )
+
+        self.version = version
+        self.base = base
+
+    def set_api_key(self, api_key: str):
+        """
+        Set the API key for the Azure API. If the key is valid, initialise the
+        conversational agent. No user stats on Azure.
+
+        Args:
+            api_key (str): The API key for the Azure API.
+
+        Returns:
+            bool: True if the API key is valid, False otherwise.
+        """
+
+        try:
+            self.chat = AzureChatOpenAI(
+                deployment_name=self.model_name,
+                openai_api_version=self.version,
+                openai_api_base=self.base,
+                openai_api_key=api_key,
+                temperature=0,
+            )
+            self.ca_chat = AzureChatOpenAI(
+                deployment_name=self.ca_model_name,
+                openai_api_version=self.version,
+                openai_api_base=self.base,
+                openai_api_key=api_key,
+                temperature=0,
+            )
+
+            test = self.chat.generate([[HumanMessage(content="Hello")]])
+
+            return True
+
+        except openai.error.AuthenticationError as e:
+            return False
 
 
 class BloomConversation(Conversation):

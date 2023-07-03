@@ -1,9 +1,11 @@
 from biochatter.llm_connect import (
     GptConversation,
+    AzureGptConversation,
     SystemMessage,
     HumanMessage,
     AIMessage,
 )
+from openai.error import AuthenticationError, InvalidRequestError
 import pytest
 
 
@@ -50,3 +52,31 @@ def test_unknown_message_type():
     convo.messages.append(None)
     with pytest.raises(ValueError):
         convo.get_msg_json()
+
+
+def test_openai_catches_authentication_error():
+    convo = GptConversation(
+        model_name="gpt-3.5-turbo",
+        prompts={},
+        split_correction=False,
+    )
+
+    success = convo.set_api_key(
+        api_key="fake_key",
+        user="test_user",
+    )
+
+    assert not success
+
+
+def test_azure_raises_request_error():
+    convo = AzureGptConversation(
+        model_name="gpt-35-turbo",
+        prompts={},
+        split_correction=False,
+        version="2023-03-15-preview",
+        base="https://api.openai.com",
+    )
+
+    with pytest.raises(InvalidRequestError):
+        convo.set_api_key("fake_key")
