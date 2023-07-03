@@ -256,9 +256,7 @@ class Conversation(ABC):
             for i, prompt in enumerate(prompts):
                 # if last prompt, format the statements into the prompt
                 if i == len(prompts) - 1:
-                    self.append_system_message(
-                        prompt.format(statements=statements)
-                    )
+                    self.append_system_message(prompt.format(statements=statements))
                 else:
                     self.append_system_message(prompt)
 
@@ -441,6 +439,7 @@ class GptConversation(Conversation):
 class AzureGptConversation(GptConversation):
     def __init__(
         self,
+        deployment_name: str,
         model_name: str,
         prompts: dict,
         split_correction: bool,
@@ -477,6 +476,7 @@ class AzureGptConversation(GptConversation):
 
         self.version = version
         self.base = base
+        self.deployment_name = deployment_name
 
     def set_api_key(self, api_key: str):
         """
@@ -492,14 +492,16 @@ class AzureGptConversation(GptConversation):
 
         try:
             self.chat = AzureChatOpenAI(
-                deployment_name=self.model_name,
+                deployment_name=self.deployment_name,
+                model_name=self.model_name,
                 openai_api_version=self.version,
                 openai_api_base=self.base,
                 openai_api_key=api_key,
                 temperature=0,
             )
             self.ca_chat = AzureChatOpenAI(
-                deployment_name=self.ca_model_name,
+                deployment_name=self.deployment_name,
+                model_name=self.model_name,
                 openai_api_version=self.version,
                 openai_api_base=self.base,
                 openai_api_key=api_key,
