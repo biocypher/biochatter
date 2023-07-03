@@ -256,7 +256,9 @@ class Conversation(ABC):
             for i, prompt in enumerate(prompts):
                 # if last prompt, format the statements into the prompt
                 if i == len(prompts) - 1:
-                    self.append_system_message(prompt.format(statements=statements))
+                    self.append_system_message(
+                        prompt.format(statements=statements)
+                    )
                 else:
                     self.append_system_message(prompt)
 
@@ -452,7 +454,10 @@ class AzureGptConversation(GptConversation):
         Extends GptConversation.
 
         Args:
-            model_name (str): The name of the model to use.
+            deployment_name (str): The name of the Azure deployment to use.
+
+            model_name (str): The name of the model to use. This is distinct
+                from the deployment name.
 
             prompts (dict): A dictionary of prompts to use for the conversation.
 
@@ -460,7 +465,7 @@ class AzureGptConversation(GptConversation):
                 splitting the output into sentences and correcting each
                 sentence individually.
 
-            docsum (DocumentEmbedder): A document summariser to use for
+            docsum (DocumentEmbedder): A vector database connection to use for
                 document summarisation.
 
             version (str): The version of the Azure API to use.
@@ -499,6 +504,8 @@ class AzureGptConversation(GptConversation):
                 openai_api_key=api_key,
                 temperature=0,
             )
+            # TODO this is the same model as the primary one; refactor to be
+            # able to use any model for correction
             self.ca_chat = AzureChatOpenAI(
                 deployment_name=self.deployment_name,
                 model_name=self.model_name,

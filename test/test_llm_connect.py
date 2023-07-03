@@ -1,3 +1,5 @@
+import os
+import openai
 from biochatter.llm_connect import (
     GptConversation,
     AzureGptConversation,
@@ -72,6 +74,7 @@ def test_openai_catches_authentication_error():
 def test_azure_raises_request_error():
     convo = AzureGptConversation(
         model_name="gpt-35-turbo",
+        deployment_name="test_deployment",
         prompts={},
         split_correction=False,
         version="2023-03-15-preview",
@@ -82,11 +85,11 @@ def test_azure_raises_request_error():
         convo.set_api_key("fake_key")
 
 
-import os
-import openai
-
-
 def test_azure():
+    """
+    Test OpenAI Azure endpoint functionality - not an actual test yet. Fails if
+    environment variables are not set.
+    """
     openai.proxy = os.getenv("OPENAI_PROXY")
     convo = AzureGptConversation(
         model_name=os.getenv("OPENAI_MODEL_NAME"),
