@@ -208,6 +208,17 @@ class Conversation(ABC):
         pass
 
     def _inject_context(self, text: str):
+        """
+        Inject the context into the prompt from vector database similarity
+        search. Finds the most similar n text fragments and adds them to the
+        message history object for usage in the next prompt. Uses the document
+        summarisation prompt set to inject the context. The ultimate prompt
+        should include the placeholder for the statements, `{statements}` (used
+        for formatting the string).
+
+        Args:
+            text (str): The user query to be used for similarity search.
+        """
         if not self.docsum.used:
             st.info(
                 "No document has been analysed yet. To use document "
@@ -242,6 +253,7 @@ class Conversation(ABC):
         if statements:
             self.current_statements = statements
             for i, prompt in enumerate(prompts):
+                # if last prompt, format the statements into the prompt
                 if i == len(prompts) - 1:
                     self.append_system_message(
                         prompt.format(statements=statements)
@@ -254,6 +266,9 @@ class Conversation(ABC):
         Return a JSON representation (of a list of dicts) of the messages in
         the conversation. The keys of the dicts are the roles, the values are
         the messages.
+
+        Returns:
+            str: A JSON representation of the messages in the conversation.
         """
         d = []
         for msg in self.messages:
@@ -283,6 +298,18 @@ class GptConversation(Conversation):
         Connect to OpenAI's GPT API and set up a conversation with the user.
         Also initialise a second conversational agent to provide corrections to
         the model output, if necessary.
+
+        Args:
+            model_name (str): The name of the model to use.
+
+            prompts (dict): A dictionary of prompts to use for the conversation.
+
+            split_correction (bool): Whether to correct the model output by
+                splitting the output into sentences and correcting each
+                sentence individually.
+
+            docsum (DocumentEmbedder): A document summariser to use for
+                document summarisation.
         """
         super().__init__(
             model_name=model_name,
@@ -298,6 +325,14 @@ class GptConversation(Conversation):
         """
         Set the API key for the OpenAI API. If the key is valid, initialise the
         conversational agent. Set the user for usage statistics.
+
+        Args:
+            api_key (str): The API key for the OpenAI API.
+
+            user (str): The user for usage statistics.
+
+        Returns:
+            bool: True if the API key is valid, False otherwise.
         """
         openai.api_key = api_key
         self.user = user
@@ -323,6 +358,15 @@ class GptConversation(Conversation):
             return False
 
     def _primary_query(self):
+        """
+        Query the OpenAI API with the user's message and return the response
+        using the message history (flattery system messages, prior conversation)
+        as context. Correct the response if necessary.
+
+        Returns:
+            tuple: A tuple containing the response from the OpenAI API and the
+                token usage.
+        """
         try:
             response = self.chat.generate([self.messages])
         except (
@@ -343,6 +387,17 @@ class GptConversation(Conversation):
         return msg, token_usage
 
     def _correct_response(self, msg: str):
+        """
+        Correct the response from the OpenAI API by sending it to a secondary
+        language model. Optionally split the response into single sentences and
+        correct each sentence individually. Update usage stats.
+
+        Args:
+            msg (str): The response from the OpenAI API.
+
+        Returns:
+            str: The corrected response (or OK if no correction necessary).
+        """
         ca_messages = self.ca_messages.copy()
         ca_messages.append(
             HumanMessage(
@@ -369,6 +424,11 @@ class GptConversation(Conversation):
         """
         Update redis database with token usage statistics using the usage_stats
         object with the increment method.
+
+        Args:
+            model (str): The model name.
+
+            token_usage (dict): The token usage statistics.
         """
         if self.user == "community":
             self.usage_stats.increment(
