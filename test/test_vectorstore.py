@@ -1,8 +1,7 @@
 from biochatter.vectorstore import (
     DocumentEmbedder,
+    DocumentReader,
     Document,
-    document_from_pdf,
-    document_from_txt,
 )
 
 import os
@@ -11,14 +10,15 @@ print(os.getcwd())
 
 
 def test_document_summariser():
-    # runs long, requires API key and local milvus server
+    # runs long, requires OpenAI API key and local milvus server
     # uses ada-002 for embeddings
     pdf_path = "test/bc_summary.pdf"
     with open(pdf_path, "rb") as f:
-        document = f.read()
-    assert isinstance(document, bytes)
+        doc_bytes = f.read()
+    assert isinstance(doc_bytes, bytes)
 
-    doc = document_from_pdf(document)
+    reader = DocumentReader()
+    doc = reader.document_from_pdf(doc_bytes)
     docsum = DocumentEmbedder()
     docsum.set_document(doc)
     docsum.split_document()
@@ -35,19 +35,17 @@ def test_document_summariser():
 
 
 def test_load_txt():
-    docsum = DocumentEmbedder()
+    reader = DocumentReader()
     text_path = "test/bc_summary.txt"
-    docsum._load_document(text_path)
-    document = docsum.document
+    document = reader.load_document(text_path)
     assert isinstance(document, list)
     assert isinstance(document[0], Document)
 
 
 def test_load_pdf():
-    docsum = DocumentEmbedder()
+    reader = DocumentReader()
     pdf_path = "test/bc_summary.pdf"
-    docsum._load_document(pdf_path)
-    document = docsum.document
+    document = reader.load_document(pdf_path)
     assert isinstance(document, list)
     assert isinstance(document[0], Document)
 
@@ -58,7 +56,8 @@ def test_byte_txt():
         document = f.read()
     assert isinstance(document, bytes)
 
-    doc = document_from_txt(document)
+    reader = DocumentReader()
+    doc = reader.document_from_txt(document)
     assert isinstance(doc, list)
     assert isinstance(doc[0], Document)
     # do we want byte string or regular string?
@@ -71,7 +70,8 @@ def test_byte_pdf():
         document = f.read()
     assert isinstance(document, bytes)
 
-    doc = document_from_pdf(document)
+    reader = DocumentReader()
+    doc = reader.document_from_pdf(document)
     assert isinstance(doc, list)
     assert isinstance(doc[0], Document)
     assert "numerous attempts at standardising KGs" in doc[0].page_content

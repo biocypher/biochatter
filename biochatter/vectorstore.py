@@ -71,34 +71,8 @@ class DocumentEmbedder:
         self.document = document
 
     def _load_document(self, path: str) -> None:
-        """
-        Loads a document from a path; accepts txt and pdf files. Txt files are
-        loaded as-is, pdf files are converted to text using fitz.
-
-        Args:
-            path (str): path to document
-
-        Returns:
-            List[Document]: list of documents
-        """
-        if path.endswith(".txt"):
-            loader = TextLoader(path)
-            self.document = loader.load()
-        elif path.endswith(".pdf"):
-            doc = fitz.open(path)
-            text = ""
-            for page in doc:
-                text += page.get_text()
-
-            meta = {k: v for k, v in doc.metadata.items() if v}
-            meta.update({"source": path})
-
-            self.document = [
-                Document(
-                    page_content=text,
-                    metadata=meta,
-                )
-            ]
+        reader = DocumentReader()
+        self.document = reader.load_document(path)
 
     def split_document(self) -> None:
         text_splitter = RecursiveCharacterTextSplitter(
@@ -139,36 +113,79 @@ class DocumentEmbedder:
             raise NotImplementedError(self.vector_db_vendor)
 
 
-def document_from_pdf(pdf) -> List[Document]:
-    """
-    Receive a byte representation of a pdf file and return a list of Documents
-    with metadata.
-    """
-    doc = fitz.open(stream=pdf, filetype="pdf")
-    text = ""
-    for page in doc:
-        text += page.get_text()
+class DocumentReader:
+    def load_document(self, path: str) -> List[Document]:
+        """
+        Loads a document from a path; accepts txt and pdf files. Txt files are
+        loaded as-is, pdf files are converted to text using fitz.
 
-    meta = {k: v for k, v in doc.metadata.items() if v}
-    meta.update({"source": "pdf"})
+        Args:
+            path (str): path to document
 
-    return [
-        Document(
-            page_content=text,
-            metadata=meta,
-        )
-    ]
+        Returns:
+            List[Document]: list of documents
+        """
+        if path.endswith(".txt"):
+            loader = TextLoader(path)
+            return loader.load()
 
+        elif path.endswith(".pdf"):
+            doc = fitz.open(path)
+            text = ""
+            for page in doc:
+                text += page.get_text()
 
-def document_from_txt(txt) -> List[Document]:
-    """
-    Receive a byte representation of a txt file and return a list of Documents
-    with metadata.
-    """
-    meta = {"source": "txt"}
-    return [
-        Document(
-            page_content=txt,
-            metadata=meta,
-        )
-    ]
+            meta = {k: v for k, v in doc.metadata.items() if v}
+            meta.update({"source": path})
+
+            return [
+                Document(
+                    page_content=text,
+                    metadata=meta,
+                )
+            ]
+
+    def document_from_pdf(self, pdf: bytes) -> List[Document]:
+        """
+        Receive a byte representation of a pdf file and return a list of Documents
+        with metadata.
+
+        Args:
+            pdf (bytes): byte representation of pdf file
+
+        Returns:
+            List[Document]: list of documents
+        """
+        doc = fitz.open(stream=pdf, filetype="pdf")
+        text = ""
+        for page in doc:
+            text += page.get_text()
+
+        meta = {k: v for k, v in doc.metadata.items() if v}
+        meta.update({"source": "pdf"})
+
+        return [
+            Document(
+                page_content=text,
+                metadata=meta,
+            )
+        ]
+
+    def document_from_txt(self, txt: bytes) -> List[Document]:
+        """
+        Receive a byte representation of a txt file and return a list of Documents
+        with metadata.
+
+        Args:
+            txt (bytes): byte representation of txt file
+
+        Returns:
+            List[Document]: list of documents
+        """
+        meta = {"source": "txt"}
+        return [
+            Document(
+                page_content=txt,
+                metadata=meta,
+            )
+        ]
