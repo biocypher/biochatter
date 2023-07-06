@@ -5,3 +5,4 @@ __pycache__/
 .venv
 .pytest_cache
 .env
+*.mp3

@@ -10,7 +10,7 @@ print(os.getcwd())
 
 
 def test_document_summariser():
-    # runs long, requires API key and local milvus server
+    # runs long, requires OpenAI API key and local milvus server
     # uses ada-002 for embeddings
     pdf_path = "test/bc_summary.pdf"
     with open(pdf_path, "rb") as f:

@@ -1,6 +1,7 @@
 from typing import List
 from langchain.schema import Document
 from .llm_connect import GptConversation
+from gtts import gTTS
 import nltk
 import os
 
@@ -30,7 +31,7 @@ class Podcaster:
         """
         self.document = document
 
-    def podcast(self, characters_per_paragraph: int) -> None:
+    def generate_podcast(self, characters_per_paragraph: int) -> None:
         """
         Podcasts the document.
         """
@@ -64,8 +65,6 @@ class Podcaster:
         )
 
         # summarise the summaries
-
-        # use text-to-speech to generate audio
 
     def _split_text(self, text: str) -> List[str]:
         """
@@ -151,3 +150,18 @@ class Podcaster:
                 section = ""
 
         return summarised_sections
+
+    def podcast_to_file(self, path: str) -> None:
+        """
+        Uses text-to-speech to generate audio for the summarised paper podcast.
+
+        Args:
+            path (str): path to save audio file to
+        """
+
+        full_text = self.podcast_intro + "\n\n"
+        for section in self.summarised_sections:
+            full_text += section + "\n\n"
+
+        audio = gTTS(text=full_text)
+        audio.save(path)
