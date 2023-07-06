@@ -63,12 +63,14 @@ class Conversation(ABC):
         self,
         model_name: str,
         prompts: dict,
+        correct: bool = True,
         split_correction: bool = False,
         docsum: DocumentEmbedder = None,
     ):
         super().__init__()
         self.model_name = model_name
         self.prompts = prompts
+        self.correct = correct
         self.split_correction = split_correction
         self.docsum = docsum
         self.history = []
@@ -162,6 +164,9 @@ class Conversation(ABC):
         if not token_usage:
             # indicates error
             return (msg, token_usage, None)
+
+        if not self.correct:
+            return (msg, token_usage, "OK")
 
         cor_msg = (
             "Correcting (using single sentences) ..."
@@ -292,7 +297,8 @@ class GptConversation(Conversation):
         self,
         model_name: str,
         prompts: dict,
-        split_correction: bool,
+        correct: bool = True,
+        split_correction: bool = False,
         docsum: DocumentEmbedder = None,
     ):
         """
@@ -315,6 +321,7 @@ class GptConversation(Conversation):
         super().__init__(
             model_name=model_name,
             prompts=prompts,
+            correct=correct,
             split_correction=split_correction,
             docsum=docsum,
         )
@@ -444,7 +451,8 @@ class AzureGptConversation(GptConversation):
         deployment_name: str,
         model_name: str,
         prompts: dict,
-        split_correction: bool,
+        correct: bool = True,
+        split_correction: bool = False,
         docsum: DocumentEmbedder = None,
         version: Optional[str] = None,
         base: Optional[str] = None,
@@ -475,6 +483,7 @@ class AzureGptConversation(GptConversation):
         super().__init__(
             model_name=model_name,
             prompts=prompts,
+            correct=correct,
             split_correction=split_correction,
             docsum=docsum,
         )
