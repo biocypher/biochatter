@@ -159,9 +159,16 @@ class Podcaster:
             path (str): path to save audio file to
         """
 
-        full_text = self.podcast_intro + "\n\n"
-        for section in self.summarised_sections:
-            full_text += section + "\n\n"
+        full_text = self.podcast_to_text()
 
         audio = gTTS(text=full_text)
         audio.save(path)
+
+    def podcast_to_text(self):
+        """
+        Returns the summarised paper podcast as text.
+        """
+        full_text = self.podcast_intro + "\n\n"
+        for section in self.summarised_sections:
+            full_text += section + "\n\n"
+        return full_text
