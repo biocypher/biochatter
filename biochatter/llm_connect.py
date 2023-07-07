@@ -82,7 +82,7 @@ class Conversation(ABC):
         self.user_name = user_name
 
     @abstractmethod
-    def set_api_key(self, api_key: str):
+    def set_api_key(self, api_key: str, user: Optional[str] = None):
         pass
 
     def get_prompts(self):
@@ -492,7 +492,7 @@ class AzureGptConversation(GptConversation):
         self.base = base
         self.deployment_name = deployment_name
 
-    def set_api_key(self, api_key: str):
+    def set_api_key(self, api_key: str, user: Optional[str] = None):
         """
         Set the API key for the Azure API. If the key is valid, initialise the
         conversational agent. No user stats on Azure.
@@ -549,7 +549,7 @@ class BloomConversation(Conversation):
 
         self.messages = []
 
-    def set_api_key(self, api_key: str, user: str):
+    def set_api_key(self, api_key: str, user: Optional[str] = None):
         self.chat = HuggingFaceHub(
             repo_id=self.model_name,
             model_kwargs={"temperature": 1.0},  # "regular sampling"
