@@ -8,12 +8,12 @@ from typing import List, Optional
 
 from langchain.schema import Document
 from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.text_splitter import TextSplitter, RecursiveCharacterTextSplitter, TokenTextSplitter
 from langchain.document_loaders import TextLoader
 from langchain.vectorstores import Milvus
 
 import fitz  # this is PyMuPDF (PyPI pymupdf package, not fitz)
-
+from transformers import GPT2TokenizerFast
 
 class DocumentEmbedder:
     def __init__(
@@ -23,6 +23,7 @@ class DocumentEmbedder:
         online: bool = False,
         chunk_size: int = 1000,
         chunk_overlap: int = 0,
+        split_by_tokens: bool = False,
         document: Optional[Document] = None,
         separators: Optional[list] = None,
         n_results: int = 3,
@@ -38,6 +39,8 @@ class DocumentEmbedder:
         self.chunk_overlap = chunk_overlap
         self.separators = separators or [" ", ",", "\n"]
         self.n_results = n_results
+        self.split_by_tokens = split_by_tokens
+        self.model_name = model
 
         # TODO: variable embeddings depending on model
         # for now, just use ada-002
@@ -74,12 +77,33 @@ class DocumentEmbedder:
         reader = DocumentReader()
         self.document = reader.load_document(path)
 
-    def split_document(self) -> None:
-        text_splitter = RecursiveCharacterTextSplitter(
+    def _characters_splitter(self) -> TextSplitter:
+        return RecursiveCharacterTextSplitter(
             chunk_size=self.chunk_size,
             chunk_overlap=self.chunk_overlap,
-            separators=self.separators,
+            separators=self.separators
         )
+    def _tokens_splitter(self) -> TextSplitter:
+        DEFAULT_OPENAI_MODEL = "gpt-3.5-turbo"
+        HUGGINGFACE_MODELS = ["bigscience/bloom"]
+        if self.model_name and self.model_name in HUGGINGFACE_MODELS:
+            tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
+            return RecursiveCharacterTextSplitter.from_huggingface_tokenizer(
+                tokenizer, 
+                chunk_size=self.chunk_size,
+                chunk_overlap=self.chunk_overlap
+            )
+        else:
+            return TokenTextSplitter(
+                encoding_name="",
+                model_name=DEFAULT_OPENAI_MODEL if not self.model_name else self.model_name,
+                chunk_size=self.chunk_size,
+                chunk_overlap=self.chunk_overlap
+            )
+    def _text_splitter(self) -> TextSplitter:
+        return self._tokens_splitter() if self.split_by_tokens else self._characters_splitter()
+    def split_document(self) -> None:
+        text_splitter = self._text_splitter()
         self.split = text_splitter.split_documents(self.document)
 
     def store_embeddings(self) -> None:
