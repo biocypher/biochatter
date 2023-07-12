@@ -7,8 +7,11 @@ from biochatter.vectorstore import (
 import os
 print(os.getcwd())
 
-from dotenv import load_dotenv
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
 
 def test_document_summariser():
     # runs long, requires OpenAI API key and local milvus server
@@ -79,51 +82,40 @@ def test_byte_pdf():
 
 CHUNK_SIZE = 100
 CHUNK_OVERLAP = 10
+
+def check_document_splitter(docsum: DocumentEmbedder, fn: str, expected_length: int):
+    docsum._load_document(fn)
+    docsum.split_document()
+    assert expected_length == len(docsum.split)
+
+
 def test_split_by_characters():
     docsum = DocumentEmbedder(
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP
     )
-    pdf_path = "test/bc_summary.pdf"
-    docsum._load_document(pdf_path)
-    docsum.split_document()
-    assert 197 == len(docsum.split)
-
-    text_path = "test/bc_summary.txt"
-    docsum._load_document(text_path)
-    docsum.split_document()
-    assert 104 == len(docsum.split)
+    check_document_splitter(docsum, "test/bc_summary.pdf", 197)
+    check_document_splitter(docsum, "test/dcn.pdf", 245)
+    check_document_splitter(docsum, "test/bc_summary.txt", 104)
 
 def test_split_by_tokens_tiktoken():
     docsum = DocumentEmbedder(
-        split_by_tokens=True,
+        split_by_characters=False,
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP
     )
-    pdf_path = "test/bc_summary.pdf"
-    docsum._load_document(pdf_path)
-    docsum.split_document()
-    assert 46 == len(docsum.split)
-
-    text_path = "test/bc_summary.txt"
-    docsum._load_document(text_path)
-    docsum.split_document()
-    assert 40 == len(docsum.split)
+    check_document_splitter(docsum, "test/bc_summary.pdf", 46)
+    check_document_splitter(docsum, "test/dcn.pdf", 71)
+    check_document_splitter(docsum, "test/bc_summary.txt", 40)
 
 def test_split_by_tokens_tokenizers():
     docsum = DocumentEmbedder(
-        split_by_tokens=True, 
+        split_by_characters=False, 
         model="bigscience/bloom",
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP
     )
-    pdf_path = "test/bc_summary.pdf"
-    docsum._load_document(pdf_path)
-    docsum.split_document()
-    assert 49 == len(docsum.split)
-
-    text_path = "test/bc_summary.txt"
-    docsum._load_document(text_path)
-    docsum.split_document()
-    assert 44 == len(docsum.split)
+    check_document_splitter(docsum, "test/bc_summary.pdf", 49)
+    check_document_splitter(docsum, "test/dcn.pdf", 71)
+    check_document_splitter(docsum, "test/bc_summary.txt", 44)
 

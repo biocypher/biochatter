@@ -23,7 +23,7 @@ class DocumentEmbedder:
         online: bool = False,
         chunk_size: int = 1000,
         chunk_overlap: int = 0,
-        split_by_tokens: bool = False,
+        split_by_characters: bool = True,
         document: Optional[Document] = None,
         separators: Optional[list] = None,
         n_results: int = 3,
@@ -39,7 +39,7 @@ class DocumentEmbedder:
         self.chunk_overlap = chunk_overlap
         self.separators = separators or [" ", ",", "\n"]
         self.n_results = n_results
-        self.split_by_tokens = split_by_tokens
+        self.split_by_characters = split_by_characters
         self.model_name = model
 
         # TODO: variable embeddings depending on model
@@ -101,7 +101,7 @@ class DocumentEmbedder:
                 chunk_overlap=self.chunk_overlap
             )
     def _text_splitter(self) -> RecursiveCharacterTextSplitter:
-        return self._tokens_splitter() if self.split_by_tokens else self._characters_splitter()
+        return self._characters_splitter() if self.split_by_characters else self._tokens_splitter()
     def split_document(self) -> None:
         text_splitter = self._text_splitter()
         self.split = text_splitter.split_documents(self.document)
