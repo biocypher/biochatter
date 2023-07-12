@@ -8,7 +8,7 @@ from typing import List, Optional
 
 from langchain.schema import Document
 from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.text_splitter import TextSplitter, RecursiveCharacterTextSplitter, TokenTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.document_loaders import TextLoader
 from langchain.vectorstores import Milvus
 
@@ -77,13 +77,13 @@ class DocumentEmbedder:
         reader = DocumentReader()
         self.document = reader.load_document(path)
 
-    def _characters_splitter(self) -> TextSplitter:
+    def _characters_splitter(self) -> RecursiveCharacterTextSplitter:
         return RecursiveCharacterTextSplitter(
             chunk_size=self.chunk_size,
             chunk_overlap=self.chunk_overlap,
             separators=self.separators
         )
-    def _tokens_splitter(self) -> TextSplitter:
+    def _tokens_splitter(self) -> RecursiveCharacterTextSplitter:
         DEFAULT_OPENAI_MODEL = "gpt-3.5-turbo"
         HUGGINGFACE_MODELS = ["bigscience/bloom"]
         if self.model_name and self.model_name in HUGGINGFACE_MODELS:
@@ -94,13 +94,13 @@ class DocumentEmbedder:
                 chunk_overlap=self.chunk_overlap
             )
         else:
-            return TokenTextSplitter(
+            return RecursiveCharacterTextSplitter.from_tiktoken_encoder(
                 encoding_name="",
                 model_name=DEFAULT_OPENAI_MODEL if not self.model_name else self.model_name,
                 chunk_size=self.chunk_size,
                 chunk_overlap=self.chunk_overlap
             )
-    def _text_splitter(self) -> TextSplitter:
+    def _text_splitter(self) -> RecursiveCharacterTextSplitter:
         return self._tokens_splitter() if self.split_by_tokens else self._characters_splitter()
     def split_document(self) -> None:
         text_splitter = self._text_splitter()

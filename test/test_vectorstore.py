@@ -7,6 +7,9 @@ from biochatter.vectorstore import (
 import os
 print(os.getcwd())
 
+from dotenv import load_dotenv
+load_dotenv()
+
 def test_document_summariser():
     # runs long, requires OpenAI API key and local milvus server
     # uses ada-002 for embeddings
@@ -84,7 +87,7 @@ def test_split_by_characters():
     pdf_path = "test/bc_summary.pdf"
     docsum._load_document(pdf_path)
     docsum.split_document()
-    assert len(docsum.split) == 197
+    assert 197 == len(docsum.split)
 
     text_path = "test/bc_summary.txt"
     docsum._load_document(text_path)
@@ -100,12 +103,12 @@ def test_split_by_tokens_tiktoken():
     pdf_path = "test/bc_summary.pdf"
     docsum._load_document(pdf_path)
     docsum.split_document()
-    assert len(docsum.split) == 46
+    assert 46 == len(docsum.split)
 
     text_path = "test/bc_summary.txt"
     docsum._load_document(text_path)
     docsum.split_document()
-    assert 20 == len(docsum.split)
+    assert 40 == len(docsum.split)
 
 def test_split_by_tokens_tokenizers():
     docsum = DocumentEmbedder(
@@ -117,7 +120,7 @@ def test_split_by_tokens_tokenizers():
     pdf_path = "test/bc_summary.pdf"
     docsum._load_document(pdf_path)
     docsum.split_document()
-    assert len(docsum.split) == 49
+    assert 49 == len(docsum.split)
 
     text_path = "test/bc_summary.txt"
     docsum._load_document(text_path)
