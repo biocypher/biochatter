@@ -8,7 +8,7 @@ from biochatter.llm_connect import (
     AIMessage,
 )
 from openai.error import InvalidRequestError
-
+import pytest
 
 def test_empty_messages():
     convo = GptConversation(
