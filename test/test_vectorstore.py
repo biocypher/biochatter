@@ -5,9 +5,13 @@ from biochatter.vectorstore import (
 )
 
 import os
-
 print(os.getcwd())
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
 
 def test_document_summariser():
     # runs long, requires OpenAI API key and local milvus server
@@ -75,3 +79,43 @@ def test_byte_pdf():
     assert isinstance(doc, list)
     assert isinstance(doc[0], Document)
     assert "numerous attempts at standardising KGs" in doc[0].page_content
+
+CHUNK_SIZE = 100
+CHUNK_OVERLAP = 10
+
+def check_document_splitter(docsum: DocumentEmbedder, fn: str, expected_length: int):
+    docsum._load_document(fn)
+    docsum.split_document()
+    assert expected_length == len(docsum.split)
+
+
+def test_split_by_characters():
+    docsum = DocumentEmbedder(
+        chunk_size=CHUNK_SIZE,
+        chunk_overlap=CHUNK_OVERLAP
+    )
+    check_document_splitter(docsum, "test/bc_summary.pdf", 197)
+    check_document_splitter(docsum, "test/dcn.pdf", 245)
+    check_document_splitter(docsum, "test/bc_summary.txt", 104)
+
+def test_split_by_tokens_tiktoken():
+    docsum = DocumentEmbedder(
+        split_by_characters=False,
+        chunk_size=CHUNK_SIZE,
+        chunk_overlap=CHUNK_OVERLAP
+    )
+    check_document_splitter(docsum, "test/bc_summary.pdf", 73)
+    check_document_splitter(docsum, "test/dcn.pdf", 104)
+    check_document_splitter(docsum, "test/bc_summary.txt", 37)
+
+def test_split_by_tokens_tokenizers():
+    docsum = DocumentEmbedder(
+        split_by_characters=False, 
+        model="bigscience/bloom",
+        chunk_size=CHUNK_SIZE,
+        chunk_overlap=CHUNK_OVERLAP
+    )
+    check_document_splitter(docsum, "test/bc_summary.pdf", 79)
+    check_document_splitter(docsum, "test/dcn.pdf", 111)
+    check_document_splitter(docsum, "test/bc_summary.txt", 40)
+
