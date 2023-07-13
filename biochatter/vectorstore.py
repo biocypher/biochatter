@@ -91,14 +91,16 @@ class DocumentEmbedder:
             return RecursiveCharacterTextSplitter.from_huggingface_tokenizer(
                 tokenizer, 
                 chunk_size=self.chunk_size,
-                chunk_overlap=self.chunk_overlap
+                chunk_overlap=self.chunk_overlap,
+                separators=self.separators
             )
         else:
             return RecursiveCharacterTextSplitter.from_tiktoken_encoder(
                 encoding_name="",
                 model_name=DEFAULT_OPENAI_MODEL if not self.model_name else self.model_name,
                 chunk_size=self.chunk_size,
-                chunk_overlap=self.chunk_overlap
+                chunk_overlap=self.chunk_overlap,
+                separators=self.separators
             )
     def _text_splitter(self) -> RecursiveCharacterTextSplitter:
         return self._characters_splitter() if self.split_by_characters else self._tokens_splitter()

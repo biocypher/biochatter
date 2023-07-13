@@ -104,9 +104,9 @@ def test_split_by_tokens_tiktoken():
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP
     )
-    check_document_splitter(docsum, "test/bc_summary.pdf", 46)
-    check_document_splitter(docsum, "test/dcn.pdf", 71)
-    check_document_splitter(docsum, "test/bc_summary.txt", 40)
+    check_document_splitter(docsum, "test/bc_summary.pdf", 73)
+    check_document_splitter(docsum, "test/dcn.pdf", 104)
+    check_document_splitter(docsum, "test/bc_summary.txt", 37)
 
 def test_split_by_tokens_tokenizers():
     docsum = DocumentEmbedder(
@@ -115,7 +115,7 @@ def test_split_by_tokens_tokenizers():
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP
     )
-    check_document_splitter(docsum, "test/bc_summary.pdf", 49)
-    check_document_splitter(docsum, "test/dcn.pdf", 71)
-    check_document_splitter(docsum, "test/bc_summary.txt", 44)
+    check_document_splitter(docsum, "test/bc_summary.pdf", 79)
+    check_document_splitter(docsum, "test/dcn.pdf", 111)
+    check_document_splitter(docsum, "test/bc_summary.txt", 40)
 
