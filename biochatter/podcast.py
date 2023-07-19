@@ -20,7 +20,8 @@ PROMPT = (
     "journal metadata, and so on. You will then be asked to summarise the"
     "section of the manuscript, making the wording more suitable for listening."
     "Remove all content in brackets that is of technical nature, such as"
-    "p-values, statistical tests, and so on."
+    "p-values, statistical tests, and so on. If the given text contains only "
+    "literature references, return 'No content'."
 )
 
 
