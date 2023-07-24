@@ -4,14 +4,9 @@ from biochatter.vectorstore import (
     Document,
 )
 
+import pytest
 import os
 print(os.getcwd())
-
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except Exception:
-    pass
 
 def test_document_summariser():
     # runs long, requires OpenAI API key and local milvus server
@@ -84,12 +79,14 @@ CHUNK_SIZE = 100
 CHUNK_OVERLAP = 10
 
 def check_document_splitter(docsum: DocumentEmbedder, fn: str, expected_length: int):
-    docsum._load_document(fn)
+    reader = DocumentReader()
+    docsum.set_document(reader.load_document(fn))
     docsum.split_document()
     assert expected_length == len(docsum.split)
 
 
 def test_split_by_characters():
+    # requires OpenAI API key
     docsum = DocumentEmbedder(
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP
@@ -99,6 +96,7 @@ def test_split_by_characters():
     check_document_splitter(docsum, "test/bc_summary.txt", 104)
 
 def test_split_by_tokens_tiktoken():
+    # requires OpenAI API key
     docsum = DocumentEmbedder(
         split_by_characters=False,
         chunk_size=CHUNK_SIZE,
@@ -109,6 +107,7 @@ def test_split_by_tokens_tiktoken():
     check_document_splitter(docsum, "test/bc_summary.txt", 37)
 
 def test_split_by_tokens_tokenizers():
+    # requires OpenAI API key
     docsum = DocumentEmbedder(
         split_by_characters=False, 
         model="bigscience/bloom",
