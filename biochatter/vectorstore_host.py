@@ -1,6 +1,7 @@
 import logging
-from typing import List, Optional
+from typing import List, Optional, Tuple
 import re
+import base64
 from pymilvus import MilvusException, connections, Collection, utility, FieldSchema
 from langchain.vectorstores import Milvus
 from langchain.embeddings import OpenAIEmbeddings
@@ -14,6 +15,21 @@ def _grab_text_field_name(fields: List[FieldSchema]) -> str | None:
             return prev_field.name
         prev_field = x
     return None
+
+def is_valid_alias(alias: str) -> Optional[Tuple]:
+    # valud alias is {base64}_c{uuid4.hex}
+    pattern = r"^([0-9a-zA-Z_]+)_c([a-f0-9]{32})$"
+    match = re.fullmatch(pattern, alias)
+    return None if not match else match.groups()
+
+def string_to_base64(txt: str) -> str:
+    converted = base64.urlsafe_b64encode(txt.encode("utf-8")).decode("utf-8")
+    return converted.replace('-', 'a_a').replace("=", "b_b")
+
+def base64_to_string(b64_txt: str) -> str:
+    converted = b64_txt.replace('a_a', '-').replace("b_b", "=")
+    return base64.urlsafe_b64decode(converted).decode("utf-8")
+
 
 class VectorCollection:
     def __init__(
@@ -58,20 +74,23 @@ class VectorDatabaseHost:
             col = Collection(col_name)
             if len(col.aliases) == 0:
                 continue
-            pattern = fr"^(\w+)_{col_name}$"
+            
             for alias in col.aliases:
-                match = re.fullmatch(pattern, alias)
-                if not match:
+                matched_grp = is_valid_alias(alias)
+                if not matched_grp:
                     continue
                 text_field = _grab_text_field_name(col.schema.fields)
                 if not text_field:
                     continue
-                grps = match.groups()
-                self.collections.append({
-                    "collection_name": col_name,
-                    "document_name": grps[0],
-                    "text_field": text_field
-                })
+                docname = matched_grp[0]
+                docname = base64_to_string(docname)
+                self.collections.append(
+                    VectorCollection(
+                        col_name=col_name,
+                        doc_name=docname,
+                        text_field=text_field
+                    )
+                )                    
                 break
     
     def get_collections(self):
@@ -86,7 +105,7 @@ class VectorDatabaseHost:
             if col.collection_name == collection_name:
                 return col
         return None
-    def set_current_collection(self, collection_name):
+    def set_current_collection(self, collection_name: str):
         col = self._find_collection(collection_name)
         if not col:
             logger.error(f"Unknown collection name: {collection_name}")
