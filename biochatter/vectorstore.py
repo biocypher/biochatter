@@ -73,10 +73,6 @@ class DocumentEmbedder:
     def set_document(self, document: List[Document]) -> None:
         self.document = document
 
-    def _load_document(self, path: str) -> None:
-        reader = DocumentReader()
-        self.document = reader.load_document(path)
-
     def _characters_splitter(self) -> RecursiveCharacterTextSplitter:
         return RecursiveCharacterTextSplitter(
             chunk_size=self.chunk_size,
