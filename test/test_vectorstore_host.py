@@ -69,5 +69,7 @@ def test_store_embeddings_and_similarity_search():
     )
     assert len(results) > 0
     assert all(["Deep Counterfactual Networks" in item.page_content for item in results])
+    cnt = len(dbHost.get_collections())
     dbHost.drop_collection(vector_collection.collection_name)
+    assert (cnt - 1) == len(dbHost.get_collections())
     

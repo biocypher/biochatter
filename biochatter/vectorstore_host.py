@@ -95,17 +95,17 @@ class VectorDatabaseHostMilvus:
     def get_collections(self):
         return self.collections
 
-    def _find_vector_collection(self, collection_name: str) -> int:
-        for i in range(len(self.collections)):
-            if self.collections[i].collection_name == collection_name:
-                return i
-        return -1
+    def _find_vector_collection(self, collection_name: str) -> Optional[VectorCollection]:
+        for obj in self.collections:
+            if obj.collection_name == collection_name:
+                return obj
+        return None
     def _remove_vector_collection(self, collection_name: str) -> bool:
-        ix = self._find_vector_collection(collection_name)
-        if ix < 0:
-            return False
-        self.collections.pop(ix)
-        return True
+        for obj in self.collections:
+            if obj.collection_name == collection_name:
+                self.collections.remove(obj)
+                return True
+        return False
     def store_embedding(
             self, 
             doc_name: str,
@@ -128,10 +128,9 @@ class VectorDatabaseHostMilvus:
         return vector_collection
     
     def similarity_search(self, collection_name: str, query: str, k: int=3) -> List[Document]:
-        ix = self._find_vector_collection(collection_name)
-        if ix < 0:
+        vector_coll = self._find_vector_collection(collection_name)
+        if not vector_coll:
             raise ValueError("No current collection loaded")
-        vector_coll = self.collections[ix]
         try:
             db = Milvus(
                 embedding_function=self.embeddings, 
