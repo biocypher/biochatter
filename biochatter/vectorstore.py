@@ -65,9 +65,11 @@ class DocumentEmbedder:
         # instantiate VectorDatabaseHost
         self.database_host = None
         self._init_database_host()
-        # Todo: Current collection name is supposed to be saved in front-end, but to be compatible, we introduce
-        # it temporarily. Once ChatGSE implements the function of current collection name (saving current collection and 
-        # passing it to call similarity_search() or drop_collection()), we will remove this attribute.
+        # Todo: remove temporary attribute current_collection_name
+        # The current collection name is intended to be saved and passed from front-end when calling similarity_search()
+        # and drop_collection(). However, to avoid breaking existing ChatGSE code, we introduce it temporarily. Once 
+        # ChatGSE is updated to store and pass current collection name with each request, we can remove this temporary
+        # current_collection_name attribute.
         self.current_collection_name = None
 
     def _init_database_host(self):
