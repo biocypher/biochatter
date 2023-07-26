@@ -5,6 +5,7 @@ import base64
 from pymilvus import MilvusException, connections, Collection, utility, FieldSchema
 from langchain.vectorstores import Milvus
 from langchain.embeddings import OpenAIEmbeddings
+from langchain.schema import Document
 
 logger = logging.getLogger(__name__)
 
@@ -42,14 +43,13 @@ class VectorCollection:
         self.document_name = doc_name
         self.text_field = text_field
 
-class VectorDatabaseHost:
+class VectorDatabaseHostMilvus:
     def __init__(
         self,
         embeddings: Optional[OpenAIEmbeddings]=None,
         connection_args: Optional[dict]=None
     ):
         self.collections: List[VectorCollection] = []
-        self.vector_db: Optional[Milvus] = None
         self.embeddings: Optional[OpenAIEmbeddings] = embeddings
         self.connection_args = connection_args or {
             "host": "127.0.0.1",
@@ -68,7 +68,6 @@ class VectorDatabaseHost:
             raise e
         
         self.collections = []
-        self.vector_db = None
         collections = utility.list_collections()
         for col_name in collections:
             col = Collection(col_name)
@@ -95,26 +94,66 @@ class VectorDatabaseHost:
     
     def get_collections(self):
         return self.collections
-    def get_current_collection(self) -> Optional[VectorCollection]:
-        if not self.vector_db:
-            return None
-        return self._find_collection(self.vector_db.collection_name)
 
-    def _find_collection(self, collection_name: str) -> Optional[VectorCollection]:
-        for col in self.collections:
-            if col.collection_name == collection_name:
-                return col
-        return None
-    def set_current_collection(self, collection_name: str):
-        col = self._find_collection(collection_name)
-        if not col:
-            logger.error(f"Unknown collection name: {collection_name}")
-            return
-        if self.vector_db and self.vector_db.collection_name == collection_name:
-            return
-        self.vector_db = Milvus(self.embeddings, self.connection_args, collection_name=collection_name, text_field=col.text_field)
-        
+    def _find_vector_collection(self, collection_name: str) -> int:
+        for i in range(len(self.collections)):
+            if self.collections[i].collection_name == collection_name:
+                return i
+        return -1
+    def _remove_vector_collection(self, collection_name: str) -> bool:
+        ix = self._find_vector_collection(collection_name)
+        if ix < 0:
+            return False
+        self.collections.pop(ix)
+        return True
+    def store_embedding(
+            self, 
+            doc_name: str,
+            documents: List[Document],
+        ) -> VectorCollection:
+        db = Milvus.from_documents(
+            documents=documents,
+            embedding=self.embeddings,
+            connection_args=self.connection_args
+        )
+        encoded_doc_name = string_to_base64(doc_name)
+        alias = f"{encoded_doc_name}_{db.collection_name}"
+        utility.create_alias(db.collection_name, alias=alias)
+        vector_collection = VectorCollection(
+            col_name=db.collection_name,
+            doc_name=doc_name,
+            text_field=db.text_field
+        )
+        self.collections.append(vector_collection)
+        return vector_collection
     
+    def similarity_search(self, collection_name: str, query: str, k: int=3) -> List[Document]:
+        ix = self._find_vector_collection(collection_name)
+        if ix < 0:
+            raise ValueError("No current collection loaded")
+        vector_coll = self.collections[ix]
+        try:
+            db = Milvus(
+                embedding_function=self.embeddings, 
+                collection_name=collection_name, 
+                connection_args=self.connection_args,
+                text_field=vector_coll.text_field
+            )
+            return db.similarity_search(query=query, k=k)
+        except MilvusException as e:
+            logger.error(e)
+            raise e
+    
+    def drop_collection(self, collection_name):
+        if not self._remove_vector_collection(collection_name):
+            return
+        try:
+            coll = Collection(collection_name)
+            coll.drop()
+        except MilvusException as e:
+            logger.error(e)
+            raise e
+
 
 
 
