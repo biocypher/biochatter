@@ -1,5 +1,5 @@
 import logging
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Dict
 import re
 import base64
 from pymilvus import MilvusException, connections, Collection, utility, FieldSchema
@@ -49,25 +49,25 @@ class VectorDatabaseHostMilvus:
         embeddings: Optional[OpenAIEmbeddings]=None,
         connection_args: Optional[dict]=None
     ):
-        self.collections: List[VectorCollection] = []
-        self.embeddings: Optional[OpenAIEmbeddings] = embeddings
-        self.connection_args = connection_args or {
+        self._collections: List[VectorCollection] = []
+        self._embeddings: Optional[OpenAIEmbeddings] = embeddings
+        self._connection_args = connection_args or {
             "host": "127.0.0.1",
             "port": "19530",
         }
 
-    def connect(self, host, port):
-        self.connection_args = {"host": host, "port": port}
+    def connect(self, host: str, port: str) -> None:
+        self._connection_args = {"host": host, "port": port}
         self._init_host(host, port)
 
-    def _init_host(self, host, port):
+    def _init_host(self, host: str, port: str):
         try:
             connections.connect(host=host, port=port)
         except MilvusException as e:
             logger.error(f"Failed to create connection to {host}:{port}")
             raise e
         
-        self.collections = []
+        self._collections = []
         collections = utility.list_collections()
         for col_name in collections:
             col = Collection(col_name)
@@ -83,7 +83,7 @@ class VectorDatabaseHostMilvus:
                     continue
                 docname = matched_grp[0]
                 docname = base64_to_string(docname)
-                self.collections.append(
+                self._collections.append(
                     VectorCollection(
                         col_name=col_name,
                         doc_name=docname,
@@ -92,29 +92,33 @@ class VectorDatabaseHostMilvus:
                 )                    
                 break
     
-    def get_collections(self):
-        return self.collections
+    @property
+    def collections(self) -> List[Dict[str, str]]:
+        return [
+            {"document_name": col.document_name, "collection_name": col.collection_name}
+            for col in self._collections
+        ]
 
     def _find_vector_collection(self, collection_name: str) -> Optional[VectorCollection]:
-        for obj in self.collections:
+        for obj in self._collections:
             if obj.collection_name == collection_name:
                 return obj
         return None
     def _remove_vector_collection(self, collection_name: str) -> bool:
-        for obj in self.collections:
+        for obj in self._collections:
             if obj.collection_name == collection_name:
-                self.collections.remove(obj)
+                self._collections.remove(obj)
                 return True
         return False
     def store_embedding(
             self, 
             doc_name: str,
             documents: List[Document],
-        ) -> VectorCollection:
+        ) -> Dict[str, str]:
         db = Milvus.from_documents(
             documents=documents,
-            embedding=self.embeddings,
-            connection_args=self.connection_args
+            embedding=self._embeddings,
+            connection_args=self._connection_args
         )
         encoded_doc_name = string_to_base64(doc_name)
         alias = f"{encoded_doc_name}_{db.collection_name}"
@@ -124,8 +128,11 @@ class VectorDatabaseHostMilvus:
             doc_name=doc_name,
             text_field=db.text_field
         )
-        self.collections.append(vector_collection)
-        return vector_collection
+        self._collections.append(vector_collection)
+        return {
+            "document_name": doc_name, 
+            "collection_name": db.collection_name
+        }
     
     def similarity_search(self, collection_name: str, query: str, k: int=3) -> List[Document]:
         vector_coll = self._find_vector_collection(collection_name)
@@ -133,9 +140,9 @@ class VectorDatabaseHostMilvus:
             raise ValueError("No current collection loaded")
         try:
             db = Milvus(
-                embedding_function=self.embeddings, 
+                embedding_function=self._embeddings, 
                 collection_name=collection_name, 
-                connection_args=self.connection_args,
+                connection_args=self._connection_args,
                 text_field=vector_coll.text_field
             )
             return db.similarity_search(query=query, k=k)
@@ -143,7 +150,7 @@ class VectorDatabaseHostMilvus:
             logger.error(e)
             raise e
     
-    def drop_collection(self, collection_name):
+    def drop_collection(self, collection_name: str) -> None:
         if not self._remove_vector_collection(collection_name):
             return
         try:

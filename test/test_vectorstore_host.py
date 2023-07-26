@@ -51,7 +51,7 @@ def test_connect_host():
     # require local milvus server
     dbHost = VectorDatabaseHostMilvus()
     dbHost.connect(host=_HOST, port=_PORT)
-    collections = dbHost.get_collections()
+    collections = dbHost.collections
     assert not collections is None
     assert len(collections) > 0
 
@@ -63,13 +63,13 @@ def test_store_embeddings_and_similarity_search():
     vector_collection = dbHost.store_embedding("dcn.pdf", splitted_docs)
 
     results = dbHost.similarity_search(
-        collection_name=vector_collection.collection_name,
+        collection_name=vector_collection["collection_name"],
         query="What is Deep Counterfactual Networks?", 
         k=3
     )
     assert len(results) > 0
     assert all(["Deep Counterfactual Networks" in item.page_content for item in results])
-    cnt = len(dbHost.get_collections())
-    dbHost.drop_collection(vector_collection.collection_name)
-    assert (cnt - 1) == len(dbHost.get_collections())
+    cnt = len(dbHost.collections)
+    dbHost.drop_collection(vector_collection["collection_name"])
+    assert (cnt - 1) == len(dbHost.collections)
     

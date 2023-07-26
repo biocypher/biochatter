@@ -24,13 +24,20 @@ def test_document_summariser():
     assert isinstance(docsum.split, list)
     assert isinstance(docsum.split[0], Document)
 
-    docsum.store_embeddings()
-    assert docsum.vector_db is not None
+    collection = docsum.store_embeddings(doc_name="bc_summary.pdf")
+    assert docsum.current_collection_name is not None
 
     query = "What is BioCypher?"
     results = docsum.similarity_search(query)
     assert len(results) == 3
     assert all(["BioCypher" in result.page_content for result in results])
+
+    collections = docsum.get_all_collections()
+    cnt = len(collections)
+    assert cnt > 0
+    docsum.drop_collection(collection["collection_name"])
+    collections = docsum.get_all_collections()
+    assert (cnt-1) == len(collections)
 
 
 def test_load_txt():
