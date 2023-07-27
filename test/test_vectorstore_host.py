@@ -15,10 +15,14 @@ from biochatter.vectorstore_host import (
 )
 
 """
-This test need OPENAI API KEY and local milvus server
+This test needs OPENAI_API_KEY in the environment and a local milvus server
 """
 
-_HOST = "127.0.0.1"
+# setup milvus connection
+if os.getenv("DEVCONTAINER"):
+    _HOST = "milvus-standalone"
+else:
+    _HOST = "127.0.0.1"
 _PORT = "19530"
 collection_names = []
 
