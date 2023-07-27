@@ -6,7 +6,9 @@ from biochatter.vectorstore import (
 
 import pytest
 import os
+
 print(os.getcwd())
+
 
 def test_document_summariser():
     # runs long, requires OpenAI API key and local milvus server
@@ -37,7 +39,7 @@ def test_document_summariser():
     assert cnt > 0
     docsum.drop_collection(collection["collection_name"])
     collections = docsum.get_all_collections()
-    assert (cnt-1) == len(collections)
+    assert (cnt - 1) == len(collections)
 
 
 def test_load_txt():
@@ -82,10 +84,16 @@ def test_byte_pdf():
     assert isinstance(doc[0], Document)
     assert "numerous attempts at standardising KGs" in doc[0].page_content
 
+
 CHUNK_SIZE = 100
 CHUNK_OVERLAP = 10
 
-def check_document_splitter(docsum: DocumentEmbedder, fn: str, expected_length: int):
+
+def check_document_splitter(
+    docsum: DocumentEmbedder,
+    fn: str,
+    expected_length: int,
+):
     reader = DocumentReader()
     docsum.set_document(reader.load_document(fn))
     docsum.split_document()
@@ -96,32 +104,33 @@ def test_split_by_characters():
     # requires OpenAI API key
     docsum = DocumentEmbedder(
         chunk_size=CHUNK_SIZE,
-        chunk_overlap=CHUNK_OVERLAP
+        chunk_overlap=CHUNK_OVERLAP,
     )
     check_document_splitter(docsum, "test/bc_summary.pdf", 197)
     check_document_splitter(docsum, "test/dcn.pdf", 245)
     check_document_splitter(docsum, "test/bc_summary.txt", 104)
+
 
 def test_split_by_tokens_tiktoken():
     # requires OpenAI API key
     docsum = DocumentEmbedder(
         split_by_characters=False,
         chunk_size=CHUNK_SIZE,
-        chunk_overlap=CHUNK_OVERLAP
+        chunk_overlap=CHUNK_OVERLAP,
     )
     check_document_splitter(docsum, "test/bc_summary.pdf", 73)
     check_document_splitter(docsum, "test/dcn.pdf", 104)
     check_document_splitter(docsum, "test/bc_summary.txt", 37)
 
+
 def test_split_by_tokens_tokenizers():
     # requires OpenAI API key
     docsum = DocumentEmbedder(
-        split_by_characters=False, 
+        split_by_characters=False,
         model="bigscience/bloom",
         chunk_size=CHUNK_SIZE,
-        chunk_overlap=CHUNK_OVERLAP
+        chunk_overlap=CHUNK_OVERLAP,
     )
     check_document_splitter(docsum, "test/bc_summary.pdf", 79)
     check_document_splitter(docsum, "test/dcn.pdf", 111)
     check_document_splitter(docsum, "test/bc_summary.txt", 40)
-
