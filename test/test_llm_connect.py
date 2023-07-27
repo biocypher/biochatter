@@ -87,8 +87,8 @@ def test_azure_raises_request_error():
 
 def test_azure():
     """
-    Test OpenAI Azure endpoint functionality - not an actual test yet. Fails if
-    environment variables are not set.
+    Test OpenAI Azure endpoint functionality. Azure connectivity is enabled by
+    setting the corresponding environment variables.
     """
     openai.proxy = os.getenv("OPENAI_PROXY")
     convo = AzureGptConversation(
