@@ -6,3 +6,5 @@ __pycache__/
 .pytest_cache
 .env
 *.mp3
+.cache
+*.env
