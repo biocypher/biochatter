@@ -18,7 +18,7 @@ def _grab_text_field_name(fields: List[FieldSchema]) -> str | None:
     return None
 
 def extract_from_alias(alias: str) -> Optional[Tuple]:
-    # valud alias is {base64}_c{uuid4.hex}
+    # valid alias is {base64}_c{uuid4.hex}
     pattern = r"^([0-9a-zA-Z_]+)_c([a-f0-9]{32})$"
     match = re.fullmatch(pattern, alias)
     return None if not match else match.groups()
