@@ -152,12 +152,12 @@ class Conversation(ABC):
                 msg = self.prompts["tool_prompts"][tool_name].format(df=df)
                 self.append_system_message(msg)
 
-    def query(self, text: str):
+    def query(self, text: str, collection_name: Optional[str]=None):
         self.append_user_message(text)
 
         if self.docsum:
             if self.docsum.use_prompt:
-                self._inject_context(text)
+                self._inject_context(text, collection_name)
 
         msg, token_usage = self._primary_query()
 
@@ -213,7 +213,7 @@ class Conversation(ABC):
     def _correct_response(self, msg: str):
         pass
 
-    def _inject_context(self, text: str):
+    def _inject_context(self, text: str, collection_name: Optional[str]=None):
         """
         Inject the context into the prompt from vector database similarity
         search. Finds the most similar n text fragments and adds them to the
@@ -244,6 +244,7 @@ class Conversation(ABC):
                     for doc in self.docsum.similarity_search(
                         text,
                         self.docsum.n_results,
+                        collection_name
                     )
                 ]
         else:
@@ -252,6 +253,7 @@ class Conversation(ABC):
                 for doc in self.docsum.similarity_search(
                     text,
                     self.docsum.n_results,
+                    collection_name
                 )
             ]
 
