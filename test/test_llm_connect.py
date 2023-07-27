@@ -10,6 +10,7 @@ from biochatter.llm_connect import (
 from openai.error import InvalidRequestError
 import pytest
 
+
 def test_empty_messages():
     convo = GptConversation(
         model_name="gpt-3.5-turbo",
@@ -99,4 +100,4 @@ def test_azure():
         base=os.getenv("OPENAI_API_BASE"),
     )
 
-    convo.set_api_key(os.getenv("OPENAI_API_KEY"))
+    assert convo.set_api_key(os.getenv("OPENAI_API_KEY"))
