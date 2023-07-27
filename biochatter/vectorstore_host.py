@@ -17,19 +17,35 @@ def _grab_text_field_name(fields: List[FieldSchema]) -> str | None:
         prev_field = x
     return None
 
-def is_valid_alias(alias: str) -> Optional[Tuple]:
+def extract_from_alias(alias: str) -> Optional[Tuple]:
     # valud alias is {base64}_c{uuid4.hex}
     pattern = r"^([0-9a-zA-Z_]+)_c([a-f0-9]{32})$"
     match = re.fullmatch(pattern, alias)
     return None if not match else match.groups()
 
 def string_to_base64(txt: str) -> str:
-    converted = base64.urlsafe_b64encode(txt.encode("utf-8")).decode("utf-8")
-    return converted.replace('-', 'a_a').replace("=", "b_b")
+    '''
+    As collection alias only supports numbers, letters and underscores, we have
+    to encode document name to url base64 string, and encode "-" and "=" of base64
+    string to "a_a" and "b_b"
+    '''
+    try:
+        converted = base64.urlsafe_b64encode(txt.encode("utf-8")).decode("utf-8")
+        return converted.replace('-', 'a_a').replace("=", "b_b")
+    except Exception as e:
+        logger.error(e)
+        raise e
 
 def base64_to_string(b64_txt: str) -> str:
-    converted = b64_txt.replace('a_a', '-').replace("b_b", "=")
-    return base64.urlsafe_b64decode(converted).decode("utf-8")
+    '''
+    Decode base64 string to document name
+    '''
+    try:
+        converted = b64_txt.replace('a_a', '-').replace("b_b", "=")
+        return base64.urlsafe_b64decode(converted).decode("utf-8")
+    except Exception as e:
+        logger.error(e)
+        return "Unknow document"
 
 
 class VectorCollection:
@@ -75,7 +91,7 @@ class VectorDatabaseHostMilvus:
                 continue
             
             for alias in col.aliases:
-                matched_grp = is_valid_alias(alias)
+                matched_grp = extract_from_alias(alias)
                 if not matched_grp:
                     continue
                 text_field = _grab_text_field_name(col.schema.fields)

@@ -57,15 +57,15 @@ class DocumentEmbedder:
             "host": "127.0.0.1",
             "port": "19530",
         }
+        self.document = None
+        
         # TODO: vector db selection
         self.vector_db_vendor = vector_db_vendor or "milvus"
-        
-        self.document = None
 
         # instantiate VectorDatabaseHost
         self.database_host = None
         self._init_database_host()
-        # Todo: remove temporary attribute current_collection_name
+        # TODO: remove temporary attribute current_collection_name
         # The current collection name is intended to be saved and passed from front-end when calling similarity_search()
         # and drop_collection(). However, to avoid breaking existing ChatGSE code, we introduce it temporarily. Once 
         # ChatGSE is updated to store and pass current collection name with each request, we can remove this temporary
@@ -75,7 +75,6 @@ class DocumentEmbedder:
     def _init_database_host(self):
         if self.vector_db_vendor == "milvus":
             self.database_host = VectorDatabaseHostMilvus(embeddings=self.embeddings, connection_args=self.connection_args)
-            self.connect(self.connection_args["host"], self.connection_args["port"])
         else:
             raise NotImplementedError(self.vector_db_vendor)
         
@@ -135,6 +134,8 @@ class DocumentEmbedder:
             query (str): query string
 
             k (int, optional): number of closest matches to return. Defaults to 3.
+
+            collection_name (str): search in collection {collection_name}
 
         """
         collection_name = collection_name or self.current_collection_name
