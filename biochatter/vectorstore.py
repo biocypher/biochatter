@@ -4,7 +4,7 @@
 # do similarity search
 # return x closes matches for in-context learning
 
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from langchain.schema import Document
 from langchain.embeddings.openai import OpenAIEmbeddings
@@ -14,6 +14,9 @@ from langchain.vectorstores import Milvus
 
 import fitz  # this is PyMuPDF (PyPI pymupdf package, not fitz)
 from transformers import GPT2TokenizerFast
+
+from biochatter.vectorstore_host import VectorDatabaseHostMilvus
+
 
 class DocumentEmbedder:
     def __init__(
@@ -55,11 +58,28 @@ class DocumentEmbedder:
             "host": "127.0.0.1",
             "port": "19530",
         }
+        self.document = None
+
         # TODO: vector db selection
         self.vector_db_vendor = vector_db_vendor or "milvus"
-        self.vector_db = None
 
-        self.document = None
+        # instantiate VectorDatabaseHost
+        self.database_host = None
+        self._init_database_host()
+        # TODO: remove temporary attribute current_collection_name
+        # The current collection name is intended to be saved and passed from front-end when calling similarity_search()
+        # and drop_collection(). However, to avoid breaking existing ChatGSE code, we introduce it temporarily. Once
+        # ChatGSE is updated to store and pass current collection name with each request, we can remove this temporary
+        # current_collection_name attribute.
+        self.current_collection_name = None
+
+    def _init_database_host(self):
+        if self.vector_db_vendor == "milvus":
+            self.database_host = VectorDatabaseHostMilvus(
+                embeddings=self.embeddings, connection_args=self.connection_args
+            )
+        else:
+            raise NotImplementedError(self.vector_db_vendor)
 
     def set_chunk_siue(self, chunk_size: int) -> None:
         self.chunk_size = chunk_size
@@ -73,52 +93,62 @@ class DocumentEmbedder:
     def set_document(self, document: List[Document]) -> None:
         self.document = document
 
-    def _load_document(self, path: str) -> None:
-        reader = DocumentReader()
-        self.document = reader.load_document(path)
-
     def _characters_splitter(self) -> RecursiveCharacterTextSplitter:
         return RecursiveCharacterTextSplitter(
             chunk_size=self.chunk_size,
             chunk_overlap=self.chunk_overlap,
-            separators=self.separators
+            separators=self.separators,
         )
+
     def _tokens_splitter(self) -> RecursiveCharacterTextSplitter:
         DEFAULT_OPENAI_MODEL = "gpt-3.5-turbo"
         HUGGINGFACE_MODELS = ["bigscience/bloom"]
         if self.model_name and self.model_name in HUGGINGFACE_MODELS:
             tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
             return RecursiveCharacterTextSplitter.from_huggingface_tokenizer(
-                tokenizer, 
+                tokenizer,
                 chunk_size=self.chunk_size,
                 chunk_overlap=self.chunk_overlap,
-                separators=self.separators
+                separators=self.separators,
             )
         else:
             return RecursiveCharacterTextSplitter.from_tiktoken_encoder(
                 encoding_name="",
-                model_name=DEFAULT_OPENAI_MODEL if not self.model_name else self.model_name,
+                model_name=DEFAULT_OPENAI_MODEL
+                if not self.model_name
+                else self.model_name,
                 chunk_size=self.chunk_size,
                 chunk_overlap=self.chunk_overlap,
-                separators=self.separators
+                separators=self.separators,
             )
+
     def _text_splitter(self) -> RecursiveCharacterTextSplitter:
-        return self._characters_splitter() if self.split_by_characters else self._tokens_splitter()
+        return (
+            self._characters_splitter()
+            if self.split_by_characters
+            else self._tokens_splitter()
+        )
+
     def split_document(self) -> None:
         text_splitter = self._text_splitter()
         self.split = text_splitter.split_documents(self.document)
 
-    def store_embeddings(self) -> None:
-        if self.vector_db_vendor == "milvus":
-            self.vector_db = Milvus.from_documents(
-                documents=self.split,
-                embedding=self.embeddings,
-                connection_args=self.connection_args,
-            )
-        else:
-            raise NotImplementedError(self.vector_db_vendor)
+    def store_embeddings(
+        self, doc_name: Optional[str] = "document"
+    ) -> Dict[str, str]:
+        vector_collection = self.database_host.store_embedding(
+            doc_name=doc_name,
+            documents=self.split,
+        )
+        self.current_collection_name = vector_collection["collection_name"]
+        return vector_collection
 
-    def similarity_search(self, query: str, k: int = 3):
+    def similarity_search(
+        self,
+        query: str,
+        k: int = 3,
+        collection_name: Optional[str] = None,
+    ):
         """
         Returns top n closest matches to query from vector store.
 
@@ -128,15 +158,22 @@ class DocumentEmbedder:
             k (int, optional): number of closest matches to return. Defaults to
             3.
 
+            collection_name (str): search in collection {collection_name}
+
         """
-        if self.vector_db_vendor == "milvus":
-            if not self.vector_db:
-                raise ValueError("No vector store loaded")
-            return self.vector_db.similarity_search(
-                query=query, k=k or self.n_results
-            )
-        else:
-            raise NotImplementedError(self.vector_db_vendor)
+        collection_name = collection_name or self.current_collection_name
+        return self.database_host.similarity_search(
+            collection_name=collection_name, query=query, k=k or self.n_results
+        )
+
+    def connect(self, host: str, port: str) -> None:
+        self.database_host.connect(host, port)
+
+    def get_all_collections(self) -> List[Dict[str, str]]:
+        return self.database_host.collections
+
+    def drop_collection(self, collection_name: str) -> None:
+        self.database_host.drop_collection(collection_name)
 
 
 class DocumentReader:
