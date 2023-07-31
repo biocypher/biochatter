@@ -399,7 +399,7 @@ referencing = ">=0.28.0"
 
 [[package]]
 name = "langchain"
-version = "0.0.146"
+version = "0.0.147"
 description = "Building applications with LLMs through composability"
 category = "main"
 optional = false
@@ -1720,8 +1720,8 @@ jsonschema-specifications = [
     {file = "jsonschema_specifications-2023.7.1.tar.gz", hash = "sha256:c91a50404e88a1f6ba40636778e2ee08f6e24c5613fe4c53ac24578a5a7f72bb"},
 ]
 langchain = [
-    {file = "langchain-0.0.146-py3-none-any.whl", hash = "sha256:efd48f8b4af11ddba153078eb84f5d467e3e3f1ed0f3e4b0124ade140ba05b57"},
-    {file = "langchain-0.0.146.tar.gz", hash = "sha256:20953a1233b0a3de4aed7f77f2d745009318dd6db80a9656ef528e842a2d6063"},
+    {file = "langchain-0.0.147-py3-none-any.whl", hash = "sha256:8d2b5cde9224d1fa38c3134ab9db1df4f583e44e28789e38066e036bd97e1993"},
+    {file = "langchain-0.0.147.tar.gz", hash = "sha256:6af9ddc60e01a24ac481898ae71b894b4eb6b7f94bead49913cf4104ab494a5c"},
 ]
 markdown-it-py = [
     {file = "markdown-it-py-3.0.0.tar.gz", hash = "sha256:e3f60a94fa066dc52ec76661e37c851cb232d92f9886b15cb560aaada2df8feb"},

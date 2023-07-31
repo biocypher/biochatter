@@ -119,7 +119,7 @@ class DocumentEmbedder:
 
     def save_document(self, doc: List[Document]) -> str:
         '''
-        This function saves document to vector database
+        This function saves document to the vector database
         Args:
             doc List[Document]: document content, read with DocumentReader load_document(), 
                 or document_from_pdf(), document_from_txt()

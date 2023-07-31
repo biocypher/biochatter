@@ -294,6 +294,7 @@ class VectorDatabaseHostMilvus:
             del_res = self._col_metadata.delete(expr)
             aligned_metadata = align_metadata(res, True)
             self._col_metadata.insert(aligned_metadata)
+            self._col_metadata.flush()
             return True
         except MilvusException as e:
             logger.error(e)

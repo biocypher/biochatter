@@ -17,8 +17,7 @@ This test needs OPENAI_API_KEY in the environment and a local milvus server
 if os.getenv("DEVCONTAINER"):
     _HOST = "milvus-standalone"
 else:
-    # _HOST = "127.0.0.1"
-    _HOST = "20.169.154.246"
+    _HOST = "127.0.0.1"
 _PORT = "19530"
 
 NAME_SUFFIX = uuid.uuid4().hex

@@ -4,7 +4,6 @@ from biochatter.vectorstore import (
     Document,
 )
 
-import pytest
 import os
 
 print(os.getcwd())
@@ -13,8 +12,7 @@ print(os.getcwd())
 if os.getenv("DEVCONTAINER"):
     _HOST = "milvus-standalone"
 else:
-    # _HOST = "127.0.0.1"
-    _HOST = "20.169.154.246"
+    _HOST = "127.0.0.1"
 _PORT = "19530"
 
 def test_document_summariser():
