@@ -533,6 +533,12 @@ class AzureGptConversation(GptConversation):
         except openai.error.AuthenticationError as e:
             return False
 
+    def _update_usage_stats(self, model: str, token_usage: dict):
+        """
+        We do not track usage stats for Azure.
+        """
+        return
+
 
 class BloomConversation(Conversation):
     def __init__(
