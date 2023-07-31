@@ -1,13 +1,13 @@
-import logging
+import logging, uuid, random
 from typing import List, Optional, Tuple, Dict
-import re
-import base64
 from pymilvus import (
     MilvusException,
     connections,
     Collection,
     utility,
+    DataType,
     FieldSchema,
+    CollectionSchema
 )
 from langchain.vectorstores import Milvus
 from langchain.embeddings import OpenAIEmbeddings
@@ -15,182 +15,299 @@ from langchain.schema import Document
 
 logger = logging.getLogger(__name__)
 
+DOCUMENT_METADATA_COLLECTION_NAME = "DocumentMetadata"
+DOCUMENT_EMBEDDINGS_COLLECTION_NAME = "DocumentEmbeddings"
 
-def _grab_text_field_name(fields: List[FieldSchema]) -> str | None:
-    prev_field = None
-    for x in fields:
-        if x.auto_id:
-            return prev_field.name
-        prev_field = x
-    return None
+METADATA_VECTOR_DIM = 2
+METADATA_FIELDS = [
+    "id", "name", "author", "title", "format", "subject",
+    "creator", "producer", "creationDate", "modDate", "source",
+]
+def align_metadata(metadata: List[Dict], isDeleted: Optional[bool]=False):
+    ret = []
+    fields = METADATA_FIELDS.copy()
+    fields.pop(0)
+    for ix, k in enumerate(fields):
+        ret.append([item[k] if k in item else "unknown" for item in metadata])
+    
+    ret.append([[random.random() for _ in range(METADATA_VECTOR_DIM)] for _ in range(len(metadata))])
+    ret.append([isDeleted for _ in metadata])
+    return ret
 
-
-def extract_from_alias(alias: str) -> Optional[Tuple]:
-    # valid alias is {base64}_c{uuid4.hex}
-    pattern = r"^([0-9a-zA-Z_]+)_c([a-f0-9]{32})$"
-    match = re.fullmatch(pattern, alias)
-    return None if not match else match.groups()
-
-
-def string_to_base64(txt: str) -> str:
-    """
-    As collection alias only supports numbers, letters and underscores, we have
-    to encode document name to url base64 string, and encode "-" and "=" of base64
-    string to "a_a" and "b_b"
-    """
-    try:
-        converted = base64.urlsafe_b64encode(txt.encode("utf-8")).decode(
-            "utf-8"
-        )
-        return converted.replace("-", "a_a").replace("=", "b_b")
-    except Exception as e:
-        logger.error(e)
-        raise e
-
-
-def base64_to_string(b64_txt: str) -> str:
-    """
-    Decode base64 string to document name
-    """
-    try:
-        converted = b64_txt.replace("a_a", "-").replace("b_b", "=")
-        return base64.urlsafe_b64decode(converted).decode("utf-8")
-    except Exception as e:
-        logger.error(e)
-        return "Unknow document"
-
-
-class VectorCollection:
-    def __init__(
-        self, col_name: str, doc_name: str, text_field: Optional[str] = "text"
-    ) -> None:
-        self.collection_name = col_name
-        self.document_name = doc_name
-        self.text_field = text_field
-
+def align_embeddings(docs: List[Document], meta_id: int) -> List[Document]:
+    ret = []
+    for doc in docs:
+        ret.append(Document(page_content=doc.page_content, metadata={"meta_id": meta_id}))
+    return ret
 
 class VectorDatabaseHostMilvus:
     def __init__(
         self,
-        embeddings: Optional[OpenAIEmbeddings] = None,
-        connection_args: Optional[dict] = None,
+        embedding_func: Optional[OpenAIEmbeddings] = None,
+        connection_args: Optional[Dict] = None,
+        embedding_collection_name: Optional[str] = None,
+        metadata_collection_name: Optional[str] = None
     ):
-        self._collections: List[VectorCollection] = []
-        self._embeddings: Optional[OpenAIEmbeddings] = embeddings
+        self._embedding_func = embedding_func
+        self._col_embeddings: Optional[Milvus] = None
+        self._col_metadata: Optional[Collection] = None
         self._connection_args = connection_args or {
             "host": "127.0.0.1",
-            "port": "19530",
+            "port": "19530"
         }
-
+        self._embedding_name = embedding_collection_name or DOCUMENT_EMBEDDINGS_COLLECTION_NAME
+        self._metadata_name = metadata_collection_name or DOCUMENT_METADATA_COLLECTION_NAME
+    
     def connect(self, host: str, port: str) -> None:
+        self._connect(host, port)
+        self._init_host()
+
+    def _connect(self, host: str, port: str) -> None:
         self._connection_args = {"host": host, "port": port}
-        self._init_host(host, port)
+        self.alias = self._create_connection_alias(host, port)
+    
+    def _init_host(self) -> None:
+        self._create_collections()
 
-    def _init_host(self, host: str, port: str):
+
+    def _create_connection_alias(self, host: str, port: str) -> str:
+        alias = uuid.uuid4().hex
         try:
-            connections.connect(host=host, port=port)
+            connections.connect(host=host, port=port, alias=alias)
+            logger.debug(f"Created new connection using: {alias}")
+            return alias
         except MilvusException as e:
-            logger.error(f"Failed to create connection to {host}:{port}")
+            logger.error(f"Failed to create  new connection using: {alias}")
             raise e
 
-        self._collections = []
-        collections = utility.list_collections()
-        for col_name in collections:
-            col = Collection(col_name)
-            if len(col.aliases) == 0:
-                continue
-
-            for alias in col.aliases:
-                matched_grp = extract_from_alias(alias)
-                if not matched_grp:
-                    continue
-                text_field = _grab_text_field_name(col.schema.fields)
-                if not text_field:
-                    continue
-                docname = matched_grp[0]
-                docname = base64_to_string(docname)
-                self._collections.append(
-                    VectorCollection(
-                        col_name=col_name,
-                        doc_name=docname,
-                        text_field=text_field,
-                    )
-                )
-                break
-
-    @property
-    def collections(self) -> List[Dict[str, str]]:
-        return [
-            {
-                "document_name": col.document_name,
-                "collection_name": col.collection_name,
-            }
-            for col in self._collections
-        ]
-
-    def _find_vector_collection(
-        self, collection_name: str
-    ) -> Optional[VectorCollection]:
-        for obj in self._collections:
-            if obj.collection_name == collection_name:
-                return obj
-        return None
-
-    def _remove_vector_collection(self, collection_name: str) -> bool:
-        for obj in self._collections:
-            if obj.collection_name == collection_name:
-                self._collections.remove(obj)
-                return True
-        return False
-
-    def store_embedding(
-        self,
-        doc_name: str,
-        documents: List[Document],
-    ) -> Dict[str, str]:
-        db = Milvus.from_documents(
-            documents=documents,
-            embedding=self._embeddings,
-            connection_args=self._connection_args,
-        )
-        encoded_doc_name = string_to_base64(doc_name)
-        alias = f"{encoded_doc_name}_{db.collection_name}"
-        utility.create_alias(db.collection_name, alias=alias)
-        vector_collection = VectorCollection(
-            col_name=db.collection_name,
-            doc_name=doc_name,
-            text_field=db.text_field,
-        )
-        self._collections.append(vector_collection)
-        return {
-            "document_name": doc_name,
-            "collection_name": db.collection_name,
-        }
-
-    def similarity_search(
-        self, collection_name: str, query: str, k: int = 3
-    ) -> List[Document]:
-        vector_coll = self._find_vector_collection(collection_name)
-        if not vector_coll:
-            raise ValueError("No current collection loaded")
-        try:
-            db = Milvus(
-                embedding_function=self._embeddings,
-                collection_name=collection_name,
-                connection_args=self._connection_args,
-                text_field=vector_coll.text_field,
+    def _create_collections(self) -> None:
+        '''
+        This function handles creating or loading the embedding and metadata collections
+        '''
+        embedding_existed = utility.has_collection(self._embedding_name, using=self.alias)
+        meta_existed = utility.has_collection(self._metadata_name, using=self.alias)
+        if meta_existed:
+            self._col_metadata = Collection(self._metadata_name, using=self.alias)
+            self._col_metadata.load()
+        else:
+            self._create_metadata_collection_directly()
+        if embedding_existed:
+            self._col_embeddings = Milvus(
+                embedding_function=self._embedding_func,
+                collection_name=self._embedding_name,
+                connection_args=self._connection_args
             )
-            return db.similarity_search(query=query, k=k)
+        else:
+            self._create_embeddings_collection_directly()
+        
+        self._create_metadata_collection_index()
+        self._col_metadata.load()
+        
+
+    def _create_metadata_collection_index(self):
+        if not isinstance(self._col_metadata, Collection) or \
+            len(self._col_metadata.indexes) > 0:
+            return
+        index_params = {
+            "metric_type": "L2",
+            "index_type": "HNSW",
+            "params": {"M": 8, "efConstruction": 64},
+        }
+        try:
+            self._col_metadata.create_index(
+                field_name="embedding",
+                index_params=index_params,
+                using=self.alias
+            )
+        except MilvusException as e:
+            logger.error(f"Failed to create index for meta collection {self._metadata_name}")
+            raise e
+        
+    def _create_metadata_collection_directly(self) -> None:
+        doc_id = FieldSchema(
+            name="id",
+            dtype=DataType.INT64,
+            is_primary=True,
+            auto_id=True
+        )
+        doc_name = FieldSchema(
+            name="name",
+            dtype=DataType.VARCHAR,
+            max_length=255
+        )
+        doc_author = FieldSchema(
+            name="author",
+            dtype=DataType.VARCHAR,
+            max_length=255
+        )
+        doc_title = FieldSchema(
+            name="title",
+            dtype=DataType.VARCHAR,
+            max_length=1000
+        )
+        doc_format = FieldSchema(
+            name="format",
+            dtype=DataType.VARCHAR,
+            max_length=255
+        )
+        doc_subject = FieldSchema(
+            name="subject",
+            dtype=DataType.VARCHAR,
+            max_length=255
+        )
+        doc_creator = FieldSchema(
+            name="creator",
+            dtype=DataType.VARCHAR,
+            max_length=255
+        )
+        doc_producer = FieldSchema(
+            name="producer",
+            dtype=DataType.VARCHAR,
+            max_length=255
+        )
+        doc_creationDate = FieldSchema(
+            name="creationDate",
+            dtype=DataType.VARCHAR,
+            max_length=64
+        )
+        doc_modDate = FieldSchema(
+            name="modDate",
+            dtype=DataType.VARCHAR,
+            max_length=64
+        )
+        doc_source = FieldSchema(
+            name="source",
+            dtype=DataType.VARCHAR,
+            max_length=1000
+        )
+        embedding = FieldSchema(
+            name="embedding",
+            dtype=DataType.FLOAT_VECTOR,
+            dim=METADATA_VECTOR_DIM,
+        )
+        isDeleted = FieldSchema(
+            name="isDeleted",
+            dtype=DataType.BOOL,
+        )
+        fields = [
+            doc_id,      doc_name,    doc_author,   doc_title,        doc_format,
+            doc_subject, doc_creator, doc_producer, doc_creationDate, doc_modDate,
+            doc_source,  embedding,   isDeleted,
+        ]
+        schema = CollectionSchema(fields=fields)
+        try:
+            self._col_metadata = Collection(name=self._metadata_name, schema=schema, using=self.alias)
+        except MilvusException as e:
+            logger.error(f"Failed to create collection {self._metadata_name}")
+            raise e
+            
+    def _create_embeddings_collection_directly(self) -> None:
+        try:
+            self._col_embeddings = Milvus(
+                embedding_function=self._embedding_func,
+                collection_name=self._embedding_name,
+                connection_args=self._connection_args
+            )
+        except MilvusException as e:
+            logger.error(f"Failed to create embeddings collection {self._embedding_name}")
+            raise e
+        
+
+    def _insert_data(self, documents: List[Document]) -> Optional[str]:
+        if (len(documents) == 0):
+            return None
+        metadata = [documents[0].metadata]
+        aligned_metadata = align_metadata(metadata)
+        try:
+            result = self._col_metadata.insert(aligned_metadata)
+            meta_id = str(result.primary_keys[0])
+        except MilvusException as e:
+            logger.error(f"Failed to insert meta data")
+            raise e
+        aligned_docs = align_embeddings(documents, meta_id)
+        try:
+            self._col_embeddings = Milvus.from_documents(
+                embedding=self._embedding_func,
+                collection_name=self._embedding_name,
+                connection_args=self._connection_args,
+                documents=aligned_docs
+            )
+        except MilvusException as e:
+            logger.error(f"Failed to insert data to embedding collection {self._embedding_name}")
+            raise e
+        return meta_id
+
+    def store_embeddings(self, documents: List[Document]) -> str:
+        if len(documents) == 0:
+            return
+        return self._insert_data(documents)
+    def _build_embedding_search_expression(self, meta_query_res: List[Dict]) -> Optional[str]:
+        if len(meta_query_res) == 0:
+            return None
+        built_expr = '''meta_id in ['''
+        for item in meta_query_res:
+            id = f'"{item["id"]}",'
+            built_expr += id
+        built_expr = built_expr[:-1]
+        built_expr += ''']'''
+        return built_expr
+    
+    def _join_embedding_and_metadata_results(self, result_embedding: List[Document], result_meta: List[Dict]) -> List[Document]:
+        def _find_metadata_by_id(metadata: List[Dict], id: str) -> Optional[Dict]:
+            for d in metadata:
+                if str(d["id"]) == id:
+                    return d
+            return None
+
+        joined_docs = []
+        for res in result_embedding:
+            found = _find_metadata_by_id(result_meta, res.metadata["meta_id"])
+            if found is None: # discard
+                logger.error(f"Failed to join meta_id {res.metadata['meta_id']}")
+                continue
+            joined_docs.append(
+                Document(page_content=res.page_content, metadata=found)
+            )
+        return joined_docs
+    def similarity_search(
+        self, query: str, k: int=3
+    ) -> List[Document]:
+        result_metadata = self._col_metadata.query(
+            expr="isDeleted == false"
+        )
+        expr = self._build_embedding_search_expression(result_metadata)
+        result_embedding = self._col_embeddings.similarity_search(
+            query=query,
+            k=k,
+            expr=expr
+        )
+        return self._join_embedding_and_metadata_results(result_embedding, result_metadata)
+    
+    def remove_document(self, doc_id: str) -> bool:
+        if not self._col_metadata:
+            return False
+        try:
+            expr = f'id in [{doc_id}]'
+            res = self._col_metadata.query(expr=expr, output_fields=METADATA_FIELDS)
+            if len(res) == 0:
+                return False
+            del_res = self._col_metadata.delete(expr)
+            aligned_metadata = align_metadata(res, True)
+            self._col_metadata.insert(aligned_metadata)
+            return True
+        except MilvusException as e:
+            logger.error(e)
+            raise e
+        
+    def get_all_documents(self) -> List[Dict]:
+        try:
+            result_metadata = self._col_metadata.query(
+                expr="isDeleted == false",
+                output_fields=METADATA_FIELDS
+            )
+            return result_metadata
         except MilvusException as e:
             logger.error(e)
             raise e
 
-    def drop_collection(self, collection_name: str) -> None:
-        if not self._remove_vector_collection(collection_name):
-            return
-        try:
-            coll = Collection(collection_name)
-            coll.drop()
-        except MilvusException as e:
-            logger.error(e)
-            raise e
+

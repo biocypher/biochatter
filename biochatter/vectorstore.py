@@ -27,7 +27,6 @@ class DocumentEmbedder:
         chunk_size: int = 1000,
         chunk_overlap: int = 0,
         split_by_characters: bool = True,
-        document: Optional[Document] = None,
         separators: Optional[list] = None,
         n_results: int = 3,
         model: Optional[str] = None,
@@ -58,25 +57,17 @@ class DocumentEmbedder:
             "host": "127.0.0.1",
             "port": "19530",
         }
-        self.document = None
 
         # TODO: vector db selection
         self.vector_db_vendor = vector_db_vendor or "milvus"
-
         # instantiate VectorDatabaseHost
         self.database_host = None
         self._init_database_host()
-        # TODO: remove temporary attribute current_collection_name
-        # The current collection name is intended to be saved and passed from front-end when calling similarity_search()
-        # and drop_collection(). However, to avoid breaking existing ChatGSE code, we introduce it temporarily. Once
-        # ChatGSE is updated to store and pass current collection name with each request, we can remove this temporary
-        # current_collection_name attribute.
-        self.current_collection_name = None
 
     def _init_database_host(self):
         if self.vector_db_vendor == "milvus":
             self.database_host = VectorDatabaseHostMilvus(
-                embeddings=self.embeddings, connection_args=self.connection_args
+                embedding_func=self.embeddings, connection_args=self.connection_args
             )
         else:
             raise NotImplementedError(self.vector_db_vendor)
@@ -89,9 +80,6 @@ class DocumentEmbedder:
 
     def set_separators(self, separators: list) -> None:
         self.separators = separators
-
-    def set_document(self, document: List[Document]) -> None:
-        self.document = document
 
     def _characters_splitter(self) -> RecursiveCharacterTextSplitter:
         return RecursiveCharacterTextSplitter(
@@ -129,25 +117,33 @@ class DocumentEmbedder:
             else self._tokens_splitter()
         )
 
-    def split_document(self) -> None:
-        text_splitter = self._text_splitter()
-        self.split = text_splitter.split_documents(self.document)
+    def save_document(self, doc: List[Document]) -> str:
+        '''
+        This function saves document to vector database
+        Args:
+            doc List[Document]: document content, read with DocumentReader load_document(), 
+                or document_from_pdf(), document_from_txt()
+        Returns:
+            str: document id, which can be used to remove an uploaded document with remove_document()
+        '''
+        splitted = self._split_document(doc)
+        return self._store_embeddings(splitted)
 
-    def store_embeddings(
-        self, doc_name: Optional[str] = "document"
-    ) -> Dict[str, str]:
-        vector_collection = self.database_host.store_embedding(
-            doc_name=doc_name,
-            documents=self.split,
+    def _split_document(self, document: List[Document]) -> List[Document]:
+        text_splitter = self._text_splitter()
+        return text_splitter.split_documents(document)
+
+    def _store_embeddings(
+        self, doc: List[Document]
+    ) -> str:
+        return self.database_host.store_embeddings(
+            documents=doc
         )
-        self.current_collection_name = vector_collection["collection_name"]
-        return vector_collection
 
     def similarity_search(
         self,
         query: str,
-        k: int = 3,
-        collection_name: Optional[str] = None,
+        k: int = 3
     ):
         """
         Returns top n closest matches to query from vector store.
@@ -161,19 +157,18 @@ class DocumentEmbedder:
             collection_name (str): search in collection {collection_name}
 
         """
-        collection_name = collection_name or self.current_collection_name
         return self.database_host.similarity_search(
-            collection_name=collection_name, query=query, k=k or self.n_results
+            query=query, k=k or self.n_results
         )
 
     def connect(self, host: str, port: str) -> None:
         self.database_host.connect(host, port)
 
-    def get_all_collections(self) -> List[Dict[str, str]]:
-        return self.database_host.collections
+    def get_all_documents(self) -> List[Dict]:
+        return self.database_host.get_all_documents()
 
-    def drop_collection(self, collection_name: str) -> None:
-        self.database_host.drop_collection(collection_name)
+    def remove_document(self, doc_id: str) -> None:
+        self.database_host.remove_document(doc_id)
 
 
 class DocumentReader:

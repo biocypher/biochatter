@@ -9,6 +9,13 @@ import os
 
 print(os.getcwd())
 
+# setup milvus connection
+if os.getenv("DEVCONTAINER"):
+    _HOST = "milvus-standalone"
+else:
+    # _HOST = "127.0.0.1"
+    _HOST = "20.169.154.246"
+_PORT = "19530"
 
 def test_document_summariser():
     # runs long, requires OpenAI API key and local milvus server
@@ -21,25 +28,22 @@ def test_document_summariser():
     reader = DocumentReader()
     doc = reader.document_from_pdf(doc_bytes)
     docsum = DocumentEmbedder()
-    docsum.set_document(doc)
-    docsum.split_document()
-    assert isinstance(docsum.split, list)
-    assert isinstance(docsum.split[0], Document)
-
-    collection = docsum.store_embeddings(doc_name="bc_summary.pdf")
-    assert docsum.current_collection_name is not None
+    docsum.connect(_HOST, _PORT)
+    doc_id = docsum.save_document(doc)
+    assert isinstance(doc_id, str)
+    assert len(doc_id) > 0
 
     query = "What is BioCypher?"
     results = docsum.similarity_search(query)
     assert len(results) == 3
     assert all(["BioCypher" in result.page_content for result in results])
 
-    collections = docsum.get_all_collections()
-    cnt = len(collections)
+    docs = docsum.get_all_documents()
+    cnt = len(docs)
     assert cnt > 0
-    docsum.drop_collection(collection["collection_name"])
-    collections = docsum.get_all_collections()
-    assert (cnt - 1) == len(collections)
+    docsum.remove_document(doc_id)
+    docs = docsum.get_all_documents()
+    assert (cnt - 1) == len(docs)
 
 
 def test_load_txt():
@@ -95,9 +99,9 @@ def check_document_splitter(
     expected_length: int,
 ):
     reader = DocumentReader()
-    docsum.set_document(reader.load_document(fn))
-    docsum.split_document()
-    assert expected_length == len(docsum.split)
+    doc = reader.load_document(fn)
+    splitted = docsum._split_document(doc)
+    assert expected_length == len(splitted)
 
 
 def test_split_by_characters():
