@@ -41,6 +41,12 @@ def align_embeddings(docs: List[Document], meta_id: int) -> List[Document]:
     return ret
 
 class VectorDatabaseHostMilvus:
+    """
+    VectorDatabaseHostMilvus is to manage vector databases in a host:
+    In it, we will manage embedding collection `_col_embeddings:langchain.vectorstores.Milvus` and 
+    metadata collection `_col_metadata:pymilvus.Collection`.
+
+    """
     def __init__(
         self,
         embedding_func: Optional[OpenAIEmbeddings] = None,
@@ -59,6 +65,13 @@ class VectorDatabaseHostMilvus:
         self._metadata_name = metadata_collection_name or DOCUMENT_METADATA_COLLECTION_NAME
     
     def connect(self, host: str, port: str) -> None:
+        """
+        Connects to a host and read two document collections (the default names are: DocumentMetadata 
+        and DocumentEmbeddings), if document collections don't exist, we will create the two collections.
+        Parameters:
+            host str: host ip address
+            port str: host port
+        """
         self._connect(host, port)
         self._init_host()
 
@@ -67,10 +80,18 @@ class VectorDatabaseHostMilvus:
         self.alias = self._create_connection_alias(host, port)
     
     def _init_host(self) -> None:
+        """
+        Initialize host. Will read/create document collection
+        """
         self._create_collections()
 
 
     def _create_connection_alias(self, host: str, port: str) -> str:
+        """
+        connect to host and create a connection alias for metadata collection
+        Returns:
+            str: connection alias
+        """
         alias = uuid.uuid4().hex
         try:
             connections.connect(host=host, port=port, alias=alias)
@@ -104,7 +125,10 @@ class VectorDatabaseHostMilvus:
         self._col_metadata.load()
         
 
-    def _create_metadata_collection_index(self):
+    def _create_metadata_collection_index(self) -> None:
+        """
+        create index for metadata collection
+        """
         if not isinstance(self._col_metadata, Collection) or \
             len(self._col_metadata.indexes) > 0:
             return
@@ -124,6 +148,13 @@ class VectorDatabaseHostMilvus:
             raise e
         
     def _create_metadata_collection_directly(self) -> None:
+        """
+        Create metadata collection.
+        All fields: "id", "name", "author", "title", "format", "subject", "creator", "producer", 
+        "creationDate", "modDate", "source", "embedding", "isDeleted"
+        As vector database requires one vector field, we will create a fake vector "embedding".
+        Field "isDeleted" is used to specify if the document is deleted.
+        """
         doc_id = FieldSchema(
             name="id",
             dtype=DataType.INT64,
@@ -202,6 +233,10 @@ class VectorDatabaseHostMilvus:
             raise e
             
     def _create_embeddings_collection_directly(self) -> None:
+        """
+        Create embedding collection.
+        All fields: "meta_id", "vector"
+        """
         try:
             self._col_embeddings = Milvus(
                 embedding_function=self._embedding_func,
@@ -213,7 +248,15 @@ class VectorDatabaseHostMilvus:
             raise e
         
 
-    def _insert_data(self, documents: List[Document]) -> Optional[str]:
+    def _insert_data(self, documents: List[Document]) -> str:
+        """
+        Insert documents to database.
+        Parameters:
+            documents List[Documents]: documents array, usually from DocumentReader.load_document
+                                       DocumentReader.document_from_pdf, DocumentReader.document_from_txt
+        Returns:
+            str: document id
+        """
         if (len(documents) == 0):
             return None
         metadata = [documents[0].metadata]
@@ -238,14 +281,29 @@ class VectorDatabaseHostMilvus:
         return meta_id
 
     def store_embeddings(self, documents: List[Document]) -> str:
+        """
+        Store documents to database.
+        Arguments;
+            documents List[Documents]: documents array, usually from DocumentReader.load_document
+                                       DocumentReader.document_from_pdf, DocumentReader.document_from_txt
+        Returns:
+            str: document id
+        """
         if len(documents) == 0:
             return
         return self._insert_data(documents)
-    def _build_embedding_search_expression(self, meta_query_res: List[Dict]) -> Optional[str]:
-        if len(meta_query_res) == 0:
+    def _build_embedding_search_expression(self, meta_ids: List[Dict]) -> Optional[str]:
+        """
+        Build search expression for embedding collection. The generated expression is like: "meta_id in [{id1}, {id2}, ...]
+        Parameters:
+            meta_ids: the array of metadata id in metadata collection
+        Returns:
+            str: search expression or None
+        """
+        if len(meta_ids) == 0:
             return None
         built_expr = '''meta_id in ['''
-        for item in meta_query_res:
+        for item in meta_ids:
             id = f'"{item["id"]}",'
             built_expr += id
         built_expr = built_expr[:-1]
@@ -253,6 +311,14 @@ class VectorDatabaseHostMilvus:
         return built_expr
     
     def _join_embedding_and_metadata_results(self, result_embedding: List[Document], result_meta: List[Dict]) -> List[Document]:
+        """
+        Join the search results of embedding collection and results of metadata.
+        Parameters:
+            result_embedding List[Document]: search result of embedding collection
+            result_meta List[Dict]: search result of metadata collection
+        Returns:
+            List[Document]: combined results like [{page_content: str, metadata: {...}}]
+        """
         def _find_metadata_by_id(metadata: List[Dict], id: str) -> Optional[Dict]:
             for d in metadata:
                 if str(d["id"]) == id:
@@ -269,9 +335,22 @@ class VectorDatabaseHostMilvus:
                 Document(page_content=res.page_content, metadata=found)
             )
         return joined_docs
+    
     def similarity_search(
         self, query: str, k: int=3
     ) -> List[Document]:
+        """
+        Similarity search according to query
+        This method will:
+        1). get all non-deleted meta_id and build to search expression for embedding collection
+        2). do similarity search in embedding collection
+        3). combine metadata and embeddings
+        Parameters:
+            query str: query string
+            k: the number of result
+        Returns:
+            List[Document]: search results
+        """
         result_metadata = self._col_metadata.query(
             expr="isDeleted == false"
         )
@@ -284,6 +363,13 @@ class VectorDatabaseHostMilvus:
         return self._join_embedding_and_metadata_results(result_embedding, result_metadata)
     
     def remove_document(self, doc_id: str) -> bool:
+        """
+        Mark the document as deleted
+        Parameters:
+            doc_id str: the document to be deleted
+        Returns: 
+            bool: if the document is deleted
+        """
         if not self._col_metadata:
             return False
         try:
@@ -301,6 +387,10 @@ class VectorDatabaseHostMilvus:
             raise e
         
     def get_all_documents(self) -> List[Dict]:
+        """
+        Returns:
+            List[Dict]: the metadata of all non-deleted documents, [{{id}, {author}, {source}, ...}]
+        """
         try:
             result_metadata = self._col_metadata.query(
                 expr="isDeleted == false",
