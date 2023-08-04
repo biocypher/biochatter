@@ -45,7 +45,12 @@ class VectorDatabaseHostMilvus:
     VectorDatabaseHostMilvus is to manage vector databases in a host:
     In it, we will manage embedding collection `_col_embeddings:langchain.vectorstores.Milvus` and 
     metadata collection `_col_metadata:pymilvus.Collection`.
-
+    A typical workflow is:
+    1. connect to a host, connect()
+    2. get all documents in the host, get_all_documents()
+    3. save document, store_embeddings()
+    4. do similarity search, similarity_search()
+    5. remove a document, remove_document()
     """
     def __init__(
         self,
