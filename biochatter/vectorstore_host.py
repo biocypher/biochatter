@@ -252,10 +252,14 @@ class VectorDatabaseHostMilvus:
     def _create_metadata_collection(self) -> None:
         """
         Create metadata collection.
-        All fields: "id", "name", "author", "title", "format", "subject", "creator", "producer",
-        "creationDate", "modDate", "source", "embedding", "isDeleted"
-        As vector database requires one vector field, we will create a fake vector "embedding".
-        Field "isDeleted" is used to specify if the document is deleted.
+
+        All fields: "id", "name", "author", "title", "format", "subject",
+        "creator", "producer", "creationDate", "modDate", "source", "embedding",
+        "isDeleted".
+
+        As the vector database requires a vector field, we will create a fake
+        vector "embedding". The field "isDeleted" is used to specify if the
+        document is deleted.
         """
         doc_id = FieldSchema(
             name="id", dtype=DataType.INT64, is_primary=True, auto_id=True
