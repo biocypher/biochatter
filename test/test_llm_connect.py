@@ -90,14 +90,14 @@ def test_azure():
     Test OpenAI Azure endpoint functionality. Azure connectivity is enabled by
     setting the corresponding environment variables.
     """
-    openai.proxy = os.getenv("OPENAI_PROXY")
+    openai.proxy = os.getenv("AZURE_TEST_OPENAI_PROXY")
     convo = AzureGptConversation(
-        model_name=os.getenv("OPENAI_MODEL_NAME"),
-        deployment_name=os.getenv("OPENAI_DEPLOYMENT_NAME"),
+        model_name=os.getenv("AZURE_TEST_OPENAI_MODEL_NAME"),
+        deployment_name=os.getenv("AZURE_TEST_OPENAI_DEPLOYMENT_NAME"),
         prompts={},
         split_correction=False,
-        version=os.getenv("OPENAI_API_VERSION"),
-        base=os.getenv("OPENAI_API_BASE"),
+        version=os.getenv("AZURE_TEST_OPENAI_API_VERSION"),
+        base=os.getenv("AZURE_TEST_OPENAI_API_BASE"),
     )
 
-    assert convo.set_api_key(os.getenv("OPENAI_API_KEY"))
+    assert convo.set_api_key(os.getenv("AZURE_TEST_OPENAI_API_KEY"))
