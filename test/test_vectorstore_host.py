@@ -31,7 +31,9 @@ METADATA_NAME = f"DocumentMetadataTest_{NAME_SUFFIX}"
 
 
 def prepare_splitted_documents(
-    doc_path: str, chunk_size: int = 1000, chunk_overlap: int = 20
+    doc_path: str,
+    chunk_size: int = 1000,
+    chunk_overlap: int = 20,
 ) -> List[Document]:
     pdf_path = doc_path
     reader = DocumentReader()
@@ -46,6 +48,7 @@ def prepare_splitted_documents(
 
 def setup_module(module):
     pass
+
 
 def teardown_module(module):
     alias = uuid.uuid4().hex
@@ -63,18 +66,19 @@ def test_connect_host():
         embedding_func=OpenAIEmbeddings(),
         connection_args={"host": _HOST, "port": _PORT},
         embedding_collection_name=EMBEDDING_NAME,
-        metadata_collection_name=METADATA_NAME
+        metadata_collection_name=METADATA_NAME,
     )
     dbHost.connect(_HOST, _PORT)
     assert dbHost._col_embeddings is not None
     assert dbHost._col_metadata is not None
+
 
 def test_store_embeddings():
     dbHost = VectorDatabaseHostMilvus(
         embedding_func=OpenAIEmbeddings(),
         connection_args={"host": _HOST, "port": _PORT},
         embedding_collection_name=EMBEDDING_NAME,
-        metadata_collection_name=METADATA_NAME
+        metadata_collection_name=METADATA_NAME,
     )
     dbHost.connect(_HOST, _PORT)
     splitted_docs = prepare_splitted_documents("test/dcn.pdf")
@@ -87,12 +91,13 @@ def test_store_embeddings():
     doc_id = dbHost.store_embeddings(splitted_docs)
     assert doc_id is not None
 
+
 def test_similarity_search():
     dbHost = VectorDatabaseHostMilvus(
         embedding_func=OpenAIEmbeddings(),
         connection_args={"host": _HOST, "port": _PORT},
         embedding_collection_name=EMBEDDING_NAME,
-        metadata_collection_name=METADATA_NAME
+        metadata_collection_name=METADATA_NAME,
     )
     dbHost.connect(_HOST, _PORT)
     results = dbHost.similarity_search(
@@ -101,12 +106,13 @@ def test_similarity_search():
     )
     assert len(results) > 0
 
+
 def test_remove_document():
     dbHost = VectorDatabaseHostMilvus(
         embedding_func=OpenAIEmbeddings(),
         connection_args={"host": _HOST, "port": _PORT},
         embedding_collection_name=EMBEDDING_NAME,
-        metadata_collection_name=METADATA_NAME
+        metadata_collection_name=METADATA_NAME,
     )
     dbHost.connect(_HOST, _PORT)
     docs = dbHost.get_all_documents()
@@ -116,5 +122,3 @@ def test_remove_document():
     res = dbHost.remove_document(docs[0]["id"])
     assert res
     assert (cnt - 1) == len(dbHost.get_all_documents())
-
-
