@@ -10,7 +10,9 @@ from biochatter.vectorstore import DocumentReader
 from biochatter.vectorstore_host import VectorDatabaseHostMilvus
 
 """
-This test needs OPENAI_API_KEY in the environment and a local milvus server
+This test needs OPENAI_API_KEY in the environment and a local milvus server. The
+entire module needs to be run in one go, as the collections are created and
+called in different tests.
 """
 
 # setup milvus connection
@@ -21,6 +23,9 @@ else:
 _PORT = "19530"
 
 NAME_SUFFIX = uuid.uuid4().hex
+# TODO: not persistent between runs of the test module, i.e. requires the module
+# to be run in one go
+
 EMBEDDING_NAME = f"DocumentEmbeddingTest_{NAME_SUFFIX}"
 METADATA_NAME = f"DocumentMetadataTest_{NAME_SUFFIX}"
 
