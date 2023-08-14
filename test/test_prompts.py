@@ -1,10 +1,10 @@
-from biochatter.prompts import BioCypherPrompts
+from biochatter.prompts import BioCypherPrompt
 import pytest
 
 
 @pytest.fixture
 def ps():
-    return BioCypherPrompts(schema_config_path="test/test_schema_config.yaml")
+    return BioCypherPrompt(schema_config_path="test/test_schema_config.yaml")
 
 
 def test_biocypher_prompts(ps):
@@ -42,9 +42,10 @@ def test_entity_selection(ps):
     TODO: a couple more representative cases
 
     """
-    ps.select_entities(
+    success = ps.select_entities(
         question="Which genes are associated with mucoviscidosis?"
     )
+    assert success
     assert ps.selected_entities == ["Gene", "Disease"]
     assert ps.selected_relationships == ["PERTURBED_IN_DISEASE"]
 
