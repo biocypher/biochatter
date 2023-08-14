@@ -90,7 +90,7 @@ def test_query_generation(ps):
     TODO: need to know verbose name of disease. should be an additional mapping
     step to get the disease name used in the database. should probably be
     non-LLM-based, since the list of possible matches could be very long. Use a
-    combination of GILDA and search?
+    combination of GILDA and fuzzy search? dedicated synonym KG?
 
     TODO: special case relationship as node
 
