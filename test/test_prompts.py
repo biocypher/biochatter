@@ -47,15 +47,17 @@ def test_entity_selection(ps):
     )
     assert success
     assert ps.selected_entities == ["Gene", "Disease"]
-    assert ps.selected_relationships == ["PERTURBED_IN_DISEASE"]
+    assert ps.selected_relationships == ["GeneToDiseaseAssociation"]
+    assert ps.selected_relationship_labels == ["PERTURBED_IN_DISEASE"]
 
 
 def test_property_selection(ps):
     """
 
     The second step is to identify the properties of the relevant KG components
-    to enable constraining the query. Requires a question and the pre-selected
-    entities and relationships as input, the properties are inferred from the
+    to enable constraining the query. Requires the pre-selected entities and
+    relationships as input. The question is reused from the entity selection
+    (but can optionally be provided), and the properties are inferred from the
     schema.
 
     "You have access to a knowledge graph that contains {entities} and
@@ -66,11 +68,14 @@ def test_property_selection(ps):
     example above, without any additional text."
 
     """
-    assert ps.select_properties(
+    success = ps.select_properties(
         question="Which genes are associated with mucoviscidosis?",
         entities=["Gene", "Disease"],
-        relationships=["PERTURBED_IN_DISEASE"],
-    ) == {"Disease": ["name"]}
+        relationships=["GeneToDiseaseAssociation"],
+    )
+    assert success
+    assert "Disease" in ps.selected_properties.keys()
+    assert "name" in ps.selected_properties.get("Disease")
 
 
 def test_query_generation(ps):

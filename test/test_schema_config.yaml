@@ -30,6 +30,10 @@ disease:
   represented_as: node
   preferred_id: doid
   input_label: Disease
+  properties:
+    name: str
+    ICD10: str
+    DSM5: str
 
 # ---
 # Associations
@@ -51,3 +55,7 @@ gene to disease association:
   label_as_edge: PERTURBED_IN_DISEASE
   input_label: [protein_disease, gene_disease]
   exclude_properties: accession
+  properties:
+    score: float
+    source: str
+    evidence: str
