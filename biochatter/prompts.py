@@ -148,7 +148,6 @@ class BioCypherPrompt:
         entities = entities or self.selected_entities
         relationships = relationships or self.selected_relationships
 
-        # raise error if not at least one of entities or relationships exists
         if not entities and not relationships:
             raise ValueError(
                 "No entities or relationships provided, and none available "
@@ -157,8 +156,6 @@ class BioCypherPrompt:
                 "(`select_entities()`) step first."
             )
 
-        # subset the entities and relationships dictionaries to only the used
-        # keys and only the property value
         e_props = {}
         for entity in entities:
             if self.entities[entity].get("properties"):
