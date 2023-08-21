@@ -501,7 +501,7 @@ class VectorDatabaseHostMilvus:
 
     def remove_document(self, doc_id: str) -> bool:
         """
-        Mark the document as deleted.
+        Remove the document include meta data and its embeddings.
 
         Args:
             doc_id (str): the document to be deleted
@@ -519,9 +519,15 @@ class VectorDatabaseHostMilvus:
             if len(res) == 0:
                 return False
             del_res = self._col_metadata.delete(expr)
-            aligned_metadata = align_metadata(res, True)
-            self._col_metadata.insert(aligned_metadata)
             self._col_metadata.flush()
+
+            res = self._col_embeddings.col.query(f'meta_id in ["{doc_id}"]')
+            if len(res) == 0:
+                return True
+            ids = [item["pk"] for item in res]
+            embedding_expr = f'pk in {ids}'
+            del_res = self._col_embeddings.col.delete(expr=embedding_expr)
+            self._col_embeddings.col.flush()
             return True
         except MilvusException as e:
             logger.error(e)

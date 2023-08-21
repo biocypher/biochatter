@@ -23,8 +23,6 @@ else:
 _PORT = "19530"
 
 NAME_SUFFIX = uuid.uuid4().hex
-# TODO: not persistent between runs of the test module, i.e. requires the module
-# to be run in one go
 
 EMBEDDING_NAME = f"DocumentEmbeddingTest_{NAME_SUFFIX}"
 METADATA_NAME = f"DocumentMetadataTest_{NAME_SUFFIX}"
@@ -46,41 +44,20 @@ def prepare_splitted_documents(
     return text_splitter.split_documents(docs)
 
 
-def setup_module(module):
-    pass
-
-
-def teardown_module(module):
-    alias = uuid.uuid4().hex
-    connections.connect(host=_HOST, port=_PORT, alias=alias)
-    if utility.has_collection(EMBEDDING_NAME, using=alias):
-        col = Collection(EMBEDDING_NAME, using=alias)
-        col.drop()
-    if utility.has_collection(METADATA_NAME, using=alias):
-        col = Collection(METADATA_NAME, using=alias)
-        col.drop()
-
-
-def test_connect_host():
+@pytest.fixture
+def dbHost():
+    # create dbHost
     dbHost = VectorDatabaseHostMilvus(
         embedding_func=OpenAIEmbeddings(),
         connection_args={"host": _HOST, "port": _PORT},
         embedding_collection_name=EMBEDDING_NAME,
-        metadata_collection_name=METADATA_NAME,
+        metadata_collection_name=METADATA_NAME
     )
     dbHost.connect(_HOST, _PORT)
     assert dbHost._col_embeddings is not None
     assert dbHost._col_metadata is not None
 
-
-def test_store_embeddings():
-    dbHost = VectorDatabaseHostMilvus(
-        embedding_func=OpenAIEmbeddings(),
-        connection_args={"host": _HOST, "port": _PORT},
-        embedding_collection_name=EMBEDDING_NAME,
-        metadata_collection_name=METADATA_NAME,
-    )
-    dbHost.connect(_HOST, _PORT)
+    # save embeddings
     splitted_docs = prepare_splitted_documents("test/dcn.pdf")
     doc_id = dbHost.store_embeddings(splitted_docs)
     assert doc_id is not None
@@ -90,9 +67,19 @@ def test_store_embeddings():
     splitted_docs = prepare_splitted_documents("test/bc_summary.txt")
     doc_id = dbHost.store_embeddings(splitted_docs)
     assert doc_id is not None
+    yield dbHost
 
+    # clean up
+    alias = uuid.uuid4().hex
+    connections.connect(host=_HOST, port=_PORT, alias=alias)
+    if utility.has_collection(EMBEDDING_NAME, using=alias):
+        col = Collection(EMBEDDING_NAME, using=alias)
+        col.drop()
+    if utility.has_collection(METADATA_NAME, using=alias):
+        col = Collection(METADATA_NAME, using=alias)
+        col.drop()
 
-def test_similarity_search():
+def test_similarity_search(dbHost):
     dbHost = VectorDatabaseHostMilvus(
         embedding_func=OpenAIEmbeddings(),
         connection_args={"host": _HOST, "port": _PORT},
@@ -107,7 +94,7 @@ def test_similarity_search():
     assert len(results) > 0
 
 
-def test_remove_document():
+def test_remove_document(dbHost):
     dbHost = VectorDatabaseHostMilvus(
         embedding_func=OpenAIEmbeddings(),
         connection_args={"host": _HOST, "port": _PORT},
