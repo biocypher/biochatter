@@ -7,7 +7,10 @@ from .llm_connect import GptConversation
 
 
 class BioCypherPrompt:
-    def __init__(self, schema_config_path: str):
+    def __init__(
+        self,
+        schema_config_or_info_path: str,
+    ):
         """
 
         Given a biocypher schema configuration, extract the entities and
@@ -21,32 +24,48 @@ class BioCypherPrompt:
             schema_config_path: Path to a biocypher schema configuration file.
 
         """
+
         # read the schema configuration
-        with open(schema_config_path, "r") as f:
+        with open(schema_config_or_info_path, "r") as f:
             schema_config = yaml.safe_load(f)
+
+        # check whether it is the original schema config or the output of
+        # biocypher info
+        is_schema_info = schema_config.get("is_schema_info", False)
 
         # extract the entities and relationships: each top level key that has
         # a 'represented_as' key
         self.entities = {}
         self.relationships = {}
-        for key, value in schema_config.items():
-            # hacky, better with biocypher output
-            name_indicates_relationship = (
-                "interaction" in key.lower() or "association" in key.lower()
-            )
-            if "represented_as" in value:
-                if (
-                    value["represented_as"] == "node"
-                    and not name_indicates_relationship
-                ):
-                    self.entities[sentencecase_to_pascalcase(key)] = value
-                elif (
-                    value["represented_as"] == "node"
-                    and name_indicates_relationship
-                ):
-                    self.relationships[sentencecase_to_pascalcase(key)] = value
-                elif value["represented_as"] == "edge":
-                    self.relationships[sentencecase_to_pascalcase(key)] = value
+        if not is_schema_info:
+            for key, value in schema_config.items():
+                # hacky, better with biocypher output
+                name_indicates_relationship = (
+                    "interaction" in key.lower() or "association" in key.lower()
+                )
+                if "represented_as" in value:
+                    if (
+                        value["represented_as"] == "node"
+                        and not name_indicates_relationship
+                    ):
+                        self.entities[sentencecase_to_pascalcase(key)] = value
+                    elif (
+                        value["represented_as"] == "node"
+                        and name_indicates_relationship
+                    ):
+                        self.relationships[
+                            sentencecase_to_pascalcase(key)
+                        ] = value
+                    elif value["represented_as"] == "edge":
+                        self.relationships[
+                            sentencecase_to_pascalcase(key)
+                        ] = value
+        else:
+            for key, value in schema_config.items():
+                if value["is_relationship"] == "false":
+                    self.entities[key] = value
+                elif value["is_relationship"] == "true":
+                    self.relationships[key] = value
 
         self.question = ""
         self.selected_entities = []

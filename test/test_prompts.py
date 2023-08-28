@@ -4,7 +4,9 @@ import pytest
 
 @pytest.fixture
 def ps():
-    return BioCypherPrompt(schema_config_path="test/test_schema_config.yaml")
+    return BioCypherPrompt(
+        schema_config_or_info_path="test/test_schema_config.yaml"
+    )
 
 
 def test_biocypher_prompts(ps):
