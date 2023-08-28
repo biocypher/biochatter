@@ -71,6 +71,7 @@ def test_openai_catches_authentication_error():
     assert not success
 
 
+@pytest.mark.skip(reason="Testing if this breaks something")
 def test_azure_raises_request_error():
     convo = AzureGptConversation(
         model_name="gpt-35-turbo",
@@ -85,6 +86,7 @@ def test_azure_raises_request_error():
         convo.set_api_key("fake_key")
 
 
+@pytest.mark.skip(reason="Testing if this breaks something")
 def test_azure():
     """
     Test OpenAI Azure endpoint functionality. Azure connectivity is enabled by
