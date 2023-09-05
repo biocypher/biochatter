@@ -10,9 +10,11 @@ from biochatter.llm_connect import (
 from openai.error import InvalidRequestError
 import pytest
 
-@pytest.fixture
+
+@pytest.fixture(scope="module", autouse=True)
 def manageTestContext():
     import openai
+
     api_base = openai.api_base
     api_type = openai.api_type
     api_version = openai.api_version
@@ -29,8 +31,7 @@ def manageTestContext():
     openai.organization = organization
 
 
-
-def test_empty_messages(manageTestContext):
+def test_empty_messages():
     convo = GptConversation(
         model_name="gpt-3.5-turbo",
         prompts={},
@@ -39,7 +40,7 @@ def test_empty_messages(manageTestContext):
     assert convo.get_msg_json() == "[]"
 
 
-def test_single_message(manageTestContext):
+def test_single_message():
     convo = GptConversation(
         model_name="gpt-3.5-turbo",
         prompts={},
@@ -49,7 +50,7 @@ def test_single_message(manageTestContext):
     assert convo.get_msg_json() == '[{"system": "Hello, world!"}]'
 
 
-def test_multiple_messages(manageTestContext):
+def test_multiple_messages():
     convo = GptConversation(
         model_name="gpt-3.5-turbo",
         prompts={},
@@ -58,13 +59,14 @@ def test_multiple_messages(manageTestContext):
     convo.messages.append(SystemMessage(content="Hello, world!"))
     convo.messages.append(HumanMessage(content="How are you?"))
     convo.messages.append(AIMessage(content="I'm doing well, thanks!"))
-    assert (
-        convo.get_msg_json()
-        == '[{"system": "Hello, world!"}, {"user": "How are you?"}, {"ai": "I\'m doing well, thanks!"}]'
+    assert convo.get_msg_json() == (
+        '[{"system": "Hello, world!"}, '
+        '{"user": "How are you?"}, '
+        '{"ai": "I\'m doing well, thanks!"}]'
     )
 
 
-def test_unknown_message_type(manageTestContext):
+def test_unknown_message_type():
     convo = GptConversation(
         model_name="gpt-3.5-turbo",
         prompts={},
@@ -75,7 +77,7 @@ def test_unknown_message_type(manageTestContext):
         convo.get_msg_json()
 
 
-def test_openai_catches_authentication_error(manageTestContext):
+def test_openai_catches_authentication_error():
     convo = GptConversation(
         model_name="gpt-3.5-turbo",
         prompts={},
@@ -90,7 +92,7 @@ def test_openai_catches_authentication_error(manageTestContext):
     assert not success
 
 
-def test_azure_raises_request_error(manageTestContext):
+def test_azure_raises_request_error():
     convo = AzureGptConversation(
         model_name="gpt-35-turbo",
         deployment_name="test_deployment",
@@ -103,7 +105,8 @@ def test_azure_raises_request_error(manageTestContext):
     with pytest.raises(InvalidRequestError):
         convo.set_api_key("fake_key")
 
-def test_azure(manageTestContext):
+
+def test_azure():
     """
     Test OpenAI Azure endpoint functionality. Azure connectivity is enabled by
     setting the corresponding environment variables.
