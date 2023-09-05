@@ -79,14 +79,7 @@ def dbHost():
         col = Collection(METADATA_NAME, using=alias)
         col.drop()
 
-def test_similarity_search(dbHost):
-    dbHost = VectorDatabaseHostMilvus(
-        embedding_func=OpenAIEmbeddings(),
-        connection_args={"host": _HOST, "port": _PORT},
-        embedding_collection_name=EMBEDDING_NAME,
-        metadata_collection_name=METADATA_NAME,
-    )
-    dbHost.connect(_HOST, _PORT)
+def test_similarity_search(dbHost):    
     results = dbHost.similarity_search(
         query="What is Deep Counterfactual Networks?",
         k=3,
@@ -94,14 +87,7 @@ def test_similarity_search(dbHost):
     assert len(results) > 0
 
 
-def test_remove_document(dbHost):
-    dbHost = VectorDatabaseHostMilvus(
-        embedding_func=OpenAIEmbeddings(),
-        connection_args={"host": _HOST, "port": _PORT},
-        embedding_collection_name=EMBEDDING_NAME,
-        metadata_collection_name=METADATA_NAME,
-    )
-    dbHost.connect(_HOST, _PORT)
+def test_remove_document(dbHost):    
     docs = dbHost.get_all_documents()
     if len(docs) == 0:
         return
