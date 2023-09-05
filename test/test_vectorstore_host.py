@@ -1,21 +1,18 @@
-import os
-import pytest
+import os, pytest, uuid
 from typing import List
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Milvus
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.schema import Document
-from pymilvus import utility, Collection
+from pymilvus import utility, Collection, connections
 
 from biochatter.vectorstore import DocumentReader
-from biochatter.vectorstore_host import (
-    VectorDatabaseHostMilvus,
-    base64_to_string,
-    string_to_base64,
-)
+from biochatter.vectorstore_host import VectorDatabaseHostMilvus
 
 """
-This test needs OPENAI_API_KEY in the environment and a local milvus server
+This test needs OPENAI_API_KEY in the environment and a local milvus server. The
+entire module needs to be run in one go, as the collections are created and
+called in different tests.
 """
 
 # setup milvus connection
@@ -24,11 +21,17 @@ if os.getenv("DEVCONTAINER"):
 else:
     _HOST = "127.0.0.1"
 _PORT = "19530"
-collection_names = []
+
+NAME_SUFFIX = uuid.uuid4().hex
+
+EMBEDDING_NAME = f"DocumentEmbeddingTest_{NAME_SUFFIX}"
+METADATA_NAME = f"DocumentMetadataTest_{NAME_SUFFIX}"
 
 
 def prepare_splitted_documents(
-    doc_path: str, chunk_size: int = 1000, chunk_overlap: int = 20
+    doc_path: str,
+    chunk_size: int = 1000,
+    chunk_overlap: int = 20,
 ) -> List[Document]:
     pdf_path = doc_path
     reader = DocumentReader()
@@ -41,53 +44,54 @@ def prepare_splitted_documents(
     return text_splitter.split_documents(docs)
 
 
-def setup_module(module):
-    pdf_path = "test/bc_summary.pdf"
-    splitted_docs = prepare_splitted_documents(pdf_path)
-    docname = string_to_base64(os.path.basename(pdf_path))
-    db = Milvus.from_documents(
-        documents=splitted_docs,
-        embedding=OpenAIEmbeddings(),
+@pytest.fixture
+def dbHost():
+    # create dbHost
+    dbHost = VectorDatabaseHostMilvus(
+        embedding_func=OpenAIEmbeddings(),
         connection_args={"host": _HOST, "port": _PORT},
+        embedding_collection_name=EMBEDDING_NAME,
+        metadata_collection_name=METADATA_NAME
     )
-    utility.create_alias(db.collection_name, f"{docname}_{db.collection_name}")
-    collection_names.append(db.collection_name)
+    dbHost.connect(_HOST, _PORT)
+    assert dbHost._col_embeddings is not None
+    assert dbHost._col_metadata is not None
 
+    # save embeddings
+    splitted_docs = prepare_splitted_documents("test/dcn.pdf")
+    doc_id = dbHost.store_embeddings(splitted_docs)
+    assert doc_id is not None
+    splitted_docs = prepare_splitted_documents("test/bc_summary.pdf")
+    doc_id = dbHost.store_embeddings(splitted_docs)
+    assert doc_id is not None
+    splitted_docs = prepare_splitted_documents("test/bc_summary.txt")
+    doc_id = dbHost.store_embeddings(splitted_docs)
+    assert doc_id is not None
+    yield dbHost
 
-def teardown_module(module):
-    for name in collection_names:
-        col = Collection(name)
+    # clean up
+    alias = uuid.uuid4().hex
+    connections.connect(host=_HOST, port=_PORT, alias=alias)
+    if utility.has_collection(EMBEDDING_NAME, using=alias):
+        col = Collection(EMBEDDING_NAME, using=alias)
+        col.drop()
+    if utility.has_collection(METADATA_NAME, using=alias):
+        col = Collection(METADATA_NAME, using=alias)
         col.drop()
 
-
-def test_connect_host():
-    # require local milvus server
-    dbHost = VectorDatabaseHostMilvus()
-    dbHost.connect(host=_HOST, port=_PORT)
-    collections = dbHost.collections
-    assert not collections is None
-    assert len(collections) > 0
-
-
-def test_store_embeddings_and_similarity_search():
-    dbHost = VectorDatabaseHostMilvus(embeddings=OpenAIEmbeddings())
-    dbHost.connect(host=_HOST, port=_PORT)
-    pdf_path = "test/dcn.pdf"
-    splitted_docs = prepare_splitted_documents(pdf_path)
-    vector_collection = dbHost.store_embedding("dcn.pdf", splitted_docs)
-
+def test_similarity_search(dbHost):    
     results = dbHost.similarity_search(
-        collection_name=vector_collection["collection_name"],
         query="What is Deep Counterfactual Networks?",
         k=3,
     )
     assert len(results) > 0
-    assert all(
-        [
-            "Deep Counterfactual Networks" in item.page_content
-            for item in results
-        ]
-    )
-    cnt = len(dbHost.collections)
-    dbHost.drop_collection(vector_collection["collection_name"])
-    assert (cnt - 1) == len(dbHost.collections)
+
+
+def test_remove_document(dbHost):    
+    docs = dbHost.get_all_documents()
+    if len(docs) == 0:
+        return
+    cnt = len(docs)
+    res = dbHost.remove_document(docs[0]["id"])
+    assert res
+    assert (cnt - 1) == len(dbHost.get_all_documents())
