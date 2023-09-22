@@ -20,6 +20,7 @@ following extras (e.g. `pip install biochatter[streamlit]`):
 - `podcast`: support for podcast text-to-speech
 
 # More information about LLMs
+
 Check out [this repository](https://github.com/csbl-br/awesome-compbio-chatgpt)
 for more info on computational biology usage of large language models.
 
