@@ -194,12 +194,15 @@ class BioCypherPrompt:
 
         msg = (
             "You have access to a knowledge graph that contains entities and "
-            "relationships. They have the following properties: "
-            f"{e_props} and {r_props}. Your task is to select the properties "
-            "that are relevant to the user's question for subsequent use in a "
-            "query. Only return the entities and relationships and relevant "
-            "properties in JSON format, without any additional text. Do not "
-            "return properties that are not relevant to the question."
+            "relationships. They have the following properties. Entities:"
+            f"{e_props}, Relationships: {r_props}. "
+            "Your task is to select the properties that are relevant to the "
+            "user's question for subsequent use in a query. Only return the "
+            "entities and relationships with their relevant properties in JSON "
+            "format, without any additional text. Return the "
+            "entities/relationships as top-level dictionary keys, and their "
+            "properties as dictionary values. "
+            "Do not return properties that are not relevant to the question."
         )
 
         conversation = GptConversation(
