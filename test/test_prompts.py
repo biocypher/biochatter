@@ -107,7 +107,7 @@ def test_query_generation(ps):
         question="Which genes are associated with mucoviscidosis?",
         entities=["Gene", "Disease"],
         relationships=["PERTURBED_IN_DISEASE"],
-        properties={"Disease": ["name"]},
+        properties={"Disease": ["name", "ICD10", "DSM5"]},
         database_language="Cypher",
     )
 
