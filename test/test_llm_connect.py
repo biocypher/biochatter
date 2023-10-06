@@ -11,6 +11,26 @@ from openai.error import InvalidRequestError
 import pytest
 
 
+@pytest.fixture(scope="module", autouse=True)
+def manageTestContext():
+    import openai
+
+    api_base = openai.api_base
+    api_type = openai.api_type
+    api_version = openai.api_version
+    api_key = openai.api_key
+    api_key_path = openai.api_key_path
+    organization = openai.organization
+    yield True
+
+    openai.api_base = api_base
+    openai.api_type = api_type
+    openai.api_version = api_version
+    openai.api_key = api_key
+    openai.api_key_path = api_key_path
+    openai.organization = organization
+
+
 def test_empty_messages():
     convo = GptConversation(
         model_name="gpt-3.5-turbo",
@@ -39,9 +59,10 @@ def test_multiple_messages():
     convo.messages.append(SystemMessage(content="Hello, world!"))
     convo.messages.append(HumanMessage(content="How are you?"))
     convo.messages.append(AIMessage(content="I'm doing well, thanks!"))
-    assert (
-        convo.get_msg_json()
-        == '[{"system": "Hello, world!"}, {"user": "How are you?"}, {"ai": "I\'m doing well, thanks!"}]'
+    assert convo.get_msg_json() == (
+        '[{"system": "Hello, world!"}, '
+        '{"user": "How are you?"}, '
+        '{"ai": "I\'m doing well, thanks!"}]'
     )
 
 
@@ -90,14 +111,14 @@ def test_azure():
     Test OpenAI Azure endpoint functionality. Azure connectivity is enabled by
     setting the corresponding environment variables.
     """
-    openai.proxy = os.getenv("OPENAI_PROXY")
+    openai.proxy = os.getenv("AZURE_TEST_OPENAI_PROXY")
     convo = AzureGptConversation(
-        model_name=os.getenv("OPENAI_MODEL_NAME"),
-        deployment_name=os.getenv("OPENAI_DEPLOYMENT_NAME"),
+        model_name=os.getenv("AZURE_TEST_OPENAI_MODEL_NAME"),
+        deployment_name=os.getenv("AZURE_TEST_OPENAI_DEPLOYMENT_NAME"),
         prompts={},
         split_correction=False,
-        version=os.getenv("OPENAI_API_VERSION"),
-        base=os.getenv("OPENAI_API_BASE"),
+        version=os.getenv("AZURE_TEST_OPENAI_API_VERSION"),
+        base=os.getenv("AZURE_TEST_OPENAI_API_BASE"),
     )
 
-    assert convo.set_api_key(os.getenv("OPENAI_API_KEY"))
+    assert convo.set_api_key(os.getenv("AZURE_TEST_OPENAI_API_KEY"))

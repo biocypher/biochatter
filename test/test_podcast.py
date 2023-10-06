@@ -1,8 +1,15 @@
 from biochatter.podcast import Podcaster
 from biochatter.vectorstore import DocumentReader
 import os
+import pytest
 
 
+@pytest.mark.skip(
+    reason=(
+        "More of an integration test without asserts. "
+        "Currently used for debugging, to be later replaced."
+    )
+)
 def test_podcast():
     # runs long, requires OpenAI API key
     reader = DocumentReader()

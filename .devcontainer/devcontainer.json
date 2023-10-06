@@ -17,7 +17,12 @@
     "customizations": {
         // Configure properties specific to VS Code.
         "vscode": {
-            "settings": {},
+            "settings": {
+                "python.testing.unittestEnabled": false,
+                "python.testing.nosetestsEnabled": false,
+                "python.testing.pytestEnabled": true,
+                "python.pythonPath": "/usr/local/bin/python"
+            },
             "extensions": [
                 "GitHub.copilot-chat",
                 "GitHub.copilot-nightly",
