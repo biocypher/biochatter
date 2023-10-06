@@ -222,3 +222,35 @@ class BioCypherPrompt:
         self.selected_properties = json.loads(msg) if msg else {}
 
         return bool(self.selected_properties)
+
+    def generate_query(
+        self,
+        question: str,
+        entities: list,
+        relationships: list,
+        properties: dict,
+        database_language: str,
+    ):
+        msg = (
+            f"Generate a database query in {database_language} that answers "
+            f"the user's question. "
+            f"You can use the following entities: {entities}, "
+            f"relationships: {relationships}, and properties: {properties}. "
+            "Only return the query, without any additional text."
+        )
+
+        conversation = GptConversation(
+            model_name="gpt-3.5-turbo",
+            prompts={},
+            correct=False,
+        )
+
+        conversation.set_api_key(
+            api_key=os.getenv("OPENAI_API_KEY"), user="query_generator"
+        )
+
+        conversation.append_system_message(msg)
+
+        msg, token_usage, correction = conversation.query(question)
+
+        return msg

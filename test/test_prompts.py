@@ -103,13 +103,17 @@ def test_query_generation(ps):
     TODO: special case relationship as node
 
     """
-    assert ps.generate_query(
+    query = ps.generate_query(
         question="Which genes are associated with mucoviscidosis?",
         entities=["Gene", "Disease"],
         relationships=["PERTURBED_IN_DISEASE"],
         properties={"Disease": ["name"]},
         database_language="Cypher",
-    ) == (
-        "MATCH (n:Gene)-[:PERTURBED_IN_DISEASE]->(m:Disease) "
-        "WHERE m.name = 'mucoviscidosis' RETURN n"
     )
+
+    assert "MATCH" in query
+    assert "RETURN" in query
+    assert "Gene" in query
+    assert "Disease" in query
+    assert "mucoviscidosis" in query
+    assert "PERTURBED_IN_DISEASE" in query
