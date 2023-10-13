@@ -5,7 +5,7 @@ from biochatter.llm_connect import (
     AzureGptConversation,
     SystemMessage,
     HumanMessage,
-    AIMessage,
+    AIMessage, GenericOpenAIConversation,
 )
 from openai.error import InvalidRequestError
 import pytest
@@ -122,3 +122,30 @@ def test_azure():
     )
 
     assert convo.set_api_key(os.getenv("AZURE_TEST_OPENAI_API_KEY"))
+
+
+def test_generic_init():
+    """
+    Test OpenAI-style API with generic Domain. Connectivity is enabled by
+    setting the corresponding environment variables.
+    """
+    base_url = os.getenv("GENERIC_TEST_OPENAI_BASE_URL", "http://llm.nedrex.net/v1")
+    convo = GenericOpenAIConversation(
+        base_url=base_url,
+        prompts={},
+        split_correction=False,
+    )
+    assert convo.set_api_key(os.getenv("GENERIC_TEST_OPENAI_KEY", "none"), os.getenv("GENERIC_TEST_OPENAI_USER", "test"))
+
+
+# def test_generic_chatting():
+#     base_url = os.getenv("GENERIC_TEST_OPENAI_BASE_URL")
+#     convo = GenericOpenAIConversation(
+#         base_url=base_url,
+#         prompts={},
+#         split_correction=False,
+#     )
+#     assert convo.set_api_key(os.getenv("GENERIC_TEST_OPENAI_KEY", "none"), os.getenv("GENERIC_TEST_OPENAI_USER", "test"))
+#
+#     (msg, token_usage, correction) = convo.query("Hello, world!")
+#     assert(token_usage['completion_tokens'] > 0)

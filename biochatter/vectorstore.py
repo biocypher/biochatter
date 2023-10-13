@@ -7,6 +7,7 @@
 from typing import List, Optional, Dict
 
 from langchain.schema import Document
+import openai
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.document_loaders import TextLoader
@@ -20,19 +21,21 @@ from biochatter.vectorstore_host import VectorDatabaseHostMilvus
 
 class DocumentEmbedder:
     def __init__(
-        self,
-        use_prompt: bool = True,
-        used: bool = False,
-        online: bool = False,
-        chunk_size: int = 1000,
-        chunk_overlap: int = 0,
-        split_by_characters: bool = True,
-        separators: Optional[list] = None,
-        n_results: int = 3,
-        model: Optional[str] = None,
-        vector_db_vendor: Optional[str] = None,
-        connection_args: Optional[dict] = None,
-        api_key: Optional[str] = None,
+            self,
+            use_prompt: bool = True,
+            used: bool = False,
+            online: bool = False,
+            chunk_size: int = 1000,
+            chunk_overlap: int = 0,
+            split_by_characters: bool = True,
+            separators: Optional[list] = None,
+            n_results: int = 3,
+            model: Optional[str] = "text-embedding-ada-002",
+            vector_db_vendor: Optional[str] = None,
+            connection_args: Optional[dict] = None,
+            api_key: Optional[str] = None,
+            base_url: Optional[str] = None,
+            embeddings: Optional[OpenAIEmbeddings] = None,
     ) -> None:
         self.use_prompt = use_prompt
         self.used = used
@@ -47,10 +50,16 @@ class DocumentEmbedder:
         # TODO: variable embeddings depending on model
         # for now, just use ada-002
         # TODO API Key handling to central config
-        if not self.online:
-            self.embeddings = OpenAIEmbeddings(openai_api_key=api_key)
+        if base_url:
+            openai.api_base = base_url
+
+        if embeddings:
+            self.embeddings = embeddings
         else:
-            self.embeddings = None
+            if not self.online:
+                self.embeddings = OpenAIEmbeddings(openai_api_key=api_key, model=model)
+            else:
+                self.embeddings = None
 
         # connection arguments
         self.connection_args = connection_args or {
@@ -63,6 +72,10 @@ class DocumentEmbedder:
         # instantiate VectorDatabaseHost
         self.database_host = None
         self._init_database_host()
+
+    def _set_embeddings(self, embeddings):
+        print("setting embedder")
+        self.embeddings = embeddings
 
     def _init_database_host(self):
         if self.vector_db_vendor == "milvus":
@@ -121,7 +134,7 @@ class DocumentEmbedder:
         '''
         This function saves document to the vector database
         Args:
-            doc List[Document]: document content, read with DocumentReader load_document(), 
+            doc List[Document]: document content, read with DocumentReader load_document(),
                 or document_from_pdf(), document_from_txt()
         Returns:
             str: document id, which can be used to remove an uploaded document with remove_document()
@@ -134,16 +147,16 @@ class DocumentEmbedder:
         return text_splitter.split_documents(document)
 
     def _store_embeddings(
-        self, doc: List[Document]
+            self, doc: List[Document]
     ) -> str:
         return self.database_host.store_embeddings(
             documents=doc
         )
 
     def similarity_search(
-        self,
-        query: str,
-        k: int = 3
+            self,
+            query: str,
+            k: int = 3
     ):
         """
         Returns top n closest matches to query from vector store.
@@ -169,6 +182,61 @@ class DocumentEmbedder:
 
     def remove_document(self, doc_id: str) -> None:
         self.database_host.remove_document(doc_id)
+
+
+class GenericDocumentEmbedder(DocumentEmbedder):
+
+    def __init__(self, use_prompt: bool = True,
+            used: bool = False,
+            chunk_size: int = 1000,
+            chunk_overlap: int = 0,
+            split_by_characters: bool = True,
+            separators: Optional[list] = None,
+            n_results: int = 3,
+            model: Optional[str] = "auto",
+            vector_db_vendor: Optional[str] = None,
+            connection_args: Optional[dict] = None,
+            api_key: Optional[str] = "none",
+            base_url: Optional[str] = None,):
+        import embedders.generic_openai as generic_openai
+        from embedders.generic_openai import GenericOpenAIEmbeddings
+
+        generic_openai.api_base = base_url
+        generic_openai.api_key = api_key
+        self.models = self.get_models()
+        if model is None or model == "auto":
+            model = self.list_models_by_type("embedding")[0]
+        model_id = self.models[model]["id"]
+        super().__init__(use_prompt=use_prompt,used=used, online = True, chunk_size=chunk_size, chunk_overlap=chunk_overlap, split_by_characters=split_by_characters, separators=separators, n_results=n_results, model=model, vector_db_vendor=vector_db_vendor, connection_args=connection_args, api_key=api_key, base_url=base_url, embeddings=GenericOpenAIEmbeddings(openai_api_key=api_key, model=model_id))
+
+    def get_models(self):
+        import requests
+        from embedders import generic_openai
+        response = requests.get(generic_openai.api_base + "/models")
+        models = {}
+        for id, model in response.json().items():
+            model["id"] = id
+            print(model)
+            models[model["model_name"]] = model
+        return models
+
+    def list_models_by_type(self, type: str):
+        names = []
+        # if type == 'embed' or type == 'embedding':
+        #     for name, model in self.models.items():
+        #         if "model_ability" in model:
+        #             if "embed" in model["model_ability"]:
+        #                 names.append(name)
+        #         elif model["model_type"] == "embedding":
+        #             names.append(name)
+        #     return names
+        for name, model in self.models.items():
+            if "model_ability" in model:
+                if type in model["model_ability"]:
+                    names.append(name)
+            elif model["model_type"] == type:
+                names.append(name)
+        return names
 
 
 class DocumentReader:

@@ -293,6 +293,197 @@ class Conversation(ABC):
 
         return json.dumps(d)
 
+class GenericOpenAIConversation(Conversation):
+    def __init__(
+            self,
+            base_url: str,
+            prompts: dict,
+            model_name: str = "auto",
+            correct: bool = True,
+            split_correction: bool = False,
+            docsum: DocumentEmbedder = None,
+    ):
+        """
+        Connect to OpenAI's GPT API and set up a conversation with the user.
+        Also initialise a second conversational agent to provide corrections to
+        the model output, if necessary.
+
+        Args:
+            model_name (str): The name of the model to use.
+
+            prompts (dict): A dictionary of prompts to use for the conversation.
+
+            split_correction (bool): Whether to correct the model output by
+                splitting the output into sentences and correcting each
+                sentence individually.
+
+            docsum (DocumentEmbedder): A document summariser to use for
+                document summarisation.
+        """
+        super().__init__(
+            model_name=model_name,
+            prompts=prompts,
+            correct=correct,
+            split_correction=split_correction,
+            docsum=docsum,
+        )
+        openai.api_base = base_url
+        openai.api_key = ""
+
+        self.ca_model_name = model_name
+        # TODO make accessible by drop-down
+
+    def get_models(self):
+        import requests
+        response = requests.get(openai.api_base + "/models")
+        models = {}
+        for id, model in response.json().items():
+            model["id"] = id
+            models[model["model_name"]] = model
+        return models
+
+
+    def list_models_by_type(self, type: str):
+        names = []
+        if type == 'embed' or type == 'embedding':
+            for name, model in self.models.items():
+                if "model_ability" in model:
+                    if "embed" in model["model_ability"]:
+                        names.append(name)
+                elif model["model_type"] == "embedding":
+                    names.append(name)
+            return names
+        for name, model in self.models.items():
+            if "model_ability" in model:
+                if type in model["model_ability"]:
+                    names.append(name)
+            elif model["model_type"] == type:
+                names.append(name)
+        return names
+
+
+    def set_api_key(self, api_key: str, user: str):
+        """
+        Set the API key for the OpenAI API. If the key is valid, initialise the
+        conversational agent. Set the user for usage statistics.
+
+        Args:
+            api_key (str): The API key for the OpenAI API.
+
+            user (str): The user for usage statistics.
+
+        Returns:
+            bool: True if the API key is valid, False otherwise.
+        """
+        openai.api_key = api_key
+        self.user = user
+        try:
+            self.models = self.get_models()
+            if self.model_name is None or self.model_name == "auto":
+                self.model_name = self.list_models_by_type("chat")[0]
+            self.model_name = self.models[self.model_name]["id"]
+            self.ca_model_name = self.model_name
+        except:
+            return False
+
+        try:
+            self.chat = ChatOpenAI(
+                model_name=self.model_name,
+                temperature=0,
+                openai_api_key=api_key,
+                max_tokens=1000,
+            )
+            self.ca_chat = ChatOpenAI(
+                model_name=self.ca_model_name,
+                temperature=0,
+                openai_api_key=api_key,
+                max_tokens=1000,
+            )
+            if user == "community":
+                self.usage_stats = get_stats(user=user)
+            return True
+
+        except openai.error.AuthenticationError as e:
+            return False
+
+    def _primary_query(self):
+        """
+        Query the OpenAI API with the user's message and return the response
+        using the message history (flattery system messages, prior conversation)
+        as context. Correct the response if necessary.
+
+        Returns:
+            tuple: A tuple containing the response from the OpenAI API and the
+                token usage.
+        """
+        try:
+            response = self.chat.generate([self.messages])
+        except (
+                openai.error.InvalidRequestError,
+                openai.error.APIConnectionError,
+                openai.error.RateLimitError,
+                openai.error.APIError,
+        ) as e:
+            return str(e), None
+
+        msg = response.generations[0][0].text
+        token_usage = response.llm_output.get("token_usage")
+
+        self._update_usage_stats(self.model_name, token_usage)
+
+        self.append_ai_message(msg)
+
+        return msg, token_usage
+
+    def _correct_response(self, msg: str):
+        """
+        Correct the response from the OpenAI API by sending it to a secondary
+        language model. Optionally split the response into single sentences and
+        correct each sentence individually. Update usage stats.
+
+        Args:
+            msg (str): The response from the OpenAI API.
+
+        Returns:
+            str: The corrected response (or OK if no correction necessary).
+        """
+        ca_messages = self.ca_messages.copy()
+        ca_messages.append(
+            HumanMessage(
+                content=msg,
+            ),
+        )
+        ca_messages.append(
+            SystemMessage(
+                content="If there is nothing to correct, please respond "
+                        "with just 'OK', and nothing else!",
+            ),
+        )
+
+        response = self.ca_chat.generate([ca_messages])
+
+        correction = response.generations[0][0].text
+        token_usage = response.llm_output.get("token_usage")
+
+        self._update_usage_stats(self.ca_model_name, token_usage)
+
+        return correction
+
+    def _update_usage_stats(self, model: str, token_usage: dict):
+        """
+        Update redis database with token usage statistics using the usage_stats
+        object with the increment method.
+
+        Args:
+            model (str): The model name.
+
+            token_usage (dict): The token usage statistics.
+        """
+        if self.user == "community":
+            self.usage_stats.increment(
+                f"usage:[date]:[user]",
+                {f"{k}:{model}": v for k, v in token_usage.items()},
+            )
 
 class GptConversation(Conversation):
     def __init__(

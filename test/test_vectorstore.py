@@ -1,7 +1,8 @@
+from biochatter.llm_connect import GenericOpenAIConversation
 from biochatter.vectorstore import (
     DocumentEmbedder,
     DocumentReader,
-    Document,
+    Document, GenericDocumentEmbedder,
 )
 
 import os
@@ -15,6 +16,7 @@ else:
     _HOST = "127.0.0.1"
 _PORT = "19530"
 
+
 def test_document_summariser():
     # runs long, requires OpenAI API key and local milvus server
     # uses ada-002 for embeddings
@@ -27,6 +29,39 @@ def test_document_summariser():
     doc = reader.document_from_pdf(doc_bytes)
     docsum = DocumentEmbedder()
     docsum.connect(_HOST, _PORT)
+    doc_id = docsum.save_document(doc)
+    assert isinstance(doc_id, str)
+    assert len(doc_id) > 0
+
+    query = "What is BioCypher?"
+    results = docsum.similarity_search(query)
+    assert len(results) == 3
+    assert all(["BioCypher" in result.page_content for result in results])
+
+    docs = docsum.get_all_documents()
+    cnt = len(docs)
+    assert cnt > 0
+    docsum.remove_document(doc_id)
+    docs = docsum.get_all_documents()
+    assert (cnt - 1) == len(docs)
+
+
+def test_document_summariser_generic_api():
+    # runs long, requires OpenAI API key and local milvus server
+    pdf_path = "test/bc_summary.pdf"
+    with open(pdf_path, "rb") as f:
+        doc_bytes = f.read()
+    assert isinstance(doc_bytes, bytes)
+
+    reader = DocumentReader()
+    doc = reader.document_from_pdf(doc_bytes)
+
+    docsum = GenericDocumentEmbedder(
+        api_key=os.getenv("GENERIC_TEST_OPENAI_KEY", "none"),
+        base_url=os.getenv("GENERIC_TEST_OPENAI_BASE_URL", "http://llm.nedrex.net/v1")
+    )
+    docsum.connect(_HOST, _PORT)
+
     doc_id = docsum.save_document(doc)
     assert isinstance(doc_id, str)
     assert len(doc_id) > 0
@@ -92,9 +127,9 @@ CHUNK_OVERLAP = 10
 
 
 def check_document_splitter(
-    docsum: DocumentEmbedder,
-    fn: str,
-    expected_length: int,
+        docsum: DocumentEmbedder,
+        fn: str,
+        expected_length: int,
 ):
     reader = DocumentReader()
     doc = reader.load_document(fn)
