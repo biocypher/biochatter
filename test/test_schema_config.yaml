@@ -1,0 +1,61 @@
+Title: BioCypher graph schema configuration file
+
+# ---
+# "Named Things"
+# ---
+
+protein:
+  represented_as: node
+  preferred_id: uniprot
+  input_label: protein
+  db_collection_name: proteins
+  properties:
+    name: str
+    score: float
+    taxon: int
+    genes: str[]
+
+pathway:
+  represented_as: node
+  preferred_id: [reactome, wikipathways]
+  input_label: [reactome, wikipathways]
+
+gene:
+  represented_as: node
+  preferred_id: hgnc
+  input_label: [hgnc, ensg]
+  exclude_properties: accession
+
+disease:
+  represented_as: node
+  preferred_id: doid
+  input_label: Disease
+  properties:
+    name: str
+    ICD10: str
+    DSM5: str
+
+# ---
+# Associations
+# ---
+
+post translational interaction:
+  is_a: pairwise molecular interaction
+  represented_as: node
+  label_as_edge: INTERACTS_POST_TRANSLATIONAL
+  input_label: post_translational
+
+phosphorylation:
+  is_a: post translational interaction
+  represented_as: edge
+  input_label: phosphorylation
+
+gene to disease association:
+  represented_as: edge
+  label_as_edge: PERTURBED_IN_DISEASE
+  input_label: [protein_disease, gene_disease]
+  exclude_properties: accession
+  properties:
+    score: float
+    source: str
+    evidence: str
