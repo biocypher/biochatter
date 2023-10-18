@@ -117,3 +117,4 @@ def test_query_generation(ps):
     assert "Disease" in query
     assert "mucoviscidosis" in query
     assert "PERTURBED_IN_DISEASE" in query
+    assert "WHERE" in query or "{name:" in query
