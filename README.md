@@ -19,6 +19,11 @@ following extras (e.g. `pip install biochatter[streamlit]`):
 - `streamlit`: support for streamlit UI functions (used in ChatGSE)
 - `podcast`: support for podcast text-to-speech
 
+## Usage
+
+As an interim documentation until we have a proper one, check out the
+[Wiki](https://github.com/biocypher/biochatter/wiki) for some usage examples.
+
 # More information about LLMs
 
 Check out [this repository](https://github.com/csbl-br/awesome-compbio-chatgpt)
