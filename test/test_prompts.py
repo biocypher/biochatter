@@ -44,7 +44,7 @@ def test_entity_selection(ps):
     TODO: a couple more representative cases
 
     """
-    success = ps.select_entities(
+    success = ps._select_entities(
         question="Which genes are associated with mucoviscidosis?"
     )
     assert success
@@ -70,7 +70,7 @@ def test_property_selection(ps):
     example above, without any additional text."
 
     """
-    success = ps.select_properties(
+    success = ps._select_properties(
         question="Which genes are associated with mucoviscidosis?",
         entities=["Gene", "Disease"],
         relationships=["GeneToDiseaseAssociation"],
@@ -103,12 +103,12 @@ def test_query_generation(ps):
     TODO: special case relationship as node
 
     """
-    query = ps.generate_query(
+    query = ps._generate_query(
         question="Which genes are associated with mucoviscidosis?",
         entities=["Gene", "Disease"],
         relationships=["PERTURBED_IN_DISEASE"],
         properties={"Disease": ["name", "ICD10", "DSM5"]},
-        database_language="Cypher",
+        query_language="Cypher",
     )
 
     assert "MATCH" in query
