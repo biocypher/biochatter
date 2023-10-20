@@ -1,10 +1,10 @@
-from biochatter.prompts import BioCypherPrompt
+from biochatter.prompts import BioCypherPromptEngine
 import pytest
 
 
 @pytest.fixture
 def ps():
-    return BioCypherPrompt(
+    return BioCypherPromptEngine(
         schema_config_or_info_path="test/test_schema_config.yaml"
     )
 
