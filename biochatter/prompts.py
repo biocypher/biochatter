@@ -64,9 +64,13 @@ class BioCypherPromptEngine:
                         ] = value
         else:
             for key, value in schema_config.items():
-                if value["is_relationship"] == "false":
+                if not isinstance(value, dict):
+                    continue
+                if value.get("present_in_knowledge_graph", None) == False:
+                    continue
+                if value.get("is_relationship", None) == False:
                     self.entities[key] = value
-                elif value["is_relationship"] == "true":
+                elif value.get("is_relationship", None) == True:
                     self.relationships[key] = value
 
         self.question = ""

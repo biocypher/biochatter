@@ -1,11 +1,7 @@
-Title: BioCypher graph schema configuration file
-
-# ---
-# "Named Things"
-# ---
-
 protein:
   represented_as: node
+  is_relationship: false
+  present_in_knowledge_graph: true
   preferred_id: uniprot
   input_label: protein
   db_collection_name: proteins
@@ -17,17 +13,23 @@ protein:
 
 pathway:
   represented_as: node
+  is_relationship: false
+  present_in_knowledge_graph: false
   preferred_id: [reactome, wikipathways]
   input_label: [reactome, wikipathways]
 
 gene:
   represented_as: node
+  is_relationship: false
+  present_in_knowledge_graph: true
   preferred_id: hgnc
   input_label: [hgnc, ensg]
   exclude_properties: accession
 
 disease:
   represented_as: node
+  is_relationship: false
+  present_in_knowledge_graph: true
   preferred_id: doid
   input_label: Disease
   properties:
@@ -41,17 +43,23 @@ disease:
 
 post translational interaction:
   is_a: pairwise molecular interaction
+  is_relationship: true
+  present_in_knowledge_graph: false
   represented_as: node
   label_as_edge: INTERACTS_POST_TRANSLATIONAL
   input_label: post_translational
 
 phosphorylation:
   is_a: post translational interaction
+  is_relationship: true
+  present_in_knowledge_graph: false
   represented_as: edge
   input_label: phosphorylation
 
 gene to disease association:
   represented_as: edge
+  is_relationship: true
+  present_in_knowledge_graph: true
   label_as_edge: PERTURBED_IN_DISEASE
   input_label: [protein_disease, gene_disease]
   exclude_properties: accession
