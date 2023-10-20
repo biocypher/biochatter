@@ -2,7 +2,7 @@ from typing import Optional
 import yaml
 import json
 import os
-from biocypher._misc import sentencecase_to_pascalcase
+from ._misc import sentencecase_to_pascalcase
 from .llm_connect import GptConversation
 
 
