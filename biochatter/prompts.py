@@ -289,6 +289,8 @@ class BioCypherPromptEngine:
                 question.
 
             query_language: The language of the query to generate.
+
+        TODO model needs indication of directionality of relationships
         """
         msg = (
             f"Generate a database query in {query_language} that answers "
