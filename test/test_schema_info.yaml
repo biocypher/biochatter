@@ -1,3 +1,5 @@
+is_schema_info: true
+
 protein:
   represented_as: node
   is_relationship: false
@@ -52,7 +54,7 @@ post translational interaction:
 phosphorylation:
   is_a: post translational interaction
   is_relationship: true
-  present_in_knowledge_graph: false
+  present_in_knowledge_graph: true
   represented_as: edge
   input_label: phosphorylation
 

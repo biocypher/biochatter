@@ -12,12 +12,10 @@ def ps():
 def test_biocypher_prompts(ps):
     assert list(ps.entities.keys()) == [
         "Protein",
-        "Pathway",
         "Gene",
         "Disease",
     ]
     assert list(ps.relationships.keys()) == [
-        "PostTranslationalInteraction",
         "Phosphorylation",
         "GeneToDiseaseAssociation",
     ]

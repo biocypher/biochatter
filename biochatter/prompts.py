@@ -69,9 +69,9 @@ class BioCypherPromptEngine:
                 if value.get("present_in_knowledge_graph", None) == False:
                     continue
                 if value.get("is_relationship", None) == False:
-                    self.entities[key] = value
+                    self.entities[sentencecase_to_pascalcase(key)] = value
                 elif value.get("is_relationship", None) == True:
-                    self.relationships[key] = value
+                    self.relationships[sentencecase_to_pascalcase(key)] = value
 
         self.question = ""
         self.selected_entities = []
@@ -273,6 +273,16 @@ class BioCypherPromptEngine:
         properties: dict,
         query_language: str,
     ):
+        # convert entities to PascalCase
+        entities = [sentencecase_to_pascalcase(e) for e in entities]
+        # convert relationships to PascalCase except for those that are
+        # explicitly labelled by 'label_as_edge'
+        relationships = [
+            sentencecase_to_pascalcase(r)
+            if not self.relationships[r].get("label_as_edge")
+            else self.relationships[r]["label_as_edge"]
+            for r in relationships
+        ]
         msg = (
             f"Generate a database query in {query_language} that answers "
             f"the user's question. "
