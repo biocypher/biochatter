@@ -75,7 +75,42 @@ class BioCypherPromptEngine:
         self.selected_relationship_labels = []  # copy to deal with labels that
         # are not the same as the relationship name
 
-    def select_entities(self, question: str) -> bool:
+    def generate_query(self, question: str, query_language: str) -> str:
+        """
+        Wrap entity and property selection and query generation; return the
+        generated query.
+
+        Args:
+            question: A user's question.
+
+            query_language: The language of the query to generate.
+
+        Returns:
+            A database query that could answer the user's question.
+        """
+
+        success1 = self._select_entities(question)
+        if not success1:
+            raise ValueError(
+                "Entity selection failed. Please try again with a different "
+                "question."
+            )
+        success2 = self._select_properties()
+        if not success2:
+            raise ValueError(
+                "Property selection failed. Please try again with a different "
+                "question."
+            )
+
+        return self._generate_query(
+            question=question,
+            entities=self.selected_entities,
+            relationships=self.selected_relationship_labels,
+            properties=self.selected_properties,
+            query_language=query_language,
+        )
+
+    def _select_entities(self, question: str) -> bool:
         """
 
         Given a question, select the entities that are relevant to the question
@@ -136,7 +171,7 @@ class BioCypherPromptEngine:
 
         return bool(result)
 
-    def select_properties(
+    def _select_properties(
         self,
         question: Optional[str] = None,
         entities: Optional[list] = None,
@@ -225,16 +260,16 @@ class BioCypherPromptEngine:
 
         return bool(self.selected_properties)
 
-    def generate_query(
+    def _generate_query(
         self,
         question: str,
         entities: list,
         relationships: list,
         properties: dict,
-        database_language: str,
+        query_language: str,
     ):
         msg = (
-            f"Generate a database query in {database_language} that answers "
+            f"Generate a database query in {query_language} that answers "
             f"the user's question. "
             f"You can use the following entities: {entities}, "
             f"relationships: {relationships}, and properties: {properties}. "
