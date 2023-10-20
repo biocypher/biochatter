@@ -273,16 +273,23 @@ class BioCypherPromptEngine:
         properties: dict,
         query_language: str,
     ):
-        # convert entities to PascalCase
-        entities = [sentencecase_to_pascalcase(e) for e in entities]
-        # convert relationships to PascalCase except for those that are
-        # explicitly labelled by 'label_as_edge'
-        relationships = [
-            sentencecase_to_pascalcase(r)
-            if not self.relationships[r].get("label_as_edge")
-            else self.relationships[r]["label_as_edge"]
-            for r in relationships
-        ]
+        """
+        Generate a query in the specified query language that answers the user's
+        question.
+
+        Args:
+            question: A user's question.
+
+            entities: A list of entities that are relevant to the question.
+
+            relationships: A list of relationships that are relevant to the
+                question.
+
+            properties: A dictionary of properties that are relevant to the
+                question.
+
+            query_language: The language of the query to generate.
+        """
         msg = (
             f"Generate a database query in {query_language} that answers "
             f"the user's question. "
