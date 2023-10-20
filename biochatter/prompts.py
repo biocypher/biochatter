@@ -163,6 +163,7 @@ class BioCypherPromptEngine:
 
         if result:
             for entity_or_relationship in result:
+                entity_or_relationship = entity_or_relationship.strip()
                 if entity_or_relationship in self.entities:
                     self.selected_entities.append(entity_or_relationship)
                 elif entity_or_relationship in self.relationships:
