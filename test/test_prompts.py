@@ -48,7 +48,9 @@ def test_entity_selection(ps):
     assert success
     assert ps.selected_entities == ["Gene", "Disease"]
     assert ps.selected_relationships == ["GeneToDiseaseAssociation"]
-    assert ps.selected_relationship_labels == ["PERTURBED_IN_DISEASE"]
+    assert ps.selected_relationship_labels == [
+        "PERTURBED (source: Disease, target: ['Protein', 'Gene'])"
+    ]
 
 
 def test_property_selection(ps):
@@ -104,7 +106,9 @@ def test_query_generation(ps):
     query = ps._generate_query(
         question="Which genes are associated with mucoviscidosis?",
         entities=["Gene", "Disease"],
-        relationships=["PERTURBED_IN_DISEASE"],
+        relationships=[
+            "PERTURBED (source: Disease, target: ['Protein', 'Gene'])"
+        ],
         properties={"Disease": ["name", "ICD10", "DSM5"]},
         query_language="Cypher",
     )
@@ -114,5 +118,7 @@ def test_query_generation(ps):
     assert "Gene" in query
     assert "Disease" in query
     assert "mucoviscidosis" in query
-    assert "PERTURBED_IN_DISEASE" in query
+    assert (
+        "-[:PERTURBED]->(g:Gene)" in query or "(g:Gene)<-[:PERTURBED]-" in query
+    )
     assert "WHERE" in query or "{name:" in query

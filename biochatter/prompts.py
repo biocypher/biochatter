@@ -92,13 +92,41 @@ class BioCypherPromptEngine:
                 if value.get("is_relationship", None) == False:
                     self.entities[sentencecase_to_pascalcase(key)] = value
                 elif value.get("is_relationship", None) == True:
+                    value = self._capitalise_source_and_target(value)
                     self.relationships[sentencecase_to_pascalcase(key)] = value
 
         self.question = ""
         self.selected_entities = []
-        self.selected_relationships = []
+        self.selected_relationships = []  # used in property selection
         self.selected_relationship_labels = []  # copy to deal with labels that
-        # are not the same as the relationship name
+        # are not the same as the relationship name, used in query generation
+
+    def _capitalise_source_and_target(self, relationship: dict) -> dict:
+        """
+        Make sources and targets PascalCase to match the entities. Sources and
+        targets can be strings or lists of strings.
+        """
+        if "source" in relationship:
+            if isinstance(relationship["source"], str):
+                relationship["source"] = sentencecase_to_pascalcase(
+                    relationship["source"]
+                )
+            elif isinstance(relationship["source"], list):
+                relationship["source"] = [
+                    sentencecase_to_pascalcase(s)
+                    for s in relationship["source"]
+                ]
+        if "target" in relationship:
+            if isinstance(relationship["target"], str):
+                relationship["target"] = sentencecase_to_pascalcase(
+                    relationship["target"]
+                )
+            elif isinstance(relationship["target"], list):
+                relationship["target"] = [
+                    sentencecase_to_pascalcase(t)
+                    for t in relationship["target"]
+                ]
+        return relationship
 
     def generate_query(self, question: str, query_language: str) -> str:
         """
@@ -162,11 +190,21 @@ class BioCypherPromptEngine:
             api_key=os.getenv("OPENAI_API_KEY"), user="entity_selector"
         )
 
+        rels = []
+        for key, value in self.relationships.items():
+            if "source" in value and "target" in value:
+                rels.append(
+                    f"{key} (source: {value['source']}, target: {value['target']})"
+                )
+            else:
+                rels.append(key)
+
         conversation.append_system_message(
             (
                 "You have access to a knowledge graph that contains "
                 f"these entities: {', '.join(self.entities)} and these "
-                f"relationships: {', '.join(self.relationships)}. Your task is "
+                "relationships (and their source and target types, if "
+                f"available): {', '.join(rels)}. Your task is "
                 "to select the ones that are relevant to the user's question "
                 "for subsequent use in a query. Only return the entities and "
                 "relationships, comma-separated, without any additional text. "
@@ -188,12 +226,19 @@ class BioCypherPromptEngine:
                 if entity_or_relationship in self.entities:
                     self.selected_entities.append(entity_or_relationship)
                 elif entity_or_relationship in self.relationships:
+                    # used in property selection
                     self.selected_relationships.append(entity_or_relationship)
-                    self.selected_relationship_labels.append(
-                        self.relationships[entity_or_relationship].get(
-                            "label_as_edge", entity_or_relationship
-                        )
+                    # used in query generation
+                    rel_dict = self.relationships[entity_or_relationship]
+                    label = rel_dict.get(
+                        "label_as_edge", entity_or_relationship
                     )
+                    if "source" in rel_dict and "target" in rel_dict:
+                        self.selected_relationship_labels.append(
+                            f"{label} (source: {rel_dict['source']}, target: {rel_dict['target']})"
+                        )
+                    else:
+                        self.selected_relationship_labels.append(label)
 
         return bool(result)
 
@@ -310,14 +355,14 @@ class BioCypherPromptEngine:
                 question.
 
             query_language: The language of the query to generate.
-
-        TODO model needs indication of directionality of relationships
         """
         msg = (
             f"Generate a database query in {query_language} that answers "
             f"the user's question. "
             f"You can use the following entities: {entities}, "
             f"relationships: {relationships}, and properties: {properties}. "
+            "Make sure to return only queries that adhere to the directionality "
+            "given by source and target types of the relationships, if present. "
             "Only return the query, without any additional text."
         )
 

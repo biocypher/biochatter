@@ -57,13 +57,17 @@ phosphorylation:
   present_in_knowledge_graph: true
   represented_as: edge
   input_label: phosphorylation
+  source: protein
+  target: protein
 
 gene to disease association:
   represented_as: edge
   is_relationship: true
   present_in_knowledge_graph: true
-  label_as_edge: PERTURBED_IN_DISEASE
+  label_as_edge: PERTURBED
   input_label: [protein_disease, gene_disease]
+  source: disease  # switch for test purposes
+  target: [protein, gene]
   exclude_properties: accession
   properties:
     score: float
