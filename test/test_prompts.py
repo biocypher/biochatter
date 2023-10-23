@@ -48,9 +48,15 @@ def test_entity_selection(ps):
     assert success
     assert ps.selected_entities == ["Gene", "Disease"]
     assert ps.selected_relationships == ["GeneToDiseaseAssociation"]
-    assert ps.selected_relationship_labels == [
-        "PERTURBED (source: Disease, target: ['Protein', 'Gene'])"
-    ]
+    assert "PERTURBED" in ps.selected_relationship_labels.keys()
+    assert "source" in ps.selected_relationship_labels.get("PERTURBED")
+    assert "target" in ps.selected_relationship_labels.get("PERTURBED")
+    assert "Disease" in ps.selected_relationship_labels.get("PERTURBED").get(
+        "source"
+    )
+    assert "Protein" in ps.selected_relationship_labels.get("PERTURBED").get(
+        "target"
+    )
 
 
 def test_property_selection(ps):
