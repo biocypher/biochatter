@@ -98,8 +98,10 @@ class BioCypherPromptEngine:
         self.question = ""
         self.selected_entities = []
         self.selected_relationships = []  # used in property selection
-        self.selected_relationship_labels = []  # copy to deal with labels that
+        self.selected_relationship_labels = {}  # copy to deal with labels that
         # are not the same as the relationship name, used in query generation
+        # dictionary to also include source and target types
+        self.rel_directions = {}
 
     def _capitalise_source_and_target(self, relationship: dict) -> dict:
         """
@@ -234,11 +236,15 @@ class BioCypherPromptEngine:
                         "label_as_edge", entity_or_relationship
                     )
                     if "source" in rel_dict and "target" in rel_dict:
-                        self.selected_relationship_labels.append(
-                            f"{label} (source: {rel_dict['source']}, target: {rel_dict['target']})"
-                        )
+                        self.selected_relationship_labels[label] = {
+                            "source": rel_dict["source"],
+                            "target": rel_dict["target"],
+                        }
                     else:
-                        self.selected_relationship_labels.append(label)
+                        self.selected_relationship_labels[label] = {
+                            "source": None,
+                            "target": None,
+                        }
 
         return bool(result)
 
@@ -335,7 +341,7 @@ class BioCypherPromptEngine:
         self,
         question: str,
         entities: list,
-        relationships: list,
+        relationships: dict,
         properties: dict,
         query_language: str,
     ):
@@ -360,11 +366,21 @@ class BioCypherPromptEngine:
             f"Generate a database query in {query_language} that answers "
             f"the user's question. "
             f"You can use the following entities: {entities}, "
-            f"relationships: {relationships}, and properties: {properties}. "
-            "Make sure to return only queries that adhere to the directionality "
-            "given by source and target types of the relationships, if present. "
-            "Only return the query, without any additional text."
+            f"relationships: {list(relationships.keys())}, and "
+            f"properties: {properties}. "
         )
+
+        for relationship, values in relationships.items():
+            self._expand_pairs(relationship, values)
+
+        if self.rel_directions:
+            msg += "Given the following valid combinations of source, relationship, and target: "
+            for key, value in self.rel_directions.items():
+                for pair in value:
+                    msg += f"'(:{pair[0]})-(:{key})->(:{pair[1]})', "
+            msg += "generate a Cypher query using one of these combinations. "
+
+        msg += "Only return the query, without any additional text."
 
         conversation = GptConversation(
             model_name="gpt-3.5-turbo",
@@ -381,3 +397,27 @@ class BioCypherPromptEngine:
         msg, token_usage, correction = conversation.query(question)
 
         return msg
+
+    def _expand_pairs(self, relationship, values):
+        if not self.rel_directions.get(relationship):
+            self.rel_directions[relationship] = []
+        if isinstance(values["source"], list):
+            for source in values["source"]:
+                if isinstance(values["target"], list):
+                    for target in values["target"]:
+                        self.rel_directions[relationship].append(
+                            (source, target)
+                        )
+                else:
+                    self.rel_directions[relationship].append(
+                        (source, values["target"])
+                    )
+        elif isinstance(values["target"], list):
+            for target in values["target"]:
+                self.rel_directions[relationship].append(
+                    (values["source"], target)
+                )
+        else:
+            self.rel_directions[relationship].append(
+                (values["source"], values["target"])
+            )

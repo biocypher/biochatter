@@ -106,9 +106,9 @@ def test_query_generation(ps):
     query = ps._generate_query(
         question="Which genes are associated with mucoviscidosis?",
         entities=["Gene", "Disease"],
-        relationships=[
-            "PERTURBED (source: Disease, target: ['Protein', 'Gene'])"
-        ],
+        relationships={
+            "PERTURBED": {"source": "Disease", "target": ["Protein", "Gene"]}
+        },
         properties={"Disease": ["name", "ICD10", "DSM5"]},
         query_language="Cypher",
     )
