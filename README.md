@@ -19,6 +19,18 @@ following extras (e.g. `pip install biochatter[streamlit]`):
 - `streamlit`: support for streamlit UI functions (used in ChatGSE)
 - `podcast`: support for podcast text-to-speech
 
+## Usage
+
+As an interim documentation until we have a proper one, check out the
+[Wiki](https://github.com/biocypher/biochatter/wiki) for some usage examples.
+Many common functionalities covered by BioChatter can be seen in use in the
+[ChatGSE](https://github.com/biocypher/ChatGSE) code base.
+
+# More information about LLMs
+
+Check out [this repository](https://github.com/csbl-br/awesome-compbio-chatgpt)
+for more info on computational biology usage of large language models.
+
 # Dev Container
 
 Due to some incompatibilities of `pymilvus` with Apple Silicon, we have created
