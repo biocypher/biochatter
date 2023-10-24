@@ -47,7 +47,15 @@ def test_entity_selection(ps):
     )
     assert success
     assert ps.selected_entities == ["Gene", "Disease"]
-    assert ps.selected_relationships == ["GeneToDiseaseAssociation"]
+
+
+def test_relationship_selection(ps):
+    ps.question = "Which genes are associated with mucoviscidosis?"
+    ps.selected_entities = ["Gene", "Disease"]
+    success = ps._select_relationships()
+    assert success
+
+    assert ps.selected_relationships == ["GeneToPhenotypeAssociation"]
     assert "PERTURBED" in ps.selected_relationship_labels.keys()
     assert "source" in ps.selected_relationship_labels.get("PERTURBED")
     assert "target" in ps.selected_relationship_labels.get("PERTURBED")
@@ -76,11 +84,10 @@ def test_property_selection(ps):
     example above, without any additional text."
 
     """
-    success = ps._select_properties(
-        question="Which genes are associated with mucoviscidosis?",
-        entities=["Gene", "Disease"],
-        relationships=["GeneToDiseaseAssociation"],
-    )
+    ps.question = "Which genes are associated with mucoviscidosis?"
+    ps.selected_entities = ["Gene", "Disease"]
+    ps.selected_relationships = ["GeneToPhenotypeAssociation"]
+    success = ps._select_properties()
     assert success
     assert "Disease" in ps.selected_properties.keys()
     assert "name" in ps.selected_properties.get("Disease")
@@ -116,6 +123,23 @@ def test_query_generation(ps):
             "PERTURBED": {"source": "Disease", "target": ["Protein", "Gene"]}
         },
         properties={"Disease": ["name", "ICD10", "DSM5"]},
+        query_language="Cypher",
+    )
+
+    assert "MATCH" in query
+    assert "RETURN" in query
+    assert "Gene" in query
+    assert "Disease" in query
+    assert "mucoviscidosis" in query
+    assert (
+        "-[:PERTURBED]->(g:Gene)" in query or "(g:Gene)<-[:PERTURBED]-" in query
+    )
+    assert "WHERE" in query or "{name:" in query
+
+
+def test_end_to_end_query_generation(ps):
+    query = ps.generate_query(
+        question="Which genes are associated with mucoviscidosis?",
         query_language="Cypher",
     )
 

@@ -60,7 +60,7 @@ phosphorylation:
   source: protein
   target: protein
 
-gene to disease association:
+gene to phenotype association:
   represented_as: edge
   is_relationship: true
   present_in_knowledge_graph: true
@@ -69,6 +69,19 @@ gene to disease association:
   source: disease  # switch for test purposes
   target: [protein, gene]
   exclude_properties: accession
+  properties:
+    score: float
+    source: str
+    evidence: str
+
+gene to disease association:
+  represented_as: edge
+  is_relationship: true
+  present_in_knowledge_graph: true
+  label_as_edge: PERTURBED_IN
+  input_label: gene_phenotype
+  source: protein  # wrong to test entity selection
+  target: disease
   properties:
     score: float
     source: str
