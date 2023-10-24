@@ -126,7 +126,7 @@ def test_azure():
 
 def test_generic_init():
     """
-    Test OpenAI-style API with generic Domain. Connectivity is enabled by
+    Test generic OpenAI-style API with generic Domain. Connectivity is enabled by
     setting the corresponding environment variables.
     """
     base_url = os.getenv("GENERIC_TEST_OPENAI_BASE_URL", "http://llm.nedrex.net/v1")

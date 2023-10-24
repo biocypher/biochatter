@@ -7,4 +7,5 @@ __pycache__/
 .env
 *.mp3
 .cache
-*.env
+*.env.idea
+.idea/

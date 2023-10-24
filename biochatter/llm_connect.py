@@ -309,9 +309,11 @@ class GenericOpenAIConversation(Conversation):
         the model output, if necessary.
 
         Args:
-            model_name (str): The name of the model to use.
+            base_url (str): The base URL of the OpenAI style API endpoint (should include the /v1 part).
 
             prompts (dict): A dictionary of prompts to use for the conversation.
+
+            model_name (str): The name of the model to use. Will be mapped to the according uid from the list of available models.
 
             split_correction (bool): Whether to correct the model output by
                 splitting the output into sentences and correcting each
