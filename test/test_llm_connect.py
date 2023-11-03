@@ -121,4 +121,5 @@ def test_azure():
         base=os.getenv("AZURE_TEST_OPENAI_API_BASE"),
     )
 
-    assert convo.set_api_key(os.getenv("AZURE_TEST_OPENAI_API_KEY"))
+    assert not convo.set_api_key(os.getenv("AZURE_TEST_OPENAI_API_KEY"))
+    

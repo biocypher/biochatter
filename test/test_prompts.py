@@ -17,6 +17,7 @@ def test_biocypher_prompts(ps):
     ]
     assert list(ps.relationships.keys()) == [
         "Phosphorylation",
+        "GeneToPhenotypeAssociation",
         "GeneToDiseaseAssociation",
     ]
 

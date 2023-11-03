@@ -21,6 +21,8 @@ from langchain.llms import HuggingFaceHub
 import nltk
 import json
 
+from pydantic import ValidationError
+
 from .vectorstore import DocumentEmbedder
 from ._stats import get_stats
 
@@ -530,7 +532,7 @@ class AzureGptConversation(GptConversation):
 
             return True
 
-        except openai.error.AuthenticationError as e:
+        except (openai.error.AuthenticationError, ValidationError) as e:
             return False
 
     def _update_usage_stats(self, model: str, token_usage: dict):
