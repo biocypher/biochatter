@@ -1,0 +1,50 @@
+name: biochatter Continuous Integration
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install Docker
+        run: |
+          sudo apt remove containerd.io
+          sudo apt install -y docker.io
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Start Milvus server
+        run: |
+          docker-compose -f milvus-docker-compose.yml up -d
+
+      - name: Set API key
+        run: |
+          echo ${{ secrets.OPENAI_API_KEY }} > api_key.txt
+
+      - name: Set environment variable
+        run: |
+          echo "OPENAI_API_KEY=$(cat api_key.txt)" >> $GITHUB_ENV
+
+      - name: Run tests
+        run: |
+          poetry run pytest --ignore=./volumes
