@@ -12,14 +12,26 @@ FIRST_PROMPT = (
     "Authors: <authors>'."
 )
 
-PROMPT = (
-    "You are tasked with summarising a scientific manuscript for consumption as"
-    "a podcast. You will receive a collection of sentences from the"
-    "manuscript, from which you will remove any information not relevant to the"
+SUMMARISE_PROMPT = (
+    "You are tasked with processing a scientific manuscript for consumption as "
+    "a podcast. You will receive a collection of sentences from the "
+    "manuscript, from which you will remove any information not relevant to the "
     "content, such as references, figure legends, tables, author information, "
-    "journal metadata, and so on. You will then be asked to summarise the"
-    "section of the manuscript, making the wording more suitable for listening."
-    "Remove all content in brackets that is of technical nature, such as"
+    "journal metadata, and so on. You will then be asked to summarise the "
+    "section of the manuscript, making the wording more suitable for listening. "
+    "Remove all content in brackets that is of technical nature, such as "
+    "p-values, statistical tests, and so on. If the given text contains only "
+    "literature references, return 'No content'."
+)
+
+PROCESS_PROMPT = (
+    "You are tasked with processing a scientific manuscript for consumption as "
+    "a podcast. You will receive a collection of sentences from the "
+    "manuscript, from which you will remove any information not relevant to the "
+    "content, such as references, figure legends, tables, author information, "
+    "journal metadata, and so on. You will then be asked to process the "
+    "section of the manuscript to make it listenable, but not shorten the content. "
+    "Remove all content in brackets that is of technical nature, such as "
     "p-values, statistical tests, and so on. If the given text contains only "
     "literature references, return 'No content'."
 )
@@ -103,12 +115,15 @@ class Podcaster:
         authors = msg.split("Authors:")[1].strip()
         return f"{title}, by {authors}, podcasted by biochatter."
 
-    def _summarise_section(self, text: str) -> str:
+    def _process_section(self, text: str, summarise: bool = False) -> str:
         """
-        Summarises a section of the document.
+        Processes a section of the document. Summarises if summarise is True,
+        otherwise just makes the text more listenable.
 
         Args:
             text (str): text to summarise
+
+            summarise (bool): whether to summarise the text
 
         Returns:
             str: summarised text
@@ -120,7 +135,10 @@ class Podcaster:
             correct=False,
         )
         c.set_api_key(api_key=os.getenv("OPENAI_API_KEY"), user="podcast")
-        c.append_system_message(PROMPT)
+        if summarise:
+            c.append_system_message(SUMMARISE_PROMPT)
+        else:
+            c.append_system_message(PROCESS_PROMPT)
         msg, token_usage, correction = c.query(text)
         return msg
 
@@ -150,7 +168,7 @@ class Podcaster:
             else:
                 if sentences:
                     sentences.insert(0, sentence)
-                summarised_section = self._summarise_section(section)
+                summarised_section = self._process_section(section)
                 summarised_sections.append(summarised_section)
                 section = ""
 
