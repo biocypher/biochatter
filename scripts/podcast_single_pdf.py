@@ -18,9 +18,23 @@ parser.add_argument(
     "output_path", type=str, help="The path to the output document."
 )
 
+if __name__ == "__main__":
+    # Debug
+    class Args:
+        def __init__(self, input_path, output_path):
+            self.input_path = input_path
+            self.output_path = output_path
 
-# Parse the arguments
-args = parser.parse_args()
+    # Use the Args class to create a mock args object
+    args = Args(
+        "/Users/slobentanzer/Downloads/MedCPT - Contrastive Pre-trained Transformers with large-scale PubMed search logs for zero-shot biomedical information retrieval.pdf",
+        "medcpt.mp3",
+    )
+else:
+    # Parse the arguments
+    args = parser.parse_args()
+
+
 args.input_path = os.path.abspath(args.input_path)
 args.output_path = os.path.abspath(args.output_path)
 

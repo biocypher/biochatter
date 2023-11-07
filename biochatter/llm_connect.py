@@ -344,11 +344,16 @@ class GptConversation(Conversation):
         Returns:
             bool: True if the API key is valid, False otherwise.
         """
-        openai.api_key = api_key
+        client = openai.OpenAI(
+            api_key=api_key,
+        )
         self.user = user
 
         try:
-            openai.Model.list()
+            client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "user", "content": "Hello world"}],
+            )
             self.chat = ChatOpenAI(
                 model_name=self.model_name,
                 temperature=0,
@@ -364,7 +369,7 @@ class GptConversation(Conversation):
 
             return True
 
-        except openai.error.AuthenticationError as e:
+        except openai._exceptions.AuthenticationError as e:
             return False
 
     def _primary_query(self):
@@ -380,10 +385,20 @@ class GptConversation(Conversation):
         try:
             response = self.chat.generate([self.messages])
         except (
-            openai.error.InvalidRequestError,
-            openai.error.APIConnectionError,
-            openai.error.RateLimitError,
-            openai.error.APIError,
+            openai._exceptions.APIError,
+            openai._exceptions.OpenAIError,
+            openai._exceptions.ConflictError,
+            openai._exceptions.NotFoundError,
+            openai._exceptions.APIStatusError,
+            openai._exceptions.RateLimitError,
+            openai._exceptions.APITimeoutError,
+            openai._exceptions.BadRequestError,
+            openai._exceptions.APIConnectionError,
+            openai._exceptions.AuthenticationError,
+            openai._exceptions.InternalServerError,
+            openai._exceptions.PermissionDeniedError,
+            openai._exceptions.UnprocessableEntityError,
+            openai._exceptions.APIResponseValidationError,
         ) as e:
             return str(e), None
 
@@ -530,7 +545,7 @@ class AzureGptConversation(GptConversation):
 
             return True
 
-        except openai.error.AuthenticationError as e:
+        except openai._exceptions.AuthenticationError as e:
             return False
 
     def _update_usage_stats(self, model: str, token_usage: dict):
