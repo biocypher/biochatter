@@ -4,6 +4,7 @@ from .llm_connect import GptConversation
 from gtts import gTTS
 import nltk
 import os
+from openai import OpenAI
 
 FIRST_PROMPT = (
     "You are tasked with summarising a scientific manuscript for consumption as"
@@ -76,7 +77,7 @@ class Podcaster:
         # LLM to determine section breaks?
 
         # go through sections and summarise each
-        self.summarised_sections = self._summarise_sections(
+        self.summarised_sections = self._process_sections(
             sentences,
             characters_per_paragraph,
         )
@@ -142,21 +143,22 @@ class Podcaster:
         msg, token_usage, correction = c.query(text)
         return msg
 
-    def _summarise_sections(
+    def _process_sections(
         self, sentences: list, characters_per_paragraph: int
     ) -> list:
         """
 
-        Summarises sections of the document. Concatenates sentences until
+        Processes sections of the document. Concatenates sentences until
         characters_per_paragraph is reached, removing each sentence from the
-        list as it is added to the section to be summarised.
+        list as it is added to the section to be processed.
 
         Args:
             sentences (list): list of sentences to summarise
+
             characters_per_paragraph (int): number of characters per paragraph
 
         Returns:
-            list: list of summarised sections
+            list: list of processed sections
         """
         summarised_sections = []
         section = ""
@@ -169,23 +171,50 @@ class Podcaster:
                 if sentences:
                     sentences.insert(0, sentence)
                 summarised_section = self._process_section(section)
-                summarised_sections.append(summarised_section)
+                # filter "no content" sections
+                if not (
+                    "no content" in summarised_section.lower()
+                    and len(summarised_section) < 30
+                ):
+                    summarised_sections.append(summarised_section)
                 section = ""
 
         return summarised_sections
 
-    def podcast_to_file(self, path: str) -> None:
+    def podcast_to_file(
+        self,
+        path: str,
+        model: str = "gtts",
+        voice: str = "alloy",
+    ) -> None:
         """
         Uses text-to-speech to generate audio for the summarised paper podcast.
 
         Args:
             path (str): path to save audio file to
+
+            model (str): model to use for text-to-speech. Currently supported:
+                'gtts' (Google Text-to-Speech, free),
+                'tts-1' (OpenAI API, paid, prioritises speed),
+                'tts-1-hd' (OpenAI API, paid, prioritises quality)
+
+            voice (str): voice to use for text-to-speech. See OpenAI API
+                documentation for available voices.
         """
 
         full_text = self.podcast_to_text()
 
-        audio = gTTS(text=full_text)
-        audio.save(path)
+        if model == "gtts":
+            audio = gTTS(text=full_text)
+            audio.save(path)
+        else:
+            client = OpenAI()
+            response = client.audio.speech.create(
+                model=model,
+                voice=voice,
+                input=full_text,
+            )
+            response.stream_to_file(path)
 
     def podcast_to_text(self):
         """

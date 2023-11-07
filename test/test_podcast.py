@@ -42,7 +42,7 @@ def test_podcast_to_text():
     assert podcaster.podcast_to_text() == expected_text
 
 
-def test_podcast_to_file(tmpdir):
+def test_podcast_to_file_gtts(tmpdir):
     # create a Podcaster object with fixed text
     reader = DocumentReader()
     document = reader.load_document("test/dcn.pdf")

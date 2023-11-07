@@ -44,5 +44,8 @@ document = reader.load_document(args.input_path)
 podcaster = Podcaster(document)
 podcaster.generate_podcast(characters_per_paragraph=5000)
 
-with open(args.output_path, "w") as f:
-    f.write(podcaster.podcast_to_text())
+if os.path.splitext(args.output_path)[1] == ".mp3":
+    podcaster.podcast_to_file(args.output_path, model="tts-1-hd")
+else:
+    with open(args.output_path, "w") as f:
+        f.write(podcaster.podcast_to_text())
