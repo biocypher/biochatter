@@ -12,7 +12,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
 langchain = "0.0.147"
-openai = "^0.27.8"
+openai = "^1.1.0"
 pymupdf = "^1.22.3"
 pymilvus = "2.2.8"
 tiktoken = "^0.4.0"
