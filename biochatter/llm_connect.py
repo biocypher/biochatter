@@ -350,10 +350,7 @@ class GptConversation(Conversation):
         self.user = user
 
         try:
-            client.chat.completions.create(
-                model="gpt-3.5-turbo",
-                messages=[{"role": "user", "content": "Hello world"}],
-            )
+            client.models.list()
             self.chat = ChatOpenAI(
                 model_name=self.model_name,
                 temperature=0,
