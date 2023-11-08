@@ -7,7 +7,6 @@ from biochatter.llm_connect import (
     HumanMessage,
     AIMessage,
 )
-from openai.error import InvalidRequestError
 import pytest
 
 
