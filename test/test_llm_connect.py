@@ -1,5 +1,6 @@
 import os
 import openai
+from openai._exceptions import BadRequestError
 from biochatter.llm_connect import (
     GptConversation,
     AzureGptConversation,
@@ -14,19 +15,19 @@ import pytest
 def manageTestContext():
     import openai
 
-    api_base = openai.api_base
+    base_url = openai.base_url
     api_type = openai.api_type
     api_version = openai.api_version
     api_key = openai.api_key
-    api_key_path = openai.api_key_path
+    # api_key_path = openai.api_key_path
     organization = openai.organization
     yield True
 
-    openai.api_base = api_base
+    openai.base_url = base_url
     openai.api_type = api_type
     openai.api_version = api_version
     openai.api_key = api_key
-    openai.api_key_path = api_key_path
+    # openai.api_key_path = api_key_path
     openai.organization = organization
 
 
@@ -101,7 +102,7 @@ def test_azure_raises_request_error():
         base="https://api.openai.com",
     )
 
-    with pytest.raises(InvalidRequestError):
+    with pytest.raises(BadRequestError):
         convo.set_api_key("fake_key")
 
 
