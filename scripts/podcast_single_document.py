@@ -17,8 +17,9 @@ parser.add_argument(
 parser.add_argument(
     "output_path", type=str, help="The path to the output document."
 )
-
-if __name__ == "__main__":
+try:
+    args = parser.parse_args()
+except:
     # Debug
     class Args:
         def __init__(self, input_path, output_path):
@@ -30,9 +31,6 @@ if __name__ == "__main__":
         "/Users/slobentanzer/Downloads/MedCPT - Contrastive Pre-trained Transformers with large-scale PubMed search logs for zero-shot biomedical information retrieval.pdf",
         "medcpt.mp3",
     )
-else:
-    # Parse the arguments
-    args = parser.parse_args()
 
 
 args.input_path = os.path.abspath(args.input_path)
@@ -55,8 +53,8 @@ if not os.path.isdir(os.path.dirname(args.output_path)):
 reader = DocumentReader()
 document = reader.load_document(args.input_path)
 
-podcaster = Podcaster(document)
-podcaster.generate_podcast(characters_per_paragraph=5000)
+podcaster = Podcaster(document, "gpt-4")
+podcaster.generate_podcast(characters_per_paragraph=25000)
 
 if os.path.splitext(args.output_path)[1] == ".mp3":
     podcaster.podcast_to_file(args.output_path, model="tts-1-hd")
