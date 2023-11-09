@@ -21,8 +21,6 @@ from langchain.llms import HuggingFaceHub
 import nltk
 import json
 
-from pydantic import ValidationError
-
 from .vectorstore import DocumentEmbedder
 from ._stats import get_stats
 
