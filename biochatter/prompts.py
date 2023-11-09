@@ -11,6 +11,7 @@ class BioCypherPromptEngine:
         self,
         schema_config_or_info_path: Optional[str] = None,
         schema_config_or_info_dict: Optional[dict] = None,
+        model_name: str = "gpt-3.5-turbo",
     ):
         """
 
@@ -102,6 +103,7 @@ class BioCypherPromptEngine:
         # are not the same as the relationship name, used in query generation
         # dictionary to also include source and target types
         self.rel_directions = {}
+        self.model_name = model_name
 
     def _capitalise_source_and_target(self, relationship: dict) -> dict:
         """
@@ -298,7 +300,7 @@ class BioCypherPromptEngine:
             rels = json.dumps(self.relationships)
 
         conversation = GptConversation(
-            model_name="gpt-3.5-turbo",
+            model_name=self.model_name,
             prompts={},
             correct=False,
         )
@@ -403,7 +405,7 @@ class BioCypherPromptEngine:
         )
 
         conversation = GptConversation(
-            model_name="gpt-3.5-turbo",
+            model_name=self.model_name,
             prompts={},
             correct=False,
         )
@@ -466,7 +468,7 @@ class BioCypherPromptEngine:
         msg += "Only return the query, without any additional text."
 
         conversation = GptConversation(
-            model_name="gpt-3.5-turbo",
+            model_name=self.model_name,
             prompts={},
             correct=False,
         )
