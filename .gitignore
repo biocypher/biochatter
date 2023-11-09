@@ -9,4 +9,4 @@ __pycache__/
 .cache
 *.env
 volumes/
-benchmark/*_results.csv
+benchmark/results/*.csv
