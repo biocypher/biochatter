@@ -1,7 +1,6 @@
 from biochatter.vectorstore import (
     DocumentEmbedder,
     DocumentReader,
-    Document,
 )
 import os
 import pytest
