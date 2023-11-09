@@ -9,7 +9,7 @@ MODEL_NAMES = [
 
 
 @pytest.fixture(scope="module", params=MODEL_NAMES)
-def ps(request):
+def prompt_engine(request):
     model_name = request.param
     return BioCypherPromptEngine(
         schema_config_or_info_path="test/test_schema_info.yaml",
@@ -23,64 +23,78 @@ def calculate_test_score(vector: list[bool]):
     return f"{score}/{max}"
 
 
-def test_entity_selection(ps):
-    success = ps._select_entities(
+def test_entity_selection(prompt_engine):
+    success = prompt_engine._select_entities(
         question="Which genes are associated with mucoviscidosis?"
     )
     assert success
 
     score = []
-    score.append("Gene" in ps.selected_entities)
-    score.append("Disease" in ps.selected_entities)
+    score.append("Gene" in prompt_engine.selected_entities)
+    score.append("Disease" in prompt_engine.selected_entities)
     score = calculate_test_score(score)
 
-    with open("benchmark/biocypher_query_results.csv", "a") as f:
-        f.write(f"{ps.model_name},entities,{score}\n")
+    with open("benchmark/results/biocypher_query_generation.csv", "a") as f:
+        f.write(f"{prompt_engine.model_name},entities,{score}\n")
 
 
-def test_relationship_selection(ps):
-    ps.question = "Which genes are associated with mucoviscidosis?"
-    ps.selected_entities = ["Gene", "Disease"]
-    success = ps._select_relationships()
+def test_relationship_selection(prompt_engine):
+    prompt_engine.question = "Which genes are associated with mucoviscidosis?"
+    prompt_engine.selected_entities = ["Gene", "Disease"]
+    success = prompt_engine._select_relationships()
     assert success
 
     score = []
-    score.append(ps.selected_relationships == ["GeneToPhenotypeAssociation"])
-    score.append("PERTURBED" in ps.selected_relationship_labels.keys())
-    score.append("source" in ps.selected_relationship_labels.get("PERTURBED"))
-    score.append("target" in ps.selected_relationship_labels.get("PERTURBED"))
+    score.append(
+        prompt_engine.selected_relationships == ["GeneToPhenotypeAssociation"]
+    )
+    score.append(
+        "PERTURBED" in prompt_engine.selected_relationship_labels.keys()
+    )
+    score.append(
+        "source" in prompt_engine.selected_relationship_labels.get("PERTURBED")
+    )
+    score.append(
+        "target" in prompt_engine.selected_relationship_labels.get("PERTURBED")
+    )
     score.append(
         "Disease"
-        in ps.selected_relationship_labels.get("PERTURBED").get("source")
+        in prompt_engine.selected_relationship_labels.get("PERTURBED").get(
+            "source"
+        )
     )
     score.append(
         "Protein"
-        in ps.selected_relationship_labels.get("PERTURBED").get("target")
+        in prompt_engine.selected_relationship_labels.get("PERTURBED").get(
+            "target"
+        )
     )
 
-    with open("benchmark/biocypher_query_results.csv", "a") as f:
+    with open("benchmark/results/biocypher_query_generation.csv", "a") as f:
         f.write(
-            f"{ps.model_name},relationships,{calculate_test_score(score)}\n"
+            f"{prompt_engine.model_name},relationships,{calculate_test_score(score)}\n"
         )
 
 
-def test_property_selection(ps):
-    ps.question = "Which genes are associated with mucoviscidosis?"
-    ps.selected_entities = ["Gene", "Disease"]
-    ps.selected_relationships = ["GeneToPhenotypeAssociation"]
-    success = ps._select_properties()
+def test_property_selection(prompt_engine):
+    prompt_engine.question = "Which genes are associated with mucoviscidosis?"
+    prompt_engine.selected_entities = ["Gene", "Disease"]
+    prompt_engine.selected_relationships = ["GeneToPhenotypeAssociation"]
+    success = prompt_engine._select_properties()
     assert success
 
     score = []
-    score.append("Disease" in ps.selected_properties.keys())
-    score.append("name" in ps.selected_properties.get("Disease"))
+    score.append("Disease" in prompt_engine.selected_properties.keys())
+    score.append("name" in prompt_engine.selected_properties.get("Disease"))
 
-    with open("benchmark/biocypher_query_results.csv", "a") as f:
-        f.write(f"{ps.model_name},properties,{calculate_test_score(score)}\n")
+    with open("benchmark/results/biocypher_query_generation.csv", "a") as f:
+        f.write(
+            f"{prompt_engine.model_name},properties,{calculate_test_score(score)}\n"
+        )
 
 
-def test_query_generation(ps):
-    query = ps._generate_query(
+def test_query_generation(prompt_engine):
+    query = prompt_engine._generate_query(
         question="Which genes are associated with mucoviscidosis?",
         entities=["Gene", "Disease"],
         relationships={
@@ -104,12 +118,14 @@ def test_query_generation(ps):
     )
     score.append("WHERE" in query or "{name:" in query)
 
-    with open("benchmark/biocypher_query_results.csv", "a") as f:
-        f.write(f"{ps.model_name},cypher query,{calculate_test_score(score)}\n")
+    with open("benchmark/results/biocypher_query_generation.csv", "a") as f:
+        f.write(
+            f"{prompt_engine.model_name},cypher query,{calculate_test_score(score)}\n"
+        )
 
 
-def test_end_to_end_query_generation(ps):
-    query = ps.generate_query(
+def test_end_to_end_query_generation(prompt_engine):
+    query = prompt_engine.generate_query(
         question="Which genes are associated with mucoviscidosis?",
         query_language="Cypher",
     )
@@ -128,5 +144,7 @@ def test_end_to_end_query_generation(ps):
     )
     score.append("WHERE" in query or "{name:" in query)
 
-    with open("benchmark/biocypher_query_results.csv", "a") as f:
-        f.write(f"{ps.model_name},end-to-end,{calculate_test_score(score)}\n")
+    with open("benchmark/results/biocypher_query_generation.csv", "a") as f:
+        f.write(
+            f"{prompt_engine.model_name},end-to-end,{calculate_test_score(score)}\n"
+        )
