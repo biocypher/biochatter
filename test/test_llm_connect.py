@@ -105,7 +105,6 @@ def test_azure_raises_request_error():
     with pytest.raises(NotFoundError):
         convo.set_api_key("fake_key")
 
-
 def test_azure():
     """
     Test OpenAI Azure endpoint functionality. Azure connectivity is enabled by
@@ -121,5 +120,5 @@ def test_azure():
         base_url=os.getenv("AZURE_TEST_OPENAI_API_BASE"),
     )
 
-    assert not convo.set_api_key(os.getenv("AZURE_TEST_OPENAI_API_KEY"))
+    assert convo.set_api_key(os.getenv("AZURE_TEST_OPENAI_API_KEY"))
     
