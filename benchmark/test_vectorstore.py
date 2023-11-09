@@ -42,5 +42,5 @@ def test_document_summariser(model, chunk_size):
     [docsum.database_host.remove_document(doc_id) for doc_id in doc_ids]
 
     # record sum in CSV file
-    with open("benchmark/vectorstore_results.csv", "a") as f:
+    with open("benchmark/results/vectorstore.csv", "a") as f:
         f.write(f"{model},{chunk_size},{correct}\n")
