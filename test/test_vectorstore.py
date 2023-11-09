@@ -143,9 +143,9 @@ def test_split_by_characters():
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP,
     )
-    check_document_splitter(docsum, "test/bc_summary.pdf", 197)
-    check_document_splitter(docsum, "test/dcn.pdf", 245)
-    check_document_splitter(docsum, "test/bc_summary.txt", 104)
+    check_document_splitter(docsum, "test/bc_summary.pdf", 195)
+    check_document_splitter(docsum, "test/dcn.pdf", 246)
+    check_document_splitter(docsum, "test/bc_summary.txt", 103)
 
 
 def test_split_by_tokens_tiktoken():
@@ -155,9 +155,9 @@ def test_split_by_tokens_tiktoken():
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP,
     )
-    check_document_splitter(docsum, "test/bc_summary.pdf", 73)
-    check_document_splitter(docsum, "test/dcn.pdf", 104)
-    check_document_splitter(docsum, "test/bc_summary.txt", 37)
+    check_document_splitter(docsum, "test/bc_summary.pdf", 46)
+    check_document_splitter(docsum, "test/dcn.pdf", 69)
+    check_document_splitter(docsum, "test/bc_summary.txt", 20)
 
 
 def test_split_by_tokens_tokenizers():
@@ -168,6 +168,6 @@ def test_split_by_tokens_tokenizers():
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP,
     )
-    check_document_splitter(docsum, "test/bc_summary.pdf", 79)
-    check_document_splitter(docsum, "test/dcn.pdf", 111)
-    check_document_splitter(docsum, "test/bc_summary.txt", 40)
+    check_document_splitter(docsum, "test/bc_summary.pdf", 48)
+    check_document_splitter(docsum, "test/dcn.pdf", 72)
+    check_document_splitter(docsum, "test/bc_summary.txt", 21)

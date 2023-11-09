@@ -9,3 +9,6 @@ __pycache__/
 .cache
 *.env.idea
 .idea/
+*.env
+volumes/
+benchmark/results/*.csv
