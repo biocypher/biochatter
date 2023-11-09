@@ -1,7 +1,15 @@
 from biochatter.prompts import BioCypherPromptEngine
 import pytest
-from .conftest import calculate_test_score
+from .conftest import calculate_test_score, RESULT_FILES
 
+FILE_PATH = next(
+    (
+        s
+        for s in RESULT_FILES
+        if "biocypher" in s and "query" in s and "generation" in s
+    ),
+    None,
+)
 
 MODEL_NAMES = [
     "gpt-3.5-turbo",
@@ -28,7 +36,7 @@ def test_entity_selection(prompt_engine):
     score.append("Gene" in prompt_engine.selected_entities)
     score.append("Disease" in prompt_engine.selected_entities)
 
-    with open("benchmark/results/biocypher_query_generation.csv", "a") as f:
+    with open(FILE_PATH, "a") as f:
         f.write(
             f"{prompt_engine.model_name},entities,{calculate_test_score(score)}\n"
         )
@@ -66,7 +74,7 @@ def test_relationship_selection(prompt_engine):
         )
     )
 
-    with open("benchmark/results/biocypher_query_generation.csv", "a") as f:
+    with open(FILE_PATH, "a") as f:
         f.write(
             f"{prompt_engine.model_name},relationships,{calculate_test_score(score)}\n"
         )
@@ -83,7 +91,7 @@ def test_property_selection(prompt_engine):
     score.append("Disease" in prompt_engine.selected_properties.keys())
     score.append("name" in prompt_engine.selected_properties.get("Disease"))
 
-    with open("benchmark/results/biocypher_query_generation.csv", "a") as f:
+    with open(FILE_PATH, "a") as f:
         f.write(
             f"{prompt_engine.model_name},properties,{calculate_test_score(score)}\n"
         )
@@ -114,7 +122,7 @@ def test_query_generation(prompt_engine):
     )
     score.append("WHERE" in query or "{name:" in query)
 
-    with open("benchmark/results/biocypher_query_generation.csv", "a") as f:
+    with open(FILE_PATH, "a") as f:
         f.write(
             f"{prompt_engine.model_name},cypher query,{calculate_test_score(score)}\n"
         )
@@ -140,7 +148,7 @@ def test_end_to_end_query_generation(prompt_engine):
     )
     score.append("WHERE" in query or "{name:" in query)
 
-    with open("benchmark/results/biocypher_query_generation.csv", "a") as f:
+    with open(FILE_PATH, "a") as f:
         f.write(
             f"{prompt_engine.model_name},end-to-end,{calculate_test_score(score)}\n"
         )

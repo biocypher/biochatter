@@ -5,7 +5,12 @@ from biochatter.vectorstore import (
 )
 import os
 import pytest
-from .conftest import calculate_test_score
+from .conftest import calculate_test_score, RESULT_FILES
+
+FILE_PATH = next(
+    (s for s in RESULT_FILES if "vectorstore" in s),
+    None,
+)
 
 # setup milvus connection
 if os.getenv("DEVCONTAINER"):
@@ -37,11 +42,11 @@ def test_document_summariser(model, chunk_size):
 
     query = "What is BioCypher?"
     results = docsum.similarity_search(query)
-    correct = sum(["BioCypher" in result.page_content for result in results])
+    correct = ["BioCypher" in result.page_content for result in results]
 
     # delete embeddings
     [docsum.database_host.remove_document(doc_id) for doc_id in doc_ids]
 
     # record sum in CSV file
-    with open("benchmark/results/vectorstore.csv", "a") as f:
+    with open(FILE_PATH, "a") as f:
         f.write(f"{model},{chunk_size},{calculate_test_score(correct)}\n")
