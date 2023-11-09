@@ -1,5 +1,6 @@
 from biochatter.prompts import BioCypherPromptEngine
 import pytest
+from .conftest import calculate_test_score
 
 
 MODEL_NAMES = [
@@ -17,12 +18,6 @@ def prompt_engine(request):
     )
 
 
-def calculate_test_score(vector: list[bool]):
-    score = sum(vector)
-    max = len(vector)
-    return f"{score}/{max}"
-
-
 def test_entity_selection(prompt_engine):
     success = prompt_engine._select_entities(
         question="Which genes are associated with mucoviscidosis?"
@@ -32,10 +27,11 @@ def test_entity_selection(prompt_engine):
     score = []
     score.append("Gene" in prompt_engine.selected_entities)
     score.append("Disease" in prompt_engine.selected_entities)
-    score = calculate_test_score(score)
 
     with open("benchmark/results/biocypher_query_generation.csv", "a") as f:
-        f.write(f"{prompt_engine.model_name},entities,{score}\n")
+        f.write(
+            f"{prompt_engine.model_name},entities,{calculate_test_score(score)}\n"
+        )
 
 
 def test_relationship_selection(prompt_engine):

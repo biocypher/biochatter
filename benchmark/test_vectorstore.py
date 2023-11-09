@@ -5,6 +5,7 @@ from biochatter.vectorstore import (
 )
 import os
 import pytest
+from .conftest import calculate_test_score
 
 # setup milvus connection
 if os.getenv("DEVCONTAINER"):
@@ -43,4 +44,4 @@ def test_document_summariser(model, chunk_size):
 
     # record sum in CSV file
     with open("benchmark/results/vectorstore.csv", "a") as f:
-        f.write(f"{model},{chunk_size},{correct}\n")
+        f.write(f"{model},{chunk_size},{calculate_test_score(correct)}\n")
