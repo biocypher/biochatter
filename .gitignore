@@ -8,3 +8,5 @@ __pycache__/
 *.mp3
 .cache
 *.env
+volumes/
+benchmark/results/*.csv
