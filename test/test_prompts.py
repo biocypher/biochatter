@@ -1,6 +1,8 @@
 from biochatter.prompts import BioCypherPromptEngine
 import pytest
 
+## THIS IS LARGELY BENCHMARK MATERIAL, TO BE MOCKED FOR UNIT TESTING
+
 
 @pytest.fixture
 def ps():
@@ -17,6 +19,7 @@ def test_biocypher_prompts(ps):
     ]
     assert list(ps.relationships.keys()) == [
         "Phosphorylation",
+        "GeneToPhenotypeAssociation",
         "GeneToDiseaseAssociation",
     ]
 

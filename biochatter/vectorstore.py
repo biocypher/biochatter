@@ -42,13 +42,15 @@ class DocumentEmbedder:
         self.separators = separators or [" ", ",", "\n"]
         self.n_results = n_results
         self.split_by_characters = split_by_characters
-        self.model_name = model
+        self.model_name = model or "text-embedding-ada-002"
 
         # TODO: variable embeddings depending on model
         # for now, just use ada-002
         # TODO API Key handling to central config
         if not self.online:
-            self.embeddings = OpenAIEmbeddings(openai_api_key=api_key)
+            self.embeddings = OpenAIEmbeddings(
+                openai_api_key=api_key, model=self.model_name
+            )
         else:
             self.embeddings = None
 
@@ -67,7 +69,8 @@ class DocumentEmbedder:
     def _init_database_host(self):
         if self.vector_db_vendor == "milvus":
             self.database_host = VectorDatabaseHostMilvus(
-                embedding_func=self.embeddings, connection_args=self.connection_args
+                embedding_func=self.embeddings,
+                connection_args=self.connection_args,
             )
         else:
             raise NotImplementedError(self.vector_db_vendor)
@@ -118,14 +121,14 @@ class DocumentEmbedder:
         )
 
     def save_document(self, doc: List[Document]) -> str:
-        '''
+        """
         This function saves document to the vector database
         Args:
-            doc List[Document]: document content, read with DocumentReader load_document(), 
+            doc List[Document]: document content, read with DocumentReader load_document(),
                 or document_from_pdf(), document_from_txt()
         Returns:
             str: document id, which can be used to remove an uploaded document with remove_document()
-        '''
+        """
         splitted = self._split_document(doc)
         return self._store_embeddings(splitted)
 
@@ -133,18 +136,10 @@ class DocumentEmbedder:
         text_splitter = self._text_splitter()
         return text_splitter.split_documents(document)
 
-    def _store_embeddings(
-        self, doc: List[Document]
-    ) -> str:
-        return self.database_host.store_embeddings(
-            documents=doc
-        )
+    def _store_embeddings(self, doc: List[Document]) -> str:
+        return self.database_host.store_embeddings(documents=doc)
 
-    def similarity_search(
-        self,
-        query: str,
-        k: int = 3
-    ):
+    def similarity_search(self, query: str, k: int = 3):
         """
         Returns top n closest matches to query from vector store.
 

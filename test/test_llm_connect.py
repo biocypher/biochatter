@@ -1,5 +1,6 @@
 import os
 import openai
+from openai._exceptions import NotFoundError
 from biochatter.llm_connect import (
     GptConversation,
     AzureGptConversation,
@@ -7,7 +8,6 @@ from biochatter.llm_connect import (
     HumanMessage,
     AIMessage,
 )
-from openai.error import InvalidRequestError
 import pytest
 
 
@@ -15,19 +15,19 @@ import pytest
 def manageTestContext():
     import openai
 
-    api_base = openai.api_base
+    base_url = openai.base_url
     api_type = openai.api_type
     api_version = openai.api_version
     api_key = openai.api_key
-    api_key_path = openai.api_key_path
+    # api_key_path = openai.api_key_path
     organization = openai.organization
     yield True
 
-    openai.api_base = api_base
+    openai.base_url = base_url
     openai.api_type = api_type
     openai.api_version = api_version
     openai.api_key = api_key
-    openai.api_key_path = api_key_path
+    # openai.api_key_path = api_key_path
     openai.organization = organization
 
 
@@ -99,10 +99,10 @@ def test_azure_raises_request_error():
         prompts={},
         split_correction=False,
         version="2023-03-15-preview",
-        base="https://api.openai.com",
+        base_url="https://api.openai.com",
     )
 
-    with pytest.raises(InvalidRequestError):
+    with pytest.raises(NotFoundError):
         convo.set_api_key("fake_key")
 
 
@@ -118,7 +118,7 @@ def test_azure():
         prompts={},
         split_correction=False,
         version=os.getenv("AZURE_TEST_OPENAI_API_VERSION"),
-        base=os.getenv("AZURE_TEST_OPENAI_API_BASE"),
+        base_url=os.getenv("AZURE_TEST_OPENAI_API_BASE"),
     )
 
     assert convo.set_api_key(os.getenv("AZURE_TEST_OPENAI_API_KEY"))
