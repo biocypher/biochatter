@@ -39,11 +39,16 @@ PROCESS_PROMPT = (
 
 
 class Podcaster:
-    def __init__(self, document: Document) -> None:
+    def __init__(
+        self,
+        document: Document,
+        model_name: str = "gpt-3.5-turbo",
+    ) -> None:
         """
         Orchestrates the podcasting of a document.
         """
         self.document = document
+        self.model_name = model_name
 
     def generate_podcast(self, characters_per_paragraph: int) -> None:
         """
@@ -104,7 +109,7 @@ class Podcaster:
         """
         # first sentence - extract title, authors
         c_first = GptConversation(
-            model_name="gpt-3.5-turbo",
+            model_name=self.model_name,
             prompts={},
             correct=False,
         )
@@ -131,7 +136,7 @@ class Podcaster:
         """
         # summarise section
         c = GptConversation(
-            model_name="gpt-3.5-turbo",
+            model_name=self.model_name,
             prompts={},
             correct=False,
         )
