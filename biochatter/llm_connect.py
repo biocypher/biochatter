@@ -469,7 +469,7 @@ class AzureGptConversation(GptConversation):
         split_correction: bool = False,
         docsum: DocumentEmbedder = None,
         version: Optional[str] = None,
-        base: Optional[str] = None,
+        base_url: Optional[str] = None,
     ):
         """
         Connect to Azure's GPT API and set up a conversation with the user.
@@ -492,7 +492,7 @@ class AzureGptConversation(GptConversation):
 
             version (str): The version of the Azure API to use.
 
-            base (str): The base URL of the Azure API to use.
+            base_url (str): The base URL of the Azure API to use.
         """
         super().__init__(
             model_name=model_name,
@@ -503,7 +503,7 @@ class AzureGptConversation(GptConversation):
         )
 
         self.version = version
-        self.base = base
+        self.base_url = base_url
         self.deployment_name = deployment_name
 
     def set_api_key(self, api_key: str, user: Optional[str] = None):
@@ -523,7 +523,7 @@ class AzureGptConversation(GptConversation):
                 deployment_name=self.deployment_name,
                 model_name=self.model_name,
                 openai_api_version=self.version,
-                openai_api_base=self.base,
+                openai_api_base=self.base_url,
                 openai_api_key=api_key,
                 temperature=0,
             )
@@ -533,7 +533,7 @@ class AzureGptConversation(GptConversation):
                 deployment_name=self.deployment_name,
                 model_name=self.model_name,
                 openai_api_version=self.version,
-                openai_api_base=self.base,
+                openai_api_base=self.base_url,
                 openai_api_key=api_key,
                 temperature=0,
             )
