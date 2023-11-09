@@ -1,6 +1,6 @@
 import os
 import openai
-from openai._exceptions import BadRequestError
+from openai._exceptions import NotFoundError
 from biochatter.llm_connect import (
     GptConversation,
     AzureGptConversation,
@@ -99,10 +99,10 @@ def test_azure_raises_request_error():
         prompts={},
         split_correction=False,
         version="2023-03-15-preview",
-        base="https://api.openai.com",
+        base_url="https://api.openai.com",
     )
 
-    with pytest.raises(BadRequestError):
+    with pytest.raises(NotFoundError):
         convo.set_api_key("fake_key")
 
 
@@ -118,7 +118,7 @@ def test_azure():
         prompts={},
         split_correction=False,
         version=os.getenv("AZURE_TEST_OPENAI_API_VERSION"),
-        base=os.getenv("AZURE_TEST_OPENAI_API_BASE"),
+        base_url=os.getenv("AZURE_TEST_OPENAI_API_BASE"),
     )
 
     assert convo.set_api_key(os.getenv("AZURE_TEST_OPENAI_API_KEY"))
