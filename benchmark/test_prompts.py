@@ -8,9 +8,9 @@ MODEL_NAMES = [
 ]
 
 
-@pytest.fixture
-@pytest.mark.parametrize("model_name", MODEL_NAMES)
-def ps(model_name):
+@pytest.fixture(scope="module", params=MODEL_NAMES)
+def ps(request):
+    model_name = request.param
     return BioCypherPromptEngine(
         schema_config_or_info_path="test/test_schema_info.yaml",
         model_name=model_name,
@@ -18,8 +18,8 @@ def ps(model_name):
 
 
 def calculate_test_score(vector: list[bool]):
-    score = sum(list)
-    max = len(list)
+    score = sum(vector)
+    max = len(vector)
     return f"{score}/{max}"
 
 
@@ -32,9 +32,10 @@ def test_entity_selection(ps):
     score = []
     score.append("Gene" in ps.selected_entities)
     score.append("Disease" in ps.selected_entities)
+    score = calculate_test_score(score)
 
     with open("benchmark/biocypher_query_results.csv", "a") as f:
-        f.write(f"{ps.model_name},entities,{calculate_test_score(score)}\n")
+        f.write(f"{ps.model_name},entities,{score}\n")
 
 
 def test_relationship_selection(ps):
