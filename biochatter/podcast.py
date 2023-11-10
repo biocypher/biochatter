@@ -117,9 +117,12 @@ class Podcaster:
         c_first.append_system_message(FIRST_PROMPT)
         msg, token_usage, correction = c_first.query(text)
         # split at authors ('Authors:' or '\nAuthors:')
-        title = msg.split("Title:")[1].split("Authors:")[0].strip()
-        authors = msg.split("Authors:")[1].strip()
-        return f"{title}, by {authors}, podcasted by biochatter."
+        if "Authors:" in msg:
+            title = msg.split("Title:")[1].split("Authors:")[0].strip()
+            authors = msg.split("Authors:")[1].strip()
+            return f"{title}, by {authors}, podcasted by biochatter."
+        else:
+            return msg
 
     def _process_section(self, text: str, summarise: bool = False) -> str:
         """
@@ -226,8 +229,40 @@ class Podcaster:
             first_path = path.rsplit(".", 1)[0] + "_0.mp3"
             response.stream_to_file(first_path)
 
-            # Save each section to a separate file with an integer suffix
+            # Contatenate the sections
+            full_text = ""
             for i, section in enumerate(self.processed_sections):
+                full_text += section + "\n\n"
+
+            # Make sections of 3500 characters max (at sentence boundaries)
+            num_sections = int(len(full_text) / 3500) + 1
+
+            nltk.download("punkt")
+            tokenizer = nltk.data.load("tokenizers/punkt/english.pickle")
+            sentences = tokenizer.tokenize(full_text)
+
+            # Find the sentence at the end of each section
+            # TODO: This is a bit hacky, but it works for now
+            section_boundaries = []
+            for i in range(num_sections):
+                section_boundaries.append(
+                    sentences[int((i + 1) * len(sentences) / num_sections) - 1]
+                )
+            # Split the text into sections
+            sections = []
+            for i in range(num_sections):
+                if i == 0:
+                    start = 0
+                else:
+                    start = sentences.index(section_boundaries[i - 1]) + 1
+                if i == num_sections - 1:
+                    end = len(sentences)
+                else:
+                    end = sentences.index(section_boundaries[i])
+                sections.append(" ".join(sentences[start:end]))
+
+            # Save each section to a separate file with an integer suffix
+            for i, section in enumerate(sections):
                 response = client.audio.speech.create(
                     model=model,
                     voice=voice,
