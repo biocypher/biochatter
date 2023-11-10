@@ -28,8 +28,8 @@ except:
 
     # Use the Args class to create a mock args object
     args = Args(
-        "/Users/slobentanzer/Downloads/MedCPT - Contrastive Pre-trained Transformers with large-scale PubMed search logs for zero-shot biomedical information retrieval.pdf",
-        "medcpt.mp3",
+        "/Users/slobentanzer/Downloads/2023.11.06.565928v1.full.pdf",
+        "poisoning-kgs-with-llms_gpt3.mp3",
     )
 
 
@@ -53,8 +53,8 @@ if not os.path.isdir(os.path.dirname(args.output_path)):
 reader = DocumentReader()
 document = reader.load_document(args.input_path)
 
-podcaster = Podcaster(document, "gpt-4")
-podcaster.generate_podcast(characters_per_paragraph=25000)
+podcaster = Podcaster(document, "gpt-3.5-turbo")
+podcaster.generate_podcast(characters_per_paragraph=8000)
 
 if os.path.splitext(args.output_path)[1] == ".mp3":
     podcaster.podcast_to_file(args.output_path, model="tts-1-hd")
