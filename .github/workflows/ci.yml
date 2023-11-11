@@ -1,0 +1,59 @@
+name: biochatter Continuous Integration
+
+on: [pull_request, push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install Docker
+        run: |
+          sudo apt remove containerd.io
+          sudo apt install -y docker.io
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+      - name: Install dependencies
+        run: |
+          poetry install
+          poetry install -E podcast
+
+      - name: Start Milvus server
+        run: |
+          docker-compose -f milvus-docker-compose.yml up -d
+
+      - name: Set API key
+        run: |
+          echo ${{ secrets.OPENAI_API_KEY }} > api_key.txt
+          echo ${{ secrets.AZURE_TEST_OPENAI_MODEL_NAME }} > azure_test_model.txt
+          echo ${{ secrets.AZURE_TEST_OPENAI_DEPLOYMENT_NAME }} > azure_test_deployment.txt
+          echo ${{ secrets.AZURE_TEST_OPENAI_API_VERSION }} > azure_test_api_version.txt
+          echo ${{ secrets.AZURE_TEST_OPENAI_API_BASE }} > azure_test_api_base.txt
+          echo ${{ secrets.AZURE_TEST_OPENAI_API_KEY }} > azure_test_api_key.txt
+
+      - name: Set environment variable
+        run: |
+          echo "OPENAI_API_KEY=$(cat api_key.txt)" >> $GITHUB_ENV
+          echo "AZURE_TEST_OPENAI_MODEL_NAME=$(cat azure_test_model.txt)" >> $GITHUB_ENV
+          echo "AZURE_TEST_OPENAI_DEPLOYMENT_NAME=$(cat azure_test_deployment.txt)" >> $GITHUB_ENV
+          echo "AZURE_TEST_OPENAI_API_VERSION=$(cat azure_test_api_version.txt)" >> $GITHUB_ENV
+          echo "AZURE_TEST_OPENAI_API_BASE=$(cat azure_test_api_base.txt)" >> $GITHUB_ENV
+          echo "AZURE_TEST_OPENAI_API_KEY=$(cat azure_test_api_key.txt)" >> $GITHUB_ENV
+
+      - name: Run tests
+        run: |
+          poetry run pytest --ignore=./volumes

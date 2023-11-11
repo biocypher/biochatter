@@ -10,9 +10,7 @@ from biochatter.vectorstore import DocumentReader
 from biochatter.vectorstore_host import VectorDatabaseHostMilvus
 
 """
-This test needs OPENAI_API_KEY in the environment and a local milvus server. The
-entire module needs to be run in one go, as the collections are created and
-called in different tests.
+This test needs OPENAI_API_KEY in the environment and a local milvus server. 
 """
 
 # setup milvus connection
