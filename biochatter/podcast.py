@@ -56,7 +56,6 @@ class Podcaster:
 
         TODO:
         - chain of density prompting for variable summary length
-        - do not summarise but just make readable
         """
         full_text = self.document[0].page_content
 
