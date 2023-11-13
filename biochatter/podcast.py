@@ -233,8 +233,8 @@ class Podcaster:
             for i, section in enumerate(self.processed_sections):
                 full_text += section + "\n\n"
 
-            # Make sections of 3500 characters max (at sentence boundaries)
-            num_sections = int(len(full_text) / 3500) + 1
+            # Make sections of 3000 characters max (at sentence boundaries)
+            num_sections = int(len(full_text) / 3000) + 1
 
             nltk.download("punkt")
             tokenizer = nltk.data.load("tokenizers/punkt/english.pickle")
