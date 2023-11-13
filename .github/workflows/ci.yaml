@@ -5,6 +5,7 @@ on: [pull_request, push]
 jobs:
   test:
     runs-on: ubuntu-latest
+    environment: 'Test CI'
 
     steps:
       - name: Checkout code
