@@ -1,32 +1,36 @@
 from biochatter.prompts import BioCypherPromptEngine
 import pytest
 
+## THIS IS LARGELY BENCHMARK MATERIAL, TO BE MOCKED FOR UNIT TESTING
+
 
 @pytest.fixture
-def ps():
+def prompt_engine():
     return BioCypherPromptEngine(
         schema_config_or_info_path="test/test_schema_info.yaml"
     )
 
 
-def test_biocypher_prompts(ps):
-    assert list(ps.entities.keys()) == [
+def test_biocypher_prompts(prompt_engine):
+    assert list(prompt_engine.entities.keys()) == [
         "Protein",
         "Gene",
         "Disease",
     ]
-    assert list(ps.relationships.keys()) == [
+    assert list(prompt_engine.relationships.keys()) == [
         "Phosphorylation",
+        "GeneToPhenotypeAssociation",
         "GeneToDiseaseAssociation",
     ]
 
-    assert "name" in ps.entities.get("Protein").get("properties")
+    assert "name" in prompt_engine.entities.get("Protein").get("properties")
     assert (
-        ps.relationships.get("Phosphorylation").get("represented_as") == "edge"
+        prompt_engine.relationships.get("Phosphorylation").get("represented_as")
+        == "edge"
     )
 
 
-def test_entity_selection(ps):
+def test_entity_selection(prompt_engine):
     """
 
     The first step is to identify the KG components that are relevant to the
@@ -42,24 +46,38 @@ def test_entity_selection(ps):
     TODO: a couple more representative cases
 
     """
-    success = ps._select_entities(
+    success = prompt_engine._select_entities(
         question="Which genes are associated with mucoviscidosis?"
     )
     assert success
-    assert ps.selected_entities == ["Gene", "Disease"]
-    assert ps.selected_relationships == ["GeneToDiseaseAssociation"]
-    assert "PERTURBED" in ps.selected_relationship_labels.keys()
-    assert "source" in ps.selected_relationship_labels.get("PERTURBED")
-    assert "target" in ps.selected_relationship_labels.get("PERTURBED")
-    assert "Disease" in ps.selected_relationship_labels.get("PERTURBED").get(
-        "source"
-    )
-    assert "Protein" in ps.selected_relationship_labels.get("PERTURBED").get(
-        "target"
-    )
+    assert prompt_engine.selected_entities == ["Gene", "Disease"]
 
 
-def test_property_selection(ps):
+def test_relationship_selection(prompt_engine):
+    prompt_engine.question = "Which genes are associated with mucoviscidosis?"
+    prompt_engine.selected_entities = ["Gene", "Disease"]
+    success = prompt_engine._select_relationships()
+    assert success
+
+    assert prompt_engine.selected_relationships == [
+        "GeneToPhenotypeAssociation"
+    ]
+    assert "PERTURBED" in prompt_engine.selected_relationship_labels.keys()
+    assert "source" in prompt_engine.selected_relationship_labels.get(
+        "PERTURBED"
+    )
+    assert "target" in prompt_engine.selected_relationship_labels.get(
+        "PERTURBED"
+    )
+    assert "Disease" in prompt_engine.selected_relationship_labels.get(
+        "PERTURBED"
+    ).get("source")
+    assert "Protein" in prompt_engine.selected_relationship_labels.get(
+        "PERTURBED"
+    ).get("target")
+
+
+def test_property_selection(prompt_engine):
     """
 
     The second step is to identify the properties of the relevant KG components
@@ -76,17 +94,16 @@ def test_property_selection(ps):
     example above, without any additional text."
 
     """
-    success = ps._select_properties(
-        question="Which genes are associated with mucoviscidosis?",
-        entities=["Gene", "Disease"],
-        relationships=["GeneToDiseaseAssociation"],
-    )
+    prompt_engine.question = "Which genes are associated with mucoviscidosis?"
+    prompt_engine.selected_entities = ["Gene", "Disease"]
+    prompt_engine.selected_relationships = ["GeneToPhenotypeAssociation"]
+    success = prompt_engine._select_properties()
     assert success
-    assert "Disease" in ps.selected_properties.keys()
-    assert "name" in ps.selected_properties.get("Disease")
+    assert "Disease" in prompt_engine.selected_properties.keys()
+    assert "name" in prompt_engine.selected_properties.get("Disease")
 
 
-def test_query_generation(ps):
+def test_query_generation(prompt_engine):
     """
 
     The third step is to generate a query that will retrieve the information
@@ -109,13 +126,30 @@ def test_query_generation(ps):
     TODO: special case relationship as node
 
     """
-    query = ps._generate_query(
+    query = prompt_engine._generate_query(
         question="Which genes are associated with mucoviscidosis?",
         entities=["Gene", "Disease"],
         relationships={
             "PERTURBED": {"source": "Disease", "target": ["Protein", "Gene"]}
         },
         properties={"Disease": ["name", "ICD10", "DSM5"]},
+        query_language="Cypher",
+    )
+
+    assert "MATCH" in query
+    assert "RETURN" in query
+    assert "Gene" in query
+    assert "Disease" in query
+    assert "mucoviscidosis" in query
+    assert (
+        "-[:PERTURBED]->(g:Gene)" in query or "(g:Gene)<-[:PERTURBED]-" in query
+    )
+    assert "WHERE" in query or "{name:" in query
+
+
+def test_end_to_end_query_generation(prompt_engine):
+    query = prompt_engine.generate_query(
+        question="Which genes are associated with mucoviscidosis?",
         query_language="Cypher",
     )
 

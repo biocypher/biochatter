@@ -554,11 +554,13 @@ class GptConversation(Conversation):
         Returns:
             bool: True if the API key is valid, False otherwise.
         """
-        openai.api_key = api_key
+        client = openai.OpenAI(
+            api_key=api_key,
+        )
         self.user = user
 
         try:
-            openai.Model.list()
+            client.models.list()
             self.chat = ChatOpenAI(
                 model_name=self.model_name,
                 temperature=0,
@@ -574,7 +576,7 @@ class GptConversation(Conversation):
 
             return True
 
-        except openai.error.AuthenticationError as e:
+        except openai._exceptions.AuthenticationError as e:
             return False
 
     def _primary_query(self):
@@ -590,10 +592,20 @@ class GptConversation(Conversation):
         try:
             response = self.chat.generate([self.messages])
         except (
-            openai.error.InvalidRequestError,
-            openai.error.APIConnectionError,
-            openai.error.RateLimitError,
-            openai.error.APIError,
+            openai._exceptions.APIError,
+            openai._exceptions.OpenAIError,
+            openai._exceptions.ConflictError,
+            openai._exceptions.NotFoundError,
+            openai._exceptions.APIStatusError,
+            openai._exceptions.RateLimitError,
+            openai._exceptions.APITimeoutError,
+            openai._exceptions.BadRequestError,
+            openai._exceptions.APIConnectionError,
+            openai._exceptions.AuthenticationError,
+            openai._exceptions.InternalServerError,
+            openai._exceptions.PermissionDeniedError,
+            openai._exceptions.UnprocessableEntityError,
+            openai._exceptions.APIResponseValidationError,
         ) as e:
             return str(e), None
 
@@ -667,7 +679,7 @@ class AzureGptConversation(GptConversation):
         split_correction: bool = False,
         docsum: DocumentEmbedder = None,
         version: Optional[str] = None,
-        base: Optional[str] = None,
+        base_url: Optional[str] = None,
     ):
         """
         Connect to Azure's GPT API and set up a conversation with the user.
@@ -690,7 +702,7 @@ class AzureGptConversation(GptConversation):
 
             version (str): The version of the Azure API to use.
 
-            base (str): The base URL of the Azure API to use.
+            base_url (str): The base URL of the Azure API to use.
         """
         super().__init__(
             model_name=model_name,
@@ -701,7 +713,7 @@ class AzureGptConversation(GptConversation):
         )
 
         self.version = version
-        self.base = base
+        self.base_url = base_url
         self.deployment_name = deployment_name
 
     def set_api_key(self, api_key: str, user: Optional[str] = None):
@@ -721,7 +733,7 @@ class AzureGptConversation(GptConversation):
                 deployment_name=self.deployment_name,
                 model_name=self.model_name,
                 openai_api_version=self.version,
-                openai_api_base=self.base,
+                openai_api_base=self.base_url,
                 openai_api_key=api_key,
                 temperature=0,
             )
@@ -731,7 +743,7 @@ class AzureGptConversation(GptConversation):
                 deployment_name=self.deployment_name,
                 model_name=self.model_name,
                 openai_api_version=self.version,
-                openai_api_base=self.base,
+                openai_api_base=self.base_url,
                 openai_api_key=api_key,
                 temperature=0,
             )
@@ -740,7 +752,7 @@ class AzureGptConversation(GptConversation):
 
             return True
 
-        except openai.error.AuthenticationError as e:
+        except openai._exceptions.AuthenticationError as e:
             return False
 
     def _update_usage_stats(self, model: str, token_usage: dict):

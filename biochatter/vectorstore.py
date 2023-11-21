@@ -22,21 +22,21 @@ from biochatter.vectorstore_host import VectorDatabaseHostMilvus
 
 class DocumentEmbedder:
     def __init__(
-            self,
-            use_prompt: bool = True,
-            used: bool = False,
-            online: bool = False,
-            chunk_size: int = 1000,
-            chunk_overlap: int = 0,
-            split_by_characters: bool = True,
-            separators: Optional[list] = None,
-            n_results: int = 3,
-            model: Optional[str] = "text-embedding-ada-002",
-            vector_db_vendor: Optional[str] = None,
-            connection_args: Optional[dict] = None,
-            api_key: Optional[str] = None,
-            base_url: Optional[str] = None,
-            embeddings: Optional[OpenAIEmbeddings | XinferenceEmbeddings] = None,
+        self,
+        use_prompt: bool = True,
+        used: bool = False,
+        online: bool = False,
+        chunk_size: int = 1000,
+        chunk_overlap: int = 0,
+        split_by_characters: bool = True,
+        separators: Optional[list] = None,
+        n_results: int = 3,
+        model: Optional[str] = "text-embedding-ada-002",
+        vector_db_vendor: Optional[str] = None,
+        connection_args: Optional[dict] = None,
+        api_key: Optional[str] = None,
+        base_url: Optional[str] = None,
+        embeddings: Optional[OpenAIEmbeddings| XinferenceEmbeddings] = None,
     ) -> None:
         self.use_prompt = use_prompt
         self.used = used

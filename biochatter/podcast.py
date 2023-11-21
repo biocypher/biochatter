@@ -4,6 +4,7 @@ from .llm_connect import GptConversation
 from gtts import gTTS
 import nltk
 import os
+from openai import OpenAI
 
 FIRST_PROMPT = (
     "You are tasked with summarising a scientific manuscript for consumption as"
@@ -12,25 +13,42 @@ FIRST_PROMPT = (
     "Authors: <authors>'."
 )
 
-PROMPT = (
-    "You are tasked with summarising a scientific manuscript for consumption as"
-    "a podcast. You will receive a collection of sentences from the"
-    "manuscript, from which you will remove any information not relevant to the"
+SUMMARISE_PROMPT = (
+    "You are tasked with processing a scientific manuscript for consumption as "
+    "a podcast. You will receive a collection of sentences from the "
+    "manuscript, from which you will remove any information not relevant to the "
     "content, such as references, figure legends, tables, author information, "
-    "journal metadata, and so on. You will then be asked to summarise the"
-    "section of the manuscript, making the wording more suitable for listening."
-    "Remove all content in brackets that is of technical nature, such as"
+    "journal metadata, and so on. You will then be asked to summarise the "
+    "section of the manuscript, making the wording more suitable for listening. "
+    "Remove all content in brackets that is of technical nature, such as "
+    "p-values, statistical tests, and so on. If the given text contains only "
+    "literature references, return 'No content'."
+)
+
+PROCESS_PROMPT = (
+    "You are tasked with processing a scientific manuscript for consumption as "
+    "a podcast. You will receive a collection of sentences from the "
+    "manuscript, from which you will remove any information not relevant to the "
+    "content, such as references, figure legends, tables, author information, "
+    "journal metadata, and so on. You will then be asked to process the "
+    "section of the manuscript to make it listenable, but not shorten the content. "
+    "Remove all content in brackets that is of technical nature, such as "
     "p-values, statistical tests, and so on. If the given text contains only "
     "literature references, return 'No content'."
 )
 
 
 class Podcaster:
-    def __init__(self, document: Document) -> None:
+    def __init__(
+        self,
+        document: Document,
+        model_name: str = "gpt-3.5-turbo",
+    ) -> None:
         """
         Orchestrates the podcasting of a document.
         """
         self.document = document
+        self.model_name = model_name
 
     def generate_podcast(self, characters_per_paragraph: int) -> None:
         """
@@ -38,7 +56,6 @@ class Podcaster:
 
         TODO:
         - chain of density prompting for variable summary length
-        - do not summarise but just make readable
         """
         full_text = self.document[0].page_content
 
@@ -64,7 +81,7 @@ class Podcaster:
         # LLM to determine section breaks?
 
         # go through sections and summarise each
-        self.summarised_sections = self._summarise_sections(
+        self.processed_sections = self._process_sections(
             sentences,
             characters_per_paragraph,
         )
@@ -91,7 +108,7 @@ class Podcaster:
         """
         # first sentence - extract title, authors
         c_first = GptConversation(
-            model_name="gpt-3.5-turbo",
+            model_name=self.model_name,
             prompts={},
             correct=False,
         )
@@ -99,46 +116,56 @@ class Podcaster:
         c_first.append_system_message(FIRST_PROMPT)
         msg, token_usage, correction = c_first.query(text)
         # split at authors ('Authors:' or '\nAuthors:')
-        title = msg.split("Title:")[1].split("Authors:")[0].strip()
-        authors = msg.split("Authors:")[1].strip()
-        return f"{title}, by {authors}, podcasted by biochatter."
+        if "Authors:" in msg:
+            title = msg.split("Title:")[1].split("Authors:")[0].strip()
+            authors = msg.split("Authors:")[1].strip()
+            return f"{title}, by {authors}, podcasted by biochatter."
+        else:
+            return msg
 
-    def _summarise_section(self, text: str) -> str:
+    def _process_section(self, text: str, summarise: bool = False) -> str:
         """
-        Summarises a section of the document.
+        Processes a section of the document. Summarises if summarise is True,
+        otherwise just makes the text more listenable.
 
         Args:
             text (str): text to summarise
+
+            summarise (bool): whether to summarise the text
 
         Returns:
             str: summarised text
         """
         # summarise section
         c = GptConversation(
-            model_name="gpt-3.5-turbo",
+            model_name=self.model_name,
             prompts={},
             correct=False,
         )
         c.set_api_key(api_key=os.getenv("OPENAI_API_KEY"), user="podcast")
-        c.append_system_message(PROMPT)
+        if summarise:
+            c.append_system_message(SUMMARISE_PROMPT)
+        else:
+            c.append_system_message(PROCESS_PROMPT)
         msg, token_usage, correction = c.query(text)
         return msg
 
-    def _summarise_sections(
+    def _process_sections(
         self, sentences: list, characters_per_paragraph: int
     ) -> list:
         """
 
-        Summarises sections of the document. Concatenates sentences until
+        Processes sections of the document. Concatenates sentences until
         characters_per_paragraph is reached, removing each sentence from the
-        list as it is added to the section to be summarised.
+        list as it is added to the section to be processed.
 
         Args:
             sentences (list): list of sentences to summarise
+
             characters_per_paragraph (int): number of characters per paragraph
 
         Returns:
-            list: list of summarised sections
+            list: list of processed sections
         """
         summarised_sections = []
         section = ""
@@ -150,30 +177,105 @@ class Podcaster:
             else:
                 if sentences:
                     sentences.insert(0, sentence)
-                summarised_section = self._summarise_section(section)
-                summarised_sections.append(summarised_section)
+                summarised_section = self._process_section(section)
+                # filter "no content" sections
+                if not (
+                    "no content" in summarised_section.lower()
+                    and len(summarised_section) < 30
+                ):
+                    summarised_sections.append(summarised_section)
                 section = ""
 
         return summarised_sections
 
-    def podcast_to_file(self, path: str) -> None:
+    def podcast_to_file(
+        self,
+        path: str,
+        model: str = "gtts",
+        voice: str = "alloy",
+    ) -> None:
         """
         Uses text-to-speech to generate audio for the summarised paper podcast.
 
         Args:
             path (str): path to save audio file to
+
+            model (str): model to use for text-to-speech. Currently supported:
+                'gtts' (Google Text-to-Speech, free),
+                'tts-1' (OpenAI API, paid, prioritises speed),
+                'tts-1-hd' (OpenAI API, paid, prioritises quality)
+
+            voice (str): voice to use for text-to-speech. See OpenAI API
+                documentation for available voices.
         """
 
         full_text = self.podcast_to_text()
 
-        audio = gTTS(text=full_text)
-        audio.save(path)
+        if model == "gtts":
+            audio = gTTS(text=full_text)
+            audio.save(path)
+        else:
+            client = OpenAI()
+
+            # Save the intro to the original file
+            response = client.audio.speech.create(
+                model=model,
+                voice=voice,
+                input=self.podcast_intro
+                + "\n\n"
+                + " Text-to-speech generated by OpenAI.",
+            )
+            first_path = path.rsplit(".", 1)[0] + "_0.mp3"
+            response.stream_to_file(first_path)
+
+            # Contatenate the sections
+            full_text = ""
+            for i, section in enumerate(self.processed_sections):
+                full_text += section + "\n\n"
+
+            # Make sections of 3500 characters max (at sentence boundaries)
+            num_sections = int(len(full_text) / 3500) + 1
+
+            nltk.download("punkt")
+            tokenizer = nltk.data.load("tokenizers/punkt/english.pickle")
+            sentences = tokenizer.tokenize(full_text)
+
+            # Find the sentence at the end of each section
+            # TODO: This is a bit hacky, but it works for now
+            section_boundaries = []
+            for i in range(num_sections):
+                section_boundaries.append(
+                    sentences[int((i + 1) * len(sentences) / num_sections) - 1]
+                )
+            # Split the text into sections
+            sections = []
+            for i in range(num_sections):
+                if i == 0:
+                    start = 0
+                else:
+                    start = sentences.index(section_boundaries[i - 1]) + 1
+                if i == num_sections - 1:
+                    end = len(sentences)
+                else:
+                    end = sentences.index(section_boundaries[i])
+                sections.append(" ".join(sentences[start:end]))
+
+            # Save each section to a separate file with an integer suffix
+            for i, section in enumerate(sections):
+                response = client.audio.speech.create(
+                    model=model,
+                    voice=voice,
+                    input=section,
+                )
+                # Insert the integer suffix just before the .mp3 extension
+                section_path = path.rsplit(".", 1)[0] + f"_{i+1}.mp3"
+                response.stream_to_file(section_path)
 
     def podcast_to_text(self):
         """
         Returns the summarised paper podcast as text.
         """
         full_text = self.podcast_intro + "\n\n"
-        for section in self.summarised_sections:
+        for section in self.processed_sections:
             full_text += section + "\n\n"
         return full_text
