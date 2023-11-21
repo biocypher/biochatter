@@ -29,7 +29,10 @@ OPENAI_MODELS = [
     "gpt-3.5-turbo-16k",
     "gpt-3.5-turbo-0301",  # legacy 3.5-turbo, until Sep 13, 2023
     "gpt-3.5-turbo-0613",  # updated 3.5-turbo
+    "gpt-3.5-turbo-1106",  # further updated 3.5-turbo
     "gpt-4",
+    "gpt-4-32k",
+    "gpt-4-1106-preview",  # gpt-4 turbo, 128k tokens
 ]
 
 HUGGINGFACE_MODELS = ["bigscience/bloom"]
@@ -39,7 +42,10 @@ TOKEN_LIMITS = {
     "gpt-3.5-turbo-16k": 16000,
     "gpt-3.5-turbo-0301": 4000,
     "gpt-3.5-turbo-0613": 4000,
+    "gpt-3.5-turbo-1106": 16000,
     "gpt-4": 8000,
+    "gpt-4-32k": 32000,
+    "gpt-4-1106-preview": 128000,
     "bigscience/bloom": 1000,
 }
 
