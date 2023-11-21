@@ -293,7 +293,7 @@ class Conversation(ABC):
 
         return json.dumps(d)
 
-class GenericOpenAIConversation(Conversation):
+class XinferenceConversation(Conversation):
     def __init__(
             self,
             base_url: str,
@@ -309,7 +309,7 @@ class GenericOpenAIConversation(Conversation):
         the model output, if necessary.
 
         Args:
-            base_url (str): The base URL of the OpenAI style API endpoint (should include the /v1 part).
+            base_url (str): The base URL of the Xinference instance (should not include the /v1 part).
 
             prompts (dict): A dictionary of prompts to use for the conversation.
 
@@ -322,6 +322,7 @@ class GenericOpenAIConversation(Conversation):
             docsum (DocumentEmbedder): A document summariser to use for
                 document summarisation.
         """
+        from xinference.client import Client
         super().__init__(
             model_name=model_name,
             prompts=prompts,
@@ -329,84 +330,41 @@ class GenericOpenAIConversation(Conversation):
             split_correction=split_correction,
             docsum=docsum,
         )
-        openai.api_base = base_url
-        openai.api_key = ""
+        self.client = Client(base_url=base_url)
+        self.models = self.get_models()
 
+        self.model_name = model_name
         self.ca_model_name = model_name
+
+        self.set_api_key()
+
         # TODO make accessible by drop-down
 
     def get_models(self):
-        import requests
-        response = requests.get(openai.api_base + "/models")
-        models = {}
-        for id, model in response.json().items():
+        models = self.client.list_models()
+        for id, model in self.client.list_models().items():
             model["id"] = id
             models[model["model_name"]] = model
         return models
 
 
-    def list_models_by_type(self, type: str):
-        names = []
-        if type == 'embed' or type == 'embedding':
-            for name, model in self.models.items():
-                if "model_ability" in model:
-                    if "embed" in model["model_ability"]:
-                        names.append(name)
-                elif model["model_type"] == "embedding":
-                    names.append(name)
-            return names
-        for name, model in self.models.items():
-            if "model_ability" in model:
-                if type in model["model_ability"]:
-                    names.append(name)
-            elif model["model_type"] == type:
-                names.append(name)
-        return names
-
-
-    def set_api_key(self, api_key: str, user: str):
-        """
-        Set the API key for the OpenAI API. If the key is valid, initialise the
-        conversational agent. Set the user for usage statistics.
-
-        Args:
-            api_key (str): The API key for the OpenAI API.
-
-            user (str): The user for usage statistics.
-
-        Returns:
-            bool: True if the API key is valid, False otherwise.
-        """
-        openai.api_key = api_key
-        self.user = user
-        try:
-            self.models = self.get_models()
-            if self.model_name is None or self.model_name == "auto":
-                self.model_name = self.list_models_by_type("chat")[0]
-            self.model_name = self.models[self.model_name]["id"]
-            self.ca_model_name = self.model_name
-        except:
-            return False
-
-        try:
-            self.chat = ChatOpenAI(
-                model_name=self.model_name,
-                temperature=0,
-                openai_api_key=api_key,
-                max_tokens=1000,
-            )
-            self.ca_chat = ChatOpenAI(
-                model_name=self.ca_model_name,
-                temperature=0,
-                openai_api_key=api_key,
-                max_tokens=1000,
-            )
-            if user == "community":
-                self.usage_stats = get_stats(user=user)
-            return True
-
-        except openai.error.AuthenticationError as e:
-            return False
+    # def list_models_by_type(self, type: str):
+    #     names = []
+    #     if type == 'embed' or type == 'embedding':
+    #         for name, model in self.models.items():
+    #             if "model_ability" in model:
+    #                 if "embed" in model["model_ability"]:
+    #                     names.append(name)
+    #             elif model["model_type"] == "embedding":
+    #                 names.append(name)
+    #         return names
+    #     for name, model in self.models.items():
+    #         if "model_ability" in model:
+    #             if type in model["model_ability"]:
+    #                 names.append(name)
+    #         elif model["model_type"] == type:
+    #             names.append(name)
+    #     return names
 
     def _primary_query(self):
         """
@@ -419,7 +377,16 @@ class GenericOpenAIConversation(Conversation):
                 token usage.
         """
         try:
-            response = self.chat.generate([self.messages])
+            history = []
+            for m in self.messages:
+                if isinstance(m, SystemMessage):
+                    history.append({"role": "system", "content": m.content})
+                elif isinstance(m, HumanMessage):
+                    history.append({"role": "user", "content": m.content})
+                elif isinstance(m, AIMessage):
+                    history.append({"role": "assistant", "content": m.content})
+            prompt = history.pop()
+            response = self.model.chat(prompt=prompt["content"], chat_history=history, generate_config={"max_tokens": 2048,"temperature":0})
         except (
                 openai.error.InvalidRequestError,
                 openai.error.APIConnectionError,
@@ -428,8 +395,8 @@ class GenericOpenAIConversation(Conversation):
         ) as e:
             return str(e), None
 
-        msg = response.generations[0][0].text
-        token_usage = response.llm_output.get("token_usage")
+        msg = response['choices'][0]['message']['content']
+        token_usage = response['usage']
 
         self._update_usage_stats(self.model_name, token_usage)
 
@@ -461,11 +428,20 @@ class GenericOpenAIConversation(Conversation):
                         "with just 'OK', and nothing else!",
             ),
         )
+        history = []
+        for m in self.messages:
+            if isinstance(m, SystemMessage):
+                history.append({"role": "system", "content": m.content})
+            elif isinstance(m, HumanMessage):
+                history.append({"role": "user", "content": m.content})
+            elif isinstance(m, AIMessage):
+                history.append({"role": "assistant", "content": m.content})
+        prompt = history.pop()
+        response = self.ca_model.chat(prompt=prompt["content"], chat_history=history,
+                                   generate_config={"max_tokens": 2048, "temperature": 0})
 
-        response = self.ca_chat.generate([ca_messages])
-
-        correction = response.generations[0][0].text
-        token_usage = response.llm_output.get("token_usage")
+        correction = response['choices'][0]['message']['content']
+        token_usage = response['usage']
 
         self._update_usage_stats(self.ca_model_name, token_usage)
 
@@ -481,11 +457,52 @@ class GenericOpenAIConversation(Conversation):
 
             token_usage (dict): The token usage statistics.
         """
-        if self.user == "community":
-            self.usage_stats.increment(
-                f"usage:[date]:[user]",
-                {f"{k}:{model}": v for k, v in token_usage.items()},
-            )
+        # if self.user == "community":
+        # self.usage_stats.increment(
+        #     f"usage:[date]:[user]",
+        #     {f"{k}:{model}": v for k, v in token_usage.items()},
+        # )
+
+    def set_api_key(self):
+        """
+        Set the API key for the OpenAI API. If the key is valid, initialise the
+        conversational agent. Set the user for usage statistics.
+
+        Returns:
+            bool: True if the API key is valid, False otherwise.
+        """
+
+        try:
+            if self.model_name is None or self.model_name == "auto":
+                self.model_name = self.list_models_by_type("embedding")[0]
+            self.model = self.client.get_model(self.models[self.model_name]["id"])
+
+
+            if self.ca_model_name is None or self.ca_model_name == "auto":
+                self.ca_model_name = self.list_models_by_type("embedding")[0]
+            self.ca_model = self.client.get_model(self.models[self.ca_model_name]["id"])
+            return True
+
+        except openai.error.AuthenticationError as e:
+            return False
+
+    def list_models_by_type(self, type: str):
+        names = []
+        if type == 'embed' or type == 'embedding':
+            for name, model in self.models.items():
+                if "model_ability" in model:
+                    if "embed" in model["model_ability"]:
+                        names.append(name)
+                elif model["model_type"] == "embedding":
+                    names.append(name)
+            return names
+        for name, model in self.models.items():
+            if "model_ability" in model:
+                if type in model["model_ability"]:
+                    names.append(name)
+            elif model["model_type"] == type:
+                names.append(name)
+        return names
 
 class GptConversation(Conversation):
     def __init__(
