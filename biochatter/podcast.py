@@ -232,7 +232,7 @@ class Podcaster:
             first_path = path.rsplit(".", 1)[0] + "_0.mp3"
             response.stream_to_file(first_path)
 
-            # Contatenate the sections
+            # Concatenate the sections
             full_text = ""
             for i, section in enumerate(self.processed_sections):
                 full_text += section + "\n\n"
