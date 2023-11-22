@@ -31,7 +31,6 @@ xinference = { version = "^0.6.3", optional = true }
 [tool.poetry.extras]
 streamlit = ["streamlit"]
 podcast = ["gTTS"]
-biocypher = ["biocypher"]
 xinference = ["botocore", "xinference"]
 
 [tool.poetry.group.dev.dependencies]
