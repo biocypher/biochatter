@@ -1,8 +1,7 @@
-from biochatter.llm_connect import GenericOpenAIConversation
 from biochatter.vectorstore import (
     DocumentEmbedder,
     DocumentReader,
-    Document, GenericDocumentEmbedder,
+    Document, XinferenceDocumentEmbedder
 )
 
 import os
@@ -56,9 +55,8 @@ def test_document_summariser_generic_api():
     reader = DocumentReader()
     doc = reader.document_from_pdf(doc_bytes)
 
-    docsum = GenericDocumentEmbedder(
-        api_key=os.getenv("GENERIC_TEST_OPENAI_KEY", "none"),
-        base_url=os.getenv("GENERIC_TEST_OPENAI_BASE_URL", "http://llm.nedrex.net/v1")
+    docsum = XinferenceDocumentEmbedder(
+        base_url=os.getenv("GENERIC_TEST_OPENAI_BASE_URL", "http://llm.biocypher.org/")
     )
     docsum.connect(_HOST, _PORT)
 

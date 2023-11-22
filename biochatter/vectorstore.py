@@ -9,6 +9,7 @@ from typing import List, Optional, Dict
 from langchain.schema import Document
 import openai
 from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.embeddings import XinferenceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.document_loaders import TextLoader
 from langchain.vectorstores import Milvus
@@ -35,7 +36,7 @@ class DocumentEmbedder:
         connection_args: Optional[dict] = None,
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
-        embeddings: Optional[OpenAIEmbeddings] = None,
+        embeddings: Optional[OpenAIEmbeddings| XinferenceEmbeddings] = None,
     ) -> None:
         self.use_prompt = use_prompt
         self.used = used
@@ -45,7 +46,7 @@ class DocumentEmbedder:
         self.separators = separators or [" ", ",", "\n"]
         self.n_results = n_results
         self.split_by_characters = split_by_characters
-        self.model_name = model or "text-embedding-ada-002"
+        self.model_name = model
 
         # TODO: variable embeddings depending on model
         # for now, just use ada-002
@@ -57,9 +58,7 @@ class DocumentEmbedder:
             self.embeddings = embeddings
         else:
             if not self.online:
-                self.embeddings = OpenAIEmbeddings(
-                    openai_api_key=api_key, model=model
-                )
+                self.embeddings = OpenAIEmbeddings(openai_api_key=api_key, model=model)
             else:
                 self.embeddings = None
 
@@ -82,8 +81,7 @@ class DocumentEmbedder:
     def _init_database_host(self):
         if self.vector_db_vendor == "milvus":
             self.database_host = VectorDatabaseHostMilvus(
-                embedding_func=self.embeddings,
-                connection_args=self.connection_args,
+                embedding_func=self.embeddings, connection_args=self.connection_args
             )
         else:
             raise NotImplementedError(self.vector_db_vendor)
@@ -134,14 +132,14 @@ class DocumentEmbedder:
         )
 
     def save_document(self, doc: List[Document]) -> str:
-        """
+        '''
         This function saves document to the vector database
         Args:
             doc List[Document]: document content, read with DocumentReader load_document(),
                 or document_from_pdf(), document_from_txt()
         Returns:
             str: document id, which can be used to remove an uploaded document with remove_document()
-        """
+        '''
         splitted = self._split_document(doc)
         return self._store_embeddings(splitted)
 
@@ -149,10 +147,18 @@ class DocumentEmbedder:
         text_splitter = self._text_splitter()
         return text_splitter.split_documents(document)
 
-    def _store_embeddings(self, doc: List[Document]) -> str:
-        return self.database_host.store_embeddings(documents=doc)
+    def _store_embeddings(
+            self, doc: List[Document]
+    ) -> str:
+        return self.database_host.store_embeddings(
+            documents=doc
+        )
 
-    def similarity_search(self, query: str, k: int = 3):
+    def similarity_search(
+            self,
+            query: str,
+            k: int = 3
+    ):
         """
         Returns top n closest matches to query from vector store.
 
@@ -179,72 +185,44 @@ class DocumentEmbedder:
         self.database_host.remove_document(doc_id)
 
 
-class GenericDocumentEmbedder(DocumentEmbedder):
-    def __init__(
-        self,
-        use_prompt: bool = True,
-        used: bool = False,
-        chunk_size: int = 1000,
-        chunk_overlap: int = 0,
-        split_by_characters: bool = True,
-        separators: Optional[list] = None,
-        n_results: int = 3,
-        model: Optional[str] = "auto",
-        vector_db_vendor: Optional[str] = None,
-        connection_args: Optional[dict] = None,
-        api_key: Optional[str] = "none",
-        base_url: Optional[str] = None,
-    ):
-        import embedders.generic_openai as generic_openai
-        from embedders.generic_openai import GenericOpenAIEmbeddings
-
-        generic_openai.api_base = base_url
-        generic_openai.api_key = api_key
+class XinferenceDocumentEmbedder(DocumentEmbedder):
+    def __init__(self, use_prompt: bool = True,
+                 used: bool = False,
+                 chunk_size: int = 1000,
+                 chunk_overlap: int = 0,
+                 split_by_characters: bool = True,
+                 separators: Optional[list] = None,
+                 n_results: int = 3,
+                 model: Optional[str] = "auto",
+                 vector_db_vendor: Optional[str] = None,
+                 connection_args: Optional[dict] = None,
+                 api_key: Optional[str] = "none",
+                 base_url: Optional[str] = None, ):
+        from xinference.client import Client
+        from langchain.embeddings import XinferenceEmbeddings
+        self.client = Client(base_url=base_url)
         self.models = self.get_models()
-        if model is None or model == "auto":
-            model = self.list_models_by_type("embedding")[0]
-        model_id = self.models[model]["id"]
-        super().__init__(
-            use_prompt=use_prompt,
-            used=used,
-            online=True,
-            chunk_size=chunk_size,
-            chunk_overlap=chunk_overlap,
-            split_by_characters=split_by_characters,
-            separators=separators,
-            n_results=n_results,
-            model=model,
-            vector_db_vendor=vector_db_vendor,
-            connection_args=connection_args,
-            api_key=api_key,
-            base_url=base_url,
-            embeddings=GenericOpenAIEmbeddings(
-                openai_api_key=api_key, model=model_id
-            ),
-        )
+        self.model_name = model
+
+        if self.model_name is None or self.model_name == "auto":
+            self.model_name = self.list_models_by_type("embedding")[0]
+        self.model_uid = self.models[self.model_name]["id"]
+
+        super().__init__(use_prompt=use_prompt, used=used, online=True, chunk_size=chunk_size,
+                         chunk_overlap=chunk_overlap, split_by_characters=split_by_characters, separators=separators,
+                         n_results=n_results, model=model, vector_db_vendor=vector_db_vendor,
+                         connection_args=connection_args, api_key=api_key, base_url=base_url,
+                         embeddings=XinferenceEmbeddings(server_url=base_url, model_uid=self.model_uid))
 
     def get_models(self):
-        import requests
-        from embedders import generic_openai
-
-        response = requests.get(generic_openai.api_base + "/models")
-        models = {}
-        for id, model in response.json().items():
+        models = self.client.list_models()
+        for id, model in self.client.list_models().items():
             model["id"] = id
-            print(model)
             models[model["model_name"]] = model
         return models
 
     def list_models_by_type(self, type: str):
         names = []
-        # if type == 'embed' or type == 'embedding':
-        #     for name, model in self.models.items():
-        #         if "model_ability" in model:
-        #             if "embed" in model["model_ability"]:
-        #                 names.append(name)
-        #         elif model["model_type"] == "embedding":
-        #             names.append(name)
-        #     return names
         for name, model in self.models.items():
             if "model_ability" in model:
                 if type in model["model_ability"]:
