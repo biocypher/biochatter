@@ -34,7 +34,11 @@ The package has some optional dependencies that can be installed using the
 following extras (e.g. `pip install biochatter[streamlit]`):
 
 - `streamlit`: support for streamlit UI functions (used in ChatGSE)
-- `podcast`: support for podcast text-to-speech
+
+- `podcast`: support for podcast text-to-speech (for the free Google TTS; the
+paid OpenAI TTS can be used without this extra)
+
+- `xinference`: support for querying open-source LLMs through Xorbits Inference
 
 ## Usage
 
