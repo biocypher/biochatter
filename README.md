@@ -21,7 +21,8 @@ preprint](https://arxiv.org/abs/2305.06488) and used in
 https://github.com/biocypher/ChatGSE. More to come, so stay tuned!
 
 BioChatter is part of the [BioCypher](https://github.com/biocypher) ecosystem, 
-connecting natively to BioCypher knowledge graphs.
+connecting natively to BioCypher knowledge graphs. The BioChatter paper is
+being written [here](https://github.com/biocypher/biochatter-paper).
 
 ## Installation
 
