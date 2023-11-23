@@ -311,23 +311,31 @@ class XinferenceConversation(Conversation):
         docsum: DocumentEmbedder = None,
     ):
         """
-        Connect to OpenAI's GPT API and set up a conversation with the user.
-        Also initialise a second conversational agent to provide corrections to
-        the model output, if necessary.
+
+        Connect to an open-source LLM via the Xinference client library and set
+        up a conversation with the user.  Also initialise a second
+        conversational agent to provide corrections to the model output, if
+        necessary.
 
         Args:
-            base_url (str): The base URL of the Xinference instance (should not include the /v1 part).
+
+            base_url (str): The base URL of the Xinference instance (should not
+            include the /v1 part).
 
             prompts (dict): A dictionary of prompts to use for the conversation.
 
-            model_name (str): The name of the model to use. Will be mapped to the according uid from the list of available models.
+            model_name (str): The name of the model to use. Will be mapped to
+            the according uid from the list of available models.
+
+            correct (bool): Whether to correct the model output.
 
             split_correction (bool): Whether to correct the model output by
-                splitting the output into sentences and correcting each
-                sentence individually.
+            splitting the output into sentences and correcting each sentence
+            individually.
 
-            docsum (DocumentEmbedder): A document summariser to use for
-                document summarisation.
+            docsum (DocumentEmbedder): A document summariser to use for document
+            summarisation.
+
         """
         from xinference.client import Client
 
@@ -375,13 +383,17 @@ class XinferenceConversation(Conversation):
 
     def _primary_query(self):
         """
-        Query the OpenAI API with the user's message and return the response
-        using the message history (flattery system messages, prior conversation)
-        as context. Correct the response if necessary.
+
+        Query the Xinference client API with the user's message and return the
+        response using the message history (flattery system messages, prior
+        conversation) as context. Correct the response if necessary.
 
         Returns:
-            tuple: A tuple containing the response from the OpenAI API and the
-                token usage.
+
+            tuple: A tuple containing the response from the Xinference API
+            (formatted similarly to responses from the OpenAI API) and the token
+            usage.
+
         """
         try:
             history = []
@@ -417,12 +429,13 @@ class XinferenceConversation(Conversation):
 
     def _correct_response(self, msg: str):
         """
-        Correct the response from the OpenAI API by sending it to a secondary
-        language model. Optionally split the response into single sentences and
-        correct each sentence individually. Update usage stats.
+
+        Correct the response from the Xinference API by sending it to a
+        secondary language model. Optionally split the response into single
+        sentences and correct each sentence individually. Update usage stats.
 
         Args:
-            msg (str): The response from the OpenAI API.
+            msg (str): The response from the model.
 
         Returns:
             str: The corrected response (or OK if no correction necessary).
