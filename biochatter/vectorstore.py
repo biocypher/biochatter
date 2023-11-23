@@ -301,9 +301,10 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
         from xinference.client import Client
         from langchain.embeddings import XinferenceEmbeddings
 
-        self.client = Client(base_url=base_url)
-        self.models = self.get_models()
         self.model_name = model
+        self.client = Client(base_url=base_url)
+        self.models = {}
+        self.load_models()
 
         if self.model_name is None or self.model_name == "auto":
             self.model_name = self.list_models_by_type("embedding")[0]
@@ -330,20 +331,16 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
             ),
         )
 
-    def get_models(self):
+    def load_models(self):
         """
         Return all models that are currently available on the Xinference server.
 
         Returns:
             dict: dict of models
         """
-        models = self.client.list_models()
         for id, model in self.client.list_models().items():
             model["id"] = id
-            models[id] = model
-            # TODO do we need to keep both the UID and the name entries?
-            models[model["model_name"]] = model
-        return models
+            self.models[model["model_name"]] = model
 
     def list_models_by_type(self, type: str):
         """
