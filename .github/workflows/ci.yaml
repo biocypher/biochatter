@@ -57,4 +57,4 @@ jobs:
 
       - name: Run tests
         run: |
-          poetry run pytest --ignore=./volumes
+          poetry run pytest test --ignore=./volumes
