@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: |
           poetry install
-          poetry install -E podcast
+          poetry install -E 'podcast xinference'
 
       - name: Start Milvus server
         run: |
