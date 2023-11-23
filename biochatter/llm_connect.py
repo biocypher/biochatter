@@ -172,7 +172,7 @@ class Conversation(ABC):
             return (msg, token_usage, None)
 
         if not self.correct:
-            return (msg, token_usage, "OK")
+            return (msg, token_usage, None)
 
         cor_msg = (
             "Correcting (using single sentences) ..."
