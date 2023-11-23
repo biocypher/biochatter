@@ -144,7 +144,10 @@ def test_xinference_init():
 def test_generic_chatting():
     base_url = os.getenv("XINFERENCE_BASE_URL", "http://llm.biocypher.org")
     convo = XinferenceConversation(
-        base_url=base_url, prompts={}, model_name="llama2-13b-chat-hf"
+        base_url=base_url,
+        prompts={},
+        correct=False,
+        model_name="llama2-13b-chat-hf",
     )
     (msg, token_usage, correction) = convo.query("Hello, world!")
     assert token_usage["completion_tokens"] > 0
