@@ -250,7 +250,6 @@ class Conversation(ABC):
                     for doc in self.rag_agent.similarity_search(
                         text,
                         self.rag_agent.n_results,
-                        collection_name,
                     )
                 ]
         else:
@@ -259,7 +258,6 @@ class Conversation(ABC):
                 for doc in self.rag_agent.similarity_search(
                     text,
                     self.rag_agent.n_results,
-                    collection_name,
                 )
             ]
 

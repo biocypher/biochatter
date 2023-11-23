@@ -221,8 +221,6 @@ class DocumentEmbedder:
             k (int, optional): number of closest matches to return. Defaults to
             3.
 
-            collection_name (str): search in collection {collection_name}
-
         """
         return self.database_host.similarity_search(
             query=query, k=k or self.n_results
