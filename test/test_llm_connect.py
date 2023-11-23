@@ -134,7 +134,6 @@ def test_xinference_init():
     convo = XinferenceConversation(
         base_url=base_url,
         prompts={},
-        model_name="llama2-13b-chat-hf",
         split_correction=False,
     )
     assert convo.set_api_key()
@@ -147,7 +146,6 @@ def test_generic_chatting():
         base_url=base_url,
         prompts={},
         correct=False,
-        model_name="llama2-13b-chat-hf",
     )
     (msg, token_usage, correction) = convo.query("Hello, world!")
     assert token_usage["completion_tokens"] > 0
