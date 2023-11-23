@@ -127,8 +127,8 @@ def test_azure():
 
 def test_xinference_init():
     """
-    Test generic OpenAI-style API with generic Domain. Connectivity is enabled by
-    setting the corresponding environment variables.
+    Test generic LLM connectivity via the Xinference client. Currently depends
+    on a test server.
     """
     base_url = os.getenv("XINFERENCE_BASE_URL", "http://llm.biocypher.org")
     convo = XinferenceConversation(
