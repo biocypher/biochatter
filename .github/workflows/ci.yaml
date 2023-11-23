@@ -1,6 +1,6 @@
 name: biochatter Continuous Integration
 
-on: [pull_request, push]
+on: [push]
 
 jobs:
   test:
