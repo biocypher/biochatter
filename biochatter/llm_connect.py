@@ -349,7 +349,7 @@ class XinferenceConversation(Conversation):
         self.client = Client(base_url=base_url)
         self.models = self.get_models()
 
-        self.model_name = model_name
+        self.model_name = model_name  # TODO necessary? super already sets
         self.ca_model_name = model_name
 
         self.set_api_key()
