@@ -299,15 +299,16 @@ class Conversation(ABC):
 
         return json.dumps(d)
 
+
 class XinferenceConversation(Conversation):
     def __init__(
-            self,
-            base_url: str,
-            prompts: dict,
-            model_name: str = "auto",
-            correct: bool = True,
-            split_correction: bool = False,
-            docsum: DocumentEmbedder = None,
+        self,
+        base_url: str,
+        prompts: dict,
+        model_name: str = "auto",
+        correct: bool = True,
+        split_correction: bool = False,
+        docsum: DocumentEmbedder = None,
     ):
         """
         Connect to OpenAI's GPT API and set up a conversation with the user.
@@ -329,6 +330,7 @@ class XinferenceConversation(Conversation):
                 document summarisation.
         """
         from xinference.client import Client
+
         super().__init__(
             model_name=model_name,
             prompts=prompts,
@@ -352,7 +354,6 @@ class XinferenceConversation(Conversation):
             model["id"] = id
             models[model["model_name"]] = model
         return models
-
 
     # def list_models_by_type(self, type: str):
     #     names = []
@@ -392,17 +393,21 @@ class XinferenceConversation(Conversation):
                 elif isinstance(m, AIMessage):
                     history.append({"role": "assistant", "content": m.content})
             prompt = history.pop()
-            response = self.model.chat(prompt=prompt["content"], chat_history=history, generate_config={"max_tokens": 2048,"temperature":0})
+            response = self.model.chat(
+                prompt=prompt["content"],
+                chat_history=history,
+                generate_config={"max_tokens": 2048, "temperature": 0},
+            )
         except (
-                openai.error.InvalidRequestError,
-                openai.error.APIConnectionError,
-                openai.error.RateLimitError,
-                openai.error.APIError,
+            openai.error.InvalidRequestError,
+            openai.error.APIConnectionError,
+            openai.error.RateLimitError,
+            openai.error.APIError,
         ) as e:
             return str(e), None
 
-        msg = response['choices'][0]['message']['content']
-        token_usage = response['usage']
+        msg = response["choices"][0]["message"]["content"]
+        token_usage = response["usage"]
 
         self._update_usage_stats(self.model_name, token_usage)
 
@@ -431,7 +436,7 @@ class XinferenceConversation(Conversation):
         ca_messages.append(
             SystemMessage(
                 content="If there is nothing to correct, please respond "
-                        "with just 'OK', and nothing else!",
+                "with just 'OK', and nothing else!",
             ),
         )
         history = []
@@ -443,11 +448,14 @@ class XinferenceConversation(Conversation):
             elif isinstance(m, AIMessage):
                 history.append({"role": "assistant", "content": m.content})
         prompt = history.pop()
-        response = self.ca_model.chat(prompt=prompt["content"], chat_history=history,
-                                   generate_config={"max_tokens": 2048, "temperature": 0})
+        response = self.ca_model.chat(
+            prompt=prompt["content"],
+            chat_history=history,
+            generate_config={"max_tokens": 2048, "temperature": 0},
+        )
 
-        correction = response['choices'][0]['message']['content']
-        token_usage = response['usage']
+        correction = response["choices"][0]["message"]["content"]
+        token_usage = response["usage"]
 
         self._update_usage_stats(self.ca_model_name, token_usage)
 
@@ -471,30 +479,35 @@ class XinferenceConversation(Conversation):
 
     def set_api_key(self):
         """
-        Set the API key for the OpenAI API. If the key is valid, initialise the
-        conversational agent. Set the user for usage statistics.
+        Try to get the Xinference model from the client API. If the model is
+        found, initialise the conversational agent. If the model is not found,
+        `get_model` will raise a RuntimeError.
 
         Returns:
-            bool: True if the API key is valid, False otherwise.
+            bool: True if the model is found, False otherwise.
         """
 
         try:
             if self.model_name is None or self.model_name == "auto":
                 self.model_name = self.list_models_by_type("embedding")[0]
-            self.model = self.client.get_model(self.models[self.model_name]["id"])
-
+            self.model = self.client.get_model(
+                self.models[self.model_name]["id"]
+            )
 
             if self.ca_model_name is None or self.ca_model_name == "auto":
                 self.ca_model_name = self.list_models_by_type("embedding")[0]
-            self.ca_model = self.client.get_model(self.models[self.ca_model_name]["id"])
+            self.ca_model = self.client.get_model(
+                self.models[self.ca_model_name]["id"]
+            )
             return True
 
-        except openai.error.AuthenticationError as e:
+        except RuntimeError as e:
+            # TODO handle error, log?
             return False
 
     def list_models_by_type(self, type: str):
         names = []
-        if type == 'embed' or type == 'embedding':
+        if type == "embed" or type == "embedding":
             for name, model in self.models.items():
                 if "model_ability" in model:
                     if "embed" in model["model_ability"]:
@@ -509,6 +522,7 @@ class XinferenceConversation(Conversation):
             elif model["model_type"] == type:
                 names.append(name)
         return names
+
 
 class GptConversation(Conversation):
     def __init__(
