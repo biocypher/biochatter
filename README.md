@@ -20,6 +20,10 @@ preprint](https://arxiv.org/abs/2305.06488) and used in
 [ChatGSE](https://chat.biocypher.org), which is being developed at
 https://github.com/biocypher/ChatGSE. More to come, so stay tuned!
 
+BioChatter is part of the [BioCypher](https://github.com/biocypher) ecosystem, 
+connecting natively to BioCypher knowledge graphs. The BioChatter paper is
+being written [here](https://github.com/biocypher/biochatter-paper).
+
 ## Installation
 
 To use the package, install it from PyPI, for instance using pip (`pip install
@@ -31,7 +35,11 @@ The package has some optional dependencies that can be installed using the
 following extras (e.g. `pip install biochatter[streamlit]`):
 
 - `streamlit`: support for streamlit UI functions (used in ChatGSE)
-- `podcast`: support for podcast text-to-speech
+
+- `podcast`: support for podcast text-to-speech (for the free Google TTS; the
+paid OpenAI TTS can be used without this extra)
+
+- `xinference`: support for querying open-source LLMs through Xorbits Inference
 
 ## Usage
 
