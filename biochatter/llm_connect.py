@@ -71,14 +71,14 @@ class Conversation(ABC):
         prompts: dict,
         correct: bool = True,
         split_correction: bool = False,
-        docsum: DocumentEmbedder = None,
+        rag_agent: DocumentEmbedder = None,
     ):
         super().__init__()
         self.model_name = model_name
         self.prompts = prompts
         self.correct = correct
         self.split_correction = split_correction
-        self.docsum = docsum
+        self.rag_agent = rag_agent
         self.history = []
         self.messages = []
         self.ca_messages = []
@@ -97,8 +97,8 @@ class Conversation(ABC):
     def set_prompts(self, prompts: dict):
         self.prompts = prompts
 
-    def set_docsum(self, docsum: DocumentEmbedder):
-        self.docsum = docsum
+    def set_rag_agent(self, rag_agent: DocumentEmbedder):
+        self.rag_agent = rag_agent
 
     def append_ai_message(self, message: str):
         self.messages.append(
@@ -161,8 +161,8 @@ class Conversation(ABC):
     def query(self, text: str, collection_name: Optional[str] = None):
         self.append_user_message(text)
 
-        if self.docsum:
-            if self.docsum.use_prompt:
+        if self.rag_agent:
+            if self.rag_agent.use_prompt:
                 self._inject_context(text, collection_name)
 
         msg, token_usage = self._primary_query()
@@ -231,15 +231,15 @@ class Conversation(ABC):
         Args:
             text (str): The user query to be used for similarity search.
         """
-        if not self.docsum.used:
+        if not self.rag_agent.used:
             st.info(
-                "No document has been analysed yet. To use document "
-                "summarisation, please analyse at least one document first."
+                "No document has been analysed yet. To use retrieval augmented "
+                "generation, please analyse at least one document first."
             )
             return
 
         sim_msg = (
-            f"Performing similarity search to inject {self.docsum.n_results}"
+            f"Performing similarity search to inject {self.rag_agent.n_results}"
             " fragments ..."
         )
 
@@ -247,23 +247,23 @@ class Conversation(ABC):
             with st.spinner(sim_msg):
                 statements = [
                     doc.page_content
-                    for doc in self.docsum.similarity_search(
+                    for doc in self.rag_agent.similarity_search(
                         text,
-                        self.docsum.n_results,
+                        self.rag_agent.n_results,
                         collection_name,
                     )
                 ]
         else:
             statements = [
                 doc.page_content
-                for doc in self.docsum.similarity_search(
+                for doc in self.rag_agent.similarity_search(
                     text,
-                    self.docsum.n_results,
+                    self.rag_agent.n_results,
                     collection_name,
                 )
             ]
 
-        prompts = self.prompts["docsum_prompts"]
+        prompts = self.prompts["rag_agent_prompts"]
         if statements:
             self.current_statements = statements
             for i, prompt in enumerate(prompts):
@@ -308,7 +308,7 @@ class XinferenceConversation(Conversation):
         model_name: str = "auto",
         correct: bool = True,
         split_correction: bool = False,
-        docsum: DocumentEmbedder = None,
+        rag_agent: DocumentEmbedder = None,
     ):
         """
 
@@ -333,8 +333,8 @@ class XinferenceConversation(Conversation):
             splitting the output into sentences and correcting each sentence
             individually.
 
-            docsum (DocumentEmbedder): A document summariser to use for document
-            summarisation.
+            rag_agent (DocumentEmbedder): A RAG agent to use for retieval
+            augmented generation.
 
         """
         from xinference.client import Client
@@ -344,7 +344,7 @@ class XinferenceConversation(Conversation):
             prompts=prompts,
             correct=correct,
             split_correction=split_correction,
-            docsum=docsum,
+            rag_agent=rag_agent,
         )
         self.client = Client(base_url=base_url)
         self.models = self.get_models()
@@ -544,7 +544,7 @@ class GptConversation(Conversation):
         prompts: dict,
         correct: bool = True,
         split_correction: bool = False,
-        docsum: DocumentEmbedder = None,
+        rag_agent: DocumentEmbedder = None,
     ):
         """
         Connect to OpenAI's GPT API and set up a conversation with the user.
@@ -560,15 +560,15 @@ class GptConversation(Conversation):
                 splitting the output into sentences and correcting each
                 sentence individually.
 
-            docsum (DocumentEmbedder): A document summariser to use for
-                document summarisation.
+            rag_agent (DocumentEmbedder): A RAG agent to use for
+                retrieval augmented generation (RAG).
         """
         super().__init__(
             model_name=model_name,
             prompts=prompts,
             correct=correct,
             split_correction=split_correction,
-            docsum=docsum,
+            rag_agent=rag_agent,
         )
 
         self.ca_model_name = "gpt-3.5-turbo"
@@ -710,7 +710,7 @@ class AzureGptConversation(GptConversation):
         prompts: dict,
         correct: bool = True,
         split_correction: bool = False,
-        docsum: DocumentEmbedder = None,
+        rag_agent: DocumentEmbedder = None,
         version: Optional[str] = None,
         base_url: Optional[str] = None,
     ):
@@ -730,8 +730,8 @@ class AzureGptConversation(GptConversation):
                 splitting the output into sentences and correcting each
                 sentence individually.
 
-            docsum (DocumentEmbedder): A vector database connection to use for
-                document summarisation.
+            rag_agent (DocumentEmbedder): A vector database connection to use for
+                retrieval augmented generation (RAG).
 
             version (str): The version of the Azure API to use.
 
@@ -742,7 +742,7 @@ class AzureGptConversation(GptConversation):
             prompts=prompts,
             correct=correct,
             split_correction=split_correction,
-            docsum=docsum,
+            rag_agent=rag_agent,
         )
 
         self.version = version
@@ -801,13 +801,13 @@ class BloomConversation(Conversation):
         model_name: str,
         prompts: dict,
         split_correction: bool,
-        docsum: DocumentEmbedder = None,
+        rag_agent: DocumentEmbedder = None,
     ):
         super().__init__(
             model_name=model_name,
             prompts=prompts,
             split_correction=split_correction,
-            docsum=docsum,
+            rag_agent=rag_agent,
         )
 
         self.messages = []

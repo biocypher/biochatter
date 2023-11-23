@@ -1,4 +1,4 @@
-# ChatGSE document summarisation functionality
+# ChatGSE retrieval augmented generation (RAG) functionality
 # split text
 # connect to vector db
 # do similarity search

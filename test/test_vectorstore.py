@@ -1,7 +1,8 @@
 from biochatter.vectorstore import (
     DocumentEmbedder,
     DocumentReader,
-    Document, XinferenceDocumentEmbedder
+    Document,
+    XinferenceDocumentEmbedder,
 )
 
 import os
@@ -16,7 +17,7 @@ else:
 _PORT = "19530"
 
 
-def test_document_summariser():
+def test_retrieval_augmented_generation():
     # runs long, requires OpenAI API key and local milvus server
     # uses ada-002 for embeddings
     pdf_path = "test/bc_summary.pdf"
@@ -26,26 +27,26 @@ def test_document_summariser():
 
     reader = DocumentReader()
     doc = reader.document_from_pdf(doc_bytes)
-    docsum = DocumentEmbedder()
-    docsum.connect(_HOST, _PORT)
-    doc_id = docsum.save_document(doc)
+    rag_agent = DocumentEmbedder()
+    rag_agent.connect(_HOST, _PORT)
+    doc_id = rag_agent.save_document(doc)
     assert isinstance(doc_id, str)
     assert len(doc_id) > 0
 
     query = "What is BioCypher?"
-    results = docsum.similarity_search(query)
+    results = rag_agent.similarity_search(query)
     assert len(results) == 3
     assert all(["BioCypher" in result.page_content for result in results])
 
-    docs = docsum.get_all_documents()
+    docs = rag_agent.get_all_documents()
     cnt = len(docs)
     assert cnt > 0
-    docsum.remove_document(doc_id)
-    docs = docsum.get_all_documents()
+    rag_agent.remove_document(doc_id)
+    docs = rag_agent.get_all_documents()
     assert (cnt - 1) == len(docs)
 
 
-def test_document_summariser_generic_api():
+def test_retrieval_augmented_generation_generic_api():
     # runs long, requires OpenAI API key and local milvus server
     pdf_path = "test/bc_summary.pdf"
     with open(pdf_path, "rb") as f:
@@ -55,25 +56,27 @@ def test_document_summariser_generic_api():
     reader = DocumentReader()
     doc = reader.document_from_pdf(doc_bytes)
 
-    docsum = XinferenceDocumentEmbedder(
-        base_url=os.getenv("GENERIC_TEST_OPENAI_BASE_URL", "http://llm.biocypher.org/")
+    rag_agent = XinferenceDocumentEmbedder(
+        base_url=os.getenv(
+            "GENERIC_TEST_OPENAI_BASE_URL", "http://llm.biocypher.org/"
+        )
     )
-    docsum.connect(_HOST, _PORT)
+    rag_agent.connect(_HOST, _PORT)
 
-    doc_id = docsum.save_document(doc)
+    doc_id = rag_agent.save_document(doc)
     assert isinstance(doc_id, str)
     assert len(doc_id) > 0
 
     query = "What is BioCypher?"
-    results = docsum.similarity_search(query)
+    results = rag_agent.similarity_search(query)
     assert len(results) == 3
     assert all(["BioCypher" in result.page_content for result in results])
 
-    docs = docsum.get_all_documents()
+    docs = rag_agent.get_all_documents()
     cnt = len(docs)
     assert cnt > 0
-    docsum.remove_document(doc_id)
-    docs = docsum.get_all_documents()
+    rag_agent.remove_document(doc_id)
+    docs = rag_agent.get_all_documents()
     assert (cnt - 1) == len(docs)
 
 
@@ -125,47 +128,47 @@ CHUNK_OVERLAP = 10
 
 
 def check_document_splitter(
-        docsum: DocumentEmbedder,
-        fn: str,
-        expected_length: int,
+    rag_agent: DocumentEmbedder,
+    fn: str,
+    expected_length: int,
 ):
     reader = DocumentReader()
     doc = reader.load_document(fn)
-    splitted = docsum._split_document(doc)
+    splitted = rag_agent._split_document(doc)
     assert expected_length == len(splitted)
 
 
 def test_split_by_characters():
     # requires OpenAI API key
-    docsum = DocumentEmbedder(
+    rag_agent = DocumentEmbedder(
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP,
     )
-    check_document_splitter(docsum, "test/bc_summary.pdf", 195)
-    check_document_splitter(docsum, "test/dcn.pdf", 246)
-    check_document_splitter(docsum, "test/bc_summary.txt", 103)
+    check_document_splitter(rag_agent, "test/bc_summary.pdf", 195)
+    check_document_splitter(rag_agent, "test/dcn.pdf", 246)
+    check_document_splitter(rag_agent, "test/bc_summary.txt", 103)
 
 
 def test_split_by_tokens_tiktoken():
     # requires OpenAI API key
-    docsum = DocumentEmbedder(
+    rag_agent = DocumentEmbedder(
         split_by_characters=False,
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP,
     )
-    check_document_splitter(docsum, "test/bc_summary.pdf", 46)
-    check_document_splitter(docsum, "test/dcn.pdf", 69)
-    check_document_splitter(docsum, "test/bc_summary.txt", 20)
+    check_document_splitter(rag_agent, "test/bc_summary.pdf", 46)
+    check_document_splitter(rag_agent, "test/dcn.pdf", 69)
+    check_document_splitter(rag_agent, "test/bc_summary.txt", 20)
 
 
 def test_split_by_tokens_tokenizers():
     # requires OpenAI API key
-    docsum = DocumentEmbedder(
+    rag_agent = DocumentEmbedder(
         split_by_characters=False,
         model="bigscience/bloom",
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP,
     )
-    check_document_splitter(docsum, "test/bc_summary.pdf", 48)
-    check_document_splitter(docsum, "test/dcn.pdf", 72)
-    check_document_splitter(docsum, "test/bc_summary.txt", 21)
+    check_document_splitter(rag_agent, "test/bc_summary.pdf", 48)
+    check_document_splitter(rag_agent, "test/dcn.pdf", 72)
+    check_document_splitter(rag_agent, "test/bc_summary.txt", 21)

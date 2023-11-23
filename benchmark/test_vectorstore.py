@@ -26,7 +26,7 @@ CHUNK_SIZES = [50, 1000]
 
 @pytest.mark.parametrize("model", EMBEDDING_MODELS)
 @pytest.mark.parametrize("chunk_size", CHUNK_SIZES)
-def test_document_summariser(model, chunk_size):
+def test_retrieval_augmented_generation(model, chunk_size):
     pdf_path = "test/bc_summary.pdf"
     with open(pdf_path, "rb") as f:
         doc_bytes = f.read()
@@ -35,16 +35,16 @@ def test_document_summariser(model, chunk_size):
     doc = reader.document_from_pdf(doc_bytes)
 
     doc_ids = []
-    docsum = DocumentEmbedder(model=model, chunk_size=chunk_size)
-    docsum.connect(_HOST, _PORT)
-    doc_ids.append(docsum.save_document(doc))
+    rag_agent = DocumentEmbedder(model=model, chunk_size=chunk_size)
+    rag_agent.connect(_HOST, _PORT)
+    doc_ids.append(rag_agent.save_document(doc))
 
     query = "What is BioCypher?"
-    results = docsum.similarity_search(query)
+    results = rag_agent.similarity_search(query)
     correct = ["BioCypher" in result.page_content for result in results]
 
     # delete embeddings
-    [docsum.database_host.remove_document(doc_id) for doc_id in doc_ids]
+    [rag_agent.database_host.remove_document(doc_id) for doc_id in doc_ids]
 
     # record sum in CSV file
     with open(FILE_PATH, "a") as f:
