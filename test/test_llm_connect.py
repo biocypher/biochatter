@@ -6,7 +6,8 @@ from biochatter.llm_connect import (
     AzureGptConversation,
     SystemMessage,
     HumanMessage,
-    AIMessage, XinferenceConversation,
+    AIMessage,
+    XinferenceConversation,
 )
 import pytest
 
@@ -105,6 +106,7 @@ def test_azure_raises_request_error():
     with pytest.raises(NotFoundError):
         convo.set_api_key("fake_key")
 
+
 def test_azure():
     """
     Test OpenAI Azure endpoint functionality. Azure connectivity is enabled by
@@ -122,6 +124,7 @@ def test_azure():
 
     assert convo.set_api_key(os.getenv("AZURE_TEST_OPENAI_API_KEY"))
 
+
 def test_xinference_init():
     """
     Test generic OpenAI-style API with generic Domain. Connectivity is enabled by
@@ -137,14 +140,11 @@ def test_xinference_init():
     assert convo.set_api_key()
 
 
-#TODO move to test_chatting.py once exists
-
-# def test_generic_chatting():
-#     base_url = os.getenv("XINFERENCE_BASE_URL", "http://llm.biocypher.org")
-#     convo = XinferenceConversation(
-#         base_url=base_url,
-#         prompts={},
-#         model_name="llama2-13b-chat-hf"
-#     )
-#     (msg, token_usage, correction) = convo.query("Hello, world!")
-#     assert(token_usage['completion_tokens'] > 0)
+# TODO move to test_chatting.py once exists
+def test_generic_chatting():
+    base_url = os.getenv("XINFERENCE_BASE_URL", "http://llm.biocypher.org")
+    convo = XinferenceConversation(
+        base_url=base_url, prompts={}, model_name="llama2-13b-chat-hf"
+    )
+    (msg, token_usage, correction) = convo.query("Hello, world!")
+    assert token_usage["completion_tokens"] > 0
