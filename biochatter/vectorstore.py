@@ -40,6 +40,60 @@ class DocumentEmbedder:
         base_url: Optional[str] = None,
         embeddings: Optional[OpenAIEmbeddings | XinferenceEmbeddings] = None,
     ) -> None:
+        """
+        Class that handles the retrieval augmented generation (RAG) functionality
+        of BioChatter. It splits text into chunks, embeds them, and stores them in
+        a vector database. It can then be used to do similarity search on the
+        database.
+
+        Args:
+
+            use_prompt (bool, optional): whether to use RAG (ChatGSE setting).
+            Defaults to True.
+
+            used (bool, optional): whether RAG has been used (ChatGSE setting).
+            Defaults to False.
+
+            online (bool, optional): whether we are running ChatGSE online.
+            Defaults to False.
+
+            chunk_size (int, optional): size of chunks to split text into.
+            Defaults to 1000.
+
+            chunk_overlap (int, optional): overlap between chunks. Defaults to 0.
+
+            split_by_characters (bool, optional): whether to split by characters
+            or tokens. Defaults to True.
+
+            separators (Optional[list], optional): list of separators to use when
+            splitting by characters. Defaults to [" ", ",", "\n"].
+
+            n_results (int, optional): number of results to return from
+            similarity search. Defaults to 3.
+
+            model (Optional[str], optional): name of model to use for embeddings.
+            Defaults to 'text-embedding-ada-002'.
+
+            vector_db_vendor (Optional[str], optional): name of vector database
+            to use. Defaults to Milvus.
+
+            connection_args (Optional[dict], optional): arguments to pass to
+            vector database connection. Defaults to None.
+
+            embedding_collection_name (Optional[str], optional): name of
+            collection to store embeddings in. Defaults to 'DocumentEmbeddings'.
+
+            metadata_collection_name (Optional[str], optional): name of
+            collection to store metadata in. Defaults to 'DocumentMetadata'.
+
+            api_key (Optional[str], optional): OpenAI API key. Defaults to None.
+
+            base_url (Optional[str], optional): base url of OpenAI API.
+
+            embeddings (Optional[OpenAIEmbeddings | XinferenceEmbeddings],
+            optional): Embeddings object to use. Defaults to OpenAI.
+
+        """
         self.use_prompt = use_prompt
         self.used = used
         self.online = online
@@ -202,6 +256,48 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
         api_key: Optional[str] = "none",
         base_url: Optional[str] = None,
     ):
+        """
+        Extension of the DocumentEmbedder class that uses Xinference for
+        embeddings.
+
+        Args:
+
+            use_prompt (bool, optional): whether to use RAG (ChatGSE setting).
+
+            used (bool, optional): whether RAG has been used (ChatGSE setting).
+
+            chunk_size (int, optional): size of chunks to split text into.
+
+            chunk_overlap (int, optional): overlap between chunks.
+
+            split_by_characters (bool, optional): whether to split by characters
+            or tokens.
+
+            separators (Optional[list], optional): list of separators to use when
+            splitting by characters.
+
+            n_results (int, optional): number of results to return from
+            similarity search.
+
+            model (Optional[str], optional): name of model to use for embeddings.
+
+            vector_db_vendor (Optional[str], optional): name of vector database
+            to use.
+
+            connection_args (Optional[dict], optional): arguments to pass to
+            vector database connection.
+
+            embedding_collection_name (Optional[str], optional): name of
+            collection to store embeddings in.
+
+            metadata_collection_name (Optional[str], optional): name of
+            collection to store metadata in.
+
+            api_key (Optional[str], optional): Xinference API key.
+
+            base_url (Optional[str], optional): base url of Xinference API.
+
+        """
         from xinference.client import Client
         from langchain.embeddings import XinferenceEmbeddings
 
@@ -235,6 +331,12 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
         )
 
     def get_models(self):
+        """
+        Return all models that are currently available on the Xinference server.
+
+        Returns:
+            dict: dict of models
+        """
         models = self.client.list_models()
         for id, model in self.client.list_models().items():
             model["id"] = id
@@ -244,6 +346,16 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
         return models
 
     def list_models_by_type(self, type: str):
+        """
+        Return all models of a certain type that are currently available on the
+        Xinference server.
+
+        Args:
+            type (str): type of model to list (e.g. "embedding", "chat")
+
+        Returns:
+            List[str]: list of model names
+        """
         names = []
         for name, model in self.models.items():
             if "model_ability" in model:
