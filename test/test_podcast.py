@@ -34,7 +34,8 @@ def test_podcast_to_text():
 
     # test the podcast_to_text method
     expected_text = (
-        podcaster.podcast_info
+        "You are listening to: "
+        + podcaster.podcast_info
         + "\n\n"
         + "\n\n".join(podcaster.processed_sections)
         + "\n\n"
