@@ -66,12 +66,12 @@ class Conversation(ABC):
     """
 
     def __init__(
-            self,
-            model_name: str,
-            prompts: dict,
-            correct: bool = True,
-            split_correction: bool = False,
-            rag_agent: DocumentEmbedder = None,
+        self,
+        model_name: str,
+        prompts: dict,
+        correct: bool = True,
+        split_correction: bool = False,
+        rag_agent: DocumentEmbedder = None,
     ):
         super().__init__()
         self.model_name = model_name
@@ -302,13 +302,13 @@ class Conversation(ABC):
 
 class XinferenceConversation(Conversation):
     def __init__(
-            self,
-            base_url: str,
-            prompts: dict,
-            model_name: str = "auto",
-            correct: bool = True,
-            split_correction: bool = False,
-            rag_agent: DocumentEmbedder = None,
+        self,
+        base_url: str,
+        prompts: dict,
+        model_name: str = "auto",
+        correct: bool = True,
+        split_correction: bool = False,
+        rag_agent: DocumentEmbedder = None,
     ):
         """
 
@@ -325,7 +325,8 @@ class XinferenceConversation(Conversation):
             prompts (dict): A dictionary of prompts to use for the conversation.
 
             model_name (str): The name of the model to use. Will be mapped to
-            the according uid from the list of available models.
+            the according uid from the list of available models. Can be set to
+            "auto" to use the first available model.
 
             correct (bool): Whether to correct the model output.
 
@@ -410,10 +411,10 @@ class XinferenceConversation(Conversation):
                 generate_config={"max_tokens": 2048, "temperature": 0},
             )
         except (
-                openai.error.InvalidRequestError,
-                openai.error.APIConnectionError,
-                openai.error.RateLimitError,
-                openai.error.APIError,
+            openai.error.InvalidRequestError,
+            openai.error.APIConnectionError,
+            openai.error.RateLimitError,
+            openai.error.APIError,
         ) as e:
             return str(e), None
 
@@ -448,7 +449,7 @@ class XinferenceConversation(Conversation):
         ca_messages.append(
             SystemMessage(
                 content="If there is nothing to correct, please respond "
-                        "with just 'OK', and nothing else!",
+                "with just 'OK', and nothing else!",
             ),
         )
         history = []
@@ -538,12 +539,12 @@ class XinferenceConversation(Conversation):
 
 class GptConversation(Conversation):
     def __init__(
-            self,
-            model_name: str,
-            prompts: dict,
-            correct: bool = True,
-            split_correction: bool = False,
-            rag_agent: DocumentEmbedder = None,
+        self,
+        model_name: str,
+        prompts: dict,
+        correct: bool = True,
+        split_correction: bool = False,
+        rag_agent: DocumentEmbedder = None,
     ):
         """
         Connect to OpenAI's GPT API and set up a conversation with the user.
@@ -624,20 +625,20 @@ class GptConversation(Conversation):
         try:
             response = self.chat.generate([self.messages])
         except (
-                openai._exceptions.APIError,
-                openai._exceptions.OpenAIError,
-                openai._exceptions.ConflictError,
-                openai._exceptions.NotFoundError,
-                openai._exceptions.APIStatusError,
-                openai._exceptions.RateLimitError,
-                openai._exceptions.APITimeoutError,
-                openai._exceptions.BadRequestError,
-                openai._exceptions.APIConnectionError,
-                openai._exceptions.AuthenticationError,
-                openai._exceptions.InternalServerError,
-                openai._exceptions.PermissionDeniedError,
-                openai._exceptions.UnprocessableEntityError,
-                openai._exceptions.APIResponseValidationError,
+            openai._exceptions.APIError,
+            openai._exceptions.OpenAIError,
+            openai._exceptions.ConflictError,
+            openai._exceptions.NotFoundError,
+            openai._exceptions.APIStatusError,
+            openai._exceptions.RateLimitError,
+            openai._exceptions.APITimeoutError,
+            openai._exceptions.BadRequestError,
+            openai._exceptions.APIConnectionError,
+            openai._exceptions.AuthenticationError,
+            openai._exceptions.InternalServerError,
+            openai._exceptions.PermissionDeniedError,
+            openai._exceptions.UnprocessableEntityError,
+            openai._exceptions.APIResponseValidationError,
         ) as e:
             return str(e), None
 
@@ -671,7 +672,7 @@ class GptConversation(Conversation):
         ca_messages.append(
             SystemMessage(
                 content="If there is nothing to correct, please respond "
-                        "with just 'OK', and nothing else!",
+                "with just 'OK', and nothing else!",
             ),
         )
 
@@ -703,15 +704,15 @@ class GptConversation(Conversation):
 
 class AzureGptConversation(GptConversation):
     def __init__(
-            self,
-            deployment_name: str,
-            model_name: str,
-            prompts: dict,
-            correct: bool = True,
-            split_correction: bool = False,
-            rag_agent: DocumentEmbedder = None,
-            version: Optional[str] = None,
-            base_url: Optional[str] = None,
+        self,
+        deployment_name: str,
+        model_name: str,
+        prompts: dict,
+        correct: bool = True,
+        split_correction: bool = False,
+        rag_agent: DocumentEmbedder = None,
+        version: Optional[str] = None,
+        base_url: Optional[str] = None,
     ):
         """
         Connect to Azure's GPT API and set up a conversation with the user.
@@ -796,11 +797,11 @@ class AzureGptConversation(GptConversation):
 
 class BloomConversation(Conversation):
     def __init__(
-            self,
-            model_name: str,
-            prompts: dict,
-            split_correction: bool,
-            rag_agent: DocumentEmbedder = None,
+        self,
+        model_name: str,
+        prompts: dict,
+        split_correction: bool,
+        rag_agent: DocumentEmbedder = None,
     ):
         super().__init__(
             model_name=model_name,

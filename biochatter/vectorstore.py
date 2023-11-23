@@ -280,6 +280,7 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
             similarity search.
 
             model (Optional[str], optional): name of model to use for embeddings.
+            Can be "auto" to use the first available model.
 
             vector_db_vendor (Optional[str], optional): name of vector database
             to use.
