@@ -34,6 +34,8 @@ class DocumentEmbedder:
         model: Optional[str] = "text-embedding-ada-002",
         vector_db_vendor: Optional[str] = None,
         connection_args: Optional[dict] = None,
+        embedding_collection_name: Optional[str] = None,
+        metadata_collection_name: Optional[str] = None,
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
         embeddings: Optional[OpenAIEmbeddings | XinferenceEmbeddings] = None,
@@ -67,6 +69,8 @@ class DocumentEmbedder:
             "host": "127.0.0.1",
             "port": "19530",
         }
+        self.embedding_collection_name = embedding_collection_name
+        self.metadata_collection_name = metadata_collection_name
 
         # TODO: vector db selection
         self.vector_db_vendor = vector_db_vendor or "milvus"
@@ -83,6 +87,8 @@ class DocumentEmbedder:
             self.database_host = VectorDatabaseHostMilvus(
                 embedding_func=self.embeddings,
                 connection_args=self.connection_args,
+                embedding_collection_name=self.embedding_collection_name,
+                metadata_collection_name=self.metadata_collection_name,
             )
         else:
             raise NotImplementedError(self.vector_db_vendor)
@@ -191,6 +197,8 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
         model: Optional[str] = "auto",
         vector_db_vendor: Optional[str] = None,
         connection_args: Optional[dict] = None,
+        embedding_collection_name: Optional[str] = None,
+        metadata_collection_name: Optional[str] = None,
         api_key: Optional[str] = "none",
         base_url: Optional[str] = None,
     ):
@@ -217,6 +225,8 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
             model=model,
             vector_db_vendor=vector_db_vendor,
             connection_args=connection_args,
+            embedding_collection_name=embedding_collection_name,
+            metadata_collection_name=metadata_collection_name,
             api_key=api_key,
             base_url=base_url,
             embeddings=XinferenceEmbeddings(

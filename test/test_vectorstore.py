@@ -4,7 +4,6 @@ from biochatter.vectorstore import (
     Document,
     XinferenceDocumentEmbedder,
 )
-
 import os
 
 print(os.getcwd())
@@ -27,7 +26,10 @@ def test_retrieval_augmented_generation():
 
     reader = DocumentReader()
     doc = reader.document_from_pdf(doc_bytes)
-    rag_agent = DocumentEmbedder()
+    rag_agent = DocumentEmbedder(
+        embedding_collection_name="openai_embedding_test",
+        metadata_collection_name="openai_metadata_test",
+    )
     rag_agent.connect(_HOST, _PORT)
     doc_id = rag_agent.save_document(doc)
     assert isinstance(doc_id, str)
@@ -59,7 +61,9 @@ def test_retrieval_augmented_generation_generic_api():
     rag_agent = XinferenceDocumentEmbedder(
         base_url=os.getenv(
             "GENERIC_TEST_OPENAI_BASE_URL", "http://llm.biocypher.org/"
-        )
+        ),
+        embedding_collection_name="xinference_embedding_test",
+        metadata_collection_name="xinference_metadata_test",
     )
     rag_agent.connect(_HOST, _PORT)
 
