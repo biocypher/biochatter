@@ -71,14 +71,14 @@ class Conversation(ABC):
         prompts: dict,
         correct: bool = True,
         split_correction: bool = False,
-        docsum: DocumentEmbedder = None,
+        rag_agent: DocumentEmbedder = None,
     ):
         super().__init__()
         self.model_name = model_name
         self.prompts = prompts
         self.correct = correct
         self.split_correction = split_correction
-        self.docsum = docsum
+        self.rag_agent = rag_agent
         self.history = []
         self.messages = []
         self.ca_messages = []
@@ -97,8 +97,8 @@ class Conversation(ABC):
     def set_prompts(self, prompts: dict):
         self.prompts = prompts
 
-    def set_docsum(self, docsum: DocumentEmbedder):
-        self.docsum = docsum
+    def set_rag_agent(self, rag_agent: DocumentEmbedder):
+        self.rag_agent = rag_agent
 
     def append_ai_message(self, message: str):
         self.messages.append(
@@ -161,8 +161,8 @@ class Conversation(ABC):
     def query(self, text: str, collection_name: Optional[str] = None):
         self.append_user_message(text)
 
-        if self.docsum:
-            if self.docsum.use_prompt:
+        if self.rag_agent:
+            if self.rag_agent.use_prompt:
                 self._inject_context(text, collection_name)
 
         msg, token_usage = self._primary_query()
@@ -231,15 +231,15 @@ class Conversation(ABC):
         Args:
             text (str): The user query to be used for similarity search.
         """
-        if not self.docsum.used:
+        if not self.rag_agent.used:
             st.info(
-                "No document has been analysed yet. To use document "
-                "summarisation, please analyse at least one document first."
+                "No document has been analysed yet. To use retrieval augmented "
+                "generation, please analyse at least one document first."
             )
             return
 
         sim_msg = (
-            f"Performing similarity search to inject {self.docsum.n_results}"
+            f"Performing similarity search to inject {self.rag_agent.n_results}"
             " fragments ..."
         )
 
@@ -247,23 +247,23 @@ class Conversation(ABC):
             with st.spinner(sim_msg):
                 statements = [
                     doc.page_content
-                    for doc in self.docsum.similarity_search(
+                    for doc in self.rag_agent.similarity_search(
                         text,
-                        self.docsum.n_results,
+                        self.rag_agent.n_results,
                         collection_name,
                     )
                 ]
         else:
             statements = [
                 doc.page_content
-                for doc in self.docsum.similarity_search(
+                for doc in self.rag_agent.similarity_search(
                     text,
-                    self.docsum.n_results,
+                    self.rag_agent.n_results,
                     collection_name,
                 )
             ]
 
-        prompts = self.prompts["docsum_prompts"]
+        prompts = self.prompts["rag_agent_prompts"]
         if statements:
             self.current_statements = statements
             for i, prompt in enumerate(prompts):
@@ -300,6 +300,243 @@ class Conversation(ABC):
         return json.dumps(d)
 
 
+class XinferenceConversation(Conversation):
+    def __init__(
+        self,
+        base_url: str,
+        prompts: dict,
+        model_name: str = "auto",
+        correct: bool = True,
+        split_correction: bool = False,
+        rag_agent: DocumentEmbedder = None,
+    ):
+        """
+
+        Connect to an open-source LLM via the Xinference client library and set
+        up a conversation with the user.  Also initialise a second
+        conversational agent to provide corrections to the model output, if
+        necessary.
+
+        Args:
+
+            base_url (str): The base URL of the Xinference instance (should not
+            include the /v1 part).
+
+            prompts (dict): A dictionary of prompts to use for the conversation.
+
+            model_name (str): The name of the model to use. Will be mapped to
+            the according uid from the list of available models. Can be set to
+            "auto" to use the first available model.
+
+            correct (bool): Whether to correct the model output.
+
+            split_correction (bool): Whether to correct the model output by
+            splitting the output into sentences and correcting each sentence
+            individually.
+
+            rag_agent (DocumentEmbedder): A RAG agent to use for retieval
+            augmented generation.
+
+        """
+        from xinference.client import Client
+
+        super().__init__(
+            model_name=model_name,
+            prompts=prompts,
+            correct=correct,
+            split_correction=split_correction,
+            rag_agent=rag_agent,
+        )
+        self.client = Client(base_url=base_url)
+
+        self.models = {}
+        self.load_models()
+
+        self.ca_model_name = model_name
+
+        self.set_api_key()
+
+        # TODO make accessible by drop-down
+
+    def load_models(self):
+        for id, model in self.client.list_models().items():
+            model["id"] = id
+            self.models[model["model_name"]] = model
+
+    # def list_models_by_type(self, type: str):
+    #     names = []
+    #     if type == 'embed' or type == 'embedding':
+    #         for name, model in self.models.items():
+    #             if "model_ability" in model:
+    #                 if "embed" in model["model_ability"]:
+    #                     names.append(name)
+    #             elif model["model_type"] == "embedding":
+    #                 names.append(name)
+    #         return names
+    #     for name, model in self.models.items():
+    #         if "model_ability" in model:
+    #             if type in model["model_ability"]:
+    #                 names.append(name)
+    #         elif model["model_type"] == type:
+    #             names.append(name)
+    #     return names
+
+    def _primary_query(self):
+        """
+
+        Query the Xinference client API with the user's message and return the
+        response using the message history (flattery system messages, prior
+        conversation) as context. Correct the response if necessary.
+
+        Returns:
+
+            tuple: A tuple containing the response from the Xinference API
+            (formatted similarly to responses from the OpenAI API) and the token
+            usage.
+
+        """
+        try:
+            history = []
+            for m in self.messages:
+                if isinstance(m, SystemMessage):
+                    history.append({"role": "system", "content": m.content})
+                elif isinstance(m, HumanMessage):
+                    history.append({"role": "user", "content": m.content})
+                elif isinstance(m, AIMessage):
+                    history.append({"role": "assistant", "content": m.content})
+            prompt = history.pop()
+            response = self.model.chat(
+                prompt=prompt["content"],
+                chat_history=history,
+                generate_config={"max_tokens": 2048, "temperature": 0},
+            )
+        except (
+            openai.error.InvalidRequestError,
+            openai.error.APIConnectionError,
+            openai.error.RateLimitError,
+            openai.error.APIError,
+        ) as e:
+            return str(e), None
+
+        msg = response["choices"][0]["message"]["content"]
+        token_usage = response["usage"]
+
+        self._update_usage_stats(self.model_name, token_usage)
+
+        self.append_ai_message(msg)
+
+        return msg, token_usage
+
+    def _correct_response(self, msg: str):
+        """
+
+        Correct the response from the Xinference API by sending it to a
+        secondary language model. Optionally split the response into single
+        sentences and correct each sentence individually. Update usage stats.
+
+        Args:
+            msg (str): The response from the model.
+
+        Returns:
+            str: The corrected response (or OK if no correction necessary).
+        """
+        ca_messages = self.ca_messages.copy()
+        ca_messages.append(
+            HumanMessage(
+                content=msg,
+            ),
+        )
+        ca_messages.append(
+            SystemMessage(
+                content="If there is nothing to correct, please respond "
+                "with just 'OK', and nothing else!",
+            ),
+        )
+        history = []
+        for m in self.messages:
+            if isinstance(m, SystemMessage):
+                history.append({"role": "system", "content": m.content})
+            elif isinstance(m, HumanMessage):
+                history.append({"role": "user", "content": m.content})
+            elif isinstance(m, AIMessage):
+                history.append({"role": "assistant", "content": m.content})
+        prompt = history.pop()
+        response = self.ca_model.chat(
+            prompt=prompt["content"],
+            chat_history=history,
+            generate_config={"max_tokens": 2048, "temperature": 0},
+        )
+
+        correction = response["choices"][0]["message"]["content"]
+        token_usage = response["usage"]
+
+        self._update_usage_stats(self.ca_model_name, token_usage)
+
+        return correction
+
+    def _update_usage_stats(self, model: str, token_usage: dict):
+        """
+        Update redis database with token usage statistics using the usage_stats
+        object with the increment method.
+
+        Args:
+            model (str): The model name.
+
+            token_usage (dict): The token usage statistics.
+        """
+        # if self.user == "community":
+        # self.usage_stats.increment(
+        #     f"usage:[date]:[user]",
+        #     {f"{k}:{model}": v for k, v in token_usage.items()},
+        # )
+
+    def set_api_key(self):
+        """
+        Try to get the Xinference model from the client API. If the model is
+        found, initialise the conversational agent. If the model is not found,
+        `get_model` will raise a RuntimeError.
+
+        Returns:
+            bool: True if the model is found, False otherwise.
+        """
+
+        try:
+            if self.model_name is None or self.model_name == "auto":
+                self.model_name = self.list_models_by_type("chat")[0]
+            self.model = self.client.get_model(
+                self.models[self.model_name]["id"]
+            )
+
+            if self.ca_model_name is None or self.ca_model_name == "auto":
+                self.ca_model_name = self.list_models_by_type("chat")[0]
+            self.ca_model = self.client.get_model(
+                self.models[self.ca_model_name]["id"]
+            )
+            return True
+
+        except RuntimeError as e:
+            # TODO handle error, log?
+            return False
+
+    def list_models_by_type(self, type: str):
+        names = []
+        if type == "embed" or type == "embedding":
+            for name, model in self.models.items():
+                if "model_ability" in model:
+                    if "embed" in model["model_ability"]:
+                        names.append(name)
+                elif model["model_type"] == "embedding":
+                    names.append(name)
+            return names
+        for name, model in self.models.items():
+            if "model_ability" in model:
+                if type in model["model_ability"]:
+                    names.append(name)
+            elif model["model_type"] == type:
+                names.append(name)
+        return names
+
+
 class GptConversation(Conversation):
     def __init__(
         self,
@@ -307,7 +544,7 @@ class GptConversation(Conversation):
         prompts: dict,
         correct: bool = True,
         split_correction: bool = False,
-        docsum: DocumentEmbedder = None,
+        rag_agent: DocumentEmbedder = None,
     ):
         """
         Connect to OpenAI's GPT API and set up a conversation with the user.
@@ -323,15 +560,15 @@ class GptConversation(Conversation):
                 splitting the output into sentences and correcting each
                 sentence individually.
 
-            docsum (DocumentEmbedder): A document summariser to use for
-                document summarisation.
+            rag_agent (DocumentEmbedder): A RAG agent to use for
+                retrieval augmented generation (RAG).
         """
         super().__init__(
             model_name=model_name,
             prompts=prompts,
             correct=correct,
             split_correction=split_correction,
-            docsum=docsum,
+            rag_agent=rag_agent,
         )
 
         self.ca_model_name = "gpt-3.5-turbo"
@@ -473,7 +710,7 @@ class AzureGptConversation(GptConversation):
         prompts: dict,
         correct: bool = True,
         split_correction: bool = False,
-        docsum: DocumentEmbedder = None,
+        rag_agent: DocumentEmbedder = None,
         version: Optional[str] = None,
         base_url: Optional[str] = None,
     ):
@@ -493,8 +730,8 @@ class AzureGptConversation(GptConversation):
                 splitting the output into sentences and correcting each
                 sentence individually.
 
-            docsum (DocumentEmbedder): A vector database connection to use for
-                document summarisation.
+            rag_agent (DocumentEmbedder): A vector database connection to use for
+                retrieval augmented generation (RAG).
 
             version (str): The version of the Azure API to use.
 
@@ -505,7 +742,7 @@ class AzureGptConversation(GptConversation):
             prompts=prompts,
             correct=correct,
             split_correction=split_correction,
-            docsum=docsum,
+            rag_agent=rag_agent,
         )
 
         self.version = version
@@ -564,13 +801,13 @@ class BloomConversation(Conversation):
         model_name: str,
         prompts: dict,
         split_correction: bool,
-        docsum: DocumentEmbedder = None,
+        rag_agent: DocumentEmbedder = None,
     ):
         super().__init__(
             model_name=model_name,
             prompts=prompts,
             split_correction=split_correction,
-            docsum=docsum,
+            rag_agent=rag_agent,
         )
 
         self.messages = []

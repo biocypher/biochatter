@@ -1,6 +1,6 @@
 name: biochatter Continuous Integration
 
-on: [pull_request, push]
+on: [push]
 
 jobs:
   test:
@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: |
           poetry install
-          poetry install -E podcast
+          poetry install -E 'podcast xinference'
 
       - name: Start Milvus server
         run: |
@@ -57,4 +57,4 @@ jobs:
 
       - name: Run tests
         run: |
-          poetry run pytest --ignore=./volumes
+          poetry run pytest test --ignore=./volumes
