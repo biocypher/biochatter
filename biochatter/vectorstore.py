@@ -228,6 +228,8 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
         models = self.client.list_models()
         for id, model in self.client.list_models().items():
             model["id"] = id
+            models[id] = model
+            # TODO do we need to keep both the UID and the name entries?
             models[model["model_name"]] = model
         return models
 
