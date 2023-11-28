@@ -268,8 +268,9 @@ class BioCypherPromptEngine:
                 rels[key] = {}
 
         if source_and_target_present:
-            # drop relationships without source and target, or where source and
-            # target are not in the selected entities
+            # drop relationships without source and target, or where not at
+            # least one of source and target are not in the selected entities
+
             for key in list(rels.keys()):
                 value = rels[key]
                 if not value:
@@ -277,8 +278,9 @@ class BioCypherPromptEngine:
 
                 # expand source and target lists to single pairs, then compare
                 # the sets of these pairs to the set of selected entities. if
-                # any of the pairs is in the set of selected entities, the whole
-                # relationship is kept
+                # any of the items in the pair is in the set of selected
+                # entities, the whole relationship is kept
+
                 if isinstance(value[0], list):
                     source = value[0]
                 else:
@@ -292,8 +294,9 @@ class BioCypherPromptEngine:
                     for t in target:
                         pairs.append((s, t))
                 if not any(
-                    set(pair).issubset(set(self.selected_entities))
+                    item in self.selected_entities
                     for pair in pairs
+                    for item in pair
                 ):
                     rels.pop(key)
 
