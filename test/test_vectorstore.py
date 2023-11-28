@@ -67,8 +67,9 @@ def test_retrieval_augmented_generation(mock_textsplitter, mock_host, mock_opena
     rag_agent = DocumentEmbedder(
         embedding_collection_name="openai_embedding_test",
         metadata_collection_name="openai_metadata_test",
+        connection_args={"host": _HOST, "port": _PORT}
     )
-    rag_agent.connect(_HOST, _PORT)
+    rag_agent.connect()
     doc_id = rag_agent.save_document(doc)
     assert isinstance(doc_id, str)
     assert len(doc_id) > 0
@@ -113,8 +114,9 @@ def test_retrieval_augmented_generation_generic_api(mock_textsplitter, mock_host
         ),
         embedding_collection_name="xinference_embedding_test",
         metadata_collection_name="xinference_metadata_test",
+        connection_args={"host": _HOST, "port": _PORT}
     )
-    rag_agent.connect(_HOST, _PORT)
+    rag_agent.connect()
 
     doc_id = rag_agent.save_document(doc)
     assert isinstance(doc_id, str)

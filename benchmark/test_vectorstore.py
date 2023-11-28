@@ -35,8 +35,12 @@ def test_retrieval_augmented_generation(model, chunk_size):
     doc = reader.document_from_pdf(doc_bytes)
 
     doc_ids = []
-    rag_agent = DocumentEmbedder(model=model, chunk_size=chunk_size)
-    rag_agent.connect(_HOST, _PORT)
+    rag_agent = DocumentEmbedder(
+        model=model, 
+        chunk_size=chunk_size, 
+        connection_args={"host": _HOST, "port": _PORT}
+    )
+    rag_agent.connect()
     doc_ids.append(rag_agent.save_document(doc))
 
     query = "What is BioCypher?"

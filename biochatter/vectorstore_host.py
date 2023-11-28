@@ -134,7 +134,7 @@ class VectorDatabaseHostMilvus:
             metadata_collection_name or DOCUMENT_METADATA_COLLECTION_NAME
         )
 
-    def connect(self, host: str, port: str) -> None:
+    def connect(self) -> None:
         """
         Connect to a host and read two document collections (the default names
         are `DocumentEmbeddings` and `DocumentMetadata`) in the currently active
@@ -142,10 +142,8 @@ class VectorDatabaseHostMilvus:
         collections don't exist, create the two collections.
 
         Args:
-            host (str): host ip address
-            port (str): host port
         """
-        self._connect(host, port)
+        self._connect(self._connection_args["host"], self._connection_args["port"])
         self._init_host()
 
     def _connect(self, host: str, port: str) -> None:

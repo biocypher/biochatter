@@ -229,8 +229,8 @@ class DocumentEmbedder:
             query=query, k=k or self.n_results
         )
 
-    def connect(self, host: str, port: str) -> None:
-        self.database_host.connect(host, port)
+    def connect(self) -> None:
+        self.database_host.connect()
 
     def get_all_documents(self) -> List[Dict]:
         return self.database_host.get_all_documents()

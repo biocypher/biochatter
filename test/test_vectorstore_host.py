@@ -68,7 +68,7 @@ def dbHost():
             embedding_collection_name=EMBEDDING_NAME,
             metadata_collection_name=METADATA_NAME
         )
-        dbHost.connect(_HOST, _PORT)
+        dbHost.connect()
         assert dbHost._col_embeddings is not None
         assert dbHost._col_metadata is not None
 
