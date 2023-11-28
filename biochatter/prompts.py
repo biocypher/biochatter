@@ -348,9 +348,22 @@ class BioCypherPromptEngine:
                             "target": None,
                         }
 
-        # TODO if we selected relationships that have source and target which is
-        # not in the selected entities, we add those entities to the selected
+        # if we selected relationships that have either source or target which
+        # is not in the selected entities, we add those entities to the selected
         # entities.
+
+        if self.selected_relationship_labels:
+            for key, value in self.selected_relationship_labels.items():
+                if (
+                    value["source"]
+                    and value["source"] not in self.selected_entities
+                ):
+                    self.selected_entities.append(value["source"])
+                if (
+                    value["target"]
+                    and value["target"] not in self.selected_entities
+                ):
+                    self.selected_entities.append(value["target"])
 
         return bool(result)
 
