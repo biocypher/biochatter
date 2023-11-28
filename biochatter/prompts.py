@@ -311,17 +311,17 @@ class BioCypherPromptEngine:
             api_key=os.getenv("OPENAI_API_KEY"), user="entity_selector"
         )
 
-        conversation.append_system_message(
-            (
-                "You have access to a knowledge graph that contains "
-                f"these entities: {', '.join(self.selected_entities)}. "
-                "Your task is to select the relationships that are relevant "
-                "to the user's question for subsequent use in a query. Only "
-                "return the relationships, comma-separated, without any "
-                "additional text. Here are the possible relationships and "
-                f"their source and target entities: {rels}."
-            )
+        msg = (
+            "You have access to a knowledge graph that contains "
+            f"these entities: {', '.join(self.selected_entities)}. "
+            "Your task is to select the relationships that are relevant "
+            "to the user's question for subsequent use in a query. Only "
+            "return the relationships, comma-separated, without any "
+            "additional text. Here are the possible relationships and "
+            f"their source and target entities: {rels}."
         )
+
+        conversation.append_system_message(msg)
 
         msg, token_usage, correction = conversation.query(self.question)
 
@@ -344,6 +344,10 @@ class BioCypherPromptEngine:
                             "source": None,
                             "target": None,
                         }
+
+        # TODO if we selected relationships that have source and target which is
+        # not in the selected entities, we add those entities to the selected
+        # entities.
 
         return bool(result)
 
