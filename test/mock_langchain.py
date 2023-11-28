@@ -31,7 +31,7 @@ class Milvus(object):
         self.col = Mock()
         self.col.query = Mock()
         self.col.query.return_value = []
-    def connect(self, host: str, port: str):
+    def connect(self):
         pass
     def store_embeddings(self, docs: List[Document]) -> str:
         id = uuid.uuid4().hex
