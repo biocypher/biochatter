@@ -2,9 +2,10 @@ from biochatter.vectorstore import (
     DocumentEmbedder,
     DocumentReader,
     Document,
+    XinferenceDocumentEmbedder,
 )
-
 import os
+from unittest.mock import patch
 
 print(os.getcwd())
 
@@ -15,10 +16,47 @@ else:
     _HOST = "127.0.0.1"
 _PORT = "19530"
 
+splitted_docs = [
+    Document(
+        page_content='Democratising',
+        metadata={'format': 'PDF 1.4', 'title': 'Accepted_Version_Editor_edits_May_2023', 'producer': 'Skia/PDF m115 Google Docs Renderer', 'source': 'pdf'}
+    ),
+    Document(
+        page_content='',
+        metadata={'format': 'PDF 1.4', 'title': 'Accepted_Version_Editor_edits_May_2023', 'producer': 'Skia/PDF m115 Google Docs Renderer', 'source': 'pdf'}
+    ),
+    Document(
+        page_content='',
+        metadata={'format': 'PDF 1.4', 'title': 'Accepted_Version_Editor_edits_May_2023', 'producer': 'Skia/PDF m115 Google Docs Renderer', 'source': 'pdf'}
+    )
+]
+search_docs = [
+    Document(
+        page_content='Democratising knowledge representation with BioCypher\nSebastian Lobentanzer1,*, Patrick Aloy2,3, Jan Baumbach4, Balazs Bohar5,6, Pornpimol\nCharoentong8,9, Katharina Danhauser10, Tunca Doğan11,12, Johann Dreo13,14, Ian Dunham15,16,\nAdrià Fernandez-Torras2, Benjamin M. Gyori17, Michael',
+        metadata={id: '1'}
+    ),
+    Document(
+        page_content='BioCypher has been built with continuous consideration of the FAIR and TRUST',
+        metadata={id: '1'}
+    ),
+    Document(
+        page_content='adopting their own, arbitrary formats of representation. To our knowledge, no\nframework provides easy access to state-of-the-art KGs to the average biomedical researcher,\na gap that BioCypher aims to fill. We demonstrate some key advantages of BioCypher by\ncase studies in Supplementary Note 5.\n5\nFigure ',
+        metadata={id: '1'}
+    )
+]
 
-def test_document_summariser():
-    # runs long, requires OpenAI API key and local milvus server
-    # uses ada-002 for embeddings
+@patch("biochatter.vectorstore.OpenAIEmbeddings")
+@patch("biochatter.vectorstore.VectorDatabaseHostMilvus")
+@patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
+def test_retrieval_augmented_generation(mock_textsplitter, mock_host, mock_openaiembeddings):
+    # mocking 
+    mock_textsplitter.from_huggingface_tokenizer.return_value = mock_textsplitter()
+    mock_textsplitter.from_tiktoken_encoder.return_value = mock_textsplitter()
+    mock_textsplitter.return_value.split_documents.return_value = splitted_docs
+    mock_host.return_value.store_embeddings.return_value = '1'
+    mock_host.return_value.similarity_search.return_value = search_docs
+
+
     pdf_path = "test/bc_summary.pdf"
     with open(pdf_path, "rb") as f:
         doc_bytes = f.read()
@@ -26,24 +64,76 @@ def test_document_summariser():
 
     reader = DocumentReader()
     doc = reader.document_from_pdf(doc_bytes)
-    docsum = DocumentEmbedder()
-    docsum.connect(_HOST, _PORT)
-    doc_id = docsum.save_document(doc)
+    rag_agent = DocumentEmbedder(
+        embedding_collection_name="openai_embedding_test",
+        metadata_collection_name="openai_metadata_test",
+    )
+    rag_agent.connect(_HOST, _PORT)
+    doc_id = rag_agent.save_document(doc)
     assert isinstance(doc_id, str)
     assert len(doc_id) > 0
 
     query = "What is BioCypher?"
-    results = docsum.similarity_search(query)
+    results = rag_agent.similarity_search(query)
     assert len(results) == 3
     assert all(["BioCypher" in result.page_content for result in results])
 
-    docs = docsum.get_all_documents()
+    mock_host.return_value.get_all_documents.return_value = [{"id": "1"}, {"id": "2"}]
+    docs = rag_agent.get_all_documents()
     cnt = len(docs)
     assert cnt > 0
-    docsum.remove_document(doc_id)
-    docs = docsum.get_all_documents()
+    rag_agent.remove_document(doc_id)
+    mock_host.return_value.get_all_documents.return_value = [{"id": "2"}]
+    docs = rag_agent.get_all_documents()
     assert (cnt - 1) == len(docs)
+    mock_host.return_value.remove_document.assert_called_once()
 
+@patch("biochatter.vectorstore.XinferenceEmbeddings")
+@patch("biochatter.vectorstore.VectorDatabaseHostMilvus")
+@patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
+def test_retrieval_augmented_generation_generic_api(mock_textsplitter, mock_host, mock_embeddings):
+    # mocking 
+    mock_textsplitter.from_huggingface_tokenizer.return_value = mock_textsplitter()
+    mock_textsplitter.from_tiktoken_encoder.return_value = mock_textsplitter()
+    mock_textsplitter.return_value.split_documents.return_value = splitted_docs
+    mock_host.return_value.store_embeddings.return_value = '1'
+    mock_host.return_value.similarity_search.return_value = search_docs
+
+    pdf_path = "test/bc_summary.pdf"
+    with open(pdf_path, "rb") as f:
+        doc_bytes = f.read()
+    assert isinstance(doc_bytes, bytes)
+
+    reader = DocumentReader()
+    doc = reader.document_from_pdf(doc_bytes)
+
+    rag_agent = XinferenceDocumentEmbedder(
+        base_url=os.getenv(
+            "GENERIC_TEST_OPENAI_BASE_URL", "http://llm.biocypher.org/"
+        ),
+        embedding_collection_name="xinference_embedding_test",
+        metadata_collection_name="xinference_metadata_test",
+    )
+    rag_agent.connect(_HOST, _PORT)
+
+    doc_id = rag_agent.save_document(doc)
+    assert isinstance(doc_id, str)
+    assert len(doc_id) > 0
+
+    query = "What is BioCypher?"
+    results = rag_agent.similarity_search(query)
+    assert len(results) == 3
+    assert all(["BioCypher" in result.page_content for result in results])
+
+    mock_host.return_value.get_all_documents.return_value = [{"id": "1"}, {"id": "2"}]
+    docs = rag_agent.get_all_documents()
+    cnt = len(docs)
+    assert cnt > 0
+    rag_agent.remove_document(doc_id)
+    mock_host.return_value.get_all_documents.return_value = [{"id": "2"}]
+    docs = rag_agent.get_all_documents()
+    assert (cnt - 1) == len(docs)
+    mock_host.return_value.remove_document.assert_called_once()
 
 def test_load_txt():
     reader = DocumentReader()
@@ -91,49 +181,56 @@ def test_byte_pdf():
 CHUNK_SIZE = 100
 CHUNK_OVERLAP = 10
 
-
 def check_document_splitter(
-    docsum: DocumentEmbedder,
+    rag_agent: DocumentEmbedder,
     fn: str,
     expected_length: int,
 ):
     reader = DocumentReader()
     doc = reader.load_document(fn)
-    splitted = docsum._split_document(doc)
+    splitted = rag_agent._split_document(doc)
     assert expected_length == len(splitted)
 
-
-def test_split_by_characters():
-    # requires OpenAI API key
-    docsum = DocumentEmbedder(
+@patch("biochatter.vectorstore.OpenAIEmbeddings")
+@patch('biochatter.vectorstore.VectorDatabaseHostMilvus')
+@patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
+def test_split_by_characters(mock_textsplitter, mock_host, mock_embeddings):
+    # character splitter
+    mock_textsplitter.from_huggingface_tokenizer.return_value = mock_textsplitter()
+    mock_textsplitter.from_tiktoken_encoder.return_value = mock_textsplitter()
+    mock_textsplitter.return_value.split_documents.return_value = splitted_docs
+    rag_agent = DocumentEmbedder(
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP,
     )
-    check_document_splitter(docsum, "test/bc_summary.pdf", 195)
-    check_document_splitter(docsum, "test/dcn.pdf", 246)
-    check_document_splitter(docsum, "test/bc_summary.txt", 103)
-
-
-def test_split_by_tokens_tiktoken():
-    # requires OpenAI API key
-    docsum = DocumentEmbedder(
+    check_document_splitter(rag_agent, "test/bc_summary.pdf", len(splitted_docs))
+    check_document_splitter(rag_agent, "test/dcn.pdf", len(splitted_docs))
+    check_document_splitter(rag_agent, "test/bc_summary.txt", len(splitted_docs))
+    
+    # tiktoken
+    rag_agent = DocumentEmbedder(
         split_by_characters=False,
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP,
     )
-    check_document_splitter(docsum, "test/bc_summary.pdf", 46)
-    check_document_splitter(docsum, "test/dcn.pdf", 69)
-    check_document_splitter(docsum, "test/bc_summary.txt", 20)
+    check_document_splitter(rag_agent, "test/bc_summary.pdf", len(splitted_docs))
+    mock_textsplitter.from_tiktoken_encoder.assert_called_once()
+    check_document_splitter(rag_agent, "test/dcn.pdf", len(splitted_docs))
+    assert mock_textsplitter.from_tiktoken_encoder.call_count == 2
+    check_document_splitter(rag_agent, "test/bc_summary.txt", len(splitted_docs))
+    assert mock_textsplitter.from_tiktoken_encoder.call_count == 3
 
-
-def test_split_by_tokens_tokenizers():
-    # requires OpenAI API key
-    docsum = DocumentEmbedder(
+    # huggingface tokenizer
+    rag_agent = DocumentEmbedder(
         split_by_characters=False,
         model="bigscience/bloom",
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP,
     )
-    check_document_splitter(docsum, "test/bc_summary.pdf", 48)
-    check_document_splitter(docsum, "test/dcn.pdf", 72)
-    check_document_splitter(docsum, "test/bc_summary.txt", 21)
+    check_document_splitter(rag_agent, "test/bc_summary.pdf", len(splitted_docs))
+    mock_textsplitter.from_huggingface_tokenizer.assert_called_once()
+    check_document_splitter(rag_agent, "test/dcn.pdf", len(splitted_docs))
+    assert mock_textsplitter.from_huggingface_tokenizer.call_count == 2
+    check_document_splitter(rag_agent, "test/bc_summary.txt", len(splitted_docs))
+    assert mock_textsplitter.from_huggingface_tokenizer.call_count == 3
+

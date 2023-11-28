@@ -380,6 +380,7 @@ class VectorDatabaseHostMilvus:
             raise e
         aligned_docs = align_embeddings(documents, meta_id)
         try:
+            # As we passed collection_name, documents will be added to existed collection 
             self._col_embeddings = Milvus.from_documents(
                 embedding=self._embedding_func,
                 collection_name=self._embedding_name,
