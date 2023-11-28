@@ -26,7 +26,7 @@ def test_podcast_to_text():
     podcaster = Podcaster(document)
 
     # set fixed text for podcast intro and summarised sections
-    podcaster.podcast_intro = "This is a podcast intro."
+    podcaster.podcast_info = "This is a podcast intro."
     podcaster.processed_sections = [
         "This is the first section.",
         "This is the second section.",
@@ -34,7 +34,8 @@ def test_podcast_to_text():
 
     # test the podcast_to_text method
     expected_text = (
-        podcaster.podcast_intro
+        "You are listening to: "
+        + podcaster.podcast_info
         + "\n\n"
         + "\n\n".join(podcaster.processed_sections)
         + "\n\n"
@@ -47,7 +48,7 @@ def test_podcast_to_file_gtts(tmpdir):
     reader = DocumentReader()
     document = reader.load_document("test/dcn.pdf")
     podcaster = Podcaster(document)
-    podcaster.podcast_intro = "This is a podcast intro."
+    podcaster.podcast_info = "This is a podcast intro."
     podcaster.processed_sections = [
         "This is the first section.",
         "This is the second section.",

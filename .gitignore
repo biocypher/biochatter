@@ -7,6 +7,8 @@ __pycache__/
 .env
 *.mp3
 .cache
+*.env.idea
+.idea/
 *.env
 volumes/
 benchmark/results/*.csv

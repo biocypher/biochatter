@@ -390,9 +390,6 @@ class BioCypherPromptEngine:
                     self.relationships[relationship]["properties"].keys()
                 )
 
-        # TODO: split into separate prompts for entities and relationships,
-        # return single JSON each
-
         msg = (
             "You have access to a knowledge graph that contains entities and "
             "relationships. They have the following properties. Entities:"
