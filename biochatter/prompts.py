@@ -2,7 +2,7 @@ from typing import Optional
 import yaml
 import json
 import os
-from ._misc import sentencecase_to_pascalcase
+from ._misc import sentencecase_to_pascalcase, ensure_iterable
 from .llm_connect import GptConversation
 
 
@@ -262,45 +262,62 @@ class BioCypherPromptEngine:
         source_and_target_present = False
         for key, value in self.relationships.items():
             if "source" in value and "target" in value:
-                rels[key] = (value["source"], value["target"])
-                source_and_target_present = True
-            else:
-                rels[key] = {}
-
-        if source_and_target_present:
-            # drop relationships without source and target, or where not at
-            # least one of source and target are not in the selected entities
-
-            for key in list(rels.keys()):
-                value = rels[key]
-                if not value:
-                    rels.pop(key)
-
-                # expand source and target lists to single pairs, then compare
-                # the sets of these pairs to the set of selected entities. if
-                # any of the items in the pair is in the set of selected
-                # entities, the whole relationship is kept
-
-                if isinstance(value[0], list):
-                    source = value[0]
-                else:
-                    source = [value[0]]
-                if isinstance(value[1], list):
-                    target = value[1]
-                else:
-                    target = [value[1]]
+                # if source or target is a list, expand to single pairs
+                source = ensure_iterable(value["source"])
+                target = ensure_iterable(value["target"])
                 pairs = []
                 for s in source:
                     for t in target:
                         pairs.append((s, t))
-                if not any(
-                    item in self.selected_entities
-                    for pair in pairs
-                    for item in pair
-                ):
-                    rels.pop(key)
+                rels[key] = pairs
+                source_and_target_present = True
+            else:
+                rels[key] = {}
 
-            rels = json.dumps(rels)
+        # prioritise relationships that have source and target, and discard
+        # relationships that do not have both source and target, if at least one
+        # relationship has both source and target. keep relationships that have
+        # either source or target, if none of the relationships have both source
+        # and target.
+
+        if source_and_target_present:
+            # First, separate the relationships into two groups: those with both
+            # source and target in the selected entities, and those with either
+            # source or target but not both.
+
+            rels_with_both = {}
+            rels_with_either = {}
+            for key, value in rels.items():
+                for pair in value:
+                    if pair[0] in self.selected_entities:
+                        if pair[1] in self.selected_entities:
+                            rels_with_both[key] = value
+                        else:
+                            rels_with_either[key] = value
+                    elif pair[1] in self.selected_entities:
+                        rels_with_either[key] = value
+
+            # If there are any relationships with both source and target,
+            # discard the others.
+
+            if rels_with_both:
+                rels = rels_with_both
+            else:
+                rels = rels_with_either
+
+            selected_rels = []
+            for key, value in rels.items():
+                if not value:
+                    continue
+
+                for pair in value:
+                    if (
+                        pair[0] in self.selected_entities
+                        or pair[1] in self.selected_entities
+                    ):
+                        selected_rels.append((key, pair))
+
+            rels = json.dumps(selected_rels)
         else:
             rels = json.dumps(self.relationships)
 
@@ -319,16 +336,17 @@ class BioCypherPromptEngine:
             f"these entities: {', '.join(self.selected_entities)}. "
             "Your task is to select the relationships that are relevant "
             "to the user's question for subsequent use in a query. Only "
-            "return the relationships, comma-separated, without any "
-            "additional text. Here are the possible relationships and "
-            f"their source and target entities: {rels}."
+            "return the relationships without their sources or targets, "
+            "comma-separated, and without any additional text. Here are the "
+            "possible relationships and their source and target entities: "
+            f"{rels}."
         )
 
         conversation.append_system_message(msg)
 
-        msg, token_usage, correction = conversation.query(self.question)
+        res, token_usage, correction = conversation.query(self.question)
 
-        result = msg.split(",") if msg else []
+        result = res.split(",") if msg else []
 
         if result:
             for relationship in result:

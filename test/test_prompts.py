@@ -77,6 +77,16 @@ def test_relationship_selection(prompt_engine):
     ).get("target")
 
 
+def test_relationship_selection_with_incomplete_entities(prompt_engine):
+    prompt_engine.question = "Which genes are associated with mucoviscidosis?"
+    prompt_engine.selected_entities = ["Disease"]
+    success = prompt_engine._select_relationships()
+    assert success
+
+    # TODO convert into benchmark to be independent of model call, mock to
+    # assert the selection logic before the model call
+
+
 def test_property_selection(prompt_engine):
     """
 
