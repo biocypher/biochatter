@@ -86,6 +86,12 @@ def test_relationship_selection_with_incomplete_entities(prompt_engine):
     # TODO convert into benchmark to be independent of model call, mock to
     # assert the selection logic before the model call
 
+    # technically, these are wrong selections, but the test is also arbitrarily
+    # wrong; in practice, this would be bad labelling.
+    assert "GeneToDiseaseAssociation" in prompt_engine.selected_relationships
+
+    assert "Protein" in prompt_engine.selected_entities
+
 
 def test_property_selection(prompt_engine):
     """
