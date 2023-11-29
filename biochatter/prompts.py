@@ -372,16 +372,14 @@ class BioCypherPromptEngine:
 
         if self.selected_relationship_labels:
             for key, value in self.selected_relationship_labels.items():
-                if (
-                    value["source"]
-                    and value["source"] not in self.selected_entities
-                ):
-                    self.selected_entities.append(value["source"])
-                if (
-                    value["target"]
-                    and value["target"] not in self.selected_entities
-                ):
-                    self.selected_entities.append(value["target"])
+                sources = ensure_iterable(value["source"])
+                targets = ensure_iterable(value["target"])
+                for source in sources:
+                    if source not in self.selected_entities:
+                        self.selected_entities.append(source)
+                for target in targets:
+                    if target not in self.selected_entities:
+                        self.selected_entities.append(target)
 
         return bool(result)
 
