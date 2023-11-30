@@ -2,8 +2,8 @@ name: docs
 on:
   push:
     branches:
-      - master 
       - main
+      - mkdocs
 permissions:
   contents: write
 jobs:
