@@ -29,6 +29,8 @@ theme:
   features:
     - content.code.copy
     - content.action.edit
+    - search.suggest
+    - search.highlight
 
   icon:
     repo: fontawesome/brands/github
