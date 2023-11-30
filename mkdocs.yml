@@ -2,3 +2,12 @@ site_name: BioChatter Documentation
 
 theme:
   name: material
+
+nav:
+  - Home: index.md
+  - Basic Usage - Chat: chat.md
+  - Connecting Knowledge Graphs: kgs.md
+  - Retrieval Augmented Generation: rag.md
+  - Open-source and Local LLMs: open-llm.md
+  - Benchmarking: benchmark.md
+  - Podcast my Paper: podcast.md
