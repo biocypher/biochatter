@@ -23,7 +23,7 @@ biochatter`) or Poetry (`poetry add biochatter`).
 ### Extras
 
 The package has some optional dependencies that can be installed using the
-following extras (e.g. `pip install biochatter[streamlit]`):
+following extras (e.g. `pip install biochatter[xinference]`):
 
 - `xinference`: support for querying open-source LLMs through Xorbits Inference
 
