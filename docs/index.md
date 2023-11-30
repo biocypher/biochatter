@@ -8,8 +8,8 @@ auxiliary technologies that are needed. `biochatter` is a Python package
 implementing a generic backend library for the connection of biomedical
 applications to conversational AI.  Described in [this
 preprint](https://arxiv.org/abs/2305.06488) and used in
-[ChatGSE](https://chat.biocypher.org), which is being developed at
-https://github.com/biocypher/ChatGSE.
+[ChatGSE](https://chat.biocypher.org), which is being developed
+[here](https://github.com/biocypher/ChatGSE).
 
 BioChatter is part of the [BioCypher](https://github.com/biocypher) ecosystem, 
 connecting natively to BioCypher knowledge graphs. The BioChatter paper is
