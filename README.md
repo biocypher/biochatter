@@ -43,9 +43,9 @@ paid OpenAI TTS can be used without this extra)
 
 ## Usage
 
-As an interim documentation until we have a proper one, check out the
-[Wiki](https://github.com/biocypher/biochatter/wiki) for some usage examples.
-Many common functionalities covered by BioChatter can be seen in use in the
+Check out the [documentation](https://biocypher.github.io/biochatter/) for
+examples, use cases, and more information. Many common functionalities covered
+by BioChatter can be seen in use in the
 [ChatGSE](https://github.com/biocypher/ChatGSE) code base.
 
 # More information about LLMs
