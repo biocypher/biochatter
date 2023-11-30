@@ -33,6 +33,10 @@ theme:
   icon:
     repo: fontawesome/brands/github
 
+plugins:
+  - mkdocstrings:
+      default_handler: python
+
 nav:
   - Home: index.md
   - Basic Usage - Chat: chat.md
@@ -41,6 +45,12 @@ nav:
   - Open-source and Local LLMs: open-llm.md
   - Benchmarking: benchmark.md
   - Podcast my Paper: podcast.md
+  - API Reference:
+      - LLM connect: llm_connect-reference.md
+      - Vectorstore: vectorstore-reference.md
+      - Vectorstore Host: vectorstore_host-reference.md
+      - Prompt Engine: prompts-reference.md
+      - Podcast: podcast-reference.md
 
 repo_url: https://github.com/biocypher/biochatter
 repo_name: biocypher/biochatter
