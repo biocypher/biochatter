@@ -28,6 +28,10 @@ theme:
 
   features:
     - content.code.copy
+    - content.action.edit
+
+  icon:
+    repo: fontawesome/brands/github
 
 nav:
   - Home: index.md
@@ -37,6 +41,10 @@ nav:
   - Open-source and Local LLMs: open-llm.md
   - Benchmarking: benchmark.md
   - Podcast my Paper: podcast.md
+
+repo_url: https://github.com/biocypher/biochatter
+repo_name: biocypher/biochatter
+edit_uri: edit/main/docs/
 
 markdown_extensions:
   - pymdownx.highlight:
