@@ -2,9 +2,11 @@ site_name: BioChatter Documentation
 
 theme:
   name: material
+
   font:
     text: Lato
     code: Roboto Mono
+
   palette:
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
@@ -23,6 +25,9 @@ theme:
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
+
+  features:
+    - content.code.copy
 
 nav:
   - Home: index.md
