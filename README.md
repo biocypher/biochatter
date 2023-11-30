@@ -34,18 +34,18 @@ biochatter`) or Poetry (`poetry add biochatter`).
 The package has some optional dependencies that can be installed using the
 following extras (e.g. `pip install biochatter[streamlit]`):
 
-- `streamlit`: support for streamlit UI functions (used in ChatGSE)
+- `xinference`: support for querying open-source LLMs through Xorbits Inference
 
 - `podcast`: support for podcast text-to-speech (for the free Google TTS; the
 paid OpenAI TTS can be used without this extra)
 
-- `xinference`: support for querying open-source LLMs through Xorbits Inference
+- `streamlit`: support for streamlit UI functions (used in ChatGSE)
 
 ## Usage
 
-As an interim documentation until we have a proper one, check out the
-[Wiki](https://github.com/biocypher/biochatter/wiki) for some usage examples.
-Many common functionalities covered by BioChatter can be seen in use in the
+Check out the [documentation](https://biocypher.github.io/biochatter/) for
+examples, use cases, and more information. Many common functionalities covered
+by BioChatter can be seen in use in the
 [ChatGSE](https://github.com/biocypher/ChatGSE) code base.
 
 # More information about LLMs

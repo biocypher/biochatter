@@ -1,4 +1,4 @@
-name: biochatter Continuous Integration
+name: CI
 
 on: [push]
 
