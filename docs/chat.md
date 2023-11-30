@@ -2,7 +2,7 @@
 
 BioChatter provides access to chat functionality via the `Conversation` class, which is implemented in several child classes (in the `llm_connect.py` module) to account for differences in APIs of the LLMs.
 
-## Set up the conversation
+## Setting up the conversation
 
 To start a conversation, we can initialise the Conversation class (here exemplified by GPT):
 
@@ -23,7 +23,7 @@ conversation.append_system_message("System Message")
 
 Similarly, the user queries (`HumanMessage`) are passed to the conversation using `convo.append_user_message("User Message")`. For purposes of keeping track of the conversation history, we can also append the model's responses as `AIMessage` using `convo.append_ai_message`. 
 
-## Query the model
+## Querying the model
 
 After setting up the conversation in this way, for instance by establishing a flattery component (e.g. 'You are an assistant to a researcher ...'), the model can be queried using the `query` function.
 
