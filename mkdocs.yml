@@ -34,6 +34,7 @@ theme:
     repo: fontawesome/brands/github
 
 plugins:
+  - search
   - mkdocstrings:
       default_handler: python
 
