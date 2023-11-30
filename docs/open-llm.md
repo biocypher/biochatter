@@ -16,7 +16,7 @@ setup cost.
 
 Usage is essentially the same as when calling the official OpenAI API, but uses
 the `XinferenceConversation` class under the hood. Interaction with the class is
-possible in the exact same way as with the [standard class](Basic-chat).
+possible in the exact same way as with the [standard class](chat.md).
 
 ## Deploying locally via Docker
 
