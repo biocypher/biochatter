@@ -31,6 +31,8 @@ theme:
     - content.action.edit
     - search.suggest
     - search.highlight
+    - navigation.instant
+    - navigation.tabs
 
   icon:
     repo: fontawesome/brands/github
@@ -42,12 +44,13 @@ plugins:
 
 nav:
   - Home: index.md
-  - Basic Usage - Chat: chat.md
-  - Connecting Knowledge Graphs: kgs.md
-  - Retrieval Augmented Generation: rag.md
-  - Open-source and Local LLMs: open-llm.md
-  - Benchmarking: benchmark.md
-  - Podcast my Paper: podcast.md
+  - Features:
+      - Basic Usage - Chat: chat.md
+      - Connecting Knowledge Graphs: kgs.md
+      - Retrieval Augmented Generation: rag.md
+      - Open-source and Local LLMs: open-llm.md
+      - Benchmarking: benchmark.md
+      - Podcast my Paper: podcast.md
   - API Reference:
       - LLM connect: llm_connect-reference.md
       - Vectorstore: vectorstore-reference.md
