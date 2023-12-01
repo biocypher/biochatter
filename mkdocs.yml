@@ -52,7 +52,7 @@ nav:
       - Benchmarking: benchmark.md
       - Podcast my Paper: podcast.md
   - API Reference:
-      - LLM connect: llm_connect-reference.md
+      - LLM Connectivity: llm_connect-reference.md
       - Vectorstore: vectorstore-reference.md
       - Vectorstore Host: vectorstore_host-reference.md
       - Prompt Engine: prompts-reference.md
