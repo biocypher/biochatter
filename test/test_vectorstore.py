@@ -89,16 +89,29 @@ def test_retrieval_augmented_generation(mock_textsplitter, mock_host, mock_opena
     assert (cnt - 1) == len(docs)
     mock_host.return_value.remove_document.assert_called_once()
 
+@patch("biochatter.vectorstore.Client")
 @patch("biochatter.vectorstore.XinferenceEmbeddings")
 @patch("biochatter.vectorstore.VectorDatabaseHostMilvus")
 @patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
-def test_retrieval_augmented_generation_generic_api(mock_textsplitter, mock_host, mock_embeddings):
+def test_retrieval_augmented_generation_generic_api(mock_textsplitter, mock_host, mock_embeddings, mock_client):
     # mocking 
     mock_textsplitter.from_huggingface_tokenizer.return_value = mock_textsplitter()
     mock_textsplitter.from_tiktoken_encoder.return_value = mock_textsplitter()
     mock_textsplitter.return_value.split_documents.return_value = splitted_docs
     mock_host.return_value.store_embeddings.return_value = '1'
     mock_host.return_value.similarity_search.return_value = search_docs
+    mock_client.return_value.list_models.return_value = {
+        "48c76b62-904c-11ee-a3d2-0242acac0302": {
+            'model_type': 'embedding', 
+            'address': '', 
+            'accelerators': ['0'], 
+            'model_name': 'gte-large', 
+            'dimensions': 1024, 
+            'max_tokens': 512, 
+            'language': ['en'], 
+            'model_revision': ''
+        }
+    }
 
     pdf_path = "test/bc_summary.pdf"
     with open(pdf_path, "rb") as f:
