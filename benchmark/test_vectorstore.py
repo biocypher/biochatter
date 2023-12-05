@@ -1,6 +1,8 @@
+from unittest.mock import patch
 from biochatter.vectorstore import (
     DocumentEmbedder,
     DocumentReader,
+    Document
 )
 import os
 import pytest
@@ -23,6 +25,34 @@ EMBEDDING_MODELS = [
 ]
 CHUNK_SIZES = [50, 1000]
 
+splitted_docs = [
+    Document(
+        page_content='Democratising',
+        metadata={'format': 'PDF 1.4', 'title': 'Accepted_Version_Editor_edits_May_2023', 'producer': 'Skia/PDF m115 Google Docs Renderer', 'source': 'pdf'}
+    ),
+    Document(
+        page_content='',
+        metadata={'format': 'PDF 1.4', 'title': 'Accepted_Version_Editor_edits_May_2023', 'producer': 'Skia/PDF m115 Google Docs Renderer', 'source': 'pdf'}
+    ),
+    Document(
+        page_content='',
+        metadata={'format': 'PDF 1.4', 'title': 'Accepted_Version_Editor_edits_May_2023', 'producer': 'Skia/PDF m115 Google Docs Renderer', 'source': 'pdf'}
+    )
+]
+search_docs = [
+    Document(
+        page_content='Democratising knowledge representation with BioCypher\nSebastian Lobentanzer1,*, Patrick Aloy2,3, Jan Baumbach4, Balazs Bohar5,6, Pornpimol\nCharoentong8,9, Katharina Danhauser10, Tunca Doğan11,12, Johann Dreo13,14, Ian Dunham15,16,\nAdrià Fernandez-Torras2, Benjamin M. Gyori17, Michael',
+        metadata={id: '1'}
+    ),
+    Document(
+        page_content='BioCypher has been built with continuous consideration of the FAIR and TRUST',
+        metadata={id: '1'}
+    ),
+    Document(
+        page_content='adopting their own, arbitrary formats of representation. To our knowledge, no\nframework provides easy access to state-of-the-art KGs to the average biomedical researcher,\na gap that BioCypher aims to fill. We demonstrate some key advantages of BioCypher by\ncase studies in Supplementary Note 5.\n5\nFigure ',
+        metadata={id: '1'}
+    )
+]
 
 @pytest.mark.parametrize("model", EMBEDDING_MODELS)
 @pytest.mark.parametrize("chunk_size", CHUNK_SIZES)
@@ -34,22 +64,32 @@ def test_retrieval_augmented_generation(model, chunk_size):
     reader = DocumentReader()
     doc = reader.document_from_pdf(doc_bytes)
 
-    doc_ids = []
-    rag_agent = DocumentEmbedder(
-        model=model, 
-        chunk_size=chunk_size, 
-        connection_args={"host": _HOST, "port": _PORT}
-    )
-    rag_agent.connect()
-    doc_ids.append(rag_agent.save_document(doc))
-
-    query = "What is BioCypher?"
-    results = rag_agent.similarity_search(query)
-    correct = ["BioCypher" in result.page_content for result in results]
-
-    # delete embeddings
-    [rag_agent.database_host.remove_document(doc_id) for doc_id in doc_ids]
-
-    # record sum in CSV file
-    with open(FILE_PATH, "a") as f:
-        f.write(f"{model},{chunk_size},{calculate_test_score(correct)}\n")
+    with patch("biochatter.vectorstore.OpenAIEmbeddings") as mock_openaiembeddings, \
+         patch("biochatter.vectorstore.VectorDatabaseHostMilvus") as mock_host, \
+         patch("biochatter.vectorstore.RecursiveCharacterTextSplitter") as mock_textsplitter:
+        # mocking 
+        mock_textsplitter.from_huggingface_tokenizer.return_value = mock_textsplitter()
+        mock_textsplitter.from_tiktoken_encoder.return_value = mock_textsplitter()
+        mock_textsplitter.return_value.split_documents.return_value = splitted_docs
+        mock_host.return_value.store_embeddings.return_value = '1'
+        mock_host.return_value.similarity_search.return_value = search_docs
+    
+        doc_ids = []
+        rag_agent = DocumentEmbedder(
+            model=model, 
+            chunk_size=chunk_size, 
+            connection_args={"host": _HOST, "port": _PORT}
+        )
+        rag_agent.connect()
+        doc_ids.append(rag_agent.save_document(doc))
+    
+        query = "What is BioCypher?"
+        results = rag_agent.similarity_search(query)
+        correct = ["BioCypher" in result.page_content for result in results]
+    
+        # delete embeddings
+        [rag_agent.database_host.remove_document(doc_id) for doc_id in doc_ids]
+    
+        # record sum in CSV file
+        with open(FILE_PATH, "a") as f:
+            f.write(f"{model},{chunk_size},{calculate_test_score(correct)}\n")

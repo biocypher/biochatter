@@ -1,6 +1,6 @@
 name: biochatter Continuous Integration
 
-on: [push]
+on: [pull_request, push]
 
 jobs:
   test:
@@ -32,28 +32,6 @@ jobs:
         run: |
           poetry install
           poetry install -E 'podcast xinference'
-
-      - name: Start Milvus server
-        run: |
-          docker-compose -f milvus-docker-compose.yml up -d
-
-      - name: Set API key
-        run: |
-          echo ${{ secrets.OPENAI_API_KEY }} > api_key.txt
-          echo ${{ secrets.AZURE_TEST_OPENAI_MODEL_NAME }} > azure_test_model.txt
-          echo ${{ secrets.AZURE_TEST_OPENAI_DEPLOYMENT_NAME }} > azure_test_deployment.txt
-          echo ${{ secrets.AZURE_TEST_OPENAI_API_VERSION }} > azure_test_api_version.txt
-          echo ${{ secrets.AZURE_TEST_OPENAI_API_BASE }} > azure_test_api_base.txt
-          echo ${{ secrets.AZURE_TEST_OPENAI_API_KEY }} > azure_test_api_key.txt
-
-      - name: Set environment variable
-        run: |
-          echo "OPENAI_API_KEY=$(cat api_key.txt)" >> $GITHUB_ENV
-          echo "AZURE_TEST_OPENAI_MODEL_NAME=$(cat azure_test_model.txt)" >> $GITHUB_ENV
-          echo "AZURE_TEST_OPENAI_DEPLOYMENT_NAME=$(cat azure_test_deployment.txt)" >> $GITHUB_ENV
-          echo "AZURE_TEST_OPENAI_API_VERSION=$(cat azure_test_api_version.txt)" >> $GITHUB_ENV
-          echo "AZURE_TEST_OPENAI_API_BASE=$(cat azure_test_api_base.txt)" >> $GITHUB_ENV
-          echo "AZURE_TEST_OPENAI_API_KEY=$(cat azure_test_api_key.txt)" >> $GITHUB_ENV
 
       - name: Run tests
         run: |
