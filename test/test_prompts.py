@@ -68,7 +68,7 @@ def test_relationship_selection(prompt_engine):
         mock_gptconv.return_value.append_system_message = mock_append_system_messages
         success = prompt_engine._select_relationships()
         assert success
-        mock_append_system_messages.assert_called_once_with('You have access to a knowledge graph that contains these entities: Gene, Disease. Your task is to select the relationships that are relevant to the user\'s question for subsequent use in a query. Only return the relationships, comma-separated, without any additional text. Here are the possible relationships and their source and target entities: {"GeneToPhenotypeAssociation": ["Disease", ["Protein", "Gene"]]}.')
+        mock_append_system_messages.assert_called_once_with('You have access to a knowledge graph that contains these entities: Gene, Disease. Your task is to select the relationships that are relevant to the user\'s question for subsequent use in a query. Only return the relationships without their sources or targets, comma-separated, and without any additional text. Here are the possible relationships and their source and target entities: [["GeneToPhenotypeAssociation", ["Disease", "Protein"]], ["GeneToPhenotypeAssociation", ["Disease", "Gene"]]].')
 
         assert prompt_engine.selected_relationships == [
             "GeneToPhenotypeAssociation"
@@ -91,17 +91,22 @@ def test_relationship_selection(prompt_engine):
 def test_relationship_selection_with_incomplete_entities(prompt_engine):
     prompt_engine.question = "Which genes are associated with mucoviscidosis?"
     prompt_engine.selected_entities = ["Disease"]
-    success = prompt_engine._select_relationships()
-    assert success
+    with patch("biochatter.prompts.GptConversation") as mock_gptconv:
+        mock_gptconv.return_value.query.return_value = ["GeneToDiseaseAssociation", Mock(), None]
+        mock_append_system_messages = Mock()
+        mock_gptconv.return_value.append_system_message = mock_append_system_messages
+        success = prompt_engine._select_relationships()
+        assert success
+        mock_append_system_messages.assert_called_once_with('You have access to a knowledge graph that contains these entities: Disease. Your task is to select the relationships that are relevant to the user\'s question for subsequent use in a query. Only return the relationships without their sources or targets, comma-separated, and without any additional text. Here are the possible relationships and their source and target entities: [["GeneToPhenotypeAssociation", ["Disease", "Protein"]], ["GeneToPhenotypeAssociation", ["Disease", "Gene"]], ["GeneToDiseaseAssociation", ["Protein", "Disease"]]].')
 
-    # TODO convert into benchmark to be independent of model call, mock to
-    # assert the selection logic before the model call
-
-    # technically, these are wrong selections, but the test is also arbitrarily
-    # wrong; in practice, this would be bad labelling.
-    assert "GeneToDiseaseAssociation" in prompt_engine.selected_relationships
-
-    assert "Protein" in prompt_engine.selected_entities
+        # TODO convert into benchmark to be independent of model call, mock to
+        # assert the selection logic before the model call
+    
+        # technically, these are wrong selections, but the test is also arbitrarily
+        # wrong; in practice, this would be bad labelling.
+        assert "GeneToDiseaseAssociation" in prompt_engine.selected_relationships
+    
+        assert "Protein" in prompt_engine.selected_entities
 
 
 def test_property_selection(prompt_engine):
