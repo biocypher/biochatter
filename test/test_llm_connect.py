@@ -10,6 +10,7 @@ from biochatter.llm_connect import (
     XinferenceConversation,
 )
 import pytest
+from unittest.mock import patch, Mock
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -78,7 +79,13 @@ def test_unknown_message_type():
         convo.get_msg_json()
 
 
-def test_openai_catches_authentication_error():
+@patch("biochatter.llm_connect.openai.OpenAI")
+def test_openai_catches_authentication_error(mock_openai):
+    mock_openai.return_value.models.list.side_effect = openai._exceptions.AuthenticationError(
+        "Incorrect API key provided: fake_key. You can find your API key at https://platform.openai.com/account/api-keys.",
+        response=Mock(),
+        body=None
+    )
     convo = GptConversation(
         model_name="gpt-3.5-turbo",
         prompts={},
@@ -91,7 +98,6 @@ def test_openai_catches_authentication_error():
     )
 
     assert not success
-
 
 def test_azure_raises_request_error():
     convo = AzureGptConversation(
@@ -106,12 +112,13 @@ def test_azure_raises_request_error():
     with pytest.raises(NotFoundError):
         convo.set_api_key("fake_key")
 
-
-def test_azure():
+@patch("biochatter.llm_connect.AzureChatOpenAI")
+def test_azure(mock_azurechat):
     """
     Test OpenAI Azure endpoint functionality. Azure connectivity is enabled by
     setting the corresponding environment variables.
     """
+    # mock_azurechat.return_value.generate = 
     openai.proxy = os.getenv("AZURE_TEST_OPENAI_PROXY")
     convo = AzureGptConversation(
         model_name=os.getenv("AZURE_TEST_OPENAI_MODEL_NAME"),
@@ -123,7 +130,6 @@ def test_azure():
     )
 
     assert convo.set_api_key(os.getenv("AZURE_TEST_OPENAI_API_KEY"))
-
 
 def test_xinference_init():
     """
