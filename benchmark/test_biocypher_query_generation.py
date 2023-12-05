@@ -58,7 +58,7 @@ def test_relationship_selection(prompt_engine):
         mock_gptconv.return_value.append_system_message = mock_append_system_messages
         success = prompt_engine._select_relationships()
         assert success
-        mock_append_system_messages.assert_called_once_with('You have access to a knowledge graph that contains these entities: Gene, Disease. Your task is to select the relationships that are relevant to the user\'s question for subsequent use in a query. Only return the relationships, comma-separated, without any additional text. Here are the possible relationships and their source and target entities: {"GeneToPhenotypeAssociation": ["Disease", ["Protein", "Gene"]]}.')
+        mock_append_system_messages.assert_called_once_with('You have access to a knowledge graph that contains these entities: Gene, Disease. Your task is to select the relationships that are relevant to the user\'s question for subsequent use in a query. Only return the relationships without their sources or targets, comma-separated, and without any additional text. Here are the possible relationships and their source and target entities: [["GeneToPhenotypeAssociation", ["Disease", "Protein"]], ["GeneToPhenotypeAssociation", ["Disease", "Gene"]]].')
 
         score = []
         score.append(
