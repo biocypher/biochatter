@@ -17,6 +17,8 @@ import openai
 from langchain.chat_models import ChatOpenAI, AzureChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 from langchain.llms import HuggingFaceHub
+# To mock Client in tests, we need to import it in advance
+from xinference.client import Client
 
 import nltk
 import json
@@ -336,8 +338,7 @@ class XinferenceConversation(Conversation):
             augmented generation.
 
         """
-        from xinference.client import Client
-
+        
         super().__init__(
             model_name=model_name,
             prompts=prompts,
