@@ -1,0 +1,72 @@
+site_name: BioChatter Documentation
+
+theme:
+  name: material
+
+  font:
+    text: Lato
+    code: Roboto Mono
+
+  palette:
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue grey
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+  features:
+    - content.code.copy
+    - content.action.edit
+    - search.suggest
+    - search.highlight
+    - navigation.instant
+    - navigation.tabs
+
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+
+nav:
+  - Home: index.md
+  - Features:
+      - Basic Usage - Chat: chat.md
+      - Connecting Knowledge Graphs: kgs.md
+      - Retrieval Augmented Generation: rag.md
+      - Open-source and Local LLMs: open-llm.md
+      - Benchmarking: benchmark.md
+      - Podcast my Paper: podcast.md
+  - API Reference:
+      - LLM Connectivity: llm_connect-reference.md
+      - Vectorstore: vectorstore-reference.md
+      - Vectorstore Host: vectorstore_host-reference.md
+      - Prompt Engine: prompts-reference.md
+      - Podcast: podcast-reference.md
+
+repo_url: https://github.com/biocypher/biochatter
+repo_name: biocypher/biochatter
+edit_uri: edit/main/docs/
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
