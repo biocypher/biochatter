@@ -41,7 +41,7 @@ class Collection(object):
     def flush(self):
         pass
 
-    def similarity_search(self, qurey: str, k: int, expr: Optional[str] = None):
+    def similarity_search(self, query: str, k: int, expr: Optional[str] = None):
         pass
 
     def load(self):
