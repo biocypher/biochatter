@@ -82,9 +82,12 @@ def test_unknown_message_type():
 @patch("biochatter.llm_connect.openai.OpenAI")
 def test_openai_catches_authentication_error(mock_openai):
     mock_openai.return_value.models.list.side_effect = openai._exceptions.AuthenticationError(
-        "Incorrect API key provided: fake_key. You can find your API key at https://platform.openai.com/account/api-keys.",
+        (
+            "Incorrect API key provided: fake_key. You can find your API key"
+            " at https://platform.openai.com/account/api-keys."
+        ),
         response=Mock(),
-        body=None
+        body=None,
     )
     convo = GptConversation(
         model_name="gpt-3.5-turbo",
@@ -99,6 +102,7 @@ def test_openai_catches_authentication_error(mock_openai):
 
     assert not success
 
+
 def test_azure_raises_request_error():
     convo = AzureGptConversation(
         model_name="gpt-35-turbo",
@@ -112,13 +116,14 @@ def test_azure_raises_request_error():
     with pytest.raises(NotFoundError):
         convo.set_api_key("fake_key")
 
+
 @patch("biochatter.llm_connect.AzureChatOpenAI")
 def test_azure(mock_azurechat):
     """
     Test OpenAI Azure endpoint functionality. Azure connectivity is enabled by
     setting the corresponding environment variables.
     """
-    # mock_azurechat.return_value.generate = 
+    # mock_azurechat.return_value.generate =
     openai.proxy = os.getenv("AZURE_TEST_OPENAI_PROXY")
     convo = AzureGptConversation(
         model_name=os.getenv("AZURE_TEST_OPENAI_MODEL_NAME"),
@@ -133,35 +138,28 @@ def test_azure(mock_azurechat):
 
 
 xinference_models = {
-   "48c76b62-904c-11ee-a3d2-0242acac0302": {
-       'model_type': 'embedding', 
-       'address': '', 
-       'accelerators': ['0'], 
-       'model_name': 'gte-large', 
-       'dimensions': 1024, 
-       'max_tokens': 512, 
-       'language': ['en'], 
-       'model_revision': ''
-   }, 
-   "a823319a-88bd-11ee-8c78-0242acac0302": {
-       "model_type": "LLM",
-       "address": "0.0.0.0:46237",
-       "accelerators": [
-           "0"
-       ],
-       "model_name": "llama2-13b-chat-hf",
-       "model_lang": [
-           "en"
-       ],
-       "model_ability": [
-           "embed",
-           "generate",
-           "chat"
-       ],
-       "model_format": "pytorch",
-       "context_length": 4096
-   },
+    "48c76b62-904c-11ee-a3d2-0242acac0302": {
+        "model_type": "embedding",
+        "address": "",
+        "accelerators": ["0"],
+        "model_name": "gte-large",
+        "dimensions": 1024,
+        "max_tokens": 512,
+        "language": ["en"],
+        "model_revision": "",
+    },
+    "a823319a-88bd-11ee-8c78-0242acac0302": {
+        "model_type": "LLM",
+        "address": "0.0.0.0:46237",
+        "accelerators": ["0"],
+        "model_name": "llama2-13b-chat-hf",
+        "model_lang": ["en"],
+        "model_ability": ["embed", "generate", "chat"],
+        "model_format": "pytorch",
+        "context_length": 4096,
+    },
 }
+
 
 def test_xinference_init():
     """
@@ -184,15 +182,30 @@ def test_generic_chatting():
     base_url = os.getenv("XINFERENCE_BASE_URL", "http://llm.biocypher.org")
     with patch("biochatter.llm_connect.Client") as mock_client:
         response = {
-            'id': '1', 
-            'object': 'chat.completion', 
-            'created': 123, 
-            'model': 'foo', 
-            'choices': [{'index': 0, 'message': {'role': 'assistant', 'content': " Hello there, can you sing me a song?"}, 'finish_reason': 'stop'}], 
-            'usage': {'prompt_tokens': 93, 'completion_tokens': 54, 'total_tokens': 147}
+            "id": "1",
+            "object": "chat.completion",
+            "created": 123,
+            "model": "foo",
+            "choices": [
+                {
+                    "index": 0,
+                    "message": {
+                        "role": "assistant",
+                        "content": " Hello there, can you sing me a song?",
+                    },
+                    "finish_reason": "stop",
+                }
+            ],
+            "usage": {
+                "prompt_tokens": 93,
+                "completion_tokens": 54,
+                "total_tokens": 147,
+            },
         }
         mock_client.return_value.list_models.return_value = xinference_models
-        mock_client.return_value.get_model.return_value.chat.return_value = response
+        mock_client.return_value.get_model.return_value.chat.return_value = (
+            response
+        )
         convo = XinferenceConversation(
             base_url=base_url,
             prompts={},
