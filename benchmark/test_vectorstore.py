@@ -11,6 +11,8 @@ FILE_PATH = next(
     None,
 )
 
+# TODO: make vectorstore / retriever a part of the matrix
+
 # setup milvus connection
 if os.getenv("DEVCONTAINER"):
     _HOST = "milvus-standalone"
@@ -36,7 +38,7 @@ def test_retrieval_augmented_generation(model, chunk_size):
 
     doc_ids = []
     rag_agent = DocumentEmbedder(model=model, chunk_size=chunk_size)
-    rag_agent.connect(_HOST, _PORT)
+    rag_agent.connect()
     doc_ids.append(rag_agent.save_document(doc))
 
     query = "What is BioCypher?"
