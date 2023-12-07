@@ -177,7 +177,6 @@ def test_xinference_init():
         assert convo.set_api_key()
 
 
-# TODO move to test_chatting.py once exists
 def test_generic_chatting():
     base_url = os.getenv("XINFERENCE_BASE_URL", "http://llm.biocypher.org")
     with patch("biochatter.llm_connect.Client") as mock_client:
