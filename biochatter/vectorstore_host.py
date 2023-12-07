@@ -140,10 +140,10 @@ class VectorDatabaseHostMilvus:
         are `DocumentEmbeddings` and `DocumentMetadata`) in the currently active
         database (default database name is `default`); if those document
         collections don't exist, create the two collections.
-
-        Args:
         """
-        self._connect(self._connection_args["host"], self._connection_args["port"])
+        self._connect(
+            self._connection_args["host"], self._connection_args["port"]
+        )
         self._init_host()
 
     def _connect(self, host: str, port: str) -> None:
@@ -378,7 +378,7 @@ class VectorDatabaseHostMilvus:
             raise e
         aligned_docs = align_embeddings(documents, meta_id)
         try:
-            # As we passed collection_name, documents will be added to existed collection 
+            # As we passed collection_name, documents will be added to existed collection
             self._col_embeddings = Milvus.from_documents(
                 embedding=self._embedding_func,
                 collection_name=self._embedding_name,
@@ -524,7 +524,7 @@ class VectorDatabaseHostMilvus:
             if len(res) == 0:
                 return True
             ids = [item["pk"] for item in res]
-            embedding_expr = f'pk in {ids}'
+            embedding_expr = f"pk in {ids}"
             del_res = self._col_embeddings.col.delete(expr=embedding_expr)
             self._col_embeddings.col.flush()
             return True
