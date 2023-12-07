@@ -14,6 +14,9 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.document_loaders import TextLoader
 from langchain.vectorstores import Milvus
 
+# To mock Client in tests, we need to import it in advance
+from xinference.client import Client
+
 import fitz  # this is PyMuPDF (PyPI pymupdf package, not fitz)
 from transformers import GPT2TokenizerFast
 
@@ -226,8 +229,8 @@ class DocumentEmbedder:
             query=query, k=k or self.n_results
         )
 
-    def connect(self, host: str, port: str) -> None:
-        self.database_host.connect(host, port)
+    def connect(self) -> None:
+        self.database_host.connect()
 
     def get_all_documents(self) -> List[Dict]:
         return self.database_host.get_all_documents()
@@ -297,9 +300,6 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
             base_url (Optional[str], optional): base url of Xinference API.
 
         """
-        from xinference.client import Client
-        from langchain.embeddings import XinferenceEmbeddings
-
         self.model_name = model
         self.client = Client(base_url=base_url)
         self.models = {}

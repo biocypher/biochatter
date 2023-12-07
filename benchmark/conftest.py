@@ -11,6 +11,13 @@ RESULT_FILES = [
 def delete_csv_files():
     """
     Reset benchmark output each time pytest is run.
+
+    Todo:
+
+        Probably not the most economic way to delete everything every time,
+        should be extended to only overwrite the tests that have changed or add
+        models that were not present before.
+
     """
     for f in RESULT_FILES:
         if os.path.exists(f):
