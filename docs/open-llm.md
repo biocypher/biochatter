@@ -74,7 +74,7 @@ the API endpoint of your deployed model via the `base_url` parameter of the
 `XinferenceConversation` class. For instance:
 
 ```python
-from biochatter.llm_connect import GenericOpenAIConversation
+from biochatter.llm_connect import XinferenceConversation
 
 conversation = XinferenceConversation(
          base_url="http://llm.biocypher.org",
