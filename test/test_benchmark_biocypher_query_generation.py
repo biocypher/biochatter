@@ -29,7 +29,13 @@ def prompt_engine(request):
 
 def test_entity_selection(prompt_engine):
     with patch("biochatter.prompts.GptConversation") as mock_gptconv:
-        system_msg = "You have access to a knowledge graph that contains these entities: Protein, Gene, Disease. Your task is to select the ones that are relevant to the user's question for subsequent use in a query. Only return the entities, comma-separated, without any additional text. "
+        system_msg = (
+            "You have access to a knowledge graph that contains these "
+            "entities: Protein, Gene, Disease. Your task is to select the ones "
+            "that are relevant to the user's question for subsequent use in a "
+            "query. Only return the entities, comma-separated, without any "
+            "additional text. "
+        )
         mock_gptconv.return_value.query.return_value = [
             "Gene,Disease",
             Mock(),
@@ -68,7 +74,14 @@ def test_relationship_selection(prompt_engine):
         success = prompt_engine._select_relationships()
         assert success
         mock_append_system_messages.assert_called_once_with(
-            'You have access to a knowledge graph that contains these entities: Gene, Disease. Your task is to select the relationships that are relevant to the user\'s question for subsequent use in a query. Only return the relationships without their sources or targets, comma-separated, and without any additional text. Here are the possible relationships and their source and target entities: [["GeneToPhenotypeAssociation", ["Disease", "Protein"]], ["GeneToPhenotypeAssociation", ["Disease", "Gene"]]].'
+            "You have access to a knowledge graph that contains these "
+            "entities: Gene, Disease. Your task is to select the relationships "
+            "that are relevant to the user's question for subsequent use in a "
+            "query. Only return the relationships without their sources or "
+            "targets, comma-separated, and without any additional text. Here "
+            "are the possible relationships and their source and target "
+            'entities: [["GeneToPhenotypeAssociation", ["Disease", '
+            '"Protein"]], ["GeneToPhenotypeAssociation", ["Disease", "Gene"]]].'
         )
 
         score = []
@@ -127,7 +140,17 @@ def test_property_selection(prompt_engine):
         success = prompt_engine._select_properties()
         assert success
         mock_append_system_messages.assert_called_once_with(
-            "You have access to a knowledge graph that contains entities and relationships. They have the following properties. Entities:{'Disease': ['name', 'ICD10', 'DSM5']}, Relationships: {'GeneToPhenotypeAssociation': ['score', 'source', 'evidence']}. Your task is to select the properties that are relevant to the user's question for subsequent use in a query. Only return the entities and relationships with their relevant properties in JSON format, without any additional text. Return the entities/relationships as top-level dictionary keys, and their properties as dictionary values. Do not return properties that are not relevant to the question."
+            "You have access to a knowledge graph that contains entities and "
+            "relationships. They have the following properties. "
+            "Entities:{'Disease': ['name', 'ICD10', 'DSM5']}, Relationships: "
+            "{'GeneToPhenotypeAssociation': ['score', 'source', 'evidence']}. "
+            "Your task is to select the properties that are relevant to the "
+            "user's question for subsequent use in a query. Only return the "
+            "entities and relationships with their relevant properties in JSON "
+            "format, without any additional text. Return the "
+            "entities/relationships as top-level dictionary keys, and their "
+            "properties as dictionary values. Do not return properties that "
+            "are not relevant to the question."
         )
 
         score = []
@@ -161,7 +184,15 @@ def test_query_generation(prompt_engine):
             query_language="Cypher",
         )
         mock_append_system_messages.assert_called_once_with(
-            "Generate a database query in Cypher that answers the user's question. You can use the following entities: ['Gene', 'Disease'], relationships: ['PERTURBED'], and properties: {'Disease': ['name', 'ICD10', 'DSM5']}. Given the following valid combinations of source, relationship, and target: '(:Disease)-(:PERTURBED)->(:Protein)', '(:Disease)-(:PERTURBED)->(:Gene)', generate a Cypher query using one of these combinations. Only return the query, without any additional text."
+            "Generate a database query in Cypher that answers the user's "
+            "question. You can use the following entities: "
+            "['Gene', 'Disease'], relationships: ['PERTURBED'], and "
+            "properties: {'Disease': ['name', 'ICD10', 'DSM5']}. Given the "
+            "following valid combinations of source, relationship, and target: "
+            "'(:Disease)-(:PERTURBED)->(:Protein)', "
+            "'(:Disease)-(:PERTURBED)->(:Gene)', generate a Cypher query using "
+            "one of these combinations. Only return the query, without any "
+            "additional text."
         )
         score = []
         score.append("MATCH" in query)
