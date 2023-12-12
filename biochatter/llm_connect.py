@@ -40,6 +40,8 @@ OPENAI_MODELS = [
 
 HUGGINGFACE_MODELS = ["bigscience/bloom"]
 
+XINFERENCE_MODELS = ["custom-endpoint"]
+
 TOKEN_LIMITS = {
     "gpt-3.5-turbo": 4000,
     "gpt-3.5-turbo-16k": 16000,
@@ -50,6 +52,7 @@ TOKEN_LIMITS = {
     "gpt-4-32k": 32000,
     "gpt-4-1106-preview": 128000,
     "bigscience/bloom": 1000,
+    "custom-endpoint": 1,  # Reasonable value?
 }
 
 
