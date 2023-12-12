@@ -116,10 +116,10 @@ def test_query_generation(prompt_engine):
     score.append("Gene" in query)
     score.append("Disease" in query)
     score.append("mucoviscidosis" in query)
+    cypher_regex = r'MATCH \([a-zA-Z]*:Gene\)<-\[[a-zA-Z]*:PERTURBED\]-\([a-zA-Z]*:Disease.*\)|MATCH \([a-zA-Z]*:Disease.*\)-\[[a-zA-Z]*:PERTURBED\]->\([a-zA-Z]*:Gene\)'
     score.append(
         (
-            "-[:PERTURBED]->(g:Gene)" in query
-            or "(g:Gene)<-[:PERTURBED]-" in query
+            re.search(cypher_regex, query) is not None
         )
     )
     score.append("WHERE" in query or "{name:" in query)
@@ -142,10 +142,10 @@ def test_end_to_end_query_generation(prompt_engine):
     score.append("Gene" in query)
     score.append("Disease" in query)
     score.append("mucoviscidosis" in query)
+    cypher_regex = r'MATCH \([a-zA-Z]*:Gene\)<-\[[a-zA-Z]*:PERTURBED\]-\([a-zA-Z]*:Disease.*\)|MATCH \([a-zA-Z]*:Disease.*\)-\[[a-zA-Z]*:PERTURBED\]->\([a-zA-Z]*:Gene\)'
     score.append(
         (
-            "-[:PERTURBED]->(g:Gene)" in query
-            or "(g:Gene)<-[:PERTURBED]-" in query
+            re.search(cypher_regex, query) is not None
         )
     )
     score.append("WHERE" in query or "{name:" in query)
