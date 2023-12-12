@@ -39,6 +39,16 @@ disease:
     ICD10: str
     DSM5: str
 
+cell type:
+  represented_as: node
+  is_relationship: false
+  present_in_knowledge_graph: true
+  preferred_id: cl
+  input_label: cell_type
+  properties: 
+   cell_type_name: str
+  
+
 # ---
 # Associations
 # ---
@@ -86,3 +96,14 @@ gene to disease association:
     score: float
     source: str
     evidence: str
+
+gene expressed in cell type:
+  represented_ad: edge
+  is_a: gene to expression site association # biolink
+  present_in_knowledge_graph: true
+  input_label: gene_expressed_in_cell_type
+  source: gene
+  target: cell type
+  properties:
+    expression_level: float
+
