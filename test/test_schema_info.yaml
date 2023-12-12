@@ -102,6 +102,7 @@ gene expressed in cell type:
   is_a: gene to expression site association # biolink
   present_in_knowledge_graph: true
   input_label: gene_expressed_in_cell_type
+  label_as_edge: GENE_EXPRESSED_IN_CELL_TYPE
   source: gene
   target: cell type
   properties:
