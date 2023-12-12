@@ -6,6 +6,8 @@ RESULT_FILES = [
     "benchmark/results/vectorstore.csv",
 ]
 
+N_ITERATIONS = 1
+
 
 @pytest.fixture(autouse=True, scope="session")
 def delete_csv_files():
