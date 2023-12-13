@@ -184,7 +184,7 @@ def test_entity_selection_multi_word(prompt_engine):
 
 # relationship selection doesn't have any issue
 def test_relationship_selection_multi_word(prompt_engine):
-    prompt_engine.question = "Which genes are expressed in fibroblast?"
+    prompt_engine.question = "Which genes are expressed in fibroblasts?"
     prompt_engine.selected_entities = ["Gene", "CellType"]
     success = prompt_engine._select_relationships()
     assert success
