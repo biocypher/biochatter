@@ -193,7 +193,7 @@ class BioCypherPromptEngine:
         self.question = question
 
         conversation = GptConversation(
-            model_name="gpt-3.5-turbo",
+            model_name=self.model_name,
             prompts={},
             correct=False,
         )
@@ -498,7 +498,7 @@ class BioCypherPromptEngine:
             for key, value in self.rel_directions.items():
                 for pair in value:
                     msg += f"'(:{pair[0]})-(:{key})->(:{pair[1]})', "
-            msg += "generate a Cypher query using one of these combinations. "
+            msg += f"generate a {query_language} query using one of these combinations. "
 
         msg += "Only return the query, without any additional text."
 
