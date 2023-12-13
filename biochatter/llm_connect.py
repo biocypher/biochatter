@@ -120,6 +120,13 @@ class Conversation(ABC):
             ),
         )
 
+    def append_ca_message(self, message: str):
+        self.ca_messages.append(
+            SystemMessage(
+                content=message,
+            ),
+        )
+
     def append_user_message(self, message: str):
         self.messages.append(
             HumanMessage(
@@ -133,19 +140,11 @@ class Conversation(ABC):
         """
         for msg in self.prompts["primary_model_prompts"]:
             if msg:
-                self.messages.append(
-                    SystemMessage(
-                        content=msg,
-                    ),
-                )
+                self.append_system_message(msg)
 
         for msg in self.prompts["correcting_agent_prompts"]:
             if msg:
-                self.ca_messages.append(
-                    SystemMessage(
-                        content=msg,
-                    ),
-                )
+                self.append_ca_message(msg)
 
         self.context = context
         msg = f"The topic of the research is {context}."
@@ -383,6 +382,56 @@ class XinferenceConversation(Conversation):
     #         elif model["model_type"] == type:
     #             names.append(name)
     #     return names
+
+    def append_system_message(self, message: str):
+        """
+        We override the system message addition because Xinference does not
+        accept multiple system messages. We concatenate them if there are
+        multiple.
+
+        Args:
+            message (str): The message to append.
+        """
+        # if there is not already a system message in self.messages
+        if not any(isinstance(m, SystemMessage) for m in self.messages):
+            self.messages.append(
+                SystemMessage(
+                    content=message,
+                ),
+            )
+        else:
+            # if there is a system message, append to the last one
+            for i, msg in enumerate(self.messages):
+                if isinstance(msg, SystemMessage):
+                    self.messages[i].content += f"\n{message}"
+                    break
+
+    def append_ca_message(self, message: str):
+        """
+
+        We also override the system message addition for the correcting agent,
+        likewise because Xinference does not accept multiple system messages. We
+        concatenate them if there are multiple.
+
+        TODO this currently assumes that the correcting agent is the same model
+        as the primary one.
+
+        Args:
+            message (str): The message to append.
+        """
+        # if there is not already a system message in self.messages
+        if not any(isinstance(m, SystemMessage) for m in self.ca_messages):
+            self.ca_messages.append(
+                SystemMessage(
+                    content=message,
+                ),
+            )
+        else:
+            # if there is a system message, append to the last one
+            for i, msg in enumerate(self.ca_messages):
+                if isinstance(msg, SystemMessage):
+                    self.ca_messages[i].content += f"\n{message}"
+                    break
 
     def _primary_query(self):
         """
