@@ -168,7 +168,7 @@ def test_end_to_end_query_generation(prompt_engine):
 # entity selection doesn't have any issue
 def test_entity_selection_multi_word(prompt_engine):
     success = prompt_engine._select_entities(
-        question="Which genes are expressed in fibroblast?"
+        question="Which genes are expressed in fibroblasts?"
     )
     assert success
 
@@ -234,7 +234,7 @@ def test_relationship_selection_multi_word(prompt_engine):
 
 
 def test_property_selection_multi_word(prompt_engine):
-    prompt_engine.question = "Which genes are expressed in fibroblast?"
+    prompt_engine.question = "Which genes are expressed in fibroblasts?"
     prompt_engine.selected_entities = ["Gene", "CellType"]
     prompt_engine.selected_relationships = ["GeneExpressedInCellType"]
     success = prompt_engine._select_properties()
@@ -264,7 +264,7 @@ def test_property_selection_multi_word(prompt_engine):
 
 def test_query_generation_multi_word(prompt_engine):
     query = prompt_engine._generate_query(
-        question="Which genes are expressed in fibroblast?",
+        question="Which genes are expressed in fibroblasts?",
         entities=["Gene", "CellType"],
         relationships={
             "GENE_EXPRESSED_IN_CELL_TYPE": {
@@ -299,7 +299,7 @@ def test_query_generation_multi_word(prompt_engine):
 
 def test_end_to_end_query_generation_multi_word(prompt_engine):
     query = prompt_engine.generate_query(
-        question="Which genes are expressed in fibroblast?",
+        question="Which genes are expressed in fibroblasts?",
         query_language="Cypher",
     )
 
