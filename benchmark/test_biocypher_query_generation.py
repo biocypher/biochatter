@@ -373,7 +373,7 @@ def get_used_property_from_query(query):
         property_mapping.update(property_mapping_add)
 
     # get all entities or relationships involved in the query
-    entity_regex = r'[a-zA-Z]+:[a-zA-Z]+'
+    entity_regex = r'[a-zA-Z]+:\w+'
     used_entities = re.findall(entity_regex, query)
     used_entities = [ i.strip() for i in used_entities]
 
@@ -395,7 +395,7 @@ def test_property_exists(prompt_engine):
     
     score = []
 
-    used_entity_property = get_used_property_from_query(query)[2]
+    entity_mapping, property_mapping, used_entity_property = get_used_property_from_query(query)
 
     for entity, property in used_entity_property.items():
 
@@ -415,5 +415,5 @@ def test_property_exists(prompt_engine):
         
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},property hallucination check,{used_entity_property}, {calculate_test_score(score), query}\n"
+            f"{prompt_engine.model_name},property hallucination check,{entity_mapping}, {property_mapping}, {used_entity_property}, {calculate_test_score(score)}, {query}\n"
         )
