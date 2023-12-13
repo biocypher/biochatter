@@ -45,9 +45,8 @@ cell type:
   present_in_knowledge_graph: true
   preferred_id: cl
   input_label: cell_type
-  properties: 
-   cell_type_name: str
-  
+  properties:
+    cell_type_name: str
 
 # ---
 # Associations
@@ -76,7 +75,7 @@ gene to phenotype association:
   present_in_knowledge_graph: true
   label_as_edge: PERTURBED
   input_label: [protein_disease, gene_disease]
-  source: disease  # switch for test purposes
+  source: disease # switch for test purposes
   target: [protein, gene]
   exclude_properties: accession
   properties:
@@ -90,7 +89,7 @@ gene to disease association:
   present_in_knowledge_graph: true
   label_as_edge: PERTURBED_IN
   input_label: gene_phenotype
-  source: protein  # wrong to test entity selection
+  source: protein # wrong to test entity selection
   target: disease
   properties:
     score: float
@@ -98,7 +97,7 @@ gene to disease association:
     evidence: str
 
 gene expressed in cell type:
-  represented_ad: edge
+  represented_as: edge
   is_a: gene to expression site association # biolink
   is_relationship: true
   present_in_knowledge_graph: true
@@ -108,4 +107,3 @@ gene expressed in cell type:
   target: cell type
   properties:
     expression_level: float
-
