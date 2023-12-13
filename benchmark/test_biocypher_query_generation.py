@@ -315,14 +315,14 @@ def test_end_to_end_query_generation_multi_word(prompt_engine):
 def map_entities_to_labels(entity_list):
     entity_mapping = {}
     for entity in entity_list:
-        match = re.match(r"\((\w+):(\w+)", entity)
+        match = re.match(r"(\w+):(\w+)", entity)
         if match:
             label, entity_type = match.groups()
             entity_mapping[label] = entity_type
     
     return entity_mapping
 
-def map_where_properties_to_labels(property_list):
+def map_dot_properties_to_labels(property_list):
     property_mapping = {}
     for property in property_list:
         match = re.match(r"(\w+)\.(\w+)", property)
@@ -352,24 +352,32 @@ def join_dictionaries(dict1, dict2):
 
 def get_used_property_from_query(query):
 
-    if "WHERE" in query:
-        property_regex_where = r'[a-zA-Z]+\.\S+ |[a-zA-Z]+\..+$'
-        used_properties = re.findall(property_regex_where, query)
-        used_properties = [ i.strip() for i in used_properties]
-        property_mapping = map_where_properties_to_labels(used_properties)
+    property_mapping = dict()
 
-    elif '{' in query:
+    # first get all properties used in 'dot' format
+    
+    property_regex_dot = r'[a-zA-Z]+\.\S+ |[a-zA-Z]+\..+$'
+    used_properties = re.findall(property_regex_dot, query)
+    used_properties = [ i.strip() for i in used_properties]
+    # map variable name to properties used
+    property_mapping_add = map_dot_properties_to_labels(used_properties)
+    property_mapping.update(property_mapping_add)
+    
+    # get peroperties used in curly brackets 
+    if '{' in query:
         property_regex_bracket = r"\(\w+:\w+ \{\w+: "
         used_properties = re.findall(property_regex_bracket, query)
         used_properties = [ i.strip() for i in used_properties]
-        property_mapping = map_bracket_properties_to_labels(used_properties)
+        # map variable name to properties used
+        property_mapping_add = map_bracket_properties_to_labels(used_properties)
+        property_mapping.update(property_mapping_add)
 
-    # all entities involved in the query with the variable name
-    entity_regex = r'\([a-zA-Z]+:[a-zA-Z]+'
+    # get all entities or relationships involved in the query
+    entity_regex = r'[a-zA-Z]+:[a-zA-Z]+'
     used_entities = re.findall(entity_regex, query)
     used_entities = [ i.strip() for i in used_entities]
 
-    # map entity and property via the variable name
+    # map variable name to entity or relationship labels
     entity_mapping = map_entities_to_labels(used_entities)
     
     # get all the entity and respective properties used in the cypher query
@@ -378,20 +386,34 @@ def get_used_property_from_query(query):
     return entity_mapping, property_mapping, used_entity_property
 
 
-def test_property_exists(prompt_engine, query):
+def test_property_exists(prompt_engine):
+
+    query = prompt_engine.generate_query(
+        question="What are the hgnc ids of the genes are expressed in fibroblast?",
+        query_language="Cypher",
+    )
     
     score = []
 
     used_entity_property = get_used_property_from_query(query)[2]
 
     for entity, property in used_entity_property.items():
-        if entity in prompt_engine.entities.keys():
+
+        if entity in prompt_engine.entities.keys() and 'properties' in prompt_engine.entities[entity]:
+            # check property used is in available propertis for entities
             avail_property_entity = list(prompt_engine.entities[entity]['properties'].keys())
-        elif entity in prompt_engine.relationships.keys():
+            score.append(property in avail_property_entity)
+
+        elif entity in prompt_engine.relationships.keys() and 'properties' in prompt_engine.relationships[entity]:
+            # check property used is in available propertis for relationships
             avail_property_entity = list(prompt_engine.relationships[entity]['properties'].keys())
-        score.append(property in avail_property_entity)
+            score.append(property in avail_property_entity)
+        else:
+            # no properties of the entity or relationship exist, simply made up
+            score.append(0)
+        
         
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},property check,{calculate_test_score(score),query}\n"
+            f"{prompt_engine.model_name},property hallucination check,{used_entity_property}, {calculate_test_score(score), query}\n"
         )
