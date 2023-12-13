@@ -407,7 +407,7 @@ def get_used_property_from_query(query):
 
 def test_property_exists(prompt_engine):
     query = prompt_engine.generate_query(
-        question="What are the hgnc ids of the genes are expressed in fibroblast?",
+        question="What are the hgnc ids of the genes that are expressed in fibroblast?",
         query_language="Cypher",
     )
 
