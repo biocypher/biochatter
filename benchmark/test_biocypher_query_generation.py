@@ -304,3 +304,94 @@ def test_end_to_end_query_generation_multi_word(prompt_engine):
         f.write(
             f"{prompt_engine.model_name},end-to-end_multi,{calculate_test_score(score),query}\n"
         )
+
+
+######
+# test hallucination: are all properties available in the KG schema?
+# in selected properties, also in the actual property used in the query
+######
+
+
+def map_entities_to_labels(entity_list):
+    entity_mapping = {}
+    for entity in entity_list:
+        match = re.match(r"\((\w+):(\w+)", entity)
+        if match:
+            label, entity_type = match.groups()
+            entity_mapping[label] = entity_type
+    
+    return entity_mapping
+
+def map_where_properties_to_labels(property_list):
+    property_mapping = {}
+    for property in property_list:
+        match = re.match(r"(\w+)\.(\w+)", property)
+        if match:
+            label, property_type = match.groups()
+            property_mapping[label] = property_type
+    
+    return property_mapping
+
+def map_bracket_properties_to_labels(property_list):
+    property_mapping = {}
+    for property in property_list:
+        match = re.search(r"\((\w+):\w+ \{(\w+):", property)
+        if match:
+            label, property_type = match.groups()
+            property_mapping[label] = property_type
+    
+    return property_mapping
+
+def join_dictionaries(dict1, dict2):
+    result_dict = {}
+    for key in dict1:
+        if key in dict2:
+            result_dict[dict1[key]] = dict2[key]
+    
+    return result_dict
+
+def get_used_property_from_query(query):
+
+    if "WHERE" in query:
+        property_regex_where = r'[a-zA-Z]+\.\S+ |[a-zA-Z]+\..+$'
+        used_properties = re.findall(property_regex_where, query)
+        used_properties = [ i.strip() for i in used_properties]
+        property_mapping = map_where_properties_to_labels(used_properties)
+
+    elif '{' in query:
+        property_regex_bracket = r"\(\w+:\w+ \{\w+: "
+        used_properties = re.findall(property_regex_bracket, query)
+        used_properties = [ i.strip() for i in used_properties]
+        property_mapping = map_bracket_properties_to_labels(used_properties)
+
+    # all entities involved in the query with the variable name
+    entity_regex = r'\([a-zA-Z]+:[a-zA-Z]+'
+    used_entities = re.findall(entity_regex, query)
+    used_entities = [ i.strip() for i in used_entities]
+
+    # map entity and property via the variable name
+    entity_mapping = map_entities_to_labels(used_entities)
+    
+    # get all the entity and respective properties used in the cypher query
+    used_entity_property = join_dictionaries(entity_mapping, property_mapping)
+
+    return entity_mapping, property_mapping, used_entity_property
+
+
+def test_property_exists(prompt_engine, query):
+    
+    score = []
+
+    used_entity_property = get_used_property_from_query(query)[2]
+
+    for entity, property in used_entity_property.items():
+        if entity in prompt_engine.entities.keys():
+            avail_property_entity = list(prompt_engine.entities[entity]['properties'].keys())
+        elif entity in prompt_engine.relationships.keys():
+            avail_property_entity = list(prompt_engine.relationships[entity]['properties'].keys())
+        score.append(property in avail_property_entity)
+        
+    with open(FILE_PATH, "a") as f:
+        f.write(
+            f"{prompt_engine.model_name},property check,{calculate_test_score(score),query}\n"
+        )
