@@ -211,7 +211,7 @@ def test_property_selection(prompt_engine):
         assert "name" in prompt_engine.selected_properties.get("Disease")
 
 
-def test_query_generation(prompt_engine):
+def test_cypher_query_generation(prompt_engine):
     """
 
     The third step is to generate a query that will retrieve the information
@@ -278,6 +278,62 @@ def test_query_generation(prompt_engine):
             or "(g:Gene)<-[:PERTURBED]-" in query
         )
         assert "WHERE" in query or "{name:" in query
+
+
+def test_sql_query_generation(prompt_engine):
+    """
+    Same as before but test the generation of an SQL query.
+
+    Note: not as representative, because normally in a relational DB there would
+    be a joining table linking genes and diseases - that info
+    is not provided from the BioCypher case.
+    Still keeping it for the sake of testing the method.
+
+    The mocked output here is generated giving extra information to
+    the LLM, i.e. that there is a joining table named "gene_disease"
+    """
+    with patch("biochatter.prompts.GptConversation") as mock_gptconv:
+        resultMsg = """
+        SELECT g.name AS AssociatedGenes
+        FROM Gene_Disease gd
+        JOIN Gene g ON gd.gene_id = g.id
+        JOIN Disease d ON gd.disease_id = d.id
+        WHERE d.name = 'mucoviscidosis';
+        """
+        mock_gptconv.return_value.query.return_value = [resultMsg, Mock(), None]
+        mock_append_system_messages = Mock()
+        mock_gptconv.return_value.append_system_message = (
+            mock_append_system_messages
+        )
+        query = prompt_engine._generate_query(
+            question="Which genes are associated with mucoviscidosis?",
+            entities=["Gene", "Disease"],
+            relationships={
+                "PERTURBED": {
+                    "source": "Disease",
+                    "target": ["Protein", "Gene"],
+                }
+            },
+            properties={"Disease": ["name", "ICD10", "DSM5"]},
+            query_language="SQL",
+        )
+
+        mock_append_system_messages.assert_called_once_with(
+            "Generate a database query in SQL that answers the user's "
+            "question. You can use the following entities: "
+            "['Gene', 'Disease'], relationships: ['PERTURBED'], and "
+            "properties: {'Disease': ['name', 'ICD10', 'DSM5']}. Given the "
+            "following valid combinations of source, relationship, and target: "
+            "'(:Disease)-(:PERTURBED)->(:Protein)', "
+            "'(:Disease)-(:PERTURBED)->(:Gene)', generate a SQL query using "
+            "one of these combinations. Only return the query, without any "
+            "additional text."
+        )
+        assert "SELECT" in query
+        assert "Gene" in query
+        assert "Disease" in query
+        assert "mucoviscidosis" in query
+        assert "WHERE" in query or "JOIN" in query
 
 
 @pytest.mark.skip(reason="temporarily skip")
