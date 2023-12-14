@@ -4,6 +4,7 @@ import pytest
 RESULT_FILES = [
     "benchmark/results/biocypher_query_generation.csv",
     "benchmark/results/vectorstore.csv",
+    "benchmark/results/numeric_qa.csv",
 ]
 
 
