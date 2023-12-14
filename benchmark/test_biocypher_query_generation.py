@@ -26,6 +26,7 @@ XINFERENCE_MODEL_NAMES = [
 BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
 
 
+
 @pytest.fixture(scope="module", params=BENCHMARKED_MODELS)
 def prompt_engine(request):
     model_name = request.param
@@ -40,6 +41,11 @@ def prompt_engine(request):
         pass
 
 
+
+######
+# test single word entities
+######
+    
 def test_entity_selection(prompt_engine):
     success = prompt_engine._select_entities(
         question="Which genes are associated with mucoviscidosis?"
@@ -224,7 +230,7 @@ def test_relationship_selection_multi_word(prompt_engine):
 
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},relationships_multi,{calculate_test_score(score), prompt_engine.selected_relationships, prompt_engine.selected_relationship_labels}\n"
+            f"{prompt_engine.model_name},relationships_multi,{calculate_test_score(score)}\n"
         )
 
 
@@ -253,7 +259,7 @@ def test_property_selection_multi_word(prompt_engine):
 
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},properties_multi,{calculate_test_score(score), prompt_engine.selected_properties}\n"
+            f"{prompt_engine.model_name},properties_multi,{calculate_test_score(score)}\n"
         )
 
 
@@ -288,7 +294,7 @@ def test_query_generation_multi_word(prompt_engine):
 
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},cypher query_multi,{calculate_test_score(score),query}\n"
+            f"{prompt_engine.model_name},cypher query_multi,{calculate_test_score(score)}\n"
         )
 
 
@@ -429,5 +435,5 @@ def test_property_exists(prompt_engine):
 
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},property hallucination check, {entity_mapping}, {property_mapping}, {used_entity_property}, {calculate_test_score(score)},{query}\n"
+            f"{prompt_engine.model_name},property hallucination check, {calculate_test_score(score)}\n"
         )
