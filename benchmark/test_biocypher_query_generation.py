@@ -406,10 +406,22 @@ def get_used_property_from_query(query):
 
 
 def test_property_exists(prompt_engine):
-    query = prompt_engine.generate_query(
-        question="What are the hgnc ids of the genes that are expressed in fibroblast?",
-        query_language="Cypher",
-    )
+
+    prompt_engine.question = "What are the hgnc ids of the genes that are expressed in fibroblast?"
+    prompt_engine.selected_entities = ["Gene", "CellType"]
+    # only ask the model to select property and generate query
+    prompt_engine._select_properties()
+    query=prompt_engine._generate_query(
+        question=prompt_engine.question,
+        entities=prompt_engine.selected_entities,
+        relationships={
+            "GENE_EXPRESSED_IN_CELL_TYPE": {
+                "source": "Gene",
+                "target": "CellType",
+            },
+        },
+        properties=prompt_engine.selected_properties,
+        query_language='Cypher')
 
     score = []
 
@@ -445,5 +457,5 @@ def test_property_exists(prompt_engine):
 
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},property hallucination check,{entity_mapping}, {property_mapping}, {used_entity_property}, {calculate_test_score(score)}, {query}\n"
+            f"{prompt_engine.model_name},property hallucination check, {entity_mapping}, {property_mapping}, {used_entity_property}, {calculate_test_score(score)},{query}\n"
         )
