@@ -29,7 +29,7 @@ def decrypt(payload: dict, private_key: rsa.PrivateKey):
 
 
 def get_benchmark_dataset() -> dict:
-    if False:  # TODO os.environ.get('HOLD_OUT_TEST_DATA_PRIVATE_KEY'):
+    if os.environ.get('HOLD_OUT_TEST_DATA_PRIVATE_KEY'):
         test_data = load_hold_out_test_dataset()
     else:
         test_data = load_test_data_from_this_repository()
