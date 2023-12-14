@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 from biochatter.llm_connect import GptConversation
 
@@ -8,9 +9,10 @@ class BioCypherQueryHandler:
         self,
         query: str,
         query_lang: str,
-        kg: dict,   # TODO could be issue if the KG is very large and we pass it to the system message each time...?
         kg_selected: dict,
         question: str,
+        kg: dict = None,
+        # could be issue if the KG is very large and we pass it to the system message each time... -> optional
         model_name: str = "gpt-3.5-turbo",
     ):
         """
@@ -29,7 +31,7 @@ class BioCypherQueryHandler:
         self.query = query
         self.query_lang = query_lang
         self.question = question
-        if self._check_required_kg_keys(kg):
+        if kg and self._check_required_kg_keys(kg):
             self.kg = kg
         if self._check_required_kg_keys(kg_selected):
             self.kg_selected = kg_selected
@@ -43,6 +45,7 @@ class BioCypherQueryHandler:
             raise ValueError(
                 "The KG input dictionary is missing required keys."
             )
+        # todo also check that entities and relationships is a dict, properties is a dict of lists
         return True
 
     def explain_query(self):
@@ -67,7 +70,7 @@ class BioCypherQueryHandler:
         )
 
         conversation.set_api_key(
-            api_key=os.getenv("OPENAI_API_KEY"), user="query_generator"
+            api_key=os.getenv("OPENAI_API_KEY"), user="query_interactor"
         )
 
         conversation.append_system_message(msg)
@@ -80,6 +83,8 @@ class BioCypherQueryHandler:
         """
         Update the query to reflect a request from the user.
         """
+        if not self.kg:
+            self.kg = self.kg_selected
         msg = (
             f"You are an expert in {self.query_lang} and will assist in updating a query.\n"
             f"The original query answers the following user question: '{self.question}'."
@@ -112,7 +117,7 @@ class BioCypherQueryHandler:
         )
 
         conversation.set_api_key(
-            api_key=os.getenv("OPENAI_API_KEY"), user="query_generator"
+            api_key=os.getenv("OPENAI_API_KEY"), user="query_interactor"
         )
 
         conversation.append_system_message(msg)
