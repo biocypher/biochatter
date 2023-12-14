@@ -1,5 +1,8 @@
 import os
+
 import pytest
+
+from benchmark.load_dataset import get_benchmark_dataset
 
 RESULT_FILES = [
     "benchmark/results/biocypher_query_generation.csv",
@@ -29,6 +32,15 @@ def delete_csv_files():
     for f in RESULT_FILES:
         with open(f, "w") as f:
             f.write("")
+
+
+def pytest_generate_tests(metafunc):
+    benchmark_dataset = get_benchmark_dataset()
+
+    if "test_data_biocypher_query_generation" in metafunc.fixturenames:
+        data_file = benchmark_dataset["./data/biocypher_query_generation/biocypher_query_generation.csv"]
+        metafunc.parametrize("test_data_biocypher_query_generation",
+                             data_file.values)
 
 
 def calculate_test_score(vector: list[bool]):
