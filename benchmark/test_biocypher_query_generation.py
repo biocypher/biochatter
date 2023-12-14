@@ -435,5 +435,5 @@ def test_property_exists(prompt_engine):
 
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},property hallucination check, {calculate_test_score(score)}\n"
+            f"{prompt_engine.model_name},property hallucination check,{calculate_test_score(score)}\n"
         )
