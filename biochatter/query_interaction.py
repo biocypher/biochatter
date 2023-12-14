@@ -33,6 +33,8 @@ class BioCypherQueryHandler:
         self.question = question
         if kg and self._check_required_kg_keys(kg):
             self.kg = kg
+        else:
+            self.kg = None
         if self._check_required_kg_keys(kg_selected):
             self.kg_selected = kg_selected
         self.model_name = model_name
