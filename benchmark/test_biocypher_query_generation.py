@@ -138,26 +138,26 @@ def test_query_generation(prompt_engine):
         )
 
 
-# def test_end_to_end_query_generation(prompt_engine):
-#     query = prompt_engine.generate_query(
-#         question="Which genes are associated with mucoviscidosis?",
-#         query_language="Cypher",
-#     )
+def test_end_to_end_query_generation(prompt_engine):
+    query = prompt_engine.generate_query(
+        question="Which genes are associated with mucoviscidosis?",
+        query_language="Cypher",
+    )
 
-#     score = []
-#     score.append("MATCH" in query)
-#     score.append("RETURN" in query)
-#     score.append("Gene" in query)
-#     score.append("Disease" in query)
-#     score.append("mucoviscidosis" in query)
-#     cypher_regex = r"MATCH \([a-zA-Z]*:Gene\)<-\[[a-zA-Z]*:PERTURBED\]-\([a-zA-Z]*:Disease.*\)|MATCH \([a-zA-Z]*:Disease.*\)-\[[a-zA-Z]*:PERTURBED\]->\([a-zA-Z]*:Gene\)"
-#     score.append((re.search(cypher_regex, query) is not None))
-#     score.append("WHERE" in query or "{name:" in query)
+    score = []
+    score.append("MATCH" in query)
+    score.append("RETURN" in query)
+    score.append("Gene" in query)
+    score.append("Disease" in query)
+    score.append("mucoviscidosis" in query)
+    cypher_regex = r"MATCH \([a-zA-Z]*:Gene\)<-\[[a-zA-Z]*:PERTURBED\]-\([a-zA-Z]*:Disease.*\)|MATCH \([a-zA-Z]*:Disease.*\)-\[[a-zA-Z]*:PERTURBED\]->\([a-zA-Z]*:Gene\)"
+    score.append((re.search(cypher_regex, query) is not None))
+    score.append("WHERE" in query or "{name:" in query)
 
-#     with open(FILE_PATH, "a") as f:
-#         f.write(
-#             f"{prompt_engine.model_name},end-to-end_single,{calculate_test_score(score)}\n"
-#         )
+    with open(FILE_PATH, "a") as f:
+        f.write(
+            f"{prompt_engine.model_name},end-to-end_single,{calculate_test_score(score)}\n"
+        )
 
 
 ######
@@ -288,33 +288,8 @@ def test_query_generation_multi_word(prompt_engine):
 
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},cypher query_single,{calculate_test_score(score),query}\n"
+            f"{prompt_engine.model_name},cypher query_multi,{calculate_test_score(score),query}\n"
         )
-
-
-# def test_end_to_end_query_generation_multi_word(prompt_engine):
-#     query = prompt_engine.generate_query(
-#         question="Which genes are expressed in fibroblasts?",
-#         query_language="Cypher",
-#     )
-
-#     score = []
-#     score.append("MATCH" in query)
-#     score.append("RETURN" in query)
-#     score.append("Gene" in query)
-#     score.append("CellType" in query)
-#     score.append("fibroblast" in query)
-
-#     # make sure direction is right
-#     cypher_regex = r"MATCH \([a-zA-Z]*:Gene\)-\[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE\]->\([a-zA-Z]*:CellType.*|MATCH \([a-zA-Z]*:CellType.*<-\[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE\]-\([a-zA-Z]*:Gene\)"
-#     score.append((re.search(cypher_regex, query) is not None))
-#     # make sure conditioned
-#     score.append("WHERE" in query or "{cell_type_name:" in query)
-
-#     with open(FILE_PATH, "a") as f:
-#         f.write(
-#             f"{prompt_engine.model_name},end-to-end_multi,{calculate_test_score(score),query}\n"
-#         )
 
 
 ######
