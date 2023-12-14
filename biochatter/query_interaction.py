@@ -1,5 +1,3 @@
-# goal: interact with query while still being aware of KG (all and selected entities/relations/properties)
-
 import os
 
 from biochatter.llm_connect import GptConversation
@@ -10,7 +8,7 @@ class BioCypherQueryHandler:
         self,
         query: str,
         query_lang: str,
-        kg: dict,
+        kg: dict,   # TODO could be issue if the KG is very large and we pass it to the system message each time...?
         kg_selected: dict,
         question: str,
         model_name: str = "gpt-3.5-turbo",
@@ -42,7 +40,9 @@ class BioCypherQueryHandler:
         required_keys = ["entities", "properties", "relationships"]
         # Check if all required keys are present in the input dictionary
         if not all(key in kg_dict for key in required_keys):
-            raise ValueError("The KG input dictionary is missing required keys.")
+            raise ValueError(
+                "The KG input dictionary is missing required keys."
+            )
         return True
 
     def explain_query(self):
@@ -78,7 +78,7 @@ class BioCypherQueryHandler:
 
     def update_query(self, update_request):
         """
-
+        Update the query to reflect a request from the user.
         """
         msg = (
             f"You are an expert in {self.query_lang} and will assist in updating a query.\n"
@@ -100,8 +100,10 @@ class BioCypherQueryHandler:
         #         for pair in value:
         #             msg += f"'(:{pair[0]})-(:{key})->(:{pair[1]})'."
 
-        msg += "Update the query to reflect the user's request." \
-               "Only return the updated query, without any additional text."
+        msg += (
+            "Update the query to reflect the user's request."
+            "Only return the updated query, without any additional text."
+        )
 
         conversation = GptConversation(
             model_name=self.model_name,
