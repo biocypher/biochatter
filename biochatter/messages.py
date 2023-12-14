@@ -1,6 +1,8 @@
 #!/usr/bin/env Python3
 
 from typing import Optional
+import re
+
 
 primary_messages = {
     "message_entity": (
@@ -46,6 +48,74 @@ primary_messages = {
         "properties: {properties}. "
     ),
 }
+
+
+def extract_placeholders(text):
+   
+    pattern = r'{(.*?)}'
+    matches = re.findall(pattern, text)
+    return matches
+
+
+class Prompt:
+    def __init__(self, 
+                 text_template_set: dict,
+                 elements: dict,
+                 text_template: Optional[str] = None,):
+        self.text_template = text_template ## current active template
+        self.text_template_set = text_template_set  ## all templates
+        self.elements = elements
+
+        # repr
+    def generate_prompt(self):
+        return self.text_template.format(**self.elements)
+
+
+class SystemPrompt(Prompt):
+
+    def __init__(
+            self,
+            text_template_set: dict,
+            elements: dict,
+            prompt_for: str,
+            text_template: Optional[str] = None,
+            message_type: str = "system",
+            
+
+    ):
+        super().__init__(
+            text_template_set=text_template_set,
+            elements=elements
+        )
+
+        prompt_for_options = ["entity", "relationship", "property", "query"]
+
+        if prompt_for is not None:
+            if prompt_for not in prompt_for_options:
+                raise ValueError(
+                    "prompt_for must be one of ['entity', 'relationship', 'property', 'query']"
+                )
+
+            self.prompt_for = prompt_for
+
+    def generate_system_message_entity(self):
+        self.prompt_for = "entity"
+        self.text_template = self.text_template_set["message_entity"]
+
+        # TODO: an option to add kg info at the beginning of this message
+        # TODO: other propts then primary
+
+        placeholders = extract_placeholders(self.text_template)
+
+        # check if all placeholder keys are in elements dictionary
+
+        if not all([ i in self.elements.keys() for i in placeholders ]):
+            raise ValueError("Not all placeholders in text template provided in elements")
+
+        return(self.generate_prompt())
+        
+
+    
 
 
 class message(str):
