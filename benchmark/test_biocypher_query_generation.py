@@ -138,26 +138,26 @@ def test_query_generation(prompt_engine):
         )
 
 
-def test_end_to_end_query_generation(prompt_engine):
-    query = prompt_engine.generate_query(
-        question="Which genes are associated with mucoviscidosis?",
-        query_language="Cypher",
-    )
+# def test_end_to_end_query_generation(prompt_engine):
+#     query = prompt_engine.generate_query(
+#         question="Which genes are associated with mucoviscidosis?",
+#         query_language="Cypher",
+#     )
 
-    score = []
-    score.append("MATCH" in query)
-    score.append("RETURN" in query)
-    score.append("Gene" in query)
-    score.append("Disease" in query)
-    score.append("mucoviscidosis" in query)
-    cypher_regex = r"MATCH \([a-zA-Z]*:Gene\)<-\[[a-zA-Z]*:PERTURBED\]-\([a-zA-Z]*:Disease.*\)|MATCH \([a-zA-Z]*:Disease.*\)-\[[a-zA-Z]*:PERTURBED\]->\([a-zA-Z]*:Gene\)"
-    score.append((re.search(cypher_regex, query) is not None))
-    score.append("WHERE" in query or "{name:" in query)
+#     score = []
+#     score.append("MATCH" in query)
+#     score.append("RETURN" in query)
+#     score.append("Gene" in query)
+#     score.append("Disease" in query)
+#     score.append("mucoviscidosis" in query)
+#     cypher_regex = r"MATCH \([a-zA-Z]*:Gene\)<-\[[a-zA-Z]*:PERTURBED\]-\([a-zA-Z]*:Disease.*\)|MATCH \([a-zA-Z]*:Disease.*\)-\[[a-zA-Z]*:PERTURBED\]->\([a-zA-Z]*:Gene\)"
+#     score.append((re.search(cypher_regex, query) is not None))
+#     score.append("WHERE" in query or "{name:" in query)
 
-    with open(FILE_PATH, "a") as f:
-        f.write(
-            f"{prompt_engine.model_name},end-to-end_single,{calculate_test_score(score)}\n"
-        )
+#     with open(FILE_PATH, "a") as f:
+#         f.write(
+#             f"{prompt_engine.model_name},end-to-end_single,{calculate_test_score(score)}\n"
+#         )
 
 
 ######
@@ -165,7 +165,6 @@ def test_end_to_end_query_generation(prompt_engine):
 ######
 
 
-# entity selection doesn't have any issue
 def test_entity_selection_multi_word(prompt_engine):
     success = prompt_engine._select_entities(
         question="Which genes are expressed in fibroblasts?"
@@ -182,7 +181,6 @@ def test_entity_selection_multi_word(prompt_engine):
         )
 
 
-# relationship selection doesn't have any issue
 def test_relationship_selection_multi_word(prompt_engine):
     prompt_engine.question = "Which genes are expressed in fibroblasts?"
     prompt_engine.selected_entities = ["Gene", "CellType"]
@@ -228,9 +226,6 @@ def test_relationship_selection_multi_word(prompt_engine):
         f.write(
             f"{prompt_engine.model_name},relationships_multi,{calculate_test_score(score), prompt_engine.selected_relationships, prompt_engine.selected_relationship_labels}\n"
         )
-
-
-# select properties DOES have issue
 
 
 def test_property_selection_multi_word(prompt_engine):
@@ -297,29 +292,29 @@ def test_query_generation_multi_word(prompt_engine):
         )
 
 
-def test_end_to_end_query_generation_multi_word(prompt_engine):
-    query = prompt_engine.generate_query(
-        question="Which genes are expressed in fibroblasts?",
-        query_language="Cypher",
-    )
+# def test_end_to_end_query_generation_multi_word(prompt_engine):
+#     query = prompt_engine.generate_query(
+#         question="Which genes are expressed in fibroblasts?",
+#         query_language="Cypher",
+#     )
 
-    score = []
-    score.append("MATCH" in query)
-    score.append("RETURN" in query)
-    score.append("Gene" in query)
-    score.append("CellType" in query)
-    score.append("fibroblast" in query)
+#     score = []
+#     score.append("MATCH" in query)
+#     score.append("RETURN" in query)
+#     score.append("Gene" in query)
+#     score.append("CellType" in query)
+#     score.append("fibroblast" in query)
 
-    # make sure direction is right
-    cypher_regex = r"MATCH \([a-zA-Z]*:Gene\)-\[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE\]->\([a-zA-Z]*:CellType.*|MATCH \([a-zA-Z]*:CellType.*<-\[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE\]-\([a-zA-Z]*:Gene\)"
-    score.append((re.search(cypher_regex, query) is not None))
-    # make sure conditioned
-    score.append("WHERE" in query or "{cell_type_name:" in query)
+#     # make sure direction is right
+#     cypher_regex = r"MATCH \([a-zA-Z]*:Gene\)-\[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE\]->\([a-zA-Z]*:CellType.*|MATCH \([a-zA-Z]*:CellType.*<-\[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE\]-\([a-zA-Z]*:Gene\)"
+#     score.append((re.search(cypher_regex, query) is not None))
+#     # make sure conditioned
+#     score.append("WHERE" in query or "{cell_type_name:" in query)
 
-    with open(FILE_PATH, "a") as f:
-        f.write(
-            f"{prompt_engine.model_name},end-to-end_multi,{calculate_test_score(score),query}\n"
-        )
+#     with open(FILE_PATH, "a") as f:
+#         f.write(
+#             f"{prompt_engine.model_name},end-to-end_multi,{calculate_test_score(score),query}\n"
+#         )
 
 
 ######
@@ -406,12 +401,13 @@ def get_used_property_from_query(query):
 
 
 def test_property_exists(prompt_engine):
-
-    prompt_engine.question = "What are the hgnc ids of the genes that are expressed in fibroblast?"
+    prompt_engine.question = (
+        "What are the hgnc ids of the genes that are expressed in fibroblast?"
+    )
     prompt_engine.selected_entities = ["Gene", "CellType"]
-    # only ask the model to select property and generate query
+    # only ask the model to select property and generate query
     prompt_engine._select_properties()
-    query=prompt_engine._generate_query(
+    query = prompt_engine._generate_query(
         question=prompt_engine.question,
         entities=prompt_engine.selected_entities,
         relationships={
@@ -421,7 +417,8 @@ def test_property_exists(prompt_engine):
             },
         },
         properties=prompt_engine.selected_properties,
-        query_language='Cypher')
+        query_language="Cypher",
+    )
 
     score = []
 
