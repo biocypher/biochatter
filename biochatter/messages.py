@@ -2,53 +2,50 @@
 
 from typing import Optional
 
-primary_message_entity = (
-    "You have access to a knowledge graph that contains "
-    "the entities after the delimiter {delimiter} in the end of this message."
-    "Your task is to select the ones that are relevant to the user's question "
-    "for subsequent use in a query. Only return the entities, "
-    "comma-separated, without any additional text. "
-    "{delimiter}"
-    "{entities}"
-)
-
-
-primary_message_relationship = (
-    "You have access to a knowledge graph that contains entities and relationships "
-    "after the delimiter {delimiter} in the end of this message."
-    "Your task is to select the relationships that are relevant "
-    "to the user's question for subsequent use in a query. Only "
-    "return the relationships without their sources or targets, "
-    "comma-separated, and without any additional text. Here are the "
-    "possible relationships and their source and target entities: "
-    "{delimiter}"
-    "entities:{selected_entities_joined}"
-    "relationships: {relationships}"
-)
-
-primary_message_property = (
-    "You have access to a knowledge graph that contains entities and "
-    "relationships. Their properties are after the delimiter {delimiter} in the end of this message."
-    "Your task is to select the properties that are relevant to the "
-    "user's question for subsequent use in a query. Only return the "
-    "entities and relationships with their relevant properties in JSON "
-    "format, without any additional text. Return the "
-    "entities/relationships as top-level dictionary keys, and their "
-    "properties as dictionary values. "
-    "Do not return properties that are not relevant to the question."
-    "{delimiter}"
-    "entities and their properties: {entity_properties}"
-    "relationships and their properties: {relationship_properties}"
-)
-
-
-primary_message_query = (
-    "Generate a database query in {query_language} that answers "
-    "the user's question. "
-    "You can use the following entities: {entities}, "
-    "relationships: {relationships_key_list}, and "
-    "properties: {properties}. "
-)
+primary_messages = {
+    "message_entity": (
+        "You have access to a knowledge graph that contains "
+        "the entities after the delimiter {delimiter} in the end of this message."
+        "Your task is to select the ones that are relevant to the user's question "
+        "for subsequent use in a query. Only return the entities, "
+        "comma-separated, without any additional text. "
+        "{delimiter}"
+        "{entities}"
+    ),
+    "message_relationship": (
+        "You have access to a knowledge graph that contains entities and relationships "
+        "after the delimiter {delimiter} in the end of this message."
+        "Your task is to select the relationships that are relevant "
+        "to the user's question for subsequent use in a query. Only "
+        "return the relationships without their sources or targets, "
+        "comma-separated, and without any additional text. Here are the "
+        "possible relationships and their source and target entities: "
+        "{delimiter}"
+        "entities:{selected_entities_joined}"
+        "relationships: {relationships}"
+    ),
+    "message_property": (
+        "You have access to a knowledge graph that contains entities and "
+        "relationships. Their properties are after the delimiter {delimiter} in the end of this message."
+        "Your task is to select the properties that are relevant to the "
+        "user's question for subsequent use in a query. Only return the "
+        "entities and relationships with their relevant properties in JSON "
+        "format, without any additional text. Return the "
+        "entities/relationships as top-level dictionary keys, and their "
+        "properties as dictionary values. "
+        "Do not return properties that are not relevant to the question."
+        "{delimiter}"
+        "entities and their properties: {entity_properties}"
+        "relationships and their properties: {relationship_properties}"
+    ),
+    "message_query": (
+        "Generate a database query in {query_language} that answers "
+        "the user's question. "
+        "You can use the following entities: {entities}, "
+        "relationships: {relationships_key_list}, and "
+        "properties: {properties}. "
+    ),
+}
 
 
 class message(str):
@@ -84,9 +81,9 @@ class system_message(message):
         self,
         message_type: str = "system",
         message_for: str = None,
+        delimiter: str = "####",
         content: str = None,  ## content of the message
-        delimiter: str = None,
-        label: Optional[str] = None,
+        label: Optional[str] = "primary",
     ):
         super().__init__(
             message_type=message_type,
@@ -111,7 +108,7 @@ class system_message(message):
         # TODO: an option to add kg info at the beginning of this message
         # TODO: other propts then primary
         if self.label == "primary":
-            system_message_entity = primary_message_entity.format(
+            system_message_entity = primary_messages['message_entity'].format(
                 delimiter=self.delimiter, entities=entities
             )
             self.content = f"{self.content}\n{system_message_entity}"
@@ -123,7 +120,7 @@ class system_message(message):
         selected_entities_joined = ", ".join(selected_entities)
 
         if self.label == "primary":
-            system_message_relationship = primary_message_relationship.format(
+            system_message_relationship = primary_messages['message_relationship'].format(
                 delimiter=self.delimiter,
                 selected_entities=selected_entities_joined,
                 relationships=relationships,
@@ -135,7 +132,7 @@ class system_message(message):
     ):
         self.message_for = "property"
         if self.label == "primary":
-            system_message_property = primary_message_property.format(
+            system_message_property = primary_messages['message_property'].format(
                 delimiter=self.delimiter,
                 entity_properties=entity_properties,
                 relationship_properties=relationship_properties,
@@ -149,7 +146,7 @@ class system_message(message):
         relationships_key_list = list(relationships.keys())
 
         if self.label == "primary":
-            system_message_query = primary_message_query.format(
+            system_message_query = primary_messages['message_query'].format(
                 query_language=query_language,
                 entities=entities,
                 relationships_key_list=relationships_key_list,
