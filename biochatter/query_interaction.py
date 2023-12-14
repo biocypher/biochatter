@@ -106,20 +106,20 @@ class BioCypherQueryHandler:
 
         # TODO is something like this needed?
 
-        for relationship, values in self.kg_selected["relationships"].items():
-            self._expand_pairs(relationship, values)
+        # for relationship, values in self.kg_selected["relationships"].items():
+        #     self._expand_pairs(relationship, values)
 
-        if self.rel_directions:
-            msg += (
-                "Given the following valid combinations of source, "
-                "relationship, and target: "
-            )
-            for key, value in self.rel_directions.items():
-                for pair in value:
-                    msg += f"'(:{pair[0]})-(:{key})->(:{pair[1]})'."
+        # if self.rel_directions:
+        #     msg += (
+        #         "Given the following valid combinations of source, "
+        #         "relationship, and target: "
+        #     )
+        #     for key, value in self.rel_directions.items():
+        #         for pair in value:
+        #             msg += f"'(:{pair[0]})-(:{key})->(:{pair[1]})'."
 
         msg += (
-            "Update the query to reflect the user's request."
+            "Update the query to reflect the user's request. "
             "Only return the updated query, without any additional text."
         )
 
