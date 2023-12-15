@@ -60,7 +60,7 @@ def extract_placeholders(text):
 
 class Prompt:
     def __init__(self, 
-                 elements: Optional[dict],
+                 elements: Optional[dict] = None,
                  text_template: Optional[str] = None):
         self.elements = elements
         self.text_template = text_template
@@ -79,3 +79,5 @@ class Prompt:
 
         return self.text_template.format(**self.elements)
 
+class SystemPrompt(Prompt):
+    pass
