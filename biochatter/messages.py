@@ -61,11 +61,12 @@ def extract_placeholders(text):
 class Prompt:
     def __init__(self, 
                  elements: Optional[dict] = None,
-                 text_template: Optional[str] = None):
+                 text_template: Optional[str] = None,
+                 prompt_type: Optional[str] = None):
         self.elements = elements
         self.text_template = text_template
+        self.prompt_type = prompt_type
 
-        # TODO repr
     def __repr__(self):
 
         if not self.text_template:
@@ -80,4 +81,14 @@ class Prompt:
         return self.text_template.format(**self.elements)
 
 class SystemPrompt(Prompt):
-    pass
+     def __init__(
+        self,
+        elements: Optional[dict] = None,
+        text_template: Optional[str] = None,
+        prompt_type: Optional[str] = 'system'
+    ):
+        super().__init__(
+            elements=elements,
+            text_template=text_template,
+            prompt_type=prompt_type
+        )
