@@ -33,7 +33,7 @@ want to install.
 
 For adding new dependencies:
 
-- Add new dependencies: `poetry add <dependency> -- group <group>`
+- Add new dependencies: `poetry add <dependency> --group <group>`
 
 - Update lock file (after adding new dependencies in pyproject.toml): `poetry
 lock`
