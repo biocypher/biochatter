@@ -35,6 +35,10 @@ def delete_csv_files():
 
 
 def pytest_generate_tests(metafunc):
+    """pytest hook function to generate test cases.
+    Called once for each test case in the benchmark test collection.
+    If fixture is part of test declaration, the test is parametrized
+    """
     benchmark_dataset = get_benchmark_dataset()
 
     if "test_data_biocypher_query_generation" in metafunc.fixturenames:
