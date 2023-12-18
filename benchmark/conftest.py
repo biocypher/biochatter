@@ -11,6 +11,8 @@ RESULT_FILES = [
 
 N_ITERATIONS = 1
 
+BENCHMARK_DATASET = get_benchmark_dataset()
+
 
 @pytest.fixture(autouse=True, scope="session")
 def delete_csv_files():
@@ -39,10 +41,8 @@ def pytest_generate_tests(metafunc):
     Called once for each test case in the benchmark test collection.
     If fixture is part of test declaration, the test is parametrized
     """
-    benchmark_dataset = get_benchmark_dataset()
-
     if "test_data_biocypher_query_generation" in metafunc.fixturenames:
-        data_file = benchmark_dataset["./data/biocypher_query_generation/biocypher_query_generation.csv"]
+        data_file = BENCHMARK_DATASET["./data/biocypher_query_generation/biocypher_query_generation.csv"]
         metafunc.parametrize("test_data_biocypher_query_generation",
                              data_file.values)
 
