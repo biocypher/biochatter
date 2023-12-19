@@ -1,5 +1,6 @@
 import os
 
+import pandas as pd
 import pytest
 
 from benchmark.load_dataset import get_benchmark_dataset
@@ -14,26 +15,34 @@ N_ITERATIONS = 1
 BENCHMARK_DATASET = get_benchmark_dataset()
 
 
+# TODO: adapt the docs
+def pytest_addoption(parser):
+    parser.addoption("--run-from-scratch", action="store_true", default=False,
+                     help="Run all benchmark tests from scratch")
+
+
 @pytest.fixture(autouse=True, scope="session")
-def delete_csv_files():
+def delete_results_csv_file_content(request):
+    """If --run-from-scratch is set, the former benchmark data is deleted.
+    Thus, all benchmarks are executed again.
     """
-    Reset benchmark output each time pytest is run.
+    if request.config.getoption("--run-from-scratch"):
+        for f in RESULT_FILES:
+            if os.path.exists(f):
+                old_df = pd.read_csv(f, header=0)
+                empty_df = pd.DataFrame(columns=old_df.columns)
+                empty_df.to_csv(f, index=False)
 
-    Todo:
 
-        Probably not the most economic way to delete everything every time,
-        should be extended to only overwrite the tests that have changed or add
-        models that were not present before.
-
-    """
-    for f in RESULT_FILES:
-        if os.path.exists(f):
-            os.remove(f)
-
-    # create blank CSV files
-    for f in RESULT_FILES:
-        with open(f, "w") as f:
-            f.write("")
+@pytest.fixture(scope="session")
+def result_files():
+    result_files = {}
+    for file in RESULT_FILES:
+        try:
+            result_files[file] = pd.read_csv(file, header=0)
+        except pd.errors.EmptyDataError:
+            result_files[file] = pd.DataFrame()
+    return result_files
 
 
 def pytest_generate_tests(metafunc):
