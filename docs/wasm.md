@@ -6,6 +6,6 @@ The newest deployment of biochatter (chatGSE-next) has also offer a WASM option.
 2. `git lfs install`  
 `git clone https://huggingface.co/zxrzxr/zephyr-7b-beta-chatRDM-q4f32_1/chatgse-next/chatgse/public/mistral`
 3. `docker-compose -f chatgse/docker-compose.yml up -d`
-4. Open http://localhost:5000/#/webllm in **CHROME** (very important, other browser does not support webGPU yet)
+4. Open http://localhost:3000/#/webllm in **CHROME** (very important, other browser does not support webGPU yet)
 5. Wait for loading of the LLM model, around 3-5 minutes.
 6. Write questions in the chat input and click the send button behind the normal send button.
