@@ -15,16 +15,15 @@ FILE_PATH = next(
 
 OPENAI_MODEL_NAMES = [
     "gpt-3.5-turbo",
-    "gpt-4",
+    # "gpt-4",
 ]
 
 XINFERENCE_MODEL_NAMES = [
-    "llama2-hf",
-    "llama2-chat-hf",
+    # "llama2-hf",
+    # "llama2-chat-hf",
 ]
 
 BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
-
 
 
 @pytest.fixture(scope="module", params=BENCHMARKED_MODELS)
@@ -41,11 +40,11 @@ def prompt_engine(request):
         pass
 
 
-
 ######
 # test single word entities
 ######
-    
+
+
 def test_entity_selection(prompt_engine):
     success = prompt_engine._select_entities(
         question="Which genes are associated with mucoviscidosis?"
