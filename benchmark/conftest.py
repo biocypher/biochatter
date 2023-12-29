@@ -51,9 +51,10 @@ def result_files():
 
 
 def pytest_generate_tests(metafunc):
-    """pytest hook function to generate test cases.
+    """
+    Pytest hook function to generate test cases.
     Called once for each test case in the benchmark test collection.
-    If fixture is part of test declaration, the test is parametrized
+    If fixture is part of test declaration, the test is parametrized.
     """
     if "test_data_biocypher_query_generation" in metafunc.fixturenames:
         data_file = BENCHMARK_DATASET[
