@@ -41,7 +41,9 @@ def benchmark_already_executed(
     model_name: str,
     result_files: dict[str, pd.DataFrame],
 ) -> bool:
-    """Checks if the benchmark task and subtask for the model_name has already been executed.
+    """
+    Checks if the benchmark task and subtask for the model_name have already
+    been executed.
 
     Args:
         task (str): The benchmark task, e.g. "biocypher_query_generation"
@@ -50,7 +52,9 @@ def benchmark_already_executed(
         result_files (dict[str, pd.DataFrame]): The result files
 
     Returns:
-        bool: True if the benchmark task and subtask for the model_name has already been run, False otherwise
+
+        bool: True if the benchmark task and subtask for the model_name has
+            already been run, False otherwise
     """
     task_results = result_files[f"benchmark/results/{task}.csv"]
     task_results_subset = (task_results["model"] == model_name) & (
