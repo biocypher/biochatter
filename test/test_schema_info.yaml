@@ -47,6 +47,8 @@ cell type:
   input_label: cell_type
   properties:
     cell_type_name: str
+    medium: str
+    organism: str
 
 # ---
 # Associations
