@@ -248,9 +248,12 @@ def test_property_selection_multi_word(prompt_engine):
             "cell_type_name"
             in prompt_engine.selected_properties.get("CellType")
         )
-        # require a list of relevant properties
+        # require a list or dict of relevant properties
         score.append(
             isinstance(prompt_engine.selected_properties.get("CellType"), list)
+            or isinstance(
+                prompt_engine.selected_properties.get("CellType"), dict
+            )
         )
     else:
         score.append(0)
@@ -357,7 +360,7 @@ def get_used_property_from_query(query):
     property_mapping_add = map_dot_properties_to_labels(used_properties)
     property_mapping.update(property_mapping_add)
 
-    # get peroperties used in curly brackets
+    # get properties used in curly brackets
     if "{" in query:
         property_regex_bracket = r"\(\w+:\w+ \{\w+: "
         used_properties = re.findall(property_regex_bracket, query)
