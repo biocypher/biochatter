@@ -17,16 +17,21 @@ BENCHMARK_DATASET = get_benchmark_dataset()
 
 # TODO: adapt the docs
 def pytest_addoption(parser):
-    parser.addoption("--run-from-scratch", action="store_true", default=False,
-                     help="Run all benchmark tests from scratch")
+    parser.addoption(
+        "--run-all",
+        action="store_true",
+        default=False,
+        help="Run all benchmark tests from scratch",
+    )
 
 
 @pytest.fixture(autouse=True, scope="session")
 def delete_results_csv_file_content(request):
-    """If --run-from-scratch is set, the former benchmark data is deleted.
-    Thus, all benchmarks are executed again.
     """
-    if request.config.getoption("--run-from-scratch"):
+    If --run-all is set, the former benchmark data are deleted and all
+    benchmarks are executed again.
+    """
+    if request.config.getoption("--run-all"):
         for f in RESULT_FILES:
             if os.path.exists(f):
                 old_df = pd.read_csv(f, header=0)
@@ -51,9 +56,12 @@ def pytest_generate_tests(metafunc):
     If fixture is part of test declaration, the test is parametrized
     """
     if "test_data_biocypher_query_generation" in metafunc.fixturenames:
-        data_file = BENCHMARK_DATASET["./data/biocypher_query_generation/biocypher_query_generation.csv"]
-        metafunc.parametrize("test_data_biocypher_query_generation",
-                             data_file.values)
+        data_file = BENCHMARK_DATASET[
+            "./data/biocypher_query_generation/biocypher_query_generation.csv"
+        ]
+        metafunc.parametrize(
+            "test_data_biocypher_query_generation", data_file.values
+        )
 
 
 def calculate_test_score(vector: list[bool]):
