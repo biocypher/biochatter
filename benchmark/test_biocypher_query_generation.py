@@ -35,7 +35,12 @@ def prompt_engine(request):
     return setup_prompt_engine
 
 
-def benchmark_already_executed(task: str, subtask: str, model_name: str, result_files: dict[str, pd.DataFrame]) -> bool:
+def benchmark_already_executed(
+    task: str,
+    subtask: str,
+    model_name: str,
+    result_files: dict[str, pd.DataFrame],
+) -> bool:
     """Checks if the benchmark task and subtask for the model_name has already been executed.
 
     Args:
@@ -48,41 +53,51 @@ def benchmark_already_executed(task: str, subtask: str, model_name: str, result_
         bool: True if the benchmark task and subtask for the model_name has already been run, False otherwise
     """
     task_results = result_files[f"benchmark/results/{task}.csv"]
-    task_results_subset = (task_results["model"] == model_name) & (task_results["subtask"] == subtask)
+    task_results_subset = (task_results["model"] == model_name) & (
+        task_results["subtask"] == subtask
+    )
     return task_results_subset.any()
 
 
 def write_results_to_file(model_name: str, subtask: str, score: str):
     with open(FILE_PATH, "a") as f:
-        f.write(
-            f"{model_name},{subtask},{score}\n"
-        )
+        f.write(f"{model_name},{subtask},{score}\n")
 
 
-def test_entity_selection(prompt_engine, test_data_biocypher_query_generation, result_files):
+def test_entity_selection(
+    prompt_engine, test_data_biocypher_query_generation, result_files
+):
     subtask = inspect.currentframe().f_code.co_name
 
     kg_schema_file_name = test_data_biocypher_query_generation[0]
     prompt = test_data_biocypher_query_generation[1]
     expected_entities = test_data_biocypher_query_generation[2]
-    prompt_engine = prompt_engine(kg_schema_path=f"./benchmark/data/biocypher_query_generation/{kg_schema_file_name}")
-
-    if benchmark_already_executed(TASK, subtask, prompt_engine.model_name, result_files):
-        pytest.skip(f"benchmark {TASK}: {subtask} with {prompt_engine.model_name} already executed")
-
-    success = prompt_engine._select_entities(
-        question=prompt
+    prompt_engine = prompt_engine(
+        kg_schema_path=f"./benchmark/data/biocypher_query_generation/{kg_schema_file_name}"
     )
+
+    if benchmark_already_executed(
+        TASK, subtask, prompt_engine.model_name, result_files
+    ):
+        pytest.skip(
+            f"benchmark {TASK}: {subtask} with {prompt_engine.model_name} already executed"
+        )
+
+    success = prompt_engine._select_entities(question=prompt)
     assert success
 
     score = []
     for expected_entity in expected_entities:
         score.append(expected_entity in prompt_engine.selected_entities)
 
-    write_results_to_file(prompt_engine.model_name, subtask, calculate_test_score(score))
+    write_results_to_file(
+        prompt_engine.model_name, subtask, calculate_test_score(score)
+    )
 
 
-def test_relationship_selection(prompt_engine, test_data_biocypher_query_generation, result_files):
+def test_relationship_selection(
+    prompt_engine, test_data_biocypher_query_generation, result_files
+):
     subtask = inspect.currentframe().f_code.co_name
 
     kg_schema_file_name = test_data_biocypher_query_generation[0]
@@ -91,10 +106,16 @@ def test_relationship_selection(prompt_engine, test_data_biocypher_query_generat
     expected_relationships = test_data_biocypher_query_generation[3]
     expected_relationship_labels = test_data_biocypher_query_generation[4]
 
-    prompt_engine = prompt_engine(kg_schema_path=f"./benchmark/data/biocypher_query_generation/{kg_schema_file_name}")
+    prompt_engine = prompt_engine(
+        kg_schema_path=f"./benchmark/data/biocypher_query_generation/{kg_schema_file_name}"
+    )
 
-    if benchmark_already_executed(TASK, subtask, prompt_engine.model_name, result_files):
-        pytest.skip(f"benchmark {TASK}: {subtask} with {prompt_engine.model_name} already executed")
+    if benchmark_already_executed(
+        TASK, subtask, prompt_engine.model_name, result_files
+    ):
+        pytest.skip(
+            f"benchmark {TASK}: {subtask} with {prompt_engine.model_name} already executed"
+        )
 
     prompt_engine.question = prompt
     prompt_engine.selected_entities = expected_entities
@@ -103,14 +124,25 @@ def test_relationship_selection(prompt_engine, test_data_biocypher_query_generat
 
     score = []
     for expected_relationship in expected_relationships:
-        score.append(expected_relationship in prompt_engine.selected_relationships)
+        score.append(
+            expected_relationship in prompt_engine.selected_relationships
+        )
 
     for expected_relationship_label_key in expected_relationship_labels.keys():
-        score.append(expected_relationship_label_key in prompt_engine.selected_relationship_labels.keys())
+        score.append(
+            expected_relationship_label_key
+            in prompt_engine.selected_relationship_labels.keys()
+        )
 
-        for expected_relationship_label_value in expected_relationship_labels[expected_relationship_label_key]:
-            score.append(expected_relationship_label_value in prompt_engine.selected_relationship_labels[
-                expected_relationship_label_key])
+        for expected_relationship_label_value in expected_relationship_labels[
+            expected_relationship_label_key
+        ]:
+            score.append(
+                expected_relationship_label_value
+                in prompt_engine.selected_relationship_labels[
+                    expected_relationship_label_key
+                ]
+            )
 
     # TODO: make it more generic to be able to compare arbitrarily nested structures
     # score.append(
@@ -126,10 +158,14 @@ def test_relationship_selection(prompt_engine, test_data_biocypher_query_generat
     #    )
     # )
 
-    write_results_to_file(prompt_engine.model_name, subtask, calculate_test_score(score))
+    write_results_to_file(
+        prompt_engine.model_name, subtask, calculate_test_score(score)
+    )
 
 
-def test_property_selection(prompt_engine, test_data_biocypher_query_generation, result_files):
+def test_property_selection(
+    prompt_engine, test_data_biocypher_query_generation, result_files
+):
     subtask = inspect.currentframe().f_code.co_name
 
     kg_schema_file_name = test_data_biocypher_query_generation[0]
@@ -138,10 +174,16 @@ def test_property_selection(prompt_engine, test_data_biocypher_query_generation,
     expected_relationships = test_data_biocypher_query_generation[3]
     expected_properties = test_data_biocypher_query_generation[5]
 
-    prompt_engine = prompt_engine(kg_schema_path=f"./benchmark/data/biocypher_query_generation/{kg_schema_file_name}")
+    prompt_engine = prompt_engine(
+        kg_schema_path=f"./benchmark/data/biocypher_query_generation/{kg_schema_file_name}"
+    )
 
-    if benchmark_already_executed(TASK, subtask, prompt_engine.model_name, result_files):
-        pytest.skip(f"benchmark {TASK}: {subtask} with {prompt_engine.model_name} already executed")
+    if benchmark_already_executed(
+        TASK, subtask, prompt_engine.model_name, result_files
+    ):
+        pytest.skip(
+            f"benchmark {TASK}: {subtask} with {prompt_engine.model_name} already executed"
+        )
 
     prompt_engine.question = prompt
     prompt_engine.selected_entities = expected_entities
@@ -151,15 +193,26 @@ def test_property_selection(prompt_engine, test_data_biocypher_query_generation,
 
     score = []
     for expected_property_key in expected_properties.keys():
-        score.append(expected_property_key in prompt_engine.selected_properties.keys())
+        score.append(
+            expected_property_key in prompt_engine.selected_properties.keys()
+        )
 
-        for expected_property_value in expected_properties[expected_property_key]:
-            score.append(expected_property_value in prompt_engine.selected_properties[expected_property_key])
+        for expected_property_value in expected_properties[
+            expected_property_key
+        ]:
+            score.append(
+                expected_property_value
+                in prompt_engine.selected_properties[expected_property_key]
+            )
 
-    write_results_to_file(prompt_engine.model_name, subtask, calculate_test_score(score))
+    write_results_to_file(
+        prompt_engine.model_name, subtask, calculate_test_score(score)
+    )
 
 
-def test_query_generation(prompt_engine, test_data_biocypher_query_generation, result_files):
+def test_query_generation(
+    prompt_engine, test_data_biocypher_query_generation, result_files
+):
     subtask = inspect.currentframe().f_code.co_name
 
     kg_schema_file_name = test_data_biocypher_query_generation[0]
@@ -169,10 +222,16 @@ def test_query_generation(prompt_engine, test_data_biocypher_query_generation, r
     expected_properties = test_data_biocypher_query_generation[5]
     expected_parts_of_query = test_data_biocypher_query_generation[6]
 
-    prompt_engine = prompt_engine(kg_schema_path=f"./benchmark/data/biocypher_query_generation/{kg_schema_file_name}")
+    prompt_engine = prompt_engine(
+        kg_schema_path=f"./benchmark/data/biocypher_query_generation/{kg_schema_file_name}"
+    )
 
-    if benchmark_already_executed(TASK, subtask, prompt_engine.model_name, result_files):
-        pytest.skip(f"benchmark {TASK}: {subtask} with {prompt_engine.model_name} already executed")
+    if benchmark_already_executed(
+        TASK, subtask, prompt_engine.model_name, result_files
+    ):
+        pytest.skip(
+            f"benchmark {TASK}: {subtask} with {prompt_engine.model_name} already executed"
+        )
 
     query = prompt_engine._generate_query(
         question=prompt,
@@ -186,24 +245,37 @@ def test_query_generation(prompt_engine, test_data_biocypher_query_generation, r
     for expected_part_of_query in expected_parts_of_query:
         print(expected_part_of_query)
         if isinstance(expected_part_of_query, tuple):
-            score.append(expected_part_of_query[0] in query or expected_part_of_query[1] in query)
+            score.append(
+                expected_part_of_query[0] in query
+                or expected_part_of_query[1] in query
+            )
         else:
             score.append(expected_part_of_query in query)
 
-    write_results_to_file(prompt_engine.model_name, subtask, calculate_test_score(score))
+    write_results_to_file(
+        prompt_engine.model_name, subtask, calculate_test_score(score)
+    )
 
 
-def test_end_to_end_query_generation(prompt_engine, test_data_biocypher_query_generation, result_files):
+def test_end_to_end_query_generation(
+    prompt_engine, test_data_biocypher_query_generation, result_files
+):
     subtask = inspect.currentframe().f_code.co_name
 
     kg_schema_file_name = test_data_biocypher_query_generation[0]
     prompt = test_data_biocypher_query_generation[1]
     expected_parts_of_query = test_data_biocypher_query_generation[6]
 
-    prompt_engine = prompt_engine(kg_schema_path=f"./benchmark/data/biocypher_query_generation/{kg_schema_file_name}")
+    prompt_engine = prompt_engine(
+        kg_schema_path=f"./benchmark/data/biocypher_query_generation/{kg_schema_file_name}"
+    )
 
-    if benchmark_already_executed(TASK, subtask, prompt_engine.model_name, result_files):
-        pytest.skip(f"benchmark {TASK}: {subtask} with {prompt_engine.model_name} already executed")
+    if benchmark_already_executed(
+        TASK, subtask, prompt_engine.model_name, result_files
+    ):
+        pytest.skip(
+            f"benchmark {TASK}: {subtask} with {prompt_engine.model_name} already executed"
+        )
 
     query = prompt_engine.generate_query(
         question=prompt,
@@ -214,8 +286,13 @@ def test_end_to_end_query_generation(prompt_engine, test_data_biocypher_query_ge
     for expected_part_of_query in expected_parts_of_query:
         print(expected_part_of_query)
         if isinstance(expected_part_of_query, tuple):
-            score.append(expected_part_of_query[0] in query or expected_part_of_query[1] in query)
+            score.append(
+                expected_part_of_query[0] in query
+                or expected_part_of_query[1] in query
+            )
         else:
             score.append(expected_part_of_query in query)
 
-    write_results_to_file(prompt_engine.model_name, subtask, calculate_test_score(score))
+    write_results_to_file(
+        prompt_engine.model_name, subtask, calculate_test_score(score)
+    )
