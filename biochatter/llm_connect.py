@@ -40,6 +40,8 @@ OPENAI_MODELS = [
 
 HUGGINGFACE_MODELS = ["bigscience/bloom"]
 
+XINFERENCE_MODELS = ["custom-endpoint"]
+
 TOKEN_LIMITS = {
     "gpt-3.5-turbo": 4000,
     "gpt-3.5-turbo-16k": 16000,
@@ -50,6 +52,7 @@ TOKEN_LIMITS = {
     "gpt-4-32k": 32000,
     "gpt-4-1106-preview": 128000,
     "bigscience/bloom": 1000,
+    "custom-endpoint": 1,  # Reasonable value?
 }
 
 
@@ -411,10 +414,20 @@ class XinferenceConversation(Conversation):
                 generate_config={"max_tokens": 2048, "temperature": 0},
             )
         except (
-            openai.error.InvalidRequestError,
-            openai.error.APIConnectionError,
-            openai.error.RateLimitError,
-            openai.error.APIError,
+            openai._exceptions.APIError,
+            openai._exceptions.OpenAIError,
+            openai._exceptions.ConflictError,
+            openai._exceptions.NotFoundError,
+            openai._exceptions.APIStatusError,
+            openai._exceptions.RateLimitError,
+            openai._exceptions.APITimeoutError,
+            openai._exceptions.BadRequestError,
+            openai._exceptions.APIConnectionError,
+            openai._exceptions.AuthenticationError,
+            openai._exceptions.InternalServerError,
+            openai._exceptions.PermissionDeniedError,
+            openai._exceptions.UnprocessableEntityError,
+            openai._exceptions.APIResponseValidationError,
         ) as e:
             return str(e), None
 
