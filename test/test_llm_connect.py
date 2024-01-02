@@ -8,6 +8,7 @@ from biochatter.llm_connect import (
     HumanMessage,
     AIMessage,
     XinferenceConversation,
+    WasmConversation,
 )
 import pytest
 from unittest.mock import patch, Mock
@@ -212,3 +213,39 @@ def test_generic_chatting():
         )
         (msg, token_usage, correction) = convo.query("Hello, world!")
         assert token_usage["completion_tokens"] > 0
+
+
+def test_wasm_conversation():
+    # Initialize the class
+    wasm_convo = WasmConversation(
+        model_name="test_model",
+        prompts={},
+        correct=True,
+        split_correction=False,
+        rag_agent=None,
+    )
+
+    # Check if the model_name is correctly set
+    assert wasm_convo.model_name == "test_model"
+
+    # Check if the prompts are correctly set
+    assert wasm_convo.prompts == {}
+
+    # Check if the correct is correctly set
+    assert wasm_convo.correct == True
+
+    # Check if the split_correction is correctly set
+    assert wasm_convo.split_correction == False
+
+    # Check if the rag_agent is correctly set
+    assert wasm_convo.rag_agent == None
+
+    # Test the query method
+    test_query = "Hello, world!"
+    result = wasm_convo.query(test_query)
+    assert result == test_query  # assuming the messages list is initially empty
+
+    # Test the _primary_query method, add another message to the messages list
+    wasm_convo.append_system_message("System message")
+    result = wasm_convo._primary_query()
+    assert result == test_query + "\nSystem message"

@@ -303,6 +303,60 @@ class Conversation(ABC):
         return json.dumps(d)
 
 
+class WasmConversation(Conversation):
+    def __init__(
+        self,
+        model_name: str,
+        prompts: dict,
+        correct: bool = True,
+        split_correction: bool = False,
+        rag_agent: DocumentEmbedder = None,
+    ):
+        """
+        This class is used to return the complete query as a string to be used
+        in the frontend running the wasm model. It does not call the API itself,
+        but updates the message history similarly to the other conversation
+        classes. It overrides the `query` method from the `Conversation` class
+        to return a plain string instead of a tuple that contains the entire
+        message for the model.
+        """
+        super().__init__(
+            model_name=model_name,
+            prompts=prompts,
+            correct=correct,
+            split_correction=split_correction,
+            rag_agent=rag_agent,
+        )
+
+    def query(self, text: str, collection_name: Optional[str] = None):
+        self.append_user_message(text)
+
+        if self.rag_agent:
+            if self.rag_agent.use_prompt:
+                self._inject_context(text, collection_name)
+
+        return self._primary_query()
+
+    def _primary_query(self):
+        """
+        Concatenate all messages in the conversation into a single string and
+        return it. Currently discards information about roles (system, user).
+        """
+        return "\n".join([m.content for m in self.messages])
+
+    def _correct_response(self, msg: str):
+        """
+        This method is not used for the wasm model.
+        """
+        return "ok"
+
+    def set_api_key(self, api_key: str, user: str | None = None):
+        """
+        This method is not used for the wasm model.
+        """
+        return True
+
+
 class XinferenceConversation(Conversation):
     def __init__(
         self,
