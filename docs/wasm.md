@@ -4,7 +4,7 @@ Thanks to the new web assembly (WASM) technology and webGPU support of Chrome, i
 The newest deployment of biochatter (chatGSE-next) has also offer a WASM option. The following steps need to be taken to make the LLM run in your local docker set up.
 1. `git clone https://github.com/xiaoranzhou/chatgse-next` (change to the biocypher repo after merge)
 2. `git lfs install`  
-`git clone https://huggingface.co/zxrzxr/zephyr-7b-beta-chatRDM-q4f32_1/ chatgse-next/chatgse/public/mistral`
+`git clone https://huggingface.co/zxrzxr/Mistral-7B-Instruct-v0.1-q4f32_1 chatgse-next/chatgse/public/mistral`
 3. `cd chatgse-next`
 4. `docker-compose -f chatgse/docker-compose.yml up -d`
 5. Open http://localhost:3000/#/webllm in **CHROME** (very important, other browser does not support webGPU yet)
