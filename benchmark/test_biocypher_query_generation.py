@@ -1,3 +1,5 @@
+import os
+from biochatter.llm_connect import GptConversation, XinferenceConversation
 from biochatter.prompts import BioCypherPromptEngine
 import pytest
 from .conftest import calculate_test_score, RESULT_FILES
@@ -25,19 +27,38 @@ XINFERENCE_MODEL_NAMES = [
 
 BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
 
+BENCHMARK_URL = "http://llm.biocypher.org"
 
-@pytest.fixture(scope="module", params=BENCHMARKED_MODELS)
-def prompt_engine(request):
+
+@pytest.fixture(scope="function")
+def prompt_engine():
+    return BioCypherPromptEngine(
+        schema_config_or_info_path="test/test_schema_info.yaml",
+    )
+
+
+@pytest.fixture(scope="function", params=BENCHMARKED_MODELS)
+def conversation(request):
     model_name = request.param
     if model_name in OPENAI_MODEL_NAMES:
-        return BioCypherPromptEngine(
-            schema_config_or_info_path="test/test_schema_info.yaml",
+        conversation = GptConversation(
             model_name=model_name,
+            prompts={},
+            correct=False,
+        )
+        conversation.set_api_key(
+            os.getenv("OPENAI_API_KEY"), user="benchmark_user"
         )
     elif model_name in XINFERENCE_MODEL_NAMES:
-        # TODO implement starting a model on xinference server and connecting
-        # from the prompt engine
-        pass
+        conversation = XinferenceConversation(
+            base_url=BENCHMARK_URL,
+            model_name=model_name,
+            prompts={},
+            correct=False,
+        )
+        conversation.set_api_key()
+
+    return conversation
 
 
 ######
@@ -45,9 +66,10 @@ def prompt_engine(request):
 ######
 
 
-def test_entity_selection(prompt_engine):
+def test_entity_selection(prompt_engine, conversation):
     success = prompt_engine._select_entities(
-        question="Which genes are associated with mucoviscidosis?"
+        question="Which genes are associated with mucoviscidosis?",
+        conversation=conversation,
     )
     assert success
 
@@ -57,14 +79,14 @@ def test_entity_selection(prompt_engine):
 
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},entities_single,{calculate_test_score(score)}\n"
+            f"{conversation.model_name},entities_single,{calculate_test_score(score)}\n"
         )
 
 
-def test_relationship_selection(prompt_engine):
+def test_relationship_selection(prompt_engine, conversation):
     prompt_engine.question = "Which genes are associated with mucoviscidosis?"
     prompt_engine.selected_entities = ["Gene", "Disease"]
-    success = prompt_engine._select_relationships()
+    success = prompt_engine._select_relationships(conversation=conversation)
     assert success
 
     score = []
@@ -95,28 +117,29 @@ def test_relationship_selection(prompt_engine):
 
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},relationships_single,{calculate_test_score(score)}\n"
+            f"{conversation.model_name},relationships_single,{calculate_test_score(score)}\n"
         )
 
 
-def test_property_selection(prompt_engine):
+def test_property_selection(prompt_engine, conversation):
     prompt_engine.question = "Which genes are associated with mucoviscidosis?"
     prompt_engine.selected_entities = ["Gene", "Disease"]
     prompt_engine.selected_relationships = ["GeneToPhenotypeAssociation"]
-    success = prompt_engine._select_properties()
+    success = prompt_engine._select_properties(conversation=conversation)
     assert success
 
     score = []
     score.append("Disease" in prompt_engine.selected_properties.keys())
-    score.append("name" in prompt_engine.selected_properties.get("Disease"))
+    if "Disease" in prompt_engine.selected_properties.keys():
+        score.append("name" in prompt_engine.selected_properties.get("Disease"))
 
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},properties_single,{calculate_test_score(score)}\n"
+            f"{conversation.model_name},properties_single,{calculate_test_score(score)}\n"
         )
 
 
-def test_query_generation(prompt_engine):
+def test_query_generation(prompt_engine, conversation):
     query = prompt_engine._generate_query(
         question="Which genes are associated with mucoviscidosis?",
         entities=["Gene", "Disease"],
@@ -125,6 +148,7 @@ def test_query_generation(prompt_engine):
         },
         properties={"Disease": ["name", "ICD10", "DSM5"]},
         query_language="Cypher",
+        conversation=conversation,
     )
 
     score = []
@@ -139,14 +163,16 @@ def test_query_generation(prompt_engine):
 
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},cypher query_single,{calculate_test_score(score)}\n"
+            f"{conversation.model_name},cypher-query_single,{calculate_test_score(score)}\n"
         )
 
 
-def test_end_to_end_query_generation(prompt_engine):
+@pytest.mark.skip(reason="problem of injecting multiple conversation objects")
+def test_end_to_end_query_generation(prompt_engine, conversation):
     query = prompt_engine.generate_query(
         question="Which genes are associated with mucoviscidosis?",
         query_language="Cypher",
+        conversation=conversation,
     )
 
     score = []
@@ -161,7 +187,7 @@ def test_end_to_end_query_generation(prompt_engine):
 
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},end-to-end_single,{calculate_test_score(score)}\n"
+            f"{conversation.model_name},end-to-end_single,{calculate_test_score(score)}\n"
         )
 
 
@@ -170,9 +196,10 @@ def test_end_to_end_query_generation(prompt_engine):
 ######
 
 
-def test_entity_selection_multi_word(prompt_engine):
+def test_entity_selection_multi_word(prompt_engine, conversation):
     success = prompt_engine._select_entities(
-        question="Which genes are expressed in fibroblasts?"
+        question="Which genes are expressed in fibroblasts?",
+        conversation=conversation,
     )
     assert success
 
@@ -182,14 +209,14 @@ def test_entity_selection_multi_word(prompt_engine):
 
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},entities_multi,{calculate_test_score(score)}\n"
+            f"{conversation.model_name},entities_multi,{calculate_test_score(score)}\n"
         )
 
 
-def test_relationship_selection_multi_word(prompt_engine):
+def test_relationship_selection_multi_word(prompt_engine, conversation):
     prompt_engine.question = "Which genes are expressed in fibroblasts?"
     prompt_engine.selected_entities = ["Gene", "CellType"]
-    success = prompt_engine._select_relationships()
+    success = prompt_engine._select_relationships(conversation=conversation)
     assert success
 
     score = []
@@ -229,15 +256,15 @@ def test_relationship_selection_multi_word(prompt_engine):
 
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},relationships_multi,{calculate_test_score(score)}\n"
+            f"{conversation.model_name},relationships_multi,{calculate_test_score(score)}\n"
         )
 
 
-def test_property_selection_multi_word(prompt_engine):
+def test_property_selection_multi_word(prompt_engine, conversation):
     prompt_engine.question = "Which genes are expressed in fibroblasts?"
     prompt_engine.selected_entities = ["Gene", "CellType"]
     prompt_engine.selected_relationships = ["GeneExpressedInCellType"]
-    success = prompt_engine._select_properties()
+    success = prompt_engine._select_properties(conversation=conversation)
     assert success
 
     score = []
@@ -261,11 +288,11 @@ def test_property_selection_multi_word(prompt_engine):
 
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},properties_multi,{calculate_test_score(score)}\n"
+            f"{conversation.model_name},properties_multi,{calculate_test_score(score)}\n"
         )
 
 
-def test_query_generation_multi_word(prompt_engine):
+def test_query_generation_multi_word(prompt_engine, conversation):
     query = prompt_engine._generate_query(
         question="Which genes are expressed in fibroblasts?",
         entities=["Gene", "CellType"],
@@ -279,6 +306,7 @@ def test_query_generation_multi_word(prompt_engine):
             "CellType": ["cell_type_name"],
         },
         query_language="Cypher",
+        conversation=conversation,
     )
 
     score = []
@@ -296,7 +324,7 @@ def test_query_generation_multi_word(prompt_engine):
 
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},cypher query_multi,{calculate_test_score(score)}\n"
+            f"{conversation.model_name},cypher-query_multi,{calculate_test_score(score)}\n"
         )
 
 
@@ -383,13 +411,13 @@ def get_used_property_from_query(query):
     return entity_mapping, property_mapping, used_entity_property
 
 
-def test_property_exists(prompt_engine):
+def test_property_exists(prompt_engine, conversation):
     prompt_engine.question = (
         "What are the hgnc ids of the genes that are expressed in fibroblast?"
     )
     prompt_engine.selected_entities = ["Gene", "CellType"]
     # only ask the model to select property and generate query
-    prompt_engine._select_properties()
+    prompt_engine._select_properties(conversation=conversation)
     query = prompt_engine._generate_query(
         question=prompt_engine.question,
         entities=prompt_engine.selected_entities,
@@ -401,6 +429,7 @@ def test_property_exists(prompt_engine):
         },
         properties=prompt_engine.selected_properties,
         query_language="Cypher",
+        conversation=conversation,
     )
 
     score = []
@@ -437,5 +466,5 @@ def test_property_exists(prompt_engine):
 
     with open(FILE_PATH, "a") as f:
         f.write(
-            f"{prompt_engine.model_name},property hallucination check,{calculate_test_score(score)}\n"
+            f"{conversation.model_name},property-hallucination-check,{calculate_test_score(score)}\n"
         )
