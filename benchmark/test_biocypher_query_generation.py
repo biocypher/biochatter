@@ -50,6 +50,7 @@ def conversation(request):
             os.getenv("OPENAI_API_KEY"), user="benchmark_user"
         )
     elif model_name in XINFERENCE_MODEL_NAMES:
+        # TODO here we probably need to start the right model on the server
         conversation = XinferenceConversation(
             base_url=BENCHMARK_URL,
             model_name=model_name,
