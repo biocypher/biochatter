@@ -313,12 +313,15 @@ class WasmConversation(Conversation):
         rag_agent: DocumentEmbedder = None,
     ):
         """
+
         This class is used to return the complete query as a string to be used
         in the frontend running the wasm model. It does not call the API itself,
         but updates the message history similarly to the other conversation
         classes. It overrides the `query` method from the `Conversation` class
-        to return a plain string instead of a tuple that contains the entire
-        message for the model.
+        to return a plain string that contains the entire message for the model
+        as the first element of the tuple. The second and third elements are
+        `None` as there is no token usage or correction for the wasm model.
+
         """
         super().__init__(
             model_name=model_name,
@@ -329,13 +332,27 @@ class WasmConversation(Conversation):
         )
 
     def query(self, text: str, collection_name: Optional[str] = None):
+        """
+        Return the entire message history as a single string. This is the
+        message that is sent to the wasm model.
+
+        Args:
+            text (str): The user query.
+
+            collection_name (str): The name of the collection to use for
+                retrieval augmented generation.
+
+        Returns:
+            tuple: A tuple containing the message history as a single string,
+                and `None` for the second and third elements of the tuple.
+        """
         self.append_user_message(text)
 
         if self.rag_agent:
             if self.rag_agent.use_prompt:
                 self._inject_context(text, collection_name)
 
-        return self._primary_query()
+        return (self._primary_query(), None, None)
 
     def _primary_query(self):
         """

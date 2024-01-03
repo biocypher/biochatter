@@ -242,7 +242,7 @@ def test_wasm_conversation():
 
     # Test the query method
     test_query = "Hello, world!"
-    result = wasm_convo.query(test_query)
+    result, _, _ = wasm_convo.query(test_query)
     assert result == test_query  # assuming the messages list is initially empty
 
     # Test the _primary_query method, add another message to the messages list
