@@ -3,7 +3,7 @@ import yaml
 import json
 import os
 from ._misc import sentencecase_to_pascalcase, ensure_iterable
-from .llm_connect import GptConversation
+from .llm_connect import Conversation, GptConversation
 
 
 class BioCypherPromptEngine:
@@ -12,7 +12,7 @@ class BioCypherPromptEngine:
         schema_config_or_info_path: Optional[str] = None,
         schema_config_or_info_dict: Optional[dict] = None,
         model_name: str = "gpt-3.5-turbo",
-    ):
+    ) -> None:
         """
 
         Given a biocypher schema configuration, extract the entities and
@@ -148,19 +148,25 @@ class BioCypherPromptEngine:
             A database query that could answer the user's question.
         """
 
-        success1 = self._select_entities(question)
+        success1 = self._select_entities(
+            question=question, conversation=self._get_conversation()
+        )
         if not success1:
             raise ValueError(
                 "Entity selection failed. Please try again with a different "
                 "question."
             )
-        success2 = self._select_relationships()
+        success2 = self._select_relationships(
+            conversation=self._get_conversation()
+        )
         if not success2:
             raise ValueError(
                 "Relationship selection failed. Please try again with a "
                 "different question."
             )
-        success3 = self._select_properties()
+        success3 = self._select_properties(
+            conversation=self._get_conversation()
+        )
         if not success3:
             raise ValueError(
                 "Property selection failed. Please try again with a different "
@@ -173,9 +179,38 @@ class BioCypherPromptEngine:
             relationships=self.selected_relationship_labels,
             properties=self.selected_properties,
             query_language=query_language,
+            conversation=self._get_conversation(),
         )
 
-    def _select_entities(self, question: str) -> bool:
+    def _get_conversation(
+        self, model_name: Optional[str] = None
+    ) -> "Conversation":
+        """
+        Create a conversation object given a model name.
+
+        Args:
+            model_name: The name of the model to use for the conversation.
+
+        Returns:
+            A BioChatter Conversation object for connecting to the LLM.
+
+        Todo:
+            Genericise to models outside of OpenAI.
+        """
+
+        conversation = GptConversation(
+            model_name=model_name or self.model_name,
+            prompts={},
+            correct=False,
+        )
+        conversation.set_api_key(
+            api_key=os.getenv("OPENAI_API_KEY"), user="test_user"
+        )
+        return conversation
+
+    def _select_entities(
+        self, question: str, conversation: "Conversation"
+    ) -> bool:
         """
 
         Given a question, select the entities that are relevant to the question
@@ -185,22 +220,15 @@ class BioCypherPromptEngine:
         Args:
             question: A user's question.
 
+            conversation: A BioChatter Conversation object for connecting to the
+                LLM.
+
         Returns:
             True if at least one entity was selected, False otherwise.
 
         """
 
         self.question = question
-
-        conversation = GptConversation(
-            model_name=self.model_name,
-            prompts={},
-            correct=False,
-        )
-
-        conversation.set_api_key(
-            api_key=os.getenv("OPENAI_API_KEY"), user="entity_selector"
-        )
 
         conversation.append_system_message(
             (
@@ -227,15 +255,14 @@ class BioCypherPromptEngine:
 
         return bool(result)
 
-    def _select_relationships(self) -> bool:
+    def _select_relationships(self, conversation: "Conversation") -> bool:
         """
         Given a question and the preselected entities, select relationships for
         the query.
 
         Args:
-            question: A user's question.
-
-            entities: A list of entities that are relevant to the question.
+            conversation: A BioChatter Conversation object for connecting to the
+                LLM.
 
         Returns:
             True if at least one relationship was selected, False otherwise.
@@ -321,16 +348,6 @@ class BioCypherPromptEngine:
         else:
             rels = json.dumps(self.relationships)
 
-        conversation = GptConversation(
-            model_name=self.model_name,
-            prompts={},
-            correct=False,
-        )
-
-        conversation.set_api_key(
-            api_key=os.getenv("OPENAI_API_KEY"), user="entity_selector"
-        )
-
         msg = (
             "You have access to a knowledge graph that contains "
             f"these entities: {', '.join(self.selected_entities)}. "
@@ -383,9 +400,7 @@ class BioCypherPromptEngine:
 
         return bool(result)
 
-    def _select_properties(
-        self,
-    ):
+    def _select_properties(self, conversation: "Conversation") -> bool:
         """
 
         Given a question (optionally provided, but in the standard use case
@@ -439,16 +454,6 @@ class BioCypherPromptEngine:
             "Do not return properties that are not relevant to the question."
         )
 
-        conversation = GptConversation(
-            model_name=self.model_name,
-            prompts={},
-            correct=False,
-        )
-
-        conversation.set_api_key(
-            api_key=os.getenv("OPENAI_API_KEY"), user="property_selector"
-        )
-
         conversation.append_system_message(msg)
 
         msg, token_usage, correction = conversation.query(self.question)
@@ -464,7 +469,8 @@ class BioCypherPromptEngine:
         relationships: dict,
         properties: dict,
         query_language: str,
-    ):
+        conversation: "Conversation",
+    ) -> str:
         """
         Generate a query in the specified query language that answers the user's
         question.
@@ -481,6 +487,12 @@ class BioCypherPromptEngine:
                 question.
 
             query_language: The language of the query to generate.
+
+            conversation: A BioChatter Conversation object for connecting to the
+                LLM.
+
+        Returns:
+            A database query that could answer the user's question.
         """
         msg = (
             f"Generate a database query in {query_language} that answers "
@@ -502,23 +514,13 @@ class BioCypherPromptEngine:
 
         msg += "Only return the query, without any additional text."
 
-        conversation = GptConversation(
-            model_name=self.model_name,
-            prompts={},
-            correct=False,
-        )
-
-        conversation.set_api_key(
-            api_key=os.getenv("OPENAI_API_KEY"), user="query_generator"
-        )
-
         conversation.append_system_message(msg)
 
         out_msg, token_usage, correction = conversation.query(question)
 
         return out_msg
 
-    def _expand_pairs(self, relationship, values):
+    def _expand_pairs(self, relationship, values) -> None:
         if not self.rel_directions.get(relationship):
             self.rel_directions[relationship] = []
         if isinstance(values["source"], list):
