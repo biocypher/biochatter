@@ -5,7 +5,8 @@ import pytest
 from .conftest import calculate_test_score, RESULT_FILES
 import re
 
-
+# find right file to write to
+# TODO should we use SQLite? An online database (REDIS)?
 FILE_PATH = next(
     (
         s
@@ -15,6 +16,8 @@ FILE_PATH = next(
     None,
 )
 
+# set model matrix
+# TODO should probably go to conftest.py
 OPENAI_MODEL_NAMES = [
     "gpt-3.5-turbo",
     # "gpt-4",
