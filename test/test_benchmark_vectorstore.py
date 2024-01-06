@@ -52,15 +52,24 @@ splitted_docs = [
 ]
 search_docs = [
     Document(
-        page_content="Democratising knowledge representation with BioCypher\nSebastian Lobentanzer1,*, Patrick Aloy2,3, Jan Baumbach4, Balazs Bohar5,6, Pornpimol\nCharoentong8,9, Katharina Danhauser10, Tunca Doğan11,12, Johann Dreo13,14, Ian Dunham15,16,\nAdrià Fernandez-Torras2, Benjamin M. Gyori17, Michael",
+        page_content="Democratising knowledge representation with BioCypher\n"
+        "Sebastian Lobentanzer1,*, Patrick Aloy2,3, Jan Baumbach4, Balazs "
+        "Bohar5,6, Pornpimol\nCharoentong8,9, Katharina Danhauser10, Tunca "
+        "Doğan11,12, Johann Dreo13,14, Ian Dunham15,16,\nAdrià "
+        "Fernandez-Torras2, Benjamin M. Gyori17, Michael",
         metadata={id: "1"},
     ),
     Document(
-        page_content="BioCypher has been built with continuous consideration of the FAIR and TRUST",
+        page_content="BioCypher has been built with continuous consideration "
+        "of the FAIR and TRUST",
         metadata={id: "1"},
     ),
     Document(
-        page_content="adopting their own, arbitrary formats of representation. To our knowledge, no\nframework provides easy access to state-of-the-art KGs to the average biomedical researcher,\na gap that BioCypher aims to fill. We demonstrate some key advantages of BioCypher by\ncase studies in Supplementary Note 5.\n5\nFigure ",
+        page_content="adopting their own, arbitrary formats of representation. "
+        "To our knowledge, no\nframework provides easy access to "
+        "tate-of-the-art KGs to the average biomedical researcher,\na gap that "
+        "BioCypher aims to fill. We demonstrate some key advantages of "
+        "BioCypher by\ncase studies in Supplementary Note 5.\n5\nFigure ",
         metadata={id: "1"},
     ),
 ]
@@ -113,5 +122,4 @@ def test_retrieval_augmented_generation(model, chunk_size):
         [rag_agent.database_host.remove_document(doc_id) for doc_id in doc_ids]
 
         # record sum in CSV file
-        with open(FILE_PATH, "a") as f:
-            f.write(f"{model},{chunk_size},{calculate_test_score(correct)}\n")
+        assert calculate_test_score(correct) == "3/3"

@@ -40,6 +40,8 @@ OPENAI_MODELS = [
 
 HUGGINGFACE_MODELS = ["bigscience/bloom"]
 
+XINFERENCE_MODELS = ["custom-endpoint"]
+
 TOKEN_LIMITS = {
     "gpt-3.5-turbo": 4000,
     "gpt-3.5-turbo-16k": 16000,
@@ -50,6 +52,7 @@ TOKEN_LIMITS = {
     "gpt-4-32k": 32000,
     "gpt-4-1106-preview": 128000,
     "bigscience/bloom": 1000,
+    "custom-endpoint": 1,  # Reasonable value?
 }
 
 
@@ -117,6 +120,13 @@ class Conversation(ABC):
             ),
         )
 
+    def append_ca_message(self, message: str):
+        self.ca_messages.append(
+            SystemMessage(
+                content=message,
+            ),
+        )
+
     def append_user_message(self, message: str):
         self.messages.append(
             HumanMessage(
@@ -130,19 +140,11 @@ class Conversation(ABC):
         """
         for msg in self.prompts["primary_model_prompts"]:
             if msg:
-                self.messages.append(
-                    SystemMessage(
-                        content=msg,
-                    ),
-                )
+                self.append_system_message(msg)
 
         for msg in self.prompts["correcting_agent_prompts"]:
             if msg:
-                self.ca_messages.append(
-                    SystemMessage(
-                        content=msg,
-                    ),
-                )
+                self.append_ca_message(msg)
 
         self.context = context
         msg = f"The topic of the research is {context}."
@@ -301,6 +303,77 @@ class Conversation(ABC):
         return json.dumps(d)
 
 
+class WasmConversation(Conversation):
+    def __init__(
+        self,
+        model_name: str,
+        prompts: dict,
+        correct: bool = True,
+        split_correction: bool = False,
+        rag_agent: DocumentEmbedder = None,
+    ):
+        """
+
+        This class is used to return the complete query as a string to be used
+        in the frontend running the wasm model. It does not call the API itself,
+        but updates the message history similarly to the other conversation
+        classes. It overrides the `query` method from the `Conversation` class
+        to return a plain string that contains the entire message for the model
+        as the first element of the tuple. The second and third elements are
+        `None` as there is no token usage or correction for the wasm model.
+
+        """
+        super().__init__(
+            model_name=model_name,
+            prompts=prompts,
+            correct=correct,
+            split_correction=split_correction,
+            rag_agent=rag_agent,
+        )
+
+    def query(self, text: str, collection_name: Optional[str] = None):
+        """
+        Return the entire message history as a single string. This is the
+        message that is sent to the wasm model.
+
+        Args:
+            text (str): The user query.
+
+            collection_name (str): The name of the collection to use for
+                retrieval augmented generation.
+
+        Returns:
+            tuple: A tuple containing the message history as a single string,
+                and `None` for the second and third elements of the tuple.
+        """
+        self.append_user_message(text)
+
+        if self.rag_agent:
+            if self.rag_agent.use_prompt:
+                self._inject_context(text, collection_name)
+
+        return (self._primary_query(), None, None)
+
+    def _primary_query(self):
+        """
+        Concatenate all messages in the conversation into a single string and
+        return it. Currently discards information about roles (system, user).
+        """
+        return "\n".join([m.content for m in self.messages])
+
+    def _correct_response(self, msg: str):
+        """
+        This method is not used for the wasm model.
+        """
+        return "ok"
+
+    def set_api_key(self, api_key: str, user: str | None = None):
+        """
+        This method is not used for the wasm model.
+        """
+        return True
+
+
 class XinferenceConversation(Conversation):
     def __init__(
         self,
@@ -381,6 +454,56 @@ class XinferenceConversation(Conversation):
     #             names.append(name)
     #     return names
 
+    def append_system_message(self, message: str):
+        """
+        We override the system message addition because Xinference does not
+        accept multiple system messages. We concatenate them if there are
+        multiple.
+
+        Args:
+            message (str): The message to append.
+        """
+        # if there is not already a system message in self.messages
+        if not any(isinstance(m, SystemMessage) for m in self.messages):
+            self.messages.append(
+                SystemMessage(
+                    content=message,
+                ),
+            )
+        else:
+            # if there is a system message, append to the last one
+            for i, msg in enumerate(self.messages):
+                if isinstance(msg, SystemMessage):
+                    self.messages[i].content += f"\n{message}"
+                    break
+
+    def append_ca_message(self, message: str):
+        """
+
+        We also override the system message addition for the correcting agent,
+        likewise because Xinference does not accept multiple system messages. We
+        concatenate them if there are multiple.
+
+        TODO this currently assumes that the correcting agent is the same model
+        as the primary one.
+
+        Args:
+            message (str): The message to append.
+        """
+        # if there is not already a system message in self.messages
+        if not any(isinstance(m, SystemMessage) for m in self.ca_messages):
+            self.ca_messages.append(
+                SystemMessage(
+                    content=message,
+                ),
+            )
+        else:
+            # if there is a system message, append to the last one
+            for i, msg in enumerate(self.ca_messages):
+                if isinstance(msg, SystemMessage):
+                    self.ca_messages[i].content += f"\n{message}"
+                    break
+
     def _primary_query(self):
         """
 
@@ -411,10 +534,20 @@ class XinferenceConversation(Conversation):
                 generate_config={"max_tokens": 2048, "temperature": 0},
             )
         except (
-            openai.error.InvalidRequestError,
-            openai.error.APIConnectionError,
-            openai.error.RateLimitError,
-            openai.error.APIError,
+            openai._exceptions.APIError,
+            openai._exceptions.OpenAIError,
+            openai._exceptions.ConflictError,
+            openai._exceptions.NotFoundError,
+            openai._exceptions.APIStatusError,
+            openai._exceptions.RateLimitError,
+            openai._exceptions.APITimeoutError,
+            openai._exceptions.BadRequestError,
+            openai._exceptions.APIConnectionError,
+            openai._exceptions.AuthenticationError,
+            openai._exceptions.InternalServerError,
+            openai._exceptions.PermissionDeniedError,
+            openai._exceptions.UnprocessableEntityError,
+            openai._exceptions.APIResponseValidationError,
         ) as e:
             return str(e), None
 
