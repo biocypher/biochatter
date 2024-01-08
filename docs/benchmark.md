@@ -1,6 +1,6 @@
 # Benchmarking
 
-For trustworthy application of LLMs to real-world and biomedical problems, it is imperative to understand their performance and limitations. 
+For trustworthy application of LLMs to real-world and biomedical problems, it is imperative to understand their performance and limitations.
 We need to constantly evaluate the multitude of combinations of individual models and versions, their parameters (e.g., temperature), prompt sets, databases and vector databases, and diverse application scenarios.
 To this end, we are maintaining a living benchmarking framework that allows us to continuously compare the performance of different models and configurations on a variety of tasks.
 
@@ -9,6 +9,8 @@ The benchmark is run on a regular basis, and the results are published on the [B
 (Currently in development.)
 The benchmarking suite can be found in the `benchmark` directory of the BioChatter repository.
 It can be executed using standard pytest syntax, e.g., `poetry run pytest benchmark`.
+As default behavior it checks, which test cases have already been executed and only executes the tests that have not been executed yet.
+To run all benchmarks again, use `poetry run pytest benchmark --run-all`.
 
 To allow flexible extension of the benchmark, we have implemeted a modular test framework that uses pytest fixtures to allow easy addition of new models and tasks.
 All setup is done in the `conftest.py` file in the `benchmark` directory.

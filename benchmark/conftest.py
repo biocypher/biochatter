@@ -17,7 +17,6 @@ N_ITERATIONS = 1
 BENCHMARK_DATASET = get_benchmark_dataset()
 
 
-# TODO: adapt the docs
 def pytest_addoption(parser):
     parser.addoption(
         "--run-all",
