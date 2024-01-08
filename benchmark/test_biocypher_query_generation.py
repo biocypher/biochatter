@@ -1,10 +1,11 @@
 import inspect
 
-import pandas as pd
 import pytest
 
+import pandas as pd
+
 from biochatter.prompts import BioCypherPromptEngine
-from .conftest import calculate_test_score, RESULT_FILES
+from .conftest import RESULT_FILES, calculate_test_score
 
 TASK = "biocypher_query_generation"
 
@@ -65,8 +66,12 @@ def benchmark_already_executed(
 
 def write_results_to_file(model_name: str, subtask: str, score: str):
     results = pd.read_csv(FILE_PATH, header=0)
-    new_row = pd.DataFrame([[model_name, subtask, score]], columns=results.columns)
-    results = pd.concat([results, new_row], ignore_index=True).sort_values(by='subtask')
+    new_row = pd.DataFrame(
+        [[model_name, subtask, score]], columns=results.columns
+    )
+    results = pd.concat([results, new_row], ignore_index=True).sort_values(
+        by="subtask"
+    )
     results.to_csv(FILE_PATH, index=False)
 
 
@@ -79,7 +84,16 @@ def get_test_data(test_data_biocypher_query_generation):
     expected_properties = test_data_biocypher_query_generation[5]
     expected_parts_of_query = test_data_biocypher_query_generation[6]
     test_case_index = test_data_biocypher_query_generation[7]
-    return kg_schema_file_name, prompt, expected_entities, expected_relationships, expected_relationship_labels, expected_properties, expected_parts_of_query, test_case_index
+    return (
+        kg_schema_file_name,
+        prompt,
+        expected_entities,
+        expected_relationships,
+        expected_relationship_labels,
+        expected_properties,
+        expected_parts_of_query,
+        test_case_index,
+    )
 
 
 def setup_test(kg_schema_file_name, prompt_engine, result_files, subtask):
@@ -87,7 +101,7 @@ def setup_test(kg_schema_file_name, prompt_engine, result_files, subtask):
         kg_schema_path=f"./benchmark/data/biocypher_query_generation/{kg_schema_file_name}"
     )
     if benchmark_already_executed(
-            TASK, subtask, prompt_engine.model_name, result_files
+        TASK, subtask, prompt_engine.model_name, result_files
     ):
         pytest.skip(
             f"benchmark {TASK}: {subtask} with {prompt_engine.model_name} already executed"
@@ -98,10 +112,20 @@ def setup_test(kg_schema_file_name, prompt_engine, result_files, subtask):
 def test_entity_selection(
     prompt_engine, test_data_biocypher_query_generation, result_files
 ):
-    kg_schema_file_name, prompt, expected_entities, _, _, _, _, test_case_index = get_test_data(
-        test_data_biocypher_query_generation)
+    (
+        kg_schema_file_name,
+        prompt,
+        expected_entities,
+        _,
+        _,
+        _,
+        _,
+        test_case_index,
+    ) = get_test_data(test_data_biocypher_query_generation)
     subtask = inspect.currentframe().f_code.co_name + "_" + str(test_case_index)
-    prompt_engine = setup_test(kg_schema_file_name, prompt_engine, result_files, subtask)
+    prompt_engine = setup_test(
+        kg_schema_file_name, prompt_engine, result_files, subtask
+    )
 
     success = prompt_engine._select_entities(question=prompt)
     assert success
@@ -118,10 +142,20 @@ def test_entity_selection(
 def test_relationship_selection(
     prompt_engine, test_data_biocypher_query_generation, result_files
 ):
-    kg_schema_file_name, prompt, expected_entities, _, expected_relationship_labels, _, _, test_case_index = get_test_data(
-        test_data_biocypher_query_generation)
+    (
+        kg_schema_file_name,
+        prompt,
+        expected_entities,
+        _,
+        expected_relationship_labels,
+        _,
+        _,
+        test_case_index,
+    ) = get_test_data(test_data_biocypher_query_generation)
     subtask = inspect.currentframe().f_code.co_name + "_" + str(test_case_index)
-    prompt_engine = setup_test(kg_schema_file_name, prompt_engine, result_files, subtask)
+    prompt_engine = setup_test(
+        kg_schema_file_name, prompt_engine, result_files, subtask
+    )
 
     prompt_engine.question = prompt
     prompt_engine.selected_entities = expected_entities
@@ -172,10 +206,20 @@ def test_relationship_selection(
 def test_property_selection(
     prompt_engine, test_data_biocypher_query_generation, result_files
 ):
-    kg_schema_file_name, prompt, expected_entities, expected_relationships, _, expected_properties, _, test_case_index = get_test_data(
-        test_data_biocypher_query_generation)
+    (
+        kg_schema_file_name,
+        prompt,
+        expected_entities,
+        expected_relationships,
+        _,
+        expected_properties,
+        _,
+        test_case_index,
+    ) = get_test_data(test_data_biocypher_query_generation)
     subtask = inspect.currentframe().f_code.co_name + "_" + str(test_case_index)
-    prompt_engine = setup_test(kg_schema_file_name, prompt_engine, result_files, subtask)
+    prompt_engine = setup_test(
+        kg_schema_file_name, prompt_engine, result_files, subtask
+    )
 
     prompt_engine.question = prompt
     prompt_engine.selected_entities = expected_entities
@@ -205,10 +249,20 @@ def test_property_selection(
 def test_query_generation(
     prompt_engine, test_data_biocypher_query_generation, result_files
 ):
-    kg_schema_file_name, prompt, expected_entities, _, expected_relationship_labels, expected_properties, expected_parts_of_query, test_case_index = get_test_data(
-        test_data_biocypher_query_generation)
+    (
+        kg_schema_file_name,
+        prompt,
+        expected_entities,
+        _,
+        expected_relationship_labels,
+        expected_properties,
+        expected_parts_of_query,
+        test_case_index,
+    ) = get_test_data(test_data_biocypher_query_generation)
     subtask = inspect.currentframe().f_code.co_name + "_" + str(test_case_index)
-    prompt_engine = setup_test(kg_schema_file_name, prompt_engine, result_files, subtask)
+    prompt_engine = setup_test(
+        kg_schema_file_name, prompt_engine, result_files, subtask
+    )
 
     query = prompt_engine._generate_query(
         question=prompt,
@@ -237,10 +291,20 @@ def test_query_generation(
 def test_end_to_end_query_generation(
     prompt_engine, test_data_biocypher_query_generation, result_files
 ):
-    kg_schema_file_name, prompt, _, _, _, _, expected_parts_of_query, test_case_index = get_test_data(
-        test_data_biocypher_query_generation)
+    (
+        kg_schema_file_name,
+        prompt,
+        _,
+        _,
+        _,
+        _,
+        expected_parts_of_query,
+        test_case_index,
+    ) = get_test_data(test_data_biocypher_query_generation)
     subtask = inspect.currentframe().f_code.co_name + "_" + str(test_case_index)
-    prompt_engine = setup_test(kg_schema_file_name, prompt_engine, result_files, subtask)
+    prompt_engine = setup_test(
+        kg_schema_file_name, prompt_engine, result_files, subtask
+    )
 
     query = prompt_engine.generate_query(
         question=prompt,

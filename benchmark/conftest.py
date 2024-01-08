@@ -1,8 +1,9 @@
 import os
 
+import pytest
+
 import numpy as np
 import pandas as pd
-import pytest
 
 from benchmark.load_dataset import get_benchmark_dataset
 
@@ -50,7 +51,9 @@ def result_files():
             result_file = pd.DataFrame(columns=["model", "subtask", "score"])
             result_file.to_csv(file, index=False)
 
-        if not np.array_equal(result_file.columns, ["model", "subtask", "score"]):
+        if not np.array_equal(
+            result_file.columns, ["model", "subtask", "score"]
+        ):
             result_file.columns = ["model", "subtask", "score"]
 
         result_files[file] = result_file
