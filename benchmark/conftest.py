@@ -1,5 +1,6 @@
 import os
 
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -44,9 +45,16 @@ def result_files():
     result_files = {}
     for file in RESULT_FILES:
         try:
-            result_files[file] = pd.read_csv(file, header=0)
-        except pd.errors.EmptyDataError:
-            result_files[file] = pd.DataFrame()
+            result_file = pd.read_csv(file, header=0)
+        except (pd.errors.EmptyDataError, FileNotFoundError):
+            result_file = pd.DataFrame(columns=["model", "subtask", "score"])
+            result_file.to_csv(file, index=False)
+
+        if not np.array_equal(result_file.columns, ["model", "subtask", "score"]):
+            result_file.columns = ["model", "subtask", "score"]
+
+        result_files[file] = result_file
+
     return result_files
 
 
@@ -60,6 +68,7 @@ def pytest_generate_tests(metafunc):
         data_file = BENCHMARK_DATASET[
             "./data/biocypher_query_generation/biocypher_query_generation.csv"
         ]
+        data_file["index"] = data_file.index
         metafunc.parametrize(
             "test_data_biocypher_query_generation", data_file.values
         )
