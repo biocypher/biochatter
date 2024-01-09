@@ -1,9 +1,16 @@
 import os
-from biochatter.llm_connect import GptConversation, XinferenceConversation
-from biochatter.prompts import BioCypherPromptEngine
-import pytest
-from .conftest import calculate_test_score, RESULT_FILES
 import re
+import inspect
+
+import pytest
+
+import pandas as pd
+
+from biochatter.prompts import BioCypherPromptEngine
+from biochatter.llm_connect import GptConversation, XinferenceConversation
+from .conftest import RESULT_FILES, calculate_test_score
+
+TASK = "biocypher_query_generation"
 
 # find right file to write to
 # TODO should we use SQLite? An online database (REDIS)?
@@ -33,11 +40,16 @@ BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
 BENCHMARK_URL = "http://llm.biocypher.org"
 
 
-@pytest.fixture(scope="function")
-def prompt_engine():
-    return BioCypherPromptEngine(
-        schema_config_or_info_path="test/test_schema_info.yaml",
-    )
+@pytest.fixture(scope="module", params=BENCHMARKED_MODELS)
+def prompt_engine(request):
+    def setup_prompt_engine(kg_schema_path):
+        model_name = request.param
+        return BioCypherPromptEngine(
+            schema_config_or_info_path=kg_schema_path,
+            model_name=model_name,
+        )
+
+    return setup_prompt_engine
 
 
 @pytest.fixture(scope="function", params=BENCHMARKED_MODELS)
@@ -65,271 +77,313 @@ def conversation(request):
     return conversation
 
 
-######
-# test single word entities
-######
+def benchmark_already_executed(
+    task: str,
+    subtask: str,
+    model_name: str,
+    result_files: dict[str, pd.DataFrame],
+) -> bool:
+    """
+    Checks if the benchmark task and subtask for the model_name have already
+    been executed.
+
+    Args:
+        task (str): The benchmark task, e.g. "biocypher_query_generation"
+        subtask (str): The benchmark subtask, e.g. "entities"
+        model_name (str): The model name, e.g. "gpt-3.5-turbo"
+        result_files (dict[str, pd.DataFrame]): The result files
+
+    Returns:
+
+        bool: True if the benchmark task and subtask for the model_name has
+            already been run, False otherwise
+    """
+    task_results = result_files[f"benchmark/results/{task}.csv"]
+    task_results_subset = (task_results["model"] == model_name) & (
+        task_results["subtask"] == subtask
+    )
+    return task_results_subset.any()
 
 
-def test_entity_selection(prompt_engine, conversation):
+def write_results_to_file(model_name: str, subtask: str, score: str):
+    results = pd.read_csv(FILE_PATH, header=0)
+    new_row = pd.DataFrame(
+        [[model_name, subtask, score]], columns=results.columns
+    )
+    results = pd.concat([results, new_row], ignore_index=True).sort_values(
+        by="subtask"
+    )
+    results.to_csv(FILE_PATH, index=False)
+
+
+def get_test_data(test_data_biocypher_query_generation):
+    kg_schema_file_name = test_data_biocypher_query_generation[0]
+    prompt = test_data_biocypher_query_generation[1]
+    expected_entities = test_data_biocypher_query_generation[2]
+    expected_relationships = test_data_biocypher_query_generation[3]
+    expected_relationship_labels = test_data_biocypher_query_generation[4]
+    expected_properties = test_data_biocypher_query_generation[5]
+    expected_parts_of_query = test_data_biocypher_query_generation[6]
+    test_case_purpose = test_data_biocypher_query_generation[7]
+    test_case_index = test_data_biocypher_query_generation[8]
+    return (
+        kg_schema_file_name,
+        prompt,
+        expected_entities,
+        expected_relationships,
+        expected_relationship_labels,
+        expected_properties,
+        expected_parts_of_query,
+        test_case_purpose,
+        test_case_index,
+    )
+
+
+def setup_test(kg_schema_file_name, prompt_engine, result_files, subtask):
+    prompt_engine = prompt_engine(
+        kg_schema_path=f"./benchmark/data/biocypher_query_generation/{kg_schema_file_name}"
+    )
+    if benchmark_already_executed(
+        TASK, subtask, prompt_engine.model_name, result_files
+    ):
+        pytest.skip(
+            f"benchmark {TASK}: {subtask} with {prompt_engine.model_name} already executed"
+        )
+    return prompt_engine
+
+
+def test_entity_selection(
+    prompt_engine,
+    test_data_biocypher_query_generation,
+    result_files,
+    conversation,
+):
+    (
+        kg_schema_file_name,
+        prompt,
+        expected_entities,
+        _,
+        _,
+        _,
+        _,
+        test_case_purpose,
+        test_case_index,
+    ) = get_test_data(test_data_biocypher_query_generation)
+    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
+    prompt_engine = setup_test(
+        kg_schema_file_name, prompt_engine, result_files, subtask
+    )
+
     success = prompt_engine._select_entities(
-        question="Which genes are associated with mucoviscidosis?",
-        conversation=conversation,
+        question=prompt, conversation=conversation
     )
     assert success
 
     score = []
-    score.append("Gene" in prompt_engine.selected_entities)
-    score.append("Disease" in prompt_engine.selected_entities)
+    for expected_entity in expected_entities:
+        score.append(expected_entity in prompt_engine.selected_entities)
 
-    with open(FILE_PATH, "a") as f:
-        f.write(
-            f"{conversation.model_name},entities_single,{calculate_test_score(score)}\n"
-        )
+    write_results_to_file(
+        prompt_engine.model_name, subtask, calculate_test_score(score)
+    )
 
 
-def test_relationship_selection(prompt_engine, conversation):
-    prompt_engine.question = "Which genes are associated with mucoviscidosis?"
-    prompt_engine.selected_entities = ["Gene", "Disease"]
+def test_relationship_selection(
+    prompt_engine,
+    test_data_biocypher_query_generation,
+    result_files,
+    conversation,
+):
+    (
+        kg_schema_file_name,
+        prompt,
+        expected_entities,
+        _,
+        expected_relationship_labels,
+        _,
+        _,
+        test_case_purpose,
+        test_case_index,
+    ) = get_test_data(test_data_biocypher_query_generation)
+    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
+    prompt_engine = setup_test(
+        kg_schema_file_name, prompt_engine, result_files, subtask
+    )
+
+    prompt_engine.question = prompt
+    prompt_engine.selected_entities = expected_entities
     success = prompt_engine._select_relationships(conversation=conversation)
     assert success
 
     score = []
-    score.append(
-        prompt_engine.selected_relationships == ["GeneToPhenotypeAssociation"]
-    )
-    score.append(
-        "PERTURBED" in prompt_engine.selected_relationship_labels.keys()
-    )
-    score.append(
-        "source" in prompt_engine.selected_relationship_labels.get("PERTURBED")
-    )
-    score.append(
-        "target" in prompt_engine.selected_relationship_labels.get("PERTURBED")
-    )
-    score.append(
-        "Disease"
-        in prompt_engine.selected_relationship_labels.get("PERTURBED").get(
-            "source"
-        )
-    )
-    score.append(
-        "Protein"
-        in prompt_engine.selected_relationship_labels.get("PERTURBED").get(
-            "target"
-        )
-    )
-
-    with open(FILE_PATH, "a") as f:
-        f.write(
-            f"{conversation.model_name},relationships_single,{calculate_test_score(score)}\n"
-        )
-
-
-def test_property_selection(prompt_engine, conversation):
-    prompt_engine.question = "Which genes are associated with mucoviscidosis?"
-    prompt_engine.selected_entities = ["Gene", "Disease"]
-    prompt_engine.selected_relationships = ["GeneToPhenotypeAssociation"]
-    success = prompt_engine._select_properties(conversation=conversation)
-    assert success
-
-    score = []
-    score.append("Disease" in prompt_engine.selected_properties.keys())
-    if "Disease" in prompt_engine.selected_properties.keys():
-        score.append("name" in prompt_engine.selected_properties.get("Disease"))
-
-    with open(FILE_PATH, "a") as f:
-        f.write(
-            f"{conversation.model_name},properties_single,{calculate_test_score(score)}\n"
-        )
-
-
-def test_query_generation(prompt_engine, conversation):
-    query = prompt_engine._generate_query(
-        question="Which genes are associated with mucoviscidosis?",
-        entities=["Gene", "Disease"],
-        relationships={
-            "PERTURBED": {"source": "Disease", "target": ["Protein", "Gene"]}
-        },
-        properties={"Disease": ["name", "ICD10", "DSM5"]},
-        query_language="Cypher",
-        conversation=conversation,
-    )
-
-    score = []
-    score.append("MATCH" in query)
-    score.append("RETURN" in query)
-    score.append("Gene" in query)
-    score.append("Disease" in query)
-    score.append("mucoviscidosis" in query)
-    cypher_regex = r"MATCH \([a-zA-Z]*:Gene\)<-\[[a-zA-Z]*:PERTURBED\]-\([a-zA-Z]*:Disease.*\)|MATCH \([a-zA-Z]*:Disease.*\)-\[[a-zA-Z]*:PERTURBED\]->\([a-zA-Z]*:Gene\)"
-    score.append((re.search(cypher_regex, query) is not None))
-    score.append("WHERE" in query or "{name:" in query)
-
-    with open(FILE_PATH, "a") as f:
-        f.write(
-            f"{conversation.model_name},cypher-query_single,{calculate_test_score(score)}\n"
-        )
-
-
-@pytest.mark.skip(reason="problem of injecting multiple conversation objects")
-def test_end_to_end_query_generation(prompt_engine, conversation):
-    query = prompt_engine.generate_query(
-        question="Which genes are associated with mucoviscidosis?",
-        query_language="Cypher",
-        conversation=conversation,
-    )
-
-    score = []
-    score.append("MATCH" in query)
-    score.append("RETURN" in query)
-    score.append("Gene" in query)
-    score.append("Disease" in query)
-    score.append("mucoviscidosis" in query)
-    cypher_regex = r"MATCH \([a-zA-Z]*:Gene\)<-\[[a-zA-Z]*:PERTURBED\]-\([a-zA-Z]*:Disease.*\)|MATCH \([a-zA-Z]*:Disease.*\)-\[[a-zA-Z]*:PERTURBED\]->\([a-zA-Z]*:Gene\)"
-    score.append((re.search(cypher_regex, query) is not None))
-    score.append("WHERE" in query or "{name:" in query)
-
-    with open(FILE_PATH, "a") as f:
-        f.write(
-            f"{conversation.model_name},end-to-end_single,{calculate_test_score(score)}\n"
-        )
-
-
-######
-# test multiple word entities
-######
-
-
-def test_entity_selection_multi_word(prompt_engine, conversation):
-    success = prompt_engine._select_entities(
-        question="Which genes are expressed in fibroblasts?",
-        conversation=conversation,
-    )
-    assert success
-
-    score = []
-    score.append("Gene" in prompt_engine.selected_entities)
-    score.append("CellType" in prompt_engine.selected_entities)
-
-    with open(FILE_PATH, "a") as f:
-        f.write(
-            f"{conversation.model_name},entities_multi,{calculate_test_score(score)}\n"
-        )
-
-
-def test_relationship_selection_multi_word(prompt_engine, conversation):
-    prompt_engine.question = "Which genes are expressed in fibroblasts?"
-    prompt_engine.selected_entities = ["Gene", "CellType"]
-    success = prompt_engine._select_relationships(conversation=conversation)
-    assert success
-
-    score = []
-    score.append(
-        prompt_engine.selected_relationships == ["GeneExpressedInCellType"]
-    )
-    score.append(
-        "GENE_EXPRESSED_IN_CELL_TYPE"
-        in prompt_engine.selected_relationship_labels.keys()
-    )
-
-    score.append(
-        "source"
-        in prompt_engine.selected_relationship_labels.get(
-            "GENE_EXPRESSED_IN_CELL_TYPE"
-        )
-    )
-    score.append(
-        "target"
-        in prompt_engine.selected_relationship_labels.get(
-            "GENE_EXPRESSED_IN_CELL_TYPE"
-        )
-    )
-    score.append(
-        ## and or or?
-        "Gene"
-        in prompt_engine.selected_relationship_labels.get(
-            "GENE_EXPRESSED_IN_CELL_TYPE"
-        ).get("source")
-    )
-    score.append(
-        "CellType"
-        in prompt_engine.selected_relationship_labels.get(
-            "GENE_EXPRESSED_IN_CELL_TYPE"
-        ).get("target")
-    )
-
-    with open(FILE_PATH, "a") as f:
-        f.write(
-            f"{conversation.model_name},relationships_multi,{calculate_test_score(score)}\n"
-        )
-
-
-def test_property_selection_multi_word(prompt_engine, conversation):
-    prompt_engine.question = "Which genes are expressed in fibroblasts?"
-    prompt_engine.selected_entities = ["Gene", "CellType"]
-    prompt_engine.selected_relationships = ["GeneExpressedInCellType"]
-    success = prompt_engine._select_properties(conversation=conversation)
-    assert success
-
-    score = []
-    score.append("CellType" in prompt_engine.selected_properties.keys())
-    if "CellType" in prompt_engine.selected_properties.keys():
-        # only run if CellType is actually a selected property
+    for expected_relationship in expected_relationship_labels:
         score.append(
-            "cell_type_name"
-            in prompt_engine.selected_properties.get("CellType")
+            expected_relationship in prompt_engine.selected_relationships
         )
-        # require a list or dict of relevant properties
+
+    for expected_relationship_label_key in expected_relationship_labels.keys():
         score.append(
-            isinstance(prompt_engine.selected_properties.get("CellType"), list)
-            or isinstance(
-                prompt_engine.selected_properties.get("CellType"), dict
+            expected_relationship_label_key
+            in prompt_engine.selected_relationship_labels.keys()
+        )
+
+        for expected_relationship_label_value in expected_relationship_labels[
+            expected_relationship_label_key
+        ]:
+            score.append(
+                expected_relationship_label_value
+                in prompt_engine.selected_relationship_labels[
+                    expected_relationship_label_key
+                ]
             )
-        )
-    else:
-        score.append(0)
-        score.append(0)
+    # TODO: make it more generic to be able to compare arbitrarily nested structures
 
-    with open(FILE_PATH, "a") as f:
-        f.write(
-            f"{conversation.model_name},properties_multi,{calculate_test_score(score)}\n"
-        )
+    write_results_to_file(
+        prompt_engine.model_name, subtask, calculate_test_score(score)
+    )
 
 
-def test_query_generation_multi_word(prompt_engine, conversation):
+def test_property_selection(
+    prompt_engine,
+    test_data_biocypher_query_generation,
+    result_files,
+    conversation,
+):
+    (
+        kg_schema_file_name,
+        prompt,
+        expected_entities,
+        expected_relationships,
+        _,
+        expected_properties,
+        _,
+        test_case_purpose,
+        test_case_index,
+    ) = get_test_data(test_data_biocypher_query_generation)
+    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
+    prompt_engine = setup_test(
+        kg_schema_file_name, prompt_engine, result_files, subtask
+    )
+
+    prompt_engine.question = prompt
+    prompt_engine.selected_entities = expected_entities
+    prompt_engine.selected_relationships = expected_relationships
+    success = prompt_engine._select_properties(conversation=conversation)
+    assert success
+
+    score = []
+    for expected_property_key in expected_properties.keys():
+        try:
+            score.append(
+                expected_property_key
+                in prompt_engine.selected_properties.keys()
+            )
+        except KeyError:
+            score.append(0)
+
+        for expected_property_value in expected_properties[
+            expected_property_key
+        ]:
+            try:
+                score.append(
+                    expected_property_value
+                    in prompt_engine.selected_properties[expected_property_key]
+                )
+            except KeyError:
+                score.append(0)
+
+    write_results_to_file(
+        prompt_engine.model_name, subtask, calculate_test_score(score)
+    )
+
+
+def test_query_generation(
+    prompt_engine,
+    test_data_biocypher_query_generation,
+    result_files,
+    conversation,
+):
+    (
+        kg_schema_file_name,
+        prompt,
+        expected_entities,
+        _,
+        expected_relationship_labels,
+        expected_properties,
+        expected_parts_of_query,
+        test_case_purpose,
+        test_case_index,
+    ) = get_test_data(test_data_biocypher_query_generation)
+    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
+    prompt_engine = setup_test(
+        kg_schema_file_name, prompt_engine, result_files, subtask
+    )
     query = prompt_engine._generate_query(
-        question="Which genes are expressed in fibroblasts?",
-        entities=["Gene", "CellType"],
-        relationships={
-            "GENE_EXPRESSED_IN_CELL_TYPE": {
-                "source": "Gene",
-                "target": "CellType",
-            },
-        },
-        properties={
-            "CellType": ["cell_type_name"],
-        },
+        question=prompt,
+        entities=expected_entities,
+        relationships=expected_relationship_labels,
+        properties=expected_properties,
         query_language="Cypher",
         conversation=conversation,
     )
 
     score = []
-    score.append("MATCH" in query)
-    score.append("RETURN" in query)
-    score.append("Gene" in query)
-    score.append("CellType" in query)
-    score.append("fibroblast" in query)
+    for expected_part_of_query in expected_parts_of_query:
+        print(expected_part_of_query)
+        if isinstance(expected_part_of_query, tuple):
+            score.append(
+                expected_part_of_query[0] in query
+                or expected_part_of_query[1] in query
+            )
+        else:
+            score.append((re.search(expected_part_of_query, query) is not None))
 
-    # make sure direction is right
-    cypher_regex = r"MATCH \([a-zA-Z]*:Gene\)-\[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE\]->\([a-zA-Z]*:CellType.*|MATCH \([a-zA-Z]*:CellType.*<-\[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE\]-\([a-zA-Z]*:Gene\)"
-    score.append((re.search(cypher_regex, query) is not None))
-    # make sure conditioned
-    score.append("WHERE" in query or "{cell_type_name:" in query)
+    write_results_to_file(
+        prompt_engine.model_name, subtask, calculate_test_score(score)
+    )
 
-    with open(FILE_PATH, "a") as f:
-        f.write(
-            f"{conversation.model_name},cypher-query_multi,{calculate_test_score(score)}\n"
-        )
+
+def test_end_to_end_query_generation(
+    prompt_engine,
+    test_data_biocypher_query_generation,
+    result_files,
+    conversation,
+):
+    (
+        kg_schema_file_name,
+        prompt,
+        _,
+        _,
+        _,
+        _,
+        expected_parts_of_query,
+        test_case_purpose,
+        test_case_index,
+    ) = get_test_data(test_data_biocypher_query_generation)
+    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
+    prompt_engine = setup_test(
+        kg_schema_file_name, prompt_engine, result_files, subtask
+    )
+    query = prompt_engine.generate_query(
+        question=prompt,
+        query_language="Cypher",
+    )
+
+    score = []
+
+    for expected_part_of_query in expected_parts_of_query:
+        print(expected_part_of_query)
+        if isinstance(expected_part_of_query, tuple):
+            score.append(
+                expected_part_of_query[0] in query
+                or expected_part_of_query[1] in query
+            )
+        else:
+            score.append((re.search(expected_part_of_query, query) is not None))
+
+    write_results_to_file(
+        prompt_engine.model_name, subtask, calculate_test_score(score)
+    )
 
 
 ######
@@ -415,23 +469,33 @@ def get_used_property_from_query(query):
     return entity_mapping, property_mapping, used_entity_property
 
 
-def test_property_exists(prompt_engine, conversation):
-    prompt_engine.question = (
-        "What are the hgnc ids of the genes that are expressed in fibroblast?"
+def test_property_exists(
+    prompt_engine,
+    test_data_biocypher_query_generation,
+    result_files,
+    conversation,
+):
+    (
+        kg_schema_file_name,
+        prompt,
+        expected_entities,
+        _,
+        expected_relationship_labels,
+        expected_properties,
+        expected_parts_of_query,
+        test_case_purpose,
+        test_case_index,
+    ) = get_test_data(test_data_biocypher_query_generation)
+    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
+    prompt_engine = setup_test(
+        kg_schema_file_name, prompt_engine, result_files, subtask
     )
-    prompt_engine.selected_entities = ["Gene", "CellType"]
-    # only ask the model to select property and generate query
-    prompt_engine._select_properties(conversation=conversation)
+
     query = prompt_engine._generate_query(
-        question=prompt_engine.question,
-        entities=prompt_engine.selected_entities,
-        relationships={
-            "GENE_EXPRESSED_IN_CELL_TYPE": {
-                "source": "Gene",
-                "target": "CellType",
-            },
-        },
-        properties=prompt_engine.selected_properties,
+        question=prompt,
+        entities=expected_entities,
+        relationships=expected_relationship_labels,
+        properties=expected_properties,
         query_language="Cypher",
         conversation=conversation,
     )
@@ -449,7 +513,7 @@ def test_property_exists(prompt_engine, conversation):
             entity in prompt_engine.entities.keys()
             and "properties" in prompt_engine.entities[entity]
         ):
-            # check property used is in available propertis for entities
+            # check property used is in available properties for entities
             avail_property_entity = list(
                 prompt_engine.entities[entity]["properties"].keys()
             )
@@ -459,7 +523,7 @@ def test_property_exists(prompt_engine, conversation):
             entity in prompt_engine.relationships.keys()
             and "properties" in prompt_engine.relationships[entity]
         ):
-            # check property used is in available propertis for relationships
+            # check property used is in available properties for relationships
             avail_property_entity = list(
                 prompt_engine.relationships[entity]["properties"].keys()
             )
@@ -468,7 +532,6 @@ def test_property_exists(prompt_engine, conversation):
             # no properties of the entity or relationship exist, simply made up
             score.append(0)
 
-    with open(FILE_PATH, "a") as f:
-        f.write(
-            f"{conversation.model_name},property-hallucination-check,{calculate_test_score(score)}\n"
-        )
+    write_results_to_file(
+        prompt_engine.model_name, subtask, calculate_test_score(score)
+    )
