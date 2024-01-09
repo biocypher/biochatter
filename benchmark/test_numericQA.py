@@ -1,6 +1,4 @@
-import pytest
 import pandas as pd
-from unittest.mock import patch
 from benchmark.numericQA import preprocess_gender_represenation_df, prompt_engine, run_test
 
 # Sample data for testing

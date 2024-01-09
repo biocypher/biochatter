@@ -243,7 +243,7 @@ def run_test(bechmark_df, model_uid, results_dictionary, main_url):
 
 
 def main():
-    bechmark_df = pd.read_csv(BENCHMARK_DF_PATH)
+    benchmark_datasets = pd.read_csv(BENCHMARK_DF_PATH)
     main_url = "http://llm.biocypher.org"
     models = Client(main_url).list_models()
     model_uids = {model['model_name']: uid for uid, model in models.items() if model['model_type'] != 'embedding'}
@@ -253,7 +253,7 @@ def main():
     # Here we specify the model to be used
     MODEL_NAME = MODEL_NAMES[0]
     # model_uid = model_uids[MODEL_NAME]
-    mean_accuracy, mean_precision, mean_recall, mean_f1, percentage_retrieved, results_df = run_test(bechmark_df, model_uids[MODEL_NAMES[0]], results_dictionary, main_url)
+    mean_accuracy, mean_precision, mean_recall, mean_f1, percentage_retrieved, results_df = run_test(benchmark_datasets, model_uids[MODEL_NAMES[0]], results_dictionary, main_url)
     # percentage_retrieved = proportion of answers with parsable output / total
     # mean scoring values are calculated from the intersection of the benchmark dataset and the answers with parsable output
     with open(FILE_PATH, "a") as f:
