@@ -18,6 +18,23 @@ Usage is essentially the same as when calling the official OpenAI API, but uses
 the `XinferenceConversation` class under the hood. Interaction with the class is
 possible in the exact same way as with the [standard class](chat.md).
 
+## Connecting to the model from BioChatter
+
+All that remains once Xinference has started your model is to tell BioChatter
+the API endpoint of your deployed model via the `base_url` parameter of the
+`XinferenceConversation` class. For instance:
+
+```python
+from biochatter.llm_connect import XinferenceConversation
+
+conversation = XinferenceConversation(
+         base_url="http://llm.biocypher.org",
+         prompts={},
+         correct=False,
+     )
+response, token_usage, correction = conversation.query("Hello world!")
+```
+
 ## Deploying locally via Docker
 
 We have created a Docker workflow that allows the deployment of builtin
@@ -65,24 +82,6 @@ model.chat(
     chat_history,
     generate_config={"max_tokens": 1024}
 )
-```
-
-## Connecting to the model from BioChatter
-
-All that remains once Xinference has started your model is to tell BioChatter
-the API endpoint of your deployed model via the `base_url` parameter of the
-`XinferenceConversation` class. For instance:
-
-```python
-from biochatter.llm_connect import XinferenceConversation
-
-conversation = XinferenceConversation(
-         base_url="http://llm.biocypher.org",
-         prompts={},
-         correct=False,
-     )
-conversation.set_api_key(os.getenv("MODEL_API_KEY", "none"))
-response, token_usage, correction = conversation.query("Hello world!")
 ```
 
 ## Public endpoint
