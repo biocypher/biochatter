@@ -53,26 +53,3 @@ by BioChatter can be seen in use in the
 
 Check out [this repository](https://github.com/csbl-br/awesome-compbio-chatgpt)
 for more info on computational biology usage of large language models.
-
-# Dev Container
-
-Due to some incompatibilities of `pymilvus` with Apple Silicon, we have created
-a dev container for this project. To use it, you need to have Docker installed
-on your machine. Then, you can run the devcontainer setup as recommended by
-VSCode
-[here](https://code.visualstudio.com/docs/remote/containers#_quick-start-open-an-existing-folder-in-a-container)
-or using Docker directly.
-
-The dev container expects an environment file (there are options, but the basic
-one is `.devcontainer/local.env`) with the following variables:
-
-```
-OPENAI_API_KEY=(sk-...)
-DOCKER_COMPOSE=true
-DEVCONTAINER=true
-```
-
-To test vector database functionality, you also need to start a Milvus
-standalone server. You can do this by running `docker-compose up` as described
-[here](https://milvus.io/docs/install_standalone-docker.md) on the host machine
-(not from inside the devcontainer).
