@@ -5,7 +5,9 @@ import pytest
 import numpy as np
 import pandas as pd
 
+from biochatter.prompts import BioCypherPromptEngine
 from benchmark.load_dataset import get_benchmark_dataset
+from biochatter.llm_connect import GptConversation, XinferenceConversation
 
 RESULT_FILES = [
     "benchmark/results/biocypher_query_generation.csv",
@@ -15,6 +17,60 @@ RESULT_FILES = [
 N_ITERATIONS = 1
 
 BENCHMARK_DATASET = get_benchmark_dataset()
+
+
+# set model matrix
+# TODO should probably go to conftest.py
+OPENAI_MODEL_NAMES = [
+    "gpt-3.5-turbo",
+    # "gpt-4",
+]
+
+XINFERENCE_MODEL_NAMES = [
+    # "llama2-hf",
+    # "llama2-chat-hf",
+]
+
+BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
+
+BENCHMARK_URL = "http://llm.biocypher.org"
+
+
+@pytest.fixture(scope="module", params=BENCHMARKED_MODELS)
+def prompt_engine(request):
+    def setup_prompt_engine(kg_schema_path):
+        model_name = request.param
+        return BioCypherPromptEngine(
+            schema_config_or_info_path=kg_schema_path,
+            model_name=model_name,
+        )
+
+    return setup_prompt_engine
+
+
+@pytest.fixture(scope="function", params=BENCHMARKED_MODELS)
+def conversation(request):
+    model_name = request.param
+    if model_name in OPENAI_MODEL_NAMES:
+        conversation = GptConversation(
+            model_name=model_name,
+            prompts={},
+            correct=False,
+        )
+        conversation.set_api_key(
+            os.getenv("OPENAI_API_KEY"), user="benchmark_user"
+        )
+    elif model_name in XINFERENCE_MODEL_NAMES:
+        # TODO here we probably need to start the right model on the server
+        conversation = XinferenceConversation(
+            base_url=BENCHMARK_URL,
+            model_name=model_name,
+            prompts={},
+            correct=False,
+        )
+        conversation.set_api_key()
+
+    return conversation
 
 
 def pytest_addoption(parser):
