@@ -28,25 +28,20 @@ def prompt_engine(request):
 
 
 def test_entity_selection(prompt_engine):
-    with patch("biochatter.prompts.GptConversation") as mock_gptconv:
-        system_msg = (
-            "You have access to a knowledge graph that contains these "
-            "entities: Protein, Gene, Disease. Your task is to select the ones "
-            "that are relevant to the user's question for subsequent use in a "
-            "query. Only return the entities, comma-separated, without any "
-            "additional text. "
-        )
-        mock_gptconv.return_value.query.return_value = [
+    with patch("biochatter.prompts.Conversation") as mock_conversation:
+        system_msg = "You have access to a knowledge graph that contains these entities: Protein, Gene, Disease, CellType. Your task is to select the ones that are relevant to the user's question for subsequent use in a query. Only return the entities, comma-separated, without any additional text. "
+        mock_conversation.return_value.query.return_value = [
             "Gene,Disease",
             Mock(),
             None,
         ]
         mock_append_system_messages = Mock()
-        mock_gptconv.return_value.append_system_message = (
+        mock_conversation.return_value.append_system_message = (
             mock_append_system_messages
         )
         success = prompt_engine._select_entities(
-            question="Which genes are associated with mucoviscidosis?"
+            question="Which genes are associated with mucoviscidosis?",
+            conversation=mock_conversation.return_value,
         )
         assert success
         mock_append_system_messages.assert_called_once_with((system_msg))
@@ -61,17 +56,19 @@ def test_entity_selection(prompt_engine):
 def test_relationship_selection(prompt_engine):
     prompt_engine.question = "Which genes are associated with mucoviscidosis?"
     prompt_engine.selected_entities = ["Gene", "Disease"]
-    with patch("biochatter.prompts.GptConversation") as mock_gptconv:
-        mock_gptconv.return_value.query.return_value = [
+    with patch("biochatter.prompts.Conversation") as mock_conversation:
+        mock_conversation.return_value.query.return_value = [
             "GeneToPhenotypeAssociation",
             Mock(),
             None,
         ]
         mock_append_system_messages = Mock()
-        mock_gptconv.return_value.append_system_message = (
+        mock_conversation.return_value.append_system_message = (
             mock_append_system_messages
         )
-        success = prompt_engine._select_relationships()
+        success = prompt_engine._select_relationships(
+            conversation=mock_conversation.return_value
+        )
         assert success
         mock_append_system_messages.assert_called_once_with(
             "You have access to a knowledge graph that contains these "
@@ -120,7 +117,7 @@ def test_property_selection(prompt_engine):
     prompt_engine.question = "Which genes are associated with mucoviscidosis?"
     prompt_engine.selected_entities = ["Gene", "Disease"]
     prompt_engine.selected_relationships = ["GeneToPhenotypeAssociation"]
-    with patch("biochatter.prompts.GptConversation") as mock_gptconv:
+    with patch("biochatter.prompts.Conversation") as mock_conversation:
         resultMsg = """
         {
             "Disease":{
@@ -132,25 +129,21 @@ def test_property_selection(prompt_engine):
                 "evidence":null
             }
         }"""
-        mock_gptconv.return_value.query.return_value = [resultMsg, Mock(), None]
+        mock_conversation.return_value.query.return_value = [
+            resultMsg,
+            Mock(),
+            None,
+        ]
         mock_append_system_messages = Mock()
-        mock_gptconv.return_value.append_system_message = (
+        mock_conversation.return_value.append_system_message = (
             mock_append_system_messages
         )
-        success = prompt_engine._select_properties()
+        success = prompt_engine._select_properties(
+            conversation=mock_conversation.return_value
+        )
         assert success
         mock_append_system_messages.assert_called_once_with(
-            "You have access to a knowledge graph that contains entities and "
-            "relationships. They have the following properties. "
-            "Entities:{'Disease': ['name', 'ICD10', 'DSM5']}, Relationships: "
-            "{'GeneToPhenotypeAssociation': ['score', 'source', 'evidence']}. "
-            "Your task is to select the properties that are relevant to the "
-            "user's question for subsequent use in a query. Only return the "
-            "entities and relationships with their relevant properties in JSON "
-            "format, without any additional text. Return the "
-            "entities/relationships as top-level dictionary keys, and their "
-            "properties as dictionary values. Do not return properties that "
-            "are not relevant to the question."
+            "You have access to a knowledge graph that contains entities and relationships. They have the following properties. Entities:{'Gene': ['id', 'name', 'taxon'], 'Disease': ['name', 'ICD10', 'DSM5']}, Relationships: {'GeneToPhenotypeAssociation': ['score', 'source', 'evidence']}. Your task is to select the properties that are relevant to the user's question for subsequent use in a query. Only return the entities and relationships with their relevant properties in JSON format, without any additional text. Return the entities/relationships as top-level dictionary keys, and their properties as dictionary values. Do not return properties that are not relevant to the question."
         )
 
         score = []
@@ -161,14 +154,18 @@ def test_property_selection(prompt_engine):
 
 
 def test_query_generation(prompt_engine):
-    with patch("biochatter.prompts.GptConversation") as mock_gptconv:
+    with patch("biochatter.prompts.GptConversation") as mock_conversation:
         resultMsg = """
         MATCH (d:Disease {name: 'mucoviscidosis'})-[:PERTURBED]->(g:Gene)
         RETURN g.name AS AssociatedGenes
         """
-        mock_gptconv.return_value.query.return_value = [resultMsg, Mock(), None]
+        mock_conversation.return_value.query.return_value = [
+            resultMsg,
+            Mock(),
+            None,
+        ]
         mock_append_system_messages = Mock()
-        mock_gptconv.return_value.append_system_message = (
+        mock_conversation.return_value.append_system_message = (
             mock_append_system_messages
         )
         query = prompt_engine._generate_query(
@@ -182,6 +179,7 @@ def test_query_generation(prompt_engine):
             },
             properties={"Disease": ["name", "ICD10", "DSM5"]},
             query_language="Cypher",
+            conversation=mock_conversation.return_value,
         )
         mock_append_system_messages.assert_called_once_with(
             "Generate a database query in Cypher that answers the user's "
