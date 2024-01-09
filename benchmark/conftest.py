@@ -10,6 +10,7 @@ from benchmark.load_dataset import get_benchmark_dataset
 RESULT_FILES = [
     "benchmark/results/biocypher_query_generation.csv",
     "benchmark/results/vectorstore.csv",
+    "benchmark/results/numeric_qa.csv",
 ]
 
 N_ITERATIONS = 1
