@@ -5,7 +5,8 @@ from biochatter.vectorstore import (
     XinferenceDocumentEmbedder,
 )
 import os
-from unittest.mock import patch
+from xinference.client import Client
+from unittest.mock import patch, MagicMock
 
 print(os.getcwd())
 
@@ -127,7 +128,7 @@ def test_retrieval_augmented_generation(
     mock_host.return_value.remove_document.assert_called_once()
 
 
-@patch("biochatter.vectorstore.Client")
+@patch("xinference.client.Client")
 @patch("biochatter.vectorstore.XinferenceEmbeddings")
 @patch("biochatter.vectorstore.VectorDatabaseHostMilvus")
 @patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
@@ -163,6 +164,8 @@ def test_retrieval_augmented_generation_generic_api(
     reader = DocumentReader()
     doc = reader.document_from_pdf(doc_bytes)
 
+    mock_client = MagicMock()
+    # with patch.dict("biochatter.vectorstore.Client", return_value=mock_client):
     rag_agent = XinferenceDocumentEmbedder(
         base_url=os.getenv(
             "GENERIC_TEST_OPENAI_BASE_URL", "http://llm.biocypher.org/"
@@ -172,16 +175,16 @@ def test_retrieval_augmented_generation_generic_api(
         connection_args={"host": _HOST, "port": _PORT},
     )
     rag_agent.connect()
-
+    
     doc_id = rag_agent.save_document(doc)
     assert isinstance(doc_id, str)
     assert len(doc_id) > 0
-
+    
     query = "What is BioCypher?"
     results = rag_agent.similarity_search(query)
     assert len(results) == 3
     assert all(["BioCypher" in result.page_content for result in results])
-
+    
     mock_host.return_value.get_all_documents.return_value = [
         {"id": "1"},
         {"id": "2"},
