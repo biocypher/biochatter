@@ -164,8 +164,6 @@ def test_retrieval_augmented_generation_generic_api(
     reader = DocumentReader()
     doc = reader.document_from_pdf(doc_bytes)
 
-    mock_client = MagicMock()
-    # with patch.dict("biochatter.vectorstore.Client", return_value=mock_client):
     rag_agent = XinferenceDocumentEmbedder(
         base_url=os.getenv(
             "GENERIC_TEST_OPENAI_BASE_URL", "http://llm.biocypher.org/"
