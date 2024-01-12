@@ -9,6 +9,8 @@ from biochatter.prompts import BioCypherPromptEngine
 from benchmark.load_dataset import get_benchmark_dataset
 from biochatter.llm_connect import GptConversation, XinferenceConversation
 
+from xinference.client import Client
+
 RESULT_FILES = [
     "benchmark/results/biocypher_query_generation.csv",
     "benchmark/results/vectorstore.csv",
@@ -22,18 +24,48 @@ BENCHMARK_DATASET = get_benchmark_dataset()
 # set model matrix
 # TODO should probably go to conftest.py
 OPENAI_MODEL_NAMES = [
-    "gpt-3.5-turbo",
+    # "gpt-3.5-turbo",
     # "gpt-4",
 ]
 
+XINFERENCE_MODELS = {
+    "llama-2-chat": {
+        "model_size_in_billions": [
+            7,
+            # 13,
+            # 70,
+        ],
+        "quantization": [
+            "q2_K",
+            # "q3_K_L",
+            # "q3_K_M",
+            # "q3_K_S",
+            # "q4_0",
+            # "q4_1",
+            # "q4_K_M",
+            # "q4_K_S",
+            # "q5_0",
+            # "q5_1",
+            # "q5_K_M",
+            # "q5_K_S",
+            # "q6_K",
+            "q8_0",
+        ],
+    },
+}
+
+# create concrete benchmark list by concatenating all combinations of model
+# names, model sizes and quantizations
 XINFERENCE_MODEL_NAMES = [
-    # "llama2-hf",
-    # "llama2-chat-hf",
+    f"{model_name}:{model_size}:{quantization}"
+    for model_name in XINFERENCE_MODELS.keys()
+    for model_size in XINFERENCE_MODELS[model_name]["model_size_in_billions"]
+    for quantization in XINFERENCE_MODELS[model_name]["quantization"]
 ]
 
 BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
 
-BENCHMARK_URL = "http://llm.biocypher.org"
+BENCHMARK_URL = "http://localhost:9997"
 
 
 @pytest.fixture(scope="module", params=BENCHMARKED_MODELS)
@@ -61,14 +93,55 @@ def conversation(request):
             os.getenv("OPENAI_API_KEY"), user="benchmark_user"
         )
     elif model_name in XINFERENCE_MODEL_NAMES:
-        # TODO here we probably need to start the right model on the server
+        _model_name, _model_size, _model_quantization = model_name.split(":")
+        _model_size = int(_model_size)
+
+        # get running models
+        client = Client(base_url=BENCHMARK_URL)
+
+        # TODO if all tests have already been executed, we should find out here,
+        # not after the model has been launched
+
+        # TODO why are we concatenating two instances of full model names for
+        # all tests? (llama-2-chat:7:q2_K-llama-2-chat:7:q8_0 ...?)
+
+        # if exact model already running, return conversation
+        running_models = client.list_models()
+        if running_models:
+            for running_model in running_models:
+                if (
+                    running_models[running_model]["model_name"] == _model_name
+                    and running_models[running_model]["model_size_in_billions"]
+                    == _model_size
+                    and running_models[running_model]["quantization"]
+                    == _model_quantization
+                ):
+                    conversation = XinferenceConversation(
+                        base_url=BENCHMARK_URL,
+                        model_name=_model_name,
+                        prompts={},
+                        correct=False,
+                    )
+                    return conversation
+
+        # else, terminate all running models
+        for running_model in running_models:
+            client.terminate_model(running_model)
+
+        # and launch model to be tested
+        client.launch_model(
+            model_name=_model_name,
+            model_size_in_billions=_model_size,
+            quantization=_model_quantization,
+        )
+
+        # return conversation
         conversation = XinferenceConversation(
             base_url=BENCHMARK_URL,
-            model_name=model_name,
+            model_name=_model_name,
             prompts={},
             correct=False,
         )
-        conversation.set_api_key()
 
     return conversation
 
