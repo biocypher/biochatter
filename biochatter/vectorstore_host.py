@@ -423,7 +423,7 @@ class VectorDatabaseHostMilvus:
             str: search expression or None
         """
         if len(meta_ids) == 0:
-            return None
+            return "meta_id in []"
         built_expr = """meta_id in ["""
         for item in meta_ids:
             id = f'"{item["id"]}",'
@@ -470,7 +470,24 @@ class VectorDatabaseHostMilvus:
             )
         return joined_docs
 
-    def similarity_search(self, query: str, k: int = 3) -> List[Document]:
+    @staticmethod
+    def _build_meta_col_query_expr_for_all_documents(doc_ids: Optional[List[str]] = None) -> str:
+        """
+        Build metadata collection query expression to obtain all documents.
+        
+        Args:
+            doc_ids: the list of document ids (metadata ids), if thie argument is None,
+                     that is, the query is to get all undeleted documents in metadata collection. 
+                     Otherwise, the query is to getr all undeleted documents form provided doc_ids
+        
+        Returns:
+            query: str
+        """
+        expr = f"id in {doc_ids} and isDeleted == false" \
+            if doc_ids is not None else "isDeleted == false"
+        return expr.replace('"', '').replace("'", '')
+
+    def similarity_search(self, query: str, k: int = 3, doc_ids: List[str] = None) -> List[Document]:
         """
         Perform similarity search insider the currently active database
         according to the input query.
@@ -486,10 +503,15 @@ class VectorDatabaseHostMilvus:
 
             k (int): the number of results to return
 
+            doc_ids(List[str] optional): the list of document ids, do similarity search across the 
+            specified documents
+
         Returns:
             List[Document]: search results
         """
-        result_metadata = self._col_metadata.query(expr="isDeleted == false")
+        result_metadata = []
+        expr = VectorDatabaseHostMilvus._build_meta_col_query_expr_for_all_documents(doc_ids)
+        result_metadata = self._col_metadata.query(expr=expr)
         expr = self._build_embedding_search_expression(result_metadata)
         result_embedding = self._col_embeddings.similarity_search(
             query=query, k=k, expr=expr
@@ -498,17 +520,25 @@ class VectorDatabaseHostMilvus:
             result_embedding, result_metadata
         )
 
-    def remove_document(self, doc_id: str) -> bool:
+    def remove_document(self, doc_id: str, doc_ids: Optional[List[str]] = None) -> bool:
         """
         Remove the document include meta data and its embeddings.
 
         Args:
             doc_id (str): the document to be deleted
 
+            doc_ids(List[str] optional): the list of document ids, defines documents scope
+            within which remove operation occurs.
+
         Returns:
             bool: True if the document is deleted, False otherwise
         """
         if not self._col_metadata:
+            return False
+        if doc_ids is not None and (
+            len(doc_ids) == 0 or
+            (len(doc_ids) > 0 and not doc_id in doc_ids)
+        ) :
             return False
         try:
             expr = f"id in [{doc_id}]"
@@ -532,17 +562,22 @@ class VectorDatabaseHostMilvus:
             logger.error(e)
             raise e
 
-    def get_all_documents(self) -> List[Dict]:
+    def get_all_documents(self, doc_ids: Optional[List[str]] = None) -> List[Dict]:
         """
         Get all non-deleted documents from the currently active database.
+
+        Args:
+            doc_ids(List[str] optional): the list of document ids, defines documents scope within
+            which the operation of obaining all documents occurs
 
         Returns:
             List[Dict]: the metadata of all non-deleted documents in the form
                 [{{id}, {author}, {source}, ...}]
         """
         try:
+            expr = VectorDatabaseHostMilvus._build_meta_col_query_expr_for_all_documents(doc_ids)
             result_metadata = self._col_metadata.query(
-                expr="isDeleted == false", output_fields=METADATA_FIELDS
+                expr=expr, output_fields=METADATA_FIELDS
             )
             return result_metadata
         except MilvusException as e:
