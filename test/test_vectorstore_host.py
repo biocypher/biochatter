@@ -199,3 +199,15 @@ def test_remove_document(dbHost):
     res = dbHost.remove_document(docs[0]["id"])
     assert res
     assert (cnt - 1) == len(dbHost.get_all_documents())
+
+def test_build_meta_col_query_expr_for_all_documents():
+    data = [
+        [[], "id in [] and isDeleted == false"],
+        [["1234", "5678"], "id in [1234, 5678] and isDeleted == false"],
+        [['1234', '5678'], "id in [1234, 5678] and isDeleted == false"],
+        [None, "isDeleted == false"],
+        [[12345678901234, 43210987654321], "id in [12345678901234, 43210987654321] and isDeleted == false"],
+    ]
+    for test_data in data:
+        expr = VectorDatabaseHostMilvus._build_meta_col_query_expr_for_all_documents(test_data[0])
+        assert expr == test_data[1]
