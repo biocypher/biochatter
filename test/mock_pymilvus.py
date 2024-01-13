@@ -72,7 +72,14 @@ class Collection(object):
 
 
 class Connections(object):
-    def connect(self, host: str, port: str, alias: Optional[str] = None):
+    def connect(
+        self, 
+        host: str, 
+        port: str, 
+        alias: Optional[str] = None, 
+        user: Optional[str]="", 
+        password: Optional[str]=""
+    ):
         pass
 
 
