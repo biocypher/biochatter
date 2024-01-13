@@ -93,6 +93,22 @@ def align_embeddings(docs: List[Document], meta_id: int) -> List[Document]:
     return ret
 
 
+def validate_connection_args(connection_args: Optional[dict] = None):
+    if connection_args is None:
+        return {
+            "host": "127.0.0.1",
+            "port": "19530",
+            "user": "",
+            "password": "",
+        }
+
+    if not "user" in connection_args:
+        connection_args["user"] = ""
+    if not "password" in connection_args:
+        connection_args["password"] = ""
+    return connection_args
+
+
 class VectorDatabaseHostMilvus:
     """
     The VectorDatabaseHostMilvus class manages vector databases in a connected
@@ -123,10 +139,7 @@ class VectorDatabaseHostMilvus:
         self._embedding_func = embedding_func
         self._col_embeddings: Optional[Milvus] = None
         self._col_metadata: Optional[Collection] = None
-        self._connection_args = connection_args or {
-            "host": "127.0.0.1",
-            "port": "19530",
-        }
+        self._connection_args = validate_connection_args(connection_args)
         self._embedding_name = (
             embedding_collection_name or DOCUMENT_EMBEDDINGS_COLLECTION_NAME
         )
@@ -142,13 +155,15 @@ class VectorDatabaseHostMilvus:
         collections don't exist, create the two collections.
         """
         self._connect(
-            self._connection_args["host"], self._connection_args["port"]
+            self._connection_args["host"],
+            self._connection_args["port"],
+            self._connection_args["user"],
+            self._connection_args["password"],
         )
         self._init_host()
 
-    def _connect(self, host: str, port: str) -> None:
-        self._connection_args = {"host": host, "port": port}
-        self.alias = self._create_connection_alias(host, port)
+    def _connect(self, host: str, port: str, user: str, password: str) -> None:
+        self.alias = self._create_connection_alias(host, port, user, password)
 
     def _init_host(self) -> None:
         """
@@ -157,7 +172,9 @@ class VectorDatabaseHostMilvus:
         """
         self._create_collections()
 
-    def _create_connection_alias(self, host: str, port: str) -> str:
+    def _create_connection_alias(
+        self, host: str, port: str, user: str, password: str
+    ) -> str:
         """
         Connect to host and create a connection alias for metadata collection
         using a random uuid.
@@ -171,7 +188,9 @@ class VectorDatabaseHostMilvus:
         """
         alias = uuid.uuid4().hex
         try:
-            connections.connect(host=host, port=port, alias=alias)
+            connections.connect(
+                host=host, port=port, user=user, password=password, alias=alias
+            )
             logger.debug(f"Created new connection using: {alias}")
             return alias
         except MilvusException as e:
@@ -471,23 +490,30 @@ class VectorDatabaseHostMilvus:
         return joined_docs
 
     @staticmethod
-    def _build_meta_col_query_expr_for_all_documents(doc_ids: Optional[List[str]] = None) -> str:
+    def _build_meta_col_query_expr_for_all_documents(
+        doc_ids: Optional[List[str]] = None,
+    ) -> str:
         """
         Build metadata collection query expression to obtain all documents.
-        
+
         Args:
             doc_ids: the list of document ids (metadata ids), if thie argument is None,
-                     that is, the query is to get all undeleted documents in metadata collection. 
+                     that is, the query is to get all undeleted documents in metadata collection.
                      Otherwise, the query is to getr all undeleted documents form provided doc_ids
-        
+
         Returns:
             query: str
         """
-        expr = f"id in {doc_ids} and isDeleted == false" \
-            if doc_ids is not None else "isDeleted == false"
-        return expr.replace('"', '').replace("'", '')
+        expr = (
+            f"id in {doc_ids} and isDeleted == false"
+            if doc_ids is not None
+            else "isDeleted == false"
+        )
+        return expr.replace('"', "").replace("'", "")
 
-    def similarity_search(self, query: str, k: int = 3, doc_ids: List[str] = None) -> List[Document]:
+    def similarity_search(
+        self, query: str, k: int = 3, doc_ids: List[str] = None
+    ) -> List[Document]:
         """
         Perform similarity search insider the currently active database
         according to the input query.
@@ -503,14 +529,16 @@ class VectorDatabaseHostMilvus:
 
             k (int): the number of results to return
 
-            doc_ids(List[str] optional): the list of document ids, do similarity search across the 
+            doc_ids(List[str] optional): the list of document ids, do similarity search across the
             specified documents
 
         Returns:
             List[Document]: search results
         """
         result_metadata = []
-        expr = VectorDatabaseHostMilvus._build_meta_col_query_expr_for_all_documents(doc_ids)
+        expr = VectorDatabaseHostMilvus._build_meta_col_query_expr_for_all_documents(
+            doc_ids
+        )
         result_metadata = self._col_metadata.query(expr=expr)
         expr = self._build_embedding_search_expression(result_metadata)
         result_embedding = self._col_embeddings.similarity_search(
@@ -520,7 +548,9 @@ class VectorDatabaseHostMilvus:
             result_embedding, result_metadata
         )
 
-    def remove_document(self, doc_id: str, doc_ids: Optional[List[str]] = None) -> bool:
+    def remove_document(
+        self, doc_id: str, doc_ids: Optional[List[str]] = None
+    ) -> bool:
         """
         Remove the document include meta data and its embeddings.
 
@@ -536,9 +566,8 @@ class VectorDatabaseHostMilvus:
         if not self._col_metadata:
             return False
         if doc_ids is not None and (
-            len(doc_ids) == 0 or
-            (len(doc_ids) > 0 and not doc_id in doc_ids)
-        ) :
+            len(doc_ids) == 0 or (len(doc_ids) > 0 and not doc_id in doc_ids)
+        ):
             return False
         try:
             expr = f"id in [{doc_id}]"
@@ -562,7 +591,9 @@ class VectorDatabaseHostMilvus:
             logger.error(e)
             raise e
 
-    def get_all_documents(self, doc_ids: Optional[List[str]] = None) -> List[Dict]:
+    def get_all_documents(
+        self, doc_ids: Optional[List[str]] = None
+    ) -> List[Dict]:
         """
         Get all non-deleted documents from the currently active database.
 
@@ -575,7 +606,9 @@ class VectorDatabaseHostMilvus:
                 [{{id}, {author}, {source}, ...}]
         """
         try:
-            expr = VectorDatabaseHostMilvus._build_meta_col_query_expr_for_all_documents(doc_ids)
+            expr = VectorDatabaseHostMilvus._build_meta_col_query_expr_for_all_documents(
+                doc_ids
+            )
             result_metadata = self._col_metadata.query(
                 expr=expr, output_fields=METADATA_FIELDS
             )
