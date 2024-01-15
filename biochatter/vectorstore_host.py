@@ -102,10 +102,9 @@ def validate_connection_args(connection_args: Optional[dict] = None):
             "password": "",
         }
 
-    if not "user" in connection_args:
-        connection_args["user"] = ""
-    if not "password" in connection_args:
-        connection_args["password"] = ""
+    
+    connection_args["user"] = connection_args.get("user", "")
+    connection_args["password"] = connection_args.get("password", "")
     return connection_args
 
 
@@ -154,12 +153,7 @@ class VectorDatabaseHostMilvus:
         database (default database name is `default`); if those document
         collections don't exist, create the two collections.
         """
-        self._connect(
-            self._connection_args["host"],
-            self._connection_args["port"],
-            self._connection_args["user"],
-            self._connection_args["password"],
-        )
+        self._connect(**self._connection_args)
         self._init_host()
 
     def _connect(self, host: str, port: str, user: str, password: str) -> None:
