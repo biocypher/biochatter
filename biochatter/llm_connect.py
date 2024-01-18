@@ -896,7 +896,7 @@ class AzureGptConversation(GptConversation):
                 deployment_name=self.deployment_name,
                 model_name=self.model_name,
                 openai_api_version=self.version,
-                openai_api_base=self.base_url,
+                azure_endpoint=self.base_url,
                 openai_api_key=api_key,
                 temperature=0,
             )
@@ -906,7 +906,7 @@ class AzureGptConversation(GptConversation):
                 deployment_name=self.deployment_name,
                 model_name=self.model_name,
                 openai_api_version=self.version,
-                openai_api_base=self.base_url,
+                azure_endpoint=self.base_url,
                 openai_api_key=api_key,
                 temperature=0,
             )

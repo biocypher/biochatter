@@ -386,6 +386,7 @@ class VectorDatabaseHostMilvus:
         try:
             result = self._col_metadata.insert(aligned_metadata)
             meta_id = str(result.primary_keys[0])
+            self._col_metadata.flush()
         except MilvusException as e:
             logger.error(f"Failed to insert meta data")
             raise e
