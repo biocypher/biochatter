@@ -9,6 +9,7 @@ from typing import List, Optional, Dict
 from langchain.schema import Document
 import openai
 from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.embeddings.azure_openai import AzureOpenAIEmbeddings
 from langchain.embeddings import XinferenceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.document_loaders import TextLoader
@@ -18,7 +19,6 @@ import fitz  # this is PyMuPDF (PyPI pymupdf package, not fitz)
 from transformers import GPT2TokenizerFast
 
 from biochatter.vectorstore_host import VectorDatabaseHostMilvus
-
 
 class DocumentEmbedder:
     def __init__(
@@ -37,6 +37,9 @@ class DocumentEmbedder:
         embedding_collection_name: Optional[str] = None,
         metadata_collection_name: Optional[str] = None,
         api_key: Optional[str] = None,
+        is_azure: Optional[bool] = False,
+        azure_deployment: Optional[str] = None,
+        azure_endpoint: Optional[str] = None,
         base_url: Optional[str] = None,
         embeddings: Optional[OpenAIEmbeddings | XinferenceEmbeddings] = None,
         documentids_workspace: Optional[List[str]] = None,
@@ -100,6 +103,12 @@ class DocumentEmbedder:
             and get all) occur. Defaults to None, which means the operations will be 
             performed across all documents in the database.
 
+            is_azure (Optional[bool], optional): if we are using Azure
+            azure_deployment (Optional[str], optional): Azure embeddings model deployment, 
+            should work with azure_endpoint when is_azure is True
+            azure_endpoint (Optional[str], optional): Azure endpoint, should work with 
+            azure_deployment when is_azure is True
+
         """
         self.use_prompt = use_prompt
         self.used = used
@@ -121,6 +130,11 @@ class DocumentEmbedder:
             if not self.online:
                 self.embeddings = OpenAIEmbeddings(
                     openai_api_key=api_key, model=model
+                ) if not is_azure else AzureOpenAIEmbeddings(
+                    api_key=api_key,
+                    azure_deployment=azure_deployment,
+                    azure_endpoint=azure_endpoint,
+                    model=model,
                 )
             else:
                 self.embeddings = None
