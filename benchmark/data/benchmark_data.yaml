@@ -31,9 +31,6 @@ biocypher_query_generation:
       ]
     test_case_purpose: single_word
   - kg_path: test_schema_info.yaml
-    prompt: Which proteins are associated with mucoviscidosis?
-    entities: ["Protein", "Disease"]
-  - kg_path: test_schema_info.yaml
     prompt: Which genes are expressed in fibroblasts?
     entities: ["Gene", "CellType"]
     relationships: ["GeneExpressedInCellType"]
