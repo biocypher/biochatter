@@ -81,6 +81,7 @@ def test_entity_selection(
     test_data_biocypher_query_generation,
     result_files,
     conversation,
+    multiple_testing,
 ):
     (
         kg_schema_file_name,
@@ -97,19 +98,23 @@ def test_entity_selection(
     skip_if_already_run(model_name, result_files, subtask)
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
-    success = prompt_engine._select_entities(
-        question=prompt, conversation=conversation
-    )
-    assert success
+    def run_test():
+        success = prompt_engine._select_entities(
+            question=prompt, conversation=conversation
+        )
+        assert success
 
-    score = []
-    for expected_entity in expected_entities:
-        score.append(expected_entity in prompt_engine.selected_entities)
+        score = []
+        for expected_entity in expected_entities:
+            score.append(expected_entity in prompt_engine.selected_entities)
+        return calculate_test_score(score)
+
+    mean_score, max = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        calculate_test_score(score),
+        f"{mean_score}/{max}",
         FILE_PATH,
     )
 

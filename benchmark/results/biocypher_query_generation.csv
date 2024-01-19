@@ -3,7 +3,7 @@ gpt-3.5-turbo,test_end_to_end_query_generation_0_single_word,7/7
 gpt-3.5-turbo,test_end_to_end_query_generation_1_nan,0/0
 gpt-3.5-turbo,test_end_to_end_query_generation_2_multi_word,7/7
 gpt-3.5-turbo,test_end_to_end_query_generation_3_nan,0/0
-gpt-3.5-turbo,test_entity_selection_0_single_word,2/2
+gpt-3.5-turbo,test_entity_selection_0_single_word,2.0/2
 gpt-3.5-turbo,test_entity_selection_1_nan,2/2
 gpt-3.5-turbo,test_entity_selection_2_multi_word,2/2
 gpt-3.5-turbo,test_entity_selection_3_nan,2/2

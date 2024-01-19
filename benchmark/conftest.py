@@ -17,7 +17,7 @@ RESULT_FILES = [
     "benchmark/results/vectorstore.csv",
 ]
 
-N_ITERATIONS = 1
+N_ITERATIONS = 2
 
 BENCHMARK_DATASET = get_benchmark_dataset()
 
@@ -74,6 +74,25 @@ BENCHMARK_URL = "http://129.206.191.235:9997"
 @pytest.fixture(params=BENCHMARKED_MODELS)
 def model_name(request):
     return request.param
+
+
+@pytest.fixture
+def multiple_testing(request):
+    def run_multiple_times(test_func, *args, **kwargs):
+        scores = []
+        for _ in range(N_ITERATIONS):
+            score, max = test_func(*args, **kwargs)
+            scores.append(score)
+        mean_score = sum(scores) / N_ITERATIONS
+        return (mean_score, max)
+
+    return run_multiple_times
+
+
+def calculate_test_score(vector: list[bool]) -> tuple[int, int]:
+    score = sum(vector)
+    max = len(vector)
+    return (score, max)
 
 
 @pytest.fixture
@@ -242,9 +261,3 @@ def pytest_generate_tests(metafunc):
             "test_data_text_extraction",
             test_rows["text_extraction"],
         )
-
-
-def calculate_test_score(vector: list[bool]):
-    score = sum(vector)
-    max = len(vector)
-    return f"{score}/{max}"
