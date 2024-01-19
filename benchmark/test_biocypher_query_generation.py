@@ -1,4 +1,3 @@
-import os
 import re
 import inspect
 
@@ -7,116 +6,26 @@ import pytest
 import pandas as pd
 
 from biochatter.prompts import BioCypherPromptEngine
-from biochatter.llm_connect import GptConversation, XinferenceConversation
-from .conftest import RESULT_FILES, calculate_test_score
-
-TASK = "biocypher_query_generation"
-
-# find right file to write to
-# TODO should we use SQLite? An online database (REDIS)?
-FILE_PATH = next(
-    (
-        s
-        for s in RESULT_FILES
-        if "biocypher" in s and "query" in s and "generation" in s
-    ),
-    None,
+from .conftest import calculate_test_score
+from .benchmark_utils import (
+    get_result_file_path,
+    write_results_to_file,
+    benchmark_already_executed,
 )
 
-# set model matrix
-# TODO should probably go to conftest.py
-OPENAI_MODEL_NAMES = [
-    "gpt-3.5-turbo",
-    # "gpt-4",
-]
-
-XINFERENCE_MODEL_NAMES = [
-    # "llama2-hf",
-    # "llama2-chat-hf",
-]
-
-BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
-
-BENCHMARK_URL = "http://llm.biocypher.org"
+TASK = "biocypher_query_generation"
+FILE_PATH = get_result_file_path(TASK)
 
 
-@pytest.fixture(scope="module", params=BENCHMARKED_MODELS)
-def prompt_engine(request):
-    def setup_prompt_engine(kg_schema_path):
-        model_name = request.param
-        return BioCypherPromptEngine(
-            schema_config_or_info_path=kg_schema_path,
-            model_name=model_name,
-        )
-
-    return setup_prompt_engine
-
-
-@pytest.fixture(scope="function", params=BENCHMARKED_MODELS)
-def conversation(request):
-    model_name = request.param
-    if model_name in OPENAI_MODEL_NAMES:
-        conversation = GptConversation(
-            model_name=model_name,
-            prompts={},
-            correct=False,
-        )
-        conversation.set_api_key(
-            os.getenv("OPENAI_API_KEY"), user="benchmark_user"
-        )
-    elif model_name in XINFERENCE_MODEL_NAMES:
-        # TODO here we probably need to start the right model on the server
-        conversation = XinferenceConversation(
-            base_url=BENCHMARK_URL,
-            model_name=model_name,
-            prompts={},
-            correct=False,
-        )
-        conversation.set_api_key()
-
-    return conversation
-
-
-def benchmark_already_executed(
-    task: str,
-    subtask: str,
-    model_name: str,
-    result_files: dict[str, pd.DataFrame],
-) -> bool:
-    """
-    Checks if the benchmark task and subtask for the model_name have already
-    been executed.
+def get_test_data(test_data_biocypher_query_generation: list) -> tuple:
+    """Helper function to unpack the test data from the test_data_biocypher_query_generation fixture.
 
     Args:
-        task (str): The benchmark task, e.g. "biocypher_query_generation"
-        subtask (str): The benchmark subtask, e.g. "entities"
-        model_name (str): The model name, e.g. "gpt-3.5-turbo"
-        result_files (dict[str, pd.DataFrame]): The result files
+        test_data_biocypher_query_generation (list): The test data from the test_data_biocypher_query_generation fixture
 
     Returns:
-
-        bool: True if the benchmark task and subtask for the model_name has
-            already been run, False otherwise
+        tuple: The unpacked test data
     """
-    task_results = result_files[f"benchmark/results/{task}.csv"]
-    task_results_subset = (task_results["model"] == model_name) & (
-        task_results["subtask"] == subtask
-    )
-    return task_results_subset.any()
-
-
-def write_results_to_file(model_name: str, subtask: str, score: str):
-    results = pd.read_csv(FILE_PATH, header=0)
-    new_row = pd.DataFrame(
-        [[model_name, subtask, score]], columns=results.columns
-    )
-    results = pd.concat([results, new_row], ignore_index=True).sort_values(
-        by="subtask"
-    )
-    results.to_csv(FILE_PATH, index=False)
-
-
-def get_test_data(test_data_biocypher_query_generation):
     kg_schema_file_name = test_data_biocypher_query_generation[0]
     prompt = test_data_biocypher_query_generation[1]
     expected_entities = test_data_biocypher_query_generation[2]
@@ -139,8 +48,25 @@ def get_test_data(test_data_biocypher_query_generation):
     )
 
 
-def setup_test(kg_schema_file_name, prompt_engine, result_files, subtask):
-    prompt_engine = prompt_engine(
+def setup_test(
+    kg_schema_file_name: str,
+    create_prompt_engine,
+    result_files: dict[str, pd.DataFrame],
+    subtask: str,
+) -> BioCypherPromptEngine:
+    """Helper function to check if the test case is already executed
+    and to create the prompt engine for the test.
+
+    Args:
+        kg_schema_file_name (str): The KG schema file name
+        create_prompt_engine: The function to create the BioCypherPromptEngine
+        result_files (dict[str, pd.DataFrame]): The result files
+        subtask (str): The benchmark subtask test case, e.g. "entities_0"
+
+    Returns:
+        BioCypherPromptEngine: The prompt engine for the test
+    """
+    prompt_engine = create_prompt_engine(
         kg_schema_path=f"./benchmark/data/biocypher_query_generation/{kg_schema_file_name}"
     )
     if benchmark_already_executed(
@@ -184,7 +110,10 @@ def test_entity_selection(
         score.append(expected_entity in prompt_engine.selected_entities)
 
     write_results_to_file(
-        prompt_engine.model_name, subtask, calculate_test_score(score)
+        prompt_engine.model_name,
+        subtask,
+        calculate_test_score(score),
+        FILE_PATH,
     )
 
 
@@ -239,7 +168,10 @@ def test_relationship_selection(
     # TODO: make it more generic to be able to compare arbitrarily nested structures
 
     write_results_to_file(
-        prompt_engine.model_name, subtask, calculate_test_score(score)
+        prompt_engine.model_name,
+        subtask,
+        calculate_test_score(score),
+        FILE_PATH,
     )
 
 
@@ -293,7 +225,10 @@ def test_property_selection(
                 score.append(0)
 
     write_results_to_file(
-        prompt_engine.model_name, subtask, calculate_test_score(score)
+        prompt_engine.model_name,
+        subtask,
+        calculate_test_score(score),
+        FILE_PATH,
     )
 
 
@@ -339,7 +274,10 @@ def test_query_generation(
             score.append((re.search(expected_part_of_query, query) is not None))
 
     write_results_to_file(
-        prompt_engine.model_name, subtask, calculate_test_score(score)
+        prompt_engine.model_name,
+        subtask,
+        calculate_test_score(score),
+        FILE_PATH,
     )
 
 
@@ -382,7 +320,10 @@ def test_end_to_end_query_generation(
             score.append((re.search(expected_part_of_query, query) is not None))
 
     write_results_to_file(
-        prompt_engine.model_name, subtask, calculate_test_score(score)
+        prompt_engine.model_name,
+        subtask,
+        calculate_test_score(score),
+        FILE_PATH,
     )
 
 
@@ -425,7 +366,7 @@ def map_bracket_properties_to_labels(property_list):
     return property_mapping
 
 
-def join_dictionaries(dict1, dict2):
+def join_dictionaries(dict1: dict, dict2: dict) -> dict:
     result_dict = {}
     for key in dict1:
         if key in dict2:
@@ -533,5 +474,8 @@ def test_property_exists(
             score.append(0)
 
     write_results_to_file(
-        prompt_engine.model_name, subtask, calculate_test_score(score)
+        prompt_engine.model_name,
+        subtask,
+        calculate_test_score(score),
+        FILE_PATH,
     )
