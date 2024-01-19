@@ -125,6 +125,7 @@ def test_relationship_selection(
     test_data_biocypher_query_generation,
     result_files,
     conversation,
+    multiple_testing,
 ):
     (
         kg_schema_file_name,
@@ -143,36 +144,44 @@ def test_relationship_selection(
 
     prompt_engine.question = prompt
     prompt_engine.selected_entities = expected_entities
-    success = prompt_engine._select_relationships(conversation=conversation)
-    assert success
 
-    score = []
-    for expected_relationship in expected_relationship_labels:
-        score.append(
-            expected_relationship in prompt_engine.selected_relationships
-        )
+    # TODO: more generic, for nested structures
 
-    for expected_relationship_label_key in expected_relationship_labels.keys():
-        score.append(
-            expected_relationship_label_key
-            in prompt_engine.selected_relationship_labels.keys()
-        )
+    def run_test():
+        success = prompt_engine._select_relationships(conversation=conversation)
+        assert success
 
-        for expected_relationship_label_value in expected_relationship_labels[
-            expected_relationship_label_key
-        ]:
+        score = []
+        for expected_relationship in expected_relationship_labels:
             score.append(
-                expected_relationship_label_value
-                in prompt_engine.selected_relationship_labels[
-                    expected_relationship_label_key
-                ]
+                expected_relationship in prompt_engine.selected_relationships
             )
-    # TODO: make it more generic to be able to compare arbitrarily nested structures
+
+        for (
+            expected_relationship_label_key
+        ) in expected_relationship_labels.keys():
+            score.append(
+                expected_relationship_label_key
+                in prompt_engine.selected_relationship_labels.keys()
+            )
+
+            for (
+                expected_relationship_label_value
+            ) in expected_relationship_labels[expected_relationship_label_key]:
+                score.append(
+                    expected_relationship_label_value
+                    in prompt_engine.selected_relationship_labels[
+                        expected_relationship_label_key
+                    ]
+                )
+        return calculate_test_score(score)
+
+    mean_score, max = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        calculate_test_score(score),
+        f"{mean_score}/{max}",
         FILE_PATH,
     )
 
@@ -183,6 +192,7 @@ def test_property_selection(
     test_data_biocypher_query_generation,
     result_files,
     conversation,
+    multiple_testing,
 ):
     (
         kg_schema_file_name,
@@ -202,34 +212,41 @@ def test_property_selection(
     prompt_engine.question = prompt
     prompt_engine.selected_entities = expected_entities
     prompt_engine.selected_relationships = expected_relationships
-    success = prompt_engine._select_properties(conversation=conversation)
-    assert success
 
-    score = []
-    for expected_property_key in expected_properties.keys():
-        try:
-            score.append(
-                expected_property_key
-                in prompt_engine.selected_properties.keys()
-            )
-        except KeyError:
-            score.append(0)
+    def run_test():
+        success = prompt_engine._select_properties(conversation=conversation)
+        assert success
 
-        for expected_property_value in expected_properties[
-            expected_property_key
-        ]:
+        score = []
+        for expected_property_key in expected_properties.keys():
             try:
                 score.append(
-                    expected_property_value
-                    in prompt_engine.selected_properties[expected_property_key]
+                    expected_property_key
+                    in prompt_engine.selected_properties.keys()
                 )
             except KeyError:
                 score.append(0)
 
+            for expected_property_value in expected_properties[
+                expected_property_key
+            ]:
+                try:
+                    score.append(
+                        expected_property_value
+                        in prompt_engine.selected_properties[
+                            expected_property_key
+                        ]
+                    )
+                except KeyError:
+                    score.append(0)
+        return calculate_test_score(score)
+
+    mean_score, max = multiple_testing(run_test)
+
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        calculate_test_score(score),
+        f"{mean_score}/{max}",
         FILE_PATH,
     )
 
@@ -240,6 +257,7 @@ def test_query_generation(
     test_data_biocypher_query_generation,
     result_files,
     conversation,
+    multiple_testing,
 ):
     (
         kg_schema_file_name,
@@ -255,30 +273,36 @@ def test_query_generation(
     subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
     skip_if_already_run(model_name, result_files, subtask)
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
-    query = prompt_engine._generate_query(
-        question=prompt,
-        entities=expected_entities,
-        relationships=expected_relationship_labels,
-        properties=expected_properties,
-        query_language="Cypher",
-        conversation=conversation,
-    )
 
-    score = []
-    for expected_part_of_query in expected_parts_of_query:
-        print(expected_part_of_query)
-        if isinstance(expected_part_of_query, tuple):
-            score.append(
-                expected_part_of_query[0] in query
-                or expected_part_of_query[1] in query
-            )
-        else:
-            score.append((re.search(expected_part_of_query, query) is not None))
+    def run_test():
+        query = prompt_engine._generate_query(
+            question=prompt,
+            entities=expected_entities,
+            relationships=expected_relationship_labels,
+            properties=expected_properties,
+            query_language="Cypher",
+            conversation=conversation,
+        )
+
+        score = []
+        for expected_part_of_query in expected_parts_of_query:
+            if isinstance(expected_part_of_query, tuple):
+                score.append(
+                    expected_part_of_query[0] in query
+                    or expected_part_of_query[1] in query
+                )
+            else:
+                score.append(
+                    (re.search(expected_part_of_query, query) is not None)
+                )
+        return calculate_test_score(score)
+
+    mean_score, max = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        calculate_test_score(score),
+        f"{mean_score}/{max}",
         FILE_PATH,
     )
 
@@ -288,6 +312,7 @@ def test_end_to_end_query_generation(
     prompt_engine,
     test_data_biocypher_query_generation,
     result_files,
+    multiple_testing,
 ):
     (
         kg_schema_file_name,
@@ -303,27 +328,32 @@ def test_end_to_end_query_generation(
     subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
     skip_if_already_run(model_name, result_files, subtask)
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
-    query = prompt_engine.generate_query(
-        question=prompt,
-        query_language="Cypher",
-    )
 
-    score = []
+    def run_test():
+        query = prompt_engine.generate_query(
+            question=prompt,
+            query_language="Cypher",
+        )
 
-    for expected_part_of_query in expected_parts_of_query:
-        print(expected_part_of_query)
-        if isinstance(expected_part_of_query, tuple):
-            score.append(
-                expected_part_of_query[0] in query
-                or expected_part_of_query[1] in query
-            )
-        else:
-            score.append((re.search(expected_part_of_query, query) is not None))
+        score = []
+        for expected_part_of_query in expected_parts_of_query:
+            if isinstance(expected_part_of_query, tuple):
+                score.append(
+                    expected_part_of_query[0] in query
+                    or expected_part_of_query[1] in query
+                )
+            else:
+                score.append(
+                    (re.search(expected_part_of_query, query) is not None)
+                )
+        return calculate_test_score(score)
+
+    mean_score, max = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        calculate_test_score(score),
+        f"{mean_score}/{max}",
         FILE_PATH,
     )
 
@@ -417,6 +447,7 @@ def test_property_exists(
     test_data_biocypher_query_generation,
     result_files,
     conversation,
+    multiple_testing,
 ):
     (
         kg_schema_file_name,
@@ -433,50 +464,53 @@ def test_property_exists(
     skip_if_already_run(model_name, result_files, subtask)
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
-    query = prompt_engine._generate_query(
-        question=prompt,
-        entities=expected_entities,
-        relationships=expected_relationship_labels,
-        properties=expected_properties,
-        query_language="Cypher",
-        conversation=conversation,
-    )
+    def run_test():
+        query = prompt_engine._generate_query(
+            question=prompt,
+            entities=expected_entities,
+            relationships=expected_relationship_labels,
+            properties=expected_properties,
+            query_language="Cypher",
+            conversation=conversation,
+        )
 
-    score = []
+        score = []
 
-    (
-        entity_mapping,
-        property_mapping,
-        used_entity_property,
-    ) = get_used_property_from_query(query)
+        (
+            entity_mapping,
+            property_mapping,
+            used_entity_property,
+        ) = get_used_property_from_query(query)
 
-    for entity, property in used_entity_property.items():
-        if (
-            entity in prompt_engine.entities.keys()
-            and "properties" in prompt_engine.entities[entity]
-        ):
-            # check property used is in available properties for entities
-            avail_property_entity = list(
-                prompt_engine.entities[entity]["properties"].keys()
-            )
-            score.append(property in avail_property_entity)
+        for entity, property in used_entity_property.items():
+            if (
+                entity in prompt_engine.entities.keys()
+                and "properties" in prompt_engine.entities[entity]
+            ):
+                # check property used is in available properties for entities
+                avail_property_entity = list(
+                    prompt_engine.entities[entity]["properties"].keys()
+                )
+                score.append(property in avail_property_entity)
+            elif (
+                entity in prompt_engine.relationships.keys()
+                and "properties" in prompt_engine.relationships[entity]
+            ):
+                # check property used is in available properties for relationships
+                avail_property_entity = list(
+                    prompt_engine.relationships[entity]["properties"].keys()
+                )
+                score.append(property in avail_property_entity)
+            else:
+                # no properties of the entity or relationship exist, simply made up
+                score.append(0)
+        return calculate_test_score(score)
 
-        elif (
-            entity in prompt_engine.relationships.keys()
-            and "properties" in prompt_engine.relationships[entity]
-        ):
-            # check property used is in available properties for relationships
-            avail_property_entity = list(
-                prompt_engine.relationships[entity]["properties"].keys()
-            )
-            score.append(property in avail_property_entity)
-        else:
-            # no properties of the entity or relationship exist, simply made up
-            score.append(0)
+    mean_score, max = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        calculate_test_score(score),
+        f"{mean_score}/{max}",
         FILE_PATH,
     )
