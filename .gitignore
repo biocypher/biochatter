@@ -11,5 +11,4 @@ __pycache__/
 .idea/
 *.env
 volumes/
-benchmark/results/*.csv
 benchmark/encrypted_llm_test_data.json
