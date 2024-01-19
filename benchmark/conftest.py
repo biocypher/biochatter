@@ -145,6 +145,17 @@ def conversation(request, model_name):
     return conversation
 
 
+@pytest.fixture
+def evaluation_conversation():
+    conversation = GptConversation(
+        model_name="gpt-3.5-turbo",
+        prompts={},
+        correct=False,
+    )
+    conversation.set_api_key(os.getenv("OPENAI_API_KEY"), user="benchmark_user")
+    return conversation
+
+
 def pytest_addoption(parser):
     parser.addoption(
         "--run-all",

@@ -52,7 +52,7 @@ def skip_if_already_run(
         )
 
 
-def test_relevance_of_single_fragments(
+def test_explicit_relevance_of_single_fragments(
     model_name,
     test_data_rag_interpretation,
     result_files,
@@ -65,7 +65,12 @@ def test_relevance_of_single_fragments(
         test_case_purpose,
         test_case_index,
     ) = get_test_data(test_data_rag_interpretation)
+
     subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
+    if not test_case_purpose == "explicit":
+        pytest.skip(
+            f"test case {test_case_purpose} not supported for {subtask} benchmark"
+        )
     skip_if_already_run(model_name, result_files, subtask)
 
     [conversation.append_system_message(m) for m in system_messages]
@@ -82,6 +87,49 @@ def test_relevance_of_single_fragments(
                 score.append(False)
     else:
         [score.append(False) for _ in expected_answers]
+
+    write_results_to_file(
+        model_name,
+        subtask,
+        calculate_test_score(score),
+        FILE_PATH,
+    )
+
+
+def test_implicit_relevance_of_multiple_fragments(
+    model_name,
+    test_data_rag_interpretation,
+    result_files,
+    conversation,
+    evaluation_conversation,
+):
+    (
+        system_messages,
+        prompt,
+        expected_answers,
+        test_case_purpose,
+        test_case_index,
+    ) = get_test_data(test_data_rag_interpretation)
+
+    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
+    if not test_case_purpose == "implicit":
+        pytest.skip(
+            f"test case {test_case_purpose} not supported for {subtask} benchmark"
+        )
+    skip_if_already_run(model_name, result_files, subtask)
+
+    [conversation.append_system_message(m) for m in system_messages]
+    response, _, _ = conversation.query(prompt)
+
+    # evaluator LLM
+    evaluation_conversation.append_system_message(
+        "Evaluate the following response regarding whether it acknowledges the irrelevance of provided information to the question. "
+        "Answer 'yes' if the response acknowledges the irrelevance of provided information to the question, 'no' if the response attempts to answer the question. "
+    )
+
+    eval, _, _ = evaluation_conversation.query(response)
+
+    score = [True] if eval.lower() == "yes" else [False]
 
     write_results_to_file(
         model_name,
