@@ -57,6 +57,7 @@ def test_explicit_relevance_of_single_fragments(
     test_data_rag_interpretation,
     result_files,
     conversation,
+    multiple_testing,
 ):
     (
         system_messages,
@@ -74,24 +75,30 @@ def test_explicit_relevance_of_single_fragments(
     skip_if_already_run(model_name, result_files, subtask)
 
     [conversation.append_system_message(m) for m in system_messages]
-    response, _, _ = conversation.query(prompt)
-    answers = ensure_iterable(response.split(","))
 
-    score = []
+    def run_test():
+        response, _, _ = conversation.query(prompt)
+        answers = ensure_iterable(response.split(","))
 
-    if len(answers) == len(expected_answers):
-        for index, answer in enumerate(answers):
-            if answer == expected_answers[index]:
-                score.append(True)
-            else:
-                score.append(False)
-    else:
-        [score.append(False) for _ in expected_answers]
+        score = []
+
+        if len(answers) == len(expected_answers):
+            for index, answer in enumerate(answers):
+                if answer == expected_answers[index]:
+                    score.append(True)
+                else:
+                    score.append(False)
+        else:
+            [score.append(False) for _ in expected_answers]
+
+        return calculate_test_score(score)
+
+    mean_score, max = multiple_testing(run_test)
 
     write_results_to_file(
         model_name,
         subtask,
-        calculate_test_score(score),
+        f"{mean_score}/{max}",
         FILE_PATH,
     )
 
@@ -102,6 +109,7 @@ def test_implicit_relevance_of_multiple_fragments(
     result_files,
     conversation,
     evaluation_conversation,
+    multiple_testing,
 ):
     (
         system_messages,
@@ -119,21 +127,27 @@ def test_implicit_relevance_of_multiple_fragments(
     skip_if_already_run(model_name, result_files, subtask)
 
     [conversation.append_system_message(m) for m in system_messages]
-    response, _, _ = conversation.query(prompt)
 
-    # evaluator LLM
-    evaluation_conversation.append_system_message(
-        "Evaluate the following response regarding whether it acknowledges the irrelevance of provided information to the question. "
-        "Answer 'yes' if the response acknowledges the irrelevance of provided information to the question, 'no' if the response attempts to answer the question. "
-    )
+    def run_test():
+        response, _, _ = conversation.query(prompt)
 
-    eval, _, _ = evaluation_conversation.query(response)
+        # evaluator LLM
+        evaluation_conversation.append_system_message(
+            "Evaluate the following response regarding whether it acknowledges the irrelevance of provided information to the question. "
+            "Answer 'yes' if the response acknowledges the irrelevance of provided information to the question, 'no' if the response attempts to answer the question. "
+        )
 
-    score = [True] if eval.lower() == "yes" else [False]
+        eval, _, _ = evaluation_conversation.query(response)
+
+        score = [True] if eval.lower() == "yes" else [False]
+
+        return calculate_test_score(score)
+
+    mean_score, max = multiple_testing(run_test)
 
     write_results_to_file(
         model_name,
         subtask,
-        calculate_test_score(score),
+        f"{mean_score}/{max}",
         FILE_PATH,
     )
