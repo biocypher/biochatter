@@ -65,6 +65,7 @@ def _load_test_data_from_this_repository():
                     "relationship_labels",
                     "properties",
                     "parts_of_query",
+                    "system_messages",
                 ],
             )
             test_data[file_path.replace("./benchmark/", "./")] = df
@@ -130,6 +131,7 @@ def _decrypt_data(
                     "relationship_labels",
                     "properties",
                     "parts_of_query",
+                    "system_messages",
                 ],
             )
             decrypted_test_data[key] = df

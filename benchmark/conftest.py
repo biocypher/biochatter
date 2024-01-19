@@ -13,6 +13,7 @@ from xinference.client import Client
 
 RESULT_FILES = [
     "benchmark/results/biocypher_query_generation.csv",
+    "benchmark/results/rag_interpretation.csv",
     "benchmark/results/vectorstore.csv",
 ]
 
@@ -202,7 +203,7 @@ def pytest_generate_tests(metafunc):
     # Initialize a dictionary to collect rows for each test type
     test_rows = {
         "biocypher_query_generation": [],
-        "rag_functionality": [],
+        "rag_interpretation": [],
         "text_extraction": [],
     }
 
@@ -219,10 +220,10 @@ def pytest_generate_tests(metafunc):
             "test_data_biocypher_query_generation",
             test_rows["biocypher_query_generation"],
         )
-    if "test_data_rag_functionality" in metafunc.fixturenames:
+    if "test_data_rag_interpretation" in metafunc.fixturenames:
         metafunc.parametrize(
-            "test_data_rag_functionality",
-            test_rows["rag_functionality"],
+            "test_data_rag_interpretation",
+            test_rows["rag_interpretation"],
         )
     if "test_data_text_extraction" in metafunc.fixturenames:
         metafunc.parametrize(
