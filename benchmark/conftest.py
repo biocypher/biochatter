@@ -66,14 +66,36 @@ def pytest_generate_tests(metafunc):
     Called once for each test case in the benchmark test collection.
     If fixture is part of test declaration, the test is parametrized.
     """
-    if "test_data_biocypher_query_generation" in metafunc.fixturenames:
-        data_file = BENCHMARK_DATASET[
-            "./data/biocypher_query_generation/biocypher_query_generation.csv"
-        ]
-        data_file["index"] = data_file.index
-        metafunc.parametrize(
-            "test_data_biocypher_query_generation", data_file.values
-        )
+    # Load the data file
+    data_file = pd.read_csv("./data/test_data.csv")
+    data_file["index"] = data_file.index
+    # should be BENCHMARK_DATASET["./data/test_data.csv"] ?
+
+    # Iterate over each row in the DataFrame
+    for index, row in data_file.iterrows():
+        # Check the type of the test case
+        if row["test_type"] == "biocypher_query_generation":
+            # If the test function requires the "test_data_biocypher_query_generation" fixture
+            if "test_data_biocypher_query_generation" in metafunc.fixturenames:
+                # Parametrize the fixture with the relevant columns
+                metafunc.parametrize(
+                    "test_data_biocypher_query_generation",
+                    [row[relevant_columns]],
+                )
+        elif row["test_type"] == "rag_functionality":
+            # If the test function requires the "test_data_rag_functionality" fixture
+            if "test_data_rag_functionality" in metafunc.fixturenames:
+                # Parametrize the fixture with the relevant columns
+                metafunc.parametrize(
+                    "test_data_rag_functionality", [row[relevant_columns]]
+                )
+        elif row["test_type"] == "text_extraction":
+            # If the test function requires the "test_data_text_extraction" fixture
+            if "test_data_text_extraction" in metafunc.fixturenames:
+                # Parametrize the fixture with the relevant columns
+                metafunc.parametrize(
+                    "test_data_text_extraction", [row[relevant_columns]]
+                )
 
 
 def calculate_test_score(vector: list[bool]):
