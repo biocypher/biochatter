@@ -70,6 +70,7 @@ BENCHMARKED_MODELS.sort()
 BENCHMARK_URL = "http://129.206.191.235:9997"
 
 
+# parameterise tests to run for each model
 @pytest.fixture(params=BENCHMARKED_MODELS)
 def model_name(request):
     return request.param
