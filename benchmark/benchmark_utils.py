@@ -25,7 +25,7 @@ def benchmark_already_executed(
             already been run, False otherwise
     """
     task_results = result_files[f"benchmark/results/{task}.csv"]
-    task_results_subset = (task_results["model"] == model_name) & (
+    task_results_subset = (task_results["model_name"] == model_name) & (
         task_results["subtask"] == subtask
     )
     return task_results_subset.any()
@@ -46,7 +46,7 @@ def write_results_to_file(
         [[model_name, subtask, score]], columns=results.columns
     )
     results = pd.concat([results, new_row], ignore_index=True).sort_values(
-        by="subtask"
+        by=["model_name", "subtask"]
     )
     results.to_csv(file_path, index=False)
 
