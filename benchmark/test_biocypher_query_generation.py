@@ -39,37 +39,44 @@ def get_test_data(test_data_biocypher_query_generation: list) -> tuple:
     )
 
 
-def setup_test(
-    kg_schema_file_name: str,
-    create_prompt_engine,
+def skip_if_already_run(
+    model_name: str,
     result_files: dict[str, pd.DataFrame],
     subtask: str,
+) -> None:
+    """Helper function to check if the test case is already executed.
+
+    Args:
+        model_name (str): The model name, e.g. "gpt-3.5-turbo"
+        result_files (dict[str, pd.DataFrame]): The result files
+        subtask (str): The benchmark subtask test case, e.g. "entities_0"
+    """
+    if benchmark_already_executed(TASK, subtask, model_name, result_files):
+        pytest.skip(
+            f"benchmark {TASK}: {subtask} with {model_name} already executed"
+        )
+
+
+def get_prompt_engine(
+    kg_schema_file_name: str,
+    create_prompt_engine,
 ) -> BioCypherPromptEngine:
-    """Helper function to check if the test case is already executed
-    and to create the prompt engine for the test.
+    """Helper function to create the prompt engine for the test.
 
     Args:
         kg_schema_file_name (str): The KG schema file name
         create_prompt_engine: The function to create the BioCypherPromptEngine
-        result_files (dict[str, pd.DataFrame]): The result files
-        subtask (str): The benchmark subtask test case, e.g. "entities_0"
 
     Returns:
         BioCypherPromptEngine: The prompt engine for the test
     """
-    prompt_engine = create_prompt_engine(
+    return create_prompt_engine(
         kg_schema_path=f"./benchmark/data/{kg_schema_file_name}"
     )
-    if benchmark_already_executed(
-        TASK, subtask, prompt_engine.model_name, result_files
-    ):
-        pytest.skip(
-            f"benchmark {TASK}: {subtask} with {prompt_engine.model_name} already executed"
-        )
-    return prompt_engine
 
 
 def test_entity_selection(
+    model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
     result_files,
@@ -87,9 +94,8 @@ def test_entity_selection(
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
     subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    prompt_engine = setup_test(
-        kg_schema_file_name, prompt_engine, result_files, subtask
-    )
+    skip_if_already_run(model_name, result_files, subtask)
+    prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     success = prompt_engine._select_entities(
         question=prompt, conversation=conversation
@@ -109,6 +115,7 @@ def test_entity_selection(
 
 
 def test_relationship_selection(
+    model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
     result_files,
@@ -126,9 +133,8 @@ def test_relationship_selection(
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
     subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    prompt_engine = setup_test(
-        kg_schema_file_name, prompt_engine, result_files, subtask
-    )
+    skip_if_already_run(model_name, result_files, subtask)
+    prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     prompt_engine.question = prompt
     prompt_engine.selected_entities = expected_entities
@@ -167,6 +173,7 @@ def test_relationship_selection(
 
 
 def test_property_selection(
+    model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
     result_files,
@@ -184,9 +191,8 @@ def test_property_selection(
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
     subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    prompt_engine = setup_test(
-        kg_schema_file_name, prompt_engine, result_files, subtask
-    )
+    skip_if_already_run(model_name, result_files, subtask)
+    prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     prompt_engine.question = prompt
     prompt_engine.selected_entities = expected_entities
@@ -224,6 +230,7 @@ def test_property_selection(
 
 
 def test_query_generation(
+    model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
     result_files,
@@ -241,9 +248,8 @@ def test_query_generation(
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
     subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    prompt_engine = setup_test(
-        kg_schema_file_name, prompt_engine, result_files, subtask
-    )
+    skip_if_already_run(model_name, result_files, subtask)
+    prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
     query = prompt_engine._generate_query(
         question=prompt,
         entities=expected_entities,
@@ -273,10 +279,10 @@ def test_query_generation(
 
 
 def test_end_to_end_query_generation(
+    model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
     result_files,
-    conversation,
 ):
     (
         kg_schema_file_name,
@@ -290,9 +296,8 @@ def test_end_to_end_query_generation(
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
     subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    prompt_engine = setup_test(
-        kg_schema_file_name, prompt_engine, result_files, subtask
-    )
+    skip_if_already_run(model_name, result_files, subtask)
+    prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
     query = prompt_engine.generate_query(
         question=prompt,
         query_language="Cypher",
@@ -402,6 +407,7 @@ def get_used_property_from_query(query):
 
 
 def test_property_exists(
+    model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
     result_files,
@@ -419,9 +425,8 @@ def test_property_exists(
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
     subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    prompt_engine = setup_test(
-        kg_schema_file_name, prompt_engine, result_files, subtask
-    )
+    skip_if_already_run(model_name, result_files, subtask)
+    prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     query = prompt_engine._generate_query(
         question=prompt,

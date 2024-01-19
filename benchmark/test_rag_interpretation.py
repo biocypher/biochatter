@@ -42,6 +42,7 @@ def skip_if_already_run(
     """Helper function to check if the test case is already executed.
 
     Args:
+        model_name (str): The model name, e.g. "gpt-3.5-turbo"
         result_files (dict[str, pd.DataFrame]): The result files
         subtask (str): The benchmark subtask test case, e.g. "entities_0"
     """
@@ -51,7 +52,7 @@ def skip_if_already_run(
         )
 
 
-def test_relevance_of_fragments(
+def test_relevance_of_single_fragments(
     model_name,
     test_data_rag_interpretation,
     result_files,
