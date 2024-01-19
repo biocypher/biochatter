@@ -68,10 +68,14 @@ BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
 BENCHMARK_URL = "http://129.206.191.235:9997"
 
 
-@pytest.fixture(scope="module", params=BENCHMARKED_MODELS)
-def prompt_engine(request):
+@pytest.fixture(params=BENCHMARKED_MODELS)
+def model_name(request):
+    return request.param
+
+
+@pytest.fixture
+def prompt_engine(request, model_name):
     def setup_prompt_engine(kg_schema_path):
-        model_name = request.param
         return BioCypherPromptEngine(
             schema_config_or_info_path=kg_schema_path,
             model_name=model_name,
@@ -80,9 +84,8 @@ def prompt_engine(request):
     return setup_prompt_engine
 
 
-@pytest.fixture(scope="function", params=BENCHMARKED_MODELS)
-def conversation(request):
-    model_name = request.param
+@pytest.fixture
+def conversation(request, model_name):
     if model_name in OPENAI_MODEL_NAMES:
         conversation = GptConversation(
             model_name=model_name,
@@ -98,12 +101,6 @@ def conversation(request):
 
         # get running models
         client = Client(base_url=BENCHMARK_URL)
-
-        # TODO if all tests have already been executed, we should find out here,
-        # not after the model has been launched
-
-        # TODO why are we concatenating two instances of full model names for
-        # all tests? (llama-2-chat:7:q2_K-llama-2-chat:7:q8_0 ...?)
 
         # if exact model already running, return conversation
         running_models = client.list_models()
