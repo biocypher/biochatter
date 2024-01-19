@@ -199,14 +199,24 @@ def pytest_generate_tests(metafunc):
     data_file = pd.read_csv("./data/test_data.csv")
     data_file["index"] = data_file.index
     # should be BENCHMARK_DATASET["./data/test_data.csv"] ?
+    relevant_columns = []
 
     # Iterate over each row in the DataFrame
     for index, row in data_file.iterrows():
-        # Check the type of the test case
         if row["test_type"] == "biocypher_query_generation":
-            # If the test function requires the "test_data_biocypher_query_generation" fixture
             if "test_data_biocypher_query_generation" in metafunc.fixturenames:
                 # Parametrize the fixture with the relevant columns
+                relevant_columns = [
+                    "kg_path",
+                    "prompt",
+                    "entities",
+                    "relationships",
+                    "relationship_labels",
+                    "properties",
+                    "parts_of_query",
+                    "test_case_purpose",
+                    "index",
+                ]
                 metafunc.parametrize(
                     "test_data_biocypher_query_generation",
                     [row[relevant_columns]],
