@@ -114,6 +114,8 @@ def _decrypt_data(
 
     Returns:
         dict: keys are filenames and values are decrypted test data.
+
+    Todo: genericise to eval automatically
     """
     decrypted_test_data = {}
     for key in encrypted_test_data.keys():

@@ -26,25 +26,16 @@ def get_test_data(test_data_biocypher_query_generation: list) -> tuple:
     Returns:
         tuple: The unpacked test data
     """
-    kg_schema_file_name = test_data_biocypher_query_generation[0]
-    prompt = test_data_biocypher_query_generation[1]
-    expected_entities = test_data_biocypher_query_generation[2]
-    expected_relationships = test_data_biocypher_query_generation[3]
-    expected_relationship_labels = test_data_biocypher_query_generation[4]
-    expected_properties = test_data_biocypher_query_generation[5]
-    expected_parts_of_query = test_data_biocypher_query_generation[6]
-    test_case_purpose = test_data_biocypher_query_generation[7]
-    test_case_index = test_data_biocypher_query_generation[8]
     return (
-        kg_schema_file_name,
-        prompt,
-        expected_entities,
-        expected_relationships,
-        expected_relationship_labels,
-        expected_properties,
-        expected_parts_of_query,
-        test_case_purpose,
-        test_case_index,
+        test_data_biocypher_query_generation["kg_path"],
+        test_data_biocypher_query_generation["prompt"],
+        test_data_biocypher_query_generation["entities"],
+        test_data_biocypher_query_generation["relationships"],
+        test_data_biocypher_query_generation["relationship_labels"],
+        test_data_biocypher_query_generation["properties"],
+        test_data_biocypher_query_generation["parts_of_query"],
+        test_data_biocypher_query_generation["test_case_purpose"],
+        test_data_biocypher_query_generation["index"],
     )
 
 
@@ -67,7 +58,7 @@ def setup_test(
         BioCypherPromptEngine: The prompt engine for the test
     """
     prompt_engine = create_prompt_engine(
-        kg_schema_path=f"./benchmark/data/biocypher_query_generation/{kg_schema_file_name}"
+        kg_schema_path=f"./benchmark/data/{kg_schema_file_name}"
     )
     if benchmark_already_executed(
         TASK, subtask, prompt_engine.model_name, result_files

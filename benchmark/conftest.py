@@ -196,45 +196,39 @@ def pytest_generate_tests(metafunc):
     If fixture is part of test declaration, the test is parametrized.
     """
     # Load the data file
-    data_file = pd.read_csv("./data/test_data.csv")
+    data_file = BENCHMARK_DATASET["./data/benchmark_data.csv"]
     data_file["index"] = data_file.index
-    # should be BENCHMARK_DATASET["./data/test_data.csv"] ?
-    relevant_columns = []
+
+    # Initialize a dictionary to collect rows for each test type
+    test_rows = {
+        "biocypher_query_generation": [],
+        "rag_functionality": [],
+        "text_extraction": [],
+    }
 
     # Iterate over each row in the DataFrame
     for index, row in data_file.iterrows():
-        if row["test_type"] == "biocypher_query_generation":
-            if "test_data_biocypher_query_generation" in metafunc.fixturenames:
-                # Parametrize the fixture with the relevant columns
-                relevant_columns = [
-                    "kg_path",
-                    "prompt",
-                    "entities",
-                    "relationships",
-                    "relationship_labels",
-                    "properties",
-                    "parts_of_query",
-                    "test_case_purpose",
-                    "index",
-                ]
-                metafunc.parametrize(
-                    "test_data_biocypher_query_generation",
-                    [row[relevant_columns]],
-                )
-        elif row["test_type"] == "rag_functionality":
-            # If the test function requires the "test_data_rag_functionality" fixture
-            if "test_data_rag_functionality" in metafunc.fixturenames:
-                # Parametrize the fixture with the relevant columns
-                metafunc.parametrize(
-                    "test_data_rag_functionality", [row[relevant_columns]]
-                )
-        elif row["test_type"] == "text_extraction":
-            # If the test function requires the "test_data_text_extraction" fixture
-            if "test_data_text_extraction" in metafunc.fixturenames:
-                # Parametrize the fixture with the relevant columns
-                metafunc.parametrize(
-                    "test_data_text_extraction", [row[relevant_columns]]
-                )
+        test_type = row["test_type"]
+        if test_type in test_rows:
+            # Add the row to the list for this test type
+            test_rows[test_type].append(row)
+
+    # Parametrize the fixtures with the collected rows
+    if "test_data_biocypher_query_generation" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "test_data_biocypher_query_generation",
+            test_rows["biocypher_query_generation"],
+        )
+    if "test_data_rag_functionality" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "test_data_rag_functionality",
+            test_rows["rag_functionality"],
+        )
+    if "test_data_text_extraction" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "test_data_text_extraction",
+            test_rows["text_extraction"],
+        )
 
 
 def calculate_test_score(vector: list[bool]):
