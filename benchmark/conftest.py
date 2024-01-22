@@ -26,33 +26,33 @@ BENCHMARK_DATASET = get_benchmark_dataset()
 # TODO should probably go to conftest.py
 OPENAI_MODEL_NAMES = [
     "gpt-3.5-turbo",
-    "gpt-4",
+    # "gpt-4",
 ]
 
 XINFERENCE_MODELS = {
-    # "llama-2-chat": {
-    #     "model_size_in_billions": [
-    #         7,
-    #         # 13,
-    #         # 70,
-    #     ],
-    #     "quantization": [
-    #         "q2_K",
-    #         # "q3_K_L",
-    #         # "q3_K_M",
-    #         # "q3_K_S",
-    #         # "q4_0",
-    #         # "q4_1",
-    #         # "q4_K_M",
-    #         # "q4_K_S",
-    #         # "q5_0",
-    #         # "q5_1",
-    #         # "q5_K_M",
-    #         # "q5_K_S",
-    #         # "q6_K",
-    #         "q8_0",
-    #     ],
-    # },
+    "llama-2-chat": {
+        "model_size_in_billions": [
+            7,
+            # 13,
+            # 70,
+        ],
+        "quantization": [
+            "q2_K",
+            # "q3_K_L",
+            # "q3_K_M",
+            # "q3_K_S",
+            # "q4_0",
+            # "q4_1",
+            # "q4_K_M",
+            # "q4_K_S",
+            # "q5_0",
+            # "q5_1",
+            # "q5_K_M",
+            # "q5_K_S",
+            # "q6_K",
+            "q8_0",
+        ],
+    },
 }
 
 # create concrete benchmark list by concatenating all combinations of model
@@ -97,6 +97,10 @@ def calculate_test_score(vector: list[bool]) -> tuple[int, int]:
 
 @pytest.fixture
 def prompt_engine(request, model_name):
+    """
+    Generates a constructor for the prompt engine for the current model name.
+    """
+
     def setup_prompt_engine(kg_schema_path):
         return BioCypherPromptEngine(
             schema_config_or_info_path=kg_schema_path,

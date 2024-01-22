@@ -29,3 +29,5 @@ gpt-4,test_query_generation_2_multi_word,7/7
 gpt-4,test_relationship_selection_0_single_word,3/4
 gpt-4,test_relationship_selection_1_multi_word,3.0/4
 gpt-4,test_relationship_selection_2_multi_word,3/4
+llama-2-chat:7:q2_K,test_entity_selection_0_single_word,2.0/2
+llama-2-chat:7:q2_K,test_entity_selection_1_multi_word,1.0/2

@@ -17,10 +17,14 @@ FILE_PATH = get_result_file_path(TASK)
 
 
 def get_test_data(test_data_rag_interpretation: list) -> tuple:
-    """Helper function to unpack the test data from the test_data_rag_interpretation fixture.
+    """
+
+    Helper function to unpack the test data from the
+    test_data_rag_interpretation fixture.
 
     Args:
-        test_data_rag_interpretation (list): The test data from the test_data_rag_interpretation fixture
+        test_data_rag_interpretation (list): The test data from the
+        test_data_rag_interpretation fixture
 
     Returns:
         tuple: The unpacked test data
