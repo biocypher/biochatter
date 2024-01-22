@@ -41,6 +41,7 @@ plugins:
   - search
   - mkdocstrings:
       default_handler: python
+  - table-reader
 
 nav:
   - Home: index.md
@@ -71,3 +72,10 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+
+extra_javascript:
+  - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
+  - scripts/tablesort.js
+
+hooks:
+  - docs/scripts/hooks.py

@@ -5,7 +5,7 @@ We need to constantly evaluate the multitude of combinations of individual model
 To this end, we are maintaining a living benchmarking framework that allows us to continuously compare the performance of different models and configurations on a variety of tasks.
 
 The benchmark uses the pytest framework to orchestrate the evaluation of a number of models on a number of tasks.
-The benchmark is run on a regular basis, and the results are published on the [BioChatter website](https://biocypher.github.io/biochatter/).
+The benchmark is run on a regular basis, and the results are published on the [BioChatter website](https://biocypher.github.io/biochatter/benchmark/#results).
 (Currently in development.)
 The benchmarking suite can be found in the `benchmark` directory of the BioChatter repository.
 It can be executed using standard pytest syntax, e.g., `poetry run pytest benchmark`.
@@ -73,3 +73,28 @@ For instance, the length and overlap of fragments, the embedding algorithms, as 
 
 There is a wide range of tasks that are potentially useful to BioChatter users.
 To cover most scenarios of research and development use, as well as clinical applications, we test a variety of tasks and LLM personas.
+
+## Results
+
+### BioChatter for BioCypher query generation
+
+In this task BioChatter is used to generate queries for a BioCypher Knowledge Graph.
+The `schema_config.yaml` of the BioCypher Knowledge Graph and a natural language query are passed to BioChatter.
+
+Benchmarking results for BioChatter as a query generator for BioCypher:
+
+{{ read_csv('benchmark/results/preprocessed_for_frontend/biocypher_query_generation_test_end_to_end_query_generation.csv', colalign=("center","center","center","center")) }}
+
+### Retrieval Augmented Generation (RAG)
+
+TODO: description of rag_interpretation_test_explicit_relevance_of_single_fragments
+
+{{ read_csv('benchmark/results/preprocessed_for_frontend/rag_interpretation_test_explicit_relevance_of_single_fragments.csv', colalign=("center","center","center","center")) }}
+
+TODO: description of rag_interpretation_test_implicit_relevance_of_multiple_fragments
+
+{{ read_csv('benchmark/results/preprocessed_for_frontend/rag_interpretation_test_implicit_relevance_of_multiple_fragments.csv', colalign=("center","center","center","center")) }}
+
+### Semantic search
+
+tbd
