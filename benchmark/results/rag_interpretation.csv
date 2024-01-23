@@ -1,0 +1,11 @@
+model_name,subtask,score
+gpt-3.5-turbo,test_explicit_relevance_of_single_fragments_2_explicit,1.0/1
+gpt-3.5-turbo,test_explicit_relevance_of_single_fragments_3_explicit,0.5/1
+gpt-3.5-turbo,test_explicit_relevance_of_single_fragments_4_explicit,1.0/1
+gpt-3.5-turbo,test_explicit_relevance_of_single_fragments_5_explicit,1.0/1
+gpt-3.5-turbo,test_implicit_relevance_of_multiple_fragments_6_implicit,0.5/1
+gpt-4,test_explicit_relevance_of_single_fragments_2_explicit,0.0/1
+gpt-4,test_explicit_relevance_of_single_fragments_3_explicit,0.0/1
+gpt-4,test_explicit_relevance_of_single_fragments_4_explicit,0.0/1
+gpt-4,test_explicit_relevance_of_single_fragments_5_explicit,0.0/1
+gpt-4,test_implicit_relevance_of_multiple_fragments_6_implicit,1.0/1
