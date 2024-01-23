@@ -4,7 +4,7 @@ from unittest.mock import patch
 # from langchain.schema import Document
 # from pymilvus import utility, Collection, connections
 # from langchain.embeddings import OpenAIEmbeddings
-from biochatter.vectorstore_agent import VectorDatabaseHostMilvus
+from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
 
 from .mock_langchain import OpenAIEmbeddings, Document, Milvus
 from .mock_pymilvus import (
@@ -136,24 +136,24 @@ mocked_bc_summary_txt_splitted_texts = [
 @pytest.fixture
 def dbHost():
     with patch(
-        "biochatter.vectorstore_host.OpenAIEmbeddings", OpenAIEmbeddings
-    ), patch("biochatter.vectorstore_host.Document", Document), patch(
-        "biochatter.vectorstore_host.Milvus", Milvus
+        "biochatter.vectorstore_agent.OpenAIEmbeddings", OpenAIEmbeddings
+    ), patch("biochatter.vectorstore_agent.Document", Document), patch(
+        "biochatter.vectorstore_agent.Milvus", Milvus
     ), patch(
-        "biochatter.vectorstore_host.connections", connections
+        "biochatter.vectorstore_agent.connections", connections
     ), patch(
-        "biochatter.vectorstore_host.utility", utility
+        "biochatter.vectorstore_agent.utility", utility
     ), patch(
-        "biochatter.vectorstore_host.Collection", Collection
+        "biochatter.vectorstore_agent.Collection", Collection
     ), patch(
-        "biochatter.vectorstore_host.DataType", DataType
+        "biochatter.vectorstore_agent.DataType", DataType
     ), patch(
-        "biochatter.vectorstore_host.FieldSchema", FieldSchema
+        "biochatter.vectorstore_agent.FieldSchema", FieldSchema
     ), patch(
-        "biochatter.vectorstore_host.CollectionSchema", CollectionSchema
+        "biochatter.vectorstore_agent.CollectionSchema", CollectionSchema
     ):
         # create dbHost
-        dbHost = VectorDatabaseHostMilvus(
+        dbHost = VectorDatabaseAgentMilvus(
             embedding_func=OpenAIEmbeddings(),
             connection_args={"host": _HOST, "port": _PORT},
             embedding_collection_name=EMBEDDING_NAME,
@@ -213,7 +213,7 @@ def test_build_meta_col_query_expr_for_all_documents():
         ],
     ]
     for test_data in data:
-        expr = VectorDatabaseHostMilvus._build_meta_col_query_expr_for_all_documents(
+        expr = VectorDatabaseAgentMilvus._build_meta_col_query_expr_for_all_documents(
             test_data[0]
         )
         assert expr == test_data[1]

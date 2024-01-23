@@ -88,7 +88,7 @@ def test_retrieval_augmented_generation(model, chunk_size):
     with patch(
         "biochatter.vectorstore.OpenAIEmbeddings"
     ) as mock_openaiembeddings, patch(
-        "biochatter.vectorstore.VectorDatabaseHostMilvus"
+        "biochatter.vectorstore.VectorDatabaseAgentMilvus"
     ) as mock_host, patch(
         "biochatter.vectorstore.RecursiveCharacterTextSplitter"
     ) as mock_textsplitter:

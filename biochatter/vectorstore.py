@@ -18,7 +18,7 @@ from langchain.vectorstores import Milvus
 import fitz  # this is PyMuPDF (PyPI pymupdf package, not fitz)
 from transformers import GPT2TokenizerFast
 
-from biochatter.vectorstore_agent import VectorDatabaseHostMilvus
+from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
 
 
 class DocumentEmbedder:
@@ -162,7 +162,7 @@ class DocumentEmbedder:
 
     def _init_database_host(self):
         if self.vector_db_vendor == "milvus":
-            self.database_host = VectorDatabaseHostMilvus(
+            self.database_host = VectorDatabaseAgentMilvus(
                 embedding_func=self.embeddings,
                 connection_args=self.connection_args,
                 embedding_collection_name=self.embedding_collection_name,

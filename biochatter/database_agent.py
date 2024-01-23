@@ -10,7 +10,7 @@ class DatabaseAgent:
         schema_config_or_info_dict: dict,
     ) -> None:
         """
-        Create a DatabaseAgent analogous to the VectorDatabaseHostMilvus class,
+        Create a DatabaseAgent analogous to the VectorDatabaseAgentMilvus class,
         which can return results from a database using a query engine. Currently
         limited to Neo4j for development.
 

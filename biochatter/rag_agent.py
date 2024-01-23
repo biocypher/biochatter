@@ -57,7 +57,7 @@ class RagAgent:
             self.query_func = self.agent.get_query_results
 
         elif self.mode == "vectorstore":
-            from .vectorstore_agent import VectorDatabaseHostMilvus
+            from .vectorstore_agent import VectorDatabaseAgentMilvus
 
             if not embedding_func:
                 raise ValueError("Please provide an embedding function.")
@@ -66,7 +66,7 @@ class RagAgent:
             if not metadata_collection_name:
                 raise ValueError("Please provide a metadata collection name.")
 
-            self.agent = VectorDatabaseHostMilvus(
+            self.agent = VectorDatabaseAgentMilvus(
                 embedding_func=embedding_func,
                 connection_args=connection_args,
                 embedding_collection_name=embedding_collection_name,
