@@ -94,16 +94,16 @@ class RagAgent:
 
         Returns:
             results (list[tuple]): A list of tuples containing the results.
+
+        Todo:
+            Which metadata are returned?
         """
         results = self.query_func(user_question, k)
         if self.mode == "kg":
             return [
                 (
-                    result["name"],
-                    {
-                        "name": result["name"],
-                        "description": result["description"],
-                    },
+                    result.page_content,
+                    result.metadata,
                 )
                 for result in results
             ]
@@ -111,10 +111,7 @@ class RagAgent:
             return [
                 (
                     result.page_content,
-                    {
-                        "name": result.metadata["name"],
-                        "description": result.metadata["description"],
-                    },
+                    result.metadata,
                 )
                 for result in results
             ]

@@ -78,4 +78,4 @@ class DatabaseAgent:
             if len(documents) == k:
                 break
 
-        return results
+        return documents
