@@ -150,7 +150,7 @@ def test_property_selection(prompt_engine):
         score.append("Disease" in prompt_engine.selected_properties.keys())
         score.append("name" in prompt_engine.selected_properties.get("Disease"))
 
-        assert calculate_test_score(score) == (2. 2)
+        assert calculate_test_score(score) == (2, 2)
 
 
 def test_query_generation(prompt_engine):

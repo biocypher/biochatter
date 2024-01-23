@@ -4,7 +4,7 @@ from biochatter.rag_agent import RagAgent
 
 
 def test_rag_agent_kg_mode():
-    with patch("rag_agent.DatabaseAgent") as MockDatabaseAgent:
+    with patch("biochatter.database.DatabaseAgent") as MockDatabaseAgent:
         mock_agent = MockDatabaseAgent.return_value
         mock_agent.get_query_results.return_value = [
             "result1",
@@ -15,7 +15,9 @@ def test_rag_agent_kg_mode():
             mode="kg",
             model_name="test_model",
             connection_args={},
-            schema_config_or_info_dict={},
+            schema_config_or_info_dict={
+                "schema_config_or_info_dict": "test_schema_config_or_info_dict"
+            },
         )
         assert agent.mode == "kg"
         assert agent.model_name == "test_model"
@@ -30,7 +32,7 @@ def test_rag_agent_kg_mode():
 
 def test_rag_agent_vectorstore_mode():
     with patch(
-        "rag_agent.VectorDatabaseHostMilvus"
+        "biochatter.vectorstore_host.VectorDatabaseHostMilvus"
     ) as MockVectorDatabaseHostMilvus:
         mock_agent = MockVectorDatabaseHostMilvus.return_value
         mock_agent.similarity_search.return_value = [
