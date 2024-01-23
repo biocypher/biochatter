@@ -81,5 +81,44 @@ class RagAgent:
                 "Invalid mode. Choose either 'kg' or 'vectorstore'."
             )
 
-    def generate_responses(self, user_question: str, k: int = 3) -> list:
-        return self.query_func(user_question)
+    def generate_responses(self, user_question: str, k: int = 3) -> list[tuple]:
+        """
+        Run the query function according to the mode and return the results in a
+        uniform format (list of tuples, where the first element is the text for
+        RAG and the second element is the metadata).
+
+        Args:
+            user_question (str): The user question.
+
+            k (int): The number of results to return.
+
+        Returns:
+            results (list[tuple]): A list of tuples containing the results.
+        """
+        results = self.query_func(user_question, k)
+        if self.mode == "kg":
+            return [
+                (
+                    result["name"],
+                    {
+                        "name": result["name"],
+                        "description": result["description"],
+                    },
+                )
+                for result in results
+            ]
+        elif self.mode == "vectorstore":
+            return [
+                (
+                    result.page_content,
+                    {
+                        "name": result.metadata["name"],
+                        "description": result.metadata["description"],
+                    },
+                )
+                for result in results
+            ]
+        else:
+            raise ValueError(
+                "Invalid mode. Choose either 'kg' or 'vectorstore'."
+            )
