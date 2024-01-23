@@ -18,7 +18,8 @@ from langchain.vectorstores import Milvus
 import fitz  # this is PyMuPDF (PyPI pymupdf package, not fitz)
 from transformers import GPT2TokenizerFast
 
-from biochatter.vectorstore_host import VectorDatabaseHostMilvus
+from biochatter.vectorstore_agent import VectorDatabaseHostMilvus
+
 
 class DocumentEmbedder:
     def __init__(
@@ -43,7 +44,6 @@ class DocumentEmbedder:
         base_url: Optional[str] = None,
         embeddings: Optional[OpenAIEmbeddings | XinferenceEmbeddings] = None,
         documentids_workspace: Optional[List[str]] = None,
-        
     ) -> None:
         """
         Class that handles the retrieval augmented generation (RAG) functionality
@@ -98,15 +98,15 @@ class DocumentEmbedder:
             embeddings (Optional[OpenAIEmbeddings | XinferenceEmbeddings],
             optional): Embeddings object to use. Defaults to OpenAI.
 
-            documentids_workspace (Optional[List[str]], optional): a list of document IDs 
-            that defines the scope within which rag operations (remove, similarity search, 
-            and get all) occur. Defaults to None, which means the operations will be 
+            documentids_workspace (Optional[List[str]], optional): a list of document IDs
+            that defines the scope within which rag operations (remove, similarity search,
+            and get all) occur. Defaults to None, which means the operations will be
             performed across all documents in the database.
 
             is_azure (Optional[bool], optional): if we are using Azure
-            azure_deployment (Optional[str], optional): Azure embeddings model deployment, 
+            azure_deployment (Optional[str], optional): Azure embeddings model deployment,
             should work with azure_endpoint when is_azure is True
-            azure_endpoint (Optional[str], optional): Azure endpoint, should work with 
+            azure_endpoint (Optional[str], optional): Azure endpoint, should work with
             azure_deployment when is_azure is True
 
         """
@@ -128,13 +128,15 @@ class DocumentEmbedder:
             self.embeddings = embeddings
         else:
             if not self.online:
-                self.embeddings = OpenAIEmbeddings(
-                    openai_api_key=api_key, model=model
-                ) if not is_azure else AzureOpenAIEmbeddings(
-                    api_key=api_key,
-                    azure_deployment=azure_deployment,
-                    azure_endpoint=azure_endpoint,
-                    model=model,
+                self.embeddings = (
+                    OpenAIEmbeddings(openai_api_key=api_key, model=model)
+                    if not is_azure
+                    else AzureOpenAIEmbeddings(
+                        api_key=api_key,
+                        azure_deployment=azure_deployment,
+                        azure_endpoint=azure_endpoint,
+                        model=model,
+                    )
                 )
             else:
                 self.embeddings = None
@@ -245,17 +247,23 @@ class DocumentEmbedder:
 
         """
         return self.database_host.similarity_search(
-            query=query, k=k or self.n_results, doc_ids=self.documentids_workspace
+            query=query,
+            k=k or self.n_results,
+            doc_ids=self.documentids_workspace,
         )
 
     def connect(self) -> None:
         self.database_host.connect()
 
     def get_all_documents(self) -> List[Dict]:
-        return self.database_host.get_all_documents(doc_ids=self.documentids_workspace)
+        return self.database_host.get_all_documents(
+            doc_ids=self.documentids_workspace
+        )
 
     def remove_document(self, doc_id: str) -> None:
-        return self.database_host.remove_document(doc_id, self.documentids_workspace)
+        return self.database_host.remove_document(
+            doc_id, self.documentids_workspace
+        )
 
 
 class XinferenceDocumentEmbedder(DocumentEmbedder):
@@ -319,13 +327,14 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
 
             base_url (Optional[str], optional): base url of Xinference API.
 
-            documentids_workspace (Optional[List[str]], optional): a list of document IDs 
-            that defines the scope within which rag operations (remove, similarity search, 
-            and get all) occur. Defaults to None, which means the operations will be 
+            documentids_workspace (Optional[List[str]], optional): a list of document IDs
+            that defines the scope within which rag operations (remove, similarity search,
+            and get all) occur. Defaults to None, which means the operations will be
             performed across all documents in the database.
 
         """
         from xinference.client import Client
+
         self.model_name = model
         self.client = Client(base_url=base_url)
         self.models = {}
@@ -354,7 +363,7 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
             embeddings=XinferenceEmbeddings(
                 server_url=base_url, model_uid=self.model_uid
             ),
-            documentids_workspace=documentids_workspace
+            documentids_workspace=documentids_workspace,
         )
 
     def load_models(self):

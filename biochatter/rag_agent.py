@@ -40,7 +40,7 @@ class RagAgent:
         self.mode = mode
         self.model_name = model_name
         if self.mode == "kg":
-            from .database import DatabaseAgent
+            from .database_agent import DatabaseAgent
 
             if not schema_config_or_info_dict:
                 raise ValueError("Please provide a schema config or info dict.")
@@ -57,7 +57,7 @@ class RagAgent:
             self.query_func = self.agent.get_query_results
 
         elif self.mode == "vectorstore":
-            from .vectorstore_host import VectorDatabaseHostMilvus
+            from .vectorstore_agent import VectorDatabaseHostMilvus
 
             if not embedding_func:
                 raise ValueError("Please provide an embedding function.")

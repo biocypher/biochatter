@@ -4,7 +4,7 @@ from unittest.mock import patch
 # from langchain.schema import Document
 # from pymilvus import utility, Collection, connections
 # from langchain.embeddings import OpenAIEmbeddings
-from biochatter.vectorstore_host import VectorDatabaseHostMilvus
+from biochatter.vectorstore_agent import VectorDatabaseHostMilvus
 
 from .mock_langchain import OpenAIEmbeddings, Document, Milvus
 from .mock_pymilvus import (
@@ -200,14 +200,20 @@ def test_remove_document(dbHost):
     assert res
     assert (cnt - 1) == len(dbHost.get_all_documents())
 
+
 def test_build_meta_col_query_expr_for_all_documents():
     data = [
         [[], "id in [] and isDeleted == false"],
         [["1234", "5678"], "id in [1234, 5678] and isDeleted == false"],
-        [['1234', '5678'], "id in [1234, 5678] and isDeleted == false"],
+        [["1234", "5678"], "id in [1234, 5678] and isDeleted == false"],
         [None, "isDeleted == false"],
-        [[12345678901234, 43210987654321], "id in [12345678901234, 43210987654321] and isDeleted == false"],
+        [
+            [12345678901234, 43210987654321],
+            "id in [12345678901234, 43210987654321] and isDeleted == false",
+        ],
     ]
     for test_data in data:
-        expr = VectorDatabaseHostMilvus._build_meta_col_query_expr_for_all_documents(test_data[0])
+        expr = VectorDatabaseHostMilvus._build_meta_col_query_expr_for_all_documents(
+            test_data[0]
+        )
         assert expr == test_data[1]
