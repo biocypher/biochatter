@@ -122,4 +122,4 @@ def test_retrieval_augmented_generation(model, chunk_size):
         [rag_agent.database_host.remove_document(doc_id) for doc_id in doc_ids]
 
         # record sum in CSV file
-        assert calculate_test_score(correct) == "3/3"
+        assert calculate_test_score(correct) == (3, 3)
