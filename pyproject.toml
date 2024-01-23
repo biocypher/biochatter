@@ -29,6 +29,7 @@ botocore = { version = "^1.33.9", optional = true }
 xinference = { version = "^0.6.5", optional = true }
 rsa = "^4.9"
 cryptography = "^41.0.7"
+neo4j-utils = "^0.0.7"
 
 [tool.poetry.extras]
 streamlit = ["streamlit"]
