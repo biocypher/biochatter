@@ -1,5 +1,7 @@
+import json
 from .prompts import BioCypherPromptEngine
 import neo4j_utils as nu
+from langchain.schema import Document
 
 
 class DatabaseAgent:
@@ -39,10 +41,11 @@ class DatabaseAgent:
             password=password,
         )
 
-    def get_query_results(self, query: str, k: int = 3) -> list:
+    def get_query_results(self, query: str, k: int = 3) -> list[Document]:
         """
         Generate a query using the prompt engine and return the results.
-        Replicates vector database similarity search API.
+        Replicates vector database similarity search API. Results are returned
+        as a list of Document objects to align with the vector database agent.
 
         Args:
             query (str): A query string.
@@ -50,10 +53,29 @@ class DatabaseAgent:
             k (int): The number of results to return.
 
         Returns:
-            results (list): A list of dictionaries containing the results.
+            list[Document]: A list of Document objects. The page content values
+                are the literal dictionaries returned by the query, the metadata
+                values are the cypher query used to generate the results, for
+                now.
         """
         cypher_query = self.prompt_engine.generate_query(query)
         # TODO some logic if it fails?
         results = self.driver.query(query=cypher_query)
-        # TODO result formatting according to k
+
+        documents = []
+        # return first k results
+        # returned nodes can have any formatting, and can also be empty or fewer
+        # than k
+        for result in results:
+            documents.append(
+                Document(
+                    page_content=json.dumps(result),
+                    metadata={
+                        "cypher_query": cypher_query,
+                    },
+                )
+            )
+            if len(documents) == k:
+                break
+
         return results
