@@ -29,7 +29,7 @@ class DatabaseAgent:
         Connect to the database and authenticate.
         """
         db_name = self.connection_args.get("db_name")
-        uri = f"{self.connection_args.get("host")}:{self.connection_args.get("port")}"
+        uri = f"{self.connection_args.get('host')}:{self.connection_args.get('port')}"
         user = self.connection_args.get("user")
         password = self.connection_args.get("password")
         self.driver = nu.Driver(
