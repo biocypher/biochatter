@@ -3,9 +3,9 @@ import neo4j_utils as nu
 
 
 class DatabaseAgent:
-    def __init__(self, connection_args):
+    def __init__(self, connection_args) -> None:
         """
-        Create a DatabaseAgent orthogonal to the VectorDatabaseHostMilvus class,
+        Create a DatabaseAgent analogous to the VectorDatabaseHostMilvus class,
         which can return results from a database using a query engine. Currently
         limited to Neo4j for development.
 
@@ -16,7 +16,7 @@ class DatabaseAgent:
         self.prompt_engine = BioCypherPromptEngine()
         self.connection_args = connection_args
 
-    def connect(self):
+    def connect(self) -> None:
         """
         Connect to the database and authenticate.
         """
@@ -31,7 +31,7 @@ class DatabaseAgent:
             db_password=db_password,
         )
 
-    def get_query_results(self, query: str, k: int = 3):
+    def get_query_results(self, query: str, k: int = 3) -> list:
         """
         Generate a query using the prompt engine and return the results.
         Replicates vector database similarity search API.
