@@ -11,10 +11,11 @@ from biochatter.llm_connect import GptConversation, XinferenceConversation
 
 from xinference.client import Client
 
+# list all CSV files in the benchmark/results directory
 RESULT_FILES = [
-    "benchmark/results/biocypher_query_generation.csv",
-    "benchmark/results/rag_interpretation.csv",
-    "benchmark/results/vectorstore.csv",
+    f"benchmark/results/{file}"
+    for file in os.listdir("benchmark/results")
+    if file.endswith(".csv")
 ]
 
 N_ITERATIONS = 2
@@ -33,7 +34,7 @@ XINFERENCE_MODELS = {
     "llama-2-chat": {
         "model_size_in_billions": [
             7,
-            # 13,
+            13,
             # 70,
         ],
         "quantization": [
@@ -41,16 +42,31 @@ XINFERENCE_MODELS = {
             # "q3_K_L",
             # "q3_K_M",
             # "q3_K_S",
-            # "q4_0",
+            "q4_0",
             # "q4_1",
             # "q4_K_M",
             # "q4_K_S",
-            # "q5_0",
+            "q5_0",
             # "q5_1",
             # "q5_K_M",
             # "q5_K_S",
             # "q6_K",
             "q8_0",
+        ],
+    },
+    "mixtral-instruct-v0.1": {
+        "model_size_in_billions": [
+            46_7,
+        ],
+        "quantization": [
+            "Q2_K",
+            # "Q3_K_M",
+            "Q4_0",
+            # "Q4_K_M",
+            "Q5_0",
+            # "Q5_K_M",
+            # "Q6_K",
+            "Q8_0",
         ],
     },
 }
@@ -112,6 +128,14 @@ def prompt_engine(request, model_name):
 
 @pytest.fixture
 def conversation(request, model_name):
+    """
+    Decides whether to run the test or skip due to the test having been run
+    before. If not skipped, will create a conversation object for interfacing
+    with the model.
+    """
+    test_name = request.node.originalname.replace("test_", "")
+    result_file = f"benchmark/results/{test_name}.csv"
+
     if model_name in OPENAI_MODEL_NAMES:
         conversation = GptConversation(
             model_name=model_name,

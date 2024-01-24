@@ -4,10 +4,9 @@ from benchmark.conftest import RESULT_FILES
 
 
 def benchmark_already_executed(
+    model_name: str,
     task: str,
     subtask: str,
-    model_name: str,
-    result_files: dict[str, pd.DataFrame],
 ) -> bool:
     """
     Checks if the benchmark task and subtask test case for the model_name have already
@@ -15,20 +14,40 @@ def benchmark_already_executed(
 
     Args:
         task (str): The benchmark task, e.g. "biocypher_query_generation"
-        subtask (str): The benchmark subtask test case, e.g. "entities_0"
+        subtask (str): The benchmark subtask test case, e.g. "0_entities"
         model_name (str): The model name, e.g. "gpt-3.5-turbo"
-        result_files (dict[str, pd.DataFrame]): The result files
 
     Returns:
 
         bool: True if the benchmark task and subtask for the model_name has
             already been run, False otherwise
     """
-    task_results = result_files[f"benchmark/results/{task}.csv"]
+    task_results = return_or_create_result_file(task)
     task_results_subset = (task_results["model_name"] == model_name) & (
         task_results["subtask"] == subtask
     )
     return task_results_subset.any()
+
+
+def return_or_create_result_file(
+    task: str,
+):
+    """
+    Returns the result file for the task or creates it if it does not exist.
+
+    Args:
+        task (str): The benchmark task, e.g. "biocypher_query_generation"
+
+    Returns:
+        pd.DataFrame: The result file for the task
+    """
+    file_path = get_result_file_path(task)
+    try:
+        results = pd.read_csv(file_path, header=0)
+    except (pd.errors.EmptyDataError, FileNotFoundError):
+        results = pd.DataFrame(columns=["model_name", "subtask", "score"])
+        results.to_csv(file_path, index=False)
+    return results
 
 
 def write_results_to_file(
@@ -61,7 +80,4 @@ def get_result_file_path(file_name: str) -> str:
     Returns:
         str: The path to the result file
     """
-    file_path = [file for file in RESULT_FILES if file_name in file]
-    if not file_path:
-        raise ValueError(f"Could not find result file {file_name}")
-    return file_path[0]
+    return f"benchmark/results/{file_name}.csv"

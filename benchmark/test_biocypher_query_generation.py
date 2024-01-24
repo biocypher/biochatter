@@ -13,9 +13,6 @@ from .benchmark_utils import (
     benchmark_already_executed,
 )
 
-TASK = "biocypher_query_generation"
-FILE_PATH = get_result_file_path(TASK)
-
 
 def get_test_data(test_data_biocypher_query_generation: list) -> tuple:
     """Helper function to unpack the test data from the test_data_biocypher_query_generation fixture.
@@ -41,7 +38,7 @@ def get_test_data(test_data_biocypher_query_generation: list) -> tuple:
 
 def skip_if_already_run(
     model_name: str,
-    result_files: dict[str, pd.DataFrame],
+    task: str,
     subtask: str,
 ) -> None:
     """Helper function to check if the test case is already executed.
@@ -49,11 +46,12 @@ def skip_if_already_run(
     Args:
         model_name (str): The model name, e.g. "gpt-3.5-turbo"
         result_files (dict[str, pd.DataFrame]): The result files
-        subtask (str): The benchmark subtask test case, e.g. "entities_0"
+        task (str): The benchmark task, e.g. "biocypher_query_generation"
+        subtask (str): The benchmark subtask test case, e.g. "0_single_word"
     """
-    if benchmark_already_executed(TASK, subtask, model_name, result_files):
+    if benchmark_already_executed(model_name, task, subtask):
         pytest.skip(
-            f"benchmark {TASK}: {subtask} with {model_name} already executed"
+            f"benchmark {task}: {subtask} with {model_name} already executed"
         )
 
 
@@ -79,7 +77,6 @@ def test_entity_selection(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
-    result_files,
     conversation,
     multiple_testing,
 ):
@@ -94,8 +91,9 @@ def test_entity_selection(
         test_case_purpose,
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
-    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name, result_files, subtask)
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    subtask = f"{str(test_case_index)}_{test_case_purpose}"
+    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     def run_test():
@@ -115,7 +113,7 @@ def test_entity_selection(
         prompt_engine.model_name,
         subtask,
         f"{mean_score}/{max};{n_iterations}",
-        FILE_PATH,
+        get_result_file_path(task),
     )
 
 
