@@ -43,7 +43,7 @@ paid OpenAI TTS can be used without this extra)
 
 ## Usage
 
-Check out the [documentation](https://biocypher.github.io/biochatter/) for
+Check out the [documentation](https://biochatter.org/) for
 examples, use cases, and more information. Many common functionalities covered
 by BioChatter can be seen in use in the
 [ChatGSE](https://github.com/biocypher/ChatGSE) code base.
