@@ -131,11 +131,6 @@ def test_relationship_selection(
         assert success
 
         score = []
-        for expected_relationship in expected_relationship_labels:
-            score.append(
-                expected_relationship in prompt_engine.selected_relationships
-            )
-
         for (
             expected_relationship_label_key
         ) in expected_relationship_labels.keys():
