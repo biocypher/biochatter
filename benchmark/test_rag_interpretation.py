@@ -80,6 +80,7 @@ def test_explicit_relevance_of_single_fragments(
     [conversation.append_system_message(m) for m in system_messages]
 
     def run_test():
+        conversation.reset()  # needs to be reset for each test
         response, _, _ = conversation.query(prompt)
         answers = ensure_iterable(response.split(","))
 
@@ -131,6 +132,7 @@ def test_implicit_relevance_of_multiple_fragments(
     [conversation.append_system_message(m) for m in system_messages]
 
     def run_test():
+        conversation.reset()  # needs to be reset for each test
         response, _, _ = conversation.query(prompt)
 
         # evaluator LLM
