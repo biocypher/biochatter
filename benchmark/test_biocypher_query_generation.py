@@ -8,7 +8,7 @@ from .conftest import calculate_test_score
 from .benchmark_utils import (
     get_result_file_path,
     write_results_to_file,
-    benchmark_already_executed,
+    skip_if_already_run,
 )
 
 
@@ -32,25 +32,6 @@ def get_test_data(test_data_biocypher_query_generation: list) -> tuple:
         test_data_biocypher_query_generation["test_case_purpose"],
         test_data_biocypher_query_generation["index"],
     )
-
-
-def skip_if_already_run(
-    model_name: str,
-    task: str,
-    subtask: str,
-) -> None:
-    """Helper function to check if the test case is already executed.
-
-    Args:
-        model_name (str): The model name, e.g. "gpt-3.5-turbo"
-        result_files (dict[str, pd.DataFrame]): The result files
-        task (str): The benchmark task, e.g. "biocypher_query_generation"
-        subtask (str): The benchmark subtask test case, e.g. "0_single_word"
-    """
-    if benchmark_already_executed(model_name, task, subtask):
-        pytest.skip(
-            f"benchmark {task}: {subtask} with {model_name} already executed"
-        )
 
 
 def get_prompt_engine(

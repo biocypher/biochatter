@@ -1,4 +1,5 @@
 import pandas as pd
+import pytest
 
 
 def benchmark_already_executed(
@@ -25,6 +26,25 @@ def benchmark_already_executed(
         task_results["subtask"] == subtask
     )
     return task_results_subset.any()
+
+
+def skip_if_already_run(
+    model_name: str,
+    task: str,
+    subtask: str,
+) -> None:
+    """Helper function to check if the test case is already executed.
+
+    Args:
+        model_name (str): The model name, e.g. "gpt-3.5-turbo"
+        result_files (dict[str, pd.DataFrame]): The result files
+        task (str): The benchmark task, e.g. "biocypher_query_generation"
+        subtask (str): The benchmark subtask test case, e.g. "0_single_word"
+    """
+    if benchmark_already_executed(model_name, task, subtask):
+        pytest.skip(
+            f"benchmark {task}: {subtask} with {model_name} already executed"
+        )
 
 
 def return_or_create_result_file(

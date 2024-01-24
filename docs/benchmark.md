@@ -14,9 +14,7 @@ To run all benchmarks again, use `poetry run pytest benchmark --run-all`.
 
 To allow flexible extension of the benchmark, we have implemeted a modular test framework that uses pytest fixtures to allow easy addition of new models and tasks.
 All setup is done in the `conftest.py` file in the `benchmark` directory.
-For management of result files, we use the `RESULT_FILES` list in the `conftest.py` file.
-Each benchmarking module imports the `RESULT_FILES` list and retrieves the path to the result file it should write to.
-The result files are simple CSVs that can be found in `benchmark/results` and contain scores for all executed combination of parameters.
+The result files are simple CSVs whose file names are generated from the name of the test function; they can be found in `benchmark/results` and contain scores for all executed combination of parameters.
 
 To achieve modularity, we use pytest fixtures and parametrization.
 For instance, to add a new model, we can modify the `MODEL_NAMES` list in the query generation test module, or the `EMBEDDING_MODELS` and `CHUNK_SIZES` lists in the vector database test module.

@@ -2,12 +2,7 @@ from unittest.mock import patch
 from biochatter.vectorstore import DocumentEmbedder, DocumentReader, Document
 import os
 import pytest
-from benchmark.conftest import calculate_test_score, RESULT_FILES
-
-FILE_PATH = next(
-    (s for s in RESULT_FILES if "vectorstore" in s),
-    None,
-)
+from benchmark.conftest import calculate_test_score
 
 # setup milvus connection
 if os.getenv("DEVCONTAINER"):
