@@ -1,0 +1,4 @@
+model_name,subtask,score
+gpt-3.5-turbo,0_single_word,6.0/10;2
+gpt-3.5-turbo,1_multi_word,5.0/7;2
+llama-2-chat:7:ggmlv3:q2_K,1_multi_word,5.0/7;2
