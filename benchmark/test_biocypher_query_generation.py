@@ -119,7 +119,6 @@ def test_relationship_selection(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
-    result_files,
     conversation,
     multiple_testing,
 ):
@@ -134,8 +133,9 @@ def test_relationship_selection(
         test_case_purpose,
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
-    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name, result_files, subtask)
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    subtask = f"{str(test_case_index)}_{test_case_purpose}"
+    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     prompt_engine.question = prompt
@@ -178,7 +178,7 @@ def test_relationship_selection(
         prompt_engine.model_name,
         subtask,
         f"{mean_score}/{max};{n_iterations}",
-        FILE_PATH,
+        get_result_file_path(task),
     )
 
 
@@ -186,7 +186,6 @@ def test_property_selection(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
-    result_files,
     conversation,
     multiple_testing,
 ):
@@ -201,8 +200,9 @@ def test_property_selection(
         test_case_purpose,
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
-    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name, result_files, subtask)
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    subtask = f"{str(test_case_index)}_{test_case_purpose}"
+    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     prompt_engine.question = prompt
@@ -243,7 +243,7 @@ def test_property_selection(
         prompt_engine.model_name,
         subtask,
         f"{mean_score}/{max};{n_iterations}",
-        FILE_PATH,
+        get_result_file_path(task),
     )
 
 
@@ -251,7 +251,6 @@ def test_query_generation(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
-    result_files,
     conversation,
     multiple_testing,
 ):
@@ -266,8 +265,9 @@ def test_query_generation(
         test_case_purpose,
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
-    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name, result_files, subtask)
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    subtask = f"{str(test_case_index)}_{test_case_purpose}"
+    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     def run_test():
@@ -299,7 +299,7 @@ def test_query_generation(
         prompt_engine.model_name,
         subtask,
         f"{mean_score}/{max};{n_iterations}",
-        FILE_PATH,
+        get_result_file_path(task),
     )
 
 
@@ -307,7 +307,6 @@ def test_end_to_end_query_generation(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
-    result_files,
     multiple_testing,
 ):
     (
@@ -321,8 +320,9 @@ def test_end_to_end_query_generation(
         test_case_purpose,
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
-    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name, result_files, subtask)
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    subtask = f"{str(test_case_index)}_{test_case_purpose}"
+    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     def run_test():
@@ -350,7 +350,7 @@ def test_end_to_end_query_generation(
         prompt_engine.model_name,
         subtask,
         f"{mean_score}/{max};{n_iterations}",
-        FILE_PATH,
+        get_result_file_path(task),
     )
 
 
@@ -441,7 +441,6 @@ def test_property_exists(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
-    result_files,
     conversation,
     multiple_testing,
 ):
@@ -456,8 +455,9 @@ def test_property_exists(
         test_case_purpose,
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
-    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name, result_files, subtask)
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    subtask = f"{str(test_case_index)}_{test_case_purpose}"
+    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     def run_test():
@@ -508,5 +508,5 @@ def test_property_exists(
         prompt_engine.model_name,
         subtask,
         f"{mean_score}/{max};{n_iterations}",
-        FILE_PATH,
+        get_result_file_path(task),
     )

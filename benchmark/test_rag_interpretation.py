@@ -59,7 +59,6 @@ def skip_if_already_run(
 def test_explicit_relevance_of_single_fragments(
     model_name,
     test_data_rag_interpretation,
-    result_files,
     conversation,
     multiple_testing,
 ):
@@ -70,13 +69,13 @@ def test_explicit_relevance_of_single_fragments(
         test_case_purpose,
         test_case_index,
     ) = get_test_data(test_data_rag_interpretation)
-
-    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    subtask = f"{str(test_case_index)}_{test_case_purpose}"
     if not test_case_purpose == "explicit":
         pytest.skip(
             f"test case {test_case_purpose} not supported for {subtask} benchmark"
         )
-    skip_if_already_run(model_name, result_files, subtask)
+    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
 
     [conversation.append_system_message(m) for m in system_messages]
 
@@ -110,7 +109,6 @@ def test_explicit_relevance_of_single_fragments(
 def test_implicit_relevance_of_multiple_fragments(
     model_name,
     test_data_rag_interpretation,
-    result_files,
     conversation,
     evaluation_conversation,
     multiple_testing,
@@ -122,13 +120,13 @@ def test_implicit_relevance_of_multiple_fragments(
         test_case_purpose,
         test_case_index,
     ) = get_test_data(test_data_rag_interpretation)
-
-    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    subtask = f"{str(test_case_index)}_{test_case_purpose}"
     if not test_case_purpose == "implicit":
         pytest.skip(
             f"test case {test_case_purpose} not supported for {subtask} benchmark"
         )
-    skip_if_already_run(model_name, result_files, subtask)
+    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
 
     [conversation.append_system_message(m) for m in system_messages]
 
