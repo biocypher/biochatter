@@ -97,12 +97,12 @@ def test_explicit_relevance_of_single_fragments(
 
         return calculate_test_score(score)
 
-    mean_score, max = multiple_testing(run_test)
+    mean_score, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         model_name,
         subtask,
-        f"{mean_score}/{max}",
+        f"{mean_score}/{max};{n_iterations}",
         FILE_PATH,
     )
 
@@ -147,11 +147,11 @@ def test_implicit_relevance_of_multiple_fragments(
 
         return calculate_test_score(score)
 
-    mean_score, max = multiple_testing(run_test)
+    mean_score, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         model_name,
         subtask,
-        f"{mean_score}/{max}",
+        f"{mean_score}/{max};{n_iterations}",
         FILE_PATH,
     )

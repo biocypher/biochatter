@@ -84,7 +84,7 @@ def multiple_testing(request):
             score, max = test_func(*args, **kwargs)
             scores.append(score)
         mean_score = sum(scores) / N_ITERATIONS
-        return (mean_score, max)
+        return (mean_score, max, N_ITERATIONS)
 
     return run_multiple_times
 

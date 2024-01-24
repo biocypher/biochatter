@@ -109,12 +109,12 @@ def test_entity_selection(
             score.append(expected_entity in prompt_engine.selected_entities)
         return calculate_test_score(score)
 
-    mean_score, max = multiple_testing(run_test)
+    mean_score, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max}",
+        f"{mean_score}/{max};{n_iterations}",
         FILE_PATH,
     )
 
@@ -176,12 +176,12 @@ def test_relationship_selection(
                 )
         return calculate_test_score(score)
 
-    mean_score, max = multiple_testing(run_test)
+    mean_score, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max}",
+        f"{mean_score}/{max};{n_iterations}",
         FILE_PATH,
     )
 
@@ -241,12 +241,12 @@ def test_property_selection(
                     score.append(0)
         return calculate_test_score(score)
 
-    mean_score, max = multiple_testing(run_test)
+    mean_score, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max}",
+        f"{mean_score}/{max};{n_iterations}",
         FILE_PATH,
     )
 
@@ -297,12 +297,12 @@ def test_query_generation(
                 )
         return calculate_test_score(score)
 
-    mean_score, max = multiple_testing(run_test)
+    mean_score, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max}",
+        f"{mean_score}/{max};{n_iterations}",
         FILE_PATH,
     )
 
@@ -348,12 +348,12 @@ def test_end_to_end_query_generation(
                 )
         return calculate_test_score(score)
 
-    mean_score, max = multiple_testing(run_test)
+    mean_score, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max}",
+        f"{mean_score}/{max};{n_iterations}",
         FILE_PATH,
     )
 
@@ -506,11 +506,11 @@ def test_property_exists(
                 score.append(0)
         return calculate_test_score(score)
 
-    mean_score, max = multiple_testing(run_test)
+    mean_score, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max}",
+        f"{mean_score}/{max};{n_iterations}",
         FILE_PATH,
     )
