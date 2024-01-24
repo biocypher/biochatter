@@ -30,10 +30,11 @@ OPENAI_MODEL_NAMES = [
 XINFERENCE_MODELS = {
     "llama-2-chat": {
         "model_size_in_billions": [
-            7,
-            13,
+            "7",
+            "13",
             # 70,
         ],
+        "model_format": "ggmlv3",
         "quantization": [
             "q2_K",
             # "q3_K_L",
@@ -53,8 +54,9 @@ XINFERENCE_MODELS = {
     },
     "mixtral-instruct-v0.1": {
         "model_size_in_billions": [
-            46_7,
+            "46_7",
         ],
+        "model_format": "ggufv2",
         "quantization": [
             "Q2_K",
             # "Q3_K_M",
@@ -71,9 +73,10 @@ XINFERENCE_MODELS = {
 # create concrete benchmark list by concatenating all combinations of model
 # names, model sizes and quantizations
 XINFERENCE_MODEL_NAMES = [
-    f"{model_name}:{model_size}:{quantization}"
+    f"{model_name}:{model_size}:{model_format}:{quantization}"
     for model_name in XINFERENCE_MODELS.keys()
     for model_size in XINFERENCE_MODELS[model_name]["model_size_in_billions"]
+    for model_format in [XINFERENCE_MODELS[model_name]["model_format"]]
     for quantization in XINFERENCE_MODELS[model_name]["quantization"]
 ]
 
@@ -148,8 +151,14 @@ def conversation(request, model_name):
             os.getenv("OPENAI_API_KEY"), user="benchmark_user"
         )
     elif model_name in XINFERENCE_MODEL_NAMES:
-        _model_name, _model_size, _model_quantization = model_name.split(":")
-        _model_size = int(_model_size)
+        (
+            _model_name,
+            _model_size,
+            _model_format,
+            _model_quantization,
+        ) = model_name.split(":")
+        if not "_" in _model_size:
+            _model_size = int(_model_size)
 
         # get running models
         client = Client(base_url=BENCHMARK_URL)
@@ -181,6 +190,7 @@ def conversation(request, model_name):
         client.launch_model(
             model_name=_model_name,
             model_size_in_billions=_model_size,
+            model_format=_model_format,
             quantization=_model_quantization,
         )
 
