@@ -11,12 +11,9 @@ from biochatter.llm_connect import GptConversation, XinferenceConversation
 
 from xinference.client import Client
 
-# list all CSV files in the benchmark/results directory
-RESULT_FILES = [
-    f"benchmark/results/{file}"
-    for file in os.listdir("benchmark/results")
-    if file.endswith(".csv")
-]
+from .benchmark_utils import (
+    benchmark_already_executed,
+)
 
 N_ITERATIONS = 2
 
@@ -134,7 +131,12 @@ def conversation(request, model_name):
     with the model.
     """
     test_name = request.node.originalname.replace("test_", "")
-    result_file = f"benchmark/results/{test_name}.csv"
+    subtask = "?"  # TODO can we get the subtask here?
+    if benchmark_already_executed(model_name, test_name, subtask):
+        pass
+        # pytest.skip(
+        #     f"benchmark {test_name}: {subtask} with {model_name} already executed"
+        # )
 
     if model_name in OPENAI_MODEL_NAMES:
         conversation = GptConversation(
@@ -220,6 +222,11 @@ def delete_results_csv_file_content(request):
     benchmarks are executed again.
     """
     if request.config.getoption("--run-all"):
+        RESULT_FILES = [
+            f"benchmark/results/{file}"
+            for file in os.listdir("benchmark/results")
+            if file.endswith(".csv")
+        ]
         for f in RESULT_FILES:
             if os.path.exists(f):
                 old_df = pd.read_csv(f, header=0)
@@ -229,6 +236,11 @@ def delete_results_csv_file_content(request):
 
 @pytest.fixture(scope="session")
 def result_files():
+    RESULT_FILES = [
+        f"benchmark/results/{file}"
+        for file in os.listdir("benchmark/results")
+        if file.endswith(".csv")
+    ]
     result_files = {}
     for file in RESULT_FILES:
         try:

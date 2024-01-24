@@ -3,8 +3,6 @@ import inspect
 
 import pytest
 
-import pandas as pd
-
 from biochatter.prompts import BioCypherPromptEngine
 from .conftest import calculate_test_score
 from .benchmark_utils import (

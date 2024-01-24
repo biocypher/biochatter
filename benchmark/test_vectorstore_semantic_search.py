@@ -4,12 +4,7 @@ from biochatter.vectorstore import (
 )
 import os
 import pytest
-from .conftest import calculate_test_score, RESULT_FILES
-
-FILE_PATH = next(
-    (s for s in RESULT_FILES if "vectorstore" in s),
-    None,
-)
+from .conftest import calculate_test_score
 
 # TODO: make vectorstore / retriever a part of the matrix
 

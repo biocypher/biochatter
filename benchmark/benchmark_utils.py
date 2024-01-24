@@ -1,7 +1,5 @@
 import pandas as pd
 
-from benchmark.conftest import RESULT_FILES
-
 
 def benchmark_already_executed(
     model_name: str,
