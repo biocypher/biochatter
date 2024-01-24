@@ -147,12 +147,15 @@ def test_relationship_selection(
             for (
                 expected_relationship_label_value
             ) in expected_relationship_labels[expected_relationship_label_key]:
-                score.append(
-                    expected_relationship_label_value
-                    in prompt_engine.selected_relationship_labels[
-                        expected_relationship_label_key
-                    ]
-                )
+                try:
+                    score.append(
+                        expected_relationship_label_value
+                        in prompt_engine.selected_relationship_labels[
+                            expected_relationship_label_key
+                        ]
+                    )
+                except KeyError:
+                    score.append(False)
         return calculate_test_score(score)
 
     mean_score, max, n_iterations = multiple_testing(run_test)
@@ -195,30 +198,33 @@ def test_property_selection(
     def run_test():
         conversation.reset()  # needs to be reset for each test
         success = prompt_engine._select_properties(conversation=conversation)
-        assert success
 
-        score = []
-        for expected_property_key in expected_properties.keys():
-            try:
-                score.append(
-                    expected_property_key
-                    in prompt_engine.selected_properties.keys()
-                )
-            except KeyError:
-                score.append(0)
-
-            for expected_property_value in expected_properties[
-                expected_property_key
-            ]:
+        if success:
+            score = []
+            for expected_property_key in expected_properties.keys():
                 try:
                     score.append(
-                        expected_property_value
-                        in prompt_engine.selected_properties[
-                            expected_property_key
-                        ]
+                        expected_property_key
+                        in prompt_engine.selected_properties.keys()
                     )
                 except KeyError:
-                    score.append(0)
+                    score.append(False)
+
+                for expected_property_value in expected_properties[
+                    expected_property_key
+                ]:
+                    try:
+                        score.append(
+                            expected_property_value
+                            in prompt_engine.selected_properties[
+                                expected_property_key
+                            ]
+                        )
+                    except KeyError:
+                        score.append(False)
+        else:
+            score = [False for _ in expected_properties.keys()]
+
         return calculate_test_score(score)
 
     mean_score, max, n_iterations = multiple_testing(run_test)
