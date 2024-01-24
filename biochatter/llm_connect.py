@@ -302,6 +302,16 @@ class Conversation(ABC):
 
         return json.dumps(d)
 
+    def reset(self):
+        """
+        Resets the conversation to the initial state.
+        """
+
+        self.history = []
+        self.messages = []
+        self.ca_messages = []
+        self.current_statements = []
+
 
 class WasmConversation(Conversation):
     def __init__(

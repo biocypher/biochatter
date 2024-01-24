@@ -95,6 +95,7 @@ def test_entity_selection(
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     def run_test():
+        conversation.reset()  # needs to be reset for each test
         success = prompt_engine._select_entities(
             question=prompt, conversation=conversation
         )
@@ -144,6 +145,7 @@ def test_relationship_selection(
     # TODO: more generic, for nested structures
 
     def run_test():
+        conversation.reset()  # needs to be reset for each test
         success = prompt_engine._select_relationships(conversation=conversation)
         assert success
 
@@ -210,6 +212,7 @@ def test_property_selection(
     prompt_engine.selected_relationships = expected_relationships
 
     def run_test():
+        conversation.reset()  # needs to be reset for each test
         success = prompt_engine._select_properties(conversation=conversation)
         assert success
 
@@ -271,6 +274,7 @@ def test_query_generation(
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     def run_test():
+        conversation.reset()  # needs to be reset for each test
         query = prompt_engine._generate_query(
             question=prompt,
             entities=expected_entities,
@@ -307,6 +311,7 @@ def test_end_to_end_query_generation(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
+    conversation,
     multiple_testing,
 ):
     (
@@ -326,22 +331,26 @@ def test_end_to_end_query_generation(
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     def run_test():
-        query = prompt_engine.generate_query(
-            question=prompt,
-            query_language="Cypher",
-        )
+        conversation.reset()  # needs to be reset for each test
+        try:
+            query = prompt_engine.generate_query(
+                question=prompt,
+                query_language="Cypher",
+            )
+            score = []
+            for expected_part_of_query in expected_parts_of_query:
+                if isinstance(expected_part_of_query, tuple):
+                    score.append(
+                        expected_part_of_query[0] in query
+                        or expected_part_of_query[1] in query
+                    )
+                else:
+                    score.append(
+                        (re.search(expected_part_of_query, query) is not None)
+                    )
+        except ValueError as e:
+            score = [False for _ in expected_parts_of_query]
 
-        score = []
-        for expected_part_of_query in expected_parts_of_query:
-            if isinstance(expected_part_of_query, tuple):
-                score.append(
-                    expected_part_of_query[0] in query
-                    or expected_part_of_query[1] in query
-                )
-            else:
-                score.append(
-                    (re.search(expected_part_of_query, query) is not None)
-                )
         return calculate_test_score(score)
 
     mean_score, max, n_iterations = multiple_testing(run_test)
@@ -461,6 +470,7 @@ def test_property_exists(
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     def run_test():
+        conversation.reset()  # needs to be reset for each test
         query = prompt_engine._generate_query(
             question=prompt,
             entities=expected_entities,
