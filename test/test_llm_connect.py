@@ -249,3 +249,79 @@ def test_wasm_conversation():
     wasm_convo.append_system_message("System message")
     result = wasm_convo._primary_query()
     assert result == test_query + "\nSystem message"
+
+
+@pytest.fixture
+def xinference_conversation():
+    with patch("biochatter.llm_connect.Client") as mock_client:
+        mock_client.return_value.list_models.return_value = xinference_models
+        mock_client.return_value.get_model.return_value.chat.return_value = (
+            {"choices": [{"message": {"content": "Human message"}}]},
+            {"completion_tokens": 0},
+        )
+        conversation = XinferenceConversation(
+            base_url="http://llm.biocypher.org",
+            prompts={},
+            correct=False,
+        )
+    return conversation
+
+
+def test_single_system_message_before_human(xinference_conversation):
+    xinference_conversation.messages = [
+        SystemMessage(content="System message"),
+        HumanMessage(content="Human message"),
+    ]
+    history = xinference_conversation._create_history()
+    assert history.pop() == {
+        "role": "user",
+        "content": "System message\nHuman message",
+    }
+
+
+def test_multiple_system_messages_before_human(xinference_conversation):
+    xinference_conversation.messages = [
+        SystemMessage(content="System message 1"),
+        SystemMessage(content="System message 2"),
+        HumanMessage(content="Human message"),
+    ]
+    history = xinference_conversation._create_history()
+    assert history.pop() == {
+        "role": "user",
+        "content": "System message 1\nSystem message 2\nHuman message",
+    }
+
+
+def test_multiple_messages_including_ai_before_system_and_human(
+    xinference_conversation,
+):
+    xinference_conversation.messages = [
+        HumanMessage(content="Human message history"),
+        AIMessage(content="AI message"),
+        SystemMessage(content="System message"),
+        HumanMessage(content="Human message"),
+    ]
+    history = xinference_conversation._create_history()
+    assert history.pop() == {
+        "role": "user",
+        "content": "System message\nHuman message",
+    }
+
+
+def test_multiple_cycles_of_ai_and_human(xinference_conversation):
+    xinference_conversation.messages = [
+        HumanMessage(content="Human message history"),
+        AIMessage(content="AI message"),
+        HumanMessage(content="Human message"),
+        AIMessage(content="AI message"),
+        HumanMessage(content="Human message"),
+        AIMessage(content="AI message"),
+        SystemMessage(content="System message"),
+        HumanMessage(content="Human message"),
+    ]
+    history = xinference_conversation._create_history()
+    assert len(history) == 3
+    assert history.pop() == {
+        "role": "user",
+        "content": "System message\nHuman message",
+    }

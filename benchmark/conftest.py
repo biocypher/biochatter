@@ -11,63 +11,81 @@ from biochatter.llm_connect import GptConversation, XinferenceConversation
 
 from xinference.client import Client
 
-RESULT_FILES = [
-    "benchmark/results/biocypher_query_generation.csv",
-    "benchmark/results/rag_interpretation.csv",
-    "benchmark/results/vectorstore.csv",
-]
+from .benchmark_utils import (
+    benchmark_already_executed,
+)
 
+# how often should each benchmark be run?
 N_ITERATIONS = 2
 
+# which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
 
 
-# set model matrix
-# TODO should probably go to conftest.py
+# which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
     "gpt-3.5-turbo",
-    "gpt-4",
+    # "gpt-4",
 ]
 
 XINFERENCE_MODELS = {
-    # "llama-2-chat": {
-    #     "model_size_in_billions": [
-    #         7,
-    #         # 13,
-    #         # 70,
-    #     ],
-    #     "quantization": [
-    #         "q2_K",
-    #         # "q3_K_L",
-    #         # "q3_K_M",
-    #         # "q3_K_S",
-    #         # "q4_0",
-    #         # "q4_1",
-    #         # "q4_K_M",
-    #         # "q4_K_S",
-    #         # "q5_0",
-    #         # "q5_1",
-    #         # "q5_K_M",
-    #         # "q5_K_S",
-    #         # "q6_K",
-    #         "q8_0",
-    #     ],
-    # },
+    "llama-2-chat": {
+        "model_size_in_billions": [
+            "7",
+            "13",
+            # 70,
+        ],
+        "model_format": "ggmlv3",
+        "quantization": [
+            "q2_K",
+            # "q3_K_L",
+            # "q3_K_M",
+            # "q3_K_S",
+            "q4_0",
+            # "q4_1",
+            # "q4_K_M",
+            # "q4_K_S",
+            "q5_0",
+            # "q5_1",
+            # "q5_K_M",
+            # "q5_K_S",
+            # "q6_K",
+            "q8_0",
+        ],
+    },
+    "mixtral-instruct-v0.1": {
+        "model_size_in_billions": [
+            "46_7",
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            "Q2_K",
+            # "Q3_K_M",
+            "Q4_0",
+            # "Q4_K_M",
+            "Q5_0",
+            # "Q5_K_M",
+            # "Q6_K",
+            "Q8_0",
+        ],
+    },
 }
 
 # create concrete benchmark list by concatenating all combinations of model
 # names, model sizes and quantizations
 XINFERENCE_MODEL_NAMES = [
-    f"{model_name}:{model_size}:{quantization}"
+    f"{model_name}:{model_size}:{model_format}:{quantization}"
     for model_name in XINFERENCE_MODELS.keys()
     for model_size in XINFERENCE_MODELS[model_name]["model_size_in_billions"]
+    for model_format in [XINFERENCE_MODELS[model_name]["model_format"]]
     for quantization in XINFERENCE_MODELS[model_name]["quantization"]
 ]
 
 BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
 BENCHMARKED_MODELS.sort()
 
-BENCHMARK_URL = "http://129.206.191.235:9997"
+# Xinference IP and port
+BENCHMARK_URL = "http://localhost:9997"
 
 
 # parameterise tests to run for each model
@@ -84,7 +102,7 @@ def multiple_testing(request):
             score, max = test_func(*args, **kwargs)
             scores.append(score)
         mean_score = sum(scores) / N_ITERATIONS
-        return (mean_score, max)
+        return (mean_score, max, N_ITERATIONS)
 
     return run_multiple_times
 
@@ -97,6 +115,10 @@ def calculate_test_score(vector: list[bool]) -> tuple[int, int]:
 
 @pytest.fixture
 def prompt_engine(request, model_name):
+    """
+    Generates a constructor for the prompt engine for the current model name.
+    """
+
     def setup_prompt_engine(kg_schema_path):
         return BioCypherPromptEngine(
             schema_config_or_info_path=kg_schema_path,
@@ -108,6 +130,19 @@ def prompt_engine(request, model_name):
 
 @pytest.fixture
 def conversation(request, model_name):
+    """
+    Decides whether to run the test or skip due to the test having been run
+    before. If not skipped, will create a conversation object for interfacing
+    with the model.
+    """
+    test_name = request.node.originalname.replace("test_", "")
+    subtask = "?"  # TODO can we get the subtask here?
+    if benchmark_already_executed(model_name, test_name, subtask):
+        pass
+        # pytest.skip(
+        #     f"benchmark {test_name}: {subtask} with {model_name} already executed"
+        # )
+
     if model_name in OPENAI_MODEL_NAMES:
         conversation = GptConversation(
             model_name=model_name,
@@ -118,8 +153,14 @@ def conversation(request, model_name):
             os.getenv("OPENAI_API_KEY"), user="benchmark_user"
         )
     elif model_name in XINFERENCE_MODEL_NAMES:
-        _model_name, _model_size, _model_quantization = model_name.split(":")
-        _model_size = int(_model_size)
+        (
+            _model_name,
+            _model_size,
+            _model_format,
+            _model_quantization,
+        ) = model_name.split(":")
+        if not "_" in _model_size:
+            _model_size = int(_model_size)
 
         # get running models
         client = Client(base_url=BENCHMARK_URL)
@@ -151,6 +192,7 @@ def conversation(request, model_name):
         client.launch_model(
             model_name=_model_name,
             model_size_in_billions=_model_size,
+            model_format=_model_format,
             quantization=_model_quantization,
         )
 
@@ -192,6 +234,11 @@ def delete_results_csv_file_content(request):
     benchmarks are executed again.
     """
     if request.config.getoption("--run-all"):
+        RESULT_FILES = [
+            f"benchmark/results/{file}"
+            for file in os.listdir("benchmark/results")
+            if file.endswith(".csv")
+        ]
         for f in RESULT_FILES:
             if os.path.exists(f):
                 old_df = pd.read_csv(f, header=0)
@@ -201,6 +248,11 @@ def delete_results_csv_file_content(request):
 
 @pytest.fixture(scope="session")
 def result_files():
+    RESULT_FILES = [
+        f"benchmark/results/{file}"
+        for file in os.listdir("benchmark/results")
+        if file.endswith(".csv")
+    ]
     result_files = {}
     for file in RESULT_FILES:
         try:

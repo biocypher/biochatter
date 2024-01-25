@@ -3,18 +3,13 @@ import inspect
 
 import pytest
 
-import pandas as pd
-
 from biochatter.prompts import BioCypherPromptEngine
 from .conftest import calculate_test_score
 from .benchmark_utils import (
     get_result_file_path,
     write_results_to_file,
-    benchmark_already_executed,
+    skip_if_already_run,
 )
-
-TASK = "biocypher_query_generation"
-FILE_PATH = get_result_file_path(TASK)
 
 
 def get_test_data(test_data_biocypher_query_generation: list) -> tuple:
@@ -39,24 +34,6 @@ def get_test_data(test_data_biocypher_query_generation: list) -> tuple:
     )
 
 
-def skip_if_already_run(
-    model_name: str,
-    result_files: dict[str, pd.DataFrame],
-    subtask: str,
-) -> None:
-    """Helper function to check if the test case is already executed.
-
-    Args:
-        model_name (str): The model name, e.g. "gpt-3.5-turbo"
-        result_files (dict[str, pd.DataFrame]): The result files
-        subtask (str): The benchmark subtask test case, e.g. "entities_0"
-    """
-    if benchmark_already_executed(TASK, subtask, model_name, result_files):
-        pytest.skip(
-            f"benchmark {TASK}: {subtask} with {model_name} already executed"
-        )
-
-
 def get_prompt_engine(
     kg_schema_file_name: str,
     create_prompt_engine,
@@ -79,7 +56,6 @@ def test_entity_selection(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
-    result_files,
     conversation,
     multiple_testing,
 ):
@@ -94,11 +70,13 @@ def test_entity_selection(
         test_case_purpose,
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
-    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name, result_files, subtask)
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    subtask = f"{str(test_case_index)}_{test_case_purpose}"
+    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     def run_test():
+        conversation.reset()  # needs to be reset for each test
         success = prompt_engine._select_entities(
             question=prompt, conversation=conversation
         )
@@ -109,13 +87,13 @@ def test_entity_selection(
             score.append(expected_entity in prompt_engine.selected_entities)
         return calculate_test_score(score)
 
-    mean_score, max = multiple_testing(run_test)
+    mean_score, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max}",
-        FILE_PATH,
+        f"{mean_score}/{max};{n_iterations}",
+        get_result_file_path(task),
     )
 
 
@@ -123,7 +101,6 @@ def test_relationship_selection(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
-    result_files,
     conversation,
     multiple_testing,
 ):
@@ -138,8 +115,9 @@ def test_relationship_selection(
         test_case_purpose,
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
-    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name, result_files, subtask)
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    subtask = f"{str(test_case_index)}_{test_case_purpose}"
+    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     prompt_engine.question = prompt
@@ -148,15 +126,11 @@ def test_relationship_selection(
     # TODO: more generic, for nested structures
 
     def run_test():
+        conversation.reset()  # needs to be reset for each test
         success = prompt_engine._select_relationships(conversation=conversation)
         assert success
 
         score = []
-        for expected_relationship in expected_relationship_labels:
-            score.append(
-                expected_relationship in prompt_engine.selected_relationships
-            )
-
         for (
             expected_relationship_label_key
         ) in expected_relationship_labels.keys():
@@ -168,21 +142,24 @@ def test_relationship_selection(
             for (
                 expected_relationship_label_value
             ) in expected_relationship_labels[expected_relationship_label_key]:
-                score.append(
-                    expected_relationship_label_value
-                    in prompt_engine.selected_relationship_labels[
-                        expected_relationship_label_key
-                    ]
-                )
+                try:
+                    score.append(
+                        expected_relationship_label_value
+                        in prompt_engine.selected_relationship_labels[
+                            expected_relationship_label_key
+                        ]
+                    )
+                except KeyError:
+                    score.append(False)
         return calculate_test_score(score)
 
-    mean_score, max = multiple_testing(run_test)
+    mean_score, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max}",
-        FILE_PATH,
+        f"{mean_score}/{max};{n_iterations}",
+        get_result_file_path(task),
     )
 
 
@@ -190,7 +167,6 @@ def test_property_selection(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
-    result_files,
     conversation,
     multiple_testing,
 ):
@@ -205,8 +181,9 @@ def test_property_selection(
         test_case_purpose,
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
-    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name, result_files, subtask)
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    subtask = f"{str(test_case_index)}_{test_case_purpose}"
+    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     prompt_engine.question = prompt
@@ -214,40 +191,44 @@ def test_property_selection(
     prompt_engine.selected_relationships = expected_relationships
 
     def run_test():
+        conversation.reset()  # needs to be reset for each test
         success = prompt_engine._select_properties(conversation=conversation)
-        assert success
 
-        score = []
-        for expected_property_key in expected_properties.keys():
-            try:
-                score.append(
-                    expected_property_key
-                    in prompt_engine.selected_properties.keys()
-                )
-            except KeyError:
-                score.append(0)
-
-            for expected_property_value in expected_properties[
-                expected_property_key
-            ]:
+        if success:
+            score = []
+            for expected_property_key in expected_properties.keys():
                 try:
                     score.append(
-                        expected_property_value
-                        in prompt_engine.selected_properties[
-                            expected_property_key
-                        ]
+                        expected_property_key
+                        in prompt_engine.selected_properties.keys()
                     )
                 except KeyError:
-                    score.append(0)
+                    score.append(False)
+
+                for expected_property_value in expected_properties[
+                    expected_property_key
+                ]:
+                    try:
+                        score.append(
+                            expected_property_value
+                            in prompt_engine.selected_properties[
+                                expected_property_key
+                            ]
+                        )
+                    except KeyError:
+                        score.append(False)
+        else:
+            score = [False for _ in expected_properties.keys()]
+
         return calculate_test_score(score)
 
-    mean_score, max = multiple_testing(run_test)
+    mean_score, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max}",
-        FILE_PATH,
+        f"{mean_score}/{max};{n_iterations}",
+        get_result_file_path(task),
     )
 
 
@@ -255,7 +236,6 @@ def test_query_generation(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
-    result_files,
     conversation,
     multiple_testing,
 ):
@@ -270,11 +250,13 @@ def test_query_generation(
         test_case_purpose,
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
-    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name, result_files, subtask)
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    subtask = f"{str(test_case_index)}_{test_case_purpose}"
+    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     def run_test():
+        conversation.reset()  # needs to be reset for each test
         query = prompt_engine._generate_query(
             question=prompt,
             entities=expected_entities,
@@ -297,13 +279,13 @@ def test_query_generation(
                 )
         return calculate_test_score(score)
 
-    mean_score, max = multiple_testing(run_test)
+    mean_score, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max}",
-        FILE_PATH,
+        f"{mean_score}/{max};{n_iterations}",
+        get_result_file_path(task),
     )
 
 
@@ -311,7 +293,7 @@ def test_end_to_end_query_generation(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
-    result_files,
+    conversation,
     multiple_testing,
 ):
     (
@@ -325,36 +307,41 @@ def test_end_to_end_query_generation(
         test_case_purpose,
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
-    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name, result_files, subtask)
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    subtask = f"{str(test_case_index)}_{test_case_purpose}"
+    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     def run_test():
-        query = prompt_engine.generate_query(
-            question=prompt,
-            query_language="Cypher",
-        )
+        conversation.reset()  # needs to be reset for each test
+        try:
+            query = prompt_engine.generate_query(
+                question=prompt,
+                query_language="Cypher",
+            )
+            score = []
+            for expected_part_of_query in expected_parts_of_query:
+                if isinstance(expected_part_of_query, tuple):
+                    score.append(
+                        expected_part_of_query[0] in query
+                        or expected_part_of_query[1] in query
+                    )
+                else:
+                    score.append(
+                        (re.search(expected_part_of_query, query) is not None)
+                    )
+        except ValueError as e:
+            score = [False for _ in expected_parts_of_query]
 
-        score = []
-        for expected_part_of_query in expected_parts_of_query:
-            if isinstance(expected_part_of_query, tuple):
-                score.append(
-                    expected_part_of_query[0] in query
-                    or expected_part_of_query[1] in query
-                )
-            else:
-                score.append(
-                    (re.search(expected_part_of_query, query) is not None)
-                )
         return calculate_test_score(score)
 
-    mean_score, max = multiple_testing(run_test)
+    mean_score, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max}",
-        FILE_PATH,
+        f"{mean_score}/{max};{n_iterations}",
+        get_result_file_path(task),
     )
 
 
@@ -445,7 +432,6 @@ def test_property_exists(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
-    result_files,
     conversation,
     multiple_testing,
 ):
@@ -460,11 +446,13 @@ def test_property_exists(
         test_case_purpose,
         test_case_index,
     ) = get_test_data(test_data_biocypher_query_generation)
-    subtask = f"{inspect.currentframe().f_code.co_name}_{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name, result_files, subtask)
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    subtask = f"{str(test_case_index)}_{test_case_purpose}"
+    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
     prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
 
     def run_test():
+        conversation.reset()  # needs to be reset for each test
         query = prompt_engine._generate_query(
             question=prompt,
             entities=expected_entities,
@@ -506,11 +494,11 @@ def test_property_exists(
                 score.append(0)
         return calculate_test_score(score)
 
-    mean_score, max = multiple_testing(run_test)
+    mean_score, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max}",
-        FILE_PATH,
+        f"{mean_score}/{max};{n_iterations}",
+        get_result_file_path(task),
     )

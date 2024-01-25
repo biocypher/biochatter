@@ -458,7 +458,10 @@ class BioCypherPromptEngine:
 
         msg, token_usage, correction = conversation.query(self.question)
 
-        self.selected_properties = json.loads(msg) if msg else {}
+        try:
+            self.selected_properties = json.loads(msg) if msg else {}
+        except json.decoder.JSONDecodeError:
+            self.selected_properties = {}
 
         return bool(self.selected_properties)
 

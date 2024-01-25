@@ -1,16 +1,7 @@
 from unittest.mock import Mock, patch
 from biochatter.prompts import BioCypherPromptEngine
 import pytest
-from benchmark.conftest import calculate_test_score, RESULT_FILES
-
-FILE_PATH = next(
-    (
-        s
-        for s in RESULT_FILES
-        if "biocypher" in s and "query" in s and "generation" in s
-    ),
-    None,
-)
+from benchmark.conftest import calculate_test_score
 
 MODEL_NAMES = [
     "gpt-3.5-turbo",
