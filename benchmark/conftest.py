@@ -1,5 +1,6 @@
 import os
 
+from xinference.client import Client
 import pytest
 
 import numpy as np
@@ -8,12 +9,7 @@ import pandas as pd
 from biochatter.prompts import BioCypherPromptEngine
 from benchmark.load_dataset import get_benchmark_dataset
 from biochatter.llm_connect import GptConversation, XinferenceConversation
-
-from xinference.client import Client
-
-from .benchmark_utils import (
-    benchmark_already_executed,
-)
+from .benchmark_utils import benchmark_already_executed
 
 # how often should each benchmark be run?
 N_ITERATIONS = 2
@@ -32,7 +28,7 @@ XINFERENCE_MODELS = {
     "llama-2-chat": {
         "model_size_in_billions": [
             "7",
-            "13",
+            # "13",
             # 70,
         ],
         "model_format": "ggmlv3",
@@ -41,34 +37,34 @@ XINFERENCE_MODELS = {
             # "q3_K_L",
             # "q3_K_M",
             # "q3_K_S",
-            "q4_0",
+            # "q4_0",
             # "q4_1",
             # "q4_K_M",
             # "q4_K_S",
-            "q5_0",
+            # "q5_0",
             # "q5_1",
             # "q5_K_M",
             # "q5_K_S",
             # "q6_K",
-            "q8_0",
+            # "q8_0",
         ],
     },
-    "mixtral-instruct-v0.1": {
-        "model_size_in_billions": [
-            "46_7",
-        ],
-        "model_format": "ggufv2",
-        "quantization": [
-            "Q2_K",
-            # "Q3_K_M",
-            "Q4_0",
-            # "Q4_K_M",
-            "Q5_0",
-            # "Q5_K_M",
-            # "Q6_K",
-            "Q8_0",
-        ],
-    },
+    # "mixtral-instruct-v0.1": {
+    #    "model_size_in_billions": [
+    #        "46_7",
+    #    ],
+    #    "model_format": "ggufv2",
+    #    "quantization": [
+    #        "Q2_K",
+    #        # "Q3_K_M",
+    #        "Q4_0",
+    #        # "Q4_K_M",
+    #        "Q5_0",
+    #        # "Q5_K_M",
+    #        # "Q6_K",
+    #        "Q8_0",
+    #    ],
+    # },
 }
 
 # create concrete benchmark list by concatenating all combinations of model
@@ -259,14 +255,20 @@ def result_files():
             result_file = pd.read_csv(file, header=0)
         except (pd.errors.EmptyDataError, FileNotFoundError):
             result_file = pd.DataFrame(
-                columns=["model_name", "subtask", "score"]
+                columns=["model_name", "subtask", "score", "iterations"]
             )
             result_file.to_csv(file, index=False)
 
         if not np.array_equal(
-            result_file.columns, ["model_name", "subtask", "score"]
+            result_file.columns,
+            ["model_name", "subtask", "score", "iterations"],
         ):
-            result_file.columns = ["model_name", "subtask", "score"]
+            result_file.columns = [
+                "model_name",
+                "subtask",
+                "score",
+                "iterations",
+            ]
 
         result_files[file] = result_file
 

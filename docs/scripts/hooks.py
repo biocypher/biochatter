@@ -7,11 +7,34 @@ def on_pre_build(config, **kwargs) -> None:
     """This function is called when building the documentation."""
 
     result_files_path = "benchmark/results/"
-    result_file_names = ["biocypher_query_generation", "rag_interpretation"]
+    result_file_names = [
+        "end_to_end_query_generation",
+        "explicit_relevance_of_single_fragments",
+        "implicit_relevance_of_multiple_fragments",
+    ]
 
     for file_name in result_file_names:
         results = pd.read_csv(f"{result_files_path}{file_name}.csv")
         preprocess_results_for_frontend(results, result_files_path, file_name)
+
+    create_overview_table(result_files_path, result_file_names)
+
+
+def extract_string_after_number(input_string: str) -> str:
+    """Extracts the string before the first number in a string.
+    e.g. "subtask_name_1_some_text" should return "subtask_name"
+
+    Args:
+        input_string (str): The input string.
+
+    Returns:
+        str: The extracted string.
+    """
+    match = re.search(r"\d+_(.+)", input_string)
+    if match:
+        return match.group(1)
+    else:
+        return input_string
 
 
 def preprocess_results_for_frontend(
@@ -25,7 +48,7 @@ def preprocess_results_for_frontend(
         file_name (str): The file name of the result file.
     """
     raw_results["subtask"] = raw_results["subtask"].apply(
-        extract_string_before_number
+        extract_string_after_number
     )
     raw_results["number_test_cases"] = raw_results["score"].apply(
         lambda x: float(x.split("/")[1])
@@ -33,44 +56,60 @@ def preprocess_results_for_frontend(
     raw_results["passed_test_cases"] = raw_results["score"].apply(
         lambda x: float(x.split("/")[0])
     )
-    aggregated_scores = raw_results.groupby(["model_name", "subtask"]).sum()
+    aggregated_scores = raw_results.groupby(["model_name"]).agg(
+        {
+            "number_test_cases": "sum",
+            "passed_test_cases": "sum",
+            "iterations": "first",
+        }
+    )
+
     aggregated_scores["Score"] = (
         aggregated_scores["passed_test_cases"]
         / aggregated_scores["number_test_cases"]
     )
-    dfs_for_each_subtask = {
-        subtask: group
-        for subtask, group in aggregated_scores.groupby("subtask")
-    }
-    for subtask, results in dfs_for_each_subtask.items():
-        results["Model name"] = results.index.get_level_values("model_name")
-        results["Passed test cases"] = results["passed_test_cases"]
-        results["Total test cases"] = results["number_test_cases"]
-        new_order = [
-            "Model name",
-            "Passed test cases",
-            "Total test cases",
-            "Score",
-        ]
-        results = results[new_order]
-        results.to_csv(
-            f"{path}preprocessed_for_frontend/{file_name}_{subtask}.csv",
-            index=False,
-        )
+
+    aggregated_scores["Model name"] = aggregated_scores.index.get_level_values(
+        "model_name"
+    )
+    aggregated_scores["Passed test cases"] = aggregated_scores[
+        "passed_test_cases"
+    ]
+    aggregated_scores["Total test cases"] = aggregated_scores[
+        "number_test_cases"
+    ]
+    aggregated_scores["Iterations"] = aggregated_scores["iterations"]
+    new_order = [
+        "Model name",
+        "Passed test cases",
+        "Total test cases",
+        "Score",
+        "Iterations",
+    ]
+    results = aggregated_scores[new_order]
+    results.to_csv(
+        f"{path}preprocessed_for_frontend/{file_name}.csv",
+        index=False,
+    )
 
 
-def extract_string_before_number(input_string: str) -> str:
-    """Extracts the string before the first number in a string.
-    e.g. "subtask_name_1_some_text" should return "subtask_name"
+def create_overview_table(result_files_path: str, result_file_names: list[str]):
+    """Creates an overview table for the frontend with y-axis = models and x-axis = tasks.
 
     Args:
-        input_string (str): The input string.
-
-    Returns:
-        str: The extracted string.
+        result_files_path (str): The path to the result files.
+        result_file_names (list[str]): The names of the result files.
     """
-    match = re.search(r"(.+?)_\d+", input_string)
-    if match:
-        return match.group(1)
-    else:
-        return input_string
+    subtask_results = []
+    for file in result_file_names:
+        subtask_result = pd.read_csv(
+            f"{result_files_path}preprocessed_for_frontend/{file}.csv"
+        )
+        subtask_result[file] = subtask_result["Score"]
+        subtask_result.set_index("Model name", inplace=True)
+        subtask_result = subtask_result[file]
+        subtask_results.append(subtask_result)
+    overview = pd.concat(subtask_results, axis=1)
+    overview.to_csv(
+        f"{result_files_path}preprocessed_for_frontend/overview.csv", index=True
+    )

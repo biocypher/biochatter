@@ -74,6 +74,10 @@ To cover most scenarios of research and development use, as well as clinical app
 
 ## Results
 
+### Overview
+
+{{ read_csv('benchmark/results/preprocessed_for_frontend/overview.csv', colalign=("center","center","center","center")) }}
+
 ### BioChatter for BioCypher query generation
 
 In this task BioChatter is used to generate queries for a BioCypher Knowledge Graph.
@@ -81,17 +85,17 @@ The `schema_config.yaml` of the BioCypher Knowledge Graph and a natural language
 
 Benchmarking results for BioChatter as a query generator for BioCypher:
 
-{{ read_csv('benchmark/results/preprocessed_for_frontend/biocypher_query_generation_test_end_to_end_query_generation.csv', colalign=("center","center","center","center")) }}
+{{ read_csv('benchmark/results/preprocessed_for_frontend/end_to_end_query_generation.csv', colalign=("center","center","center","center","center")) }}
 
 ### Retrieval Augmented Generation (RAG)
 
 TODO: description of rag_interpretation_test_explicit_relevance_of_single_fragments
 
-{{ read_csv('benchmark/results/preprocessed_for_frontend/rag_interpretation_test_explicit_relevance_of_single_fragments.csv', colalign=("center","center","center","center")) }}
+{{ read_csv('benchmark/results/preprocessed_for_frontend/explicit_relevance_of_single_fragments.csv', colalign=("center","center","center","center","center")) }}
 
 TODO: description of rag_interpretation_test_implicit_relevance_of_multiple_fragments
 
-{{ read_csv('benchmark/results/preprocessed_for_frontend/rag_interpretation_test_implicit_relevance_of_multiple_fragments.csv', colalign=("center","center","center","center")) }}
+{{ read_csv('benchmark/results/preprocessed_for_frontend/implicit_relevance_of_multiple_fragments.csv', colalign=("center","center","center","center","center")) }}
 
 ### Semantic search
 
