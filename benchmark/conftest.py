@@ -15,13 +15,14 @@ from .benchmark_utils import (
     benchmark_already_executed,
 )
 
+# how often should each benchmark be run?
 N_ITERATIONS = 2
 
+# which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
 
 
-# set model matrix
-# TODO should probably go to conftest.py
+# which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
     "gpt-3.5-turbo",
     # "gpt-4",
@@ -83,6 +84,7 @@ XINFERENCE_MODEL_NAMES = [
 BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
 BENCHMARKED_MODELS.sort()
 
+# Xinference IP and port
 BENCHMARK_URL = "http://localhost:9997"
 
 
