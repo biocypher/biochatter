@@ -9,18 +9,16 @@ from typing import List, Optional, Dict
 from langchain.schema import Document
 import openai
 from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.embeddings.azure_openai import AzureOpenAIEmbeddings
 from langchain.embeddings import XinferenceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.document_loaders import TextLoader
 from langchain.vectorstores import Milvus
 
-# To mock Client in tests, we need to import it in advance
-from xinference.client import Client
-
 import fitz  # this is PyMuPDF (PyPI pymupdf package, not fitz)
 from transformers import GPT2TokenizerFast
 
-from biochatter.vectorstore_host import VectorDatabaseHostMilvus
+from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
 
 
 class DocumentEmbedder:
@@ -40,8 +38,12 @@ class DocumentEmbedder:
         embedding_collection_name: Optional[str] = None,
         metadata_collection_name: Optional[str] = None,
         api_key: Optional[str] = None,
+        is_azure: Optional[bool] = False,
+        azure_deployment: Optional[str] = None,
+        azure_endpoint: Optional[str] = None,
         base_url: Optional[str] = None,
         embeddings: Optional[OpenAIEmbeddings | XinferenceEmbeddings] = None,
+        documentids_workspace: Optional[List[str]] = None,
     ) -> None:
         """
         Class that handles the retrieval augmented generation (RAG) functionality
@@ -96,6 +98,17 @@ class DocumentEmbedder:
             embeddings (Optional[OpenAIEmbeddings | XinferenceEmbeddings],
             optional): Embeddings object to use. Defaults to OpenAI.
 
+            documentids_workspace (Optional[List[str]], optional): a list of document IDs
+            that defines the scope within which rag operations (remove, similarity search,
+            and get all) occur. Defaults to None, which means the operations will be
+            performed across all documents in the database.
+
+            is_azure (Optional[bool], optional): if we are using Azure
+            azure_deployment (Optional[str], optional): Azure embeddings model deployment,
+            should work with azure_endpoint when is_azure is True
+            azure_endpoint (Optional[str], optional): Azure endpoint, should work with
+            azure_deployment when is_azure is True
+
         """
         self.use_prompt = use_prompt
         self.used = used
@@ -115,8 +128,15 @@ class DocumentEmbedder:
             self.embeddings = embeddings
         else:
             if not self.online:
-                self.embeddings = OpenAIEmbeddings(
-                    openai_api_key=api_key, model=model
+                self.embeddings = (
+                    OpenAIEmbeddings(openai_api_key=api_key, model=model)
+                    if not is_azure
+                    else AzureOpenAIEmbeddings(
+                        api_key=api_key,
+                        azure_deployment=azure_deployment,
+                        azure_endpoint=azure_endpoint,
+                        model=model,
+                    )
                 )
             else:
                 self.embeddings = None
@@ -128,6 +148,7 @@ class DocumentEmbedder:
         }
         self.embedding_collection_name = embedding_collection_name
         self.metadata_collection_name = metadata_collection_name
+        self.documentids_workspace = documentids_workspace
 
         # TODO: vector db selection
         self.vector_db_vendor = vector_db_vendor or "milvus"
@@ -141,7 +162,7 @@ class DocumentEmbedder:
 
     def _init_database_host(self):
         if self.vector_db_vendor == "milvus":
-            self.database_host = VectorDatabaseHostMilvus(
+            self.database_host = VectorDatabaseAgentMilvus(
                 embedding_func=self.embeddings,
                 connection_args=self.connection_args,
                 embedding_collection_name=self.embedding_collection_name,
@@ -226,17 +247,23 @@ class DocumentEmbedder:
 
         """
         return self.database_host.similarity_search(
-            query=query, k=k or self.n_results
+            query=query,
+            k=k or self.n_results,
+            doc_ids=self.documentids_workspace,
         )
 
     def connect(self) -> None:
         self.database_host.connect()
 
     def get_all_documents(self) -> List[Dict]:
-        return self.database_host.get_all_documents()
+        return self.database_host.get_all_documents(
+            doc_ids=self.documentids_workspace
+        )
 
     def remove_document(self, doc_id: str) -> None:
-        self.database_host.remove_document(doc_id)
+        return self.database_host.remove_document(
+            doc_id, self.documentids_workspace
+        )
 
 
 class XinferenceDocumentEmbedder(DocumentEmbedder):
@@ -256,6 +283,7 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
         metadata_collection_name: Optional[str] = None,
         api_key: Optional[str] = "none",
         base_url: Optional[str] = None,
+        documentids_workspace: Optional[List[str]] = None,
     ):
         """
         Extension of the DocumentEmbedder class that uses Xinference for
@@ -299,7 +327,14 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
 
             base_url (Optional[str], optional): base url of Xinference API.
 
+            documentids_workspace (Optional[List[str]], optional): a list of document IDs
+            that defines the scope within which rag operations (remove, similarity search,
+            and get all) occur. Defaults to None, which means the operations will be
+            performed across all documents in the database.
+
         """
+        from xinference.client import Client
+
         self.model_name = model
         self.client = Client(base_url=base_url)
         self.models = {}
@@ -328,6 +363,7 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
             embeddings=XinferenceEmbeddings(
                 server_url=base_url, model_uid=self.model_uid
             ),
+            documentids_workspace=documentids_workspace,
         )
 
     def load_models(self):

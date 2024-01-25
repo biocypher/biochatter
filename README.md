@@ -53,3 +53,17 @@ by BioChatter can be seen in use in the
 
 Check out [this repository](https://github.com/csbl-br/awesome-compbio-chatgpt)
 for more info on computational biology usage of large language models.
+
+## Developer notes
+
+If you're on Apple Silicon, you may encounter issues with the `grpcio`
+dependency (`grpc` library, which is used in `pymilvus`). If so, try to install
+the binary from source after removing the installed package from the virtual
+environment from
+[here](https://stackoverflow.com/questions/72620996/apple-m1-symbol-not-found-cfrelease-while-running-python-app):
+
+```bash
+pip uninstall grpcio
+export GRPC_PYTHON_LDFLAGS=" -framework CoreFoundation"
+pip install grpcio==1.53.0 --no-binary :all:
+```

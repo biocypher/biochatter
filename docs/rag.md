@@ -3,8 +3,8 @@
 To connect to a vector database for using semantic similarity search and
 retrieval augmented generation (RAG), we provide an implementation that connects
 to a [Milvus](https://milvus.io) instance (local or remote).  These functions
-are provided by the modules `vectorstore_host.py` (for maintaining the
-connection) and `vectorstore.py` (for performing embeddings and search).
+are provided by the modules `vectorstore.py` (for performing embeddings) and `vectorstore_agent.py` (for maintaining the
+connection and search).
 
 This is implemented in the [ChatGSE](https://github.com/biocypher/ChatGSE)
 Docker workflow and the BioChatter Docker compose found in this repository.  To
@@ -17,9 +17,9 @@ services alongside it).
 To connect to a vector DB host, we can use the corresponding class:
 
 ```python
-from biochatter.vectorstore_host import VectorDatabaseHostMilvus
+from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
 
-dbHost = VectorDatabaseHostMilvus(
+dbHost = VectorDatabaseAgentMilvus(
     embedding_func=OpenAIEmbeddings(),
     connection_args={"host": _HOST, "port": _PORT},
     embedding_collection_name=EMBEDDING_NAME,

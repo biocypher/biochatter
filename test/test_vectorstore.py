@@ -5,7 +5,8 @@ from biochatter.vectorstore import (
     XinferenceDocumentEmbedder,
 )
 import os
-from unittest.mock import patch
+from xinference.client import Client
+from unittest.mock import patch, MagicMock
 
 print(os.getcwd())
 
@@ -77,7 +78,7 @@ search_docs = [
 
 
 @patch("biochatter.vectorstore.OpenAIEmbeddings")
-@patch("biochatter.vectorstore.VectorDatabaseHostMilvus")
+@patch("biochatter.vectorstore.VectorDatabaseAgentMilvus")
 @patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
 def test_retrieval_augmented_generation(
     mock_textsplitter, mock_host, mock_openaiembeddings
@@ -127,9 +128,9 @@ def test_retrieval_augmented_generation(
     mock_host.return_value.remove_document.assert_called_once()
 
 
-@patch("biochatter.vectorstore.Client")
+@patch("xinference.client.Client")
 @patch("biochatter.vectorstore.XinferenceEmbeddings")
-@patch("biochatter.vectorstore.VectorDatabaseHostMilvus")
+@patch("biochatter.vectorstore.VectorDatabaseAgentMilvus")
 @patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
 def test_retrieval_augmented_generation_generic_api(
     mock_textsplitter, mock_host, mock_embeddings, mock_client
@@ -255,7 +256,7 @@ def check_document_splitter(
 
 
 @patch("biochatter.vectorstore.OpenAIEmbeddings")
-@patch("biochatter.vectorstore.VectorDatabaseHostMilvus")
+@patch("biochatter.vectorstore.VectorDatabaseAgentMilvus")
 @patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
 def test_split_by_characters(mock_textsplitter, mock_host, mock_embeddings):
     # character splitter

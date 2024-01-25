@@ -1,6 +1,7 @@
 import os
 import openai
 from openai._exceptions import NotFoundError
+from xinference.client import Client
 from biochatter.llm_connect import (
     GptConversation,
     AzureGptConversation,
@@ -168,7 +169,7 @@ def test_xinference_init():
     on a test server.
     """
     base_url = os.getenv("XINFERENCE_BASE_URL", "http://llm.biocypher.org")
-    with patch("biochatter.llm_connect.Client") as mock_client:
+    with patch("xinference.client.Client") as mock_client:
         mock_client.return_value.list_models.return_value = xinference_models
         convo = XinferenceConversation(
             base_url=base_url,
@@ -180,7 +181,7 @@ def test_xinference_init():
 
 def test_generic_chatting():
     base_url = os.getenv("XINFERENCE_BASE_URL", "http://llm.biocypher.org")
-    with patch("biochatter.llm_connect.Client") as mock_client:
+    with patch("xinference.client.Client") as mock_client:
         response = {
             "id": "1",
             "object": "chat.completion",

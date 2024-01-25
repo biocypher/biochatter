@@ -41,7 +41,7 @@ def test_entity_selection(prompt_engine):
         score.append("Gene" in prompt_engine.selected_entities)
         score.append("Disease" in prompt_engine.selected_entities)
 
-        assert calculate_test_score(score) == "2/2"
+        assert calculate_test_score(score) == (2, 2)
 
 
 def test_relationship_selection(prompt_engine):
@@ -101,7 +101,7 @@ def test_relationship_selection(prompt_engine):
             )
         )
 
-        assert calculate_test_score(score) == "6/6"
+        assert calculate_test_score(score) == (6, 6)
 
 
 def test_property_selection(prompt_engine):
@@ -141,7 +141,7 @@ def test_property_selection(prompt_engine):
         score.append("Disease" in prompt_engine.selected_properties.keys())
         score.append("name" in prompt_engine.selected_properties.get("Disease"))
 
-        assert calculate_test_score(score) == "2/2"
+        assert calculate_test_score(score) == (2, 2)
 
 
 def test_query_generation(prompt_engine):
@@ -197,4 +197,4 @@ def test_query_generation(prompt_engine):
         )
         score.append("WHERE" in query or "{name:" in query)
 
-        assert calculate_test_score(score) == "7/7"
+        assert calculate_test_score(score) == (7, 7)
