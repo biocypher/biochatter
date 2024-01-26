@@ -54,25 +54,16 @@ by BioChatter can be seen in use in the
 Check out [this repository](https://github.com/csbl-br/awesome-compbio-chatgpt)
 for more info on computational biology usage of large language models.
 
-# Dev Container
+## Developer notes
 
-Due to some incompatibilities of `pymilvus` with Apple Silicon, we have created
-a dev container for this project. To use it, you need to have Docker installed
-on your machine. Then, you can run the devcontainer setup as recommended by
-VSCode
-[here](https://code.visualstudio.com/docs/remote/containers#_quick-start-open-an-existing-folder-in-a-container)
-or using Docker directly.
+If you're on Apple Silicon, you may encounter issues with the `grpcio`
+dependency (`grpc` library, which is used in `pymilvus`). If so, try to install
+the binary from source after removing the installed package from the virtual
+environment from
+[here](https://stackoverflow.com/questions/72620996/apple-m1-symbol-not-found-cfrelease-while-running-python-app):
 
-The dev container expects an environment file (there are options, but the basic
-one is `.devcontainer/local.env`) with the following variables:
-
+```bash
+pip uninstall grpcio
+export GRPC_PYTHON_LDFLAGS=" -framework CoreFoundation"
+pip install grpcio==1.53.0 --no-binary :all:
 ```
-OPENAI_API_KEY=(sk-...)
-DOCKER_COMPOSE=true
-DEVCONTAINER=true
-```
-
-To test vector database functionality, you also need to start a Milvus
-standalone server. You can do this by running `docker-compose up` as described
-[here](https://milvus.io/docs/install_standalone-docker.md) on the host machine
-(not from inside the devcontainer).

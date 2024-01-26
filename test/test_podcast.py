@@ -43,6 +43,7 @@ def test_podcast_to_text():
     assert podcaster.podcast_to_text() == expected_text
 
 
+@pytest.mark.skip(reason=("Temporary skip, gtts is slow."))
 def test_podcast_to_file_gtts(tmpdir):
     # create a Podcaster object with fixed text
     reader = DocumentReader()

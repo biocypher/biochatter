@@ -78,7 +78,7 @@ search_docs = [
 
 
 @patch("biochatter.vectorstore.OpenAIEmbeddings")
-@patch("biochatter.vectorstore.VectorDatabaseHostMilvus")
+@patch("biochatter.vectorstore.VectorDatabaseAgentMilvus")
 @patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
 def test_retrieval_augmented_generation(
     mock_textsplitter, mock_host, mock_openaiembeddings
@@ -130,7 +130,7 @@ def test_retrieval_augmented_generation(
 
 @patch("xinference.client.Client")
 @patch("biochatter.vectorstore.XinferenceEmbeddings")
-@patch("biochatter.vectorstore.VectorDatabaseHostMilvus")
+@patch("biochatter.vectorstore.VectorDatabaseAgentMilvus")
 @patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
 def test_retrieval_augmented_generation_generic_api(
     mock_textsplitter, mock_host, mock_embeddings, mock_client
@@ -173,16 +173,16 @@ def test_retrieval_augmented_generation_generic_api(
         connection_args={"host": _HOST, "port": _PORT},
     )
     rag_agent.connect()
-    
+
     doc_id = rag_agent.save_document(doc)
     assert isinstance(doc_id, str)
     assert len(doc_id) > 0
-    
+
     query = "What is BioCypher?"
     results = rag_agent.similarity_search(query)
     assert len(results) == 3
     assert all(["BioCypher" in result.page_content for result in results])
-    
+
     mock_host.return_value.get_all_documents.return_value = [
         {"id": "1"},
         {"id": "2"},
@@ -256,7 +256,7 @@ def check_document_splitter(
 
 
 @patch("biochatter.vectorstore.OpenAIEmbeddings")
-@patch("biochatter.vectorstore.VectorDatabaseHostMilvus")
+@patch("biochatter.vectorstore.VectorDatabaseAgentMilvus")
 @patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
 def test_split_by_characters(mock_textsplitter, mock_host, mock_embeddings):
     # character splitter

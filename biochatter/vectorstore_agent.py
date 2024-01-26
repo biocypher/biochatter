@@ -102,15 +102,14 @@ def validate_connection_args(connection_args: Optional[dict] = None):
             "password": "",
         }
 
-    
     connection_args["user"] = connection_args.get("user", "")
     connection_args["password"] = connection_args.get("password", "")
     return connection_args
 
 
-class VectorDatabaseHostMilvus:
+class VectorDatabaseAgentMilvus:
     """
-    The VectorDatabaseHostMilvus class manages vector databases in a connected
+    The VectorDatabaseAgentMilvus class manages vector databases in a connected
     host database. It manages an embedding collection
     `_col_embeddings:langchain.vectorstores.Milvus`, which is the main
     information on the embedded text fragments and the basis for similarity
@@ -531,7 +530,7 @@ class VectorDatabaseHostMilvus:
             List[Document]: search results
         """
         result_metadata = []
-        expr = VectorDatabaseHostMilvus._build_meta_col_query_expr_for_all_documents(
+        expr = VectorDatabaseAgentMilvus._build_meta_col_query_expr_for_all_documents(
             doc_ids
         )
         result_metadata = self._col_metadata.query(expr=expr)
@@ -601,7 +600,7 @@ class VectorDatabaseHostMilvus:
                 [{{id}, {author}, {source}, ...}]
         """
         try:
-            expr = VectorDatabaseHostMilvus._build_meta_col_query_expr_for_all_documents(
+            expr = VectorDatabaseAgentMilvus._build_meta_col_query_expr_for_all_documents(
                 doc_ids
             )
             result_metadata = self._col_metadata.query(
