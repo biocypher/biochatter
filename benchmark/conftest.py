@@ -17,7 +17,6 @@ N_ITERATIONS = 2
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
 
-
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
     "gpt-3.5-turbo",
@@ -27,44 +26,44 @@ OPENAI_MODEL_NAMES = [
 XINFERENCE_MODELS = {
     "llama-2-chat": {
         "model_size_in_billions": [
-            "7",
-            # "13",
-            # 70,
+            7,
+            13,
+            70,
         ],
         "model_format": "ggmlv3",
         "quantization": [
             "q2_K",
             # "q3_K_L",
-            # "q3_K_M",
+            "q3_K_M",
             # "q3_K_S",
-            # "q4_0",
-            # "q4_1",
-            # "q4_K_M",
-            # "q4_K_S",
-            # "q5_0",
+            "q4_0",
+            "q4_1",
+            "q4_K_M",
+            "q4_K_S",
+            "q5_0",
             # "q5_1",
-            # "q5_K_M",
+            "q5_K_M",
             # "q5_K_S",
-            # "q6_K",
-            # "q8_0",
+            "q6_K",
+            "q8_0",
         ],
     },
-    # "mixtral-instruct-v0.1": {
-    #    "model_size_in_billions": [
-    #        "46_7",
-    #    ],
-    #    "model_format": "ggufv2",
-    #    "quantization": [
-    #        "Q2_K",
-    #        # "Q3_K_M",
-    #        "Q4_0",
-    #        # "Q4_K_M",
-    #        "Q5_0",
-    #        # "Q5_K_M",
-    #        # "Q6_K",
-    #        "Q8_0",
-    #    ],
-    # },
+    "mixtral-instruct-v0.1": {
+        "model_size_in_billions": [
+            "46_7",
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            "Q2_K",
+            # "Q3_K_M",
+            "Q4_0",
+            "Q4_K_M",
+            "Q5_0",
+            # "Q5_K_M",
+            # "Q6_K",
+            "Q8_0",
+        ],
+    },
 }
 
 # create concrete benchmark list by concatenating all combinations of model

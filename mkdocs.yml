@@ -56,7 +56,7 @@ nav:
   - API Reference:
       - LLM Connectivity: llm_connect-reference.md
       - Vectorstore: vectorstore-reference.md
-      - Vectorstore Host: vectorstore_host-reference.md
+      - Vectorstore Agent: vectorstore_agent-reference.md
       - Prompt Engine: prompts-reference.md
       - Podcast: podcast-reference.md
 
