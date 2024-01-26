@@ -28,4 +28,5 @@ jobs:
       - run: pip install mkdocs-material 
       - run: pip install mkdocstrings[python]
       - run: pip install pandas
+      - run: pip install mkdocs-table-reader-plugin
       - run: mkdocs gh-deploy --force
