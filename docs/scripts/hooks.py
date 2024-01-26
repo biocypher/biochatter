@@ -96,7 +96,10 @@ def preprocess_results_for_frontend(
 
 
 def create_overview_table(result_files_path: str, result_file_names: list[str]):
-    """Creates an overview table for the frontend with y-axis = models and x-axis = tasks.
+    """
+
+    Creates an overview table for the frontend with y-axis = models and x-axis =
+    tasks.
 
     Args:
         result_files_path (str): The path to the result files.
@@ -116,4 +119,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     overview["Mean"] = overview.mean(axis=1)
     overview.to_csv(
         f"{result_files_path}preprocessed_for_frontend/overview.csv", index=True
+    )
+    overview_aggregated = overview[["Mean"]]
+    overview_aggregated.to_csv(
+        f"{result_files_path}preprocessed_for_frontend/overview-aggregated.csv",
+        index=True,
     )

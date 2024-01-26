@@ -53,6 +53,9 @@ nav:
       - LLM in your Browser - WebAssembly: wasm.md
       - Benchmarking: benchmark.md
       - Podcast my Paper: podcast.md
+  - Benchmark:
+      - Overview: benchmark-overview.md
+      - All Results: benchmark-results.md
   - API Reference:
       - LLM Connectivity: llm_connect-reference.md
       - Vectorstore: vectorstore-reference.md
