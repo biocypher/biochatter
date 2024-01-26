@@ -46,7 +46,7 @@ For ensuring code quality, the following tools are used:
 
 - [black](https://black.readthedocs.io/en/stable/) for automated code formatting
 
-<!-- - [pre-commit-hooks](https://github.com/pre-commit/pre-commit-hooks) for
+- [pre-commit-hooks](https://github.com/pre-commit/pre-commit-hooks) for
 ensuring some general rules
 
 - [pep585-upgrade](https://github.com/snok/pep585-upgrade) for automatically
@@ -55,28 +55,26 @@ upgrading type hints to the new native types defined in PEP 585
 - [pygrep-hooks](https://github.com/pre-commit/pygrep-hooks) for ensuring some
 general naming rules -->
 
-<!-- Pre-commit hooks are used to automatically run these tools before each commit.
+Pre-commit hooks are used to automatically run these tools before each commit.
 They are defined in [.pre-commit-config.yaml](./.pre-commit-config.yaml). To
 install the hooks run `poetry run pre-commit install`. The hooks are then
 executed before each commit. For running the hook for all project files (not
 only the changed ones) run `poetry run pre-commit run --all-files`. -->
 
-<!-- The project uses a [Sphinx](https://www.sphinx-doc.org/en/master/) autodoc
-GitHub Actions workflow to generate the documentation. If you add new code,
+The project uses [mkdocs-material](https://squidfunk.github.io/mkdocs-material/) within a GitHub Actions workflow to generate the documentation. If you add new code,
 please make sure that it is documented accordingly and in a consistent manner
 with the existing code base. The docstrings should follow the [Google style
 guide](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html).
 To check if the docs build successfully, you can build them locally by running
-`make html` in the `docs` directory. -->
-
+`mkdocs build` in the project root directory. To preview your changes run `mkdocs serve`.
+`
+<!-- TODO: doctest -->
 <!-- When adding new code snippets to the documentation, make sure that they are
 automatically tested with
 [doctest](https://sphinx-tutorial.readthedocs.io/step-3/#testing-your-code);
 this ensures that no outdated code snippets are part of the documentation. -->
 
-Documentation currently lives in the repository's
-[wiki](https://github.com/biocypher/biochatter/wiki). We will soon create a
-Sphinx-based documentation site.
+The documentation is hosted [here](https://biochatter.org/).
 
 
 ## Testing

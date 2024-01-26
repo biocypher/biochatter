@@ -1,5 +1,6 @@
-import pandas as pd
 import pytest
+
+import pandas as pd
 
 
 def benchmark_already_executed(
@@ -63,13 +64,15 @@ def return_or_create_result_file(
     try:
         results = pd.read_csv(file_path, header=0)
     except (pd.errors.EmptyDataError, FileNotFoundError):
-        results = pd.DataFrame(columns=["model_name", "subtask", "score"])
+        results = pd.DataFrame(
+            columns=["model_name", "subtask", "score", "iterations"]
+        )
         results.to_csv(file_path, index=False)
     return results
 
 
 def write_results_to_file(
-    model_name: str, subtask: str, score: str, file_path: str
+    model_name: str, subtask: str, score: str, iterations: str, file_path: str
 ):
     """Writes the benchmark results for the subtask to the result file.
 
@@ -77,10 +80,11 @@ def write_results_to_file(
         model_name (str): The model name, e.g. "gpt-3.5-turbo"
         subtask (str): The benchmark subtask test case, e.g. "entities_0"
         score (str): The benchmark score, e.g. "1/1"
+        iterations (str): The number of iterations, e.g. "1"
     """
     results = pd.read_csv(file_path, header=0)
     new_row = pd.DataFrame(
-        [[model_name, subtask, score]], columns=results.columns
+        [[model_name, subtask, score, iterations]], columns=results.columns
     )
     results = pd.concat([results, new_row], ignore_index=True).sort_values(
         by=["model_name", "subtask"]

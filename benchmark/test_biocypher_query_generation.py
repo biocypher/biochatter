@@ -6,9 +6,9 @@ import pytest
 from biochatter.prompts import BioCypherPromptEngine
 from .conftest import calculate_test_score
 from .benchmark_utils import (
+    skip_if_already_run,
     get_result_file_path,
     write_results_to_file,
-    skip_if_already_run,
 )
 
 
@@ -92,7 +92,8 @@ def test_entity_selection(
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max};{n_iterations}",
+        f"{mean_score}/{max}",
+        f"{n_iterations}",
         get_result_file_path(task),
     )
 
@@ -158,7 +159,8 @@ def test_relationship_selection(
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max};{n_iterations}",
+        f"{mean_score}/{max}",
+        f"{n_iterations}",
         get_result_file_path(task),
     )
 
@@ -227,7 +229,8 @@ def test_property_selection(
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max};{n_iterations}",
+        f"{mean_score}/{max}",
+        f"{n_iterations}",
         get_result_file_path(task),
     )
 
@@ -284,7 +287,8 @@ def test_query_generation(
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max};{n_iterations}",
+        f"{mean_score}/{max}",
+        f"{n_iterations}",
         get_result_file_path(task),
     )
 
@@ -340,7 +344,8 @@ def test_end_to_end_query_generation(
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max};{n_iterations}",
+        f"{mean_score}/{max}",
+        f"{n_iterations}",
         get_result_file_path(task),
     )
 
@@ -499,6 +504,7 @@ def test_property_exists(
     write_results_to_file(
         prompt_engine.model_name,
         subtask,
-        f"{mean_score}/{max};{n_iterations}",
+        f"{mean_score}/{max}",
+        f"{n_iterations}",
         get_result_file_path(task),
     )

@@ -12,3 +12,4 @@ __pycache__/
 *.env
 volumes/
 benchmark/encrypted_llm_test_data.json
+site/

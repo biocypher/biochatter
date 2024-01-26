@@ -1,5 +1,6 @@
 import os
 
+from xinference.client import Client
 import pytest
 
 import numpy as np
@@ -8,19 +9,13 @@ import pandas as pd
 from biochatter.prompts import BioCypherPromptEngine
 from benchmark.load_dataset import get_benchmark_dataset
 from biochatter.llm_connect import GptConversation, XinferenceConversation
-
-from xinference.client import Client
-
-from .benchmark_utils import (
-    benchmark_already_executed,
-)
+from .benchmark_utils import benchmark_already_executed
 
 # how often should each benchmark be run?
 N_ITERATIONS = 2
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
-
 
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
@@ -259,14 +254,20 @@ def result_files():
             result_file = pd.read_csv(file, header=0)
         except (pd.errors.EmptyDataError, FileNotFoundError):
             result_file = pd.DataFrame(
-                columns=["model_name", "subtask", "score"]
+                columns=["model_name", "subtask", "score", "iterations"]
             )
             result_file.to_csv(file, index=False)
 
         if not np.array_equal(
-            result_file.columns, ["model_name", "subtask", "score"]
+            result_file.columns,
+            ["model_name", "subtask", "score", "iterations"],
         ):
-            result_file.columns = ["model_name", "subtask", "score"]
+            result_file.columns = [
+                "model_name",
+                "subtask",
+                "score",
+                "iterations",
+            ]
 
         result_files[file] = result_file
 

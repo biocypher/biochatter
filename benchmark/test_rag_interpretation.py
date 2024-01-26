@@ -2,13 +2,13 @@ import inspect
 
 import pytest
 
+from biochatter._misc import ensure_iterable
 from .conftest import calculate_test_score
 from .benchmark_utils import (
+    skip_if_already_run,
     get_result_file_path,
     write_results_to_file,
-    skip_if_already_run,
 )
-from biochatter._misc import ensure_iterable
 
 
 def get_test_data(test_data_rag_interpretation: list) -> tuple:
@@ -78,7 +78,8 @@ def test_explicit_relevance_of_single_fragments(
     write_results_to_file(
         model_name,
         subtask,
-        f"{mean_score}/{max};{n_iterations}",
+        f"{mean_score}/{max}",
+        f"{n_iterations}",
         get_result_file_path(task),
     )
 
@@ -127,6 +128,7 @@ def test_implicit_relevance_of_multiple_fragments(
     write_results_to_file(
         model_name,
         subtask,
-        f"{mean_score}/{max};{n_iterations}",
+        f"{mean_score}/{max}",
+        f"{n_iterations}",
         get_result_file_path(task),
     )
