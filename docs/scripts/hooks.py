@@ -89,6 +89,7 @@ def preprocess_results_for_frontend(
         "Iterations",
     ]
     results = aggregated_scores[new_order]
+    results = results.sort_values(by="Score", ascending=False)
     results.to_csv(
         f"{path}preprocessed_for_frontend/{file_name}",
         index=False,
@@ -117,6 +118,7 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         subtask_results.append(subtask_result)
     overview = pd.concat(subtask_results, axis=1)
     overview["Mean"] = overview.mean(axis=1)
+    overview = overview.sort_values(by="Mean", ascending=False)
     overview.to_csv(
         f"{result_files_path}preprocessed_for_frontend/overview.csv", index=True
     )

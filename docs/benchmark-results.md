@@ -1,6 +1,6 @@
 # Benchmark - All Results
 
-## BioChatter for BioCypher query generation
+## BioCypher query generation
 
 In this set of tasks, we test LLM abilities to generate queries for a BioCypher Knowledge Graph using BioChatter.
 The `schema_config.yaml` of the BioCypher Knowledge Graph and a natural language query are passed to BioChatter.
@@ -50,4 +50,4 @@ Instructions can be explicit ("is this fragment relevant to the question?") or i
 
 ## Semantic search
 
-tbd
+Coming soon.
