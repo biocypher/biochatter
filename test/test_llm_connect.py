@@ -254,7 +254,7 @@ def test_wasm_conversation():
 
 @pytest.fixture
 def xinference_conversation():
-    with patch("biochatter.llm_connect.Client") as mock_client:
+    with patch("xinference.client.Client") as mock_client:
         mock_client.return_value.list_models.return_value = xinference_models
         mock_client.return_value.get_model.return_value.chat.return_value = (
             {"choices": [{"message": {"content": "Human message"}}]},
