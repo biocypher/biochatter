@@ -1,3 +1,4 @@
+import os
 import re
 
 import pandas as pd
@@ -7,14 +8,15 @@ def on_pre_build(config, **kwargs) -> None:
     """This function is called when building the documentation."""
 
     result_files_path = "benchmark/results/"
+
     result_file_names = [
-        "end_to_end_query_generation",
-        "explicit_relevance_of_single_fragments",
-        "implicit_relevance_of_multiple_fragments",
+        f
+        for f in os.listdir(result_files_path)
+        if os.path.isfile(os.path.join(result_files_path, f))
     ]
 
     for file_name in result_file_names:
-        results = pd.read_csv(f"{result_files_path}{file_name}.csv")
+        results = pd.read_csv(f"{result_files_path}{file_name}")
         preprocess_results_for_frontend(results, result_files_path, file_name)
 
     create_overview_table(result_files_path, result_file_names)
@@ -88,7 +90,7 @@ def preprocess_results_for_frontend(
     ]
     results = aggregated_scores[new_order]
     results.to_csv(
-        f"{path}preprocessed_for_frontend/{file_name}.csv",
+        f"{path}preprocessed_for_frontend/{file_name}",
         index=False,
     )
 
@@ -103,13 +105,15 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     subtask_results = []
     for file in result_file_names:
         subtask_result = pd.read_csv(
-            f"{result_files_path}preprocessed_for_frontend/{file}.csv"
+            f"{result_files_path}preprocessed_for_frontend/{file}"
         )
-        subtask_result[file] = subtask_result["Score"]
+        file_name_without_extension = os.path.splitext(file)[0]
+        subtask_result[file_name_without_extension] = subtask_result["Score"]
         subtask_result.set_index("Model name", inplace=True)
-        subtask_result = subtask_result[file]
+        subtask_result = subtask_result[file_name_without_extension]
         subtask_results.append(subtask_result)
     overview = pd.concat(subtask_results, axis=1)
+    overview["Mean"] = overview.mean(axis=1)
     overview.to_csv(
         f"{result_files_path}preprocessed_for_frontend/overview.csv", index=True
     )

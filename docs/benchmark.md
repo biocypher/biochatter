@@ -85,17 +85,43 @@ The `schema_config.yaml` of the BioCypher Knowledge Graph and a natural language
 
 Benchmarking results for BioChatter as a query generator for BioCypher:
 
-{{ read_csv('benchmark/results/preprocessed_for_frontend/end_to_end_query_generation.csv', colalign=("center","center","center","center","center")) }}
+=== "Entity selection"
+
+    {{ read_csv('benchmark/results/preprocessed_for_frontend/entity_selection.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Relationship selection"
+
+    {{ read_csv('benchmark/results/preprocessed_for_frontend/relationship_selection.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Property selection"
+
+    {{ read_csv('benchmark/results/preprocessed_for_frontend/property_selection.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Property hallucination"
+
+    {{ read_csv('benchmark/results/preprocessed_for_frontend/property_exists.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Query generation"
+
+    {{ read_csv('benchmark/results/preprocessed_for_frontend/query_generation.csv', colalign=("center","center","center","center","center")) }}
+
+=== "End to end query generation"
+
+    {{ read_csv('benchmark/results/preprocessed_for_frontend/end_to_end_query_generation.csv', colalign=("center","center","center","center","center")) }}
 
 ### Retrieval Augmented Generation (RAG)
 
-TODO: description of rag_interpretation_test_explicit_relevance_of_single_fragments
+=== "Explicit relevance of single fragments"
 
-{{ read_csv('benchmark/results/preprocessed_for_frontend/explicit_relevance_of_single_fragments.csv', colalign=("center","center","center","center","center")) }}
+    TODO: description of rag_interpretation_test_explicit_relevance_of_single_fragments
 
-TODO: description of rag_interpretation_test_implicit_relevance_of_multiple_fragments
+    {{ read_csv('benchmark/results/preprocessed_for_frontend/explicit_relevance_of_single_fragments.csv', colalign=("center","center","center","center","center")) }}
 
-{{ read_csv('benchmark/results/preprocessed_for_frontend/implicit_relevance_of_multiple_fragments.csv', colalign=("center","center","center","center","center")) }}
+=== "Implicit relevance of single fragments"
+
+    TODO: description of rag_interpretation_test_implicit_relevance_of_multiple_fragments
+
+    {{ read_csv('benchmark/results/preprocessed_for_frontend/implicit_relevance_of_multiple_fragments.csv', colalign=("center","center","center","center","center")) }}
 
 ### Semantic search
 
