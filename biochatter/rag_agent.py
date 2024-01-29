@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 class RagAgentModeEnum:
     VectorStore = "vectorstore"
@@ -14,6 +14,7 @@ class RagAgent:
         use_prompt: Optional[bool] = False,
         schema_config_or_info_dict: Optional[dict] = None,
         embedding_func: Optional[object] = None,
+        documentids_workspace: Optional[List[str]]=None
     ) -> None:
         """
         Create a RAG agent that can return results from a database or vector
@@ -42,11 +43,17 @@ class RagAgent:
 
             metadata_collection_name (str): The name of the metadata
                 collection. Required if mode is "vectorstore".
+            
+            documentids_workspace (Optional[List[str]], optional): a list of document IDs
+                that defines the scope within which similarity search occurs. Defaults 
+                to None, which means the operations will be performed across all 
+                documents in the database.
         """
         self.mode = mode
         self.model_name = model_name
         self.use_prompt = use_prompt
         self.n_results = n_results
+        # self.
         if self.mode == RagAgentModeEnum.KG:
             from .database_agent import DatabaseAgent
 
