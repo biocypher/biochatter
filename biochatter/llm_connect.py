@@ -53,10 +53,6 @@ TOKEN_LIMITS = {
     "custom-endpoint": 1,  # Reasonable value?
 }
 
-class RagAgentEnum:
-    VectorStore = "vectorstore"
-    KG = "kg"
-
 class Conversation(ABC):
     """
 

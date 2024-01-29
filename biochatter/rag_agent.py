@@ -1,5 +1,8 @@
 from typing import Optional
 
+class RagAgentModeEnum:
+    VectorStore = "vectorstore"
+    KG = "kg"
 
 class RagAgent:
     def __init__(
@@ -44,7 +47,7 @@ class RagAgent:
         self.model_name = model_name
         self.use_prompt = use_prompt
         self.n_results = n_results
-        if self.mode == "kg":
+        if self.mode == RagAgentModeEnum.KG:
             from .database_agent import DatabaseAgent
 
             if not schema_config_or_info_dict:
@@ -61,7 +64,7 @@ class RagAgent:
 
             self.query_func = self.agent.get_query_results
 
-        elif self.mode == "vectorstore":
+        elif self.mode == RagAgentModeEnum.VectorStore:
             from .vectorstore_agent import VectorDatabaseAgentMilvus
 
             if not embedding_func:
@@ -96,7 +99,7 @@ class RagAgent:
             Which metadata are returned?
         """
         results = self.query_func(user_question, self.n_results)
-        if self.mode == "kg":
+        if self.mode == RagAgentModeEnum.KG:
             return [
                 (
                     result.page_content,
@@ -104,7 +107,7 @@ class RagAgent:
                 )
                 for result in results
             ]
-        elif self.mode == "vectorstore":
+        elif self.mode == RagAgentModeEnum.VectorStore:
             return [
                 (
                     result.page_content,

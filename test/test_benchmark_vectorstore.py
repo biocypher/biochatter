@@ -1,7 +1,7 @@
 from unittest.mock import patch
 from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
 from biochatter.vectorstore import DocumentEmbedder, DocumentReader, Document
-from biochatter.rag_agent import RagAgent
+from biochatter.rag_agent import RagAgent, RagAgentModeEnum
 import os
 import pytest
 from benchmark.conftest import calculate_test_score
@@ -111,7 +111,7 @@ def test_retrieval_augmented_generation(model, chunk_size):
             connection_args={"host": _HOST, "port": _PORT},
         )
         rag_agent = RagAgent(
-            mode='vectorstore',
+            mode=RagAgentModeEnum.VectorStore,
             model_name=model,
             connection_args={"host": _HOST, "port": _PORT},
             embedding_func=mock_openaiembeddings
