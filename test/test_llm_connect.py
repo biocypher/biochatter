@@ -223,7 +223,6 @@ def test_wasm_conversation():
         prompts={},
         correct=True,
         split_correction=False,
-        rag_agent=None,
     )
 
     # Check if the model_name is correctly set
@@ -237,9 +236,6 @@ def test_wasm_conversation():
 
     # Check if the split_correction is correctly set
     assert wasm_convo.split_correction == False
-
-    # Check if the rag_agent is correctly set
-    assert wasm_convo.rag_agent == None
 
     # Test the query method
     test_query = "Hello, world!"

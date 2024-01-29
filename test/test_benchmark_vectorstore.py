@@ -1,5 +1,7 @@
 from unittest.mock import patch
+from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
 from biochatter.vectorstore import DocumentEmbedder, DocumentReader, Document
+from biochatter.rag_agent import RagAgent
 import os
 import pytest
 from benchmark.conftest import calculate_test_score
@@ -45,6 +47,7 @@ splitted_docs = [
         },
     ),
 ]
+
 search_docs = [
     Document(
         page_content="Democratising knowledge representation with BioCypher\n"
@@ -69,7 +72,6 @@ search_docs = [
     ),
 ]
 
-
 @pytest.mark.parametrize("model", EMBEDDING_MODELS)
 @pytest.mark.parametrize("chunk_size", CHUNK_SIZES)
 def test_retrieval_augmented_generation(model, chunk_size):
@@ -83,6 +85,8 @@ def test_retrieval_augmented_generation(model, chunk_size):
     with patch(
         "biochatter.vectorstore.OpenAIEmbeddings"
     ) as mock_openaiembeddings, patch(
+        "biochatter.vectorstore_agent.VectorDatabaseAgentMilvus"
+    ) as mock_host_1, patch(
         "biochatter.vectorstore.VectorDatabaseAgentMilvus"
     ) as mock_host, patch(
         "biochatter.vectorstore.RecursiveCharacterTextSplitter"
@@ -98,23 +102,29 @@ def test_retrieval_augmented_generation(model, chunk_size):
             splitted_docs
         )
         mock_host.return_value.store_embeddings.return_value = "1"
-        mock_host.return_value.similarity_search.return_value = search_docs
+        mock_host_1.return_value.similarity_search.return_value = search_docs
 
         doc_ids = []
-        rag_agent = DocumentEmbedder(
+        doc_embedder = DocumentEmbedder(
             model=model,
             chunk_size=chunk_size,
             connection_args={"host": _HOST, "port": _PORT},
         )
-        rag_agent.connect()
-        doc_ids.append(rag_agent.save_document(doc))
+        rag_agent = RagAgent(
+            mode='vectorstore',
+            model_name=model,
+            connection_args={"host": _HOST, "port": _PORT},
+            embedding_func=mock_openaiembeddings
+        )
+        doc_embedder.connect()
+        doc_ids.append(doc_embedder.save_document(doc))
 
         query = "What is BioCypher?"
-        results = rag_agent.similarity_search(query)
-        correct = ["BioCypher" in result.page_content for result in results]
+        results = rag_agent.generate_responses(query)
+        correct = ["BioCypher" in result[0] for result in results]
 
         # delete embeddings
-        [rag_agent.database_host.remove_document(doc_id) for doc_id in doc_ids]
+        [doc_embedder.database_host.remove_document(doc_id) for doc_id in doc_ids]
 
         # record sum in CSV file
         assert calculate_test_score(correct) == (3, 3)

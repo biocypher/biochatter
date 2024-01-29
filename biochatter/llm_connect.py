@@ -11,7 +11,7 @@ except ImportError:
     st = None
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, List, Tuple
 import openai
 
 from langchain.chat_models import ChatOpenAI, AzureChatOpenAI
@@ -22,6 +22,7 @@ import nltk
 import json
 
 from .vectorstore import DocumentEmbedder
+from .rag_agent import RagAgent
 from ._stats import get_stats
 
 OPENAI_MODELS = [
@@ -52,6 +53,9 @@ TOKEN_LIMITS = {
     "custom-endpoint": 1,  # Reasonable value?
 }
 
+class RagAgentEnum:
+    VectorStore = "vectorstore"
+    KG = "kg"
 
 class Conversation(ABC):
     """
@@ -74,21 +78,39 @@ class Conversation(ABC):
         prompts: dict,
         correct: bool = True,
         split_correction: bool = False,
-        rag_agent: DocumentEmbedder = None,
     ):
         super().__init__()
         self.model_name = model_name
         self.prompts = prompts
         self.correct = correct
         self.split_correction = split_correction
-        self.rag_agent = rag_agent
+        self.rag_agents: List[RagAgent] = []
         self.history = []
         self.messages = []
         self.ca_messages = []
         self.current_statements = []
-
+    
     def set_user_name(self, user_name: str):
         self.user_name = user_name
+
+    def set_rag_agent(self, agent: RagAgent):
+        """
+        Update or insert rag_agent: if the rag_agent with the same mode already
+        exists, it will be updated. Otherwise, the new rag_agent will be inserted.
+        """
+        i, _ = self._find_rag_agent(agent.mode)
+        if i < 0:
+            # insert
+            self.rag_agents.append(agent)
+        else:
+            # update
+            self.rag_agents[i] = agent
+
+    def _find_rag_agent(self, mode: str) -> Tuple[int, RagAgent]:
+        for i, val in enumerate(self.rag_agents):
+            if val.mode == mode:
+                return i, val
+        return -1, None
 
     @abstractmethod
     def set_api_key(self, api_key: str, user: Optional[str] = None):
@@ -160,12 +182,10 @@ class Conversation(ABC):
                 msg = self.prompts["tool_prompts"][tool_name].format(df=df)
                 self.append_system_message(msg)
 
-    def query(self, text: str, collection_name: Optional[str] = None):
+    def query(self, text: str):
         self.append_user_message(text)
 
-        if self.rag_agent:
-            if self.rag_agent.use_prompt:
-                self._inject_context(text, collection_name)
+        self._inject_context(text)
 
         msg, token_usage = self._primary_query()
 
@@ -190,6 +210,7 @@ class Conversation(ABC):
 
         if not corrections:
             return (msg, token_usage, None)
+
 
         correction = "\n".join(corrections)
         return (msg, token_usage, correction)
@@ -221,10 +242,10 @@ class Conversation(ABC):
     def _correct_response(self, msg: str):
         pass
 
-    def _inject_context(self, text: str, collection_name: Optional[str] = None):
+    def _inject_context(self, text: str):
         """
-        Inject the context into the prompt from vector database similarity
-        search. Finds the most similar n text fragments and adds them to the
+        Inject the context into the prompt from rag_agents. rag_agents will finds 
+        the most similar n text fragments and adds them to the
         message history object for usage in the next prompt. Uses the document
         summarisation prompt set to inject the context. The ultimate prompt
         should include the placeholder for the statements, `{statements}` (used
@@ -233,38 +254,33 @@ class Conversation(ABC):
         Args:
             text (str): The user query to be used for similarity search.
         """
-        if not self.rag_agent.used:
-            st.info(
-                "No document has been analysed yet. To use retrieval augmented "
-                "generation, please analyse at least one document first."
-            )
-            return
-
+        
         sim_msg = (
-            f"Performing similarity search to inject {self.rag_agent.n_results}"
-            " fragments ..."
+            f"Performing similarity search to inject fragments ..."
         )
 
         if st:
             with st.spinner(sim_msg):
-                statements = [
-                    doc.page_content
-                    for doc in self.rag_agent.similarity_search(
-                        text,
-                        self.rag_agent.n_results,
+                statements = []         
+                for agent in self.rag_agents:
+                    if not agent.use_prompt:
+                        continue
+                    statements.append(
+                        doc[0]
+                        for doc in agent.generate_responses(text)
                     )
-                ]
-        else:
-            statements = [
-                doc.page_content
-                for doc in self.rag_agent.similarity_search(
-                    text,
-                    self.rag_agent.n_results,
+        else:   
+            statements = []         
+            for agent in self.rag_agents:
+                if not agent.use_prompt:
+                    continue
+                statements.append(
+                    doc[0]
+                    for doc in agent.generate_responses(text)
                 )
-            ]
 
-        prompts = self.prompts["rag_agent_prompts"]
-        if statements:
+        if statements and len(statements) > 0:
+            prompts = self.prompts["rag_agent_prompts"]
             self.current_statements = statements
             for i, prompt in enumerate(prompts):
                 # if last prompt, format the statements into the prompt
@@ -317,7 +333,6 @@ class WasmConversation(Conversation):
         prompts: dict,
         correct: bool = True,
         split_correction: bool = False,
-        rag_agent: DocumentEmbedder = None,
     ):
         """
 
@@ -335,10 +350,9 @@ class WasmConversation(Conversation):
             prompts=prompts,
             correct=correct,
             split_correction=split_correction,
-            rag_agent=rag_agent,
         )
 
-    def query(self, text: str, collection_name: Optional[str] = None):
+    def query(self, text: str):
         """
         Return the entire message history as a single string. This is the
         message that is sent to the wasm model.
@@ -354,10 +368,8 @@ class WasmConversation(Conversation):
                 and `None` for the second and third elements of the tuple.
         """
         self.append_user_message(text)
-
-        if self.rag_agent:
-            if self.rag_agent.use_prompt:
-                self._inject_context(text, collection_name)
+        
+        self._inject_context(text)
 
         return (self._primary_query(), None, None)
 
@@ -389,7 +401,6 @@ class XinferenceConversation(Conversation):
         model_name: str = "auto",
         correct: bool = True,
         split_correction: bool = False,
-        rag_agent: DocumentEmbedder = None,
     ):
         """
 
@@ -415,9 +426,6 @@ class XinferenceConversation(Conversation):
             splitting the output into sentences and correcting each sentence
             individually.
 
-            rag_agent (DocumentEmbedder): A RAG agent to use for retieval
-            augmented generation.
-
         """
         from xinference.client import Client
         super().__init__(
@@ -425,7 +433,6 @@ class XinferenceConversation(Conversation):
             prompts=prompts,
             correct=correct,
             split_correction=split_correction,
-            rag_agent=rag_agent,
         )
         self.client = Client(base_url=base_url)
 
@@ -737,7 +744,6 @@ class GptConversation(Conversation):
         prompts: dict,
         correct: bool = True,
         split_correction: bool = False,
-        rag_agent: DocumentEmbedder = None,
     ):
         """
         Connect to OpenAI's GPT API and set up a conversation with the user.
@@ -752,16 +758,12 @@ class GptConversation(Conversation):
             split_correction (bool): Whether to correct the model output by
                 splitting the output into sentences and correcting each
                 sentence individually.
-
-            rag_agent (DocumentEmbedder): A RAG agent to use for
-                retrieval augmented generation (RAG).
         """
         super().__init__(
             model_name=model_name,
             prompts=prompts,
             correct=correct,
             split_correction=split_correction,
-            rag_agent=rag_agent,
         )
 
         self.ca_model_name = "gpt-3.5-turbo"
@@ -903,7 +905,6 @@ class AzureGptConversation(GptConversation):
         prompts: dict,
         correct: bool = True,
         split_correction: bool = False,
-        rag_agent: DocumentEmbedder = None,
         version: Optional[str] = None,
         base_url: Optional[str] = None,
     ):
@@ -923,9 +924,6 @@ class AzureGptConversation(GptConversation):
                 splitting the output into sentences and correcting each
                 sentence individually.
 
-            rag_agent (DocumentEmbedder): A vector database connection to use for
-                retrieval augmented generation (RAG).
-
             version (str): The version of the Azure API to use.
 
             base_url (str): The base URL of the Azure API to use.
@@ -935,7 +933,6 @@ class AzureGptConversation(GptConversation):
             prompts=prompts,
             correct=correct,
             split_correction=split_correction,
-            rag_agent=rag_agent,
         )
 
         self.version = version
@@ -994,13 +991,11 @@ class BloomConversation(Conversation):
         model_name: str,
         prompts: dict,
         split_correction: bool,
-        rag_agent: DocumentEmbedder = None,
     ):
         super().__init__(
             model_name=model_name,
             prompts=prompts,
             split_correction=split_correction,
-            rag_agent=rag_agent,
         )
 
         self.messages = []

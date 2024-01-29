@@ -62,7 +62,7 @@ def test_rag_agent_kg_mode():
         )
         assert agent.mode == "kg"
         assert agent.model_name == "test_model"
-        result = agent.generate_responses("test question", 3)
+        result = agent.generate_responses("test question")
         assert len(result) == 3
         assert type(result) == list
         assert type(result[0]) == tuple
@@ -103,12 +103,10 @@ def test_rag_agent_vectorstore_mode():
             model_name="test_model",
             connection_args={},
             embedding_func=MagicMock(),
-            embedding_collection_name="test_embedding_collection",
-            metadata_collection_name="test_metadata_collection",
         )
         assert agent.mode == "vectorstore"
         assert agent.model_name == "test_model"
-        result = agent.generate_responses("test question", 3)
+        result = agent.generate_responses("test question")
         assert len(result) == 3
         assert type(result) == list
         assert type(result[0]) == tuple
