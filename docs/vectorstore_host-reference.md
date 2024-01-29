@@ -1,5 +1,6 @@
-# Vectorstore host module
+# Vectorstore agent module
 
-Here we handle connections and management of various vectorstore services.
+Here we handle connections and management of various vectorstore services and
+semantic seach.
 
-::: biochatter.vectorstore_host
+::: biochatter.vectorstore_agent

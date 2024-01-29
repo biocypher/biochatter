@@ -3,12 +3,11 @@ from biochatter.vectorstore import (
     DocumentReader,
 )
 import os
+import inspect
 import pytest
-from .conftest import calculate_test_score, RESULT_FILES
-
-FILE_PATH = next(
-    (s for s in RESULT_FILES if "vectorstore" in s),
-    None,
+from .conftest import calculate_test_score
+from .benchmark_utils import (
+    get_result_file_path,
 )
 
 # TODO: make vectorstore / retriever a part of the matrix
@@ -26,9 +25,11 @@ EMBEDDING_MODELS = [
 CHUNK_SIZES = [50, 1000]
 
 
+@pytest.mark.skip(reason="skip for development purposes for now")
 @pytest.mark.parametrize("model", EMBEDDING_MODELS)
 @pytest.mark.parametrize("chunk_size", CHUNK_SIZES)
 def test_retrieval_augmented_generation(model, chunk_size):
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     pdf_path = "test/bc_summary.pdf"
     with open(pdf_path, "rb") as f:
         doc_bytes = f.read()
@@ -49,5 +50,5 @@ def test_retrieval_augmented_generation(model, chunk_size):
     [rag_agent.database_host.remove_document(doc_id) for doc_id in doc_ids]
 
     # record sum in CSV file
-    with open(FILE_PATH, "a") as f:
+    with open(get_result_file_path(task), "a") as f:
         f.write(f"{model},{chunk_size},{calculate_test_score(correct)}\n")

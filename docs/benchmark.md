@@ -1,20 +1,19 @@
 # Benchmarking
 
-For trustworthy application of LLMs to real-world and biomedical problems, it is imperative to understand their performance and limitations. 
+For trustworthy application of LLMs to real-world and biomedical problems, it is imperative to understand their performance and limitations.
 We need to constantly evaluate the multitude of combinations of individual models and versions, their parameters (e.g., temperature), prompt sets, databases and vector databases, and diverse application scenarios.
 To this end, we are maintaining a living benchmarking framework that allows us to continuously compare the performance of different models and configurations on a variety of tasks.
 
 The benchmark uses the pytest framework to orchestrate the evaluation of a number of models on a number of tasks.
-The benchmark is run on a regular basis, and the results are published on the [BioChatter website](https://biocypher.github.io/biochatter/).
-(Currently in development.)
+The benchmark is run on a regular basis, and the results are published on the [BioChatter website](https://biochatter.org/benchmark-overview/).
 The benchmarking suite can be found in the `benchmark` directory of the BioChatter repository.
 It can be executed using standard pytest syntax, e.g., `poetry run pytest benchmark`.
+As default behavior it checks, which test cases have already been executed and only executes the tests that have not been executed yet.
+To run all benchmarks again, use `poetry run pytest benchmark --run-all`.
 
 To allow flexible extension of the benchmark, we have implemeted a modular test framework that uses pytest fixtures to allow easy addition of new models and tasks.
 All setup is done in the `conftest.py` file in the `benchmark` directory.
-For management of result files, we use the `RESULT_FILES` list in the `conftest.py` file.
-Each benchmarking module imports the `RESULT_FILES` list and retrieves the path to the result file it should write to.
-The result files are simple CSVs that can be found in `benchmark/results` and contain scores for all executed combination of parameters.
+The result files are simple CSVs whose file names are generated from the name of the test function; they can be found in `benchmark/results` and contain scores for all executed combination of parameters.
 
 To achieve modularity, we use pytest fixtures and parametrization.
 For instance, to add a new model, we can modify the `MODEL_NAMES` list in the query generation test module, or the `EMBEDDING_MODELS` and `CHUNK_SIZES` lists in the vector database test module.
@@ -71,3 +70,4 @@ For instance, the length and overlap of fragments, the embedding algorithms, as 
 
 There is a wide range of tasks that are potentially useful to BioChatter users.
 To cover most scenarios of research and development use, as well as clinical applications, we test a variety of tasks and LLM personas.
+

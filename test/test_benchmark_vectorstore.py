@@ -2,12 +2,7 @@ from unittest.mock import patch
 from biochatter.vectorstore import DocumentEmbedder, DocumentReader, Document
 import os
 import pytest
-from benchmark.conftest import calculate_test_score, RESULT_FILES
-
-FILE_PATH = next(
-    (s for s in RESULT_FILES if "vectorstore" in s),
-    None,
-)
+from benchmark.conftest import calculate_test_score
 
 # setup milvus connection
 if os.getenv("DEVCONTAINER"):
@@ -88,7 +83,7 @@ def test_retrieval_augmented_generation(model, chunk_size):
     with patch(
         "biochatter.vectorstore.OpenAIEmbeddings"
     ) as mock_openaiembeddings, patch(
-        "biochatter.vectorstore.VectorDatabaseHostMilvus"
+        "biochatter.vectorstore.VectorDatabaseAgentMilvus"
     ) as mock_host, patch(
         "biochatter.vectorstore.RecursiveCharacterTextSplitter"
     ) as mock_textsplitter:
@@ -122,4 +117,4 @@ def test_retrieval_augmented_generation(model, chunk_size):
         [rag_agent.database_host.remove_document(doc_id) for doc_id in doc_ids]
 
         # record sum in CSV file
-        assert calculate_test_score(correct) == "3/3"
+        assert calculate_test_score(correct) == (3, 3)

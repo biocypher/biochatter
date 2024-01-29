@@ -299,6 +299,16 @@ class Conversation(ABC):
 
         return json.dumps(d)
 
+    def reset(self):
+        """
+        Resets the conversation to the initial state.
+        """
+
+        self.history = []
+        self.messages = []
+        self.ca_messages = []
+        self.current_statements = []
+
 
 class WasmConversation(Conversation):
     def __init__(
@@ -508,6 +518,13 @@ class XinferenceConversation(Conversation):
         response using the message history (flattery system messages, prior
         conversation) as context. Correct the response if necessary.
 
+        LLaMA2 architecture does not accept separate system messages, so we
+        concatenate the system message with the user message to form the prompt.
+        'LLaMA enforces a strict rule that chats should alternate
+        user/assistant/user/assistant, and the system message, if present,
+        should be embedded into the first user message.' (from
+        https://discuss.huggingface.co/t/issue-with-llama-2-chat-template-and-out-of-date-documentation/61645/3)
+
         Returns:
 
             tuple: A tuple containing the response from the Xinference API
@@ -516,14 +533,8 @@ class XinferenceConversation(Conversation):
 
         """
         try:
-            history = []
-            for m in self.messages:
-                if isinstance(m, SystemMessage):
-                    history.append({"role": "system", "content": m.content})
-                elif isinstance(m, HumanMessage):
-                    history.append({"role": "user", "content": m.content})
-                elif isinstance(m, AIMessage):
-                    history.append({"role": "assistant", "content": m.content})
+            history = self._create_history()
+            # TODO this is for LLaMA2 arch, may be different for newer models
             prompt = history.pop()
             response = self.model.chat(
                 prompt=prompt["content"],
@@ -556,6 +567,58 @@ class XinferenceConversation(Conversation):
         self.append_ai_message(msg)
 
         return msg, token_usage
+
+    def _create_history(self):
+        history = []
+        # find location of last AI message (if any)
+        last_ai_message = None
+        for i, m in enumerate(self.messages):
+            if isinstance(m, AIMessage):
+                last_ai_message = i
+
+        # concatenate all messages before the last AI message into one message
+        if last_ai_message:
+            history.append(
+                {
+                    "role": "user",
+                    "content": "\n".join(
+                        [m.content for m in self.messages[:last_ai_message]]
+                    ),
+                }
+            )
+            # then append the last AI message
+            history.append(
+                {
+                    "role": "assistant",
+                    "content": self.messages[last_ai_message].content,
+                }
+            )
+
+            # then concatenate all messages after that
+            # into one HumanMessage
+            history.append(
+                {
+                    "role": "user",
+                    "content": "\n".join(
+                        [
+                            m.content
+                            for m in self.messages[last_ai_message + 1 :]
+                        ]
+                    ),
+                }
+            )
+
+        # if there is no AI message, concatenate all messages into one user
+        # message
+        else:
+            history.append(
+                {
+                    "role": "user",
+                    "content": "\n".join([m.content for m in self.messages]),
+                }
+            )
+
+        return history
 
     def _correct_response(self, msg: str):
         """
