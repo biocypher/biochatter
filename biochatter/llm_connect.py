@@ -53,6 +53,7 @@ TOKEN_LIMITS = {
     "custom-endpoint": 1,  # Reasonable value?
 }
 
+
 class Conversation(ABC):
     """
 
@@ -85,7 +86,7 @@ class Conversation(ABC):
         self.messages = []
         self.ca_messages = []
         self.current_statements = []
-    
+
     def set_user_name(self, user_name: str):
         self.user_name = user_name
 
@@ -204,7 +205,6 @@ class Conversation(ABC):
         if not corrections:
             return (msg, token_usage, None)
 
-
         correction = "\n".join(corrections)
         return (msg, token_usage, correction)
 
@@ -237,8 +237,9 @@ class Conversation(ABC):
 
     def _inject_context(self, text: str):
         """
-        Inject the context into the prompt from rag_agents. rag_agents will finds 
-        the most similar n text fragments and adds them to the
+
+        Inject the context received from the RAG agent into the prompt. The RAG
+        agent will find the most similar n text fragments and add them to the
         message history object for usage in the next prompt. Uses the document
         summarisation prompt set to inject the context. The ultimate prompt
         should include the placeholder for the statements, `{statements}` (used
@@ -247,31 +248,27 @@ class Conversation(ABC):
         Args:
             text (str): The user query to be used for similarity search.
         """
-        
-        sim_msg = (
-            f"Performing similarity search to inject fragments ..."
-        )
+
+        sim_msg = f"Performing similarity search to inject fragments ..."
 
         if st:
             with st.spinner(sim_msg):
-                statements = []         
+                statements = []
                 for agent in self.rag_agents:
                     if not agent.use_prompt:
                         continue
-                    statements = (
-                        statements + [
-                            doc[0] for doc in agent.generate_responses(text)
-                        ])
-                    
-        else:   
-            statements = []         
+                    statements = statements + [
+                        doc[0] for doc in agent.generate_responses(text)
+                    ]
+
+        else:
+            statements = []
             for agent in self.rag_agents:
                 if not agent.use_prompt:
                     continue
-                statements = (
-                    statements + [
-                        doc[0] for doc in agent.generate_responses(text)
-                    ])
+                statements = statements + [
+                    doc[0] for doc in agent.generate_responses(text)
+                ]
 
         if statements and len(statements) > 0:
             prompts = self.prompts["rag_agent_prompts"]
@@ -362,7 +359,7 @@ class WasmConversation(Conversation):
                 and `None` for the second and third elements of the tuple.
         """
         self.append_user_message(text)
-        
+
         self._inject_context(text)
 
         return (self._primary_query(), None, None)
@@ -422,6 +419,7 @@ class XinferenceConversation(Conversation):
 
         """
         from xinference.client import Client
+
         super().__init__(
             model_name=model_name,
             prompts=prompts,
@@ -986,6 +984,9 @@ class BloomConversation(Conversation):
         prompts: dict,
         split_correction: bool,
     ):
+        """
+        DEPRECATED: Superceded by XinferenceConversation.
+        """
         super().__init__(
             model_name=model_name,
             prompts=prompts,
