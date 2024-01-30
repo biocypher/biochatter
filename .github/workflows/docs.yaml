@@ -1,11 +1,13 @@
 name: Docs 
+
 on:
   push:
     branches:
       - main
-      - mkdocs
+
 permissions:
   contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
