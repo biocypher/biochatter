@@ -19,7 +19,7 @@ To achieve modularity, we use pytest fixtures and parametrization.
 For instance, to add a new model, we can modify the `MODEL_NAMES` list in the query generation test module, or the `EMBEDDING_MODELS` and `CHUNK_SIZES` lists in the vector database test module.
 The environment that runs the benchmark needs to make available all prerequisites for the different modules.
 For instance, the tasks requiring connection to an LLM need to provide the necessary credentials and API keys, or a connection to a self-hosted model.
-Likewise, the benchmarks of retrieval augmented generation (RAG) processes require a connection to the RAG agent, e.g., a vector database.
+Likewise, the benchmarks of retrieval-augmented generation (RAG) processes require a connection to the RAG agent, e.g., a vector database.
 
 ## Calibration
 

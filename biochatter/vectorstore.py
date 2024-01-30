@@ -1,9 +1,3 @@
-# ChatGSE retrieval augmented generation (RAG) functionality
-# split text
-# connect to vector db
-# do similarity search
-# return x closes matches for in-context learning
-
 from typing import List, Optional, Dict
 
 from langchain.schema import Document
@@ -24,7 +18,7 @@ from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
 class DocumentEmbedder:
     def __init__(
         self,
-        used: bool = False,        
+        used: bool = False,
         online: bool = False,
         chunk_size: int = 1000,
         chunk_overlap: int = 0,
@@ -45,7 +39,7 @@ class DocumentEmbedder:
         documentids_workspace: Optional[List[str]] = None,
     ) -> None:
         """
-        Class that handles the retrieval augmented generation (RAG) functionality
+        Class that handles the retrieval-augmented generation (RAG) functionality
         of BioChatter. It splits text into chunks, embeds them, and stores them in
         a vector database. It can then be used to do similarity search on the
         database.
@@ -196,9 +190,11 @@ class DocumentEmbedder:
         else:
             return RecursiveCharacterTextSplitter.from_tiktoken_encoder(
                 encoding_name="",
-                model_name=DEFAULT_OPENAI_MODEL
-                if not self.model_name
-                else self.model_name,
+                model_name=(
+                    DEFAULT_OPENAI_MODEL
+                    if not self.model_name
+                    else self.model_name
+                ),
                 chunk_size=self.chunk_size,
                 chunk_overlap=self.chunk_overlap,
                 separators=self.separators,
