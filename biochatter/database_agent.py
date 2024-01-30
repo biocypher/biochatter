@@ -25,6 +25,7 @@ class DatabaseAgent:
             schema_config_or_info_dict=schema_config_or_info_dict,
         )
         self.connection_args = connection_args
+        self.driver = None
 
     def connect(self) -> None:
         """
@@ -40,6 +41,8 @@ class DatabaseAgent:
             user=user,
             password=password,
         )
+    def is_connected(self) -> bool:
+        return not self.driver is None
 
     def get_query_results(self, query: str, k: int = 3) -> list[Document]:
         """

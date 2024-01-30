@@ -118,9 +118,6 @@ class Conversation(ABC):
     def set_prompts(self, prompts: dict):
         self.prompts = prompts
 
-    def set_rag_agent(self, rag_agent: DocumentEmbedder):
-        self.rag_agent = rag_agent
-
     def append_ai_message(self, message: str):
         self.messages.append(
             AIMessage(
@@ -261,19 +258,20 @@ class Conversation(ABC):
                 for agent in self.rag_agents:
                     if not agent.use_prompt:
                         continue
-                    statements.append(
-                        doc[0]
-                        for doc in agent.generate_responses(text)
-                    )
+                    statements = (
+                        statements + [
+                            doc[0] for doc in agent.generate_responses(text)
+                        ])
+                    
         else:   
             statements = []         
             for agent in self.rag_agents:
                 if not agent.use_prompt:
                     continue
-                statements.append(
-                    doc[0]
-                    for doc in agent.generate_responses(text)
-                )
+                statements = (
+                    statements + [
+                        doc[0] for doc in agent.generate_responses(text)
+                    ])
 
         if statements and len(statements) > 0:
             prompts = self.prompts["rag_agent_prompts"]

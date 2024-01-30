@@ -53,7 +53,7 @@ class RagAgent:
         self.model_name = model_name
         self.use_prompt = use_prompt
         self.n_results = n_results
-        # self.
+        self.documentids_workspace = documentids_workspace
         if self.mode == RagAgentModeEnum.KG:
             from .database_agent import DatabaseAgent
 
@@ -105,8 +105,8 @@ class RagAgent:
         Todo:
             Which metadata are returned?
         """
-        results = self.query_func(user_question, self.n_results)
         if self.mode == RagAgentModeEnum.KG:
+            results = self.query_func(user_question, self.n_results)
             return [
                 (
                     result.page_content,
@@ -115,6 +115,7 @@ class RagAgent:
                 for result in results
             ]
         elif self.mode == RagAgentModeEnum.VectorStore:
+            results = self.query_func(user_question, self.n_results, doc_ids=self.documentids_workspace)
             return [
                 (
                     result.page_content,
