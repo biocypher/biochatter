@@ -24,8 +24,7 @@ from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
 class DocumentEmbedder:
     def __init__(
         self,
-        use_prompt: bool = True,
-        used: bool = False,
+        used: bool = False,        
         online: bool = False,
         chunk_size: int = 1000,
         chunk_overlap: int = 0,
@@ -52,9 +51,6 @@ class DocumentEmbedder:
         database.
 
         Args:
-
-            use_prompt (bool, optional): whether to use RAG (ChatGSE setting).
-            Defaults to True.
 
             used (bool, optional): whether RAG has been used (ChatGSE setting).
             Defaults to False.
@@ -110,7 +106,6 @@ class DocumentEmbedder:
             azure_deployment when is_azure is True
 
         """
-        self.use_prompt = use_prompt
         self.used = used
         self.online = online
         self.chunk_size = chunk_size
@@ -235,23 +230,6 @@ class DocumentEmbedder:
     def _store_embeddings(self, doc: List[Document]) -> str:
         return self.database_host.store_embeddings(documents=doc)
 
-    def similarity_search(self, query: str, k: int = 3):
-        """
-        Returns top n closest matches to query from vector store.
-
-        Args:
-            query (str): query string
-
-            k (int, optional): number of closest matches to return. Defaults to
-            3.
-
-        """
-        return self.database_host.similarity_search(
-            query=query,
-            k=k or self.n_results,
-            doc_ids=self.documentids_workspace,
-        )
-
     def connect(self) -> None:
         self.database_host.connect()
 
@@ -269,7 +247,6 @@ class DocumentEmbedder:
 class XinferenceDocumentEmbedder(DocumentEmbedder):
     def __init__(
         self,
-        use_prompt: bool = True,
         used: bool = False,
         chunk_size: int = 1000,
         chunk_overlap: int = 0,
@@ -290,8 +267,6 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
         embeddings.
 
         Args:
-
-            use_prompt (bool, optional): whether to use RAG (ChatGSE setting).
 
             used (bool, optional): whether RAG has been used (ChatGSE setting).
 
@@ -345,7 +320,6 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
         self.model_uid = self.models[self.model_name]["id"]
 
         super().__init__(
-            use_prompt=use_prompt,
             used=used,
             online=True,
             chunk_size=chunk_size,

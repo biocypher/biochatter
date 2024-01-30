@@ -129,11 +129,21 @@ class VectorDatabaseAgentMilvus:
 
     def __init__(
         self,
-        embedding_func: Optional[OpenAIEmbeddings] = None,
+        embedding_func: OpenAIEmbeddings,
         connection_args: Optional[Dict] = None,
         embedding_collection_name: Optional[str] = None,
         metadata_collection_name: Optional[str] = None,
     ):
+        """
+        Args:
+            embedding_func OpenAIEmbeddings: Function used to embed the text
+
+            connection_args Optional dict: args to connect Vector Database
+
+            embedding_collection_name Optional str: exposed for test
+            
+            metadata_collection_name Optional str: exposed for test
+        """
         self._embedding_func = embedding_func
         self._col_embeddings: Optional[Milvus] = None
         self._col_metadata: Optional[Collection] = None

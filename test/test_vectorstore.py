@@ -46,36 +46,6 @@ splitted_docs = [
         },
     ),
 ]
-search_docs = [
-    Document(
-        page_content=(
-            "Democratising knowledge representation with BioCypher\nSebastian "
-            "Lobentanzer1,*, Patrick Aloy2,3, Jan Baumbach4, Balazs Bohar5,6, "
-            "Pornpimol\nCharoentong8,9, Katharina Danhauser10, Tunca "
-            "Doğan11,12, Johann Dreo13,14, Ian Dunham15,16,\nAdrià "
-            "Fernandez-Torras2, Benjamin M. Gyori17, Michael"
-        ),
-        metadata={id: "1"},
-    ),
-    Document(
-        page_content=(
-            "BioCypher has been built with continuous consideration of "
-            "the FAIR and TRUST"
-        ),
-        metadata={id: "1"},
-    ),
-    Document(
-        page_content=(
-            "adopting their own, arbitrary formats of representation. To our "
-            "knowledge, no\nframework provides easy access to state-of-the-art "
-            "KGs to the average biomedical researcher,\na gap that BioCypher "
-            "aims to fill. We demonstrate some key advantages of BioCypher "
-            "by\ncase studies in Supplementary Note 5.\n5\nFigure "
-        ),
-        metadata={id: "1"},
-    ),
-]
-
 
 @patch("biochatter.vectorstore.OpenAIEmbeddings")
 @patch("biochatter.vectorstore.VectorDatabaseAgentMilvus")
@@ -90,7 +60,6 @@ def test_retrieval_augmented_generation(
     mock_textsplitter.from_tiktoken_encoder.return_value = mock_textsplitter()
     mock_textsplitter.return_value.split_documents.return_value = splitted_docs
     mock_host.return_value.store_embeddings.return_value = "1"
-    mock_host.return_value.similarity_search.return_value = search_docs
 
     pdf_path = "test/bc_summary.pdf"
     with open(pdf_path, "rb") as f:
@@ -108,11 +77,6 @@ def test_retrieval_augmented_generation(
     doc_id = rag_agent.save_document(doc)
     assert isinstance(doc_id, str)
     assert len(doc_id) > 0
-
-    query = "What is BioCypher?"
-    results = rag_agent.similarity_search(query)
-    assert len(results) == 3
-    assert all(["BioCypher" in result.page_content for result in results])
 
     mock_host.return_value.get_all_documents.return_value = [
         {"id": "1"},
@@ -142,7 +106,6 @@ def test_retrieval_augmented_generation_generic_api(
     mock_textsplitter.from_tiktoken_encoder.return_value = mock_textsplitter()
     mock_textsplitter.return_value.split_documents.return_value = splitted_docs
     mock_host.return_value.store_embeddings.return_value = "1"
-    mock_host.return_value.similarity_search.return_value = search_docs
     mock_client.return_value.list_models.return_value = {
         "48c76b62-904c-11ee-a3d2-0242acac0302": {
             "model_type": "embedding",
@@ -177,11 +140,6 @@ def test_retrieval_augmented_generation_generic_api(
     doc_id = rag_agent.save_document(doc)
     assert isinstance(doc_id, str)
     assert len(doc_id) > 0
-
-    query = "What is BioCypher?"
-    results = rag_agent.similarity_search(query)
-    assert len(results) == 3
-    assert all(["BioCypher" in result.page_content for result in results])
 
     mock_host.return_value.get_all_documents.return_value = [
         {"id": "1"},

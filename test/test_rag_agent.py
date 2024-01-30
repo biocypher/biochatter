@@ -1,7 +1,7 @@
 import json
 import pytest
 from unittest.mock import MagicMock, patch
-from biochatter.rag_agent import RagAgent
+from biochatter.rag_agent import RagAgent, RagAgentModeEnum
 from biochatter.vectorstore_agent import Document
 
 
@@ -53,16 +53,16 @@ def test_rag_agent_kg_mode():
             ),
         ]
         agent = RagAgent(
-            mode="kg",
+            mode=RagAgentModeEnum.KG,
             model_name="test_model",
             connection_args={},
             schema_config_or_info_dict={
                 "schema_config_or_info_dict": "test_schema_config_or_info_dict"
             },
         )
-        assert agent.mode == "kg"
+        assert agent.mode == RagAgentModeEnum.KG
         assert agent.model_name == "test_model"
-        result = agent.generate_responses("test question", 3)
+        result = agent.generate_responses("test question")
         assert len(result) == 3
         assert type(result) == list
         assert type(result[0]) == tuple
@@ -99,21 +99,19 @@ def test_rag_agent_vectorstore_mode():
             ),
         ]
         agent = RagAgent(
-            mode="vectorstore",
+            mode=RagAgentModeEnum.VectorStore,
             model_name="test_model",
             connection_args={},
             embedding_func=MagicMock(),
-            embedding_collection_name="test_embedding_collection",
-            metadata_collection_name="test_metadata_collection",
         )
-        assert agent.mode == "vectorstore"
+        assert agent.mode == RagAgentModeEnum.VectorStore
         assert agent.model_name == "test_model"
-        result = agent.generate_responses("test question", 3)
+        result = agent.generate_responses("test question")
         assert len(result) == 3
         assert type(result) == list
         assert type(result[0]) == tuple
         MockVectorDatabaseAgentMilvus.assert_called_once()
-        mock_agent.similarity_search.assert_called_once_with("test question", 3)
+        mock_agent.similarity_search.assert_called_once_with("test question", 3, doc_ids=None)
 
 
 def test_rag_agent_invalid_mode():
