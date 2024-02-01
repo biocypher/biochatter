@@ -281,36 +281,21 @@ def pytest_generate_tests(metafunc):
     If fixture is part of test declaration, the test is parametrized.
     """
     # Load the data file
-    data_file = BENCHMARK_DATASET["./data/benchmark_data.csv"]
-    data_file["index"] = data_file.index
-
-    # Initialize a dictionary to collect rows for each test type
-    test_rows = {
-        "biocypher_query_generation": [],
-        "rag_interpretation": [],
-        "text_extraction": [],
-    }
-
-    # Iterate over each row in the DataFrame
-    for index, row in data_file.iterrows():
-        test_type = row["test_type"]
-        if test_type in test_rows:
-            # Add the row to the list for this test type
-            test_rows[test_type].append(row)
+    data_file = BENCHMARK_DATASET["./data/benchmark_data.yaml"]
 
     # Parametrize the fixtures with the collected rows
     if "test_data_biocypher_query_generation" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_biocypher_query_generation",
-            test_rows["biocypher_query_generation"],
+            data_file["biocypher_query_generation"],
         )
     if "test_data_rag_interpretation" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_rag_interpretation",
-            test_rows["rag_interpretation"],
+            data_file["rag_interpretation"],
         )
     if "test_data_text_extraction" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_text_extraction",
-            test_rows["text_extraction"],
+            data_file["text_extraction"],
         )

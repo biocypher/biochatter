@@ -30,7 +30,7 @@ def get_test_data(test_data_biocypher_query_generation: list) -> tuple:
         test_data_biocypher_query_generation["properties"],
         test_data_biocypher_query_generation["parts_of_query"],
         test_data_biocypher_query_generation["test_case_purpose"],
-        test_data_biocypher_query_generation["index"],
+        test_data_biocypher_query_generation["hash"],
     )
 
 

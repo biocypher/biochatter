@@ -1,3 +1,4 @@
+import hashlib
 import io
 import json
 import os
@@ -51,9 +52,11 @@ def _load_test_data_from_this_repository():
         dict: keys are filenames and values are test data.
     """
     print("Using public test data from this repository for benchmarking.")
-    test_data = {}
     directory_path = "./benchmark/data"
     files_in_directory = _get_all_files(directory_path)
+
+    # old csv implementation
+    test_data_csv = {}
     for file_path in files_in_directory:
         if file_path.endswith(".csv"):
             df = pd.read_csv(file_path, sep=";")
@@ -68,11 +71,41 @@ def _load_test_data_from_this_repository():
                     "system_messages",
                 ],
             )
-            test_data[file_path.replace("./benchmark/", "./")] = df
+            test_data_csv[file_path.replace("./benchmark/", "./")] = df
         elif file_path.endswith(".yaml"):
-            test_data[file_path.replace("./benchmark/", "./")] = yaml.safe_load(
-                file_path
+            test_data_csv[file_path.replace("./benchmark/", "./")] = (
+                yaml.safe_load(file_path)
             )
+
+    # new yaml implementation
+    test_data = {}
+    for file_path in files_in_directory:
+        if file_path.endswith(".yaml"):
+            with open(file_path, "r") as stream:
+                try:
+                    yaml_data = yaml.safe_load(stream)
+
+                    # every dictionary in the list of dictionaries that is under
+                    # any top level key gets a hash field that is the md5 hash
+                    # of the dictionary
+
+                    for key in yaml_data.keys():
+                        if isinstance(yaml_data[key], list):
+                            for i in range(len(yaml_data[key])):
+                                if isinstance(yaml_data[key][i], dict):
+                                    yaml_data[key][i]["hash"] = hashlib.md5(
+                                        json.dumps(yaml_data[key][i]).encode(
+                                            "utf-8"
+                                        )
+                                    ).hexdigest()
+
+                    test_data[file_path.replace("./benchmark/", "./")] = (
+                        yaml_data
+                    )
+
+                except yaml.YAMLError as exc:
+                    print(exc)
+
     return test_data
 
 
