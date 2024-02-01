@@ -41,6 +41,15 @@ jobs:
       - name: Build
         run: mkdocs build
 
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          touch site/.nojekyll
+          echo 'biochatter.org' > site/CNAME
+          git add -f site/
+          git commit -m "Update autodoc" -a
+
       - name: Deploy
         uses: s0/git-publish-subdir-action@develop
         env:
