@@ -13,6 +13,7 @@ def test_get_query_results():
             "password": "password",
         },
         {"schema_config": "test_schema"},
+        None,
     )
     db_agent.connect()  # Call the connect method to initialize the driver
 
@@ -24,12 +25,12 @@ def test_get_query_results():
         with mock.patch.object(
             db_agent.driver,
             "query",
-            return_value=[
+            return_value=[[
                 {"key": "value"},
                 {"key": "value"},
                 {"key": "value"},
                 {"key": "value"},
-            ],
+            ], {}],
         ):
             result = db_agent.get_query_results("test_query", 3)
 

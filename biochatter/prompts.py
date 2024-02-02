@@ -12,6 +12,7 @@ class BioCypherPromptEngine:
         schema_config_or_info_path: Optional[str] = None,
         schema_config_or_info_dict: Optional[dict] = None,
         model_name: str = "gpt-3.5-turbo",
+        conversation_factory: Optional[callable]=None,
     ) -> None:
         """
 
@@ -58,6 +59,10 @@ class BioCypherPromptEngine:
         # check whether it is the original schema config or the output of
         # biocypher info
         is_schema_info = schema_config.get("is_schema_info", False)
+        self.conversation_factory = (
+            conversation_factory if conversation_factory is not None 
+            else self._get_conversation
+        )
 
         # extract the entities and relationships: each top level key that has
         # a 'represented_as' key
@@ -134,7 +139,7 @@ class BioCypherPromptEngine:
                 ]
         return relationship
 
-    def generate_query(self, question: str, query_language: str) -> str:
+    def generate_query(self, question: str, query_language: Optional[str]="Neo4j") -> str:
         """
         Wrap entity and property selection and query generation; return the
         generated query.
@@ -149,7 +154,7 @@ class BioCypherPromptEngine:
         """
 
         success1 = self._select_entities(
-            question=question, conversation=self._get_conversation()
+            question=question, conversation=self.conversation_factory()
         )
         if not success1:
             raise ValueError(
@@ -157,7 +162,7 @@ class BioCypherPromptEngine:
                 "question."
             )
         success2 = self._select_relationships(
-            conversation=self._get_conversation()
+            conversation=self.conversation_factory()
         )
         if not success2:
             raise ValueError(
@@ -165,7 +170,7 @@ class BioCypherPromptEngine:
                 "different question."
             )
         success3 = self._select_properties(
-            conversation=self._get_conversation()
+            conversation=self.conversation_factory()
         )
         if not success3:
             raise ValueError(
@@ -179,7 +184,7 @@ class BioCypherPromptEngine:
             relationships=self.selected_relationship_labels,
             properties=self.selected_properties,
             query_language=query_language,
-            conversation=self._get_conversation(),
+            conversation=self.conversation_factory(),
         )
 
     def _get_conversation(

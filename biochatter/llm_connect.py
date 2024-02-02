@@ -352,7 +352,7 @@ class WasmConversation(Conversation):
             text (str): The user query.
 
             collection_name (str): The name of the collection to use for
-                retrieval augmented generation.
+                retrieval-augmented generation.
 
         Returns:
             tuple: A tuple containing the message history as a single string,

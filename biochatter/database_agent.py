@@ -10,6 +10,7 @@ class DatabaseAgent:
         model_name: str,
         connection_args: dict,
         schema_config_or_info_dict: dict,
+        conversation_factory: callable,
     ) -> None:
         """
         Create a DatabaseAgent analogous to the VectorDatabaseAgentMilvus class,
@@ -19,10 +20,13 @@ class DatabaseAgent:
         Args:
             connection_args (dict): A dictionary of arguments to connect to the
                 database. Contains database name, URI, user, and password.
+
+            conversation_factory (callable): A function to create conversation
         """
         self.prompt_engine = BioCypherPromptEngine(
             model_name=model_name,
             schema_config_or_info_dict=schema_config_or_info_dict,
+            conversation_factory=conversation_factory
         )
         self.connection_args = connection_args
         self.driver = None
@@ -69,7 +73,9 @@ class DatabaseAgent:
         # return first k results
         # returned nodes can have any formatting, and can also be empty or fewer
         # than k
-        for result in results:
+        if results is None or len(results) == 0 or results[0] is None:
+            return []
+        for result in results[0]:
             documents.append(
                 Document(
                     page_content=json.dumps(result),

@@ -13,8 +13,9 @@ class RagAgent:
         n_results: Optional[int] = 3,
         use_prompt: Optional[bool] = False,
         schema_config_or_info_dict: Optional[dict] = None,
+        conversation_factory: Optional[callable]=None,
         embedding_func: Optional[object] = None,
-        documentids_workspace: Optional[List[str]]=None
+        documentids_workspace: Optional[List[str]]=None,
     ) -> None:
         """
         Create a RAG agent that can return results from a database or vector
@@ -35,14 +36,11 @@ class RagAgent:
             schema_config_or_info_dict (dict): A dictionary of schema
                 information for the database. Required if mode is "kg".
 
+            conversation_factory (callable): A function used to create conversation
+                for KG to query. Required if mode is "kg"
+
             embedding_func (object): An embedding function. Required if mode is
                 "vectorstore".
-
-            embedding_collection_name (str): The name of the embedding
-                collection. Required if mode is "vectorstore".
-
-            metadata_collection_name (str): The name of the metadata
-                collection. Required if mode is "vectorstore".
             
             documentids_workspace (Optional[List[str]], optional): a list of document IDs
                 that defines the scope within which similarity search occurs. Defaults 
@@ -65,6 +63,7 @@ class RagAgent:
                 model_name=model_name,
                 connection_args=connection_args,
                 schema_config_or_info_dict=self.schema_config_or_info_dict,
+                conversation_factory=conversation_factory
             )
 
             self.agent.connect()
