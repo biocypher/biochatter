@@ -93,7 +93,9 @@ def pytest_collection_modifyitems(items):
     before moving to the next model.
     """
 
-    items.sort(key=lambda item: item.callspec.id)
+    items.sort(
+        key=lambda item: (item.callspec.id if hasattr(item, "callspec") else "")
+    )
 
 
 # parameterise tests to run for each model
