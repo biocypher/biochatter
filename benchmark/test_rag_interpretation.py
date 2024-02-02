@@ -19,7 +19,7 @@ def test_explicit_relevance_of_single_fragments(
 ):
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     subtask = f"{str(test_data_rag_interpretation['hash'])}_{test_data_rag_interpretation['test_case_purpose']}"
-    if not test_data_rag_interpretation["test_case_purpose"] == "explicit":
+    if "explicit" not in test_data_rag_interpretation["test_case_purpose"]:
         pytest.skip(
             f"test case {test_data_rag_interpretation['test_case_purpose']} not supported for {subtask} benchmark"
         )
@@ -42,7 +42,7 @@ def test_explicit_relevance_of_single_fragments(
 
         score = []
 
-        score.append(response.lower() == test_data_rag_interpretation["answer"])
+        score.append(response == test_data_rag_interpretation["answer"])
 
         return calculate_test_score(score)
 
@@ -66,9 +66,7 @@ def test_implicit_relevance_of_multiple_fragments(
 ):
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     subtask = f"{str(test_data_rag_interpretation['hash'])}_{test_data_rag_interpretation['test_case_purpose']}"
-    correct = test_data_rag_interpretation["answer"]
-    incorrect = "no" if correct == "yes" else "yes"
-    if not test_data_rag_interpretation["test_case_purpose"] == "implicit":
+    if "implicit" not in test_data_rag_interpretation["test_case_purpose"]:
         pytest.skip(
             f"test case {test_data_rag_interpretation['test_case_purpose']} not supported for {subtask} benchmark"
         )
@@ -84,18 +82,29 @@ def test_implicit_relevance_of_multiple_fragments(
             test_data_rag_interpretation["prompt"]
         )
 
-        # evaluator LLM
-        evaluation_conversation.append_system_message(
-            "Evaluate the following response regarding whether it acknowledges "
-            "the irrelevance of provided information to the question. "
-            f"Answer '{incorrect}' if the response acknowledges the "
-            f"irrelevance of provided information to the question, '{correct}' "
-            "if the response attempts to answer the question. "
+        msg = (
+            "You will receive a statement as an answer to this question: "
+            f"{test_data_rag_interpretation['prompt']} "
+            "If the statement is an answer to the question, please type 'answer'. "
+            "If the statement declines to answer to the question or apologises, giving the reason of lack of relevance of the given text fragments, please type 'decline'. "
+            "Do not type anything except these two options. Here is the statement: "
         )
+
+        # evaluator LLM
+        evaluation_conversation.append_system_message(msg)
 
         eval, _, _ = evaluation_conversation.query(response)
 
-        score = [True] if eval.lower() == "yes" else [False]
+        # lower case, remove punctuation
+        eval = (
+            eval.lower().replace(".", "").replace("?", "").replace("!", "")
+        ).strip()
+
+        score = (
+            [True]
+            if eval == test_data_rag_interpretation["expected_behaviour"]
+            else [False]
+        )
 
         return calculate_test_score(score)
 

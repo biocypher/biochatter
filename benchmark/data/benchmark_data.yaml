@@ -94,9 +94,31 @@ rag_interpretation:
         "You will receive a text fragment to help answer the user's question. Your task is to judge these text fragments for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
         "The Human is the most endurant mammal.",
       ]
+  - prompt: "I'm sorry, but the given text fragments do not provide any relevant information about molecular pathways associated with cancer."
+    answer: "decline"
+    test_case_purpose: explicit
+    system_messages:
+      [
+        "You will receive a statement as an answer to this question: ",
+        "Which molecular pathways are associated with cancer? ",
+        "If the statement is an answer to the question, please type 'answer'. ",
+        "If the statement declines to answer to the question or apologises, giving the reason of lack of relevance of the given text fragments, please type 'decline'. ",
+        "Do not type anything except these two options. Here is the statement: ",
+      ]
+  - prompt: "There are several molecular pathways that are associated with cancer, for instance TP53, BRCA1, the STAT inflammatory pathway, and the EGFR pathway."
+    answer: "answer"
+    test_case_purpose: explicit
+    system_messages:
+      [
+        "You will receive a statement as an answer to this question: ",
+        "Which molecular pathways are associated with cancer? ",
+        "If the statement is an answer to the question, please type 'answer'. ",
+        "If the statement declines to answer to the question or apologises, giving the reason of lack of relevance of the given text fragments, please type 'decline'. ",
+        "Do not type anything except these two options. Here is the statement: ",
+      ]
   - prompt: Which molecular pathways are associated with cancer?
     test_case_purpose: implicit
-    answer: "no"
+    expected_behaviour: "decline"
     system_messages:
       [
         "You will receive a number of text fragments to help answer the user's question. Your task is to use the information in these text fragments for answering the user's question, if they are relevant. Here are the fragments: ",
@@ -107,7 +129,7 @@ rag_interpretation:
       ]
   - prompt: Which molecular pathways are associated with cancer?
     test_case_purpose: implicit
-    answer: "yes"
+    expected_behaviour: "answer"
     system_messages:
       [
         "You will receive a number of text fragments to help answer the user's question. Your task is to use the information in these text fragments for answering the user's question, if they are relevant. Here are the fragments: ",
