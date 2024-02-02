@@ -62,7 +62,7 @@ biocypher_query_generation:
     test_case_purpose: multi_word
 rag_interpretation:
   - prompt: Which molecular pathways are associated with cancer?
-    entities: ["no"]
+    answer: "no"
     test_case_purpose: explicit
     system_messages:
       [
@@ -70,7 +70,7 @@ rag_interpretation:
         "The earth is a globe.",
       ]
   - prompt: Which molecular pathways are associated with cancer?
-    entities: ["yes"]
+    answer: "yes"
     test_case_purpose: explicit
     system_messages:
       [
@@ -79,7 +79,7 @@ rag_interpretation:
         "The EGFR pathway is deregulated in a number of cancers.",
       ]
   - prompt: Which molecular pathways are associated with cancer?
-    entities: ["yes"]
+    answer: "yes"
     test_case_purpose: explicit
     system_messages:
       [
@@ -87,7 +87,7 @@ rag_interpretation:
         "The EGFR pathway is deregulated in a number of cancers.",
       ]
   - prompt: Which molecular pathways are associated with cancer?
-    entities: ["no"]
+    answer: "no"
     test_case_purpose: explicit
     system_messages:
       [
