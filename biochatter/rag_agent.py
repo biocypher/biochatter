@@ -1,8 +1,10 @@
 from typing import Optional, List
 
+
 class RagAgentModeEnum:
     VectorStore = "vectorstore"
     KG = "kg"
+
 
 class RagAgent:
     def __init__(
@@ -13,8 +15,9 @@ class RagAgent:
         n_results: Optional[int] = 3,
         use_prompt: Optional[bool] = False,
         schema_config_or_info_dict: Optional[dict] = None,
+        conversation_factory: Optional[callable] = None,
         embedding_func: Optional[object] = None,
-        documentids_workspace: Optional[List[str]]=None
+        documentids_workspace: Optional[List[str]] = None,
     ) -> None:
         """
         Create a RAG agent that can return results from a database or vector
@@ -31,19 +34,16 @@ class RagAgent:
 
             n_results: the number of results to return for method
                 generate_response
-                
+
             schema_config_or_info_dict (dict): A dictionary of schema
                 information for the database. Required if mode is "kg".
+
+            conversation_factory (callable): A function used to create conversation
+                for KG to query. Required if mode is "kg"
 
             embedding_func (object): An embedding function. Required if mode is
                 "vectorstore".
 
-            embedding_collection_name (str): The name of the embedding
-                collection. Required if mode is "vectorstore".
-
-            metadata_collection_name (str): The name of the metadata
-                collection. Required if mode is "vectorstore".
-            
             documentids_workspace (Optional[List[str]], optional): a list of document IDs
                 that defines the scope within which similarity search occurs. Defaults 
                 to None, which means the operations will be performed across all 
@@ -58,13 +58,15 @@ class RagAgent:
             from .database_agent import DatabaseAgent
 
             if not schema_config_or_info_dict:
-                raise ValueError("Please provide a schema config or info dict.")
+                raise ValueError(
+                    "Please provide a schema config or info dict.")
             self.schema_config_or_info_dict = schema_config_or_info_dict
 
             self.agent = DatabaseAgent(
                 model_name=model_name,
                 connection_args=connection_args,
                 schema_config_or_info_dict=self.schema_config_or_info_dict,
+                conversation_factory=conversation_factory
             )
 
             self.agent.connect()
@@ -115,7 +117,8 @@ class RagAgent:
                 for result in results
             ]
         elif self.mode == RagAgentModeEnum.VectorStore:
-            results = self.query_func(user_question, self.n_results, doc_ids=self.documentids_workspace)
+            results = self.query_func(
+                user_question, self.n_results, doc_ids=self.documentids_workspace)
             return [
                 (
                     result.page_content,
