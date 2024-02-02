@@ -28,7 +28,7 @@ XINFERENCE_MODELS = {
         "model_size_in_billions": [
             7,
             13,
-            70,
+            # 70,
         ],
         "model_format": "ggmlv3",
         "quantization": [
