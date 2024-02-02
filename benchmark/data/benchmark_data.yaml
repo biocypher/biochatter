@@ -96,6 +96,7 @@ rag_interpretation:
       ]
   - prompt: Which molecular pathways are associated with cancer?
     test_case_purpose: implicit
+    answer: "no"
     system_messages:
       [
         "You will receive a number of text fragments to help answer the user's question. Your task is to use the information in these text fragments for answering the user's question, if they are relevant. Here are the fragments: ",
@@ -103,4 +104,15 @@ rag_interpretation:
         "The Human is the most endurant mammal.",
         "America was discovered by Columbus.",
         "The wavelength of red light is longer than that of blue light.",
+      ]
+  - prompt: Which molecular pathways are associated with cancer?
+    test_case_purpose: implicit
+    answer: "yes"
+    system_messages:
+      [
+        "You will receive a number of text fragments to help answer the user's question. Your task is to use the information in these text fragments for answering the user's question, if they are relevant. Here are the fragments: ",
+        "TP53, when mutated, often is a driving mutation in cancer.",
+        "BRCA1 is an important genetic regulator of breast cancer.",
+        "The STAT inflammatory pathway is often perturbed in cancers.",
+        "The EGFR pathway can lead to excessive growth of cancer cells.",
       ]

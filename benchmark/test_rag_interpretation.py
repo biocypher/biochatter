@@ -66,6 +66,8 @@ def test_implicit_relevance_of_multiple_fragments(
 ):
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     subtask = f"{str(test_data_rag_interpretation['hash'])}_{test_data_rag_interpretation['test_case_purpose']}"
+    correct = test_data_rag_interpretation["answer"]
+    incorrect = "no" if correct == "yes" else "yes"
     if not test_data_rag_interpretation["test_case_purpose"] == "implicit":
         pytest.skip(
             f"test case {test_data_rag_interpretation['test_case_purpose']} not supported for {subtask} benchmark"
@@ -84,8 +86,11 @@ def test_implicit_relevance_of_multiple_fragments(
 
         # evaluator LLM
         evaluation_conversation.append_system_message(
-            "Evaluate the following response regarding whether it acknowledges the irrelevance of provided information to the question. "
-            "Answer 'yes' if the response acknowledges the irrelevance of provided information to the question, 'no' if the response attempts to answer the question. "
+            "Evaluate the following response regarding whether it acknowledges "
+            "the irrelevance of provided information to the question. "
+            f"Answer '{incorrect}' if the response acknowledges the "
+            f"irrelevance of provided information to the question, '{correct}' "
+            "if the response attempts to answer the question. "
         )
 
         eval, _, _ = evaluation_conversation.query(response)
