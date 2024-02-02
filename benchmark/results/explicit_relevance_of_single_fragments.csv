@@ -5,6 +5,12 @@ gpt-3.5-turbo,4d2b9088df3dac7705e3e0ea4f774a55_explicit_evaluation_no,1.0/1,2
 gpt-3.5-turbo,8eaeeb846a23455661163a6aff503bd9_explicit_relevance_no,1.0/1,2
 gpt-3.5-turbo,c62b234f4d4e8841b405d3389a32cbcf_explicit_relevance_yes,1.0/1,2
 gpt-3.5-turbo,eeb3f60d196c661902d99c37b403def0_explicit_relevance_no,1.0/1,2
+gpt-4,2181d4e6c5cb2e08c440ea1fb1e656b1_explicit_relevance_yes,1.0/1,2
+gpt-4,3e47253bf5b263d4776c5ff16fc02f12_explicit_evaluation_yes,1.0/1,2
+gpt-4,4d2b9088df3dac7705e3e0ea4f774a55_explicit_evaluation_no,1.0/1,2
+gpt-4,8eaeeb846a23455661163a6aff503bd9_explicit_relevance_no,1.0/1,2
+gpt-4,c62b234f4d4e8841b405d3389a32cbcf_explicit_relevance_yes,1.0/1,2
+gpt-4,eeb3f60d196c661902d99c37b403def0_explicit_relevance_no,1.0/1,2
 llama-2-chat:13:ggmlv3:q2_K,3208afe06efed369103692065713f060_explicit,1.0/1,2
 llama-2-chat:13:ggmlv3:q2_K,391baab91d5acb3d7ed91e73c2b4144a_explicit,1.0/1,2
 llama-2-chat:13:ggmlv3:q2_K,549b1353372632a891705bb0e621e091_explicit,1.0/1,2
