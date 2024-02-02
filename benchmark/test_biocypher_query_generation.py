@@ -41,18 +41,20 @@ def test_entity_selection(
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     subtask = f"{str(yaml_data['hash'])}_{yaml_data['test_case_purpose']}"
     skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
-    prompt_engine = get_prompt_engine(yaml_data["kg_path"], prompt_engine)
+    prompt_engine = get_prompt_engine(
+        yaml_data["input"]["kg_path"], prompt_engine
+    )
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
         success = prompt_engine._select_entities(
-            question=yaml_data["prompt"],
+            question=yaml_data["input"]["prompt"],
             conversation=conversation,
         )
         assert success
 
         score = []
-        for expected_entity in yaml_data["entities"]:
+        for expected_entity in yaml_data["expected"]["entities"]:
             score.append(expected_entity in prompt_engine.selected_entities)
         return calculate_test_score(score)
 
@@ -78,10 +80,12 @@ def test_relationship_selection(
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     subtask = f"{str(yaml_data['hash'])}_{yaml_data['test_case_purpose']}"
     skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
-    prompt_engine = get_prompt_engine(yaml_data["kg_path"], prompt_engine)
+    prompt_engine = get_prompt_engine(
+        yaml_data["input"]["kg_path"], prompt_engine
+    )
 
-    prompt_engine.question = yaml_data["prompt"]
-    prompt_engine.selected_entities = yaml_data["entities"]
+    prompt_engine.question = yaml_data["input"]["prompt"]
+    prompt_engine.selected_entities = yaml_data["expected"]["entities"]
 
     # TODO: more generic, for nested structures
 
@@ -91,7 +95,7 @@ def test_relationship_selection(
         assert success
 
         score = []
-        for expected_relationship_label_key in yaml_data[
+        for expected_relationship_label_key in yaml_data["expected"][
             "relationship_labels"
         ].keys():
             score.append(
@@ -99,7 +103,7 @@ def test_relationship_selection(
                 in prompt_engine.selected_relationship_labels.keys()
             )
 
-            for expected_relationship_label_value in yaml_data[
+            for expected_relationship_label_value in yaml_data["expected"][
                 "relationship_labels"
             ][expected_relationship_label_key]:
                 try:
@@ -135,11 +139,15 @@ def test_property_selection(
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     subtask = f"{str(yaml_data['hash'])}_{yaml_data['test_case_purpose']}"
     skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
-    prompt_engine = get_prompt_engine(yaml_data["kg_path"], prompt_engine)
+    prompt_engine = get_prompt_engine(
+        yaml_data["input"]["kg_path"], prompt_engine
+    )
 
-    prompt_engine.question = yaml_data["prompt"]
-    prompt_engine.selected_entities = yaml_data["entities"]
-    prompt_engine.selected_relationships = yaml_data["relationships"]
+    prompt_engine.question = yaml_data["input"]["prompt"]
+    prompt_engine.selected_entities = yaml_data["expected"]["entities"]
+    prompt_engine.selected_relationships = yaml_data["expected"][
+        "relationships"
+    ]
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
@@ -147,7 +155,9 @@ def test_property_selection(
 
         if success:
             score = []
-            for expected_property_key in yaml_data["properties"].keys():
+            for expected_property_key in yaml_data["expected"][
+                "properties"
+            ].keys():
                 try:
                     score.append(
                         expected_property_key
@@ -156,9 +166,9 @@ def test_property_selection(
                 except KeyError:
                     score.append(False)
 
-                for expected_property_value in yaml_data["properties"][
-                    expected_property_key
-                ]:
+                for expected_property_value in yaml_data["expected"][
+                    "properties"
+                ][expected_property_key]:
                     try:
                         score.append(
                             expected_property_value
@@ -169,7 +179,7 @@ def test_property_selection(
                     except KeyError:
                         score.append(False)
         else:
-            score = [False for _ in yaml_data["properties"].keys()]
+            score = [False for _ in yaml_data["expected"]["properties"].keys()]
 
         return calculate_test_score(score)
 
@@ -195,21 +205,23 @@ def test_query_generation(
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     subtask = f"{str(yaml_data['hash'])}_{yaml_data['test_case_purpose']}"
     skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
-    prompt_engine = get_prompt_engine(yaml_data["kg_path"], prompt_engine)
+    prompt_engine = get_prompt_engine(
+        yaml_data["input"]["kg_path"], prompt_engine
+    )
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
         query = prompt_engine._generate_query(
-            question=yaml_data["prompt"],
-            entities=yaml_data["entities"],
-            relationships=yaml_data["relationship_labels"],
-            properties=yaml_data["properties"],
+            question=yaml_data["input"]["prompt"],
+            entities=yaml_data["expected"]["entities"],
+            relationships=yaml_data["expected"]["relationship_labels"],
+            properties=yaml_data["expected"]["properties"],
             query_language="Cypher",
             conversation=conversation,
         )
 
         score = []
-        for expected_part_of_query in yaml_data["parts_of_query"]:
+        for expected_part_of_query in yaml_data["expected"]["parts_of_query"]:
             if isinstance(expected_part_of_query, tuple):
                 score.append(
                     expected_part_of_query[0] in query
@@ -243,17 +255,21 @@ def test_end_to_end_query_generation(
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     subtask = f"{str(yaml_data['hash'])}_{yaml_data['test_case_purpose']}"
     skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
-    prompt_engine = get_prompt_engine(yaml_data["kg_path"], prompt_engine)
+    prompt_engine = get_prompt_engine(
+        yaml_data["input"]["kg_path"], prompt_engine
+    )
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
         try:
             query = prompt_engine.generate_query(
-                question=yaml_data["prompt"],
+                question=yaml_data["input"]["prompt"],
                 query_language="Cypher",
             )
             score = []
-            for expected_part_of_query in yaml_data["parts_of_query"]:
+            for expected_part_of_query in yaml_data["expected"][
+                "parts_of_query"
+            ]:
                 if isinstance(expected_part_of_query, tuple):
                     score.append(
                         expected_part_of_query[0] in query
@@ -264,7 +280,7 @@ def test_end_to_end_query_generation(
                         (re.search(expected_part_of_query, query) is not None)
                     )
         except ValueError as e:
-            score = [False for _ in yaml_data["parts_of_query"]]
+            score = [False for _ in yaml_data["expected"]["parts_of_query"]]
 
         return calculate_test_score(score)
 
@@ -373,15 +389,17 @@ def test_property_exists(
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     subtask = f"{str(yaml_data['hash'])}_{yaml_data['test_case_purpose']}"
     skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
-    prompt_engine = get_prompt_engine(yaml_data["kg_path"], prompt_engine)
+    prompt_engine = get_prompt_engine(
+        yaml_data["input"]["kg_path"], prompt_engine
+    )
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
         query = prompt_engine._generate_query(
-            question=yaml_data["prompt"],
-            entities=yaml_data["entities"],
-            relationships=yaml_data["relationship_labels"],
-            properties=yaml_data["properties"],
+            question=yaml_data["input"]["prompt"],
+            entities=yaml_data["expected"]["entities"],
+            relationships=yaml_data["expected"]["relationship_labels"],
+            properties=yaml_data["expected"]["properties"],
             query_language="Cypher",
             conversation=conversation,
         )

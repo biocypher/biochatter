@@ -29,10 +29,10 @@ def test_explicit_relevance_of_single_fragments(
         conversation.reset()  # needs to be reset for each test
         [
             conversation.append_system_message(m)
-            for m in test_data_rag_interpretation["system_messages"]
+            for m in test_data_rag_interpretation["input"]["system_messages"]
         ]
         response, _, _ = conversation.query(
-            test_data_rag_interpretation["prompt"]
+            test_data_rag_interpretation["input"]["prompt"]
         )
 
         # lower case, remove punctuation
@@ -42,7 +42,9 @@ def test_explicit_relevance_of_single_fragments(
 
         score = []
 
-        score.append(response == test_data_rag_interpretation["answer"])
+        score.append(
+            response == test_data_rag_interpretation["expected"]["answer"]
+        )
 
         return calculate_test_score(score)
 
@@ -76,15 +78,15 @@ def test_implicit_relevance_of_multiple_fragments(
         conversation.reset()  # needs to be reset for each test
         [
             conversation.append_system_message(m)
-            for m in test_data_rag_interpretation["system_messages"]
+            for m in test_data_rag_interpretation["input"]["system_messages"]
         ]
         response, _, _ = conversation.query(
-            test_data_rag_interpretation["prompt"]
+            test_data_rag_interpretation["input"]["prompt"]
         )
 
         msg = (
             "You will receive a statement as an answer to this question: "
-            f"{test_data_rag_interpretation['prompt']} "
+            f"{test_data_rag_interpretation['input']['prompt']} "
             "If the statement is an answer to the question, please type 'answer'. "
             "If the statement declines to answer to the question or apologises, giving the reason of lack of relevance of the given text fragments, please type 'decline'. "
             "Do not type anything except these two options. Here is the statement: "
@@ -102,7 +104,7 @@ def test_implicit_relevance_of_multiple_fragments(
 
         score = (
             [True]
-            if eval == test_data_rag_interpretation["expected_behaviour"]
+            if eval == test_data_rag_interpretation["expected"]["behaviour"]
             else [False]
         )
 

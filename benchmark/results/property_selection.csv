@@ -1,6 +1,7 @@
 model_name,subtask,score,iterations
+gpt-3.5-turbo,152cdbfe563d26cbcc2838f185e87ae2_multi_word,5.0/7,2
 gpt-3.5-turbo,18695dffc4ad2b31935a6a768ebe8f74_multi_word,5.0/7,2
-gpt-3.5-turbo,72434e7a340a3f6dd047b944988491b7_single_word,6.0/10,2
+gpt-3.5-turbo,fe1d6c90419df7a4879f1db6bf2a6699_single_word,6.0/10,2
 llama-2-chat:13:ggmlv3:q2_K,18695dffc4ad2b31935a6a768ebe8f74_multi_word,0.0/3,2
 llama-2-chat:13:ggmlv3:q2_K,72434e7a340a3f6dd047b944988491b7_single_word,0.0/3,2
 llama-2-chat:13:ggmlv3:q3_K_M,18695dffc4ad2b31935a6a768ebe8f74_multi_word,0.0/3,2
