@@ -35,6 +35,11 @@ def test_explicit_relevance_of_single_fragments(
             test_data_rag_interpretation["prompt"]
         )
 
+        # lower case, remove punctuation
+        response = (
+            response.lower().replace(".", "").replace("?", "").replace("!", "")
+        ).strip()
+
         score = []
 
         score.append(response.lower() == test_data_rag_interpretation["answer"])
