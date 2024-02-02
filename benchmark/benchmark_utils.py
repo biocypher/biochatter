@@ -9,13 +9,18 @@ def benchmark_already_executed(
     subtask: str,
 ) -> bool:
     """
-    Checks if the benchmark task and subtask test case for the model_name have already
-    been executed.
+
+    Checks if the benchmark task and subtask test case for the model_name have
+    already been executed.
 
     Args:
-        task (str): The benchmark task, e.g. "biocypher_query_generation"
-        subtask (str): The benchmark subtask test case, e.g. "0_entities"
         model_name (str): The model name, e.g. "gpt-3.5-turbo"
+
+        task (str): The benchmark task, e.g. "biocypher_query_generation"
+
+        subtask (str): The benchmark subtask test case, e.g.,
+            "72434e7a340a3f6dd047b944988491b7_single_word". It is composed of
+            the md5 hash of the test case and the test case purpose.
 
     Returns:
 
@@ -38,9 +43,12 @@ def skip_if_already_run(
 
     Args:
         model_name (str): The model name, e.g. "gpt-3.5-turbo"
-        result_files (dict[str, pd.DataFrame]): The result files
+
         task (str): The benchmark task, e.g. "biocypher_query_generation"
-        subtask (str): The benchmark subtask test case, e.g. "0_single_word"
+
+        subtask (str): The benchmark subtask test case, e.g.,
+            "72434e7a340a3f6dd047b944988491b7_single_word". It is composed of
+            the md5 hash of the test case and the test case purpose.
     """
     if benchmark_already_executed(model_name, task, subtask):
         pytest.skip(
