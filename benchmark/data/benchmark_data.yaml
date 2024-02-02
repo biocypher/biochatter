@@ -63,7 +63,7 @@ biocypher_query_generation:
 rag_interpretation:
   - prompt: Which molecular pathways are associated with cancer?
     answer: "no"
-    test_case_purpose: explicit
+    test_case_purpose: explicit_relevance_no
     system_messages:
       [
         "You will receive a text fragment to help answer the user's question. Your task is to judge these text fragments for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
@@ -71,7 +71,7 @@ rag_interpretation:
       ]
   - prompt: Which molecular pathways are associated with cancer?
     answer: "yes"
-    test_case_purpose: explicit
+    test_case_purpose: explicit_relevance_yes
     system_messages:
       [
         "You will receive a text fragment to help answer the user's question. Your task is to judge these text fragments for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
@@ -80,7 +80,7 @@ rag_interpretation:
       ]
   - prompt: Which molecular pathways are associated with cancer?
     answer: "yes"
-    test_case_purpose: explicit
+    test_case_purpose: explicit_relevance_yes
     system_messages:
       [
         "You will receive a text fragment to help answer the user's question. Your task is to judge these text fragments for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
@@ -88,7 +88,7 @@ rag_interpretation:
       ]
   - prompt: Which molecular pathways are associated with cancer?
     answer: "no"
-    test_case_purpose: explicit
+    test_case_purpose: explicit_relevance_no
     system_messages:
       [
         "You will receive a text fragment to help answer the user's question. Your task is to judge these text fragments for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
@@ -96,7 +96,7 @@ rag_interpretation:
       ]
   - prompt: "I'm sorry, but the given text fragments do not provide any relevant information about molecular pathways associated with cancer."
     answer: "decline"
-    test_case_purpose: explicit
+    test_case_purpose: explicit_evaluation_no
     system_messages:
       [
         "You will receive a statement as an answer to this question: ",
@@ -107,7 +107,7 @@ rag_interpretation:
       ]
   - prompt: "There are several molecular pathways that are associated with cancer, for instance TP53, BRCA1, the STAT inflammatory pathway, and the EGFR pathway."
     answer: "answer"
-    test_case_purpose: explicit
+    test_case_purpose: explicit_evaluation_yes
     system_messages:
       [
         "You will receive a statement as an answer to this question: ",
@@ -117,7 +117,7 @@ rag_interpretation:
         "Do not type anything except these two options. Here is the statement: ",
       ]
   - prompt: Which molecular pathways are associated with cancer?
-    test_case_purpose: implicit
+    test_case_purpose: implicit_relevance_no
     expected_behaviour: "decline"
     system_messages:
       [
@@ -128,7 +128,7 @@ rag_interpretation:
         "The wavelength of red light is longer than that of blue light.",
       ]
   - prompt: Which molecular pathways are associated with cancer?
-    test_case_purpose: implicit
+    test_case_purpose: implicit_relevance_yes
     expected_behaviour: "answer"
     system_messages:
       [

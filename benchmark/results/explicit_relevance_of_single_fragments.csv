@@ -1,10 +1,10 @@
 model_name,subtask,score,iterations
-gpt-3.5-turbo,22b46629ca39d7d139399c27f910adb1_explicit,1.0/1,2
-gpt-3.5-turbo,3208afe06efed369103692065713f060_explicit,1.0/1,2
-gpt-3.5-turbo,391baab91d5acb3d7ed91e73c2b4144a_explicit,1.0/1,2
-gpt-3.5-turbo,549b1353372632a891705bb0e621e091_explicit,1.0/1,2
-gpt-3.5-turbo,6add138ece86dd32c7add8e60aa13054_explicit,1.0/1,2
-gpt-3.5-turbo,dc574c3e08323cead7fd99076482b001_explicit,1.0/1,2
+gpt-3.5-turbo,05ebbde9381a73f7fd240396d980fa7e_explicit_evaluation_yes,1.0/1,2
+gpt-3.5-turbo,14f39e6b45e89b2a94304b501c68e677_explicit_relevance_no,1.0/1,2
+gpt-3.5-turbo,2a0e00b42ab6392f2c4513c132bdbd37_explicit_relevance_yes,1.0/1,2
+gpt-3.5-turbo,3c6eb3b9fbbff548f8bb21b5f111b59c_explicit_evaluation_no,1.0/1,2
+gpt-3.5-turbo,a0b8c59680fc4c100e9a64f7a0951900_explicit_relevance_no,1.0/1,2
+gpt-3.5-turbo,dee154d0b9e963bc484c87c885d7c7bb_explicit_relevance_yes,1.0/1,2
 llama-2-chat:13:ggmlv3:q2_K,3208afe06efed369103692065713f060_explicit,1.0/1,2
 llama-2-chat:13:ggmlv3:q2_K,391baab91d5acb3d7ed91e73c2b4144a_explicit,1.0/1,2
 llama-2-chat:13:ggmlv3:q2_K,549b1353372632a891705bb0e621e091_explicit,1.0/1,2
