@@ -83,6 +83,19 @@ BENCHMARKED_MODELS.sort()
 BENCHMARK_URL = "http://localhost:9997"
 
 
+def pytest_collection_modifyitems(items):
+    """
+    Pytest hook function to modify the collected test items.
+    Called once after collection has been performed.
+
+    Used here to order items by their `callspec.id` (which starts with the
+    model name and configuration) to ensure running all tests for one model
+    before moving to the next model.
+    """
+
+    items.sort(key=lambda item: item.callspec.id)
+
+
 # parameterise tests to run for each model
 @pytest.fixture(params=BENCHMARKED_MODELS)
 def model_name(request):
