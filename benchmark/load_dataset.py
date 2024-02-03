@@ -55,29 +55,6 @@ def _load_test_data_from_this_repository():
     directory_path = "./benchmark/data"
     files_in_directory = _get_all_files(directory_path)
 
-    # old csv implementation
-    test_data_csv = {}
-    for file_path in files_in_directory:
-        if file_path.endswith(".csv"):
-            df = pd.read_csv(file_path, sep=";")
-            _apply_literal_eval(
-                df,
-                [
-                    "entities",
-                    "relationships",
-                    "relationship_labels",
-                    "properties",
-                    "parts_of_query",
-                    "system_messages",
-                ],
-            )
-            test_data_csv[file_path.replace("./benchmark/", "./")] = df
-        elif file_path.endswith(".yaml"):
-            test_data_csv[file_path.replace("./benchmark/", "./")] = (
-                yaml.safe_load(file_path)
-            )
-
-    # new yaml implementation
     test_data = {}
     for file_path in files_in_directory:
         if file_path.endswith(".yaml"):
@@ -85,19 +62,12 @@ def _load_test_data_from_this_repository():
                 try:
                     yaml_data = yaml.safe_load(stream)
 
-                    # every dictionary in the list of dictionaries that is under
-                    # any top level key gets a hash field that is the md5 hash
-                    # of the dictionary
+                    if "_data" in file_path:
+                        # expand multi-instruction tests
+                        yaml_data = _expand_multi_instruction(yaml_data)
 
-                    for key in yaml_data.keys():
-                        if isinstance(yaml_data[key], list):
-                            for i in range(len(yaml_data[key])):
-                                if isinstance(yaml_data[key][i], dict):
-                                    yaml_data[key][i]["hash"] = hashlib.md5(
-                                        json.dumps(yaml_data[key][i]).encode(
-                                            "utf-8"
-                                        )
-                                    ).hexdigest()
+                        # generate hash for each case
+                        yaml_data = _hash_each_case(yaml_data)
 
                     test_data[file_path.replace("./benchmark/", "./")] = (
                         yaml_data
@@ -107,6 +77,55 @@ def _load_test_data_from_this_repository():
                     print(exc)
 
     return test_data
+
+
+def _hash_each_case(data_dict: dict) -> dict:
+    """
+    Create a hash for each case in the test data to identify tests that have
+    been run or modified.
+
+    Args:
+        data_dict (dict): The yaml data.
+
+    Returns:
+        dict: The yaml data with a hash for each case.
+    """
+    for key in data_dict.keys():
+        if isinstance(data_dict[key], list):
+            for i in range(len(data_dict[key])):
+                if isinstance(data_dict[key][i], dict):
+                    data_dict[key][i]["hash"] = hashlib.md5(
+                        json.dumps(data_dict[key][i]).encode("utf-8")
+                    ).hexdigest()
+
+    return data_dict
+
+
+def _expand_multi_instruction(data_dict: dict) -> dict:
+    """
+    Expands tests with input dictionaries that contain dictionaries.
+
+    Args:
+        data_dict (dict): The yaml data.
+
+    Returns:
+        dict: The expanded yaml data.
+    """
+    for module_key in data_dict.keys():
+        test_list = data_dict[module_key]
+        for test in test_list:
+            test_input = test["input"]
+            for case, potential_subcase in test_input.items():
+                if isinstance(potential_subcase, dict):
+                    for key, value in potential_subcase.items():
+                        new_case = test.copy()
+                        new_case["case"] = "_".join([test["case"], key])
+                        new_case["input"][case] = value
+                        test_list.append(new_case)
+                    test_list.remove(test)
+        data_dict[module_key] = test_list
+
+    return data_dict
 
 
 def _get_private_key_from_env_variable() -> rsa.PrivateKey:
