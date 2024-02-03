@@ -66,9 +66,13 @@ def preprocess_results_for_frontend(
         }
     )
 
-    aggregated_scores["Score"] = (
-        aggregated_scores["passed_test_cases"]
-        / aggregated_scores["number_test_cases"]
+    aggregated_scores["Score"] = aggregated_scores.apply(
+        lambda row: (
+            row["passed_test_cases"] / row["number_test_cases"]
+            if row["number_test_cases"] != 0
+            else 0
+        ),
+        axis=1,
     )
 
     aggregated_scores["Model name"] = aggregated_scores.index.get_level_values(
@@ -118,12 +122,36 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         subtask_results.append(subtask_result)
     overview = pd.concat(subtask_results, axis=1)
     overview["Mean"] = overview.mean(axis=1)
+    overview["SD"] = overview.std(axis=1)
     overview = overview.sort_values(by="Mean", ascending=False)
+    # split "Model name" at : to get Model name, size, version, and quantisation
+    overview["Model name"] = overview.index
+    overview[["Model name", "Size", "Version", "Quantisation"]] = overview[
+        "Model name"
+    ].str.split(":", expand=True)
+    overview = overview[
+        [
+            "Model name",
+            "Size",
+            "Version",
+            "Quantisation",
+            "Mean",
+            "SD",
+        ]
+    ]
     overview.to_csv(
-        f"{result_files_path}preprocessed_for_frontend/overview.csv", index=True
+        f"{result_files_path}preprocessed_for_frontend/overview.csv",
+        index=False,
     )
-    overview_aggregated = overview[["Mean"]]
+
+    overview_aggregated = overview[
+        ["Model name", "Size", "Quantisation", "Mean"]
+    ]
     overview_aggregated.to_csv(
         f"{result_files_path}preprocessed_for_frontend/overview-aggregated.csv",
-        index=True,
+        index=False,
     )
+
+
+if __name__ == "__main__":
+    on_pre_build(None)
