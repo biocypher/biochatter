@@ -38,7 +38,8 @@ class BioCypherPromptEngine:
 
             conversation_factory: A function used to create a conversation for
                 creating the KG query. If not provided, a default function is
-                used.
+                used (creating an OpenAI conversation with the specified model,
+                see `_get_conversation`).
         """
 
         if not schema_config_or_info_path and not schema_config_or_info_dict:
