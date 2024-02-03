@@ -39,7 +39,8 @@ class RagAgent:
                 information for the database. Required if mode is "kg".
 
             conversation_factory (callable): A function used to create a
-                conversation for the KG to query. Required if mode is "kg".
+                conversation for creating the KG query. Required if mode is
+                "kg".
 
             embedding_func (object): An embedding function. Required if mode is
                 "vectorstore".

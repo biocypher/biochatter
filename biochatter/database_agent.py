@@ -22,6 +22,7 @@ class DatabaseAgent:
                 database. Contains database name, URI, user, and password.
 
             conversation_factory (callable): A function to create a conversation
+                for creating the KG query.
         """
         self.prompt_engine = BioCypherPromptEngine(
             model_name=model_name,
