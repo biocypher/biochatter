@@ -145,7 +145,7 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     )
 
     overview_aggregated = overview[
-        ["Model name", "Size", "Quantisation", "Mean"]
+        ["Model name", "Size", "Quantisation", "Mean", "SD"]
     ]
     overview_aggregated.to_csv(
         f"{result_files_path}preprocessed_for_frontend/overview-aggregated.csv",
