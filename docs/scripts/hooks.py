@@ -147,6 +147,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     overview_aggregated = overview[
         ["Model name", "Size", "Quantisation", "Mean", "SD"]
     ]
+    # round mean and sd to 2 decimal places
+    overview_aggregated["Mean"] = overview_aggregated["Mean"].round(2)
+    overview_aggregated["SD"] = overview_aggregated["SD"].round(2)
     overview_aggregated.to_csv(
         f"{result_files_path}preprocessed_for_frontend/overview-aggregated.csv",
         index=False,
