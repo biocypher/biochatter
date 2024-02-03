@@ -45,10 +45,11 @@ class RagAgent:
             embedding_func (object): An embedding function. Required if mode is
                 "vectorstore".
 
-            documentids_workspace (Optional[List[str]], optional): a list of document IDs
-                that defines the scope within which similarity search occurs. Defaults
-                to None, which means the operations will be performed across all
-                documents in the database.
+            documentids_workspace (Optional[List[str]], optional): a list of
+                document IDs that defines the scope within which similarity
+                search occurs. Defaults to None, which means the operations will
+                be performed across all documents in the database.
+
         """
         self.mode = mode
         self.model_name = model_name
