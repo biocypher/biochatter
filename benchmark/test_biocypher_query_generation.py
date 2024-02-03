@@ -39,8 +39,9 @@ def test_entity_selection(
 ):
     yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    subtask = f"{str(yaml_data['hash'])}_{yaml_data['test_case_purpose']}"
-    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
     prompt_engine = get_prompt_engine(
         yaml_data["input"]["kg_path"], prompt_engine
     )
@@ -62,9 +63,10 @@ def test_entity_selection(
 
     write_results_to_file(
         prompt_engine.model_name,
-        subtask,
+        yaml_data["case"],
         f"{mean_score}/{max}",
         f"{n_iterations}",
+        yaml_data["hash"],
         get_result_file_path(task),
     )
 
@@ -78,8 +80,9 @@ def test_relationship_selection(
 ):
     yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    subtask = f"{str(yaml_data['hash'])}_{yaml_data['test_case_purpose']}"
-    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
     prompt_engine = get_prompt_engine(
         yaml_data["input"]["kg_path"], prompt_engine
     )
@@ -121,9 +124,10 @@ def test_relationship_selection(
 
     write_results_to_file(
         prompt_engine.model_name,
-        subtask,
+        yaml_data["case"],
         f"{mean_score}/{max}",
         f"{n_iterations}",
+        yaml_data["hash"],
         get_result_file_path(task),
     )
 
@@ -137,8 +141,9 @@ def test_property_selection(
 ):
     yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    subtask = f"{str(yaml_data['hash'])}_{yaml_data['test_case_purpose']}"
-    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
     prompt_engine = get_prompt_engine(
         yaml_data["input"]["kg_path"], prompt_engine
     )
@@ -187,9 +192,10 @@ def test_property_selection(
 
     write_results_to_file(
         prompt_engine.model_name,
-        subtask,
+        yaml_data["case"],
         f"{mean_score}/{max}",
         f"{n_iterations}",
+        yaml_data["hash"],
         get_result_file_path(task),
     )
 
@@ -203,8 +209,9 @@ def test_query_generation(
 ):
     yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    subtask = f"{str(yaml_data['hash'])}_{yaml_data['test_case_purpose']}"
-    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
     prompt_engine = get_prompt_engine(
         yaml_data["input"]["kg_path"], prompt_engine
     )
@@ -237,9 +244,10 @@ def test_query_generation(
 
     write_results_to_file(
         prompt_engine.model_name,
-        subtask,
+        yaml_data["case"],
         f"{mean_score}/{max}",
         f"{n_iterations}",
+        yaml_data["hash"],
         get_result_file_path(task),
     )
 
@@ -253,8 +261,9 @@ def test_end_to_end_query_generation(
 ):
     yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    subtask = f"{str(yaml_data['hash'])}_{yaml_data['test_case_purpose']}"
-    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
     prompt_engine = get_prompt_engine(
         yaml_data["input"]["kg_path"], prompt_engine
     )
@@ -288,9 +297,10 @@ def test_end_to_end_query_generation(
 
     write_results_to_file(
         prompt_engine.model_name,
-        subtask,
+        yaml_data["case"],
         f"{mean_score}/{max}",
         f"{n_iterations}",
+        yaml_data["hash"],
         get_result_file_path(task),
     )
 
@@ -387,8 +397,9 @@ def test_property_exists(
 ):
     yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    subtask = f"{str(yaml_data['hash'])}_{yaml_data['test_case_purpose']}"
-    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
     prompt_engine = get_prompt_engine(
         yaml_data["input"]["kg_path"], prompt_engine
     )
@@ -440,8 +451,9 @@ def test_property_exists(
 
     write_results_to_file(
         prompt_engine.model_name,
-        subtask,
+        yaml_data["case"],
         f"{mean_score}/{max}",
         f"{n_iterations}",
+        yaml_data["hash"],
         get_result_file_path(task),
     )

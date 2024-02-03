@@ -17,23 +17,23 @@ def test_explicit_relevance_of_single_fragments(
     conversation,
     multiple_testing,
 ):
+    yaml_data = test_data_rag_interpretation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    subtask = f"{str(test_data_rag_interpretation['hash'])}_{test_data_rag_interpretation['test_case_purpose']}"
-    if "explicit" not in test_data_rag_interpretation["test_case_purpose"]:
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
+    if "explicit" not in yaml_data["case"]:
         pytest.skip(
-            f"test case {test_data_rag_interpretation['test_case_purpose']} not supported for {subtask} benchmark"
+            f"test case {yaml_data['case']} not supported for {task} benchmark"
         )
-    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
         [
             conversation.append_system_message(m)
-            for m in test_data_rag_interpretation["input"]["system_messages"]
+            for m in yaml_data["input"]["system_messages"]
         ]
-        response, _, _ = conversation.query(
-            test_data_rag_interpretation["input"]["prompt"]
-        )
+        response, _, _ = conversation.query(yaml_data["input"]["prompt"])
 
         # lower case, remove punctuation
         response = (
@@ -42,9 +42,7 @@ def test_explicit_relevance_of_single_fragments(
 
         score = []
 
-        score.append(
-            response == test_data_rag_interpretation["expected"]["answer"]
-        )
+        score.append(response == yaml_data["expected"]["answer"])
 
         return calculate_test_score(score)
 
@@ -52,9 +50,10 @@ def test_explicit_relevance_of_single_fragments(
 
     write_results_to_file(
         model_name,
-        subtask,
+        yaml_data["case"],
         f"{mean_score}/{max}",
         f"{n_iterations}",
+        yaml_data["hash"],
         get_result_file_path(task),
     )
 
@@ -66,27 +65,27 @@ def test_implicit_relevance_of_multiple_fragments(
     evaluation_conversation,
     multiple_testing,
 ):
+    yaml_data = test_data_rag_interpretation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    subtask = f"{str(test_data_rag_interpretation['hash'])}_{test_data_rag_interpretation['test_case_purpose']}"
-    if "implicit" not in test_data_rag_interpretation["test_case_purpose"]:
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
+    if "implicit" not in yaml_data["case"]:
         pytest.skip(
-            f"test case {test_data_rag_interpretation['test_case_purpose']} not supported for {subtask} benchmark"
+            f"test case {yaml_data['case']} not supported for {task} benchmark"
         )
-    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
         [
             conversation.append_system_message(m)
-            for m in test_data_rag_interpretation["input"]["system_messages"]
+            for m in yaml_data["input"]["system_messages"]
         ]
-        response, _, _ = conversation.query(
-            test_data_rag_interpretation["input"]["prompt"]
-        )
+        response, _, _ = conversation.query(yaml_data["input"]["prompt"])
 
         msg = (
             "You will receive a statement as an answer to this question: "
-            f"{test_data_rag_interpretation['input']['prompt']} "
+            f"{yaml_data['input']['prompt']} "
             "If the statement is an answer to the question, please type 'answer'. "
             "If the statement declines to answer to the question or apologises, giving the reason of lack of relevance of the given text fragments, please type 'decline'. "
             "Do not type anything except these two options. Here is the statement: "
@@ -103,9 +102,7 @@ def test_implicit_relevance_of_multiple_fragments(
         ).strip()
 
         score = (
-            [True]
-            if eval == test_data_rag_interpretation["expected"]["behaviour"]
-            else [False]
+            [True] if eval == yaml_data["expected"]["behaviour"] else [False]
         )
 
         return calculate_test_score(score)
@@ -114,8 +111,9 @@ def test_implicit_relevance_of_multiple_fragments(
 
     write_results_to_file(
         model_name,
-        subtask,
+        yaml_data["case"],
         f"{mean_score}/{max}",
         f"{n_iterations}",
+        yaml_data["hash"],
         get_result_file_path(task),
     )

@@ -269,19 +269,26 @@ def result_files():
             result_file = pd.read_csv(file, header=0)
         except (pd.errors.EmptyDataError, FileNotFoundError):
             result_file = pd.DataFrame(
-                columns=["model_name", "subtask", "score", "iterations"]
+                columns=[
+                    "model_name",
+                    "subtask",
+                    "score",
+                    "iterations",
+                    "md5_hash",
+                ]
             )
             result_file.to_csv(file, index=False)
 
         if not np.array_equal(
             result_file.columns,
-            ["model_name", "subtask", "score", "iterations"],
+            ["model_name", "subtask", "score", "iterations", "md5_hash"],
         ):
             result_file.columns = [
                 "model_name",
                 "subtask",
                 "score",
                 "iterations",
+                "md5_hash",
             ]
 
         result_files[file] = result_file
