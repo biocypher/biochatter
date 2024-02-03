@@ -47,57 +47,51 @@ class DocumentEmbedder:
         Args:
 
             used (bool, optional): whether RAG has been used (ChatGSE setting).
-            Defaults to False.
+                Defaults to False.
 
             online (bool, optional): whether we are running ChatGSE online.
-            Defaults to False.
+                Defaults to False.
 
             chunk_size (int, optional): size of chunks to split text into.
-            Defaults to 1000.
+                Defaults to 1000.
 
             chunk_overlap (int, optional): overlap between chunks. Defaults to 0.
 
             split_by_characters (bool, optional): whether to split by characters
-            or tokens. Defaults to True.
+                or tokens. Defaults to True.
 
             separators (Optional[list], optional): list of separators to use when
-            splitting by characters. Defaults to [" ", ",", "\n"].
+                splitting by characters. Defaults to [" ", ",", "\n"].
 
             n_results (int, optional): number of results to return from
-            similarity search. Defaults to 3.
+                similarity search. Defaults to 3.
 
             model (Optional[str], optional): name of model to use for embeddings.
-            Defaults to 'text-embedding-ada-002'.
+                Defaults to 'text-embedding-ada-002'.
 
             vector_db_vendor (Optional[str], optional): name of vector database
-            to use. Defaults to Milvus.
+                to use. Defaults to Milvus.
 
             connection_args (Optional[dict], optional): arguments to pass to
-            vector database connection. Defaults to None.
-
-            embedding_collection_name (Optional[str], optional): name of
-            collection to store embeddings in. Defaults to 'DocumentEmbeddings'.
-
-            metadata_collection_name (Optional[str], optional): name of
-            collection to store metadata in. Defaults to 'DocumentMetadata'.
+                vector database connection. Defaults to None.
 
             api_key (Optional[str], optional): OpenAI API key. Defaults to None.
 
             base_url (Optional[str], optional): base url of OpenAI API.
 
             embeddings (Optional[OpenAIEmbeddings | XinferenceEmbeddings],
-            optional): Embeddings object to use. Defaults to OpenAI.
+                optional): Embeddings object to use. Defaults to OpenAI.
 
             documentids_workspace (Optional[List[str]], optional): a list of document IDs
-            that defines the scope within which rag operations (remove, similarity search,
-            and get all) occur. Defaults to None, which means the operations will be
-            performed across all documents in the database.
+                that defines the scope within which rag operations (remove, similarity search,
+                and get all) occur. Defaults to None, which means the operations will be
+                performed across all documents in the database.
 
             is_azure (Optional[bool], optional): if we are using Azure
             azure_deployment (Optional[str], optional): Azure embeddings model deployment,
-            should work with azure_endpoint when is_azure is True
+                should work with azure_endpoint when is_azure is True
             azure_endpoint (Optional[str], optional): Azure endpoint, should work with
-            azure_deployment when is_azure is True
+                azure_deployment when is_azure is True
 
         """
         self.used = used

@@ -13,10 +13,18 @@ To run all benchmarks again, use `poetry run pytest benchmark --run-all`.
 
 To allow flexible extension of the benchmark, we have implemeted a modular test framework that uses pytest fixtures to allow easy addition of new models and tasks.
 All setup is done in the `conftest.py` file in the `benchmark` directory.
+The benchmarks are organised by module, task, and subtask.
+Module names (e.g., `biocypher_query_generation` or `rag_interpretation`) group tasks by use case and are used to create benchmark dataset objects for the tests.
+Tasks (e.g., `entity_selection` or `query_generation`) are the actual tests that are executed in each module.
+The name of the test (minus the `test_` prefix) is used to generate the result file name.
+Subtasks (e.g., `single_word` or `multi_word`) are used to parametrise the tests and track the results of different subtasks in the result files.
+In addition, we generate md5 hashes of the test data for each subtask and use them to skip tests that have already been executed.
+Exemplary tests are defined in a YAML file in the `benchmark/data` directory, while the actual test dataset is encrypted and only available to the benchmarking pipeline.
 The result files are simple CSVs whose file names are generated from the name of the test function; they can be found in `benchmark/results` and contain scores for all executed combination of parameters.
 
 To achieve modularity, we use pytest fixtures and parametrization.
-For instance, to add a new model, we can modify the `MODEL_NAMES` list in the query generation test module, or the `EMBEDDING_MODELS` and `CHUNK_SIZES` lists in the vector database test module.
+For instance, to add a new model, we can modify the `OPENAI_MODEL_NAMES` and `XINFERENCE_MODELS` dictionary in `conftest.py`.
+The latter carries model names, sizes, format, and quantisations.
 The environment that runs the benchmark needs to make available all prerequisites for the different modules.
 For instance, the tasks requiring connection to an LLM need to provide the necessary credentials and API keys, or a connection to a self-hosted model.
 Likewise, the benchmarks of retrieval-augmented generation (RAG) processes require a connection to the RAG agent, e.g., a vector database.
