@@ -53,6 +53,13 @@ class BioCypherPromptEngine:
                 "path to a file or as a dictionary, not both."
             )
 
+        # set conversation factory or use default
+        self.conversation_factory = (
+            conversation_factory
+            if conversation_factory is not None
+            else self._get_conversation
+        )
+
         if schema_config_or_info_path:
             # read the schema configuration
             with open(schema_config_or_info_path, "r") as f:
@@ -63,11 +70,6 @@ class BioCypherPromptEngine:
         # check whether it is the original schema config or the output of
         # biocypher info
         is_schema_info = schema_config.get("is_schema_info", False)
-        self.conversation_factory = (
-            conversation_factory
-            if conversation_factory is not None
-            else self._get_conversation
-        )
 
         # extract the entities and relationships: each top level key that has
         # a 'represented_as' key
