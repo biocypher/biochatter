@@ -38,15 +38,15 @@ class RagAgent:
             schema_config_or_info_dict (dict): A dictionary of schema
                 information for the database. Required if mode is "kg".
 
-            conversation_factory (callable): A function used to create conversation
-                for KG to query. Required if mode is "kg"
+            conversation_factory (callable): A function used to create a
+                conversation for the KG to query. Required if mode is "kg".
 
             embedding_func (object): An embedding function. Required if mode is
                 "vectorstore".
 
             documentids_workspace (Optional[List[str]], optional): a list of document IDs
-                that defines the scope within which similarity search occurs. Defaults 
-                to None, which means the operations will be performed across all 
+                that defines the scope within which similarity search occurs. Defaults
+                to None, which means the operations will be performed across all
                 documents in the database.
         """
         self.mode = mode
@@ -58,15 +58,14 @@ class RagAgent:
             from .database_agent import DatabaseAgent
 
             if not schema_config_or_info_dict:
-                raise ValueError(
-                    "Please provide a schema config or info dict.")
+                raise ValueError("Please provide a schema config or info dict.")
             self.schema_config_or_info_dict = schema_config_or_info_dict
 
             self.agent = DatabaseAgent(
                 model_name=model_name,
                 connection_args=connection_args,
                 schema_config_or_info_dict=self.schema_config_or_info_dict,
-                conversation_factory=conversation_factory
+                conversation_factory=conversation_factory,
             )
 
             self.agent.connect()
@@ -118,7 +117,10 @@ class RagAgent:
             ]
         elif self.mode == RagAgentModeEnum.VectorStore:
             results = self.query_func(
-                user_question, self.n_results, doc_ids=self.documentids_workspace)
+                user_question,
+                self.n_results,
+                doc_ids=self.documentids_workspace,
+            )
             return [
                 (
                     result.page_content,

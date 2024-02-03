@@ -21,12 +21,12 @@ class DatabaseAgent:
             connection_args (dict): A dictionary of arguments to connect to the
                 database. Contains database name, URI, user, and password.
 
-            conversation_factory (callable): A function to create conversation
+            conversation_factory (callable): A function to create a conversation
         """
         self.prompt_engine = BioCypherPromptEngine(
             model_name=model_name,
             schema_config_or_info_dict=schema_config_or_info_dict,
-            conversation_factory=conversation_factory
+            conversation_factory=conversation_factory,
         )
         self.connection_args = connection_args
         self.driver = None
@@ -45,6 +45,7 @@ class DatabaseAgent:
             user=user,
             password=password,
         )
+
     def is_connected(self) -> bool:
         return not self.driver is None
 

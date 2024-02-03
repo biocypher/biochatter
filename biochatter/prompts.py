@@ -12,7 +12,7 @@ class BioCypherPromptEngine:
         schema_config_or_info_path: Optional[str] = None,
         schema_config_or_info_dict: Optional[dict] = None,
         model_name: str = "gpt-3.5-turbo",
-        conversation_factory: Optional[callable]=None,
+        conversation_factory: Optional[callable] = None,
     ) -> None:
         """
 
@@ -60,7 +60,8 @@ class BioCypherPromptEngine:
         # biocypher info
         is_schema_info = schema_config.get("is_schema_info", False)
         self.conversation_factory = (
-            conversation_factory if conversation_factory is not None 
+            conversation_factory
+            if conversation_factory is not None
             else self._get_conversation
         )
 
@@ -84,13 +85,13 @@ class BioCypherPromptEngine:
                         value["represented_as"] == "node"
                         and name_indicates_relationship
                     ):
-                        self.relationships[
-                            sentencecase_to_pascalcase(key)
-                        ] = value
+                        self.relationships[sentencecase_to_pascalcase(key)] = (
+                            value
+                        )
                     elif value["represented_as"] == "edge":
-                        self.relationships[
-                            sentencecase_to_pascalcase(key)
-                        ] = value
+                        self.relationships[sentencecase_to_pascalcase(key)] = (
+                            value
+                        )
         else:
             for key, value in schema_config.items():
                 if not isinstance(value, dict):
@@ -139,7 +140,9 @@ class BioCypherPromptEngine:
                 ]
         return relationship
 
-    def generate_query(self, question: str, query_language: Optional[str]="Neo4j") -> str:
+    def generate_query(
+        self, question: str, query_language: Optional[str] = "Cypher"
+    ) -> str:
         """
         Wrap entity and property selection and query generation; return the
         generated query.
