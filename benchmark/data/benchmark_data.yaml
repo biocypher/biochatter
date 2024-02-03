@@ -1,12 +1,18 @@
-# could make sense to divide in general categories, e.g.:
-# file: test_schema_info.yaml (optional)
-# input: prompt (user question, system messages)
-# expected: entities etc.
-# assertion method? (string to evaluate, e.g. "assert 'Gene' in entities")
+# Top-level keys: benchmark modules
+# Values: list of dictionaries, each containing a test case
+#
+# Test case keys:
+# - input (for creating the test)
+# - expected (for asserting ourcomes and generating a score)
+# - case (for categorizing the test case)
+#
+# If any input is a dictionary itself, it will be expanded into separate test
+# cases, using the top-level key to create a concatenated test case purpose.
 biocypher_query_generation:
-  - input:
+  - case: single_word
+    input:
       kg_path: test_schema_info.yaml
-      prompt: Which genes are associated with mucoviscidosis?
+      prompt: Which genes are associated with mucoviscidosis ?
     expected:
       entities: ["Gene", "Disease"]
       relationships: ["GeneToPhenotypeAssociation"]
@@ -36,8 +42,9 @@ biocypher_query_generation:
           "WHERE",
           "{name:}",
         ]
-    test_case_purpose: single_word
-  - input:
+
+  - case: multi_word
+    input:
       kg_path: test_schema_info.yaml
       prompt: Which genes are expressed in fibroblasts?
     expected:
@@ -63,50 +70,43 @@ biocypher_query_generation:
           "WHERE",
           "{name:}",
         ]
-    test_case_purpose: multi_word
+
 rag_interpretation:
-  - input:
+  - case: explicit_relevance_no
+    input:
       prompt: Which molecular pathways are associated with cancer?
       system_messages:
-        [
-          "You will receive a text fragment to help answer the user's question. Your task is to judge these text fragments for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
-          "The earth is a globe.",
-        ]
+        simple:
+          [
+            "You will receive a text fragment to help answer the user's question. Your task is to judge this text fragment for relevance to the user's question, and return either 'yes' or 'no'! Here is the fragment: ",
+            "The earth is a globe.",
+          ]
+        more_explicit:
+          [
+            "You will receive a text fragment to help answer the user's question. Your task is to judge this text fragment for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
+            "The earth is a globe.",
+          ]
+        repeat_instruction:
+          [
+            "You will receive a text fragment to help answer the user's question. You should only respond with 'yes' or 'no' without additional words. Your task is to judge this text fragment for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
+            "The earth is a globe.",
+          ]
     expected:
       answer: "no"
-    test_case_purpose: explicit_relevance_no
-  - input:
+
+  - case: explicit_relevance_yes
+    input:
       prompt: Which molecular pathways are associated with cancer?
       system_messages:
         [
-          "You will receive a text fragment to help answer the user's question. Your task is to judge these text fragments for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
-          "TP53 is important in the regulation of cellular death.",
+          "You will receive a text fragment to help answer the user's question. Your task is to judge this text fragment for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
           "The EGFR pathway is deregulated in a number of cancers.",
         ]
     expected:
       answer: "yes"
-    test_case_purpose: explicit_relevance_yes
-  - input:
-      prompt: Which molecular pathways are associated with cancer?
-      system_messages:
-        [
-          "You will receive a text fragment to help answer the user's question. Your task is to judge these text fragments for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
-          "The EGFR pathway is deregulated in a number of cancers.",
-        ]
-    expected:
-      answer: "yes"
-    test_case_purpose: explicit_relevance_yes
-  - input:
-      prompt: Which molecular pathways are associated with cancer?
-      system_messages:
-        [
-          "You will receive a text fragment to help answer the user's question. Your task is to judge these text fragments for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
-          "The Human is the most endurant mammal.",
-        ]
-    expected:
-      answer: "no"
-    test_case_purpose: explicit_relevance_no
-  - input:
+
+  - case: explicit_evaluation_no
+    input:
       prompt: "I'm sorry, but the given text fragments do not provide any relevant information about molecular pathways associated with cancer."
       system_messages:
         [
@@ -118,8 +118,9 @@ rag_interpretation:
         ]
     expected:
       answer: "decline"
-    test_case_purpose: explicit_evaluation_no
-  - input:
+
+  - case: explicit_evaluation_yes
+    input:
       prompt: "There are several molecular pathways that are associated with cancer, for instance TP53, BRCA1, the STAT inflammatory pathway, and the EGFR pathway."
       system_messages:
         [
@@ -131,8 +132,9 @@ rag_interpretation:
         ]
     expected:
       answer: "answer"
-    test_case_purpose: explicit_evaluation_yes
-  - input:
+
+  - case: implicit_relevance_no
+    input:
       prompt: Which molecular pathways are associated with cancer?
       system_messages:
         [
@@ -144,8 +146,9 @@ rag_interpretation:
         ]
     expected:
       behaviour: "decline"
-    test_case_purpose: implicit_relevance_no
-  - input:
+
+  - case: implicit_relevance_yes
+    input:
       prompt: Which molecular pathways are associated with cancer?
       system_messages:
         [
@@ -157,4 +160,3 @@ rag_interpretation:
         ]
     expected:
       behaviour: "answer"
-    test_case_purpose: implicit_relevance_yes
