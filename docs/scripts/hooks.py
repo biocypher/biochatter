@@ -129,6 +129,8 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     overview[["Model name", "Size", "Version", "Quantisation"]] = overview[
         "Model name"
     ].str.split(":", expand=True)
+    # convert underscores in Size to commas
+    overview["Size"] = overview["Size"].str.replace("_", ",")
     overview = overview[
         [
             "Model name",
