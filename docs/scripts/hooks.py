@@ -125,13 +125,21 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     overview["SD"] = overview.std(axis=1)
     overview = overview.sort_values(by="Mean", ascending=False)
     # split "Model name" at : to get Model name, size, version, and quantisation
-    overview["Model name"] = overview.index
-    overview[["Model name", "Size", "Version", "Quantisation"]] = overview[
-        "Model name"
-    ].str.split(":", expand=True)
+    overview.to_csv(
+        f"{result_files_path}preprocessed_for_frontend/overview.csv",
+        index=True,
+    )
+
+    overview_aggregated = overview
+    overview_aggregated["Model name"] = overview_aggregated.index
+    overview_aggregated[["Model name", "Size", "Version", "Quantisation"]] = (
+        overview_aggregated["Model name"].str.split(":", expand=True)
+    )
     # convert underscores in Size to commas
-    overview["Size"] = overview["Size"].str.replace("_", ",")
-    overview = overview[
+    overview_aggregated["Size"] = overview_aggregated["Size"].str.replace(
+        "_", ","
+    )
+    overview_aggregated = overview_aggregated[
         [
             "Model name",
             "Size",
@@ -140,14 +148,6 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
             "Mean",
             "SD",
         ]
-    ]
-    overview.to_csv(
-        f"{result_files_path}preprocessed_for_frontend/overview.csv",
-        index=False,
-    )
-
-    overview_aggregated = overview[
-        ["Model name", "Size", "Quantisation", "Mean", "SD"]
     ]
     # round mean and sd to 2 decimal places
     overview_aggregated["Mean"] = overview_aggregated["Mean"].round(2)
