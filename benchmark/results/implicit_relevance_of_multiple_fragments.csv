@@ -1,6 +1,8 @@
 model_name,subtask,score,iterations,md5_hash
 gpt-3.5-turbo,implicit_relevance_no,1.0/1,2,b24fb31fd761b0f3e308bebd70ce4277
 gpt-3.5-turbo,implicit_relevance_yes,1.0/1,2,f9d749647929fcb55321c614a3bf8d20
+gpt-4,implicit_relevance_no,1.0/1,2,b24fb31fd761b0f3e308bebd70ce4277
+gpt-4,implicit_relevance_yes,1.0/1,2,f9d749647929fcb55321c614a3bf8d20
 llama-2-chat:13:ggmlv3:q2_K,implicit_relevance_no,1.0/1,2,b24fb31fd761b0f3e308bebd70ce4277
 llama-2-chat:13:ggmlv3:q2_K,implicit_relevance_yes,1.0/1,2,f9d749647929fcb55321c614a3bf8d20
 llama-2-chat:13:ggmlv3:q3_K_M,implicit_relevance_no,0.0/1,2,b24fb31fd761b0f3e308bebd70ce4277
