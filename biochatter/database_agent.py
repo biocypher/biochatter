@@ -38,11 +38,12 @@ class DatabaseAgent:
         """
         db_name = self.connection_args.get("db_name")
         uri = f"{self.connection_args.get('host')}:{self.connection_args.get('port')}"
+        uri = uri if uri.startswith("bolt://") else "bolt://" + uri
         user = self.connection_args.get("user")
         password = self.connection_args.get("password")
         self.driver = nu.Driver(
             db_name=db_name or "neo4j",
-            uri=uri,
+            db_uri=uri,
             user=user,
             password=password,
         )
