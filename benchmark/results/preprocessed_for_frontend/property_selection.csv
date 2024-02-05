@@ -1,4 +1,4 @@
-Model name,Passed test cases,Total test cases,Score,Iterations
+Full model name,Passed test cases,Total test cases,Score,Iterations
 gpt-4,13.0,17.0,0.7647058823529411,2
 gpt-3.5-turbo,11.0,17.0,0.6470588235294118,2
 llama-2-chat:7:ggufv2:Q2_K,4.0,17.0,0.23529411764705882,2

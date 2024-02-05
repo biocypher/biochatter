@@ -1,4 +1,4 @@
-Model name,Passed test cases,Total test cases,Score,Iterations
+Full model name,Passed test cases,Total test cases,Score,Iterations
 gpt-4,11.5,16.0,0.71875,2
 gpt-3.5-turbo,11.0,16.0,0.6875,2
 mixtral-instruct-v0.1:46_7:ggufv2:Q6_K,0.0,16.0,0.0,2

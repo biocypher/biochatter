@@ -1,4 +1,4 @@
-Model name,Passed test cases,Total test cases,Score,Iterations
+Full model name,Passed test cases,Total test cases,Score,Iterations
 mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,12.0,16.0,0.75,2
 mixtral-instruct-v0.1:46_7:ggufv2:Q6_K,12.0,16.0,0.75,2
 mixtral-instruct-v0.1:46_7:ggufv2:Q5_0,12.0,16.0,0.75,2

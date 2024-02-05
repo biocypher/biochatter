@@ -1,4 +1,4 @@
-Model name,property_selection,query_generation,explicit_relevance_of_single_fragments,entity_selection,relationship_selection,end_to_end_query_generation,implicit_relevance_of_multiple_fragments,property_exists,Mean,SD
+Full model name,property_selection,query_generation,explicit_relevance_of_single_fragments,entity_selection,relationship_selection,end_to_end_query_generation,implicit_relevance_of_multiple_fragments,property_exists,Mean,SD
 gpt-4,0.7647058823529411,0.75,1.0,1.0,1.0,0.71875,1.0,1.0,0.9041819852941176,0.12425585940001706
 gpt-3.5-turbo,0.6470588235294118,0.6875,1.0,1.0,1.0,0.6875,1.0,1.0,0.8777573529411764,0.1582457961403944
 llama-2-chat:70:ggufv2:Q4_K_M,0.0,0.5,1.0,0.75,1.0,0.0,1.0,1.0,0.65625,0.41339864235384227
