@@ -57,8 +57,8 @@ nav:
       - Overview: benchmark-overview.md
       - All Results: benchmark-results.md
   - Vignettes:
-      - Retrieval-Augmented Generation (RAG): vignette-rag.md
       - Knowledge Graph RAG: vignette-kg.md
+      - Retrieval-Augmented Generation (RAG): vignette-rag.md
   - API Reference:
       - LLM Connectivity: llm_connect-reference.md
       - Vectorstore: vectorstore-reference.md
