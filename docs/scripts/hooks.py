@@ -66,7 +66,7 @@ def preprocess_results_for_frontend(
         }
     )
 
-    aggregated_scores["Score"] = aggregated_scores.apply(
+    aggregated_scores["Accuracy"] = aggregated_scores.apply(
         lambda row: (
             row["passed_test_cases"] / row["number_test_cases"]
             if row["number_test_cases"] != 0
@@ -89,11 +89,11 @@ def preprocess_results_for_frontend(
         "Full model name",
         "Passed test cases",
         "Total test cases",
-        "Score",
+        "Accuracy",
         "Iterations",
     ]
     results = aggregated_scores[new_order]
-    results = results.sort_values(by="Score", ascending=False)
+    results = results.sort_values(by="Accuracy", ascending=False)
     results.to_csv(
         f"{path}preprocessed_for_frontend/{file_name}",
         index=False,
@@ -116,14 +116,14 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
             f"{result_files_path}preprocessed_for_frontend/{file}"
         )
         file_name_without_extension = os.path.splitext(file)[0]
-        subtask_result[file_name_without_extension] = subtask_result["Score"]
+        subtask_result[file_name_without_extension] = subtask_result["Accuracy"]
         subtask_result.set_index("Full model name", inplace=True)
         subtask_result = subtask_result[file_name_without_extension]
         subtask_results.append(subtask_result)
     overview = pd.concat(subtask_results, axis=1)
-    overview["Mean"] = overview.mean(axis=1)
+    overview["Mean Accuracy"] = overview.mean(axis=1)
     overview["SD"] = overview.std(axis=1)
-    overview = overview.sort_values(by="Mean", ascending=False)
+    overview = overview.sort_values(by="Mean Accuracy", ascending=False)
     # split "Full model name" at : to get Model name, size, version, and quantisation
     overview.to_csv(
         f"{result_files_path}preprocessed_for_frontend/overview.csv",
@@ -158,14 +158,14 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
             "Size",
             "Version",
             "Quantisation",
-            "Mean",
+            "Mean Accuracy",
             "SD",
         ]
     ]
     # round mean and sd to 2 decimal places
-    overview_per_quantisation["Mean"] = overview_per_quantisation["Mean"].round(
-        2
-    )
+    overview_per_quantisation["Mean Accuracy"] = overview_per_quantisation[
+        "Mean Accuracy"
+    ].round(2)
     overview_per_quantisation["SD"] = overview_per_quantisation["SD"].round(2)
     overview_per_quantisation.to_csv(
         f"{result_files_path}preprocessed_for_frontend/overview-quantisation.csv",
@@ -178,16 +178,18 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         ["Model name", "Size"]
     ).agg(
         {
-            "Mean": "mean",
+            "Mean Accuracy": "mean",
             "SD": "mean",
         }
     )
     # round mean and SD to 2 decimal places
-    overview_per_size["Mean"] = overview_per_size["Mean"].round(2)
+    overview_per_size["Mean Accuracy"] = overview_per_size[
+        "Mean Accuracy"
+    ].round(2)
     overview_per_size["SD"] = overview_per_size["SD"].round(2)
     # sort by mean, descending
     overview_per_size = overview_per_size.sort_values(
-        by="Mean", ascending=False
+        by="Mean Accuracy", ascending=False
     )
     overview_per_size.to_csv(
         f"{result_files_path}preprocessed_for_frontend/overview-model.csv",
