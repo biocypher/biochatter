@@ -5,7 +5,7 @@ We need to constantly evaluate the multitude of combinations of individual model
 To this end, we are maintaining a living benchmarking framework that allows us to continuously compare the performance of different models and configurations on a variety of tasks.
 
 The benchmark uses the pytest framework to orchestrate the evaluation of a number of models on a number of tasks.
-The benchmark is run on a regular basis, and the results are published on the [BioChatter website](https://biochatter.org/benchmark-overview/).
+The benchmark is run on a regular basis, and the results are published in the [benchmark section](https://biochatter.org/benchmark/).
 The benchmarking suite can be found in the `benchmark` directory of the BioChatter repository.
 It can be executed using standard pytest syntax, e.g., `poetry run pytest benchmark`.
 As default behavior it checks, which test cases have already been executed and only executes the tests that have not been executed yet.
