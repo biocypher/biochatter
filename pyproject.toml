@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "biochatter"
-version = "0.4.5"
+version = "0.4.6"
 description = "Backend library for conversational AI in biomedicine"
 authors = [
     "Sebastian Lobentanzer <sebastian.lobentanzer@gmail.com>",
