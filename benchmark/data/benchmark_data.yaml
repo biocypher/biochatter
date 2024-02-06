@@ -12,7 +12,7 @@ biocypher_query_generation:
   - case: single_word
     input:
       kg_path: test_schema_info.yaml
-      prompt: Which genes are associated with mucoviscidosis ?
+      prompt: Which genes are associated with mucoviscidosis?
     expected:
       entities: ["Gene", "Disease"]
       relationships: ["GeneToPhenotypeAssociation"]
