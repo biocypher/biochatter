@@ -69,6 +69,9 @@ def _load_test_data_from_this_repository():
                         # generate hash for each case
                         yaml_data = _hash_each_case(yaml_data)
 
+                        # delete benchmark results that have outdated hashes
+                        _delete_outdated_benchmark_results(yaml_data)
+
                     test_data[file_path.replace("./benchmark/", "./")] = (
                         yaml_data
                     )
@@ -77,6 +80,41 @@ def _load_test_data_from_this_repository():
                     print(exc)
 
     return test_data
+
+
+def _delete_outdated_benchmark_results(data_dict: dict) -> None:
+    """
+    Delete outdated benchmark results.
+    Opens the corresponding result file for each test and deletes the results
+    that have hashes that are not in the current test data.
+
+    Args:
+        yaml_data (dict): The yaml data.
+    """
+
+    # get all current hashes for comparison
+    current_hashes = []
+    for key in data_dict.keys():
+        if isinstance(data_dict[key], list):
+            for i in range(len(data_dict[key])):
+                if isinstance(data_dict[key][i], dict):
+                    current_hashes.append(data_dict[key][i]["hash"])
+
+    # get all result files
+    result_files = [
+        f"benchmark/results/{file}"
+        for file in os.listdir("benchmark/results")
+        if file.endswith(".csv")
+    ]
+
+    # delete outdated results
+    for file in result_files:
+        result_file = pd.read_csv(file, header=0)
+        result_hashes = result_file["hash"].to_list()
+        for hash in result_hashes:
+            if hash not in current_hashes:
+                result_file = result_file[result_file["hash"] != hash]
+        result_file.to_csv(file, index=False)
 
 
 def _hash_each_case(data_dict: dict) -> dict:
