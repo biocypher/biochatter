@@ -12,7 +12,9 @@ Settings` dialog.
 For the demonstration purposes of this vignette, we include a demo KG based on
 an open-source dataset of crime statistics in Manchester, because it allows us
 to redistribute the KG due to its small size and public domain licence, and
-because it is easily understood. This is the schema of the KG:
+because it is easily understood. This is non-trivial for most biomedical
+datasets; however, we are currently working on a synthetic biomedical example to
+extend this vignette. This is the schema of the demo KG:
 
 ```mermaid
 graph LR;
