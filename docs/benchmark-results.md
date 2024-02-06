@@ -31,7 +31,7 @@ Individual steps of the query generation process are tested separately, as well 
 
     {{ read_csv('benchmark/results/preprocessed_for_frontend/end_to_end_query_generation.csv', colalign=("center","center","center","center","center")) }}
 
-## Retrieval Augmented Generation (RAG)
+## Retrieval-Augmented Generation (RAG)
 
 In this set of tasks, we test LLM abilities to generate answers to a given question using a RAG agent, or to judge the relevance of a RAG fragment to a given question.
 Instructions can be explicit ("is this fragment relevant to the question?") or implicit (just asking the question without instructions and evaluating whether the model responds with 'not enough information given').

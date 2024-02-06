@@ -1,7 +1,7 @@
-# Retrieval Augmented Generation
+# Retrieval-Augmented Generation
 
 To connect to a vector database for using semantic similarity search and
-retrieval augmented generation (RAG), we provide an implementation that connects
+retrieval-augmented generation (RAG), we provide an implementation that connects
 to a [Milvus](https://milvus.io) instance (local or remote).  These functions
 are provided by the modules `vectorstore.py` (for performing embeddings) and `vectorstore_agent.py` (for maintaining the
 connection and search).

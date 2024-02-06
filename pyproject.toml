@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "biochatter"
-version = "0.4.0"
+version = "0.4.4"
 description = "Backend library for conversational AI in biomedicine"
 authors = [
     "Sebastian Lobentanzer <sebastian.lobentanzer@gmail.com>",
@@ -17,7 +17,7 @@ openai = "^1.1.0"
 pymupdf = "^1.22.3"
 pydantic = "1.10.13"
 pymilvus = "2.2.8"
-tiktoken = "^0.4.0"
+tiktoken = "^0.5.2"
 nltk = "^3.8.1"
 redis = "^4.5.5"
 retry = "^0.9.2"

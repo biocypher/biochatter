@@ -48,7 +48,7 @@ nav:
   - Features:
       - Basic Usage - Chat: chat.md
       - Connecting Knowledge Graphs: kgs.md
-      - Retrieval Augmented Generation: rag.md
+      - Retrieval-Augmented Generation: rag.md
       - Open-source and Local LLMs: open-llm.md
       - LLM in your Browser - WebAssembly: wasm.md
       - Benchmarking: benchmark.md
@@ -56,6 +56,8 @@ nav:
   - Benchmark:
       - Overview: benchmark-overview.md
       - All Results: benchmark-results.md
+  - Vignettes:
+      - Retrieval-Augmented Generation: vignette-rag.md
   - API Reference:
       - LLM Connectivity: llm_connect-reference.md
       - Vectorstore: vectorstore-reference.md
