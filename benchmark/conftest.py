@@ -30,22 +30,20 @@ XINFERENCE_MODELS = {
             13,
             70,
         ],
-        "model_format": "ggmlv3",
+        "model_format": "ggufv2",
         "quantization": [
-            "q2_K",
-            # "q3_K_L",
-            "q3_K_M",
-            # "q3_K_S",
-            "q4_0",
-            "q4_1",
-            "q4_K_M",
-            "q4_K_S",
-            "q5_0",
-            # "q5_1",
-            "q5_K_M",
-            # "q5_K_S",
-            "q6_K",
-            "q8_0",
+            "Q2_K",
+            # "Q3_K_S",
+            "Q3_K_M",
+            # "Q3_K_L",
+            # "Q4_0",
+            # "Q4_K_S",
+            "Q4_K_M",
+            # "Q5_0",
+            # "Q5_K_S",
+            "Q5_K_M",
+            "Q6_K",
+            "Q8_0",
         ],
     },
     "mixtral-instruct-v0.1": {
@@ -55,12 +53,12 @@ XINFERENCE_MODELS = {
         "model_format": "ggufv2",
         "quantization": [
             "Q2_K",
-            # "Q3_K_M",
-            "Q4_0",
+            "Q3_K_M",
+            # "Q4_0",
             "Q4_K_M",
             "Q5_0",
             # "Q5_K_M",
-            # "Q6_K",
+            "Q6_K",
             "Q8_0",
         ],
     },
@@ -81,6 +79,21 @@ BENCHMARKED_MODELS.sort()
 
 # Xinference IP and port
 BENCHMARK_URL = "http://localhost:9997"
+
+
+def pytest_collection_modifyitems(items):
+    """
+    Pytest hook function to modify the collected test items.
+    Called once after collection has been performed.
+
+    Used here to order items by their `callspec.id` (which starts with the
+    model name and configuration) to ensure running all tests for one model
+    before moving to the next model.
+    """
+
+    items.sort(
+        key=lambda item: (item.callspec.id if hasattr(item, "callspec") else "")
+    )
 
 
 # parameterise tests to run for each model
@@ -249,25 +262,27 @@ def result_files():
         if file.endswith(".csv")
     ]
     result_files = {}
+    result_columns = [
+        "model_name",
+        "subtask",
+        "score",
+        "iterations",
+        "md5_hash",
+    ]
     for file in RESULT_FILES:
         try:
             result_file = pd.read_csv(file, header=0)
         except (pd.errors.EmptyDataError, FileNotFoundError):
             result_file = pd.DataFrame(
-                columns=["model_name", "subtask", "score", "iterations"]
+                columns=result_columns,
             )
             result_file.to_csv(file, index=False)
 
         if not np.array_equal(
             result_file.columns,
-            ["model_name", "subtask", "score", "iterations"],
+            result_columns,
         ):
-            result_file.columns = [
-                "model_name",
-                "subtask",
-                "score",
-                "iterations",
-            ]
+            result_file.columns = result_columns
 
         result_files[file] = result_file
 
@@ -281,36 +296,21 @@ def pytest_generate_tests(metafunc):
     If fixture is part of test declaration, the test is parametrized.
     """
     # Load the data file
-    data_file = BENCHMARK_DATASET["./data/benchmark_data.csv"]
-    data_file["index"] = data_file.index
-
-    # Initialize a dictionary to collect rows for each test type
-    test_rows = {
-        "biocypher_query_generation": [],
-        "rag_interpretation": [],
-        "text_extraction": [],
-    }
-
-    # Iterate over each row in the DataFrame
-    for index, row in data_file.iterrows():
-        test_type = row["test_type"]
-        if test_type in test_rows:
-            # Add the row to the list for this test type
-            test_rows[test_type].append(row)
+    data_file = BENCHMARK_DATASET["./data/benchmark_data.yaml"]
 
     # Parametrize the fixtures with the collected rows
     if "test_data_biocypher_query_generation" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_biocypher_query_generation",
-            test_rows["biocypher_query_generation"],
+            data_file["biocypher_query_generation"],
         )
     if "test_data_rag_interpretation" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_rag_interpretation",
-            test_rows["rag_interpretation"],
+            data_file["rag_interpretation"],
         )
     if "test_data_text_extraction" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_text_extraction",
-            test_rows["text_extraction"],
+            data_file["text_extraction"],
         )

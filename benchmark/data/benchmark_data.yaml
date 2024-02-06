@@ -1,106 +1,162 @@
-# could make sense to divide in general categories, e.g.:
-# file: test_schema_info.yaml (optional)
-# input: prompt (user question, system messages)
-# expected: entities etc.
-# assertion method? (string to evaluate, e.g. "assert 'Gene' in entities")
+# Top-level keys: benchmark modules
+# Values: list of dictionaries, each containing a test case
+#
+# Test case keys:
+# - input (for creating the test)
+# - expected (for asserting ourcomes and generating a score)
+# - case (for categorizing the test case)
+#
+# If any input is a dictionary itself, it will be expanded into separate test
+# cases, using the top-level key to create a concatenated test case purpose.
 biocypher_query_generation:
-  - kg_path: test_schema_info.yaml
-    prompt: Which genes are associated with mucoviscidosis?
-    entities: ["Gene", "Disease"]
-    relationships: ["GeneToPhenotypeAssociation"]
-    relationship_labels:
-      PERTURBED:
-        source: Disease
-        target: ["Protein", "Gene"]
-    properties:
-      Disease:
-        name: {}
-        ICD10: {}
-        DSM5: {}
-      Gene:
-        name: true
-      GeneToPhenotypeAssociation:
-        score: true
-        source: true
-        evidence: true
-    parts_of_query:
-      [
-        "MATCH",
-        "RETURN",
-        "Gene",
-        "Disease",
-        "mucoviscidosis",
-        "MATCH ([a-zA-Z]*:Gene)<-[[a-zA-Z]*:PERTURBED]-([a-zA-Z]*:Disease.*)|MATCH ([a-zA-Z]*:Disease.*)-[[a-zA-Z]*:PERTURBED]->([a-zA-Z]*:Gene)",
-        "WHERE",
-        "{name:}",
-      ]
-    test_case_purpose: single_word
-  - kg_path: test_schema_info.yaml
-    prompt: Which genes are expressed in fibroblasts?
-    entities: ["Gene", "CellType"]
-    relationships: ["GeneExpressedInCellType"]
-    relationship_labels:
-      GENE_EXPRESSED_IN_CELL_TYPE:
-        source: Gene
-        target: ["CellType"]
-    properties:
-      CellType:
-        cell_type_name: {}
-      Gene: ["id", "name"]
-      GeneExpressedInCellType: ["expression_level"]
-    parts_of_query:
-      [
-        "MATCH",
-        "RETURN",
-        "Gene",
-        "CellType",
-        "fibroblast",
-        "MATCH ([a-zA-Z]*:Gene)-[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE]->([a-zA-Z]*:CellType.*)|MATCH ([a-zA-Z]*:CellType.*)<-[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE]-([a-zA-Z]*:Gene)",
-        "WHERE",
-        "{name:}",
-      ]
-    test_case_purpose: multi_word
+  - case: single_word
+    input:
+      kg_path: test_schema_info.yaml
+      prompt: Which genes are associated with mucoviscidosis ?
+    expected:
+      entities: ["Gene", "Disease"]
+      relationships: ["GeneToPhenotypeAssociation"]
+      relationship_labels:
+        PERTURBED:
+          source: Disease
+          target: ["Protein", "Gene"]
+      properties:
+        Disease:
+          name: {}
+          ICD10: {}
+          DSM5: {}
+        Gene:
+          name: true
+        GeneToPhenotypeAssociation:
+          score: true
+          source: true
+          evidence: true
+      parts_of_query:
+        [
+          "MATCH",
+          "RETURN",
+          "Gene",
+          "Disease",
+          "mucoviscidosis",
+          "MATCH ([a-zA-Z]*:Gene)<-[[a-zA-Z]*:PERTURBED]-([a-zA-Z]*:Disease.*)|MATCH ([a-zA-Z]*:Disease.*)-[[a-zA-Z]*:PERTURBED]->([a-zA-Z]*:Gene)",
+          "WHERE",
+          "{name:}",
+        ]
+
+  - case: multi_word
+    input:
+      kg_path: test_schema_info.yaml
+      prompt: Which genes are expressed in fibroblasts?
+    expected:
+      entities: ["Gene", "CellType"]
+      relationships: ["GeneExpressedInCellType"]
+      relationship_labels:
+        GENE_EXPRESSED_IN_CELL_TYPE:
+          source: Gene
+          target: ["CellType"]
+      properties:
+        CellType:
+          cell_type_name: {}
+        Gene: ["id", "name"]
+        GeneExpressedInCellType: ["expression_level"]
+      parts_of_query:
+        [
+          "MATCH",
+          "RETURN",
+          "Gene",
+          "CellType",
+          "fibroblast",
+          "MATCH ([a-zA-Z]*:Gene)-[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE]->([a-zA-Z]*:CellType.*)|MATCH ([a-zA-Z]*:CellType.*)<-[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE]-([a-zA-Z]*:Gene)",
+          "WHERE",
+          "{name:}",
+        ]
+
 rag_interpretation:
-  - prompt: Which molecular pathways are associated with cancer?
-    entities: ["no"]
-    test_case_purpose: explicit
-    system_messages:
-      [
-        "You will receive a text fragment to help answer the user's question. Your task is to judge these text fragments for relevance to the user's question, and return either 'yes' or 'no'. Here is the fragment: ",
-        "The earth is a globe.",
-      ]
-  - prompt: Which molecular pathways are associated with cancer?
-    entities: ["yes"]
-    test_case_purpose: explicit
-    system_messages:
-      [
-        "You will receive a text fragment to help answer the user's question. Your task is to judge these text fragments for relevance to the user's question, and return either 'yes' or 'no'. Here is the fragment: ",
-        "TP53 is important in the regulation of cellular death.",
-        "The EGFR pathway is deregulated in a number of cancers.",
-      ]
-  - prompt: Which molecular pathways are associated with cancer?
-    entities: ["yes"]
-    test_case_purpose: explicit
-    system_messages:
-      [
-        "You will receive a text fragment to help answer the user's question. Your task is to judge these text fragments for relevance to the user's question, and return either 'yes' or 'no'. Here is the fragment: ",
-        "The EGFR pathway is deregulated in a number of cancers.",
-      ]
-  - prompt: Which molecular pathways are associated with cancer?
-    entities: ["no"]
-    test_case_purpose: explicit
-    system_messages:
-      [
-        "You will receive a text fragment to help answer the user's question. Your task is to judge these text fragments for relevance to the user's question, and return either 'yes' or 'no'. Here is the fragment: ",
-        "The Human is the most endurant mammal.",
-      ]
-  - prompt: Which molecular pathways are associated with cancer?
-    test_case_purpose: implicit
-    system_messages:
-      [
-        "You will receive a number of text fragments to help answer the user's question. Your task is to use the information in these text fragments for answering the user's question, if they are relevant. Here are the fragments: ",
-        "The earth is a globe.",
-        "The Human is the most endurant mammal.",
-        "America was discovered by Columbus.",
-        "The wavelength of red light is longer than that of blue light.",
-      ]
+  - case: explicit_relevance_no
+    input:
+      prompt: Which molecular pathways are associated with cancer?
+      system_messages:
+        simple:
+          [
+            "You will receive a text fragment to help answer the user's question. Your task is to judge this text fragment for relevance to the user's question, and return either 'yes' or 'no'! Here is the fragment: ",
+            "The earth is a globe.",
+          ]
+        more_explicit:
+          [
+            "You will receive a text fragment to help answer the user's question. Your task is to judge this text fragment for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
+            "The earth is a globe.",
+          ]
+        repeat_instruction:
+          [
+            "You will receive a text fragment to help answer the user's question. You should only respond with 'yes' or 'no' without additional words. Your task is to judge this text fragment for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
+            "The earth is a globe.",
+          ]
+    expected:
+      answer: "no"
+
+  - case: explicit_relevance_yes
+    input:
+      prompt: Which molecular pathways are associated with cancer?
+      system_messages:
+        [
+          "You will receive a text fragment to help answer the user's question. Your task is to judge this text fragment for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
+          "The EGFR pathway is deregulated in a number of cancers.",
+        ]
+    expected:
+      answer: "yes"
+
+  - case: explicit_evaluation_no
+    input:
+      prompt: "I'm sorry, but the given text fragments do not provide any relevant information about molecular pathways associated with cancer."
+      system_messages:
+        [
+          "You will receive a statement as an answer to this question: ",
+          "Which molecular pathways are associated with cancer? ",
+          "If the statement is an answer to the question, please type 'answer'. ",
+          "If the statement declines to answer to the question or apologises, giving the reason of lack of relevance of the given text fragments, please type 'decline'. ",
+          "Do not type anything except these two options. Here is the statement: ",
+        ]
+    expected:
+      answer: "decline"
+
+  - case: explicit_evaluation_yes
+    input:
+      prompt: "There are several molecular pathways that are associated with cancer, for instance TP53, BRCA1, the STAT inflammatory pathway, and the EGFR pathway."
+      system_messages:
+        [
+          "You will receive a statement as an answer to this question: ",
+          "Which molecular pathways are associated with cancer? ",
+          "If the statement is an answer to the question, please type 'answer'. ",
+          "If the statement declines to answer to the question or apologises, giving the reason of lack of relevance of the given text fragments, please type 'decline'. ",
+          "Do not type anything except these two options. Here is the statement: ",
+        ]
+    expected:
+      answer: "answer"
+
+  - case: implicit_relevance_no
+    input:
+      prompt: Which molecular pathways are associated with cancer?
+      system_messages:
+        [
+          "You will receive a number of text fragments to help answer the user's question. Your task is to use the information in these text fragments for answering the user's question, if they are relevant. Here are the fragments: ",
+          "The earth is a globe.",
+          "The Human is the most endurant mammal.",
+          "America was discovered by Columbus.",
+          "The wavelength of red light is longer than that of blue light.",
+        ]
+    expected:
+      behaviour: "decline"
+
+  - case: implicit_relevance_yes
+    input:
+      prompt: Which molecular pathways are associated with cancer?
+      system_messages:
+        [
+          "You will receive a number of text fragments to help answer the user's question. Your task is to use the information in these text fragments for answering the user's question, if they are relevant. Here are the fragments: ",
+          "TP53, when mutated, often is a driving mutation in cancer.",
+          "BRCA1 is an important genetic regulator of breast cancer.",
+          "The STAT inflammatory pathway is often perturbed in cancers.",
+          "The EGFR pathway can lead to excessive growth of cancer cells.",
+        ]
+    expected:
+      behaviour: "answer"

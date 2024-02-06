@@ -11,65 +11,38 @@ from .benchmark_utils import (
 )
 
 
-def get_test_data(test_data_rag_interpretation: list) -> tuple:
-    """
-
-    Helper function to unpack the test data from the
-    test_data_rag_interpretation fixture.
-
-    Args:
-        test_data_rag_interpretation (list): The test data from the
-        test_data_rag_interpretation fixture
-
-    Returns:
-        tuple: The unpacked test data
-    """
-    return (
-        test_data_rag_interpretation["system_messages"],
-        test_data_rag_interpretation["prompt"],
-        test_data_rag_interpretation["entities"],
-        test_data_rag_interpretation["test_case_purpose"],
-        test_data_rag_interpretation["index"],
-    )
-
-
 def test_explicit_relevance_of_single_fragments(
     model_name,
     test_data_rag_interpretation,
     conversation,
     multiple_testing,
 ):
-    (
-        system_messages,
-        prompt,
-        expected_answers,
-        test_case_purpose,
-        test_case_index,
-    ) = get_test_data(test_data_rag_interpretation)
+    yaml_data = test_data_rag_interpretation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    subtask = f"{str(test_case_index)}_{test_case_purpose}"
-    if not test_case_purpose == "explicit":
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
+    if "explicit" not in yaml_data["case"]:
         pytest.skip(
-            f"test case {test_case_purpose} not supported for {subtask} benchmark"
+            f"test case {yaml_data['case']} not supported for {task} benchmark"
         )
-    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
-        [conversation.append_system_message(m) for m in system_messages]
-        response, _, _ = conversation.query(prompt)
-        answers = ensure_iterable(response.split(","))
+        [
+            conversation.append_system_message(m)
+            for m in yaml_data["input"]["system_messages"]
+        ]
+        response, _, _ = conversation.query(yaml_data["input"]["prompt"])
+
+        # lower case, remove punctuation
+        response = (
+            response.lower().replace(".", "").replace("?", "").replace("!", "")
+        ).strip()
 
         score = []
 
-        if len(answers) == len(expected_answers):
-            for index, answer in enumerate(answers):
-                if answer == expected_answers[index]:
-                    score.append(True)
-                else:
-                    score.append(False)
-        else:
-            [score.append(False) for _ in expected_answers]
+        score.append(response == yaml_data["expected"]["answer"])
 
         return calculate_test_score(score)
 
@@ -77,9 +50,10 @@ def test_explicit_relevance_of_single_fragments(
 
     write_results_to_file(
         model_name,
-        subtask,
+        yaml_data["case"],
         f"{mean_score}/{max}",
         f"{n_iterations}",
+        yaml_data["hash"],
         get_result_file_path(task),
     )
 
@@ -91,35 +65,45 @@ def test_implicit_relevance_of_multiple_fragments(
     evaluation_conversation,
     multiple_testing,
 ):
-    (
-        system_messages,
-        prompt,
-        expected_answers,
-        test_case_purpose,
-        test_case_index,
-    ) = get_test_data(test_data_rag_interpretation)
+    yaml_data = test_data_rag_interpretation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    subtask = f"{str(test_case_index)}_{test_case_purpose}"
-    if not test_case_purpose == "implicit":
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
+    if "implicit" not in yaml_data["case"]:
         pytest.skip(
-            f"test case {test_case_purpose} not supported for {subtask} benchmark"
+            f"test case {yaml_data['case']} not supported for {task} benchmark"
         )
-    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
-        [conversation.append_system_message(m) for m in system_messages]
-        response, _, _ = conversation.query(prompt)
+        [
+            conversation.append_system_message(m)
+            for m in yaml_data["input"]["system_messages"]
+        ]
+        response, _, _ = conversation.query(yaml_data["input"]["prompt"])
+
+        msg = (
+            "You will receive a statement as an answer to this question: "
+            f"{yaml_data['input']['prompt']} "
+            "If the statement is an answer to the question, please type 'answer'. "
+            "If the statement declines to answer to the question or apologises, giving the reason of lack of relevance of the given text fragments, please type 'decline'. "
+            "Do not type anything except these two options. Here is the statement: "
+        )
 
         # evaluator LLM
-        evaluation_conversation.append_system_message(
-            "Evaluate the following response regarding whether it acknowledges the irrelevance of provided information to the question. "
-            "Answer 'yes' if the response acknowledges the irrelevance of provided information to the question, 'no' if the response attempts to answer the question. "
-        )
+        evaluation_conversation.append_system_message(msg)
 
         eval, _, _ = evaluation_conversation.query(response)
 
-        score = [True] if eval.lower() == "yes" else [False]
+        # lower case, remove punctuation
+        eval = (
+            eval.lower().replace(".", "").replace("?", "").replace("!", "")
+        ).strip()
+
+        score = (
+            [True] if eval == yaml_data["expected"]["behaviour"] else [False]
+        )
 
         return calculate_test_score(score)
 
@@ -127,8 +111,9 @@ def test_implicit_relevance_of_multiple_fragments(
 
     write_results_to_file(
         model_name,
-        subtask,
+        yaml_data["case"],
         f"{mean_score}/{max}",
         f"{n_iterations}",
+        yaml_data["hash"],
         get_result_file_path(task),
     )

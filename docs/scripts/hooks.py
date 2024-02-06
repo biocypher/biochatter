@@ -66,13 +66,17 @@ def preprocess_results_for_frontend(
         }
     )
 
-    aggregated_scores["Score"] = (
-        aggregated_scores["passed_test_cases"]
-        / aggregated_scores["number_test_cases"]
+    aggregated_scores["Score"] = aggregated_scores.apply(
+        lambda row: (
+            row["passed_test_cases"] / row["number_test_cases"]
+            if row["number_test_cases"] != 0
+            else 0
+        ),
+        axis=1,
     )
 
-    aggregated_scores["Model name"] = aggregated_scores.index.get_level_values(
-        "model_name"
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
     )
     aggregated_scores["Passed test cases"] = aggregated_scores[
         "passed_test_cases"
@@ -82,7 +86,7 @@ def preprocess_results_for_frontend(
     ]
     aggregated_scores["Iterations"] = aggregated_scores["iterations"]
     new_order = [
-        "Model name",
+        "Full model name",
         "Passed test cases",
         "Total test cases",
         "Score",
@@ -113,17 +117,83 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         )
         file_name_without_extension = os.path.splitext(file)[0]
         subtask_result[file_name_without_extension] = subtask_result["Score"]
-        subtask_result.set_index("Model name", inplace=True)
+        subtask_result.set_index("Full model name", inplace=True)
         subtask_result = subtask_result[file_name_without_extension]
         subtask_results.append(subtask_result)
     overview = pd.concat(subtask_results, axis=1)
     overview["Mean"] = overview.mean(axis=1)
+    overview["SD"] = overview.std(axis=1)
     overview = overview.sort_values(by="Mean", ascending=False)
+    # split "Full model name" at : to get Model name, size, version, and quantisation
     overview.to_csv(
-        f"{result_files_path}preprocessed_for_frontend/overview.csv", index=True
-    )
-    overview_aggregated = overview[["Mean"]]
-    overview_aggregated.to_csv(
-        f"{result_files_path}preprocessed_for_frontend/overview-aggregated.csv",
+        f"{result_files_path}preprocessed_for_frontend/overview.csv",
         index=True,
     )
+
+    overview_per_quantisation = overview
+    overview_per_quantisation["Full model name"] = (
+        overview_per_quantisation.index
+    )
+    overview_per_quantisation[
+        ["Model name", "Size", "Version", "Quantisation"]
+    ] = overview_per_quantisation["Full model name"].str.split(":", expand=True)
+    # convert underscores in Size to commas
+    overview_per_quantisation["Size"] = overview_per_quantisation[
+        "Size"
+    ].str.replace("_", ",")
+    # add size 175 for gpt-3.5-turbo and Unknown for gpt-4
+    overview_per_quantisation["Size"] = overview_per_quantisation.apply(
+        lambda row: (
+            "175" if row["Model name"] == "gpt-3.5-turbo" else row["Size"]
+        ),
+        axis=1,
+    )
+    overview_per_quantisation["Size"] = overview_per_quantisation.apply(
+        lambda row: "Unknown" if row["Model name"] == "gpt-4" else row["Size"],
+        axis=1,
+    )
+    overview_per_quantisation = overview_per_quantisation[
+        [
+            "Model name",
+            "Size",
+            "Version",
+            "Quantisation",
+            "Mean",
+            "SD",
+        ]
+    ]
+    # round mean and sd to 2 decimal places
+    overview_per_quantisation["Mean"] = overview_per_quantisation["Mean"].round(
+        2
+    )
+    overview_per_quantisation["SD"] = overview_per_quantisation["SD"].round(2)
+    overview_per_quantisation.to_csv(
+        f"{result_files_path}preprocessed_for_frontend/overview-quantisation.csv",
+        index=False,
+    )
+
+    # group by model name and size, aggregate different quantisations
+    # keep models that do not have sizes
+    overview_per_size = overview_per_quantisation.groupby(
+        ["Model name", "Size"]
+    ).agg(
+        {
+            "Mean": "mean",
+            "SD": "mean",
+        }
+    )
+    # round mean and SD to 2 decimal places
+    overview_per_size["Mean"] = overview_per_size["Mean"].round(2)
+    overview_per_size["SD"] = overview_per_size["SD"].round(2)
+    # sort by mean, descending
+    overview_per_size = overview_per_size.sort_values(
+        by="Mean", ascending=False
+    )
+    overview_per_size.to_csv(
+        f"{result_files_path}preprocessed_for_frontend/overview-model.csv",
+        index=True,
+    )
+
+
+if __name__ == "__main__":
+    on_pre_build(None)
