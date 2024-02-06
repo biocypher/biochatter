@@ -35,12 +35,12 @@ biocypher_query_generation:
         [
           "MATCH",
           "RETURN",
-          "Gene",
-          "Disease",
-          "mucoviscidosis",
-          "MATCH ([a-zA-Z]*:Gene)<-[[a-zA-Z]*:PERTURBED]-([a-zA-Z]*:Disease.*)|MATCH ([a-zA-Z]*:Disease.*)-[[a-zA-Z]*:PERTURBED]->([a-zA-Z]*:Gene)",
-          "WHERE",
-          "{name:}",
+          "([a-zA-Z]*:Gene)",
+          "([a-zA-Z]*:Disease)",
+          "[a-zA-Z]*:PERTURBED]",
+          "[Mm]ucoviscidosis",
+          "\\(([a-zA-Z]*:Gene)\\)<-[[a-zA-Z]*:PERTURBED]-|-[[a-zA-Z]*:PERTURBED]->\\(([a-zA-Z]*:Gene)\\)",
+          "WHERE [a-zA-Z]*\\.name|{name:",
         ]
 
   - case: multi_word
@@ -63,12 +63,11 @@ biocypher_query_generation:
         [
           "MATCH",
           "RETURN",
-          "Gene",
-          "CellType",
-          "fibroblast",
-          "MATCH ([a-zA-Z]*:Gene)-[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE]->([a-zA-Z]*:CellType.*)|MATCH ([a-zA-Z]*:CellType.*)<-[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE]-([a-zA-Z]*:Gene)",
-          "WHERE",
-          "{name:}",
+          "([a-zA-Z]*:Gene)",
+          "([a-zA-Z]*:CellType.*)",
+          "[Ff]ibroblast",
+          "\\(([a-zA-Z]*:Gene)\\)-[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE]->\\(([a-zA-Z]*:CellType.*)\\)|\\(([a-zA-Z]*:CellType.*)\\)<-[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE]-\\(([a-zA-Z]*:Gene)\\)",
+          "WHERE [a-zA-Z]*\\.cell_type_name|{cell_type_name:",
         ]
 
 rag_interpretation:

@@ -32,7 +32,7 @@ def get_prompt_engine(
     )
 
 
-def test_naive_query_generation(
+def test_naive_query_generation_using_schema(
     model_name,
     test_data_biocypher_query_generation,
     conversation,
@@ -513,3 +513,20 @@ def test_property_exists(
         yaml_data["hash"],
         get_result_file_path(task),
     )
+
+
+@pytest.mark.skip(reason="Helper function for testing regex patterns")
+def test_regex(test_data_biocypher_query_generation):
+    yaml_data = test_data_biocypher_query_generation
+    query = 'MATCH (g:Gene)-[:GENE_EXPRESSED_IN_CELL_TYPE]->(c:CellType) WHERE c.cell_type_name = "fibroblast" RETURN g.id, g.name, c.cell_type_name, c.expression_level ORDER BY c.expression_level DESC'
+    score = []
+    for expected_part_of_query in yaml_data["expected"]["parts_of_query"]:
+        if isinstance(expected_part_of_query, tuple):
+            score.append(
+                expected_part_of_query[0] in query
+                or expected_part_of_query[1] in query
+            )
+        else:
+            score.append((re.search(expected_part_of_query, query) is not None))
+
+        assert True
