@@ -1,7 +1,9 @@
+import json
 import re
 import inspect
 
 import pytest
+import yaml
 
 from biochatter.prompts import BioCypherPromptEngine
 from .conftest import calculate_test_score
@@ -27,6 +29,60 @@ def get_prompt_engine(
     """
     return create_prompt_engine(
         kg_schema_path=f"./benchmark/data/{kg_schema_file_name}"
+    )
+
+
+def test_naive_query_generation(
+    model_name,
+    test_data_biocypher_query_generation,
+    conversation,
+    multiple_testing,
+):
+    yaml_data = test_data_biocypher_query_generation
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
+    with open(f"./benchmark/data/{yaml_data['input']['kg_path']}", "r") as f:
+        schema = yaml.safe_load(f)
+
+    def run_test():
+        conversation.reset()  # needs to be reset for each test
+
+        conversation.append_system_message(
+            "You are a database expert. Please write a Cypher query to "
+            "retrieve information for the user. The schema of the graph is "
+            "defined as follows: "
+        )
+        conversation.append_system_message(json.dumps(schema, indent=2))
+        conversation.append_system_message(
+            "Only return the query, nothing else."
+        )
+
+        query, _, _ = conversation.query(yaml_data["input"]["prompt"])
+
+        score = []
+        for expected_part_of_query in yaml_data["expected"]["parts_of_query"]:
+            if isinstance(expected_part_of_query, tuple):
+                score.append(
+                    expected_part_of_query[0] in query
+                    or expected_part_of_query[1] in query
+                )
+            else:
+                score.append(
+                    (re.search(expected_part_of_query, query) is not None)
+                )
+        return calculate_test_score(score)
+
+    mean_score, max, n_iterations = multiple_testing(run_test)
+
+    write_results_to_file(
+        model_name,
+        yaml_data["case"],
+        f"{mean_score}/{max}",
+        f"{n_iterations}",
+        yaml_data["hash"],
+        get_result_file_path(task),
     )
 
 
