@@ -1,4 +1,4 @@
-# Vignette: Retrieval-Augmented Generation
+# Vignette: Retrieval-Augmented Generation (RAG)
 
 This vignette demonstrates the RAG module of BioChatter as used by the
 BioChatter Next application. This basic use case involves an LLM manuscript
@@ -76,19 +76,19 @@ database instance, free of charge at
 
 ### BioChatter RAG
 
-#### Contextual Prompt:
+#### Contextual Prompt
 You are an assistant to a biomedical researcher.
 
-#### Contextual Prompt:
+#### Contextual Prompt
 You have access to text fragments from one or multiple scientific manuscripts, which were retrieved by their semantic similarity to the user's question.
 
-#### Contextual Prompt:
+#### Contextual Prompt
 Your task is to help the user understand the manuscripts and their relevance to their questions. Be concise in your explanations, provide quotes from the manuscripts where appropriate, and be open about limitations in cases where the text does not contain pertinent information.
 
-#### Message From You:
+#### Message From You
 What is known about the CFTR protein in resistance to ovarian cancer?
 
-#### Message From BioChatter:
+#### Message From BioChatter
 Based on the provided information, there are several studies that suggest a potential role of the CFTR (Cystic Fibrosis Transmembrane Conductance Regulator) protein in resistance to ovarian cancer. Here are some key findings from the referenced manuscripts:
 
 1. Gene expression profiling of ovarian tumors before and after chemotherapy revealed molecular signatures of chemoresistant tumors (M, et al., 2006). This study did not specifically mention CFTR, but it provides insights into the molecular changes associated with chemoresistance.
@@ -107,10 +107,10 @@ Based on the provided information, there are several studies that suggest a pote
 
 It is important to note that while these studies suggest a potential association between CFTR and resistance to ovarian cancer, the exact mechanisms and clinical implications are still being investigated. Further research is needed to fully understand the role of CFTR in ovarian cancer resistance.
 
-#### Message From You:
+#### Message From You
 Tell me more about the studies of aggression and knockdown of CFTR in vivo.
 
-#### Message From BioChatter:
+#### Message From BioChatter
 Based on the provided information, there are two relevant studies regarding the aggression and knockdown of CFTR in ovarian cancer:
 
 1. The study by Wu et al. (2013) investigated the constitutive activation of nuclear factor κB (NF-κB) and its contribution to CFTR expression, cancer progression, and poor prognosis in cervical cancer. Although this study is not specific to ovarian cancer, it provides insights into the role of CFTR and NF-κB in promoting cancer progression.
