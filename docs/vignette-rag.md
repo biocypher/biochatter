@@ -35,7 +35,7 @@ We can now start a new conversation (using the `New Persona` button in the
 sidebar), for which we select the `Research manuscript helper (RAG)` persona,
 which includes suitable contextual prompts. Upon activating the RAG in the chat
 (to signal that we wish to perform RAG for our question), we can enter into a
-dialogue with the assistant. We use gpt-3.5-turbo in this example, which is a
+dialogue with the assistant. We use `gpt-3.5-turbo` in this example, which is a
 very affordable model. The procedure is demonstrated in the GIF below.
 
 ![RAG Demo](rag-demo.gif)
@@ -53,7 +53,7 @@ You can read the full answer
 Overall, the quality of ChatGPT 4 is comparable to the RAG output, but the user
 has less control over the knowledge used, and the answer cannot include
 information that is not easily found on the web (for instance due to access
-restrictions). Of note, we used gpt-3.5-turbo in this example, which is less
+restrictions). Of note, we used `gpt-3.5-turbo` in this example, which is less
 recent and much less expensive than GPT-4.
 
 Asking the naive ChatGPT 3.5 (free access), the same question yields a very
