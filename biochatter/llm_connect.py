@@ -263,9 +263,9 @@ class Conversation(ABC):
                     try:
                         docs = agent.generate_responses(text)
                         statements = statements + [
-                            doc[0] for doc in agent.generate_responses(text)
+                            doc[0] for doc in docs
                         ]
-                    except Exception as e:
+                    except ValueError as e:
                         logger.warning(e)
 
         else:
@@ -278,7 +278,7 @@ class Conversation(ABC):
                     statements = statements + [
                         doc[0] for doc in docs
                     ]
-                except Exception as e:
+                except ValueError as e:
                     logger.warning(e)   
 
         if statements and len(statements) > 0:
