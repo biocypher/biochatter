@@ -48,7 +48,7 @@ This is a living document that will be updated as we add new tests and test modu
 Naturally the biggest impact on BioChatter performance comes with the model used.
 However, model versions can have a significant impact, which can be obfuscated by the fact that model names are often not unique.
 For instance, OpenAI's GPT models often have versions with significantly diverging capabilities and performance.
-[etc]
+Open-source models even come in a range of sizes and quantisations, which can have a significant impact on performance.
 
 ### Prompts
 
