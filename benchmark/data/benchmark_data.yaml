@@ -33,7 +33,7 @@ biocypher_query_generation:
           evidence: true
       parts_of_query:
         [
-          "MATCH",
+          "^MATCH",
           "RETURN",
           "([a-zA-Z]*:Gene)",
           "([a-zA-Z]*:Disease)",
@@ -61,10 +61,11 @@ biocypher_query_generation:
         GeneExpressedInCellType: ["expression_level"]
       parts_of_query:
         [
-          "MATCH",
+          "^MATCH",
           "RETURN",
           "([a-zA-Z]*:Gene)",
           "([a-zA-Z]*:CellType.*)",
+          "[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE]",
           "[Ff]ibroblast",
           "\\(([a-zA-Z]*:Gene)\\)-[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE]->\\(([a-zA-Z]*:CellType.*)\\)|\\(([a-zA-Z]*:CellType.*)\\)<-[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE]-\\(([a-zA-Z]*:Gene)\\)",
           "WHERE [a-zA-Z]*\\.cell_type_name|{cell_type_name:",
