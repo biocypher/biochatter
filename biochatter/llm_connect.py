@@ -11,6 +11,7 @@ except ImportError:
     st = None
 
 from abc import ABC, abstractmethod
+import logging
 from typing import Optional, List, Tuple
 import openai
 
@@ -24,6 +25,8 @@ import json
 from .vectorstore import DocumentEmbedder
 from .rag_agent import RagAgent
 from ._stats import get_stats
+
+logger = logging.getLogger(__name__)
 
 OPENAI_MODELS = [
     "gpt-3.5-turbo",
@@ -257,18 +260,26 @@ class Conversation(ABC):
                 for agent in self.rag_agents:
                     if not agent.use_prompt:
                         continue
-                    statements = statements + [
-                        doc[0] for doc in agent.generate_responses(text)
-                    ]
+                    try:
+                        docs = agent.generate_responses(text)
+                        statements = statements + [
+                            doc[0] for doc in agent.generate_responses(text)
+                        ]
+                    except Exception as e:
+                        logger.warning(e)
 
         else:
             statements = []
             for agent in self.rag_agents:
                 if not agent.use_prompt:
                     continue
-                statements = statements + [
-                    doc[0] for doc in agent.generate_responses(text)
-                ]
+                try:
+                    docs = agent.generate_responses(text)
+                    statements = statements + [
+                        doc[0] for doc in docs
+                    ]
+                except Exception as e:
+                    logger.warning(e)   
 
         if statements and len(statements) > 0:
             prompts = self.prompts["rag_agent_prompts"]
