@@ -19,7 +19,7 @@ Individual steps of the query generation process are tested separately, as well 
 
     {{ read_csv('benchmark/results/preprocessed_for_frontend/property_selection.csv', colalign=("center","center","center","center","center")) }}
 
-=== "Property hallucination"
+=== "Property confabulation"
 
     {{ read_csv('benchmark/results/preprocessed_for_frontend/property_exists.csv', colalign=("center","center","center","center","center")) }}
 

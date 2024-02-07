@@ -505,7 +505,11 @@ def test_property_exists(
                 score.append(property in avail_property_entity)
             else:
                 # no properties of the entity or relationship exist, simply made up
-                score.append(0)
+                score.append(False)
+
+        # if score is shorter than the least expected number of properties, add
+        # False values until the length is reached
+        score += [False] * (len(yaml_data["expected"]["entities"]) - len(score))
         return calculate_test_score(score)
 
     mean_score, max, n_iterations = multiple_testing(run_test)
