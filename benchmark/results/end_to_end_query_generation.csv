@@ -3,6 +3,7 @@ chatglm3:6:ggmlv3:q4_0,multi_word,0.0/8,2,e4cfb4f576ebc58af48ec1b850253dc8
 chatglm3:6:ggmlv3:q4_0,single_word,0.0/8,2,6fb9b071418cc18729199192b0637a05
 code-llama-instruct:13:ggufv2:Q2_K,multi_word,0.0/8,2,e4cfb4f576ebc58af48ec1b850253dc8
 code-llama-instruct:13:ggufv2:Q2_K,single_word,0.0/8,2,6fb9b071418cc18729199192b0637a05
+code-llama-instruct:13:ggufv2:Q3_K_M,single_word,0.0/8,2,6fb9b071418cc18729199192b0637a05
 code-llama-instruct:13:ggufv2:Q4_K_M,multi_word,0.0/8,2,e4cfb4f576ebc58af48ec1b850253dc8
 code-llama-instruct:13:ggufv2:Q4_K_M,single_word,0.0/8,2,6fb9b071418cc18729199192b0637a05
 code-llama-instruct:13:ggufv2:Q8_0,multi_word,0.0/8,2,e4cfb4f576ebc58af48ec1b850253dc8

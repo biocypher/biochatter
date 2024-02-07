@@ -113,6 +113,26 @@ XINFERENCE_MODELS = {
             "q4_0",
         ],
     },
+    "mistral-instruct-v0.2": {
+        "model_size_in_billions": [
+            7,
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            "Q2_K",
+            # "Q3_K_S",
+            "Q3_K_M",
+            # "Q3_K_L",
+            # "Q4_0",
+            # "Q4_K_S",
+            "Q4_K_M",
+            # "Q5_0",
+            # "Q5_K_S",
+            "Q5_K_M",
+            # "Q6_K",
+            "Q8_0",
+        ],
+    },
 }
 
 # create concrete benchmark list by concatenating all combinations of model
