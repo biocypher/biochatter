@@ -166,6 +166,8 @@ def pytest_collection_modifyitems(items):
         key=lambda item: (item.callspec.id if hasattr(item, "callspec") else "")
     )
 
+    # can we skip here the tests (model x hash) that have already been executed?
+
 
 # parameterise tests to run for each model
 @pytest.fixture(params=BENCHMARKED_MODELS)
