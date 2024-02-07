@@ -7,12 +7,16 @@ Click the column names to reorder.
 
 {{ read_csv('benchmark/results/preprocessed_for_frontend/overview-model.csv', colalign=("left","right")) }}
 
+![Boxplot Model](boxplot-per-model.png)
+
 ## Scores per quantisation
 
 Table sorted by mean score in descending order.
 Click the column names to reorder.
 
 {{ read_csv('benchmark/results/preprocessed_for_frontend/overview-quantisation.csv', colalign=("left","right")) }}
+
+![Boxplot Quantisation](boxplot-per-quantisation.png)
 
 ## Scores of all tasks
 

@@ -1,5 +1,10 @@
 import os
 import re
+import seaborn as sns
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
 import pandas as pd
 
@@ -121,9 +126,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         subtask_result = subtask_result[file_name_without_extension]
         subtask_results.append(subtask_result)
     overview = pd.concat(subtask_results, axis=1)
-    overview["Mean Accuracy"] = overview.mean(axis=1)
+    overview["Median Accuracy"] = overview.median(axis=1)
     overview["SD"] = overview.std(axis=1)
-    overview = overview.sort_values(by="Mean Accuracy", ascending=False)
+    overview = overview.sort_values(by="Median Accuracy", ascending=False)
     # split "Full model name" at : to get Model name, size, version, and quantisation
     overview.to_csv(
         f"{result_files_path}preprocessed_for_frontend/overview.csv",
@@ -158,15 +163,17 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
             "Size",
             "Version",
             "Quantisation",
-            "Mean Accuracy",
+            "Median Accuracy",
             "SD",
         ]
     ]
     # round mean and sd to 2 decimal places
-    overview_per_quantisation["Mean Accuracy"] = overview_per_quantisation[
-        "Mean Accuracy"
+    overview_per_quantisation.loc[:, "Median Accuracy"] = (
+        overview_per_quantisation["Median Accuracy"].round(2)
+    )
+    overview_per_quantisation.loc[:, "SD"] = overview_per_quantisation[
+        "SD"
     ].round(2)
-    overview_per_quantisation["SD"] = overview_per_quantisation["SD"].round(2)
     overview_per_quantisation.to_csv(
         f"{result_files_path}preprocessed_for_frontend/overview-quantisation.csv",
         index=False,
@@ -178,23 +185,122 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         ["Model name", "Size"]
     ).agg(
         {
-            "Mean Accuracy": "mean",
+            "Median Accuracy": "median",
             "SD": "mean",
         }
     )
     # round mean and SD to 2 decimal places
-    overview_per_size["Mean Accuracy"] = overview_per_size[
-        "Mean Accuracy"
+    overview_per_size["Median Accuracy"] = overview_per_size[
+        "Median Accuracy"
     ].round(2)
     overview_per_size["SD"] = overview_per_size["SD"].round(2)
     # sort by mean, descending
     overview_per_size = overview_per_size.sort_values(
-        by="Mean Accuracy", ascending=False
+        by="Median Accuracy", ascending=False
     )
     overview_per_size.to_csv(
         f"{result_files_path}preprocessed_for_frontend/overview-model.csv",
         index=True,
     )
+
+    plot_accuracy_per_model(overview)
+    plot_accuracy_per_quantisation(overview)
+    plot_accuracy_per_task(overview)
+
+
+def plot_accuracy_per_model(overview) -> None:
+    sns.set_theme(style="whitegrid")
+    overview_melted = overview.melt(
+        id_vars=[
+            "Full model name",
+            "Model name",
+            "Size",
+            "Version",
+            "Quantisation",
+            "Median Accuracy",
+            "SD",
+        ],
+        var_name="Task",
+        value_name="Accuracy",
+    )
+    plt.figure(figsize=(10, 6))
+    sns.boxplot(x="Model name", y="Accuracy", hue="Size", data=overview_melted)
+    plt.title("Boxplot across tasks, per Model")
+    plt.xticks(rotation=45)
+    plt.savefig(
+        f"docs/boxplot-per-model.png",
+        bbox_inches="tight",
+    )
+    plt.close()
+
+
+def plot_accuracy_per_quantisation(overview) -> None:
+    sns.set_theme(style="whitegrid")
+    overview_melted = overview.melt(
+        id_vars=[
+            "Full model name",
+            "Model name",
+            "Size",
+            "Version",
+            "Quantisation",
+            "Median Accuracy",
+            "SD",
+        ],
+        var_name="Task",
+        value_name="Accuracy",
+    )
+    # unify quantisation names: 2-bit, 3-bit, etc
+    digit_pattern = r"\d+"
+    overview_melted["Quantisation"] = overview_melted["Quantisation"].apply(
+        lambda x: f"{re.findall(digit_pattern, x)[0]}-bit" if x else "None"
+    )
+    # set quantisation of gpt models to None
+    overview_melted["Quantisation"] = overview_melted.apply(
+        lambda row: (
+            "None"
+            if row["Model name"] in ["gpt-3.5-turbo", "gpt-4"]
+            else row["Quantisation"]
+        ),
+        axis=1,
+    )
+
+    plt.figure(figsize=(10, 6))
+    sns.boxplot(
+        x="Model name", y="Accuracy", hue="Quantisation", data=overview_melted
+    )
+    plt.title("Boxplot across tasks, per Quantisation")
+    plt.xticks(rotation=45)
+    plt.savefig(
+        f"docs/boxplot-per-quantisation.png",
+        bbox_inches="tight",
+    )
+    plt.close()
+
+
+def plot_accuracy_per_task(overview):
+    sns.set_theme(style="whitegrid")
+    overview_melted = overview.melt(
+        id_vars=[
+            "Full model name",
+            "Model name",
+            "Size",
+            "Version",
+            "Quantisation",
+            "Median Accuracy",
+            "SD",
+        ],
+        var_name="Task",
+        value_name="Accuracy",
+    )
+    plt.figure(figsize=(10, 6))
+    sns.boxplot(x="Task", y="Accuracy", hue="Model name", data=overview_melted)
+    plt.title("Boxplot across models, per Task")
+    plt.xticks(rotation=45)
+    plt.savefig(
+        f"docs/boxplot-per-task.png",
+        bbox_inches="tight",
+    )
+    plt.close()
 
 
 if __name__ == "__main__":
