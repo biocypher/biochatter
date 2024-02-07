@@ -240,7 +240,12 @@ def test_property_selection(
                     except KeyError:
                         score.append(False)
         else:
-            score = [False for _ in yaml_data["expected"]["properties"].keys()]
+            total_properties = len(
+                yaml_data["expected"]["properties"].keys()
+            ) + sum(
+                len(v) for v in yaml_data["expected"]["properties"].values()
+            )
+            score = [False] * total_properties
 
         return calculate_test_score(score)
 
