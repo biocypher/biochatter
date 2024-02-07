@@ -1,0 +1,6 @@
+Full model name,Passed test cases,Total test cases,Accuracy,Iterations
+gpt-3.5-turbo,8.0,16.0,0.5,2
+llama-2-chat:13:ggufv2:Q3_K_M,8.0,16.0,0.5,2
+llama-2-chat:13:ggufv2:Q5_K_M,4.0,8.0,0.5,2
+llama-2-chat:13:ggufv2:Q2_K,7.5,16.0,0.46875,2
+llama-2-chat:13:ggufv2:Q4_K_M,5.0,16.0,0.3125,2

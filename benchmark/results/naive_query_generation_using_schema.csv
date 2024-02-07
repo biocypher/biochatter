@@ -1,0 +1,7 @@
+model_name,subtask,score,iterations,md5_hash
+gpt-3.5-turbo,multi_word,4.0/8,2,e4cfb4f576ebc58af48ec1b850253dc8
+gpt-3.5-turbo,single_word,4.0/8,2,6fb9b071418cc18729199192b0637a05
+llama-2-chat:13:ggufv2:Q2_K,multi_word,3.0/8,2,e4cfb4f576ebc58af48ec1b850253dc8
+llama-2-chat:13:ggufv2:Q2_K,single_word,4.5/8,2,6fb9b071418cc18729199192b0637a05
+llama-2-chat:13:ggufv2:Q4_K_M,multi_word,2.0/8,2,e4cfb4f576ebc58af48ec1b850253dc8
+llama-2-chat:13:ggufv2:Q4_K_M,single_word,3.0/8,2,6fb9b071418cc18729199192b0637a05
