@@ -36,7 +36,7 @@ jobs:
             mkdocs-material-
 
       - name: Packages
-        run: pip install mkdocs-material mkdocstrings[python] pandas mkdocs-table-reader-plugin
+        run: pip install mkdocs-material mkdocstrings[python] pandas mkdocs-table-reader-plugin seaborn matplotlib
 
       - name: Build
         run: mkdocs build
