@@ -23,7 +23,11 @@ Individual steps of the query generation process are tested separately, as well 
 
     {{ read_csv('benchmark/results/preprocessed_for_frontend/property_exists.csv', colalign=("center","center","center","center","center")) }}
 
-=== "Query generation"
+=== "Naive query generation"
+
+    {{ read_csv('benchmark/results/preprocessed_for_frontend/naive_query_generation_using_schema.csv', colalign=("center","center","center","center","center")) }}
+
+=== "BioChatter query generation"
 
     {{ read_csv('benchmark/results/preprocessed_for_frontend/query_generation.csv', colalign=("center","center","center","center","center")) }}
 
