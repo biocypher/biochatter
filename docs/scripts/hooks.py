@@ -383,6 +383,24 @@ def plot_comparison_naive_biochatter(overview):
     )
     plt.close()
 
+    # calculate p-value between naive and biochatter
+    from scipy.stats import ttest_ind
+
+    biochatter = overview_melted[overview_melted["Task"] == "query_generation"][
+        "Accuracy"
+    ].dropna()
+    naive = overview_melted[
+        overview_melted["Task"] == "naive_query_generation_using_schema"
+    ]["Accuracy"].dropna()
+
+    t_stat, p_value = ttest_ind(biochatter, naive)
+    print(f"mean: {biochatter.mean()} vs {naive.mean()}")
+    print(f"std: {biochatter.std()} vs {naive.std()}")
+    print(f"p-value: {p_value}")
+    print(f"t-statistic: {t_stat}")
+
+    # TODO publish this test and other related ones on website as well?
+
 
 def melt_and_process(overview):
     overview_melted = overview.melt(
