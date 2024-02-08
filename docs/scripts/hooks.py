@@ -221,6 +221,7 @@ def plot_accuracy_per_model(overview) -> None:
     plt.title(
         "Boxplot across tasks, per Model, coloured by size (billions of parameters)"
     )
+    plt.ylim(-0.1, 1.1)
     plt.xticks(rotation=45)
     plt.legend(bbox_to_anchor=(0, 0), loc="lower left")
     plt.savefig(
@@ -244,6 +245,7 @@ def plot_accuracy_per_quantisation(overview) -> None:
     plt.savefig(
         f"docs/images/boxplot-per-quantisation.png",
         bbox_inches="tight",
+        dpi=300,
     )
     plt.close()
 
@@ -259,6 +261,7 @@ def plot_accuracy_per_task(overview):
     plt.savefig(
         f"docs/images/boxplot-per-task.png",
         bbox_inches="tight",
+        dpi=300,
     )
     plt.close()
 
@@ -267,7 +270,7 @@ def plot_scatter_per_quantisation(overview):
     overview_melted = melt_and_process(overview)
 
     sns.set_theme(style="whitegrid")
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(6, 4))
     # order x axis quantisation values numerically
     overview_melted["Quantisation"] = pd.Categorical(
         overview_melted["Quantisation"],
@@ -283,37 +286,42 @@ def plot_scatter_per_quantisation(overview):
         ],
         ordered=True,
     )
+    overview_melted["Size"] = pd.Categorical(
+        overview_melted["Size"],
+        categories=[
+            "Unknown",
+            "175",
+            "70",
+            "46,7",
+            "34",
+            "13",
+            "7",
+            "6",
+        ],
+        ordered=True,
+    )
     sns.scatterplot(
         x="Quantisation",
         y="Mean Accuracy",
-        hue="Full model name",
+        hue="Model name",
+        size="Size",
+        sizes=(10, 300),
         data=overview_melted,
+        alpha=0.5,
     )
+    plt.ylim(0, 1.1)
     plt.title(
-        "Scatter plot across models, per Quantisation, coloured by model name"
+        "Scatter plot across models, per quantisation, coloured by model name, size by model size (billions of parameters)"
     )
     plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
     plt.xticks(rotation=45)
     plt.savefig(
         f"docs/images/scatter-per-quantisation-name.png",
         bbox_inches="tight",
+        dpi=300,
     )
-    plt.close()
-
-    plt.figure(figsize=(10, 6))
-    sns.scatterplot(
-        x="Quantisation",
-        y="Mean Accuracy",
-        hue="Size",
-        data=overview_melted,
-    )
-    plt.title(
-        "Scatter plot across models, per Quantisation, coloured by model size"
-    )
-    plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
-    plt.xticks(rotation=45)
     plt.savefig(
-        f"docs/images/scatter-per-quantisation-size.png",
+        f"docs/images/scatter-per-quantisation-name.svg",
         bbox_inches="tight",
     )
     plt.close()
