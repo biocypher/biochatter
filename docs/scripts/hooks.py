@@ -323,7 +323,7 @@ def plot_scatter_per_quantisation(overview):
         dpi=300,
     )
     plt.savefig(
-        f"docs/images/scatter-per-quantisation-name.svg",
+        f"docs/images/scatter-per-quantisation-name.pdf",
         bbox_inches="tight",
     )
     plt.close()
@@ -378,7 +378,7 @@ def plot_comparison_naive_biochatter(overview):
         dpi=300,
     )
     plt.savefig(
-        f"docs/images/boxplot-naive-vs-biochatter.svg",
+        f"docs/images/boxplot-naive-vs-biochatter.pdf",
         bbox_inches="tight",
     )
     plt.close()
