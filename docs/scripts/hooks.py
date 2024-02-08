@@ -30,6 +30,8 @@ def on_pre_build(config, **kwargs) -> None:
     plot_accuracy_per_quantisation(overview)
     plot_accuracy_per_task(overview)
     plot_scatter_per_quantisation(overview)
+    plot_task_comparison(overview)
+    plot_comparison_naive_biochatter(overview)
 
 
 def extract_string_after_number(input_string: str) -> str:
@@ -322,6 +324,61 @@ def plot_scatter_per_quantisation(overview):
     )
     plt.savefig(
         f"docs/images/scatter-per-quantisation-name.svg",
+        bbox_inches="tight",
+    )
+    plt.close()
+
+
+def plot_task_comparison(overview):
+    overview_melted = melt_and_process(overview)
+
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(10, 6))
+    sns.boxplot(
+        x="Task",
+        y="Accuracy",
+        hue="Task",
+        data=overview_melted,
+    )
+    plt.xticks(rotation=45)
+    plt.savefig(
+        f"docs/images/boxplot-tasks.png",
+        bbox_inches="tight",
+    )
+    plt.close()
+
+
+def plot_comparison_naive_biochatter(overview):
+    overview_melted = melt_and_process(overview)
+
+    # select tasks naive_query_generation_using_schema and query_generation
+    overview_melted = overview_melted[
+        overview_melted["Task"].isin(
+            ["naive_query_generation_using_schema", "query_generation"]
+        )
+    ]
+
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(6, 4))
+    sns.boxplot(
+        x="Task",
+        y="Accuracy",
+        hue="Task",
+        data=overview_melted,
+    )
+    plt.ylim(0, 1)
+    plt.xlabel(None)
+    plt.xticks(
+        ticks=range(len(overview_melted["Task"].unique())),
+        labels=["BioChatter", "Naive LLM (using full YAML schema)"],
+    )
+    plt.savefig(
+        f"docs/images/boxplot-naive-vs-biochatter.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+    plt.savefig(
+        f"docs/images/boxplot-naive-vs-biochatter.svg",
         bbox_inches="tight",
     )
     plt.close()
