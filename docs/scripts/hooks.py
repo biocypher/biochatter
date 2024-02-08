@@ -24,7 +24,12 @@ def on_pre_build(config, **kwargs) -> None:
         results = pd.read_csv(f"{result_files_path}{file_name}")
         preprocess_results_for_frontend(results, result_files_path, file_name)
 
-    create_overview_table(result_files_path, result_file_names)
+    overview = create_overview_table(result_files_path, result_file_names)
+
+    plot_accuracy_per_model(overview)
+    plot_accuracy_per_quantisation(overview)
+    plot_accuracy_per_task(overview)
+    plot_scatter_per_quantisation(overview)
 
 
 def extract_string_after_number(input_string: str) -> str:
@@ -126,6 +131,7 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         subtask_result = subtask_result[file_name_without_extension]
         subtask_results.append(subtask_result)
     overview = pd.concat(subtask_results, axis=1)
+    overview["Mean Accuracy"] = overview.mean(axis=1)
     overview["Median Accuracy"] = overview.median(axis=1)
     overview["SD"] = overview.std(axis=1)
     overview = overview.sort_values(by="Median Accuracy", ascending=False)
@@ -203,39 +209,117 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         index=True,
     )
 
-    plot_accuracy_per_model(overview)
-    plot_accuracy_per_quantisation(overview)
-    plot_accuracy_per_task(overview)
+    return overview
 
 
 def plot_accuracy_per_model(overview) -> None:
+    overview_melted = melt_and_process(overview)
+
     sns.set_theme(style="whitegrid")
-    overview_melted = overview.melt(
-        id_vars=[
-            "Full model name",
-            "Model name",
-            "Size",
-            "Version",
-            "Quantisation",
-            "Median Accuracy",
-            "SD",
-        ],
-        var_name="Task",
-        value_name="Accuracy",
-    )
     plt.figure(figsize=(10, 6))
     sns.boxplot(x="Model name", y="Accuracy", hue="Size", data=overview_melted)
-    plt.title("Boxplot across tasks, per Model")
+    plt.title(
+        "Boxplot across tasks, per Model, coloured by size (billions of parameters)"
+    )
     plt.xticks(rotation=45)
+    plt.legend(bbox_to_anchor=(0, 0), loc="lower left")
     plt.savefig(
-        f"docs/boxplot-per-model.png",
+        f"docs/images/boxplot-per-model.png",
         bbox_inches="tight",
     )
     plt.close()
 
 
 def plot_accuracy_per_quantisation(overview) -> None:
+    overview_melted = melt_and_process(overview)
+
     sns.set_theme(style="whitegrid")
+
+    plt.figure(figsize=(10, 6))
+    sns.boxplot(
+        x="Model name", y="Accuracy", hue="Quantisation", data=overview_melted
+    )
+    plt.title("Boxplot across tasks, per Quantisation")
+    plt.xticks(rotation=45)
+    plt.savefig(
+        f"docs/images/boxplot-per-quantisation.png",
+        bbox_inches="tight",
+    )
+    plt.close()
+
+
+def plot_accuracy_per_task(overview):
+    overview_melted = melt_and_process(overview)
+
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(10, 6))
+    sns.boxplot(x="Task", y="Accuracy", hue="Model name", data=overview_melted)
+    plt.title("Boxplot across models, per Task")
+    plt.xticks(rotation=45)
+    plt.savefig(
+        f"docs/images/boxplot-per-task.png",
+        bbox_inches="tight",
+    )
+    plt.close()
+
+
+def plot_scatter_per_quantisation(overview):
+    overview_melted = melt_and_process(overview)
+
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(10, 6))
+    # order x axis quantisation values numerically
+    overview_melted["Quantisation"] = pd.Categorical(
+        overview_melted["Quantisation"],
+        categories=[
+            "None",
+            "2-bit",
+            "3-bit",
+            "4-bit",
+            "5-bit",
+            "6-bit",
+            "8-bit",
+            ">= 16-bit*",
+        ],
+        ordered=True,
+    )
+    sns.scatterplot(
+        x="Quantisation",
+        y="Mean Accuracy",
+        hue="Full model name",
+        data=overview_melted,
+    )
+    plt.title(
+        "Scatter plot across models, per Quantisation, coloured by model name"
+    )
+    plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+    plt.xticks(rotation=45)
+    plt.savefig(
+        f"docs/images/scatter-per-quantisation-name.png",
+        bbox_inches="tight",
+    )
+    plt.close()
+
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(
+        x="Quantisation",
+        y="Mean Accuracy",
+        hue="Size",
+        data=overview_melted,
+    )
+    plt.title(
+        "Scatter plot across models, per Quantisation, coloured by model size"
+    )
+    plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+    plt.xticks(rotation=45)
+    plt.savefig(
+        f"docs/images/scatter-per-quantisation-size.png",
+        bbox_inches="tight",
+    )
+    plt.close()
+
+
+def melt_and_process(overview):
     overview_melted = overview.melt(
         id_vars=[
             "Full model name",
@@ -243,6 +327,7 @@ def plot_accuracy_per_quantisation(overview) -> None:
             "Size",
             "Version",
             "Quantisation",
+            "Mean Accuracy",
             "Median Accuracy",
             "SD",
         ],
@@ -257,50 +342,14 @@ def plot_accuracy_per_quantisation(overview) -> None:
     # set quantisation of gpt models to None
     overview_melted["Quantisation"] = overview_melted.apply(
         lambda row: (
-            "None"
+            ">= 16-bit*"
             if row["Model name"] in ["gpt-3.5-turbo", "gpt-4"]
             else row["Quantisation"]
         ),
         axis=1,
     )
 
-    plt.figure(figsize=(10, 6))
-    sns.boxplot(
-        x="Model name", y="Accuracy", hue="Quantisation", data=overview_melted
-    )
-    plt.title("Boxplot across tasks, per Quantisation")
-    plt.xticks(rotation=45)
-    plt.savefig(
-        f"docs/boxplot-per-quantisation.png",
-        bbox_inches="tight",
-    )
-    plt.close()
-
-
-def plot_accuracy_per_task(overview):
-    sns.set_theme(style="whitegrid")
-    overview_melted = overview.melt(
-        id_vars=[
-            "Full model name",
-            "Model name",
-            "Size",
-            "Version",
-            "Quantisation",
-            "Median Accuracy",
-            "SD",
-        ],
-        var_name="Task",
-        value_name="Accuracy",
-    )
-    plt.figure(figsize=(10, 6))
-    sns.boxplot(x="Task", y="Accuracy", hue="Model name", data=overview_melted)
-    plt.title("Boxplot across models, per Task")
-    plt.xticks(rotation=45)
-    plt.savefig(
-        f"docs/boxplot-per-task.png",
-        bbox_inches="tight",
-    )
-    plt.close()
+    return overview_melted
 
 
 if __name__ == "__main__":

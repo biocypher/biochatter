@@ -7,7 +7,7 @@ Click the column names to reorder.
 
 {{ read_csv('benchmark/results/preprocessed_for_frontend/overview-model.csv', colalign=("left","right")) }}
 
-![Boxplot Model](boxplot-per-model.png)
+![Boxplot Model](images/boxplot-per-model.png)
 
 ## Scores per quantisation
 
@@ -16,7 +16,9 @@ Click the column names to reorder.
 
 {{ read_csv('benchmark/results/preprocessed_for_frontend/overview-quantisation.csv', colalign=("left","right")) }}
 
-![Boxplot Quantisation](boxplot-per-quantisation.png)
+![Boxplot Quantisation](images/boxplot-per-quantisation.png)
+![Scatter Quantisation Name](images/scatter-per-quantisation-name.png)
+![Scatter Quantisation Size](images/scatter-per-quantisation-size.png)
 
 ## Scores of all tasks
 
