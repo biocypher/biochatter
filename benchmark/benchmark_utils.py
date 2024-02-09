@@ -1,6 +1,7 @@
 import pytest
 
 import pandas as pd
+from datetime import datetime
 
 
 def benchmark_already_executed(
@@ -82,7 +83,14 @@ def return_or_create_result_file(
         results = pd.read_csv(file_path, header=0)
     except (pd.errors.EmptyDataError, FileNotFoundError):
         results = pd.DataFrame(
-            columns=["model_name", "subtask", "score", "iterations", "md5_hash"]
+            columns=[
+                "model_name",
+                "subtask",
+                "score",
+                "iterations",
+                "md5_hash",
+                "datetime",
+            ]
         )
         results.to_csv(file_path, index=False)
     return results
@@ -107,8 +115,9 @@ def write_results_to_file(
         file_path (str): The path to the result file
     """
     results = pd.read_csv(file_path, header=0)
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     new_row = pd.DataFrame(
-        [[model_name, subtask, score, iterations, md5_hash]],
+        [[model_name, subtask, score, iterations, md5_hash, now]],
         columns=results.columns,
     )
     results = pd.concat([results, new_row], ignore_index=True).sort_values(
