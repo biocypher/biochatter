@@ -136,6 +136,8 @@ def test_relationship_selection(
 ):
     yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    if not yaml_data["expected"]["relationships"]:
+        pytest.skip("No relationships to test")
     skip_if_already_run(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )

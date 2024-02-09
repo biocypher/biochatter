@@ -65,6 +65,8 @@ post translational interaction:
   represented_as: node
   label_as_edge: INTERACTS_POST_TRANSLATIONAL
   input_label: post_translational
+  source: protein
+  target: protein
 
 phosphorylation:
   is_a: post translational interaction
@@ -97,6 +99,18 @@ gene to disease association:
   input_label: gene_phenotype
   source: protein # wrong to test entity selection
   target: disease
+  properties:
+    score: float
+    source: str
+    evidence: str
+
+gene to protein association:
+  represented_as: edge
+  is_relationship: true
+  present_in_knowledge_graph: true
+  input_label: gene_protein
+  source: gene
+  target: protein
   properties:
     score: float
     source: str
