@@ -401,6 +401,52 @@ def plot_comparison_naive_biochatter(overview):
 
     # TODO publish this test and other related ones on website as well?
 
+    # calculate correlation between LLM size and accuracy for all tasks
+    # convert size to float, make Unknown = 300, replace commas with dots
+    size = overview_melted["Size"].apply(
+        lambda x: 300 if x == "Unknown" else float(x.replace(",", "."))
+    )
+    print(size.corr(overview_melted["Accuracy"]))
+    # plot scatter plot
+    plt.figure(figsize=(6, 4))
+    sns.scatterplot(x=size, y=overview_melted["Accuracy"])
+    plt.xlabel("Model size (billions of parameters)")
+    plt.ylabel("Accuracy")
+    plt.title("Scatter plot of model size vs accuracy")
+    plt.savefig(
+        f"docs/images/scatter-size-accuracy.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+    plt.savefig(
+        f"docs/images/scatter-size-accuracy.pdf",
+        bbox_inches="tight",
+    )
+    plt.close()
+
+    # calculate correlation between quantisation and accuracy for all tasks
+    # convert quantisation to float, make >= 16-bit* = 16, replace -bit with nothing
+    quantisation = overview_melted["Quantisation"].apply(
+        lambda x: 16 if x == ">= 16-bit*" else float(x.replace("-bit", ""))
+    )
+    print(quantisation.corr(overview_melted["Accuracy"]))
+    # plot scatter plot
+    plt.figure(figsize=(6, 4))
+    sns.scatterplot(x=quantisation, y=overview_melted["Accuracy"])
+    plt.xlabel("Quantisation (bits)")
+    plt.ylabel("Accuracy")
+    plt.title("Scatter plot of quantisation vs accuracy")
+    plt.savefig(
+        f"docs/images/scatter-quantisation-accuracy.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+    plt.savefig(
+        f"docs/images/scatter-quantisation-accuracy.pdf",
+        bbox_inches="tight",
+    )
+    plt.close()
+
 
 def melt_and_process(overview):
     overview_melted = overview.melt(
