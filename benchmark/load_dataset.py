@@ -1,14 +1,15 @@
-import hashlib
-import io
-import json
-import os
 from ast import literal_eval
 from base64 import b64decode
+import io
+import os
+import json
+import hashlib
 
-import pandas as pd
+from cryptography.fernet import Fernet
 import rsa
 import yaml
-from cryptography.fernet import Fernet
+
+import pandas as pd
 
 
 def get_benchmark_dataset() -> dict[str, pd.DataFrame | dict[str, str]]:
@@ -72,9 +73,9 @@ def _load_test_data_from_this_repository():
                         # delete benchmark results that have outdated hashes
                         _delete_outdated_benchmark_results(yaml_data)
 
-                    test_data[file_path.replace("./benchmark/", "./")] = (
-                        yaml_data
-                    )
+                    test_data[
+                        file_path.replace("./benchmark/", "./")
+                    ] = yaml_data
 
                 except yaml.YAMLError as exc:
                     print(exc)
@@ -211,22 +212,25 @@ def _decrypt_data(
     decrypted_test_data = {}
     for key in encrypted_test_data.keys():
         decrypted = _decrypt(encrypted_test_data[key], private_key)
-        if key.endswith(".csv"):
-            df = pd.read_csv(io.StringIO(decrypted), sep=";")
-            _apply_literal_eval(
-                df,
-                [
-                    "entities",
-                    "relationships",
-                    "relationship_labels",
-                    "properties",
-                    "parts_of_query",
-                    "system_messages",
-                ],
-            )
-            decrypted_test_data[key] = df
-        elif key.endswith(".yaml"):
-            decrypted_test_data[key] = yaml.safe_load(decrypted)
+
+        if key.endswith(".yaml"):
+            try:
+                yaml_data = yaml.safe_load(decrypted)
+                # TODO: avoid code duplication
+                if "_data" in key:
+                    # expand multi-instruction tests
+                    yaml_data = _expand_multi_instruction(yaml_data)
+
+                    # generate hash for each case
+                    yaml_data = _hash_each_case(yaml_data)
+
+                    # delete benchmark results that have outdated hashes
+                    _delete_outdated_benchmark_results(yaml_data)
+
+                decrypted_test_data[key] = yaml_data
+            except yaml.YAMLError as exc:
+                print(exc)
+
     return decrypted_test_data
 
 
