@@ -8,7 +8,9 @@
 #
 # If any input is a dictionary itself, it will be expanded into separate test
 # cases, using the top-level key to create a concatenated test case purpose.
+
 biocypher_query_generation:
+  # test ability to create a simple cypher query
   - case: simple
     input:
       kg_path: test_schema_info.yaml
@@ -27,6 +29,7 @@ biocypher_query_generation:
           "WHERE [a-zA-Z]*\\.ICD10|{ICD10:",
         ]
 
+  # test cypher query with single-word entities
   - case: single_word
     input:
       kg_path: test_schema_info.yaml
@@ -54,6 +57,7 @@ biocypher_query_generation:
           "WHERE [a-zA-Z]*\\.name|{name:",
         ]
 
+  # test cypher query with multi-word entities
   - case: multi_word
     input:
       kg_path: test_schema_info.yaml
@@ -81,6 +85,7 @@ biocypher_query_generation:
           "WHERE [a-zA-Z]*\\.cell_type_name|{cell_type_name:",
         ]
 
+  # test more complex cypher query
   - case: complex
     input:
       kg_path: test_schema_info.yaml
@@ -116,6 +121,7 @@ biocypher_query_generation:
         ]
 
 rag_interpretation:
+  # test simple irrelevance judgement
   - case: explicit_relevance_no
     input:
       prompt: Which molecular pathways are associated with cancer?
@@ -138,6 +144,7 @@ rag_interpretation:
     expected:
       answer: "no"
 
+  # test simple relevance judgement
   - case: explicit_relevance_yes
     input:
       prompt: Which molecular pathways are associated with cancer?
@@ -149,6 +156,7 @@ rag_interpretation:
     expected:
       answer: "yes"
 
+  # test capability to evaluate response to relevance question negatively
   - case: explicit_evaluation_no
     input:
       prompt: "I'm sorry, but the given text fragments do not provide any relevant information about molecular pathways associated with cancer."
@@ -163,6 +171,7 @@ rag_interpretation:
     expected:
       answer: "decline"
 
+  # test capability to evaluate response to relevance question positively
   - case: explicit_evaluation_yes
     input:
       prompt: "There are several molecular pathways that are associated with cancer, for instance TP53, BRCA1, the STAT inflammatory pathway, and the EGFR pathway."
@@ -177,6 +186,7 @@ rag_interpretation:
     expected:
       answer: "answer"
 
+  # test complex (implicit) irrelevance judgement
   - case: implicit_relevance_no
     input:
       prompt: Which molecular pathways are associated with cancer?
@@ -191,6 +201,7 @@ rag_interpretation:
     expected:
       behaviour: "decline"
 
+  # test complex (implicit) relevance judgement
   - case: implicit_relevance_yes
     input:
       prompt: Which molecular pathways are associated with cancer?
