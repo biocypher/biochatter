@@ -13,3 +13,6 @@ __pycache__/
 volumes/
 benchmark/encrypted_llm_test_data.json
 site/
+benchmark/data/*
+!benchmark/data/benchmark_data.json
+!benchmark/data/example_test_schema_info.yaml

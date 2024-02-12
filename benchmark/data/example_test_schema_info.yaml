@@ -1,0 +1,111 @@
+cell type:
+  input_label: cell_type
+  is_relationship: false
+  preferred_id: cl
+  present_in_knowledge_graph: true
+  properties:
+    cell_type_name: str
+    medium: str
+    organism: str
+  represented_as: node
+disease:
+  input_label: Disease
+  is_relationship: false
+  preferred_id: doid
+  present_in_knowledge_graph: true
+  properties:
+    DSM5: str
+    ICD10: str
+    name: str
+  represented_as: node
+gene:
+  exclude_properties: accession
+  input_label:
+  - hgnc
+  - ensg
+  is_relationship: false
+  preferred_id: hgnc
+  present_in_knowledge_graph: true
+  properties:
+    id: str
+    name: str
+    taxon: int
+  represented_as: node
+gene expressed in cell type:
+  input_label: gene_expressed_in_cell_type
+  is_a: gene to expression site association
+  is_relationship: true
+  label_as_edge: GENE_EXPRESSED_IN_CELL_TYPE
+  present_in_knowledge_graph: true
+  properties:
+    expression_level: float
+  represented_as: edge
+  source: gene
+  target: cell type
+gene to disease association:
+  input_label: gene_phenotype
+  is_relationship: true
+  label_as_edge: PERTURBED_IN
+  present_in_knowledge_graph: true
+  properties:
+    evidence: str
+    score: float
+    source: str
+  represented_as: edge
+  source: protein
+  target: disease
+gene to phenotype association:
+  exclude_properties: accession
+  input_label:
+  - protein_disease
+  - gene_disease
+  is_relationship: true
+  label_as_edge: PERTURBED
+  present_in_knowledge_graph: true
+  properties:
+    evidence: str
+    score: float
+    source: str
+  represented_as: edge
+  source: disease
+  target:
+  - protein
+  - gene
+is_schema_info: true
+pathway:
+  input_label:
+  - reactome
+  - wikipathways
+  is_relationship: false
+  preferred_id:
+  - reactome
+  - wikipathways
+  present_in_knowledge_graph: false
+  represented_as: node
+phosphorylation:
+  input_label: phosphorylation
+  is_a: post translational interaction
+  is_relationship: true
+  present_in_knowledge_graph: true
+  represented_as: edge
+  source: protein
+  target: protein
+post translational interaction:
+  input_label: post_translational
+  is_a: pairwise molecular interaction
+  is_relationship: true
+  label_as_edge: INTERACTS_POST_TRANSLATIONAL
+  present_in_knowledge_graph: false
+  represented_as: node
+protein:
+  db_collection_name: proteins
+  input_label: protein
+  is_relationship: false
+  preferred_id: uniprot
+  present_in_knowledge_graph: true
+  properties:
+    genes: str[]
+    name: str
+    score: float
+    taxon: int
+  represented_as: node

@@ -11,7 +11,7 @@
 biocypher_query_generation:
   - case: single_word
     input:
-      kg_path: test_schema_info.yaml
+      kg_path: example_test_schema_info.yaml
       prompt: Which genes are associated with mucoviscidosis?
     expected:
       entities: ["Gene", "Disease"]
@@ -45,7 +45,7 @@ biocypher_query_generation:
 
   - case: multi_word
     input:
-      kg_path: test_schema_info.yaml
+      kg_path: example_test_schema_info.yaml
       prompt: Which genes are expressed in fibroblasts?
     expected:
       entities: ["Gene", "CellType"]

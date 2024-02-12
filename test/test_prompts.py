@@ -1,8 +1,10 @@
-import os
-from biochatter.llm_connect import GptConversation
-from biochatter.prompts import BioCypherPromptEngine
-import pytest
 from unittest.mock import Mock, patch
+import os
+
+import pytest
+
+from biochatter.prompts import BioCypherPromptEngine
+from biochatter.llm_connect import GptConversation
 
 ## THIS IS LARGELY BENCHMARK MATERIAL, TO BE MOCKED FOR UNIT TESTING
 
@@ -10,7 +12,7 @@ from unittest.mock import Mock, patch
 @pytest.fixture
 def prompt_engine():
     return BioCypherPromptEngine(
-        schema_config_or_info_path="test/test_schema_info.yaml"
+        schema_config_or_info_path="test/example_test_schema_info.yaml"
     )
 
 

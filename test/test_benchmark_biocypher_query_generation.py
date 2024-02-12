@@ -1,7 +1,9 @@
 from unittest.mock import Mock, patch
-from biochatter.prompts import BioCypherPromptEngine
+
 import pytest
+
 from benchmark.conftest import calculate_test_score
+from biochatter.prompts import BioCypherPromptEngine
 
 MODEL_NAMES = [
     "gpt-3.5-turbo",
@@ -13,7 +15,7 @@ MODEL_NAMES = [
 def prompt_engine(request):
     model_name = request.param
     return BioCypherPromptEngine(
-        schema_config_or_info_path="test/test_schema_info.yaml",
+        schema_config_or_info_path="test/example_test_schema_info.yaml",
         model_name=model_name,
     )
 

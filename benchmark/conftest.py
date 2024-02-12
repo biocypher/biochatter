@@ -1,6 +1,7 @@
 import os
 
 from xinference.client import Client
+import yaml
 import pytest
 
 import numpy as np
@@ -20,120 +21,120 @@ BENCHMARK_DATASET = get_benchmark_dataset()
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
     "gpt-3.5-turbo",
-    "gpt-4",
+    # "gpt-4",
 ]
 
-XINFERENCE_MODELS = {
-    "llama-2-chat": {
-        "model_size_in_billions": [
-            7,
-            13,
-            70,
-        ],
-        "model_format": "ggufv2",
-        "quantization": [
-            "Q2_K",
-            # "Q3_K_S",
-            "Q3_K_M",
-            # "Q3_K_L",
-            # "Q4_0",
-            # "Q4_K_S",
-            "Q4_K_M",
-            # "Q5_0",
-            # "Q5_K_S",
-            "Q5_K_M",
-            # "Q6_K",
-            "Q8_0",
-        ],
-    },
-    "code-llama-instruct": {
-        "model_size_in_billions": [
-            7,
-            13,
-            34,
-        ],
-        "model_format": "ggufv2",
-        "quantization": [
-            "Q2_K",
-            # "Q3_K_L",
-            "Q3_K_M",
-            # "Q3_K_S",
-            # "Q4_0",
-            "Q4_K_M",
-            # "Q4_K_S",
-            # "Q5_0",
-            "Q5_K_M",
-            # "Q5_K_S",
-            # "Q6_K",
-            "Q8_0",
-        ],
-    },
-    "mixtral-instruct-v0.1": {
-        "model_size_in_billions": [
-            "46_7",
-        ],
-        "model_format": "ggufv2",
-        "quantization": [
-            "Q2_K",
-            "Q3_K_M",
-            # "Q4_0",
-            "Q4_K_M",
-            # "Q5_0",
-            "Q5_K_M",
-            # "Q6_K",
-            "Q8_0",
-        ],
-    },
-    "openhermes-2.5": {
-        "model_size_in_billions": [
-            7,
-        ],
-        "model_format": "ggufv2",
-        "quantization": [
-            "Q2_K",
-            # "Q3_K_S",
-            "Q3_K_M",
-            # "Q3_K_L",
-            # "Q4_0",
-            # "Q4_K_S",
-            "Q4_K_M",
-            # "Q5_0",
-            # "Q5_K_S",
-            "Q5_K_M",
-            # "Q6_K",
-            "Q8_0",
-        ],
-    },
-    "chatglm3": {
-        "model_size_in_billions": [
-            6,
-        ],
-        "model_format": "ggmlv3",
-        "quantization": [
-            "q4_0",
-        ],
-    },
-    "mistral-instruct-v0.2": {
-        "model_size_in_billions": [
-            7,
-        ],
-        "model_format": "ggufv2",
-        "quantization": [
-            "Q2_K",
-            # "Q3_K_S",
-            "Q3_K_M",
-            # "Q3_K_L",
-            # "Q4_0",
-            # "Q4_K_S",
-            "Q4_K_M",
-            # "Q5_0",
-            # "Q5_K_S",
-            "Q5_K_M",
-            # "Q6_K",
-            "Q8_0",
-        ],
-    },
-}
+XINFERENCE_MODELS = {}  # {
+#    "llama-2-chat": {
+#        "model_size_in_billions": [
+#            7,
+#            13,
+#            70,
+#        ],
+#        "model_format": "ggufv2",
+#        "quantization": [
+#            "Q2_K",
+#            # "Q3_K_S",
+#            "Q3_K_M",
+#            # "Q3_K_L",
+#            # "Q4_0",
+#            # "Q4_K_S",
+#            "Q4_K_M",
+#            # "Q5_0",
+#            # "Q5_K_S",
+#            "Q5_K_M",
+#            # "Q6_K",
+#            "Q8_0",
+#        ],
+#    },
+#    "code-llama-instruct": {
+#        "model_size_in_billions": [
+#            7,
+#            13,
+#            34,
+#        ],
+#        "model_format": "ggufv2",
+#        "quantization": [
+#            "Q2_K",
+#            # "Q3_K_L",
+#            "Q3_K_M",
+#            # "Q3_K_S",
+#            # "Q4_0",
+#            "Q4_K_M",
+#            # "Q4_K_S",
+#            # "Q5_0",
+#            "Q5_K_M",
+#            # "Q5_K_S",
+#            # "Q6_K",
+#            "Q8_0",
+#        ],
+#    },
+#    "mixtral-instruct-v0.1": {
+#        "model_size_in_billions": [
+#            "46_7",
+#        ],
+#        "model_format": "ggufv2",
+#        "quantization": [
+#            "Q2_K",
+#            "Q3_K_M",
+#            # "Q4_0",
+#            "Q4_K_M",
+#            # "Q5_0",
+#            "Q5_K_M",
+#            # "Q6_K",
+#            "Q8_0",
+#        ],
+#    },
+#    "openhermes-2.5": {
+#        "model_size_in_billions": [
+#            7,
+#        ],
+#        "model_format": "ggufv2",
+#        "quantization": [
+#            "Q2_K",
+#            # "Q3_K_S",
+#            "Q3_K_M",
+#            # "Q3_K_L",
+#            # "Q4_0",
+#            # "Q4_K_S",
+#            "Q4_K_M",
+#            # "Q5_0",
+#            # "Q5_K_S",
+#            "Q5_K_M",
+#            # "Q6_K",
+#            "Q8_0",
+#        ],
+#    },
+#    "chatglm3": {
+#        "model_size_in_billions": [
+#            6,
+#        ],
+#        "model_format": "ggmlv3",
+#        "quantization": [
+#            "q4_0",
+#        ],
+#    },
+#    "mistral-instruct-v0.2": {
+#        "model_size_in_billions": [
+#            7,
+#        ],
+#        "model_format": "ggufv2",
+#        "quantization": [
+#            "Q2_K",
+#            # "Q3_K_S",
+#            "Q3_K_M",
+#            # "Q3_K_L",
+#            # "Q4_0",
+#            # "Q4_K_S",
+#            "Q4_K_M",
+#            # "Q5_0",
+#            # "Q5_K_S",
+#            "Q5_K_M",
+#            # "Q6_K",
+#            "Q8_0",
+#        ],
+#    },
+# }
 
 # create concrete benchmark list by concatenating all combinations of model
 # names, model sizes and quantizations
@@ -387,3 +388,12 @@ def pytest_generate_tests(metafunc):
             "test_data_text_extraction",
             data_file["text_extraction"],
         )
+
+    os.chdir("benchmark")
+    for key in BENCHMARK_DATASET.keys():
+        if "schema" in key:
+            # write value to file with filename key
+            print(os.getcwd())
+            with open(key, "w+") as yaml_file:
+                yaml.dump(BENCHMARK_DATASET[key], yaml_file)
+    os.chdir("..")
