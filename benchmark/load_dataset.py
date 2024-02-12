@@ -1,6 +1,5 @@
 from ast import literal_eval
 from base64 import b64decode
-import io
 import os
 import json
 import hashlib
@@ -64,14 +63,7 @@ def _load_test_data_from_this_repository():
                     yaml_data = yaml.safe_load(stream)
 
                     if "_data" in file_path:
-                        # expand multi-instruction tests
-                        yaml_data = _expand_multi_instruction(yaml_data)
-
-                        # generate hash for each case
-                        yaml_data = _hash_each_case(yaml_data)
-
-                        # delete benchmark results that have outdated hashes
-                        _delete_outdated_benchmark_results(yaml_data)
+                        yaml_data = _get_yaml_data(yaml_data)
 
                     test_data[
                         file_path.replace("./benchmark/", "./")
@@ -81,6 +73,16 @@ def _load_test_data_from_this_repository():
                     print(exc)
 
     return test_data
+
+
+def _get_yaml_data(yaml_data):
+    # expand multi-instruction tests
+    yaml_data = _expand_multi_instruction(yaml_data)
+    # generate hash for each case
+    yaml_data = _hash_each_case(yaml_data)
+    # delete benchmark results that have outdated hashes
+    _delete_outdated_benchmark_results(yaml_data)
+    return yaml_data
 
 
 def _delete_outdated_benchmark_results(data_dict: dict) -> None:
@@ -216,16 +218,8 @@ def _decrypt_data(
         if key.endswith(".yaml"):
             try:
                 yaml_data = yaml.safe_load(decrypted)
-                # TODO: avoid code duplication
                 if "_data" in key:
-                    # expand multi-instruction tests
-                    yaml_data = _expand_multi_instruction(yaml_data)
-
-                    # generate hash for each case
-                    yaml_data = _hash_each_case(yaml_data)
-
-                    # delete benchmark results that have outdated hashes
-                    _delete_outdated_benchmark_results(yaml_data)
+                    yaml_data = _get_yaml_data(yaml_data)
 
                 decrypted_test_data[key] = yaml_data
             except yaml.YAMLError as exc:
