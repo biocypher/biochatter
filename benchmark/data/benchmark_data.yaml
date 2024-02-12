@@ -8,7 +8,28 @@
 #
 # If any input is a dictionary itself, it will be expanded into separate test
 # cases, using the top-level key to create a concatenated test case purpose.
+
 biocypher_query_generation:
+  # test ability to create a simple cypher query
+  - case: simple
+    input:
+      kg_path: test_schema_info.yaml
+      prompt: What is the name of the disease with ICD10 code 'E10'?
+    expected:
+      entities: ["Disease"]
+      relationships: []
+      relationship_labels: {}
+      properties:
+        Disease: ["name", "ICD10"]
+      parts_of_query:
+        [
+          "^MATCH",
+          "RETURN",
+          "([a-zA-Z]*:Disease)",
+          "WHERE [a-zA-Z]*\\.ICD10|{ICD10:",
+        ]
+
+  # test cypher query with single-word entities
   - case: single_word
     input:
       kg_path: example_test_schema_info.yaml
@@ -21,28 +42,22 @@ biocypher_query_generation:
           source: Disease
           target: ["Protein", "Gene"]
       properties:
-        Disease:
-          name: {}
-          ICD10: {}
-          DSM5: {}
-        Gene:
-          name: true
-        GeneToPhenotypeAssociation:
-          score: true
-          source: true
-          evidence: true
+        Disease: ["name", "ICD10", "DSM5"]
+        Gene: ["id", "name"]
+        GeneToPhenotypeAssociation: ["score", "source", "evidence"]
       parts_of_query:
         [
           "^MATCH",
           "RETURN",
           "([a-zA-Z]*:Gene)",
           "([a-zA-Z]*:Disease)",
-          "[a-zA-Z]*:PERTURBED]",
+          "([a-zA-Z]*)?:PERTURBED]",
           "[Mm]ucoviscidosis",
-          "\\(([a-zA-Z]*:Gene)\\)<-[[a-zA-Z]*:PERTURBED]-|-[[a-zA-Z]*:PERTURBED]->\\(([a-zA-Z]*:Gene)\\)",
+          "\\(.*:Gene\\)<-\\[:PERTURBED\\]-|-\\[:PERTURBED\\]->\\(.*:Gene\\)",
           "WHERE [a-zA-Z]*\\.name|{name:",
         ]
 
+  # test cypher query with multi-word entities
   - case: multi_word
     input:
       kg_path: example_test_schema_info.yaml
@@ -53,25 +68,60 @@ biocypher_query_generation:
       relationship_labels:
         GENE_EXPRESSED_IN_CELL_TYPE:
           source: Gene
-          target: ["CellType"]
+          target: CellType
       properties:
-        CellType:
-          cell_type_name: {}
+        CellType: cell_type_name
         Gene: ["id", "name"]
-        GeneExpressedInCellType: ["expression_level"]
+        GeneExpressedInCellType: expression_level
       parts_of_query:
         [
           "^MATCH",
           "RETURN",
           "([a-zA-Z]*:Gene)",
           "([a-zA-Z]*:CellType.*)",
-          "[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE]",
+          "([a-zA-Z]*)?:GENE_EXPRESSED_IN_CELL_TYPE]",
           "[Ff]ibroblast",
-          "\\(([a-zA-Z]*:Gene)\\)-[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE]->\\(([a-zA-Z]*:CellType.*)\\)|\\(([a-zA-Z]*:CellType.*)\\)<-[[a-zA-Z]*:GENE_EXPRESSED_IN_CELL_TYPE]-\\(([a-zA-Z]*:Gene)\\)",
+          "\\(.*:Gene\\)-\\[:GENE_EXPRESSED_IN_CELL_TYPE\\]->\\(.*:CellType.*\\)|\\(.*:CellType.*\\)<-\\[:GENE_EXPRESSED_IN_CELL_TYPE\\]-\\(.*:Gene\\)",
           "WHERE [a-zA-Z]*\\.cell_type_name|{cell_type_name:",
         ]
 
+  # test more complex cypher query
+  - case: complex
+    input:
+      kg_path: test_schema_info.yaml
+      prompt: Which proteins are associated with the disease having ICD10 code 'E10', what are their scores, and what is the gene related to these proteins?
+    expected:
+      entities: ["Protein", "Disease", "Gene"]
+      relationships: ["GeneToPhenotypeAssociation", "GeneToProteinAssociation"]
+      relationship_labels:
+        PERTURBED_IN:
+          source: Protein
+          target: Disease
+        GeneToProteinAssociation:
+          source: Gene
+          target: Protein
+      properties:
+        Disease: ["name", "ICD10"]
+        Protein: ["name", "score"]
+        Gene: ["name", "score"]
+        GeneToPhenotypeAssociation: ["score", "source", "evidence"]
+        GeneToProteinAssociation: ["score"]
+      parts_of_query:
+        [
+          "^MATCH",
+          "RETURN",
+          "([a-zA-Z]*:Protein)",
+          "([a-zA-Z]*:Disease)",
+          "([a-zA-Z]*:Gene)",
+          "([a-zA-Z]*)?:PERTURBED_IN]",
+          "([a-zA-Z]*)?:GeneToProteinAssociation]",
+          "WHERE [a-zA-Z]*\\.ICD10|{ICD10:",
+          "\\)<-\\[([a-zA-Z]*)?:PERTURBED_IN]-|-\\[([a-zA-Z]*)?:PERTURBED_IN]->\\(([a-zA-Z]*:Disease)",
+          "\\(([a-zA-Z]*(:Protein)?)\\)<-\\[([a-zA-Z]*)?:GeneToProteinAssociation]-|-\\[([a-zA-Z]*)?:GeneToProteinAssociation]->\\(([a-zA-Z]*(:Protein)?)\\)",
+        ]
+
 rag_interpretation:
+  # test simple irrelevance judgement
   - case: explicit_relevance_no
     input:
       prompt: Which molecular pathways are associated with cancer?
@@ -94,6 +144,7 @@ rag_interpretation:
     expected:
       answer: "no"
 
+  # test simple relevance judgement
   - case: explicit_relevance_yes
     input:
       prompt: Which molecular pathways are associated with cancer?
@@ -105,6 +156,7 @@ rag_interpretation:
     expected:
       answer: "yes"
 
+  # test capability to evaluate response to relevance question negatively
   - case: explicit_evaluation_no
     input:
       prompt: "I'm sorry, but the given text fragments do not provide any relevant information about molecular pathways associated with cancer."
@@ -119,6 +171,7 @@ rag_interpretation:
     expected:
       answer: "decline"
 
+  # test capability to evaluate response to relevance question positively
   - case: explicit_evaluation_yes
     input:
       prompt: "There are several molecular pathways that are associated with cancer, for instance TP53, BRCA1, the STAT inflammatory pathway, and the EGFR pathway."
@@ -133,6 +186,7 @@ rag_interpretation:
     expected:
       answer: "answer"
 
+  # test complex (implicit) irrelevance judgement
   - case: implicit_relevance_no
     input:
       prompt: Which molecular pathways are associated with cancer?
@@ -147,6 +201,7 @@ rag_interpretation:
     expected:
       behaviour: "decline"
 
+  # test complex (implicit) relevance judgement
   - case: implicit_relevance_yes
     input:
       prompt: Which molecular pathways are associated with cancer?

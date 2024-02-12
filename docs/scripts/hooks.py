@@ -18,6 +18,7 @@ def on_pre_build(config, **kwargs) -> None:
         f
         for f in os.listdir(result_files_path)
         if os.path.isfile(os.path.join(result_files_path, f))
+        and f.endswith(".csv")
     ]
 
     for file_name in result_file_names:
@@ -32,6 +33,7 @@ def on_pre_build(config, **kwargs) -> None:
     plot_scatter_per_quantisation(overview)
     plot_task_comparison(overview)
     plot_comparison_naive_biochatter(overview)
+    calculate_stats(overview)
 
 
 def extract_string_after_number(input_string: str) -> str:
@@ -107,7 +109,7 @@ def preprocess_results_for_frontend(
     results = aggregated_scores[new_order]
     results = results.sort_values(by="Accuracy", ascending=False)
     results.to_csv(
-        f"{path}preprocessed_for_frontend/{file_name}",
+        f"{path}processed/{file_name}",
         index=False,
     )
 
@@ -124,9 +126,7 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     """
     subtask_results = []
     for file in result_file_names:
-        subtask_result = pd.read_csv(
-            f"{result_files_path}preprocessed_for_frontend/{file}"
-        )
+        subtask_result = pd.read_csv(f"{result_files_path}processed/{file}")
         file_name_without_extension = os.path.splitext(file)[0]
         subtask_result[file_name_without_extension] = subtask_result["Accuracy"]
         subtask_result.set_index("Full model name", inplace=True)
@@ -139,7 +139,7 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     overview = overview.sort_values(by="Median Accuracy", ascending=False)
     # split "Full model name" at : to get Model name, size, version, and quantisation
     overview.to_csv(
-        f"{result_files_path}preprocessed_for_frontend/overview.csv",
+        f"{result_files_path}processed/overview.csv",
         index=True,
     )
 
@@ -157,12 +157,14 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     # add size 175 for gpt-3.5-turbo and Unknown for gpt-4
     overview_per_quantisation["Size"] = overview_per_quantisation.apply(
         lambda row: (
-            "175" if row["Model name"] == "gpt-3.5-turbo" else row["Size"]
+            "175" if "gpt-3.5-turbo" in row["Model name"] else row["Size"]
         ),
         axis=1,
     )
     overview_per_quantisation["Size"] = overview_per_quantisation.apply(
-        lambda row: "Unknown" if row["Model name"] == "gpt-4" else row["Size"],
+        lambda row: (
+            "Unknown" if "gpt-4" in row["Model name"] else row["Size"]
+        ),
         axis=1,
     )
     overview_per_quantisation = overview_per_quantisation[
@@ -183,7 +185,7 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         "SD"
     ].round(2)
     overview_per_quantisation.to_csv(
-        f"{result_files_path}preprocessed_for_frontend/overview-quantisation.csv",
+        f"{result_files_path}processed/overview-quantisation.csv",
         index=False,
     )
 
@@ -207,7 +209,7 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         by="Median Accuracy", ascending=False
     )
     overview_per_size.to_csv(
-        f"{result_files_path}preprocessed_for_frontend/overview-model.csv",
+        f"{result_files_path}processed/overview-model.csv",
         index=True,
     )
 
@@ -227,7 +229,7 @@ def plot_accuracy_per_model(overview) -> None:
     plt.xticks(rotation=45)
     plt.legend(bbox_to_anchor=(0, 0), loc="lower left")
     plt.savefig(
-        f"docs/images/boxplot-per-model.png",
+        "docs/images/boxplot-per-model.png",
         bbox_inches="tight",
     )
     plt.close()
@@ -245,7 +247,7 @@ def plot_accuracy_per_quantisation(overview) -> None:
     plt.title("Boxplot across tasks, per Quantisation")
     plt.xticks(rotation=45)
     plt.savefig(
-        f"docs/images/boxplot-per-quantisation.png",
+        "docs/images/boxplot-per-quantisation.png",
         bbox_inches="tight",
         dpi=300,
     )
@@ -255,15 +257,81 @@ def plot_accuracy_per_quantisation(overview) -> None:
 def plot_accuracy_per_task(overview):
     overview_melted = melt_and_process(overview)
 
+    # concatenate model name and quantisation
+    overview_melted["Coarse model name"] = overview_melted[
+        "Model name"
+    ].replace(
+        {
+            "gpt-3.5-turbo-0613": "gpt-3.5-turbo",
+            "gpt-3.5-turbo-0125": "gpt-3.5-turbo",
+            "gpt-4-0613": "gpt-4",
+            "gpt-4-0125-preview": "gpt-4",
+        },
+        regex=True,
+    )
+
     sns.set_theme(style="whitegrid")
-    plt.figure(figsize=(10, 6))
-    sns.boxplot(x="Task", y="Accuracy", hue="Model name", data=overview_melted)
-    plt.title("Boxplot across models, per Task")
+    plt.figure(figsize=(20, 10))
+
+    # Define the color palette
+    palette = sns.color_palette(
+        "Set1", len(overview_melted["Coarse model name"].unique())
+    )
+
+    # Calculate mean accuracy for each task
+    task_order = (
+        overview_melted.groupby("Task")["Accuracy"]
+        .mean()
+        .sort_values()
+        .index[::-1]
+    )
+
+    # Sort the dataframe
+    overview_melted["Task"] = pd.Categorical(
+        overview_melted["Task"], categories=task_order, ordered=True
+    )
+    overview_melted = overview_melted.sort_values("Task")
+
+    sns.stripplot(
+        x="Task",
+        y="Accuracy",
+        hue="Coarse model name",
+        data=overview_melted,
+        dodge=True,
+        palette=palette,
+        jitter=0.2,
+        alpha=0.8,
+    )
+
+    sns.lineplot(
+        x="Task",
+        y="Accuracy",
+        hue="Coarse model name",
+        data=overview_melted,
+        sort=False,
+        legend=False,
+        palette=palette,
+        alpha=0.3,
+    )
+
+    # Get current axis
+    ax = plt.gca()
+
+    # Add vertical lines at each x tick
+    for x in ax.get_xticks():
+        ax.axvline(x=x, color="gray", linestyle="--", lw=0.5)
+
+    plt.legend(bbox_to_anchor=(1, 1), loc="upper right")
+    plt.title("Dot plot across models / quantisations, per Task")
     plt.xticks(rotation=45)
     plt.savefig(
-        f"docs/images/boxplot-per-task.png",
+        "docs/images/dotplot-per-task.png",
         bbox_inches="tight",
         dpi=300,
+    )
+    plt.savefig(
+        "docs/images/dotplot-per-task.pdf",
+        bbox_inches="tight",
     )
     plt.close()
 
@@ -318,12 +386,12 @@ def plot_scatter_per_quantisation(overview):
     plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
     plt.xticks(rotation=45)
     plt.savefig(
-        f"docs/images/scatter-per-quantisation-name.png",
+        "docs/images/scatter-per-quantisation-name.png",
         bbox_inches="tight",
         dpi=300,
     )
     plt.savefig(
-        f"docs/images/scatter-per-quantisation-name.pdf",
+        "docs/images/scatter-per-quantisation-name.pdf",
         bbox_inches="tight",
     )
     plt.close()
@@ -342,7 +410,7 @@ def plot_task_comparison(overview):
     )
     plt.xticks(rotation=45)
     plt.savefig(
-        f"docs/images/boxplot-tasks.png",
+        "docs/images/boxplot-tasks.png",
         bbox_inches="tight",
     )
     plt.close()
@@ -373,16 +441,19 @@ def plot_comparison_naive_biochatter(overview):
         labels=["BioChatter", "Naive LLM (using full YAML schema)"],
     )
     plt.savefig(
-        f"docs/images/boxplot-naive-vs-biochatter.png",
+        "docs/images/boxplot-naive-vs-biochatter.png",
         bbox_inches="tight",
         dpi=300,
     )
     plt.savefig(
-        f"docs/images/boxplot-naive-vs-biochatter.pdf",
+        "docs/images/boxplot-naive-vs-biochatter.pdf",
         bbox_inches="tight",
     )
     plt.close()
 
+
+def calculate_stats(overview):
+    overview_melted = melt_and_process(overview)
     # calculate p-value between naive and biochatter
     from scipy.stats import ttest_ind
 
@@ -394,10 +465,13 @@ def plot_comparison_naive_biochatter(overview):
     ]["Accuracy"].dropna()
 
     t_stat, p_value = ttest_ind(biochatter, naive)
-    print(f"mean: {biochatter.mean()} vs {naive.mean()}")
-    print(f"std: {biochatter.std()} vs {naive.std()}")
-    print(f"p-value: {p_value}")
-    print(f"t-statistic: {t_stat}")
+
+    # write to file
+    with open("benchmark/results/processed/naive_vs_biochatter.txt", "w") as f:
+        f.write(f"mean: {biochatter.mean()} vs {naive.mean()}\n")
+        f.write(f"std: {biochatter.std()} vs {naive.std()}\n")
+        f.write(f"p-value: {p_value}\n")
+        f.write(f"t-statistic: {t_stat}\n")
 
     # TODO publish this test and other related ones on website as well?
 
@@ -406,7 +480,7 @@ def plot_comparison_naive_biochatter(overview):
     size = overview_melted["Size"].apply(
         lambda x: 300 if x == "Unknown" else float(x.replace(",", "."))
     )
-    print(size.corr(overview_melted["Accuracy"]))
+    size_accuracy_corr = size.corr(overview_melted["Accuracy"])
     # plot scatter plot
     plt.figure(figsize=(6, 4))
     sns.scatterplot(x=size, y=overview_melted["Accuracy"])
@@ -414,12 +488,12 @@ def plot_comparison_naive_biochatter(overview):
     plt.ylabel("Accuracy")
     plt.title("Scatter plot of model size vs accuracy")
     plt.savefig(
-        f"docs/images/scatter-size-accuracy.png",
+        "docs/images/scatter-size-accuracy.png",
         bbox_inches="tight",
         dpi=300,
     )
     plt.savefig(
-        f"docs/images/scatter-size-accuracy.pdf",
+        "docs/images/scatter-size-accuracy.pdf",
         bbox_inches="tight",
     )
     plt.close()
@@ -429,7 +503,7 @@ def plot_comparison_naive_biochatter(overview):
     quantisation = overview_melted["Quantisation"].apply(
         lambda x: 16 if x == ">= 16-bit*" else float(x.replace("-bit", ""))
     )
-    print(quantisation.corr(overview_melted["Accuracy"]))
+    quant_accuracy_corr = quantisation.corr(overview_melted["Accuracy"])
     # plot scatter plot
     plt.figure(figsize=(6, 4))
     sns.scatterplot(x=quantisation, y=overview_melted["Accuracy"])
@@ -437,15 +511,22 @@ def plot_comparison_naive_biochatter(overview):
     plt.ylabel("Accuracy")
     plt.title("Scatter plot of quantisation vs accuracy")
     plt.savefig(
-        f"docs/images/scatter-quantisation-accuracy.png",
+        "docs/images/scatter-quantisation-accuracy.png",
         bbox_inches="tight",
         dpi=300,
     )
     plt.savefig(
-        f"docs/images/scatter-quantisation-accuracy.pdf",
+        "docs/images/scatter-quantisation-accuracy.pdf",
         bbox_inches="tight",
     )
     plt.close()
+
+    # write to file
+    with open("benchmark/results/processed/correlations.txt", "w") as f:
+        f.write(f"Size vs accuracy Pearson correlation: {size_accuracy_corr}\n")
+        f.write(
+            f"Quantisation vs accuracy Pearson correlation: {quant_accuracy_corr}\n"
+        )
 
 
 def melt_and_process(overview):
@@ -472,7 +553,8 @@ def melt_and_process(overview):
     overview_melted["Quantisation"] = overview_melted.apply(
         lambda row: (
             ">= 16-bit*"
-            if row["Model name"] in ["gpt-3.5-turbo", "gpt-4"]
+            if "gpt-3.5-turbo" in row["Model name"]
+            or "gpt-4" in row["Model name"]
             else row["Quantisation"]
         ),
         axis=1,

@@ -3,6 +3,9 @@
 For trustworthy application of LLMs to real-world and biomedical problems, it is imperative to understand their performance and limitations.
 We need to constantly evaluate the multitude of combinations of individual models and versions, their parameters (e.g., temperature), prompt sets, databases and vector databases, and diverse application scenarios.
 To this end, we are maintaining a living benchmarking framework that allows us to continuously compare the performance of different models and configurations on a variety of tasks.
+The procedure of the living benchmark follows the idea of test-driven development, in that test cases are added with practical reference to a desired feature or behaviour.
+For cases where a model does not yield a perfect response out of the box, which will be most cases, modifications to the components of the framework, such as prompts or functions, are made to improve the model's performance.
+By tracking model performance on these tests over time, we can gain insights into the reliability of the framework and identify the gaps to be addressed.
 
 The benchmark uses the pytest framework to orchestrate the evaluation of a number of models on a number of tasks.
 The benchmark is run on a regular basis, and the results are published in the [benchmark section](https://biochatter.org/benchmark/).

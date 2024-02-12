@@ -6,8 +6,8 @@ from benchmark.conftest import calculate_test_score
 from biochatter.prompts import BioCypherPromptEngine
 
 MODEL_NAMES = [
-    "gpt-3.5-turbo",
-    "gpt-4",
+    "gpt-3.5-turbo-0613",
+    "gpt-4-0613",
 ]
 
 
