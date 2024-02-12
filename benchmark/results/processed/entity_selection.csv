@@ -2,10 +2,10 @@ Full model name,Passed test cases,Total test cases,Accuracy,Iterations
 openhermes-2.5:7:ggufv2:Q6_K,8.0,8.0,1.0,5
 openhermes-2.5:7:ggufv2:Q3_K_M,9.0,9.0,1.0,5
 openhermes-2.5:7:ggufv2:Q8_0,8.0,9.0,0.8888888888888888,5
-gpt-3.5-turbo,8.0,9.0,0.8888888888888888,5
+gpt-3.5-turbo-0613,8.0,9.0,0.8888888888888888,5
 openhermes-2.5:7:ggufv2:Q5_K_M,8.0,9.0,0.8888888888888888,5
 openhermes-2.5:7:ggufv2:Q4_K_M,8.0,9.0,0.8888888888888888,5
-gpt-4,8.0,9.0,0.8888888888888888,5
+gpt-4-0613,8.0,9.0,0.8888888888888888,5
 chatglm3:6:ggmlv3:q4_0,6.0,8.0,0.75,5
 openhermes-2.5:7:ggufv2:Q2_K,5.0,9.0,0.5555555555555556,5
 code-llama-instruct:7:ggufv2:Q3_K_M,4.0,8.0,0.5,5

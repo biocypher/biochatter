@@ -1,6 +1,6 @@
 Full model name,Passed test cases,Total test cases,Accuracy,Iterations
 chatglm3:6:ggmlv3:q4_0,2.0,2.0,1.0,5
-gpt-3.5-turbo,2.0,2.0,1.0,5
+gpt-3.5-turbo-0613,2.0,2.0,1.0,5
 openhermes-2.5:7:ggufv2:Q6_K,2.0,2.0,1.0,5
 openhermes-2.5:7:ggufv2:Q5_K_M,2.0,2.0,1.0,5
 openhermes-2.5:7:ggufv2:Q4_K_M,2.0,2.0,1.0,5
@@ -13,7 +13,7 @@ mistral-instruct-v0.2:7:ggufv2:Q3_K_M,2.0,2.0,1.0,5
 llama-2-chat:7:ggufv2:Q3_K_M,2.0,2.0,1.0,5
 llama-2-chat:7:ggufv2:Q2_K,2.0,2.0,1.0,5
 llama-2-chat:70:ggufv2:Q4_K_M,2.0,2.0,1.0,5
-gpt-4,2.0,2.0,1.0,5
+gpt-4-0613,2.0,2.0,1.0,5
 openhermes-2.5:7:ggufv2:Q8_0,2.0,2.0,1.0,5
 code-llama-instruct:34:ggufv2:Q5_K_M,2.0,2.0,1.0,5
 code-llama-instruct:34:ggufv2:Q2_K,2.0,2.0,1.0,5

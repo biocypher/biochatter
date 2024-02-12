@@ -1,5 +1,5 @@
 Full model name,Passed test cases,Total test cases,Accuracy,Iterations
-gpt-4,20.4,30.0,0.6799999999999999,5
+gpt-4-0613,20.4,30.0,0.6799999999999999,5
 code-llama-instruct:7:ggufv2:Q4_K_M,19.6,30.0,0.6533333333333334,5
 code-llama-instruct:34:ggufv2:Q3_K_M,18.0,30.0,0.6,5
 openhermes-2.5:7:ggufv2:Q5_K_M,17.6,30.0,0.5866666666666667,5
@@ -13,7 +13,7 @@ code-llama-instruct:7:ggufv2:Q2_K,16.0,30.0,0.5333333333333333,5
 openhermes-2.5:7:ggufv2:Q6_K,16.0,30.0,0.5333333333333333,5
 code-llama-instruct:13:ggufv2:Q4_K_M,16.0,30.0,0.5333333333333333,5
 code-llama-instruct:13:ggufv2:Q3_K_M,16.0,30.0,0.5333333333333333,5
-gpt-3.5-turbo,15.0,30.0,0.5,5
+gpt-3.5-turbo-0613,15.0,30.0,0.5,5
 mixtral-instruct-v0.1:46_7:ggufv2:Q2_K,14.4,30.0,0.48000000000000004,5
 llama-2-chat:13:ggufv2:Q8_0,14.4,30.0,0.48000000000000004,5
 llama-2-chat:13:ggufv2:Q3_K_M,14.4,30.0,0.48000000000000004,5

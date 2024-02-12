@@ -3,7 +3,7 @@ code-llama-instruct:34:ggufv2:Q4_K_M,7.8,8.0,0.975,5
 code-llama-instruct:34:ggufv2:Q5_K_M,7.6,8.0,0.95,5
 code-llama-instruct:34:ggufv2:Q8_0,7.4,8.0,0.925,5
 code-llama-instruct:34:ggufv2:Q6_K,7.2,8.0,0.9,5
-gpt-4,8.0,9.0,0.8888888888888888,5
+gpt-4-0613,8.0,9.0,0.8888888888888888,5
 code-llama-instruct:13:ggufv2:Q2_K,7.0,8.0,0.875,5
 code-llama-instruct:34:ggufv2:Q3_K_M,7.0,8.0,0.875,5
 mixtral-instruct-v0.1:46_7:ggufv2:Q6_K,6.8,8.0,0.85,5
@@ -25,7 +25,7 @@ llama-2-chat:70:ggufv2:Q4_K_M,6.8,9.0,0.7555555555555555,5
 mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,6.8,9.0,0.7555555555555555,5
 openhermes-2.5:7:ggufv2:Q8_0,6.8,9.0,0.7555555555555555,5
 openhermes-2.5:7:ggufv2:Q4_K_M,6.8,9.0,0.7555555555555555,5
-gpt-3.5-turbo,6.8,9.0,0.7555555555555555,5
+gpt-3.5-turbo-0613,6.8,9.0,0.7555555555555555,5
 code-llama-instruct:34:ggufv2:Q2_K,6.0,8.0,0.75,5
 code-llama-instruct:13:ggufv2:Q8_0,6.0,8.0,0.75,5
 mixtral-instruct-v0.1:46_7:ggufv2:Q2_K,6.6000000000000005,9.0,0.7333333333333334,5

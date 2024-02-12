@@ -157,12 +157,14 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     # add size 175 for gpt-3.5-turbo and Unknown for gpt-4
     overview_per_quantisation["Size"] = overview_per_quantisation.apply(
         lambda row: (
-            "175" if row["Model name"] == "gpt-3.5-turbo" else row["Size"]
+            "175" if row["Model name"] == "gpt-3.5-turbo-0613" else row["Size"]
         ),
         axis=1,
     )
     overview_per_quantisation["Size"] = overview_per_quantisation.apply(
-        lambda row: "Unknown" if row["Model name"] == "gpt-4" else row["Size"],
+        lambda row: (
+            "Unknown" if row["Model name"] == "gpt-4-0613" else row["Size"]
+        ),
         axis=1,
     )
     overview_per_quantisation = overview_per_quantisation[
@@ -485,7 +487,7 @@ def melt_and_process(overview):
     overview_melted["Quantisation"] = overview_melted.apply(
         lambda row: (
             ">= 16-bit*"
-            if row["Model name"] in ["gpt-3.5-turbo", "gpt-4"]
+            if row["Model name"] in ["gpt-3.5-turbo-0613", "gpt-4-0613"]
             else row["Quantisation"]
         ),
         axis=1,

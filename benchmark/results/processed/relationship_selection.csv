@@ -4,8 +4,8 @@ openhermes-2.5:7:ggufv2:Q6_K,12.0,12.0,1.0,5
 openhermes-2.5:7:ggufv2:Q5_K_M,12.0,12.0,1.0,5
 openhermes-2.5:7:ggufv2:Q4_K_M,12.0,12.0,1.0,5
 openhermes-2.5:7:ggufv2:Q3_K_M,12.0,12.0,1.0,5
-gpt-4,7.8,12.0,0.65,5
-gpt-3.5-turbo,6.0,12.0,0.5,5
+gpt-4-0613,7.8,12.0,0.65,5
+gpt-3.5-turbo-0613,6.0,12.0,0.5,5
 openhermes-2.5:7:ggufv2:Q2_K,6.0,12.0,0.5,5
 code-llama-instruct:34:ggufv2:Q2_K,6.0,12.0,0.5,5
 chatglm3:6:ggmlv3:q4_0,4.8,12.0,0.39999999999999997,5

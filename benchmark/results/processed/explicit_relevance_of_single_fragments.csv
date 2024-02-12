@@ -26,8 +26,8 @@ openhermes-2.5:7:ggufv2:Q8_0,6.0,6.0,1.0,5
 llama-2-chat:13:ggufv2:Q4_K_M,6.0,6.0,1.0,5
 llama-2-chat:13:ggufv2:Q3_K_M,6.0,6.0,1.0,5
 llama-2-chat:13:ggufv2:Q2_K,6.0,6.0,1.0,5
-gpt-4,6.0,6.0,1.0,5
-gpt-3.5-turbo,6.0,6.0,1.0,5
+gpt-4-0613,6.0,6.0,1.0,5
+gpt-3.5-turbo-0613,6.0,6.0,1.0,5
 code-llama-instruct:7:ggufv2:Q8_0,6.0,6.0,1.0,5
 code-llama-instruct:7:ggufv2:Q4_K_M,6.0,6.0,1.0,5
 code-llama-instruct:13:ggufv2:Q6_K,5.0,6.0,0.8333333333333334,5

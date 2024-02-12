@@ -1,10 +1,10 @@
 Full model name,Passed test cases,Total test cases,Accuracy,Iterations
-gpt-4,29.0,30.0,0.9666666666666667,5
+gpt-4-0613,29.0,30.0,0.9666666666666667,5
 code-llama-instruct:7:ggufv2:Q4_K_M,29.0,30.0,0.9666666666666667,5
 code-llama-instruct:7:ggufv2:Q5_K_M,28.8,30.0,0.9600000000000001,5
 code-llama-instruct:7:ggufv2:Q8_0,28.8,30.0,0.9600000000000001,5
 code-llama-instruct:7:ggufv2:Q6_K,28.8,30.0,0.9600000000000001,5
-gpt-3.5-turbo,28.4,30.0,0.9466666666666667,5
+gpt-3.5-turbo-0613,28.4,30.0,0.9466666666666667,5
 openhermes-2.5:7:ggufv2:Q3_K_M,28.2,30.0,0.94,5
 openhermes-2.5:7:ggufv2:Q2_K,28.2,30.0,0.94,5
 llama-2-chat:70:ggufv2:Q4_K_M,27.6,30.0,0.92,5
