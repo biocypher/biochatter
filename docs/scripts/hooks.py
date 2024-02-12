@@ -18,6 +18,7 @@ def on_pre_build(config, **kwargs) -> None:
         f
         for f in os.listdir(result_files_path)
         if os.path.isfile(os.path.join(result_files_path, f))
+        and f.endswith(".csv")
     ]
 
     for file_name in result_file_names:
@@ -32,6 +33,7 @@ def on_pre_build(config, **kwargs) -> None:
     plot_scatter_per_quantisation(overview)
     plot_task_comparison(overview)
     plot_comparison_naive_biochatter(overview)
+    calculate_stats(overview)
 
 
 def extract_string_after_number(input_string: str) -> str:
@@ -107,7 +109,7 @@ def preprocess_results_for_frontend(
     results = aggregated_scores[new_order]
     results = results.sort_values(by="Accuracy", ascending=False)
     results.to_csv(
-        f"{path}preprocessed_for_frontend/{file_name}",
+        f"{path}processed/{file_name}",
         index=False,
     )
 
@@ -124,9 +126,7 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     """
     subtask_results = []
     for file in result_file_names:
-        subtask_result = pd.read_csv(
-            f"{result_files_path}preprocessed_for_frontend/{file}"
-        )
+        subtask_result = pd.read_csv(f"{result_files_path}processed/{file}")
         file_name_without_extension = os.path.splitext(file)[0]
         subtask_result[file_name_without_extension] = subtask_result["Accuracy"]
         subtask_result.set_index("Full model name", inplace=True)
@@ -139,7 +139,7 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     overview = overview.sort_values(by="Median Accuracy", ascending=False)
     # split "Full model name" at : to get Model name, size, version, and quantisation
     overview.to_csv(
-        f"{result_files_path}preprocessed_for_frontend/overview.csv",
+        f"{result_files_path}processed/overview.csv",
         index=True,
     )
 
@@ -183,7 +183,7 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         "SD"
     ].round(2)
     overview_per_quantisation.to_csv(
-        f"{result_files_path}preprocessed_for_frontend/overview-quantisation.csv",
+        f"{result_files_path}processed/overview-quantisation.csv",
         index=False,
     )
 
@@ -207,7 +207,7 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         by="Median Accuracy", ascending=False
     )
     overview_per_size.to_csv(
-        f"{result_files_path}preprocessed_for_frontend/overview-model.csv",
+        f"{result_files_path}processed/overview-model.csv",
         index=True,
     )
 
@@ -383,6 +383,9 @@ def plot_comparison_naive_biochatter(overview):
     )
     plt.close()
 
+
+def calculate_stats(overview):
+    overview_melted = melt_and_process(overview)
     # calculate p-value between naive and biochatter
     from scipy.stats import ttest_ind
 
@@ -394,10 +397,13 @@ def plot_comparison_naive_biochatter(overview):
     ]["Accuracy"].dropna()
 
     t_stat, p_value = ttest_ind(biochatter, naive)
-    print(f"mean: {biochatter.mean()} vs {naive.mean()}")
-    print(f"std: {biochatter.std()} vs {naive.std()}")
-    print(f"p-value: {p_value}")
-    print(f"t-statistic: {t_stat}")
+
+    # write to file
+    with open("benchmark/results/processed/naive_vs_biochatter.txt", "w") as f:
+        f.write(f"mean: {biochatter.mean()} vs {naive.mean()}\n")
+        f.write(f"std: {biochatter.std()} vs {naive.std()}\n")
+        f.write(f"p-value: {p_value}\n")
+        f.write(f"t-statistic: {t_stat}\n")
 
     # TODO publish this test and other related ones on website as well?
 
@@ -406,7 +412,7 @@ def plot_comparison_naive_biochatter(overview):
     size = overview_melted["Size"].apply(
         lambda x: 300 if x == "Unknown" else float(x.replace(",", "."))
     )
-    print(size.corr(overview_melted["Accuracy"]))
+    size_accuracy_corr = size.corr(overview_melted["Accuracy"])
     # plot scatter plot
     plt.figure(figsize=(6, 4))
     sns.scatterplot(x=size, y=overview_melted["Accuracy"])
@@ -429,7 +435,7 @@ def plot_comparison_naive_biochatter(overview):
     quantisation = overview_melted["Quantisation"].apply(
         lambda x: 16 if x == ">= 16-bit*" else float(x.replace("-bit", ""))
     )
-    print(quantisation.corr(overview_melted["Accuracy"]))
+    quant_accuracy_corr = quantisation.corr(overview_melted["Accuracy"])
     # plot scatter plot
     plt.figure(figsize=(6, 4))
     sns.scatterplot(x=quantisation, y=overview_melted["Accuracy"])
@@ -446,6 +452,13 @@ def plot_comparison_naive_biochatter(overview):
         bbox_inches="tight",
     )
     plt.close()
+
+    # write to file
+    with open("benchmark/results/processed/correlations.txt", "w") as f:
+        f.write(f"Size vs accuracy Pearson correlation: {size_accuracy_corr}\n")
+        f.write(
+            f"Quantisation vs accuracy Pearson correlation: {quant_accuracy_corr}\n"
+        )
 
 
 def melt_and_process(overview):
