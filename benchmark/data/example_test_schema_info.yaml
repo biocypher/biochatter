@@ -1,129 +1,124 @@
-is_schema_info: true
-
-protein:
-  represented_as: node
-  is_relationship: false
-  present_in_knowledge_graph: true
-  preferred_id: uniprot
-  input_label: protein
-  db_collection_name: proteins
-  properties:
-    name: str
-    score: float
-    taxon: int
-    genes: str[]
-
-pathway:
-  represented_as: node
-  is_relationship: false
-  present_in_knowledge_graph: false
-  preferred_id: [reactome, wikipathways]
-  input_label: [reactome, wikipathways]
-
-gene:
-  represented_as: node
-  is_relationship: false
-  present_in_knowledge_graph: true
-  preferred_id: hgnc
-  input_label: [hgnc, ensg]
-  exclude_properties: accession
-  properties:
-    id: str
-    name: str
-    taxon: int
-
-disease:
-  represented_as: node
-  is_relationship: false
-  present_in_knowledge_graph: true
-  preferred_id: doid
-  input_label: Disease
-  properties:
-    name: str
-    ICD10: str
-    DSM5: str
-
 cell type:
-  represented_as: node
-  is_relationship: false
-  present_in_knowledge_graph: true
-  preferred_id: cl
   input_label: cell_type
+  is_relationship: false
+  preferred_id: cl
+  present_in_knowledge_graph: true
   properties:
     cell_type_name: str
     medium: str
     organism: str
-
-# ---
-# Associations
-# ---
-
-post translational interaction:
-  is_a: pairwise molecular interaction
+  represented_as: node
+disease:
+  input_label: Disease
+  is_relationship: false
+  preferred_id: doid
+  present_in_knowledge_graph: true
+  properties:
+    DSM5: str
+    ICD10: str
+    name: str
+  represented_as: node
+gene:
+  exclude_properties: accession
+  input_label:
+  - hgnc
+  - ensg
+  is_relationship: false
+  preferred_id: hgnc
+  present_in_knowledge_graph: true
+  properties:
+    id: str
+    name: str
+    taxon: int
+  represented_as: node
+gene expressed in cell type:
+  input_label: gene_expressed_in_cell_type
+  is_a: gene to expression site association
   is_relationship: true
+  label_as_edge: GENE_EXPRESSED_IN_CELL_TYPE
+  present_in_knowledge_graph: true
+  properties:
+    expression_level: float
+  represented_as: edge
+  source: gene
+  target: cell type
+gene to disease association:
+  input_label: gene_phenotype
+  is_relationship: true
+  label_as_edge: PERTURBED_IN
+  present_in_knowledge_graph: true
+  properties:
+    evidence: str
+    score: float
+    source: str
+  represented_as: edge
+  source: protein
+  target: disease
+gene to phenotype association:
+  exclude_properties: accession
+  input_label:
+  - protein_disease
+  - gene_disease
+  is_relationship: true
+  label_as_edge: PERTURBED
+  present_in_knowledge_graph: true
+  properties:
+    evidence: str
+    score: float
+    source: str
+  represented_as: edge
+  source: disease
+  target:
+  - protein
+  - gene
+gene to protein association:
+  input_label: gene_protein
+  is_relationship: true
+  present_in_knowledge_graph: true
+  properties:
+    evidence: str
+    score: float
+    source: str
+  represented_as: edge
+  source: gene
+  target: protein
+is_schema_info: true
+pathway:
+  input_label:
+  - reactome
+  - wikipathways
+  is_relationship: false
+  preferred_id:
+  - reactome
+  - wikipathways
   present_in_knowledge_graph: false
   represented_as: node
-  label_as_edge: INTERACTS_POST_TRANSLATIONAL
-  input_label: post_translational
-  source: protein
-  target: protein
-
 phosphorylation:
+  input_label: phosphorylation
   is_a: post translational interaction
   is_relationship: true
   present_in_knowledge_graph: true
   represented_as: edge
-  input_label: phosphorylation
   source: protein
   target: protein
-
-gene to phenotype association:
-  represented_as: edge
+post translational interaction:
+  input_label: post_translational
+  is_a: pairwise molecular interaction
   is_relationship: true
-  present_in_knowledge_graph: true
-  label_as_edge: PERTURBED
-  input_label: [protein_disease, gene_disease]
-  source: disease # switch for test purposes
-  target: [protein, gene]
-  exclude_properties: accession
-  properties:
-    score: float
-    source: str
-    evidence: str
-
-gene to disease association:
-  represented_as: edge
-  is_relationship: true
-  present_in_knowledge_graph: true
-  label_as_edge: PERTURBED_IN
-  input_label: gene_phenotype
-  source: protein # wrong to test entity selection
-  target: disease
-  properties:
-    score: float
-    source: str
-    evidence: str
-
-gene to protein association:
-  represented_as: edge
-  is_relationship: true
-  present_in_knowledge_graph: true
-  input_label: gene_protein
-  source: gene
+  label_as_edge: INTERACTS_POST_TRANSLATIONAL
+  present_in_knowledge_graph: false
+  represented_as: node
+  source: protein
   target: protein
-  properties:
-    score: float
-    source: str
-    evidence: str
-
-gene expressed in cell type:
-  represented_as: edge
-  is_a: gene to expression site association # biolink
-  is_relationship: true
+protein:
+  db_collection_name: proteins
+  input_label: protein
+  is_relationship: false
+  preferred_id: uniprot
   present_in_knowledge_graph: true
-  input_label: gene_expressed_in_cell_type
-  label_as_edge: GENE_EXPRESSED_IN_CELL_TYPE
-  source: gene
-  target: cell type
   properties:
-    expression_level: float
+    genes: str[]
+    name: str
+    score: float
+    taxon: int
+  represented_as: node
