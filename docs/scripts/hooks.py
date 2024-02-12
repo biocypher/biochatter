@@ -229,7 +229,7 @@ def plot_accuracy_per_model(overview) -> None:
     plt.xticks(rotation=45)
     plt.legend(bbox_to_anchor=(0, 0), loc="lower left")
     plt.savefig(
-        f"docs/images/boxplot-per-model.png",
+        "docs/images/boxplot-per-model.png",
         bbox_inches="tight",
     )
     plt.close()
@@ -247,7 +247,7 @@ def plot_accuracy_per_quantisation(overview) -> None:
     plt.title("Boxplot across tasks, per Quantisation")
     plt.xticks(rotation=45)
     plt.savefig(
-        f"docs/images/boxplot-per-quantisation.png",
+        "docs/images/boxplot-per-quantisation.png",
         bbox_inches="tight",
         dpi=300,
     )
@@ -257,17 +257,81 @@ def plot_accuracy_per_quantisation(overview) -> None:
 def plot_accuracy_per_task(overview):
     overview_melted = melt_and_process(overview)
 
-    sns.set_theme(style="whitegrid")
-    plt.figure(figsize=(10, 6))
-    sns.scatterplot(
-        x="Task", y="Accuracy", hue="Model name", data=overview_melted
+    # concatenate model name and quantisation
+    overview_melted["Coarse model name"] = overview_melted[
+        "Model name"
+    ].replace(
+        {
+            "gpt-3.5-turbo-0613": "gpt-3.5-turbo",
+            "gpt-3.5-turbo-0125": "gpt-3.5-turbo",
+            "gpt-4-0613": "gpt-4",
+            "gpt-4-0125-preview": "gpt-4",
+        },
+        regex=True,
     )
-    plt.title("Boxplot across models, per Task")
+
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(20, 10))
+
+    # Define the color palette
+    palette = sns.color_palette(
+        "Set1", len(overview_melted["Coarse model name"].unique())
+    )
+
+    # Calculate mean accuracy for each task
+    task_order = (
+        overview_melted.groupby("Task")["Accuracy"]
+        .mean()
+        .sort_values()
+        .index[::-1]
+    )
+
+    # Sort the dataframe
+    overview_melted["Task"] = pd.Categorical(
+        overview_melted["Task"], categories=task_order, ordered=True
+    )
+    overview_melted = overview_melted.sort_values("Task")
+
+    sns.stripplot(
+        x="Task",
+        y="Accuracy",
+        hue="Coarse model name",
+        data=overview_melted,
+        dodge=True,
+        palette=palette,
+        jitter=0.2,
+        alpha=0.8,
+    )
+
+    sns.lineplot(
+        x="Task",
+        y="Accuracy",
+        hue="Coarse model name",
+        data=overview_melted,
+        sort=False,
+        legend=False,
+        palette=palette,
+        alpha=0.3,
+    )
+
+    # Get current axis
+    ax = plt.gca()
+
+    # Add vertical lines at each x tick
+    for x in ax.get_xticks():
+        ax.axvline(x=x, color="gray", linestyle="--", lw=0.5)
+
+    plt.legend(bbox_to_anchor=(1, 1), loc="upper right")
+    plt.title("Dot plot across models / quantisations, per Task")
     plt.xticks(rotation=45)
     plt.savefig(
-        f"docs/images/boxplot-per-task.png",
+        "docs/images/dotplot-per-task.png",
         bbox_inches="tight",
         dpi=300,
+    )
+    plt.savefig(
+        "docs/images/dotplot-per-task.pdf",
+        bbox_inches="tight",
     )
     plt.close()
 
@@ -322,12 +386,12 @@ def plot_scatter_per_quantisation(overview):
     plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
     plt.xticks(rotation=45)
     plt.savefig(
-        f"docs/images/scatter-per-quantisation-name.png",
+        "docs/images/scatter-per-quantisation-name.png",
         bbox_inches="tight",
         dpi=300,
     )
     plt.savefig(
-        f"docs/images/scatter-per-quantisation-name.pdf",
+        "docs/images/scatter-per-quantisation-name.pdf",
         bbox_inches="tight",
     )
     plt.close()
@@ -346,7 +410,7 @@ def plot_task_comparison(overview):
     )
     plt.xticks(rotation=45)
     plt.savefig(
-        f"docs/images/boxplot-tasks.png",
+        "docs/images/boxplot-tasks.png",
         bbox_inches="tight",
     )
     plt.close()
@@ -377,12 +441,12 @@ def plot_comparison_naive_biochatter(overview):
         labels=["BioChatter", "Naive LLM (using full YAML schema)"],
     )
     plt.savefig(
-        f"docs/images/boxplot-naive-vs-biochatter.png",
+        "docs/images/boxplot-naive-vs-biochatter.png",
         bbox_inches="tight",
         dpi=300,
     )
     plt.savefig(
-        f"docs/images/boxplot-naive-vs-biochatter.pdf",
+        "docs/images/boxplot-naive-vs-biochatter.pdf",
         bbox_inches="tight",
     )
     plt.close()
@@ -424,12 +488,12 @@ def calculate_stats(overview):
     plt.ylabel("Accuracy")
     plt.title("Scatter plot of model size vs accuracy")
     plt.savefig(
-        f"docs/images/scatter-size-accuracy.png",
+        "docs/images/scatter-size-accuracy.png",
         bbox_inches="tight",
         dpi=300,
     )
     plt.savefig(
-        f"docs/images/scatter-size-accuracy.pdf",
+        "docs/images/scatter-size-accuracy.pdf",
         bbox_inches="tight",
     )
     plt.close()
@@ -447,12 +511,12 @@ def calculate_stats(overview):
     plt.ylabel("Accuracy")
     plt.title("Scatter plot of quantisation vs accuracy")
     plt.savefig(
-        f"docs/images/scatter-quantisation-accuracy.png",
+        "docs/images/scatter-quantisation-accuracy.png",
         bbox_inches="tight",
         dpi=300,
     )
     plt.savefig(
-        f"docs/images/scatter-quantisation-accuracy.pdf",
+        "docs/images/scatter-quantisation-accuracy.pdf",
         bbox_inches="tight",
     )
     plt.close()
