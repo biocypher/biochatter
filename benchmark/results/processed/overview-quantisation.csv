@@ -1,4 +1,5 @@
 Model name,Size,Version,Quantisation,Median Accuracy,SD
+gpt-3.5-turbo-0125,175,,,0.91,0.22
 gpt-4-0613,Unknown,,,0.88,0.19
 openhermes-2.5,7,ggufv2,Q5_K_M,0.83,0.35
 openhermes-2.5,7,ggufv2,Q8_0,0.82,0.35
@@ -6,6 +7,7 @@ openhermes-2.5,7,ggufv2,Q4_K_M,0.81,0.36
 openhermes-2.5,7,ggufv2,Q6_K,0.8,0.37
 gpt-3.5-turbo-0613,175,,,0.79,0.22
 openhermes-2.5,7,ggufv2,Q3_K_M,0.68,0.35
+gpt-4-0125-preview,Unknown,,,0.65,0.32
 code-llama-instruct,7,ggufv2,Q4_K_M,0.55,0.39
 openhermes-2.5,7,ggufv2,Q2_K,0.52,0.33
 code-llama-instruct,34,ggufv2,Q2_K,0.5,0.33
