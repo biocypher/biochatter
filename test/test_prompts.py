@@ -12,7 +12,7 @@ from biochatter.llm_connect import GptConversation
 @pytest.fixture
 def prompt_engine():
     return BioCypherPromptEngine(
-        schema_config_or_info_path="test/example_test_schema_info.yaml"
+        schema_config_or_info_path="test/test_schema_info.yaml"
     )
 
 
