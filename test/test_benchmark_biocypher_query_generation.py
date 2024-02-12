@@ -15,7 +15,7 @@ MODEL_NAMES = [
 def prompt_engine(request):
     model_name = request.param
     return BioCypherPromptEngine(
-        schema_config_or_info_path="test/example_test_schema_info.yaml",
+        schema_config_or_info_path="test/test_schema_info.yaml",
         model_name=model_name,
     )
 
