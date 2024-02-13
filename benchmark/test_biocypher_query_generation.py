@@ -1,7 +1,9 @@
+import json
 import re
 import inspect
 
 import pytest
+import yaml
 
 from biochatter.prompts import BioCypherPromptEngine
 from .conftest import calculate_test_score
@@ -10,28 +12,6 @@ from .benchmark_utils import (
     get_result_file_path,
     write_results_to_file,
 )
-
-
-def get_test_data(test_data_biocypher_query_generation: list) -> tuple:
-    """Helper function to unpack the test data from the test_data_biocypher_query_generation fixture.
-
-    Args:
-        test_data_biocypher_query_generation (list): The test data from the test_data_biocypher_query_generation fixture
-
-    Returns:
-        tuple: The unpacked test data
-    """
-    return (
-        test_data_biocypher_query_generation["kg_path"],
-        test_data_biocypher_query_generation["prompt"],
-        test_data_biocypher_query_generation["entities"],
-        test_data_biocypher_query_generation["relationships"],
-        test_data_biocypher_query_generation["relationship_labels"],
-        test_data_biocypher_query_generation["properties"],
-        test_data_biocypher_query_generation["parts_of_query"],
-        test_data_biocypher_query_generation["test_case_purpose"],
-        test_data_biocypher_query_generation["index"],
-    )
 
 
 def get_prompt_engine(
@@ -52,6 +32,60 @@ def get_prompt_engine(
     )
 
 
+def test_naive_query_generation_using_schema(
+    model_name,
+    test_data_biocypher_query_generation,
+    conversation,
+    multiple_testing,
+):
+    yaml_data = test_data_biocypher_query_generation
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
+    with open(f"./benchmark/data/{yaml_data['input']['kg_path']}", "r") as f:
+        schema = yaml.safe_load(f)
+
+    def run_test():
+        conversation.reset()  # needs to be reset for each test
+
+        conversation.append_system_message(
+            "You are a database expert. Please write a Cypher query to "
+            "retrieve information for the user. The schema of the graph is "
+            "defined as follows: "
+        )
+        conversation.append_system_message(json.dumps(schema, indent=2))
+        conversation.append_system_message(
+            "Only return the query, nothing else."
+        )
+
+        query, _, _ = conversation.query(yaml_data["input"]["prompt"])
+
+        score = []
+        for expected_part_of_query in yaml_data["expected"]["parts_of_query"]:
+            if isinstance(expected_part_of_query, tuple):
+                score.append(
+                    expected_part_of_query[0] in query
+                    or expected_part_of_query[1] in query
+                )
+            else:
+                score.append(
+                    (re.search(expected_part_of_query, query) is not None)
+                )
+        return calculate_test_score(score)
+
+    mean_score, max, n_iterations = multiple_testing(run_test)
+
+    write_results_to_file(
+        model_name,
+        yaml_data["case"],
+        f"{mean_score}/{max}",
+        f"{n_iterations}",
+        yaml_data["hash"],
+        get_result_file_path(task),
+    )
+
+
 def test_entity_selection(
     model_name,
     prompt_engine,
@@ -59,31 +93,25 @@ def test_entity_selection(
     conversation,
     multiple_testing,
 ):
-    (
-        kg_schema_file_name,
-        prompt,
-        expected_entities,
-        _,
-        _,
-        _,
-        _,
-        test_case_purpose,
-        test_case_index,
-    ) = get_test_data(test_data_biocypher_query_generation)
+    yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    subtask = f"{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
-    prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
+    prompt_engine = get_prompt_engine(
+        yaml_data["input"]["kg_path"], prompt_engine
+    )
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
         success = prompt_engine._select_entities(
-            question=prompt, conversation=conversation
+            question=yaml_data["input"]["prompt"],
+            conversation=conversation,
         )
         assert success
 
         score = []
-        for expected_entity in expected_entities:
+        for expected_entity in yaml_data["expected"]["entities"]:
             score.append(expected_entity in prompt_engine.selected_entities)
         return calculate_test_score(score)
 
@@ -91,9 +119,10 @@ def test_entity_selection(
 
     write_results_to_file(
         prompt_engine.model_name,
-        subtask,
+        yaml_data["case"],
         f"{mean_score}/{max}",
         f"{n_iterations}",
+        yaml_data["hash"],
         get_result_file_path(task),
     )
 
@@ -105,24 +134,19 @@ def test_relationship_selection(
     conversation,
     multiple_testing,
 ):
-    (
-        kg_schema_file_name,
-        prompt,
-        expected_entities,
-        _,
-        expected_relationship_labels,
-        _,
-        _,
-        test_case_purpose,
-        test_case_index,
-    ) = get_test_data(test_data_biocypher_query_generation)
+    yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    subtask = f"{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
-    prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
+    if not yaml_data["expected"]["relationships"]:
+        pytest.skip("No relationships to test")
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
+    prompt_engine = get_prompt_engine(
+        yaml_data["input"]["kg_path"], prompt_engine
+    )
 
-    prompt_engine.question = prompt
-    prompt_engine.selected_entities = expected_entities
+    prompt_engine.question = yaml_data["input"]["prompt"]
+    prompt_engine.selected_entities = yaml_data["expected"]["entities"]
 
     # TODO: more generic, for nested structures
 
@@ -132,17 +156,17 @@ def test_relationship_selection(
         assert success
 
         score = []
-        for (
-            expected_relationship_label_key
-        ) in expected_relationship_labels.keys():
+        for expected_relationship_label_key in yaml_data["expected"][
+            "relationship_labels"
+        ].keys():
             score.append(
                 expected_relationship_label_key
                 in prompt_engine.selected_relationship_labels.keys()
             )
 
-            for (
-                expected_relationship_label_value
-            ) in expected_relationship_labels[expected_relationship_label_key]:
+            for expected_relationship_label_value in yaml_data["expected"][
+                "relationship_labels"
+            ][expected_relationship_label_key]:
                 try:
                     score.append(
                         expected_relationship_label_value
@@ -158,9 +182,10 @@ def test_relationship_selection(
 
     write_results_to_file(
         prompt_engine.model_name,
-        subtask,
+        yaml_data["case"],
         f"{mean_score}/{max}",
         f"{n_iterations}",
+        yaml_data["hash"],
         get_result_file_path(task),
     )
 
@@ -172,25 +197,20 @@ def test_property_selection(
     conversation,
     multiple_testing,
 ):
-    (
-        kg_schema_file_name,
-        prompt,
-        expected_entities,
-        expected_relationships,
-        _,
-        expected_properties,
-        _,
-        test_case_purpose,
-        test_case_index,
-    ) = get_test_data(test_data_biocypher_query_generation)
+    yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    subtask = f"{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
-    prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
+    prompt_engine = get_prompt_engine(
+        yaml_data["input"]["kg_path"], prompt_engine
+    )
 
-    prompt_engine.question = prompt
-    prompt_engine.selected_entities = expected_entities
-    prompt_engine.selected_relationships = expected_relationships
+    prompt_engine.question = yaml_data["input"]["prompt"]
+    prompt_engine.selected_entities = yaml_data["expected"]["entities"]
+    prompt_engine.selected_relationships = yaml_data["expected"][
+        "relationships"
+    ]
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
@@ -198,7 +218,9 @@ def test_property_selection(
 
         if success:
             score = []
-            for expected_property_key in expected_properties.keys():
+            for expected_property_key in yaml_data["expected"][
+                "properties"
+            ].keys():
                 try:
                     score.append(
                         expected_property_key
@@ -207,9 +229,9 @@ def test_property_selection(
                 except KeyError:
                     score.append(False)
 
-                for expected_property_value in expected_properties[
-                    expected_property_key
-                ]:
+                for expected_property_value in yaml_data["expected"][
+                    "properties"
+                ][expected_property_key]:
                     try:
                         score.append(
                             expected_property_value
@@ -220,7 +242,12 @@ def test_property_selection(
                     except KeyError:
                         score.append(False)
         else:
-            score = [False for _ in expected_properties.keys()]
+            total_properties = len(
+                yaml_data["expected"]["properties"].keys()
+            ) + sum(
+                len(v) for v in yaml_data["expected"]["properties"].values()
+            )
+            score = [False] * total_properties
 
         return calculate_test_score(score)
 
@@ -228,9 +255,10 @@ def test_property_selection(
 
     write_results_to_file(
         prompt_engine.model_name,
-        subtask,
+        yaml_data["case"],
         f"{mean_score}/{max}",
         f"{n_iterations}",
+        yaml_data["hash"],
         get_result_file_path(task),
     )
 
@@ -242,35 +270,28 @@ def test_query_generation(
     conversation,
     multiple_testing,
 ):
-    (
-        kg_schema_file_name,
-        prompt,
-        expected_entities,
-        _,
-        expected_relationship_labels,
-        expected_properties,
-        expected_parts_of_query,
-        test_case_purpose,
-        test_case_index,
-    ) = get_test_data(test_data_biocypher_query_generation)
+    yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    subtask = f"{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
-    prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
+    prompt_engine = get_prompt_engine(
+        yaml_data["input"]["kg_path"], prompt_engine
+    )
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
         query = prompt_engine._generate_query(
-            question=prompt,
-            entities=expected_entities,
-            relationships=expected_relationship_labels,
-            properties=expected_properties,
+            question=yaml_data["input"]["prompt"],
+            entities=yaml_data["expected"]["entities"],
+            relationships=yaml_data["expected"]["relationship_labels"],
+            properties=yaml_data["expected"]["properties"],
             query_language="Cypher",
             conversation=conversation,
         )
 
         score = []
-        for expected_part_of_query in expected_parts_of_query:
+        for expected_part_of_query in yaml_data["expected"]["parts_of_query"]:
             if isinstance(expected_part_of_query, tuple):
                 score.append(
                     expected_part_of_query[0] in query
@@ -286,9 +307,10 @@ def test_query_generation(
 
     write_results_to_file(
         prompt_engine.model_name,
-        subtask,
+        yaml_data["case"],
         f"{mean_score}/{max}",
         f"{n_iterations}",
+        yaml_data["hash"],
         get_result_file_path(task),
     )
 
@@ -300,31 +322,26 @@ def test_end_to_end_query_generation(
     conversation,
     multiple_testing,
 ):
-    (
-        kg_schema_file_name,
-        prompt,
-        _,
-        _,
-        _,
-        _,
-        expected_parts_of_query,
-        test_case_purpose,
-        test_case_index,
-    ) = get_test_data(test_data_biocypher_query_generation)
+    yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    subtask = f"{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
-    prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
+    prompt_engine = get_prompt_engine(
+        yaml_data["input"]["kg_path"], prompt_engine
+    )
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
         try:
             query = prompt_engine.generate_query(
-                question=prompt,
+                question=yaml_data["input"]["prompt"],
                 query_language="Cypher",
             )
             score = []
-            for expected_part_of_query in expected_parts_of_query:
+            for expected_part_of_query in yaml_data["expected"][
+                "parts_of_query"
+            ]:
                 if isinstance(expected_part_of_query, tuple):
                     score.append(
                         expected_part_of_query[0] in query
@@ -335,7 +352,7 @@ def test_end_to_end_query_generation(
                         (re.search(expected_part_of_query, query) is not None)
                     )
         except ValueError as e:
-            score = [False for _ in expected_parts_of_query]
+            score = [False for _ in yaml_data["expected"]["parts_of_query"]]
 
         return calculate_test_score(score)
 
@@ -343,9 +360,10 @@ def test_end_to_end_query_generation(
 
     write_results_to_file(
         prompt_engine.model_name,
-        subtask,
+        yaml_data["case"],
         f"{mean_score}/{max}",
         f"{n_iterations}",
+        yaml_data["hash"],
         get_result_file_path(task),
     )
 
@@ -440,29 +458,22 @@ def test_property_exists(
     conversation,
     multiple_testing,
 ):
-    (
-        kg_schema_file_name,
-        prompt,
-        expected_entities,
-        _,
-        expected_relationship_labels,
-        expected_properties,
-        expected_parts_of_query,
-        test_case_purpose,
-        test_case_index,
-    ) = get_test_data(test_data_biocypher_query_generation)
+    yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    subtask = f"{str(test_case_index)}_{test_case_purpose}"
-    skip_if_already_run(model_name=model_name, task=task, subtask=subtask)
-    prompt_engine = get_prompt_engine(kg_schema_file_name, prompt_engine)
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
+    prompt_engine = get_prompt_engine(
+        yaml_data["input"]["kg_path"], prompt_engine
+    )
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
         query = prompt_engine._generate_query(
-            question=prompt,
-            entities=expected_entities,
-            relationships=expected_relationship_labels,
-            properties=expected_properties,
+            question=yaml_data["input"]["prompt"],
+            entities=yaml_data["expected"]["entities"],
+            relationships=yaml_data["expected"]["relationship_labels"],
+            properties=yaml_data["expected"]["properties"],
             query_language="Cypher",
             conversation=conversation,
         )
@@ -496,15 +507,37 @@ def test_property_exists(
                 score.append(property in avail_property_entity)
             else:
                 # no properties of the entity or relationship exist, simply made up
-                score.append(0)
+                score.append(False)
+
+        # if score is shorter than the least expected number of properties, add
+        # False values until the length is reached
+        score += [False] * (len(yaml_data["expected"]["entities"]) - len(score))
         return calculate_test_score(score)
 
     mean_score, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
-        subtask,
+        yaml_data["case"],
         f"{mean_score}/{max}",
         f"{n_iterations}",
+        yaml_data["hash"],
         get_result_file_path(task),
     )
+
+
+@pytest.mark.skip(reason="Helper function for testing regex patterns")
+def test_regex(test_data_biocypher_query_generation):
+    yaml_data = test_data_biocypher_query_generation
+    query = 'MATCH (g:Gene)-[:GENE_EXPRESSED_IN_CELL_TYPE]->(c:CellType) WHERE c.cell_type_name = "fibroblast" RETURN g.id, g.name, c.cell_type_name, c.expression_level ORDER BY c.expression_level DESC'
+    score = []
+    for expected_part_of_query in yaml_data["expected"]["parts_of_query"]:
+        if isinstance(expected_part_of_query, tuple):
+            score.append(
+                expected_part_of_query[0] in query
+                or expected_part_of_query[1] in query
+            )
+        else:
+            score.append((re.search(expected_part_of_query, query) is not None))
+
+        assert True

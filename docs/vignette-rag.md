@@ -1,4 +1,4 @@
-# Vignette: Retrieval-Augmented Generation
+# Vignette: Retrieval-Augmented Generation (RAG)
 
 This vignette demonstrates the RAG module of BioChatter as used by the
 BioChatter Next application. This basic use case involves an LLM manuscript
@@ -21,7 +21,7 @@ limited by the scale of the vector database system. In this case, and for
 demonstration purposes, we uploaded the four manuscripts, which leads to the
 state shown in the screenshot below. You can find the citations below.
 
-![RAG Settings](rag-settings.png)
+![RAG Settings](images/rag-settings.png)
 
 Note that we chose to split the documents into fragments of 1000 characters
 each. We could have split by tokens instead, or changed the fragment length and
@@ -35,10 +35,10 @@ We can now start a new conversation (using the `New Persona` button in the
 sidebar), for which we select the `Research manuscript helper (RAG)` persona,
 which includes suitable contextual prompts. Upon activating the RAG in the chat
 (to signal that we wish to perform RAG for our question), we can enter into a
-dialogue with the assistant. We use gpt-3.5-turbo in this example, which is a
-very affordable model. The procedure is demonstrated in the GIF below.
+dialogue with the assistant. We use `gpt-3.5-turbo-0613` in this example, which
+is a very affordable model. The procedure is demonstrated in the GIF below.
 
-![RAG Demo](rag-demo.gif)
+![RAG Demo](images/rag-demo.gif)
 
 ## Comparison with ChatGPT
 
@@ -53,8 +53,8 @@ You can read the full answer
 Overall, the quality of ChatGPT 4 is comparable to the RAG output, but the user
 has less control over the knowledge used, and the answer cannot include
 information that is not easily found on the web (for instance due to access
-restrictions). Of note, we used gpt-3.5-turbo in this example, which is less
-recent and much less expensive than GPT-4.
+restrictions). Of note, we used `gpt-3.5-turbo-0613` in this example, which is
+less recent and much less expensive than GPT-4.
 
 Asking the naive ChatGPT 3.5 (free access), the same question yields a very
 different answer. The free version of ChatGPT cannot search the internet, and
@@ -76,19 +76,19 @@ database instance, free of charge at
 
 ### BioChatter RAG
 
-#### Contextual Prompt:
+#### Contextual Prompt
 You are an assistant to a biomedical researcher.
 
-#### Contextual Prompt:
+#### Contextual Prompt
 You have access to text fragments from one or multiple scientific manuscripts, which were retrieved by their semantic similarity to the user's question.
 
-#### Contextual Prompt:
+#### Contextual Prompt
 Your task is to help the user understand the manuscripts and their relevance to their questions. Be concise in your explanations, provide quotes from the manuscripts where appropriate, and be open about limitations in cases where the text does not contain pertinent information.
 
-#### Message From You:
+#### Message From You
 What is known about the CFTR protein in resistance to ovarian cancer?
 
-#### Message From BioChatter:
+#### Message From BioChatter
 Based on the provided information, there are several studies that suggest a potential role of the CFTR (Cystic Fibrosis Transmembrane Conductance Regulator) protein in resistance to ovarian cancer. Here are some key findings from the referenced manuscripts:
 
 1. Gene expression profiling of ovarian tumors before and after chemotherapy revealed molecular signatures of chemoresistant tumors (M, et al., 2006). This study did not specifically mention CFTR, but it provides insights into the molecular changes associated with chemoresistance.
@@ -107,10 +107,10 @@ Based on the provided information, there are several studies that suggest a pote
 
 It is important to note that while these studies suggest a potential association between CFTR and resistance to ovarian cancer, the exact mechanisms and clinical implications are still being investigated. Further research is needed to fully understand the role of CFTR in ovarian cancer resistance.
 
-#### Message From You:
+#### Message From You
 Tell me more about the studies of aggression and knockdown of CFTR in vivo.
 
-#### Message From BioChatter:
+#### Message From BioChatter
 Based on the provided information, there are two relevant studies regarding the aggression and knockdown of CFTR in ovarian cancer:
 
 1. The study by Wu et al. (2013) investigated the constitutive activation of nuclear factor κB (NF-κB) and its contribution to CFTR expression, cancer progression, and poor prognosis in cervical cancer. Although this study is not specific to ovarian cancer, it provides insights into the role of CFTR and NF-κB in promoting cancer progression.

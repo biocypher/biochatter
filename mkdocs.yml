@@ -51,13 +51,14 @@ nav:
       - Retrieval-Augmented Generation: rag.md
       - Open-source and Local LLMs: open-llm.md
       - LLM in your Browser - WebAssembly: wasm.md
-      - Benchmarking: benchmark.md
+      - Benchmarking: benchmarking.md
       - Podcast my Paper: podcast.md
   - Benchmark:
-      - Overview: benchmark-overview.md
+      - Overview: benchmark.md
       - All Results: benchmark-results.md
   - Vignettes:
-      - Retrieval-Augmented Generation: vignette-rag.md
+      - Knowledge Graph RAG: vignette-kg.md
+      - Retrieval-Augmented Generation (RAG): vignette-rag.md
   - API Reference:
       - LLM Connectivity: llm_connect-reference.md
       - Vectorstore: vectorstore-reference.md
@@ -82,6 +83,16 @@ markdown_extensions:
       slugify: !!python/object/apply:pymdownx.slugs.slugify
         kwds:
           case: lower
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - attr_list
+  - md_in_html
 
 extra_javascript:
   - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js

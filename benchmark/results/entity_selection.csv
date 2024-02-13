@@ -1,29 +1,229 @@
-model_name,subtask,score,iterations
-gpt-3.5-turbo,0_single_word,2.0/2,2
-gpt-3.5-turbo,1_multi_word,2.0/2,2
-gpt-4,0_single_word,2.0/2,2
-gpt-4,1_multi_word,2.0/2,2
-llama-2-chat:13:ggmlv3:q2_K,0_single_word,0.0/2,2
-llama-2-chat:13:ggmlv3:q2_K,1_multi_word,0.0/2,2
-llama-2-chat:13:ggmlv3:q4_0,0_single_word,1.0/2,2
-llama-2-chat:13:ggmlv3:q4_0,1_multi_word,0.0/2,2
-llama-2-chat:13:ggmlv3:q5_0,0_single_word,0.0/2,2
-llama-2-chat:13:ggmlv3:q5_0,1_multi_word,0.0/2,2
-llama-2-chat:13:ggmlv3:q8_0,0_single_word,0.0/2,2
-llama-2-chat:13:ggmlv3:q8_0,1_multi_word,0.0/2,2
-llama-2-chat:7:ggmlv3:q2_K,0_single_word,1.0/2,2
-llama-2-chat:7:ggmlv3:q2_K,1_multi_word,1.0/2,2
-llama-2-chat:7:ggmlv3:q4_0,0_single_word,1.0/2,2
-llama-2-chat:7:ggmlv3:q4_0,1_multi_word,1.0/2,2
-llama-2-chat:7:ggmlv3:q5_0,0_single_word,1.0/2,2
-llama-2-chat:7:ggmlv3:q5_0,1_multi_word,1.0/2,2
-llama-2-chat:7:ggmlv3:q8_0,0_single_word,1.0/2,2
-llama-2-chat:7:ggmlv3:q8_0,1_multi_word,1.0/2,2
-mixtral-instruct-v0.1:46_7:ggufv2:Q2_K,0_single_word,0.0/2,2
-mixtral-instruct-v0.1:46_7:ggufv2:Q2_K,1_multi_word,0.0/2,2
-mixtral-instruct-v0.1:46_7:ggufv2:Q4_0,0_single_word,0.0/2,2
-mixtral-instruct-v0.1:46_7:ggufv2:Q4_0,1_multi_word,0.0/2,2
-mixtral-instruct-v0.1:46_7:ggufv2:Q5_0,0_single_word,0.0/2,2
-mixtral-instruct-v0.1:46_7:ggufv2:Q5_0,1_multi_word,1.0/2,2
-mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,0_single_word,0.0/2,2
-mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,1_multi_word,1.0/2,2
+model_name,subtask,score,iterations,md5_hash,datetime
+chatglm3:6:ggmlv3:q4_0,complex,3.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-09 23:28:42
+chatglm3:6:ggmlv3:q4_0,multi_word,1.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-09 23:24:42
+chatglm3:6:ggmlv3:q4_0,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-09 23:17:28
+chatglm3:6:ggmlv3:q4_0,single_word,1.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-09 23:20:51
+code-llama-instruct:13:ggufv2:Q2_K,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-09 23:55:43
+code-llama-instruct:13:ggufv2:Q2_K,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-09 23:48:55
+code-llama-instruct:13:ggufv2:Q2_K,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-09 23:36:02
+code-llama-instruct:13:ggufv2:Q2_K,single_word,0.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-09 23:41:49
+code-llama-instruct:13:ggufv2:Q3_K_M,complex,2.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 00:28:22
+code-llama-instruct:13:ggufv2:Q3_K_M,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 00:20:30
+code-llama-instruct:13:ggufv2:Q3_K_M,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 00:07:06
+code-llama-instruct:13:ggufv2:Q3_K_M,single_word,1.6/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 00:12:13
+code-llama-instruct:13:ggufv2:Q4_K_M,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 00:58:01
+code-llama-instruct:13:ggufv2:Q4_K_M,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 00:50:20
+code-llama-instruct:13:ggufv2:Q4_K_M,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 00:39:00
+code-llama-instruct:13:ggufv2:Q4_K_M,single_word,0.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 00:43:25
+code-llama-instruct:13:ggufv2:Q5_K_M,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 01:30:52
+code-llama-instruct:13:ggufv2:Q5_K_M,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 01:22:52
+code-llama-instruct:13:ggufv2:Q5_K_M,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 01:09:40
+code-llama-instruct:13:ggufv2:Q5_K_M,single_word,0.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 01:15:08
+code-llama-instruct:13:ggufv2:Q6_K,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 07:59:03
+code-llama-instruct:13:ggufv2:Q6_K,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 07:49:19
+code-llama-instruct:13:ggufv2:Q6_K,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 07:35:21
+code-llama-instruct:13:ggufv2:Q6_K,single_word,0.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 07:41:20
+code-llama-instruct:13:ggufv2:Q8_0,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 02:07:18
+code-llama-instruct:13:ggufv2:Q8_0,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 01:57:40
+code-llama-instruct:13:ggufv2:Q8_0,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 01:43:52
+code-llama-instruct:13:ggufv2:Q8_0,single_word,0.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 01:49:08
+code-llama-instruct:34:ggufv2:Q2_K,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 04:13:49
+code-llama-instruct:34:ggufv2:Q2_K,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 03:43:52
+code-llama-instruct:34:ggufv2:Q2_K,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 02:24:46
+code-llama-instruct:34:ggufv2:Q2_K,single_word,0.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 03:12:22
+code-llama-instruct:34:ggufv2:Q3_K_M,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 05:28:33
+code-llama-instruct:34:ggufv2:Q3_K_M,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 05:12:00
+code-llama-instruct:34:ggufv2:Q3_K_M,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 04:44:01
+code-llama-instruct:34:ggufv2:Q3_K_M,single_word,0.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 04:58:44
+code-llama-instruct:34:ggufv2:Q4_K_M,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 07:03:14
+code-llama-instruct:34:ggufv2:Q4_K_M,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 06:41:25
+code-llama-instruct:34:ggufv2:Q4_K_M,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 06:03:08
+code-llama-instruct:34:ggufv2:Q4_K_M,single_word,0.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 06:20:20
+code-llama-instruct:34:ggufv2:Q5_K_M,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 08:18:46
+code-llama-instruct:34:ggufv2:Q5_K_M,multi_word,1.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 08:06:35
+code-llama-instruct:34:ggufv2:Q5_K_M,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 07:46:30
+code-llama-instruct:34:ggufv2:Q5_K_M,single_word,0.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 07:56:44
+code-llama-instruct:34:ggufv2:Q6_K,complex,1.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 09:22:21
+code-llama-instruct:34:ggufv2:Q6_K,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 09:06:03
+code-llama-instruct:34:ggufv2:Q6_K,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 08:31:46
+code-llama-instruct:34:ggufv2:Q6_K,single_word,0.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 08:47:07
+code-llama-instruct:34:ggufv2:Q8_0,complex,1.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 09:35:13
+code-llama-instruct:34:ggufv2:Q8_0,multi_word,1.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 09:21:08
+code-llama-instruct:34:ggufv2:Q8_0,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 08:52:25
+code-llama-instruct:34:ggufv2:Q8_0,single_word,0.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 09:09:26
+code-llama-instruct:7:ggufv2:Q2_K,complex,1.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 10:45:44
+code-llama-instruct:7:ggufv2:Q2_K,multi_word,1.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 10:42:07
+code-llama-instruct:7:ggufv2:Q2_K,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 10:34:10
+code-llama-instruct:7:ggufv2:Q2_K,single_word,0.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 10:38:47
+code-llama-instruct:7:ggufv2:Q3_K_M,complex,1.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 11:00:26
+code-llama-instruct:7:ggufv2:Q3_K_M,multi_word,1.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 10:57:36
+code-llama-instruct:7:ggufv2:Q3_K_M,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 10:53:15
+code-llama-instruct:7:ggufv2:Q3_K_M,single_word,2.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 10:54:34
+code-llama-instruct:7:ggufv2:Q4_K_M,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 11:13:00
+code-llama-instruct:7:ggufv2:Q4_K_M,multi_word,1.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 11:10:23
+code-llama-instruct:7:ggufv2:Q4_K_M,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 11:06:19
+code-llama-instruct:7:ggufv2:Q4_K_M,single_word,2.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 11:07:29
+code-llama-instruct:7:ggufv2:Q5_K_M,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 11:28:18
+code-llama-instruct:7:ggufv2:Q5_K_M,multi_word,1.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 11:25:14
+code-llama-instruct:7:ggufv2:Q5_K_M,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 11:18:40
+code-llama-instruct:7:ggufv2:Q5_K_M,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 11:21:32
+code-llama-instruct:7:ggufv2:Q6_K,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 15:53:50
+code-llama-instruct:7:ggufv2:Q6_K,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 15:49:58
+code-llama-instruct:7:ggufv2:Q6_K,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 15:44:01
+code-llama-instruct:7:ggufv2:Q6_K,single_word,0.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 15:46:14
+code-llama-instruct:7:ggufv2:Q8_0,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 11:45:10
+code-llama-instruct:7:ggufv2:Q8_0,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 11:41:59
+code-llama-instruct:7:ggufv2:Q8_0,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 11:37:06
+code-llama-instruct:7:ggufv2:Q8_0,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 11:38:46
+gpt-3.5-turbo-0125,complex,3.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-12 08:28:16
+gpt-3.5-turbo-0125,multi_word,2.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-12 08:27:16
+gpt-3.5-turbo-0125,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-12 08:25:17
+gpt-3.5-turbo-0125,single_word,2.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-12 08:26:06
+gpt-3.5-turbo-0613,complex,3.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 11:55:12
+gpt-3.5-turbo-0613,multi_word,2.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 11:52:10
+gpt-3.5-turbo-0613,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-09 23:09:16
+gpt-3.5-turbo-0613,single_word,2.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 11:51:17
+gpt-4-0125-preview,complex,2.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-12 08:35:59
+gpt-4-0125-preview,multi_word,2.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-12 08:34:26
+gpt-4-0125-preview,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-12 08:32:07
+gpt-4-0125-preview,single_word,2.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-12 08:33:10
+gpt-4-0613,complex,3.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 12:01:29
+gpt-4-0613,multi_word,2.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 11:59:42
+gpt-4-0613,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 11:56:59
+gpt-4-0613,single_word,2.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 11:58:07
+llama-2-chat:13:ggufv2:Q2_K,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 12:27:24
+llama-2-chat:13:ggufv2:Q2_K,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 12:19:11
+llama-2-chat:13:ggufv2:Q2_K,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 12:06:10
+llama-2-chat:13:ggufv2:Q2_K,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 12:10:31
+llama-2-chat:13:ggufv2:Q3_K_M,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 13:01:14
+llama-2-chat:13:ggufv2:Q3_K_M,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 12:52:06
+llama-2-chat:13:ggufv2:Q3_K_M,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 12:41:12
+llama-2-chat:13:ggufv2:Q3_K_M,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 12:44:38
+llama-2-chat:13:ggufv2:Q4_K_M,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 13:33:06
+llama-2-chat:13:ggufv2:Q4_K_M,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 13:25:29
+llama-2-chat:13:ggufv2:Q4_K_M,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 13:13:49
+llama-2-chat:13:ggufv2:Q4_K_M,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 13:17:20
+llama-2-chat:13:ggufv2:Q5_K_M,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 14:10:20
+llama-2-chat:13:ggufv2:Q5_K_M,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 14:00:59
+llama-2-chat:13:ggufv2:Q5_K_M,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 13:47:21
+llama-2-chat:13:ggufv2:Q5_K_M,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 13:52:15
+llama-2-chat:13:ggufv2:Q6_K,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 16:30:07
+llama-2-chat:13:ggufv2:Q6_K,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 16:18:47
+llama-2-chat:13:ggufv2:Q6_K,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 16:02:49
+llama-2-chat:13:ggufv2:Q6_K,single_word,0.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 16:07:23
+llama-2-chat:13:ggufv2:Q8_0,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 14:52:32
+llama-2-chat:13:ggufv2:Q8_0,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 14:41:16
+llama-2-chat:13:ggufv2:Q8_0,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 14:25:18
+llama-2-chat:13:ggufv2:Q8_0,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 14:31:51
+llama-2-chat:70:ggufv2:Q2_K,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 16:32:23
+llama-2-chat:70:ggufv2:Q2_K,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 16:05:21
+llama-2-chat:70:ggufv2:Q2_K,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 15:15:52
+llama-2-chat:70:ggufv2:Q2_K,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 15:33:08
+llama-2-chat:70:ggufv2:Q3_K_M,complex,2.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 18:42:28
+llama-2-chat:70:ggufv2:Q3_K_M,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 18:19:24
+llama-2-chat:70:ggufv2:Q3_K_M,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 17:40:01
+llama-2-chat:70:ggufv2:Q3_K_M,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 17:54:10
+llama-2-chat:70:ggufv2:Q4_K_M,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 20:38:33
+llama-2-chat:70:ggufv2:Q4_K_M,multi_word,2.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 20:18:31
+llama-2-chat:70:ggufv2:Q4_K_M,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 19:42:04
+llama-2-chat:70:ggufv2:Q4_K_M,single_word,1.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 19:54:16
+llama-2-chat:70:ggufv2:Q5_K_M,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 22:36:46
+llama-2-chat:70:ggufv2:Q5_K_M,multi_word,2.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 22:13:47
+llama-2-chat:70:ggufv2:Q5_K_M,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 21:32:26
+llama-2-chat:70:ggufv2:Q5_K_M,single_word,2.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 21:43:23
+llama-2-chat:7:ggufv2:Q2_K,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-10 23:54:46
+llama-2-chat:7:ggufv2:Q2_K,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-10 23:49:57
+llama-2-chat:7:ggufv2:Q2_K,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-10 23:41:59
+llama-2-chat:7:ggufv2:Q2_K,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-10 23:45:01
+llama-2-chat:7:ggufv2:Q3_K_M,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 00:23:00
+llama-2-chat:7:ggufv2:Q3_K_M,multi_word,1.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 00:18:53
+llama-2-chat:7:ggufv2:Q3_K_M,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 00:04:35
+llama-2-chat:7:ggufv2:Q3_K_M,single_word,2.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 00:05:55
+llama-2-chat:7:ggufv2:Q4_K_M,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 00:38:41
+llama-2-chat:7:ggufv2:Q4_K_M,multi_word,1.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 00:34:40
+llama-2-chat:7:ggufv2:Q4_K_M,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 00:29:13
+llama-2-chat:7:ggufv2:Q4_K_M,single_word,2.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 00:31:02
+llama-2-chat:7:ggufv2:Q5_K_M,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 00:56:42
+llama-2-chat:7:ggufv2:Q5_K_M,multi_word,1.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 00:51:12
+llama-2-chat:7:ggufv2:Q5_K_M,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 00:45:30
+llama-2-chat:7:ggufv2:Q5_K_M,single_word,2.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 00:47:08
+llama-2-chat:7:ggufv2:Q6_K,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 21:26:25
+llama-2-chat:7:ggufv2:Q6_K,multi_word,1.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 21:20:46
+llama-2-chat:7:ggufv2:Q6_K,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 21:13:59
+llama-2-chat:7:ggufv2:Q6_K,single_word,1.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 21:16:14
+llama-2-chat:7:ggufv2:Q8_0,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 01:15:17
+llama-2-chat:7:ggufv2:Q8_0,multi_word,1.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 01:10:58
+llama-2-chat:7:ggufv2:Q8_0,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 01:03:46
+llama-2-chat:7:ggufv2:Q8_0,single_word,2.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 01:05:49
+mistral-instruct-v0.2:7:ggufv2:Q2_K,complex,2.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 01:31:20
+mistral-instruct-v0.2:7:ggufv2:Q2_K,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 01:28:25
+mistral-instruct-v0.2:7:ggufv2:Q2_K,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 01:23:56
+mistral-instruct-v0.2:7:ggufv2:Q2_K,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 01:25:28
+mistral-instruct-v0.2:7:ggufv2:Q3_K_M,complex,2.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 01:47:24
+mistral-instruct-v0.2:7:ggufv2:Q3_K_M,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 01:42:45
+mistral-instruct-v0.2:7:ggufv2:Q3_K_M,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 01:38:37
+mistral-instruct-v0.2:7:ggufv2:Q3_K_M,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 01:39:55
+mistral-instruct-v0.2:7:ggufv2:Q4_K_M,complex,2.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 02:00:46
+mistral-instruct-v0.2:7:ggufv2:Q4_K_M,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 01:57:19
+mistral-instruct-v0.2:7:ggufv2:Q4_K_M,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 01:52:39
+mistral-instruct-v0.2:7:ggufv2:Q4_K_M,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 01:54:06
+mistral-instruct-v0.2:7:ggufv2:Q5_K_M,complex,2.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 02:13:24
+mistral-instruct-v0.2:7:ggufv2:Q5_K_M,multi_word,1.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 02:10:30
+mistral-instruct-v0.2:7:ggufv2:Q5_K_M,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 02:05:42
+mistral-instruct-v0.2:7:ggufv2:Q5_K_M,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 02:06:59
+mistral-instruct-v0.2:7:ggufv2:Q6_K,complex,2.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 21:46:40
+mistral-instruct-v0.2:7:ggufv2:Q6_K,multi_word,1.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 21:43:21
+mistral-instruct-v0.2:7:ggufv2:Q6_K,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 21:38:36
+mistral-instruct-v0.2:7:ggufv2:Q6_K,single_word,0.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 21:40:11
+mistral-instruct-v0.2:7:ggufv2:Q8_0,complex,2.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 02:27:06
+mistral-instruct-v0.2:7:ggufv2:Q8_0,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 02:24:16
+mistral-instruct-v0.2:7:ggufv2:Q8_0,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 02:19:02
+mistral-instruct-v0.2:7:ggufv2:Q8_0,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 02:20:29
+mixtral-instruct-v0.1:46_7:ggufv2:Q2_K,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 03:16:32
+mixtral-instruct-v0.1:46_7:ggufv2:Q2_K,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 02:59:39
+mixtral-instruct-v0.1:46_7:ggufv2:Q2_K,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 02:35:19
+mixtral-instruct-v0.1:46_7:ggufv2:Q2_K,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 02:40:08
+mixtral-instruct-v0.1:46_7:ggufv2:Q3_K_M,complex,0.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 03:52:58
+mixtral-instruct-v0.1:46_7:ggufv2:Q3_K_M,multi_word,2.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 03:44:09
+mixtral-instruct-v0.1:46_7:ggufv2:Q3_K_M,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 03:31:00
+mixtral-instruct-v0.1:46_7:ggufv2:Q3_K_M,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 03:36:08
+mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,complex,2.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 04:23:43
+mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,multi_word,1.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 04:17:14
+mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,simple,0.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 04:07:59
+mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 04:11:08
+mixtral-instruct-v0.1:46_7:ggufv2:Q5_K_M,complex,2.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 04:54:18
+mixtral-instruct-v0.1:46_7:ggufv2:Q5_K_M,multi_word,0.8/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 04:46:55
+mixtral-instruct-v0.1:46_7:ggufv2:Q5_K_M,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 04:33:13
+mixtral-instruct-v0.1:46_7:ggufv2:Q5_K_M,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 04:38:10
+mixtral-instruct-v0.1:46_7:ggufv2:Q6_K,complex,2.8/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 22:18:37
+mixtral-instruct-v0.1:46_7:ggufv2:Q6_K,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 22:09:53
+mixtral-instruct-v0.1:46_7:ggufv2:Q6_K,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 21:56:35
+mixtral-instruct-v0.1:46_7:ggufv2:Q6_K,single_word,0.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 22:01:26
+mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,complex,1.8/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 05:33:45
+mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,multi_word,0.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 05:24:48
+mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 05:08:29
+mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,single_word,0.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 05:13:54
+openhermes-2.5:7:ggufv2:Q2_K,complex,2.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 05:56:28
+openhermes-2.5:7:ggufv2:Q2_K,multi_word,1.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 05:53:51
+openhermes-2.5:7:ggufv2:Q2_K,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 05:49:22
+openhermes-2.5:7:ggufv2:Q2_K,single_word,1.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 05:51:15
+openhermes-2.5:7:ggufv2:Q3_K_M,complex,3.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 06:08:52
+openhermes-2.5:7:ggufv2:Q3_K_M,multi_word,2.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 06:05:59
+openhermes-2.5:7:ggufv2:Q3_K_M,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 06:01:22
+openhermes-2.5:7:ggufv2:Q3_K_M,single_word,3.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 06:02:52
+openhermes-2.5:7:ggufv2:Q4_K_M,complex,3.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 06:19:34
+openhermes-2.5:7:ggufv2:Q4_K_M,multi_word,2.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 06:17:11
+openhermes-2.5:7:ggufv2:Q4_K_M,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 06:13:01
+openhermes-2.5:7:ggufv2:Q4_K_M,single_word,2.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 06:14:22
+openhermes-2.5:7:ggufv2:Q5_K_M,complex,3.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 06:30:07
+openhermes-2.5:7:ggufv2:Q5_K_M,multi_word,2.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 06:26:43
+openhermes-2.5:7:ggufv2:Q5_K_M,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 06:23:20
+openhermes-2.5:7:ggufv2:Q5_K_M,single_word,2.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 06:24:34
+openhermes-2.5:7:ggufv2:Q6_K,complex,3.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 22:45:46
+openhermes-2.5:7:ggufv2:Q6_K,multi_word,2.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 22:42:49
+openhermes-2.5:7:ggufv2:Q6_K,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 22:38:30
+openhermes-2.5:7:ggufv2:Q6_K,single_word,2.0/2,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 22:39:57
+openhermes-2.5:7:ggufv2:Q8_0,complex,3.0/3,5,04e7d76d436c8eb831a01a742898bf3c,2024-02-11 06:40:50
+openhermes-2.5:7:ggufv2:Q8_0,multi_word,2.0/2,5,858df73e5ffe176ea273839a9318658c,2024-02-11 06:38:01
+openhermes-2.5:7:ggufv2:Q8_0,simple,1.0/1,5,a8ad6eb106b7f7214fab43fa9fa1a66d,2024-02-11 06:33:32
+openhermes-2.5:7:ggufv2:Q8_0,single_word,2.0/3,5,7e0f1a2b37b22c6083b30e4bd562f18d,2024-02-11 06:35:28

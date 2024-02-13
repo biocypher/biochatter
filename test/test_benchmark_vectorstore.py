@@ -111,6 +111,7 @@ def test_retrieval_augmented_generation(model, chunk_size):
             connection_args={"host": _HOST, "port": _PORT},
         )
         rag_agent = RagAgent(
+            use_prompt=True,
             mode=RagAgentModeEnum.VectorStore,
             model_name=model,
             connection_args={"host": _HOST, "port": _PORT},

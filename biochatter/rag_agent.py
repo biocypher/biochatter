@@ -56,6 +56,7 @@ class RagAgent:
         self.use_prompt = use_prompt
         self.n_results = n_results
         self.documentids_workspace = documentids_workspace
+        self.last_response = []
         if self.mode == RagAgentModeEnum.KG:
             from .database_agent import DatabaseAgent
 
@@ -108,9 +109,12 @@ class RagAgent:
         Todo:
             Which metadata are returned?
         """
+        self.last_response = []
+        if not self.use_prompt:
+            return []
         if self.mode == RagAgentModeEnum.KG:
             results = self.query_func(user_question, self.n_results)
-            return [
+            response = [
                 (
                     result.page_content,
                     result.metadata,
@@ -123,7 +127,7 @@ class RagAgent:
                 self.n_results,
                 doc_ids=self.documentids_workspace,
             )
-            return [
+            response = [
                 (
                     result.page_content,
                     result.metadata,
@@ -134,3 +138,5 @@ class RagAgent:
             raise ValueError(
                 "Invalid mode. Choose either 'kg' or 'vectorstore'."
             )
+        self.last_response = response
+        return response

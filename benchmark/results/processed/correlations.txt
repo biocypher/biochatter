@@ -1,0 +1,2 @@
+Size vs accuracy Pearson correlation: 0.17136834388171893
+Quantisation vs accuracy Pearson correlation: 0.19154346449095874

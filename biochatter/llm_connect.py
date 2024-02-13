@@ -258,8 +258,6 @@ class Conversation(ABC):
             with st.spinner(sim_msg):
                 statements = []
                 for agent in self.rag_agents:
-                    if not agent.use_prompt:
-                        continue
                     try:
                         docs = agent.generate_responses(text)
                         statements = statements + [
@@ -271,8 +269,6 @@ class Conversation(ABC):
         else:
             statements = []
             for agent in self.rag_agents:
-                if not agent.use_prompt:
-                    continue
                 try:
                     docs = agent.generate_responses(text)
                     statements = statements + [
@@ -293,6 +289,14 @@ class Conversation(ABC):
                 else:
                     self.append_system_message(prompt)
 
+    def get_last_inject_context(self):
+        last_context = []
+        for agent in self.rag_agents:
+            last_context.append({
+                "mode": agent.mode,
+                "context": agent.last_response
+            })
+        return last_context
     def get_msg_json(self):
         """
         Return a JSON representation (of a list of dicts) of the messages in

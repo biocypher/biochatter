@@ -9,27 +9,31 @@ Individual steps of the query generation process are tested separately, as well 
 
 === "Entity selection"
 
-    {{ read_csv('benchmark/results/preprocessed_for_frontend/entity_selection.csv', colalign=("center","center","center","center","center")) }}
+    {{ read_csv('benchmark/results/processed/entity_selection.csv', colalign=("center","center","center","center","center")) }}
 
 === "Relationship selection"
 
-    {{ read_csv('benchmark/results/preprocessed_for_frontend/relationship_selection.csv', colalign=("center","center","center","center","center")) }}
+    {{ read_csv('benchmark/results/processed/relationship_selection.csv', colalign=("center","center","center","center","center")) }}
 
 === "Property selection"
 
-    {{ read_csv('benchmark/results/preprocessed_for_frontend/property_selection.csv', colalign=("center","center","center","center","center")) }}
+    {{ read_csv('benchmark/results/processed/property_selection.csv', colalign=("center","center","center","center","center")) }}
 
-=== "Property hallucination"
+=== "Property confabulation"
 
-    {{ read_csv('benchmark/results/preprocessed_for_frontend/property_exists.csv', colalign=("center","center","center","center","center")) }}
+    {{ read_csv('benchmark/results/processed/property_exists.csv', colalign=("center","center","center","center","center")) }}
 
-=== "Query generation"
+=== "Naive query generation"
 
-    {{ read_csv('benchmark/results/preprocessed_for_frontend/query_generation.csv', colalign=("center","center","center","center","center")) }}
+    {{ read_csv('benchmark/results/processed/naive_query_generation_using_schema.csv', colalign=("center","center","center","center","center")) }}
+
+=== "BioChatter query generation"
+
+    {{ read_csv('benchmark/results/processed/query_generation.csv', colalign=("center","center","center","center","center")) }}
 
 === "End to end query generation"
 
-    {{ read_csv('benchmark/results/preprocessed_for_frontend/end_to_end_query_generation.csv', colalign=("center","center","center","center","center")) }}
+    {{ read_csv('benchmark/results/processed/end_to_end_query_generation.csv', colalign=("center","center","center","center","center")) }}
 
 ## Retrieval-Augmented Generation (RAG)
 
@@ -40,13 +44,13 @@ Instructions can be explicit ("is this fragment relevant to the question?") or i
 
     TODO: description of rag_interpretation_test_explicit_relevance_of_single_fragments
 
-    {{ read_csv('benchmark/results/preprocessed_for_frontend/explicit_relevance_of_single_fragments.csv', colalign=("center","center","center","center","center")) }}
+    {{ read_csv('benchmark/results/processed/explicit_relevance_of_single_fragments.csv', colalign=("center","center","center","center","center")) }}
 
 === "Implicit relevance of single fragments"
 
     TODO: description of rag_interpretation_test_implicit_relevance_of_multiple_fragments
 
-    {{ read_csv('benchmark/results/preprocessed_for_frontend/implicit_relevance_of_multiple_fragments.csv', colalign=("center","center","center","center","center")) }}
+    {{ read_csv('benchmark/results/processed/implicit_relevance_of_multiple_fragments.csv', colalign=("center","center","center","center","center")) }}
 
 ## Semantic search
 

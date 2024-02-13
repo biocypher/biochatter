@@ -543,7 +543,7 @@ class VectorDatabaseAgentMilvus:
         expr = VectorDatabaseAgentMilvus._build_meta_col_query_expr_for_all_documents(
             doc_ids
         )
-        result_metadata = self._col_metadata.query(expr=expr)
+        result_metadata = self._col_metadata.query(expr=expr, output_fields=METADATA_FIELDS)
         expr = self._build_embedding_search_expression(result_metadata)
         result_embedding = self._col_embeddings.similarity_search(
             query=query, k=k, expr=expr

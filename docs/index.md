@@ -6,10 +6,32 @@ the biomedical domain is still limited, in part due to the lack of a common
 framework for deploying, testing, and evaluating the diverse models and
 auxiliary technologies that are needed. `biochatter` is a Python package
 implementing a generic backend library for the connection of biomedical
-applications to conversational AI.  Described in [this
-preprint](https://arxiv.org/abs/2305.06488) and used in
-[ChatGSE](https://chat.biocypher.org), which is being developed
-[here](https://github.com/biocypher/ChatGSE).
+applications to conversational AI. We describe the framework in [this
+preprint](https://arxiv.org/abs/2305.06488); for a more hands-on experience,
+check out our two web app implementations:
+
+<div class="grid cards" markdown>
+
+-   :material-clock-fast:{ .lg .middle } &nbsp; __BioChatter Light__
+
+    ---
+
+    Agile framework in pure Python built with [Streamlit](https://streamlit.io),
+    for fast prototyping and iteration.
+
+    [:octicons-arrow-right-24: Go To BioChatter Light](https://light.biochatter.org)
+
+-   :fontawesome-solid-wand-magic-sparkles:{ .lg .middle } &nbsp; __BioChatter Next__
+
+    ---
+
+    Advanced client-server architecture based on
+    [Flask](https://flask.palletsprojects.com) and
+    [Next.js](https://nextjs.org).
+
+    [:octicons-arrow-right-24: Go To BioChatter Next](https://next.biochatter.org)
+
+</div>
 
 BioChatter is part of the [BioCypher](https://github.com/biocypher) ecosystem, 
 connecting natively to BioCypher knowledge graphs. The BioChatter paper is
