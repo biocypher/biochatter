@@ -224,7 +224,10 @@ class BioCypherPromptEngine:
         return conversation
 
     def _select_entities(
-        self, question: str, conversation: "Conversation"
+        self,
+        question: str,
+        conversation: "Conversation",
+        few_shot_prompt: str = "",
     ) -> bool:
         """
 
@@ -237,6 +240,9 @@ class BioCypherPromptEngine:
 
             conversation: A BioChatter Conversation object for connecting to the
                 LLM.
+
+            few_shot_prompt: A few-shot prompt to use for the LLM. If used, is
+                injected after the system message, before the user's question.
 
         Returns:
             True if at least one entity was selected, False otherwise.
@@ -255,6 +261,9 @@ class BioCypherPromptEngine:
             )
         )
 
+        if few_shot_prompt:
+            conversation.append_system_message(few_shot_prompt)
+
         msg, token_usage, correction = conversation.query(question)
 
         result = msg.split(",") if msg else []
@@ -270,7 +279,11 @@ class BioCypherPromptEngine:
 
         return bool(result)
 
-    def _select_relationships(self, conversation: "Conversation") -> bool:
+    def _select_relationships(
+        self,
+        conversation: "Conversation",
+        few_shot_prompt: str = "",
+    ) -> bool:
         """
         Given a question and the preselected entities, select relationships for
         the query.
@@ -278,6 +291,9 @@ class BioCypherPromptEngine:
         Args:
             conversation: A BioChatter Conversation object for connecting to the
                 LLM.
+
+            few_shot_prompt: A few-shot prompt to use for the LLM. If used, is
+                injected after the system message, before the user's question.
 
         Returns:
             True if at least one relationship was selected, False otherwise.
@@ -376,6 +392,9 @@ class BioCypherPromptEngine:
 
         conversation.append_system_message(msg)
 
+        if few_shot_prompt:
+            conversation.append_system_message(few_shot_prompt)
+
         res, token_usage, correction = conversation.query(self.question)
 
         result = res.split(",") if msg else []
@@ -415,13 +434,24 @@ class BioCypherPromptEngine:
 
         return bool(result)
 
-    def _select_properties(self, conversation: "Conversation") -> bool:
+    def _select_properties(
+        self,
+        conversation: "Conversation",
+        few_shot_prompt: str = "",
+    ) -> bool:
         """
 
         Given a question (optionally provided, but in the standard use case
         reused from the entity selection step) and the selected entities, select
         the properties that are relevant to the question and store them in
         the dictionary `selected_properties`.
+
+        Args:
+            conversation: A BioChatter Conversation object for connecting to the
+                LLM.
+
+            few_shot_prompt: A few-shot prompt to use for the LLM. If used, is
+                injected after the system message, before the user's question.
 
         Returns:
             True if at least one property was selected, False otherwise.
@@ -471,6 +501,9 @@ class BioCypherPromptEngine:
 
         conversation.append_system_message(msg)
 
+        if few_shot_prompt:
+            conversation.append_system_message(few_shot_prompt)
+
         msg, token_usage, correction = conversation.query(self.question)
 
         try:
@@ -488,6 +521,7 @@ class BioCypherPromptEngine:
         properties: dict,
         query_language: str,
         conversation: "Conversation",
+        few_shot_prompt: str = "",
     ) -> str:
         """
         Generate a query in the specified query language that answers the user's
@@ -508,6 +542,9 @@ class BioCypherPromptEngine:
 
             conversation: A BioChatter Conversation object for connecting to the
                 LLM.
+
+            few_shot_prompt: A few-shot prompt to use for the LLM. If used, is
+                injected after the system message, before the user's question.
 
         Returns:
             A database query that could answer the user's question.
@@ -533,6 +570,9 @@ class BioCypherPromptEngine:
         msg += "Only return the query, without any additional text."
 
         conversation.append_system_message(msg)
+
+        if few_shot_prompt:
+            conversation.append_system_message(few_shot_prompt)
 
         out_msg, token_usage, correction = conversation.query(question)
 

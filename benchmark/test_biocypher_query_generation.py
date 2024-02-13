@@ -127,6 +127,56 @@ def test_entity_selection(
     )
 
 
+def test_entity_selection_few_shot(
+    model_name,
+    prompt_engine,
+    test_data_biocypher_query_generation,
+    conversation,
+    multiple_testing,
+):
+    yaml_data = test_data_biocypher_query_generation
+    task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
+    prompt_engine = get_prompt_engine(
+        yaml_data["input"]["kg_path"], prompt_engine
+    )
+
+    def run_test():
+        conversation.reset()  # needs to be reset for each test
+        few_shot_prompt = (
+            "Which planet is the largest in the solar system?\n"
+            "Planet\n"
+            "Which car company buys parts from Germany?\n"
+            "CarCompany,Country,Supplier\n"
+            "Which bus can I take to get to the airport?\n"
+            "Bus,Station,Location\n"
+        )
+        success = prompt_engine._select_entities(
+            question=yaml_data["input"]["prompt"],
+            conversation=conversation,
+            few_shot_prompt=few_shot_prompt,
+        )
+        assert success
+
+        score = []
+        for expected_entity in yaml_data["expected"]["entities"]:
+            score.append(expected_entity in prompt_engine.selected_entities)
+        return calculate_test_score(score)
+
+    mean_score, max, n_iterations = multiple_testing(run_test)
+
+    write_results_to_file(
+        prompt_engine.model_name,
+        yaml_data["case"],
+        f"{mean_score}/{max}",
+        f"{n_iterations}",
+        yaml_data["hash"],
+        get_result_file_path(task),
+    )
+
+
 def test_relationship_selection(
     model_name,
     prompt_engine,
