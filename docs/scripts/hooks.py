@@ -1,5 +1,6 @@
 import os
 import re
+import numpy as np
 import seaborn as sns
 import matplotlib
 
@@ -221,15 +222,17 @@ def plot_accuracy_per_model(overview) -> None:
 
     sns.set_theme(style="whitegrid")
     plt.figure(figsize=(10, 6))
-    sns.boxplot(x="Model name", y="Accuracy", hue="Size", data=overview_melted)
+    sns.stripplot(
+        x="Model name", y="Accuracy", hue="Size", data=overview_melted
+    )
     plt.title(
-        "Boxplot across tasks, per Model, coloured by size (billions of parameters)"
+        "Strip plot across tasks, per Model, coloured by size (billions of parameters)"
     )
     plt.ylim(-0.1, 1.1)
     plt.xticks(rotation=45)
     plt.legend(bbox_to_anchor=(0, 0), loc="lower left")
     plt.savefig(
-        "docs/images/boxplot-per-model.png",
+        "docs/images/stripplot-per-model.png",
         bbox_inches="tight",
     )
     plt.close()
@@ -339,13 +342,27 @@ def plot_accuracy_per_task(overview):
 def plot_scatter_per_quantisation(overview):
     overview_melted = melt_and_process(overview)
 
+    # remove individual task accuracy columns
+    overview_melted = overview_melted[
+        [
+            "Model name",
+            "Size",
+            "Quantisation",
+            "Mean Accuracy",
+            "Median Accuracy",
+            "SD",
+        ]
+    ]
+
+    # deduplicate remaining rows
+    overview_melted = overview_melted.drop_duplicates()
+
     sns.set_theme(style="whitegrid")
     plt.figure(figsize=(6, 4))
     # order x axis quantisation values numerically
     overview_melted["Quantisation"] = pd.Categorical(
         overview_melted["Quantisation"],
         categories=[
-            "None",
             "2-bit",
             "3-bit",
             "4-bit",
@@ -370,8 +387,34 @@ def plot_scatter_per_quantisation(overview):
         ],
         ordered=True,
     )
+
+    # Add jitter to x-coordinates
+    x = pd.Categorical(overview_melted["Quantisation"]).codes.astype(float)
+
+    # Create a mask for 'openhermes' and 'gpt' models
+    mask_openhermes = overview_melted["Model name"] == "openhermes-2.5"
+    mask_gpt = overview_melted["Model name"].str.contains("gpt")
+
+    # Do not add jitter for 'openhermes' model
+    x[mask_openhermes] += 0
+
+    # Manually enter jitter values for 'gpt' models
+    jitter_values = {
+        "gpt-3": -0.2,
+        "gpt-4": 0.2,
+    }
+
+    for model, jitter in jitter_values.items():
+        mask_model = overview_melted["Model name"].str.contains(model)
+        x[mask_model] += jitter
+
+    # For other models, add the original jitter
+    x[~mask_openhermes & ~mask_gpt] += np.random.normal(
+        0, 0.1, size=len(x[~mask_openhermes & ~mask_gpt])
+    )
+
     sns.scatterplot(
-        x="Quantisation",
+        x=x,
         y="Mean Accuracy",
         hue="Model name",
         size="Size",
@@ -379,7 +422,11 @@ def plot_scatter_per_quantisation(overview):
         data=overview_melted,
         alpha=0.5,
     )
-    plt.ylim(0, 1.1)
+    plt.ylim(0, 1)
+    plt.xticks(
+        ticks=range(len(overview_melted["Quantisation"].unique())),
+        labels=overview_melted["Quantisation"].cat.categories,
+    )
     plt.title(
         "Scatter plot across models, per quantisation, coloured by model name, size by model size (billions of parameters)"
     )
