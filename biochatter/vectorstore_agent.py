@@ -141,7 +141,7 @@ class VectorDatabaseAgentMilvus:
             connection_args Optional dict: args to connect Vector Database
 
             embedding_collection_name Optional str: exposed for test
-            
+
             metadata_collection_name Optional str: exposed for test
         """
         self._embedding_func = embedding_func
@@ -543,7 +543,9 @@ class VectorDatabaseAgentMilvus:
         expr = VectorDatabaseAgentMilvus._build_meta_col_query_expr_for_all_documents(
             doc_ids
         )
-        result_metadata = self._col_metadata.query(expr=expr)
+        result_metadata = self._col_metadata.query(
+            expr=expr, output_fields=METADATA_FIELDS
+        )
         expr = self._build_embedding_search_expression(result_metadata)
         result_embedding = self._col_embeddings.similarity_search(
             query=query, k=k, expr=expr
