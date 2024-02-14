@@ -33,6 +33,7 @@ def on_pre_build(config, **kwargs) -> None:
     plot_accuracy_per_task(overview)
     plot_scatter_per_quantisation(overview)
     plot_task_comparison(overview)
+    plot_rag_tasks(overview)
     plot_comparison_naive_biochatter(overview)
     calculate_stats(overview)
 
@@ -458,6 +459,61 @@ def plot_task_comparison(overview):
     plt.xticks(rotation=45)
     plt.savefig(
         "docs/images/boxplot-tasks.png",
+        bbox_inches="tight",
+    )
+    plt.close()
+
+
+def plot_rag_tasks(overview):
+    overview_melted = melt_and_process(overview)
+
+    # select tasks naive_query_generation_using_schema and query_generation
+    overview_melted = overview_melted[
+        overview_melted["Task"].isin(
+            [
+                "explicit_relevance_of_single_fragments",
+                "implicit_relevance_of_multiple_fragments",
+            ]
+        )
+    ]
+
+    # order models by median accuracy, inverse
+    overview_melted["Model name"] = pd.Categorical(
+        overview_melted["Model name"],
+        categories=overview_melted.groupby("Model name")["Median Accuracy"]
+        .median()
+        .sort_values()
+        .index[::-1],
+        ordered=True,
+    )
+
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(6, 4))
+    sns.stripplot(
+        x="Model name",
+        y="Accuracy",
+        hue="Quantisation",
+        data=overview_melted,
+        jitter=0.2,
+        alpha=0.8,
+    )
+    plt.xlabel(None)
+    plt.xticks(rotation=45)
+    plt.legend(bbox_to_anchor=(1, 0), loc="lower left")
+    # Get current axis
+    ax = plt.gca()
+
+    # Add vertical lines at each x tick
+    for x in ax.get_xticks():
+        ax.axvline(x=x, color="gray", linestyle="--", lw=0.5)
+
+    plt.savefig(
+        "docs/images/stripplot-rag-tasks.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+    plt.savefig(
+        "docs/images/stripplot-rag-tasks.pdf",
         bbox_inches="tight",
     )
     plt.close()
