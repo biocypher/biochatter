@@ -35,6 +35,9 @@ class RagAgent:
             n_results: the number of results to return for method
                 generate_response
 
+            use_prompt (bool): Whether to use the prompt for the query. If
+                False, will not retrieve any results and return an empty list.
+
             schema_config_or_info_dict (dict): A dictionary of schema
                 information for the database. Required if mode is "kg".
 
