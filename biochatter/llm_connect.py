@@ -260,9 +260,7 @@ class Conversation(ABC):
                 for agent in self.rag_agents:
                     try:
                         docs = agent.generate_responses(text)
-                        statements = statements + [
-                            doc[0] for doc in docs
-                        ]
+                        statements = statements + [doc[0] for doc in docs]
                     except ValueError as e:
                         logger.warning(e)
 
@@ -271,11 +269,9 @@ class Conversation(ABC):
             for agent in self.rag_agents:
                 try:
                     docs = agent.generate_responses(text)
-                    statements = statements + [
-                        doc[0] for doc in docs
-                    ]
+                    statements = statements + [doc[0] for doc in docs]
                 except ValueError as e:
-                    logger.warning(e)   
+                    logger.warning(e)
 
         if statements and len(statements) > 0:
             prompts = self.prompts["rag_agent_prompts"]
@@ -289,14 +285,22 @@ class Conversation(ABC):
                 else:
                     self.append_system_message(prompt)
 
-    def get_last_inject_context(self):
+    def get_last_injected_context(self) -> List[dict]:
+        """
+        Get a formatted list of the last context injected into the
+        conversation. Contains one dictionary for each RAG mode.
+
+        Returns:
+            List[dict]: A list of dictionaries containing the mode and context
+            for each RAG agent.
+        """
         last_context = []
         for agent in self.rag_agents:
-            last_context.append({
-                "mode": agent.mode,
-                "context": agent.last_response
-            })
+            last_context.append(
+                {"mode": agent.mode, "context": agent.last_response}
+            )
         return last_context
+
     def get_msg_json(self):
         """
         Return a JSON representation (of a list of dicts) of the messages in
