@@ -414,15 +414,68 @@ def plot_scatter_per_quantisation(overview):
         0, 0.1, size=len(x[~mask_openhermes & ~mask_gpt])
     )
 
-    sns.scatterplot(
+    # Create a ColorBrewer palette
+    palette = sns.color_palette("Paired", n_colors=12)
+
+    # Define a dictionary mapping model names to colors
+    color_dict = {
+        "gpt-3.5-turbo-0613": palette[0],
+        "gpt-3.5-turbo-0125": palette[1],
+        "gpt-4-0613": palette[2],
+        "gpt-4-0125-preview": palette[3],
+        "openhermes-2.5": palette[5],
+        "code-llama-instruct": palette[6],
+        "llama-2-chat": palette[7],
+        "mixtral-instruct-v0.1": palette[8],
+        "mistral-instruct-v0.2": palette[9],
+        "chatglm3": palette[11],
+    }
+
+    # Use the dictionary as the palette argument in sns.scatterplot
+    ax = sns.scatterplot(
         x=x,
         y="Mean Accuracy",
         hue="Model name",
         size="Size",
         sizes=(10, 300),
         data=overview_melted,
+        palette=color_dict,  # Use the color dictionary here
         alpha=0.5,
     )
+
+    model_names_order = [
+        "Model name",
+        "gpt-3.5-turbo-0125",
+        "gpt-3.5-turbo-0613",
+        "openhermes-2.5",
+        "gpt-4-0125-preview",
+        "gpt-4-0613",
+        "llama-2-chat",
+        "code-llama-instruct",
+        "mixtral-instruct-v0.1",
+        "mistral-instruct-v0.2",
+        "chatglm3",
+        "Size",
+        "Unknown",
+        "175",
+        "70",
+        "46,7",
+        "34",
+        "13",
+        "7",
+        "6",
+    ]
+
+    # Reorder the legend
+    handles, labels = ax.get_legend_handles_labels()
+    order = [labels.index(name) for name in model_names_order]
+    plt.legend(
+        [handles[idx] for idx in order],
+        [labels[idx] for idx in order],
+        bbox_to_anchor=(1.05, 1),
+        loc="upper left",
+    )
+
     plt.ylim(0, 1)
     plt.xticks(
         ticks=range(len(overview_melted["Quantisation"].unique())),
@@ -431,7 +484,6 @@ def plot_scatter_per_quantisation(overview):
     plt.title(
         "Scatter plot across models, per quantisation, coloured by model name, size by model size (billions of parameters)"
     )
-    plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
     plt.xticks(rotation=45)
     plt.savefig(
         "docs/images/scatter-per-quantisation-name.png",
