@@ -635,7 +635,12 @@ def calculate_stats(overview):
     size = overview_melted["Size"].apply(
         lambda x: 300 if x == "Unknown" else float(x.replace(",", "."))
     )
-    size_accuracy_corr = size.corr(overview_melted["Accuracy"])
+    from scipy.stats import pearsonr
+
+    size_accuracy_corr, size_accuracy_p_value = pearsonr(
+        size, overview_melted["Accuracy"]
+    )
+
     # plot scatter plot
     plt.figure(figsize=(6, 4))
     sns.scatterplot(x=size, y=overview_melted["Accuracy"])
@@ -658,7 +663,9 @@ def calculate_stats(overview):
     quantisation = overview_melted["Quantisation"].apply(
         lambda x: 16 if x == ">= 16-bit*" else float(x.replace("-bit", ""))
     )
-    quant_accuracy_corr = quantisation.corr(overview_melted["Accuracy"])
+    quant_accuracy_corr, quant_accuracy_p_value = pearsonr(
+        quantisation, overview_melted["Accuracy"]
+    )
     # plot scatter plot
     plt.figure(figsize=(6, 4))
     sns.scatterplot(x=quantisation, y=overview_melted["Accuracy"])
@@ -680,7 +687,13 @@ def calculate_stats(overview):
     with open("benchmark/results/processed/correlations.txt", "w") as f:
         f.write(f"Size vs accuracy Pearson correlation: {size_accuracy_corr}\n")
         f.write(
+            f"Size vs accuracy Pearson correlation p-value: {size_accuracy_p_value}\n"
+        )
+        f.write(
             f"Quantisation vs accuracy Pearson correlation: {quant_accuracy_corr}\n"
+        )
+        f.write(
+            f"Quantisation vs accuracy Pearson correlation p-value: {quant_accuracy_p_value}\n"
         )
 
 
