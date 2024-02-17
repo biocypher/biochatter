@@ -1,6 +1,6 @@
 ---
 name: Benchmark model request
-about: This template allows requesting the inclusion of a specific model for benchmark.
+about: Request the inclusion of a specific model in the benchmark.
 title: "[Model request]"
 labels: model request
 assignees: ''
