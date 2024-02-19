@@ -42,13 +42,9 @@ Instructions can be explicit ("is this fragment relevant to the question?") or i
 
 === "Explicit relevance of single fragments"
 
-    TODO: description of rag_interpretation_test_explicit_relevance_of_single_fragments
-
     {{ read_csv('benchmark/results/processed/explicit_relevance_of_single_fragments.csv', colalign=("center","center","center","center","center")) }}
 
 === "Implicit relevance of single fragments"
-
-    TODO: description of rag_interpretation_test_implicit_relevance_of_multiple_fragments
 
     {{ read_csv('benchmark/results/processed/implicit_relevance_of_multiple_fragments.csv', colalign=("center","center","center","center","center")) }}
 
