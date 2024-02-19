@@ -1,9 +1,8 @@
-import json
 import re
+import json
 import inspect
 
 import pytest
-import yaml
 
 from biochatter.prompts import BioCypherPromptEngine
 from .conftest import calculate_test_score
@@ -12,24 +11,6 @@ from .benchmark_utils import (
     get_result_file_path,
     write_results_to_file,
 )
-
-
-def get_prompt_engine(
-    kg_schema_file_name: str,
-    create_prompt_engine,
-) -> BioCypherPromptEngine:
-    """Helper function to create the prompt engine for the test.
-
-    Args:
-        kg_schema_file_name (str): The KG schema file name
-        create_prompt_engine: The function to create the BioCypherPromptEngine
-
-    Returns:
-        BioCypherPromptEngine: The prompt engine for the test
-    """
-    return create_prompt_engine(
-        kg_schema_path=f"./benchmark/data/{kg_schema_file_name}"
-    )
 
 
 def test_naive_query_generation_using_schema(
@@ -43,8 +24,7 @@ def test_naive_query_generation_using_schema(
     skip_if_already_run(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
-    with open(f"./benchmark/data/{yaml_data['input']['kg_path']}", "r") as f:
-        schema = yaml.safe_load(f)
+    schema = yaml_data["input"]["kg_schema"]
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
@@ -86,6 +66,22 @@ def test_naive_query_generation_using_schema(
     )
 
 
+def get_prompt_engine(
+    kg_schema_dict: dict,
+    create_prompt_engine,
+) -> BioCypherPromptEngine:
+    """Helper function to create the prompt engine for the test.
+
+    Args:
+        kg_schema_dict (dict): The KG schema
+        create_prompt_engine: The function to create the BioCypherPromptEngine
+
+    Returns:
+        BioCypherPromptEngine: The prompt engine for the test
+    """
+    return create_prompt_engine(kg_schema_dict=kg_schema_dict)
+
+
 def test_entity_selection(
     model_name,
     prompt_engine,
@@ -99,7 +95,7 @@ def test_entity_selection(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_path"], prompt_engine
+        yaml_data["input"]["kg_schema"], prompt_engine
     )
 
     def run_test():
@@ -142,7 +138,7 @@ def test_relationship_selection(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_path"], prompt_engine
+        yaml_data["input"]["kg_schema"], prompt_engine
     )
 
     prompt_engine.question = yaml_data["input"]["prompt"]
@@ -203,7 +199,7 @@ def test_property_selection(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_path"], prompt_engine
+        yaml_data["input"]["kg_schema"], prompt_engine
     )
 
     prompt_engine.question = yaml_data["input"]["prompt"]
@@ -276,7 +272,7 @@ def test_query_generation(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_path"], prompt_engine
+        yaml_data["input"]["kg_schema"], prompt_engine
     )
 
     def run_test():
@@ -328,7 +324,7 @@ def test_end_to_end_query_generation(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_path"], prompt_engine
+        yaml_data["input"]["kg_schema"], prompt_engine
     )
 
     def run_test():
@@ -464,7 +460,7 @@ def test_property_exists(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_path"], prompt_engine
+        yaml_data["input"]["kg_schema"], prompt_engine
     )
 
     def run_test():

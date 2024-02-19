@@ -65,9 +65,9 @@ def _load_test_data_from_this_repository():
                     if "_data" in file_path:
                         yaml_data = _get_yaml_data(yaml_data)
 
-                    test_data[
-                        file_path.replace("./benchmark/", "./")
-                    ] = yaml_data
+                    file_name = os.path.basename(file_path)
+
+                    test_data[file_name] = yaml_data
 
                 except yaml.YAMLError as exc:
                     print(exc)
@@ -92,7 +92,7 @@ def _delete_outdated_benchmark_results(data_dict: dict) -> None:
     that have hashes that are not in the current test data.
 
     Args:
-        yaml_data (dict): The yaml data.
+        data_dict (dict): The yaml data.
     """
 
     # get all current hashes for comparison
@@ -157,13 +157,14 @@ def _expand_multi_instruction(data_dict: dict) -> dict:
         for test in test_list:
             test_input = test["input"]
             for case, potential_subcase in test_input.items():
-                if isinstance(potential_subcase, dict):
-                    for key, value in potential_subcase.items():
-                        new_case = test.copy()
-                        new_case["case"] = "_".join([test["case"], key])
-                        new_case["input"][case] = value
-                        test_list.append(new_case)
-                    test_list.remove(test)
+                if "kg_schema" not in case:
+                    if isinstance(potential_subcase, dict):
+                        for key, value in potential_subcase.items():
+                            new_case = test.copy()
+                            new_case["case"] = "_".join([test["case"], key])
+                            new_case["input"][case] = value
+                            test_list.append(new_case)
+                        test_list.remove(test)
         data_dict[module_key] = test_list
 
     return data_dict
