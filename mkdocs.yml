@@ -1,4 +1,4 @@
-site_name: BioChatter Documentation
+site_name: BioChatter
 
 theme:
   name: material
@@ -42,6 +42,9 @@ plugins:
   - mkdocstrings:
       default_handler: python
   - table-reader
+  - social
+
+site_url: https://biochatter.org/
 
 nav:
   - Home: index.md

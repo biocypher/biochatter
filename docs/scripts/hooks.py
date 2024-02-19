@@ -1,5 +1,6 @@
 import os
 import re
+import numpy as np
 import seaborn as sns
 import matplotlib
 
@@ -32,6 +33,7 @@ def on_pre_build(config, **kwargs) -> None:
     plot_accuracy_per_task(overview)
     plot_scatter_per_quantisation(overview)
     plot_task_comparison(overview)
+    plot_rag_tasks(overview)
     plot_comparison_naive_biochatter(overview)
     calculate_stats(overview)
 
@@ -221,15 +223,17 @@ def plot_accuracy_per_model(overview) -> None:
 
     sns.set_theme(style="whitegrid")
     plt.figure(figsize=(10, 6))
-    sns.boxplot(x="Model name", y="Accuracy", hue="Size", data=overview_melted)
+    sns.stripplot(
+        x="Model name", y="Accuracy", hue="Size", data=overview_melted
+    )
     plt.title(
-        "Boxplot across tasks, per Model, coloured by size (billions of parameters)"
+        "Strip plot across tasks, per Model, coloured by size (billions of parameters)"
     )
     plt.ylim(-0.1, 1.1)
     plt.xticks(rotation=45)
     plt.legend(bbox_to_anchor=(0, 0), loc="lower left")
     plt.savefig(
-        "docs/images/boxplot-per-model.png",
+        "docs/images/stripplot-per-model.png",
         bbox_inches="tight",
     )
     plt.close()
@@ -339,13 +343,27 @@ def plot_accuracy_per_task(overview):
 def plot_scatter_per_quantisation(overview):
     overview_melted = melt_and_process(overview)
 
+    # remove individual task accuracy columns
+    overview_melted = overview_melted[
+        [
+            "Model name",
+            "Size",
+            "Quantisation",
+            "Mean Accuracy",
+            "Median Accuracy",
+            "SD",
+        ]
+    ]
+
+    # deduplicate remaining rows
+    overview_melted = overview_melted.drop_duplicates()
+
     sns.set_theme(style="whitegrid")
     plt.figure(figsize=(6, 4))
     # order x axis quantisation values numerically
     overview_melted["Quantisation"] = pd.Categorical(
         overview_melted["Quantisation"],
         categories=[
-            "None",
             "2-bit",
             "3-bit",
             "4-bit",
@@ -370,20 +388,102 @@ def plot_scatter_per_quantisation(overview):
         ],
         ordered=True,
     )
-    sns.scatterplot(
-        x="Quantisation",
+
+    # Add jitter to x-coordinates
+    x = pd.Categorical(overview_melted["Quantisation"]).codes.astype(float)
+
+    # Create a mask for 'openhermes' and 'gpt' models
+    mask_openhermes = overview_melted["Model name"] == "openhermes-2.5"
+    mask_gpt = overview_melted["Model name"].str.contains("gpt")
+
+    # Do not add jitter for 'openhermes' model
+    x[mask_openhermes] += 0
+
+    # Manually enter jitter values for 'gpt' models
+    jitter_values = {
+        "gpt-3": -0.2,
+        "gpt-4": 0.2,
+    }
+
+    for model, jitter in jitter_values.items():
+        mask_model = overview_melted["Model name"].str.contains(model)
+        x[mask_model] += jitter
+
+    # For other models, add the original jitter
+    x[~mask_openhermes & ~mask_gpt] += np.random.normal(
+        0, 0.1, size=len(x[~mask_openhermes & ~mask_gpt])
+    )
+
+    # Create a ColorBrewer palette
+    palette = sns.color_palette("Paired", n_colors=12)
+
+    # Define a dictionary mapping model names to colors
+    color_dict = {
+        "gpt-3.5-turbo-0613": palette[0],
+        "gpt-3.5-turbo-0125": palette[1],
+        "gpt-4-0613": palette[2],
+        "gpt-4-0125-preview": palette[3],
+        "openhermes-2.5": palette[5],
+        "code-llama-instruct": palette[6],
+        "llama-2-chat": palette[7],
+        "mixtral-instruct-v0.1": palette[8],
+        "mistral-instruct-v0.2": palette[9],
+        "chatglm3": palette[11],
+    }
+
+    # Use the dictionary as the palette argument in sns.scatterplot
+    ax = sns.scatterplot(
+        x=x,
         y="Mean Accuracy",
         hue="Model name",
         size="Size",
         sizes=(10, 300),
         data=overview_melted,
+        palette=color_dict,  # Use the color dictionary here
         alpha=0.5,
     )
-    plt.ylim(0, 1.1)
+
+    model_names_order = [
+        "Model name",
+        "gpt-3.5-turbo-0125",
+        "gpt-3.5-turbo-0613",
+        "openhermes-2.5",
+        "gpt-4-0125-preview",
+        "gpt-4-0613",
+        "llama-2-chat",
+        "code-llama-instruct",
+        "mixtral-instruct-v0.1",
+        "mistral-instruct-v0.2",
+        "chatglm3",
+        "Size",
+        "Unknown",
+        "175",
+        "70",
+        "46,7",
+        "34",
+        "13",
+        "7",
+        "6",
+    ]
+
+    # Reorder the legend
+    handles, labels = ax.get_legend_handles_labels()
+    order = [labels.index(name) for name in model_names_order]
+    plt.legend(
+        [handles[idx] for idx in order],
+        [labels[idx] for idx in order],
+        bbox_to_anchor=(1.05, 1),
+        loc="upper left",
+    )
+
+    plt.ylim(0, 1)
+    plt.xticks(
+        ticks=range(len(overview_melted["Quantisation"].unique())),
+        labels=overview_melted["Quantisation"].cat.categories,
+    )
     plt.title(
         "Scatter plot across models, per quantisation, coloured by model name, size by model size (billions of parameters)"
     )
-    plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
     plt.xticks(rotation=45)
     plt.savefig(
         "docs/images/scatter-per-quantisation-name.png",
@@ -411,6 +511,61 @@ def plot_task_comparison(overview):
     plt.xticks(rotation=45)
     plt.savefig(
         "docs/images/boxplot-tasks.png",
+        bbox_inches="tight",
+    )
+    plt.close()
+
+
+def plot_rag_tasks(overview):
+    overview_melted = melt_and_process(overview)
+
+    # select tasks naive_query_generation_using_schema and query_generation
+    overview_melted = overview_melted[
+        overview_melted["Task"].isin(
+            [
+                "explicit_relevance_of_single_fragments",
+                "implicit_relevance_of_multiple_fragments",
+            ]
+        )
+    ]
+
+    # order models by median accuracy, inverse
+    overview_melted["Model name"] = pd.Categorical(
+        overview_melted["Model name"],
+        categories=overview_melted.groupby("Model name")["Median Accuracy"]
+        .median()
+        .sort_values()
+        .index[::-1],
+        ordered=True,
+    )
+
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(6, 4))
+    sns.stripplot(
+        x="Model name",
+        y="Accuracy",
+        hue="Quantisation",
+        data=overview_melted,
+        jitter=0.2,
+        alpha=0.8,
+    )
+    plt.xlabel(None)
+    plt.xticks(rotation=45)
+    plt.legend(bbox_to_anchor=(1, 0), loc="lower left")
+    # Get current axis
+    ax = plt.gca()
+
+    # Add vertical lines at each x tick
+    for x in ax.get_xticks():
+        ax.axvline(x=x, color="gray", linestyle="--", lw=0.5)
+
+    plt.savefig(
+        "docs/images/stripplot-rag-tasks.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+    plt.savefig(
+        "docs/images/stripplot-rag-tasks.pdf",
         bbox_inches="tight",
     )
     plt.close()
@@ -480,7 +635,12 @@ def calculate_stats(overview):
     size = overview_melted["Size"].apply(
         lambda x: 300 if x == "Unknown" else float(x.replace(",", "."))
     )
-    size_accuracy_corr = size.corr(overview_melted["Accuracy"])
+    from scipy.stats import pearsonr
+
+    size_accuracy_corr, size_accuracy_p_value = pearsonr(
+        size, overview_melted["Accuracy"]
+    )
+
     # plot scatter plot
     plt.figure(figsize=(6, 4))
     sns.scatterplot(x=size, y=overview_melted["Accuracy"])
@@ -503,7 +663,9 @@ def calculate_stats(overview):
     quantisation = overview_melted["Quantisation"].apply(
         lambda x: 16 if x == ">= 16-bit*" else float(x.replace("-bit", ""))
     )
-    quant_accuracy_corr = quantisation.corr(overview_melted["Accuracy"])
+    quant_accuracy_corr, quant_accuracy_p_value = pearsonr(
+        quantisation, overview_melted["Accuracy"]
+    )
     # plot scatter plot
     plt.figure(figsize=(6, 4))
     sns.scatterplot(x=quantisation, y=overview_melted["Accuracy"])
@@ -525,7 +687,13 @@ def calculate_stats(overview):
     with open("benchmark/results/processed/correlations.txt", "w") as f:
         f.write(f"Size vs accuracy Pearson correlation: {size_accuracy_corr}\n")
         f.write(
+            f"Size vs accuracy Pearson correlation p-value: {size_accuracy_p_value}\n"
+        )
+        f.write(
             f"Quantisation vs accuracy Pearson correlation: {quant_accuracy_corr}\n"
+        )
+        f.write(
+            f"Quantisation vs accuracy Pearson correlation p-value: {quant_accuracy_p_value}\n"
         )
 
 

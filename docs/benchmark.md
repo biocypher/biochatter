@@ -11,7 +11,7 @@ Click the column names to reorder.
 {{ read_csv('benchmark/results/processed/overview-model.csv', colalign=("left","right")) }}
 
 ![Scatter Quantisation Name](images/scatter-per-quantisation-name.png)
-![Boxplot Model](images/boxplot-per-model.png)
+![Boxplot Model](images/stripplot-per-model.png)
 
 ## Scores per quantisation
 

@@ -53,6 +53,7 @@ def test_rag_agent_kg_mode():
             ),
         ]
         agent = RagAgent(
+            use_prompt=True,
             mode=RagAgentModeEnum.KG,
             model_name="test_model",
             connection_args={},
@@ -99,6 +100,7 @@ def test_rag_agent_vectorstore_mode():
             ),
         ]
         agent = RagAgent(
+            use_prompt=True,
             mode=RagAgentModeEnum.VectorStore,
             model_name="test_model",
             connection_args={},
