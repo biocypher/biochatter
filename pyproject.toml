@@ -40,13 +40,14 @@ xinference = ["botocore", "xinference"]
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
 bump2version = "^1.0.1"
-mkdocs-material = "^9.4.14"
+mkdocs-material = {extras = ["imaging"], version = "^9.5.10"}
 mkdocstrings = {extras = ["python"], version = "^0.24.0"}
 black = "^23.12.1"
 isort = "^5.10.1"
 flake8 = "^6.1.0"
 pre-commit = ">=2.17.0"
 mkdocs-table-reader-plugin = "^2.0.3"
+scipy = "^1.12.0"
 
 [build-system]
 requires = ["poetry-core"]
