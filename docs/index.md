@@ -1,3 +1,7 @@
+---
+title: BioChatter - Conversational AI for Biomedical Applications
+description: A framework for deploying, testing, and evaluating conversational AI models in the biomedical domain.
+---
 # Home
 
 Generative AI models have shown tremendous usefulness in increasing
