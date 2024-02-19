@@ -41,6 +41,8 @@ BioChatter is part of the [BioCypher](https://github.com/biocypher) ecosystem,
 connecting natively to BioCypher knowledge graphs. The BioChatter paper is
 being written [here](https://github.com/biocypher/biochatter-paper).
 
+![BioChatter Overview](images/biochatter_overview.png)
+
 ## Installation
 
 To use the package, install it from PyPI, for instance using pip (`pip install
