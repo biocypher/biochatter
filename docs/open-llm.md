@@ -83,10 +83,3 @@ model.chat(
     generate_config={"max_tokens": 1024}
 )
 ```
-
-## Public endpoint
-
-We maintain a public API endpoint of an xinference instance at
-`https://llm.biocypher.org/v1`. Please note that this is a testing endpoint that
-may be subject to rapid changes or downtimes. It usually runs one conversational
-and one embedding model.
