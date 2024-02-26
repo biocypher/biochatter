@@ -20,12 +20,13 @@ BENCHMARK_DATASET = get_benchmark_dataset()
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
     "gpt-3.5-turbo-0613",
-    "gpt-3.5-turbo-0125",
-    "gpt-4-0613",
-    "gpt-4-0125-preview",
+    # "gpt-3.5-turbo-0125",
+    # "gpt-4-0613",
+    # "gpt-4-0125-preview",
 ]
 
-XINFERENCE_MODELS = {
+XINFERENCE_MODELS = {}
+tmp = {
     "llama-2-chat": {
         "model_size_in_billions": [
             7,
@@ -389,3 +390,9 @@ def pytest_generate_tests(metafunc):
             "test_data_text_extraction",
             data_file["text_extraction"],
         )
+
+
+@pytest.fixture
+def kg_schemas():
+    data_file = BENCHMARK_DATASET["benchmark_data.yaml"]
+    return data_file["kg_schemas"]

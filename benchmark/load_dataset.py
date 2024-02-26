@@ -153,19 +153,20 @@ def _expand_multi_instruction(data_dict: dict) -> dict:
         dict: The expanded yaml data.
     """
     for module_key in data_dict.keys():
-        test_list = data_dict[module_key]
-        for test in test_list:
-            test_input = test["input"]
-            for case, potential_subcase in test_input.items():
-                if "kg_schema" not in case:
-                    if isinstance(potential_subcase, dict):
-                        for key, value in potential_subcase.items():
-                            new_case = test.copy()
-                            new_case["case"] = "_".join([test["case"], key])
-                            new_case["input"][case] = value
-                            test_list.append(new_case)
-                        test_list.remove(test)
-        data_dict[module_key] = test_list
+        if "kg_schemas" not in module_key:
+            test_list = data_dict[module_key]
+            for test in test_list:
+                test_input = test["input"]
+                for case, potential_subcase in test_input.items():
+                    if "kg_schema" not in case:
+                        if isinstance(potential_subcase, dict):
+                            for key, value in potential_subcase.items():
+                                new_case = test.copy()
+                                new_case["case"] = "_".join([test["case"], key])
+                                new_case["input"][case] = value
+                                test_list.append(new_case)
+                            test_list.remove(test)
+            data_dict[module_key] = test_list
 
     return data_dict
 

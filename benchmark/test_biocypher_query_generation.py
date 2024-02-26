@@ -16,6 +16,7 @@ from .benchmark_utils import (
 def test_naive_query_generation_using_schema(
     model_name,
     test_data_biocypher_query_generation,
+    kg_schemas,
     conversation,
     multiple_testing,
 ):
@@ -24,7 +25,7 @@ def test_naive_query_generation_using_schema(
     skip_if_already_run(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
-    schema = yaml_data["input"]["kg_schema"]
+    schema = kg_schemas[yaml_data["input"]["kg_schema"]]
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
@@ -86,6 +87,7 @@ def test_entity_selection(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
+    kg_schemas,
     conversation,
     multiple_testing,
 ):
@@ -95,7 +97,7 @@ def test_entity_selection(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_schema"], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
     )
 
     def run_test():
@@ -127,6 +129,7 @@ def test_relationship_selection(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
+    kg_schemas,
     conversation,
     multiple_testing,
 ):
@@ -138,7 +141,7 @@ def test_relationship_selection(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_schema"], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
     )
 
     prompt_engine.question = yaml_data["input"]["prompt"]
@@ -190,6 +193,7 @@ def test_property_selection(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
+    kg_schemas,
     conversation,
     multiple_testing,
 ):
@@ -199,7 +203,7 @@ def test_property_selection(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_schema"], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
     )
 
     prompt_engine.question = yaml_data["input"]["prompt"]
@@ -263,6 +267,7 @@ def test_query_generation(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
+    kg_schemas,
     conversation,
     multiple_testing,
 ):
@@ -272,7 +277,7 @@ def test_query_generation(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_schema"], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
     )
 
     def run_test():
@@ -315,6 +320,7 @@ def test_end_to_end_query_generation(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
+    kg_schemas,
     conversation,
     multiple_testing,
 ):
@@ -324,7 +330,7 @@ def test_end_to_end_query_generation(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_schema"], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
     )
 
     def run_test():
@@ -451,6 +457,7 @@ def test_property_exists(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
+    kg_schemas,
     conversation,
     multiple_testing,
 ):
@@ -460,7 +467,7 @@ def test_property_exists(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_schema"], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
     )
 
     def run_test():
