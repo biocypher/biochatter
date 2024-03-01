@@ -248,10 +248,11 @@ class BioCypherPromptEngine:
         conversation.append_system_message(
             (
                 "You have access to a knowledge graph that contains "
-                f"these entities: {', '.join(self.entities)}. Your task is "
-                "to select the ones that are relevant to the user's question "
-                "for subsequent use in a query. Only return the entities, "
-                "comma-separated, without any additional text. "
+                f"these entity types: {', '.join(self.entities)}. Your task is "
+                "to select the entity types that are relevant to the user's question "
+                "for subsequent use in a query. Only return the entity types, "
+                "comma-separated, without any additional text. Do not return "
+                "entity names, relationships, or properties."
             )
         )
 
