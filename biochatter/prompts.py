@@ -407,9 +407,13 @@ class BioCypherPromptEngine:
                 sources = ensure_iterable(value["source"])
                 targets = ensure_iterable(value["target"])
                 for source in sources:
+                    if source is None:
+                        continue
                     if source not in self.selected_entities:
                         self.selected_entities.append(source)
                 for target in targets:
+                    if target is None:
+                        continue
                     if target not in self.selected_entities:
                         self.selected_entities.append(target)
 
