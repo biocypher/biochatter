@@ -22,7 +22,7 @@ def prompt_engine(request):
 
 def test_entity_selection(prompt_engine):
     with patch("biochatter.prompts.Conversation") as mock_conversation:
-        system_msg = "You have access to a knowledge graph that contains these entities: Protein, Gene, Disease, CellType. Your task is to select the ones that are relevant to the user's question for subsequent use in a query. Only return the entities, comma-separated, without any additional text. "
+        system_msg = "You have access to a knowledge graph that contains these entity types: Protein, Gene, Disease, CellType. Your task is to select the entity types that are relevant to the user's question for subsequent use in a query. Only return the entity types, comma-separated, without any additional text. Do not return entity names, relationships, or properties."
         mock_conversation.return_value.query.return_value = [
             "Gene,Disease",
             Mock(),
