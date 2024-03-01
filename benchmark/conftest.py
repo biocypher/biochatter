@@ -202,9 +202,9 @@ def prompt_engine(request, model_name):
     Generates a constructor for the prompt engine for the current model name.
     """
 
-    def setup_prompt_engine(kg_schema_path):
+    def setup_prompt_engine(kg_schema_dict):
         return BioCypherPromptEngine(
-            schema_config_or_info_path=kg_schema_path,
+            schema_config_or_info_dict=kg_schema_dict,
             model_name=model_name,
         )
 
@@ -371,7 +371,7 @@ def pytest_generate_tests(metafunc):
     If fixture is part of test declaration, the test is parametrized.
     """
     # Load the data file
-    data_file = BENCHMARK_DATASET["./data/benchmark_data.yaml"]
+    data_file = BENCHMARK_DATASET["benchmark_data.yaml"]
 
     # Parametrize the fixtures with the collected rows
     if "test_data_biocypher_query_generation" in metafunc.fixturenames:
@@ -389,3 +389,9 @@ def pytest_generate_tests(metafunc):
             "test_data_text_extraction",
             data_file["text_extraction"],
         )
+
+
+@pytest.fixture
+def kg_schemas():
+    data_file = BENCHMARK_DATASET["benchmark_data.yaml"]
+    return data_file["kg_schemas"]

@@ -13,4 +13,6 @@ __pycache__/
 volumes/
 benchmark/encrypted_llm_test_data.json
 site/
+benchmark/data/*
+!benchmark/data/benchmark_data.json
 serve.sh

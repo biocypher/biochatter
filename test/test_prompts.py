@@ -1,8 +1,10 @@
-import os
-from biochatter.llm_connect import GptConversation
-from biochatter.prompts import BioCypherPromptEngine
-import pytest
 from unittest.mock import Mock, patch
+import os
+
+import pytest
+
+from biochatter.prompts import BioCypherPromptEngine
+from biochatter.llm_connect import GptConversation
 
 ## THIS IS LARGELY BENCHMARK MATERIAL, TO BE MOCKED FOR UNIT TESTING
 

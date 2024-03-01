@@ -13,7 +13,7 @@ biocypher_query_generation:
   # test ability to create a simple cypher query
   - case: simple
     input:
-      kg_path: test_schema_info.yaml
+      kg_schema: gene_kg
       prompt: What is the name of the disease with ICD10 code 'E10'?
     expected:
       entities: ["Disease"]
@@ -32,7 +32,7 @@ biocypher_query_generation:
   # test cypher query with single-word entities
   - case: single_word
     input:
-      kg_path: test_schema_info.yaml
+      kg_schema: gene_kg
       prompt: Which genes are associated with mucoviscidosis?
     expected:
       entities: ["Gene", "Disease"]
@@ -60,7 +60,7 @@ biocypher_query_generation:
   # test cypher query with multi-word entities
   - case: multi_word
     input:
-      kg_path: test_schema_info.yaml
+      kg_schema: gene_kg
       prompt: Which genes are expressed in fibroblasts?
     expected:
       entities: ["Gene", "CellType"]
@@ -88,7 +88,7 @@ biocypher_query_generation:
   # test more complex cypher query
   - case: complex
     input:
-      kg_path: test_schema_info.yaml
+      kg_schema: gene_kg
       prompt: Which proteins are associated with the disease having ICD10 code 'E10', what are their scores, and what is the gene related to these proteins?
     expected:
       entities: ["Protein", "Disease", "Gene"]
@@ -215,3 +215,129 @@ rag_interpretation:
         ]
     expected:
       behaviour: "answer"
+
+kg_schemas:
+  gene_kg:
+    cell type:
+      input_label: cell_type
+      is_relationship: false
+      preferred_id: cl
+      present_in_knowledge_graph: true
+      properties:
+        cell_type_name: str
+        medium: str
+        organism: str
+      represented_as: node
+    disease:
+      input_label: Disease
+      is_relationship: false
+      preferred_id: doid
+      present_in_knowledge_graph: true
+      properties:
+        DSM5: str
+        ICD10: str
+        name: str
+      represented_as: node
+    gene:
+      exclude_properties: accession
+      input_label:
+        - hgnc
+        - ensg
+      is_relationship: false
+      preferred_id: hgnc
+      present_in_knowledge_graph: true
+      properties:
+        id: str
+        name: str
+        taxon: int
+      represented_as: node
+    gene expressed in cell type:
+      input_label: gene_expressed_in_cell_type
+      is_a: gene to expression site association
+      is_relationship: true
+      label_as_edge: GENE_EXPRESSED_IN_CELL_TYPE
+      present_in_knowledge_graph: true
+      properties:
+        expression_level: float
+      represented_as: edge
+      source: gene
+      target: cell type
+    gene to disease association:
+      input_label: gene_phenotype
+      is_relationship: true
+      label_as_edge: PERTURBED_IN
+      present_in_knowledge_graph: true
+      properties:
+        evidence: str
+        score: float
+        source: str
+      represented_as: edge
+      source: protein
+      target: disease
+    gene to phenotype association:
+      exclude_properties: accession
+      input_label:
+        - protein_disease
+        - gene_disease
+      is_relationship: true
+      label_as_edge: PERTURBED
+      present_in_knowledge_graph: true
+      properties:
+        evidence: str
+        score: float
+        source: str
+      represented_as: edge
+      source: disease
+      target:
+        - protein
+        - gene
+    gene to protein association:
+      input_label: gene_protein
+      is_relationship: true
+      present_in_knowledge_graph: true
+      properties:
+        evidence: str
+        score: float
+        source: str
+      represented_as: edge
+      source: gene
+      target: protein
+    pathway:
+      input_label:
+        - reactome
+        - wikipathways
+      is_relationship: false
+      preferred_id:
+        - reactome
+        - wikipathways
+      present_in_knowledge_graph: false
+      represented_as: node
+    phosphorylation:
+      input_label: phosphorylation
+      is_a: post translational interaction
+      is_relationship: true
+      present_in_knowledge_graph: true
+      represented_as: edge
+      source: protein
+      target: protein
+    post translational interaction:
+      input_label: post_translational
+      is_a: pairwise molecular interaction
+      is_relationship: true
+      label_as_edge: INTERACTS_POST_TRANSLATIONAL
+      present_in_knowledge_graph: false
+      represented_as: node
+      source: protein
+      target: protein
+    protein:
+      db_collection_name: proteins
+      input_label: protein
+      is_relationship: false
+      preferred_id: uniprot
+      present_in_knowledge_graph: true
+      represented_as: node
+      properties:
+        genes: str[]
+        name: str
+        score: float
+        taxon: int
