@@ -61,7 +61,7 @@ cell type:
 post translational interaction:
   is_a: pairwise molecular interaction
   is_relationship: true
-  present_in_knowledge_graph: false
+  present_in_knowledge_graph: true
   represented_as: node
   label_as_edge: INTERACTS_POST_TRANSLATIONAL
   input_label: post_translational

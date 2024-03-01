@@ -24,6 +24,7 @@ def test_biocypher_prompts(prompt_engine):
         "CellType",
     ]
     assert list(prompt_engine.relationships.keys()) == [
+        "PostTranslationalInteraction",
         "Phosphorylation",
         "GeneToPhenotypeAssociation",
         "GeneToDiseaseAssociation",
@@ -156,6 +157,26 @@ def test_relationship_selection_with_incomplete_entities(prompt_engine):
         )
 
         assert "Protein" in prompt_engine.selected_entities
+
+
+def test_relationship_selection_does_not_create_none_entities(prompt_engine):
+    prompt_engine.question = "Which proteins interact post-translationally?"
+    prompt_engine.selected_entities = ["Protein"]
+    with patch("biochatter.prompts.Conversation") as mock_conversation:
+        mock_conversation.return_value.query.return_value = [
+            "PostTranslationalInteraction",
+            Mock(),
+            None,
+        ]
+        mock_append_system_messages = Mock()
+        mock_conversation.return_value.append_system_message = (
+            mock_append_system_messages
+        )
+        success = prompt_engine._select_relationships(
+            conversation=mock_conversation.return_value
+        )
+        assert success
+        assert None not in prompt_engine.selected_entities
 
 
 def test_property_selection(prompt_engine):
