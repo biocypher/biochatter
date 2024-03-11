@@ -44,6 +44,16 @@ version can be read [here](https://biocypher.github.io/biochatter-paper).
 
 ![BioChatter Overview](images/biochatter_overview.png)
 
+!!! note "Hot Topics"
+
+    BioChatter natively extends [BioCypher](https://biocypher.org) knowledge
+    graphs. Check there for more information.
+
+    We have also recently published a perspective on connecting knowledge and
+    machine learning to enable causal reasoning in biomedicine, with a
+    particular focus on the currently emerging "foundation models." You can read
+    it [here](https://arxiv.org/abs/2401.09558).
+
 ## Installation
 
 To use the package, install it from PyPI, for instance using pip (`pip install
