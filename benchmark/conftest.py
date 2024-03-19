@@ -1,5 +1,6 @@
 import os
 
+import requests
 from xinference.client import Client
 import pytest
 
@@ -246,7 +247,13 @@ def conversation(request, model_name):
             _model_size = int(_model_size)
 
         # get running models
-        client = Client(base_url=BENCHMARK_URL)
+        try:
+            client = Client(base_url=BENCHMARK_URL)
+        except requests.exceptions.ConnectionError:
+            raise ConnectionError(
+                f"Could not connect to Xinference server at {BENCHMARK_URL}. "
+                "Please make sure that the server is running."
+            )
 
         # if exact model already running, return conversation
         running_models = client.list_models()
