@@ -196,3 +196,19 @@ tests inputs from the YAML definition (the schema of the BioCypher knowledge
 graph underlying the test) and additional functionality from BioChatter (an
 instance of the prompt engine class that generates the knowledge graph query
 using the aforementioned schema).
+
+## Running open-source models
+
+To execute the benchmark on any of the open-source models in the test matrix,
+you need to deploy an [Xorbits Inference]() server at an arbitrary IP, either
+via [Docker]() (available on Linux machines with dedicated Nvidia GPU) or
+natively (e.g., on Apple machines). Please refer to the Xinference
+[documentation]() for details.
+
+When you have deployed the Xinference server, you can point the benchmark
+to the server by setting the `BENCHMARK_URL` parameter in `conftest.py`:
+
+```python
+# Xinference IP and port
+BENCHMARK_URL = "http://localhost:9997"
+```
