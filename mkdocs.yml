@@ -59,6 +59,7 @@ nav:
   - Benchmark:
       - Overview: benchmark.md
       - All Results: benchmark-results.md
+      - Developer Guide: benchmark-developer.md
   - Vignettes:
       - Knowledge Graph RAG: vignette-kg.md
       - Retrieval-Augmented Generation (RAG): vignette-rag.md
