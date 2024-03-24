@@ -42,7 +42,10 @@ Xinference models,
 [here](https://github.com/biocypher/xinference-docker-builtin). It will soon be
 available via Dockerhub. There is another workflow that allows mounting
 (potentially) any compatible model from HuggingFace,
-[here](https://github.com/AndiMajore/xinference-docker-hf).
+[here](https://github.com/AndiMajore/xinference-docker-hf). Note that, due to
+graphics driver limitations, this currently only works for Linux machines with
+dedicated Nvidia graphics cards. If you have a different setup, please check
+below for deploying Xinference without the Docker workflow.
 
 ## Deploying locally without Docker
 

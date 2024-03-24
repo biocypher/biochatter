@@ -32,3 +32,7 @@ msg, token_usage, correction = conversation.query('Question here')
 ```
 
 Note that a query will automatically append a user message to the message history, so there is no need to call `append_user_message()` again. The query function returns the actual answer of the model (`msg`), the token usage statistics reported by the API (`token_usage`), and an optional `correction` that contains the opinion of the corrective agent.
+
+## Using OpenAI models
+
+Using an OpenAI model via the API is generally the easiest way to get started, but requires the provision of an API key to the OpenAI API. To do this, you can designate the `OPENAI_API_KEY` variable in your environment directly (`export OPENAI_API_KEY=sk-...`) by adding it to your shell configuration (e.g., the `zshrc`).
