@@ -1,11 +1,11 @@
 # Benchmark - Developer Notes
 
 To understand the benchmarking procedure, you should be familiar with
-[Pytest](). The benchmark test matrix is executed via Pytest fixtures that
-iterate through the combinations of test parameters such as model name and size.
-This basic setup happens in the `conftest.py` file in the `benchmark` directory.
-The benchmark Pytest setup is distinct from the Pytest setup we use for our
-continuous integration (in the `test` folder).
+[Pytest](https://docs.pytest.org/en/). The benchmark test matrix is executed via
+Pytest fixtures that iterate through the combinations of test parameters such as
+model name and size.  This basic setup happens in the `conftest.py` file in the
+`benchmark` directory.  The benchmark Pytest setup is distinct from the Pytest
+setup we use for our continuous integration (in the `test` folder).
 
 You can imagine the benchmark as a set of unit tests, with the only difference
 being that the test subject is not our codebase, but the behaviour and
@@ -22,10 +22,10 @@ tests according to our benchmark philosophy.
 ## Test setup
 
 Tests are collected in the typical Pytest manner at the start of the procedure.
-In `conftest.py`, we define the model combinations we want to use in the benchmark.
-We distinguish between closed-source and open-source models, since open-source models
-offer more flexibility, e.g., by setting their size and quantisation. In contrast,
-for OpenAI models, all we need is the name.
+In `conftest.py`, we define the model combinations we want to use in the
+benchmark.  We distinguish between closed-source and open-source models, since
+open-source models offer more flexibility, e.g., by setting their size and
+quantisation. In contrast, for OpenAI models, all we need is the name.
 
 ### Quickstart
 
@@ -33,8 +33,8 @@ For getting started with developing your own benchmark, OpenAI models offer the
 simplest way, only requiring an API key and an internet connection. If you don't
 want to run open-source models right away, which is tied to setting up an
 external service for deploying the models, we can remove the
-`XINFERENCE_MODEL_NAMES` from the list of models to be benchmarked in [line
-151]() (by deleting or commenting them out):
+`XINFERENCE_MODEL_NAMES` from the list of models to be benchmarked in
+`conftest.py` (by deleting or commenting them out):
 
 ```python
 BENCHMARKED_MODELS = OPENAI_MODEL_NAMES
@@ -42,7 +42,7 @@ BENCHMARKED_MODELS = OPENAI_MODEL_NAMES
 
 In addition, we can reduce the number of OpenAI models to call to one for
 development; `gpt-3.5-turbo-0125` is a well-performing and economical initial
-choice (modify [line 22]()).
+choice (in `conftest.py`).
 
 ```python
 OPENAI_MODEL_NAMES = [
@@ -54,7 +54,7 @@ The last thing to look out for when running the benchmark is to reduce the
 number of iterations for each test to one. We run iterations to account for
 stochasticity in LLM responses when we run the benchmark for real, but in
 development, this iteration brings no benefit and just increases computational
-cost. Set `N_ITERATIONS` to 1 in [line 16]().
+cost. Set `N_ITERATIONS` to 1 in `conftest.py`.
 
 ```python
 # how often should each benchmark be run?
@@ -69,13 +69,14 @@ or method effectively. For more explanation on how to do this, please read on.
 You can get some insight into how the benchmark works by debugging the existing
 test cases and stepping through the code line-by-line. For this, it is necessary
 that you are familiar with the debugging procedure in your programming
-environment of choice, for instance, [VSCode](). You can set breakpoints in the
-initial setup (e.g., in `conftest.py` and `load_dataset.py`) as well as the test
-functions (e.g., `test_rag_interpretation.py`). Stepping through the code will
-give you insights into how the benchmark is designed and also how the LLMs
-respond in detail to each specific task. This is particularly helpful for
-ensuring that your newly developed benchmark test cases behave as expected and
-test accurately the functionality you aim to test.
+environment of choice, for instance,
+[VSCode](https://code.visualstudio.com/docs/editor/debugging). You can set
+breakpoints in the initial setup (e.g., in `conftest.py` and `load_dataset.py`)
+as well as the test functions (e.g., `test_rag_interpretation.py`). Stepping
+through the code will give you insights into how the benchmark is designed and
+also how the LLMs respond in detail to each specific task. This is particularly
+helpful for ensuring that your newly developed benchmark test cases behave as
+expected and test accurately the functionality you aim to test.
 
 ## Creating new test cases for existing tests
 
@@ -200,10 +201,13 @@ using the aforementioned schema).
 ## Running open-source models
 
 To execute the benchmark on any of the open-source models in the test matrix,
-you need to deploy an [Xorbits Inference]() server at an arbitrary IP, either
-via [Docker]() (available on Linux machines with dedicated Nvidia GPU) or
-natively (e.g., on Apple machines). Please refer to the Xinference
-[documentation]() for details.
+you need to deploy an [Xorbits
+Inference](https://inference.readthedocs.io/en/latest/) server at an arbitrary
+IP, either via [Docker](https://www.docker.com) (available on Linux machines
+with dedicated Nvidia GPU) or natively (e.g., on Apple machines). Please refer
+to the Xinference
+[documentation](https://inference.readthedocs.io/en/latest/getting_started/using_xinference.html)
+for details.
 
 When you have deployed the Xinference server, you can point the benchmark
 to the server by setting the `BENCHMARK_URL` parameter in `conftest.py`:
