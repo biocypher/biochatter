@@ -1,7 +1,8 @@
 # Benchmark Results - Overview
 
 Here we collect the results of the living BioChatter benchmark. For an
-explanation, see the [benchmarking documentation](benchmarking.md).
+explanation, see the [benchmarking documentation](benchmarking.md) and the
+[developer docs](benchmark-developer.md) for further reading.
 
 ## Scores per model
 
