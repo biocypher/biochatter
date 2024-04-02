@@ -8,22 +8,19 @@ import numpy as np
 import pandas as pd
 
 from biochatter.prompts import BioCypherPromptEngine
-from benchmark.load_dataset import get_benchmark_dataset
+from .load_dataset import get_benchmark_dataset
 from biochatter.llm_connect import GptConversation, XinferenceConversation
 from .benchmark_utils import benchmark_already_executed
 
 # how often should each benchmark be run?
-N_ITERATIONS = 5
+N_ITERATIONS = 1
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
 
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
-    "gpt-3.5-turbo-0613",
-    "gpt-3.5-turbo-0125",
-    "gpt-4-0613",
-    "gpt-4-0125-preview",
+    "gpt-3.5-turbo-0125"
 ]
 
 XINFERENCE_MODELS = {
