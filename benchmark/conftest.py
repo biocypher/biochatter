@@ -1,6 +1,7 @@
 import os
 
 import requests
+from dotenv import load_dotenv
 from xinference.client import Client
 import pytest
 
@@ -145,7 +146,7 @@ XINFERENCE_MODEL_NAMES = [
     for quantization in XINFERENCE_MODELS[model_name]["quantization"]
 ]
 
-BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
+BENCHMARKED_MODELS = OPENAI_MODEL_NAMES #+ XINFERENCE_MODEL_NAMES
 BENCHMARKED_MODELS.sort()
 
 # Xinference IP and port
@@ -230,6 +231,8 @@ def conversation(request, model_name):
             prompts={},
             correct=False,
         )
+        cus_path = os.getcwd() + "/venv/bin/.env"
+        load_dotenv(cus_path)
         conversation.set_api_key(
             os.getenv("OPENAI_API_KEY"), user="benchmark_user"
         )
@@ -301,6 +304,8 @@ def evaluation_conversation():
         prompts={},
         correct=False,
     )
+    cus_path = os.getcwd() + "/venv/bin/.env"
+    load_dotenv(cus_path)
     conversation.set_api_key(os.getenv("OPENAI_API_KEY"), user="benchmark_user")
     return conversation
 
