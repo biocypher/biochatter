@@ -4,6 +4,7 @@ dist/
 __pycache__/
 .venv
 .pytest_cache
+venv/.env
 .env
 *.mp3
 .cache
