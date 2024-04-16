@@ -1,20 +1,20 @@
-from biochatter.vectorstore import (
-    DocumentEmbedder,
-    DocumentReader,
-)
-from biochatter._misc import ensure_iterable
 import os
+import ast
 import inspect
+
+from datasets import load_metric
 import pytest
+import evaluate
+
+from biochatter._misc import ensure_iterable
+from biochatter.vectorstore import DocumentReader, DocumentEmbedder
 from .conftest import calculate_test_score
 from .benchmark_utils import (
     skip_if_already_run,
     get_result_file_path,
     write_results_to_file,
 )
-import evaluate
-from datasets import load_metric
-import ast
+
 
 def test_sourcedata_info_extraction(
     model_name,
@@ -48,7 +48,6 @@ def test_sourcedata_info_extraction(
                 response, _, _ = conversation.query(
                     f"FIGURE CAPTION: {caption} ##\n\n## QUERY: {query} ##\n\n## ANSWER FORMAT: {format_}"
                 )
-                
                 rouge_score = evaluate_response(response, answer)
 
                 rouge_scores.append(rouge_score)
