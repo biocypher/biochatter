@@ -221,17 +221,17 @@ text_extraction:
     input:
       query: [
         "What is the measured entity?",
-        # "Was there any perturbation in this experiment?",
-        # "What was the intervention/controlled variable in this experiment?",
-        # "In what kind of cell/tissue/organism was the experiment performed?",
-        # "What kind of experimental assay was used for this experiment?",
-        # "Does the legend describe an experiment or not?",
-        # "Can you link the identified genes to their NCBI gene identifiers?",
-        # "Can you link any identified proteins to Uniprot identifiers?",
-        # "Which components of the experiment are used for normalisation of the assayed component?",
-        # "Can you formulate the hypothesis that this experiment has tested.",
-        # "Is there any disease term mentioned in the figure legend?",
-        # "What was the statistical method to validate the significance of the experimental result?",
+        "Was there any perturbation in this experiment?",
+        "What was the intervention/controlled variable in this experiment?",
+        "In what kind of cell/tissue/organism was the experiment performed?",
+        "What kind of experimental assay was used for this experiment?",
+        "Does the legend describe an experiment or not?",
+        "Can you link the identified genes to their NCBI gene identifiers?",
+        "Can you link any identified proteins to Uniprot identifiers?",
+        "Which components of the experiment are used for normalisation of the assayed component?",
+        "Can you formulate the hypothesis that this experiment has tested.",
+        "Is there any disease term mentioned in the figure legend?",
+        "What was the statistical method to validate the significance of the experimental result?",
         "What is the significance level of the experiment?"
       ]
       caption: [
@@ -239,17 +239,17 @@ text_extraction:
       ]
       format: [
         "List of comma separated entities. 'None' if no entity is found.",
-        # "List of comma separated perturbations. 'None' if no perturbation is found.",
-        # "List of comma separated entities. Empty list if no intervention / controlled entities are found.",
-        # "Line separated asignations following the example: cell_type: Cell_type_name1, cell_type_2 \n organism: Organism_1, organism_2 \n tissue: tissue_name \n cell_line: cell_line_name. Return empty strings for the fields with no information in the caption.",
-        # "List of comma separated experimental assays. 'None' if no assay is found.",
-        # "Return 'Yes' if the legend describes an experiment, 'No' if not.",
-        # "For each identified gene, generate a line with: 'gene_name': 'NCBI gene identifier'. Return 'None' if no genes are identified.",
-        # "For each identified protein, generate a line with: 'protein_name': 'Uniprot identifier'. Return 'None' if no proteins are identified.",
-        # "List of comma separated normalizing components. 'None' if no normalizing component is found.",
-        # "One hypothesis per line as in the example: Entity 1 --> Entity 2 \n Entity 3 --> Entity 4",
-        # "Comma separated list with the mentioned diseases, 'None' list if no disease is mentioned.",
-        # "Simple string.",
+        "List of comma separated perturbations. 'None' if no perturbation is found.",
+        "List of comma separated entities. Empty list if no intervention / controlled entities are found.",
+        "Line separated asignations following the example: cell_type: Cell_type_name1, cell_type_2 \n organism: Organism_1, organism_2 \n tissue: tissue_name \n cell_line: cell_line_name. Return empty strings for the fields with no information in the caption.",
+        "List of comma separated experimental assays. 'None' if no assay is found.",
+        "Return 'Yes' if the legend describes an experiment, 'No' if not.",
+        "For each identified gene, generate a line with: 'gene_name': 'NCBI gene identifier'. Return 'None' if no genes are identified.",
+        "For each identified protein, generate a line with: 'protein_name': 'Uniprot identifier'. Return 'None' if no proteins are identified.",
+        "List of comma separated normalizing components. 'None' if no normalizing component is found.",
+        "One hypothesis per line as in the example: Entity 1 --> Entity 2 \n Entity 3 --> Entity 4",
+        "Comma separated list with the mentioned diseases, 'None' list if no disease is mentioned.",
+        "Simple string.",
         "The statistical significance level. 'None' if no information is found"
       ]
       system_messages: |-
@@ -313,17 +313,17 @@ text_extraction:
     expected:
       answer: [
         "pUb",
-        # "AO-induced mitophagy",
-        # "PINK1, FBXO7",
-        # "cell_type: None \n organism: None \n tissue: None \n cell_line: HeLa",
-        # "3D structured illumination microscopy (3D-SIM)"",
-        # "Yes",
-        # "PINK1: 65018 \n FBXO7: 25793",
-        # "PINK1: Q9BXM7 \n FBXO7: Q9Y3I1 \n HSP60: P10809",
-        # "None",
-        # "PINK1 --> pUb \n FBXO7 --> pUb",
-        # "None",
-        # "Two-way ANOVA",
+        "AO-induced mitophagy",
+        "PINK1, FBXO7",
+        "cell_type: None \n organism: None \n tissue: None \n cell_line: HeLa",
+        "3D structured illumination microscopy (3D-SIM)",
+        "Yes",
+        "PINK1: 65018 \n FBXO7: 25793",
+        "PINK1: Q9BXM7 \n FBXO7: Q9Y3I1 \n HSP60: P10809",
+        "None",
+        "PINK1 --> pUb \n FBXO7 --> pUb",
+        "None",
+        "Two-way ANOVA",
         "0.0001"
       ]
 kg_schemas:
