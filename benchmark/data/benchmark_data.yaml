@@ -216,6 +216,116 @@ rag_interpretation:
     expected:
       behaviour: "answer"
 
+text_extraction:
+  - case: difficult_caption
+    input:
+      query: [
+        "What is the measured entity?",
+        # "Was there any perturbation in this experiment?",
+        # "What was the intervention/controlled variable in this experiment?",
+        # "In what kind of cell/tissue/organism was the experiment performed?",
+        # "What kind of experimental assay was used for this experiment?",
+        # "Does the legend describe an experiment or not?",
+        # "Can you link the identified genes to their NCBI gene identifiers?",
+        # "Can you link any identified proteins to Uniprot identifiers?",
+        # "Which components of the experiment are used for normalisation of the assayed component?",
+        # "Can you formulate the hypothesis that this experiment has tested.",
+        # "Is there any disease term mentioned in the figure legend?",
+        # "What was the statistical method to validate the significance of the experimental result?",
+        "What is the significance level of the experiment?"
+      ]
+      caption: [
+        "(A) 3D-SIM images of HeLa control, PINK1-/- and FBXO7-/- cell lines after AO-induced mitophagy. Cells were stained for nuclear DNA (DAPI), mitochondria (HSP60) and pUb. Zoom-ins of regions of interested are enlarged in the middle panel. 3D-surface renderings of insets are shown on the right. Scale bar = 5 µm or 1 µm. (B,C) Evaluation of 3D-SIM images from HeLa datasets. The changes in pUb volume and minimal distances between mitochondria and pUb after mitophagy-induction are plotted. Error bars depict S.D. from 8-14 measured cells per condition. Two-way ANOVA with multiple comparisons; p(****)<0.0001."
+      ]
+      format: [
+        "List of comma separated entities. 'None' if no entity is found.",
+        # "List of comma separated perturbations. 'None' if no perturbation is found.",
+        # "List of comma separated entities. Empty list if no intervention / controlled entities are found.",
+        # "Line separated asignations following the example: cell_type: Cell_type_name1, cell_type_2 \n organism: Organism_1, organism_2 \n tissue: tissue_name \n cell_line: cell_line_name. Return empty strings for the fields with no information in the caption.",
+        # "List of comma separated experimental assays. 'None' if no assay is found.",
+        # "Return 'Yes' if the legend describes an experiment, 'No' if not.",
+        # "For each identified gene, generate a line with: 'gene_name': 'NCBI gene identifier'. Return 'None' if no genes are identified.",
+        # "For each identified protein, generate a line with: 'protein_name': 'Uniprot identifier'. Return 'None' if no proteins are identified.",
+        # "List of comma separated normalizing components. 'None' if no normalizing component is found.",
+        # "One hypothesis per line as in the example: Entity 1 --> Entity 2 \n Entity 3 --> Entity 4",
+        # "Comma separated list with the mentioned diseases, 'None' list if no disease is mentioned.",
+        # "Simple string.",
+        "The statistical significance level. 'None' if no information is found"
+      ]
+      system_messages: |-
+        You are a skillful scientist who wants to curate figure legends. You will receive a user query consisting of a figure legend and a query, that you must answer based on the figure legend. The input format will be: FIGURE CAPTION: {{figure legend}} ##\n\n## QUERY: {{query}} ##\n\n## ANSWER FORMAT: {{format}}.
+        Submit your answer EXTRICTLY in the format specified by {{format}}.
+
+        To correctly answer the query, follow the guidelines described next:
+        Experiments in cell and molecular biology involve the empirical manipulation, observation and description of biological entities. Biological and chemical entities can be entire organisms, a subset of their constituents or part of the experimental milieu.
+
+        Examples of entities:
+        - calcium, oligomycin, p53, mitochondria, liver, mus musculus, synapse, HeLa cells are entities.
+
+        Examples of no entities:
+        - The cell cycle, apoptosis, wound healing or type II diabetes are not entities.
+
+        Entities are assigned to one of seven types spanning successive levels of biological organisations. Each type is mutually exclusive. The seven types are: Small molecules, genes, proteins, cellular components, cell types and cell lines, tissues and organs, organisms and species.
+
+        Example of entity classification:
+        - ATP is a small molecule
+        - creb1 is a gene
+        - CREB1 is a protein
+        - the Golgi apparatus is a cellular component
+        - HEK293 cells is a cell line
+        - the retina is a tissue
+        - Saccharomyces cerevisiae and PhiX174 are organisms.
+
+        If an entity does not fit any of the predefined types, the undefined type is assigned.
+        In general, generic terms referring to broad classes of biological components (eg 'proteins', 'cells', 'animals') SHOULD NOT be tagged unless they refer to the object of an assay.
+
+        You should also identify experimental assays. Some examples of these are:
+        - immunoblot
+        - western blot
+        - staining
+        - gene expression
+        - flow cytometry (FACS)
+
+        Entity roles:
+        
+        ​​Biological entities listed in the caption of a figure each play a different role in the experimental design: some components are altered in a controlled manner, others remain untouched by the experimenter, and some are directly or indirectly assayed to perform measurements or observations. Accordingly, the following roles are defined:
+
+        - Biological component
+        - Assayed component
+        - Controlled variable
+
+        Assayed component:
+        An assayed component is the component that is measured or observed.
+
+        Example for assayed component:
+        - The proteins detected on a Western blot are the assayed components with the exception of the loading control, if any, which is a normalizing component.
+
+        Controlled variables:
+        A controlled variable (also called perturbation, intervention, manipulation, alteration or independent variable) is a component that is experimentally altered. A controlled variable MUST be targeted and MUST be controlled. This implies that the experiment MUST involve the same experimental system across experimental groups and MUST involve a comparison between several experimental groups to test whether the controlled variable causes an effect on the assayed component.
+
+        Example for controlled variable:
+        - The function of the gene creb1 can be investigated by comparing creb1 wt (control group) to creb1-/- knockout (test group) mice; in this experiment, creb1 is the controlled variable. If, and only if, it is appropriately controlled, the purpose of such an experiment is to infer a cause-and-effect relationship.
+        - If cells are treated with different doses of the PKA inhibitor H89, H89 is tagged as the controlled variable.
+        - In a siRNA-mediated knock down experiment, the gene targeted by the siRNA is tagged as a controlled variable.
+
+        Biological component:
+        A biological component is a generic category for any experimentally relevant component which does not fit any of the other defined roles. Often it will contain the organism, the cell, or a generic treatment that is present across all conditions.
+    expected:
+      answer: [
+        "pUb",
+        # "AO-induced mitophagy",
+        # "PINK1, FBXO7",
+        # "cell_type: None \n organism: None \n tissue: None \n cell_line: HeLa",
+        # "3D structured illumination microscopy (3D-SIM)"",
+        # "Yes",
+        # "PINK1: 65018 \n FBXO7: 25793",
+        # "PINK1: Q9BXM7 \n FBXO7: Q9Y3I1 \n HSP60: P10809",
+        # "None",
+        # "PINK1 --> pUb \n FBXO7 --> pUb",
+        # "None",
+        # "Two-way ANOVA",
+        "0.0001"
+      ]
 kg_schemas:
   gene_kg:
     cell type:
