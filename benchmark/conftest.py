@@ -20,10 +20,10 @@ BENCHMARK_DATASET = get_benchmark_dataset()
 
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
-    # "gpt-3.5-turbo-0613",
-    # "gpt-3.5-turbo-0125",
+    "gpt-3.5-turbo-0613",
+    "gpt-3.5-turbo-0125",
     "gpt-4-0613",
-    # "gpt-4-0125-preview",
+    "gpt-4-0125-preview",
 ]
 
 XINFERENCE_MODELS = {
@@ -148,7 +148,7 @@ XINFERENCE_MODEL_NAMES = [
     for quantization in XINFERENCE_MODELS[model_name]["quantization"]
 ]
 
-BENCHMARKED_MODELS = OPENAI_MODEL_NAMES # + XINFERENCE_MODEL_NAMES
+BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
 BENCHMARKED_MODELS.sort()
 
 # Xinference IP and port
