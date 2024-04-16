@@ -36,10 +36,7 @@ def test_sourcedata_info_extraction(
         conversation.reset()
 
         # Define the system prompt
-        [
-            conversation.append_system_message(m)
-            for m in yaml_data["input"]["system_messages"]
-        ]
+        [conversation.append_system_message(yaml_data["input"]["system_messages"])]
 
         rouge_scores = []
         for caption in ensure_iterable(yaml_data["input"]["caption"]):
@@ -52,10 +49,6 @@ def test_sourcedata_info_extraction(
                     f"FIGURE CAPTION: {caption} ##\n\n## QUERY: {query} ##\n\n## ANSWER FORMAT: {format_}"
                 )
                 
-                import pdb; pdb.set_trace()
-                print(response)
-                print(answer)
-
                 rouge_score = evaluate_response(response, answer)
 
                 rouge_scores.append(rouge_score)
