@@ -65,20 +65,8 @@ def test_sourcedata_info_extraction(
         get_result_file_path(task),
     )
 
-def check_if_correct_format(answer, format_):
-    try:
-        # Try to safely evaluate the string
-        result = ast.literal_eval(answer)
-        # Check the type of the result
-        if isinstance(result, format_):
-            return True
-        else:
-            return False
-    except:
-        raise ValueError("The answer is not in the correct format")
-
 def evaluate_response(response, expected):
-    # Check if the response is the expected one
+    """Application of the ROUGE metric to evaluate the response of the model."""
     rouge = evaluate.load('rouge')
 
     return rouge.compute(
