@@ -217,7 +217,7 @@ rag_interpretation:
       behaviour: "answer"
 
 text_extraction:
-  - case: difficult_caption
+  - case: source_data_extraction
     input:
       query: [
         "What is the assayed/measured entity?",
@@ -229,7 +229,7 @@ text_extraction:
         "Can you formulate the hypothesis that this experiment has tested.",
         "Is there any disease term mentioned, or can be infered, in the figure legend?",
         "What was the statistical method to validate the significance of the experimental result?",
-        "What is the significance level of the experiment?"
+        "What is the significance level of the experiment?",
         "Are there any chemical compounds or small molecules mentioned?"
       ]
       caption: [
@@ -240,14 +240,14 @@ text_extraction:
       ]
       format: [
         "List of comma separated entities. 'None' if no entity is found.",
-        "List of comma separated entities. Empty list if no intervention / controlled entities are found.",
-        "Line separated asignations following the example: cell_type: Cell_type_name1, cell_type_2 \n organism: Organism_1, organism_2 \n tissue: tissue_name \n cell_line: cell_line_name \n subcellular: subcell_component. Return empty strings for the fields with no information in the caption.",
+        "List of comma separated entities. 'None' if no intervention / controlled entities are found.",
+        "Line separated asignations following the example: cell_type: Cell_type_name1, cell_type_2 \n organism: Organism_1, organism_2 \n tissue: tissue_name \n cell_line: cell_line_name \n subcellular: subcell_component. Return None for the fields with no information in the caption.",
         "List of comma separated experimental assays. 'None' if no assay is found.",
         "Return 'Yes' if the legend describes an experiment, 'No' if not.",
         "For each identified gene, generate a line with: 'gene_name': 'NCBI gene identifier'. Return 'None' if no genes are identified.",
         "One hypothesis per line as in the example: Entity 1 --> Entity 2 \n Entity 3 --> Entity 4",
         "Comma separated list with the mentioned diseases, 'None' list if no disease is mentioned.",
-        "Simple string.",
+        "Simple string. 'None' if no information is found.",
         "The statistical significance level. 'None' if no information is found",
         "List of comma separated chemicals. 'None' if no chemical compound or molecule is found.",
       ]
@@ -311,10 +311,10 @@ text_extraction:
         A biological component is a generic category for any experimentally relevant component which does not fit any of the other defined roles. Often it will contain the organism, the cell, or a generic treatment that is present across all conditions.
     expected:
       answer: [
-        ["Ub (pUb), mitochondria, HSP60", "PINK1, FBXO7", "cell_type: None \n organism: None \n tissue: None \n cell_line: HeLa \n subcellular: nucleus, mitochondria", "3D structured illumination microscopy (3D-SIM)", "Yes", "PINK1: 65018 \n FBXO7: 25793", "PINK1 --> pUb \n FBXO7 --> pUb", "Two-way ANOVA", "0.0001", "DAPI"],
-        ["HeLa, mitochondria", "AO (Antimycin A, Oligomycin), BafilomycinA (BafA)", "cell_type: None \n organism: None \n tissue: None \n cell_line: HeLa \n subcellular: mitochondria", "Flow cytometry", "Yes", "Parkin: 5071", "Antimycin A --> HeLa \n Oligomycin --> HeLa \n BafilomycinA (BafA) --> HeLa", "None", "Two-way ANOVA with multiple comparisons", "0.0001", "None"],
-        ["env, gag", "None", "cell_type: fibroblast \n organism: mouse (mus musculus) \n tissue: connective \n cell_line: EO771, TS/A, LLC1, KP, B16F10, MCA101, MB49, Raw264.7, 4T1, MutuDC, Pfa1, Mus Dunni \n subcellular: None", "Western blot", "Yes", "", "(EO771, TS/A, LLC1, KP, B16F10, MCA101, MB49, Raw264.7, 4T1, MutuDC, Pfa1, Mus Dunni) --> env \n (EO771, TS/A, LLC1, KP, B16F10, MCA101, MB49, Raw264.7, 4T1, MutuDC, Pfa1, Mus Dunni) --> gag ", "Murine leukemia", "", "", "None"],
-        ["CD63, CD9", "None", "cell_type: None \n organism: mouse (mus musculus) \n tissue: None \n cell_line: EO771-myr/palm-mCherry \n subcellular: None", "Confocal microscopy", "Yes", "", " EO771-myr/palm-mCherry --> CD9 \n EO771-myr/palm-mCherry --> CD63 ", "None", "", "", "DAPI"],
+        ["Ub (pUb), mitochondria, HSP60", "PINK1, FBXO7", "cell_type: None \n organism: None \n tissue: None \n cell_line: HeLa \n subcellular: nucleus, mitochondria", "3D structured illumination microscopy (3D-SIM)", "Yes", "PINK1: 65018 \n FBXO7: 25793", "PINK1 --> pUb \n FBXO7 --> pUb", "None", "Two-way ANOVA with multiple comparisons", "0.0001", "DAPI"],
+        ["Mean Acidic:Neutral mtKeima per-cell ratios, HeLa, mitochondria", "Antimycin A, Oligomycin, BafilomycinA (BafA)", "cell_type: None \n organism: None \n tissue: None \n cell_line: HeLa \n subcellular: mitochondria", "Flow cytometry", "Yes", "Parkin: 5071", "Antimycin A --> HeLa \n Oligomycin --> HeLa Mean Acidic:Neutral mtKeima per-cell ratios \n BafilomycinA (BafA) --> HeLa Mean Acidic:Neutral mtKeima per-cell ratios", "None", "Two-way ANOVA with multiple comparisons", "0.0001", "Antimycin A, Oligomycin, BafilomycinA "],
+        ["env, gag", "None", "cell_type: fibroblast \n organism: None \n tissue: connective \n cell_line: EO771, TS/A, LLC1, KP, B16F10, MCA101, MB49, Raw264.7, 4T1, MutuDC, Pfa1, Mus Dunni \n subcellular: None", "Western blot", "Yes", "None", "(EO771, TS/A, LLC1, KP, B16F10, MCA101, MB49, Raw264.7, 4T1, MutuDC, Pfa1, Mus Dunni) --> env \n (EO771, TS/A, LLC1, KP, B16F10, MCA101, MB49, Raw264.7, 4T1, MutuDC, Pfa1, Mus Dunni) --> gag ", "None mentioned, Murine leukemia", "None", "None", "None"],
+        ["CD63, CD9", "None", "cell_type: None \n organism: None \n tissue: None \n cell_line: EO771-myr/palm-mCherry \n subcellular: None", "Confocal microscopy", "Yes", "None", " EO771-myr/palm-mCherry --> CD9 \n EO771-myr/palm-mCherry --> CD63 ", "None", "None", "None", "DAPI"],
       ]
 kg_schemas:
   gene_kg:
