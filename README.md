@@ -65,7 +65,7 @@ by BioChatter can be seen in use in the
 Check out [this repository](https://github.com/csbl-br/awesome-compbio-chatgpt)
 for more info on computational biology usage of large language models.
 
-## Developer notes
+## Troubleshooting
 
 If you're on Apple Silicon, you may encounter issues with the `grpcio`
 dependency (`grpc` library, which is used in `pymilvus`). If so, try to install
