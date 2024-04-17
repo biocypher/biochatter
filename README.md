@@ -15,10 +15,21 @@ the biomedical domain is still limited, in part due to the lack of a common
 framework for deploying, testing, and evaluating the diverse models and
 auxiliary technologies that are needed.  This repository contains the
 `biochatter` Python package, a generic backend library for the connection of
-biomedical applications to conversational AI.  Described in [this
-preprint](https://arxiv.org/abs/2305.06488) and used in
-[ChatGSE](https://chat.biocypher.org), which is being developed at
-https://github.com/biocypher/ChatGSE. More to come, so stay tuned!
+biomedical applications to conversational AI.
+
+The library is described in [this preprint](https://arxiv.org/abs/2305.06488) and
+used in various demo applications for showcasing its use:
+
+- a simple Python-based frontend called [BioChatter
+Light](https://light.biochatter.org), which we develop at
+https://github.com/biocypher/biochatter-light;
+
+- an advanced Next.js-based frontend called [BioChatter
+Next](https://next.biochatter.org), which we develop at
+https://github.com/biocypher/biochatter-next;
+
+- a RESTful API server for use by the Next frontend (and any other REST-based
+application) at https://github.com/biocypher/biochatter-server.
 
 BioChatter is part of the [BioCypher](https://github.com/biocypher) ecosystem, 
 connecting natively to BioCypher knowledge graphs. The BioChatter paper is
