@@ -220,37 +220,36 @@ text_extraction:
   - case: difficult_caption
     input:
       query: [
-        "What is the measured entity?",
-        "Was there any perturbation in this experiment?",
+        "What is the assayed/measured entity?",
         "What was the intervention/controlled variable in this experiment?",
-        "In what kind of cell/tissue/organism was the experiment performed?",
+        "In what kind of cell/tissue/organism/subcellular component was the experiment performed?",
         "What kind of experimental assay was used for this experiment?",
         "Does the legend describe an experiment or not?",
         "Can you link the identified genes to their NCBI gene identifiers?",
-        "Can you link any identified proteins to Uniprot identifiers?",
-        "Which components of the experiment are used for normalisation of the assayed component?",
         "Can you formulate the hypothesis that this experiment has tested.",
-        "Is there any disease term mentioned in the figure legend?",
+        "Is there any disease term mentioned, or can be infered, in the figure legend?",
         "What was the statistical method to validate the significance of the experimental result?",
         "What is the significance level of the experiment?"
+        "Are there any chemical compounds or small molecules mentioned?"
       ]
       caption: [
-        "(A) 3D-SIM images of HeLa control, PINK1-/- and FBXO7-/- cell lines after AO-induced mitophagy. Cells were stained for nuclear DNA (DAPI), mitochondria (HSP60) and pUb. Zoom-ins of regions of interested are enlarged in the middle panel. 3D-surface renderings of insets are shown on the right. Scale bar = 5 µm or 1 µm. (B,C) Evaluation of 3D-SIM images from HeLa datasets. The changes in pUb volume and minimal distances between mitochondria and pUb after mitophagy-induction are plotted. Error bars depict S.D. from 8-14 measured cells per condition. Two-way ANOVA with multiple comparisons; p(****)<0.0001."
+        "(A) 3D-SIM images of HeLa control, PINK1-/- and FBXO7-/- cell lines after AO-induced mitophagy. Cells were stained for nuclear DNA (DAPI), mitochondria (HSP60) and pUb. Zoom-ins of regions of interested are enlarged in the middle panel. 3D-surface renderings of insets are shown on the right. Scale bar = 5 µm or 1 µm. (B,C) Evaluation of 3D-SIM images from HeLa datasets. The changes in pUb volume and minimal distances between mitochondria and pUb after mitophagy-induction are plotted. Error bars depict S.D. from 8-14 measured cells per condition. Two-way ANOVA with multiple comparisons; p(****)<0.0001.",
+        "(B) Mean Acidic:Neutral mtKeima per-cell ratios measured by flow cytometry for HeLa cells expressing Parkin ndicating the number of hours treated with AO (Antimycin A (5 µM) and Oligomycin (10 µM)) or three hours with 25 nM BafilomycinA (BafA). Error bars depict S.D. from biological triplicate measurements from three independent clones. Two-way ANOVA with multiple comparisons; p(****)<0.0001.",
+        "(E) Western blot of cell lysate (Lys) from 2x105 cells, 10k and 200k secreted by 20x106 of 10 tumor cell lines (EO771, TS/A, LLC1, KP, B16F10, MCA101, MB49, Raw264.7, 4T1 and MutuDC) and 2 non-tumoral fibroblast cell lines (Pfa1 and Mus Dunni), showing hybridization with antibodies against env (top) and gag (middle) viral proteins and total proteins (bottom). Gag is observed with different sizes, especially the full-length Pr65 (blue circle), and the mature cleaved p30 (blue cross) forms.",
+        "(B) Confocal microscopy of EO771-myr/palm-mCherry cells showing DAPI in blue and mCherry in red, CD9 in green and CD63 in magenta (overlay and close-ups)."
       ]
       format: [
         "List of comma separated entities. 'None' if no entity is found.",
-        "List of comma separated perturbations. 'None' if no perturbation is found.",
         "List of comma separated entities. Empty list if no intervention / controlled entities are found.",
-        "Line separated asignations following the example: cell_type: Cell_type_name1, cell_type_2 \n organism: Organism_1, organism_2 \n tissue: tissue_name \n cell_line: cell_line_name. Return empty strings for the fields with no information in the caption.",
+        "Line separated asignations following the example: cell_type: Cell_type_name1, cell_type_2 \n organism: Organism_1, organism_2 \n tissue: tissue_name \n cell_line: cell_line_name \n subcellular: subcell_component. Return empty strings for the fields with no information in the caption.",
         "List of comma separated experimental assays. 'None' if no assay is found.",
         "Return 'Yes' if the legend describes an experiment, 'No' if not.",
         "For each identified gene, generate a line with: 'gene_name': 'NCBI gene identifier'. Return 'None' if no genes are identified.",
-        "For each identified protein, generate a line with: 'protein_name': 'Uniprot identifier'. Return 'None' if no proteins are identified.",
-        "List of comma separated normalizing components. 'None' if no normalizing component is found.",
         "One hypothesis per line as in the example: Entity 1 --> Entity 2 \n Entity 3 --> Entity 4",
         "Comma separated list with the mentioned diseases, 'None' list if no disease is mentioned.",
         "Simple string.",
-        "The statistical significance level. 'None' if no information is found"
+        "The statistical significance level. 'None' if no information is found",
+        "List of comma separated chemicals. 'None' if no chemical compound or molecule is found.",
       ]
       system_messages: |-
         You are a skillful scientist who wants to curate figure legends. You will receive a user query consisting of a figure legend and a query, that you must answer based on the figure legend. The input format will be: FIGURE CAPTION: {{figure legend}} ##\n\n## QUERY: {{query}} ##\n\n## ANSWER FORMAT: {{format}}.
@@ -312,19 +311,10 @@ text_extraction:
         A biological component is a generic category for any experimentally relevant component which does not fit any of the other defined roles. Often it will contain the organism, the cell, or a generic treatment that is present across all conditions.
     expected:
       answer: [
-        "pUb",
-        "AO-induced mitophagy",
-        "PINK1, FBXO7",
-        "cell_type: None \n organism: None \n tissue: None \n cell_line: HeLa",
-        "3D structured illumination microscopy (3D-SIM)",
-        "Yes",
-        "PINK1: 65018 \n FBXO7: 25793",
-        "PINK1: Q9BXM7 \n FBXO7: Q9Y3I1 \n HSP60: P10809",
-        "None",
-        "PINK1 --> pUb \n FBXO7 --> pUb",
-        "None",
-        "Two-way ANOVA",
-        "0.0001"
+        ["Ub (pUb), mitochondria, HSP60", "PINK1, FBXO7", "cell_type: None \n organism: None \n tissue: None \n cell_line: HeLa \n subcellular: nucleus, mitochondria", "3D structured illumination microscopy (3D-SIM)", "Yes", "PINK1: 65018 \n FBXO7: 25793", "PINK1 --> pUb \n FBXO7 --> pUb", "Two-way ANOVA", "0.0001", "DAPI"],
+        ["HeLa, mitochondria", "AO (Antimycin A, Oligomycin), BafilomycinA (BafA)", "cell_type: None \n organism: None \n tissue: None \n cell_line: HeLa \n subcellular: mitochondria", "Flow cytometry", "Yes", "Parkin: 5071", "Antimycin A --> HeLa \n Oligomycin --> HeLa \n BafilomycinA (BafA) --> HeLa", "None", "Two-way ANOVA with multiple comparisons", "0.0001", "None"],
+        ["env, gag", "None", "cell_type: fibroblast \n organism: mouse (mus musculus) \n tissue: connective \n cell_line: EO771, TS/A, LLC1, KP, B16F10, MCA101, MB49, Raw264.7, 4T1, MutuDC, Pfa1, Mus Dunni \n subcellular: None", "Western blot", "Yes", "", "(EO771, TS/A, LLC1, KP, B16F10, MCA101, MB49, Raw264.7, 4T1, MutuDC, Pfa1, Mus Dunni) --> env \n (EO771, TS/A, LLC1, KP, B16F10, MCA101, MB49, Raw264.7, 4T1, MutuDC, Pfa1, Mus Dunni) --> gag ", "Murine leukemia", "", "", "None"],
+        ["CD63, CD9", "None", "cell_type: None \n organism: mouse (mus musculus) \n tissue: None \n cell_line: EO771-myr/palm-mCherry \n subcellular: None", "Confocal microscopy", "Yes", "", " EO771-myr/palm-mCherry --> CD9 \n EO771-myr/palm-mCherry --> CD63 ", "None", "", "", "DAPI"],
       ]
 kg_schemas:
   gene_kg:
