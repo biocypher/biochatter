@@ -286,7 +286,7 @@ text_extraction:
         - flow cytometry (FACS)
 
         Entity roles:
-        
+
         ​​Biological entities listed in the caption of a figure each play a different role in the experimental design: some components are altered in a controlled manner, others remain untouched by the experimenter, and some are directly or indirectly assayed to perform measurements or observations. Accordingly, the following roles are defined:
 
         - Biological component

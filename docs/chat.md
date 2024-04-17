@@ -21,7 +21,7 @@ It is possible to supply a dictionary of prompts to the conversation from the ou
 conversation.append_system_message("System Message")
 ```
 
-Similarly, the user queries (`HumanMessage`) are passed to the conversation using `convo.append_user_message("User Message")`. For purposes of keeping track of the conversation history, we can also append the model's responses as `AIMessage` using `convo.append_ai_message`. 
+Similarly, the user queries (`HumanMessage`) are passed to the conversation using `convo.append_user_message("User Message")`. For purposes of keeping track of the conversation history, we can also append the model's responses as `AIMessage` using `convo.append_ai_message`.
 
 ## Querying the model
 

@@ -1,14 +1,11 @@
-from biochatter.vectorstore import (
-    DocumentEmbedder,
-    DocumentReader,
-)
 import os
 import inspect
+
 import pytest
+
+from biochatter.vectorstore import DocumentReader, DocumentEmbedder
 from .conftest import calculate_test_score
-from .benchmark_utils import (
-    get_result_file_path,
-)
+from .benchmark_utils import get_result_file_path
 
 # TODO: make vectorstore / retriever a part of the matrix
 

@@ -36,15 +36,22 @@ def test_sourcedata_info_extraction(
         conversation.reset()
 
         # Define the system prompt
-        [conversation.append_system_message(yaml_data["input"]["system_messages"])]
+        [
+            conversation.append_system_message(
+                yaml_data["input"]["system_messages"]
+            )
+        ]
 
         avg_rouge_scores = []
-        for caption, answers in zip(ensure_iterable(yaml_data["input"]["caption"]), ensure_iterable(yaml_data["expected"]["answer"])):
+        for caption, answers in zip(
+            ensure_iterable(yaml_data["input"]["caption"]),
+            ensure_iterable(yaml_data["expected"]["answer"]),
+        ):
             rouge_scores = []
             for query, format_, answer in zip(
                 ensure_iterable(yaml_data["input"]["query"]),
                 ensure_iterable(yaml_data["input"]["format"]),
-                ensure_iterable(answers)
+                ensure_iterable(answers),
             ):
                 response, _, _ = conversation.query(
                     f"FIGURE CAPTION: {caption} ##\n\n## QUERY: {query} ##\n\n## ANSWER FORMAT: {format_}"
@@ -67,11 +74,11 @@ def test_sourcedata_info_extraction(
         get_result_file_path(task),
     )
 
+
 def evaluate_response(response, expected):
     """Application of the ROUGE metric to evaluate the response of the model."""
-    rouge = evaluate.load('rouge')
+    rouge = evaluate.load("rouge")
 
-    return rouge.compute(
-        predictions=[response],
-        references=[expected]
-        )["rouge1"]
+    return rouge.compute(predictions=[response], references=[expected])[
+        "rouge1"
+    ]

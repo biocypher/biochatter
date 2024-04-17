@@ -1,8 +1,8 @@
 import os
 
-import requests
 from xinference.client import Client
 import pytest
+import requests
 
 import numpy as np
 import pandas as pd

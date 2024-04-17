@@ -44,4 +44,3 @@ services:
     depends_on:
       - "etcd"
       - "minio"
-

@@ -1,8 +1,10 @@
 from typing import Optional
-import yaml
-import json
 import os
-from ._misc import sentencecase_to_pascalcase, ensure_iterable
+import json
+
+import yaml
+
+from ._misc import ensure_iterable, sentencecase_to_pascalcase
 from .llm_connect import Conversation, GptConversation
 
 
@@ -92,13 +94,13 @@ class BioCypherPromptEngine:
                         value["represented_as"] == "node"
                         and name_indicates_relationship
                     ):
-                        self.relationships[sentencecase_to_pascalcase(key)] = (
-                            value
-                        )
+                        self.relationships[
+                            sentencecase_to_pascalcase(key)
+                        ] = value
                     elif value["represented_as"] == "edge":
-                        self.relationships[sentencecase_to_pascalcase(key)] = (
-                            value
-                        )
+                        self.relationships[
+                            sentencecase_to_pascalcase(key)
+                        ] = value
         else:
             for key, value in schema_config.items():
                 if not isinstance(value, dict):

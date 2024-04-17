@@ -1,7 +1,8 @@
+from datetime import datetime
+
 import pytest
 
 import pandas as pd
-from datetime import datetime
 
 
 def benchmark_already_executed(

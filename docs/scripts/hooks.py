@@ -1,8 +1,10 @@
 import os
 import re
-import numpy as np
+
 import seaborn as sns
 import matplotlib
+
+import numpy as np
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -91,9 +93,9 @@ def preprocess_results_for_frontend(
         axis=1,
     )
 
-    aggregated_scores["Full model name"] = (
-        aggregated_scores.index.get_level_values("model_name")
-    )
+    aggregated_scores[
+        "Full model name"
+    ] = aggregated_scores.index.get_level_values("model_name")
     aggregated_scores["Passed test cases"] = aggregated_scores[
         "passed_test_cases"
     ]
@@ -146,9 +148,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     )
 
     overview_per_quantisation = overview
-    overview_per_quantisation["Full model name"] = (
-        overview_per_quantisation.index
-    )
+    overview_per_quantisation[
+        "Full model name"
+    ] = overview_per_quantisation.index
     overview_per_quantisation[
         ["Model name", "Size", "Version", "Quantisation"]
     ] = overview_per_quantisation["Full model name"].str.split(":", expand=True)
@@ -180,9 +182,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         ]
     ]
     # round mean and sd to 2 decimal places
-    overview_per_quantisation.loc[:, "Median Accuracy"] = (
-        overview_per_quantisation["Median Accuracy"].round(2)
-    )
+    overview_per_quantisation.loc[
+        :, "Median Accuracy"
+    ] = overview_per_quantisation["Median Accuracy"].round(2)
     overview_per_quantisation.loc[:, "SD"] = overview_per_quantisation[
         "SD"
     ].round(2)

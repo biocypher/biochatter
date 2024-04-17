@@ -1,24 +1,25 @@
-import os, pytest, uuid
 from unittest.mock import patch
+import os
+import uuid
+
+import pytest
 
 # from langchain.schema import Document
 # from pymilvus import utility, Collection, connections
 # from langchain.embeddings import OpenAIEmbeddings
 from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
-
-from .mock_langchain import OpenAIEmbeddings, Document, Milvus
 from .mock_pymilvus import (
-    connections,
-    utility,
-    Collection,
     DataType,
+    Collection,
     FieldSchema,
     CollectionSchema,
+    utility,
+    connections,
 )
-
+from .mock_langchain import Milvus, Document, OpenAIEmbeddings
 
 """
-This test needs OPENAI_API_KEY in the environment and a local milvus server. 
+This test needs OPENAI_API_KEY in the environment and a local milvus server.
 """
 
 # setup milvus connection

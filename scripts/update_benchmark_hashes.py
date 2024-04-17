@@ -1,6 +1,9 @@
 import os
-import pandas as pd
+
 import yaml
+
+import pandas as pd
+
 from benchmark.load_dataset import _get_all_files, _get_yaml_data
 
 
@@ -51,9 +54,9 @@ def _update_hashes_in_results():
                         # corresponding hash from reference_hashes, matching the
                         # case in the subtask column
                         for index, row in result_file.iterrows():
-                            result_file.at[index, "md5_hash"] = (
-                                reference_hashes[row["subtask"]]
-                            )
+                            result_file.at[
+                                index, "md5_hash"
+                            ] = reference_hashes[row["subtask"]]
                         result_file.to_csv(file, index=False)
 
                 except yaml.YAMLError as exc:
