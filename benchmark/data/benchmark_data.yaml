@@ -219,16 +219,27 @@ rag_interpretation:
 
 # new test cases pdsm
 pdsm:
-  # test simple irrelevance judgement
+  # test simple yes / no answer
   - case: single_answer_yes
     input:
       prompt: Does taking blood thinners have the potential to reduce the risk of a stroke?
       system_messages:
         [
-          "You will recieve a question and you should answer it with only using the word 'yes' or 'no'"
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
         ]
     expected:
       answer: "yes"
+
+  # test multiple choice answer
+  - case: multiple_answer_a
+    input:
+      prompt: Which of the following is a known risk factor for stroke? A) High cholesterol B) Low blood pressure C) Regular exercise D) Vitamin D deficiency
+      system_messages:
+        [
+          "You will receive a multiple choice question. Your answer should only contain the right letter 'A', 'B', 'C' or 'D'"
+        ]
+    expected:
+      answer: "A"
 
 
 

@@ -19,6 +19,7 @@ def test_correctness_of_answers(
 ):
     yaml_data = test_data_pdsm
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    # Wieder einkomentieren, wenn benötigt
     '''skip_if_already_run(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )'''
@@ -35,6 +36,8 @@ def test_correctness_of_answers(
         response = (
             response.lower().replace(".", "").replace("?", "").replace("!", "")
         ).strip()
+
+        print(response)
 
         score = []
 
