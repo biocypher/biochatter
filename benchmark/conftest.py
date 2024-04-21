@@ -21,7 +21,8 @@ BENCHMARK_DATASET = get_benchmark_dataset()
 
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
-    "gpt-3.5-turbo-0125"
+    "gpt-3.5-turbo-0125",
+    "gpt-4-0613"
 ]
 
 XINFERENCE_MODELS = {
@@ -231,7 +232,8 @@ def conversation(request, model_name):
             prompts={},
             correct=False,
         )
-        cus_path = os.getcwd() + "/venv/bin/.env"
+        # delete first dots if venv is in project env
+        cus_path = os.getcwd() + "../../venv/bin/.env"
         load_dotenv(cus_path)
         conversation.set_api_key(
             os.getenv("OPENAI_API_KEY"), user="benchmark_user"
@@ -304,7 +306,8 @@ def evaluation_conversation():
         prompts={},
         correct=False,
     )
-    cus_path = os.getcwd() + "/venv/bin/.env"
+    # delete first dots if venv is in project env
+    cus_path = os.getcwd() + "../../venv/bin/.env"
     load_dotenv(cus_path)
     conversation.set_api_key(os.getenv("OPENAI_API_KEY"), user="benchmark_user")
     return conversation
