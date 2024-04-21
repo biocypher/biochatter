@@ -220,7 +220,7 @@ rag_interpretation:
 # new test cases pdsm
 pdsm:
   # test simple irrelevance judgement
-  - case: explicit_relevance_yes
+  - case: single_answer_yes
     input:
       prompt: Does taking blood thinners have the potential to reduce the risk of a stroke?
       system_messages:
