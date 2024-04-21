@@ -5,23 +5,23 @@ import pytest
 from biochatter._misc import ensure_iterable
 from .conftest import calculate_test_score
 from .benchmark_utils import (
-    #skip_if_already_run,
+    skip_if_already_run,
     get_result_file_path,
     write_results_to_file,
 )
 
 
-def test_explicit_relevance_of_single_fragments(
+def test_correctness_of_answers(
     model_name,
-    test_data_rag_interpretation,
+    test_data_pdsm,
     conversation,
     multiple_testing,
 ):
-    yaml_data = test_data_rag_interpretation
+    yaml_data = test_data_pdsm
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    '''skip_if_already_run(
+    skip_if_already_run(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
-    )'''
+    )
     if "explicit" not in yaml_data["case"]:
         pytest.skip(
             f"test case {yaml_data['case']} not supported for {task} benchmark"
@@ -58,7 +58,7 @@ def test_explicit_relevance_of_single_fragments(
     )
 
 
-def test_implicit_relevance_of_multiple_fragments(
+'''def test_implicit_relevance_of_multiple_fragments(
     model_name,
     test_data_rag_interpretation,
     conversation,
@@ -67,9 +67,9 @@ def test_implicit_relevance_of_multiple_fragments(
 ):
     yaml_data = test_data_rag_interpretation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    '''skip_if_already_run(
+    skip_if_already_run(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
-    )'''
+    )
     if "implicit" not in yaml_data["case"]:
         pytest.skip(
             f"test case {yaml_data['case']} not supported for {task} benchmark"
@@ -117,3 +117,4 @@ def test_implicit_relevance_of_multiple_fragments(
         yaml_data["hash"],
         get_result_file_path(task),
     )
+'''

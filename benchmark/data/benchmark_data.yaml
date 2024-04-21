@@ -216,6 +216,22 @@ rag_interpretation:
     expected:
       behaviour: "answer"
 
+
+# new test cases pdsm
+pdsm:
+  # test simple irrelevance judgement
+  - case: explicit_relevance_yes
+    input:
+      prompt: Does taking blood thinners have the potential to reduce the risk of a stroke?
+      system_messages:
+        [
+          "You will recieve a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "yes"
+
+
+
 kg_schemas:
   gene_kg:
     cell type:
