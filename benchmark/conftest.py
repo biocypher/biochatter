@@ -401,6 +401,11 @@ def pytest_generate_tests(metafunc):
             "test_data_text_extraction",
             data_file["text_extraction"],
         )
+    if "test_data_pdsm" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "test_data_pdsm",
+            data_file["pdsm"],
+        )
 
 
 @pytest.fixture
