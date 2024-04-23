@@ -393,6 +393,29 @@ pdsm:
     expected:
       answer: "c"
 
+#################
+pdsm_regex:
+
+- case: asymmetry_calculations
+  input:
+    system_messages:
+      [
+        Beantworte die Frage so präzise und kurz wie möglich
+      ]
+    prompt: "Nenne mir die drei gängigsten Berechnungen für die Asymmetrie zwischen Elektrodenpaaren in EEG-Signalen"
+  expected:
+    words_in_response:
+      -
+        - "Absolute Asymmetry"
+        - "Absolute Differenz"
+      -
+        - "Relative Asymmetry"
+        - "Relative Differenz"
+      -
+        - "Coherence"
+        - "Logarithmierte Differenz"
+
+
 
 
 

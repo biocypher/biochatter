@@ -406,6 +406,11 @@ def pytest_generate_tests(metafunc):
             "test_data_pdsm",
             data_file["pdsm"],
         )
+    if "test_data_pdsm_regex" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "test_data_pdsm_regex",
+            data_file["pdsm_regex"],
+        )
 
 
 @pytest.fixture

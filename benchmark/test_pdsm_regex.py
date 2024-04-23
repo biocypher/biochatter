@@ -1,8 +1,6 @@
+import re
 import inspect
 
-import pytest
-
-from biochatter._misc import ensure_iterable
 from .conftest import calculate_test_score
 from .benchmark_utils import (
     skip_if_already_run,
@@ -11,20 +9,17 @@ from .benchmark_utils import (
 )
 
 
-def test_correctness_of_answers(
-    model_name,
-    test_data_pdsm,
-    conversation,
-    multiple_testing,
+def test_asymmetry_calculations(
+        model_name,
+        test_data_pdsm_regex,
+        conversation,
+        multiple_testing
 ):
-    yaml_data = test_data_pdsm
+    yaml_data = test_data_pdsm_regex
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    # Wieder einkommentieren, wenn benötigt
-    '''skip_if_already_run(
-        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
-    )'''
 
     def run_test():
+
         conversation.reset()  # needs to be reset for each test
         [
             conversation.append_system_message(m)
@@ -32,16 +27,16 @@ def test_correctness_of_answers(
         ]
         response, _, _ = conversation.query(yaml_data["input"]["prompt"])
 
-        # lower case, remove punctuation
-        response = (
-            response.lower().replace(".", "").replace("?", "").replace("!", "")
-        ).strip()
-
-        print(response)
-
         score = []
 
-        score.append(response == yaml_data["expected"]["answer"])
+        expected_word_pairs = yaml_data["expected"]["words_in_response"]
+        for pair in expected_word_pairs:
+            regex = "|".join(pair)
+            if re.search(regex, response, re.IGNORECASE):
+                score.append(True)
+            else:
+                score.append(False)
+                print(f"Expected words '{pair}' not found in response: {response}")
 
         return calculate_test_score(score)
 
@@ -55,5 +50,6 @@ def test_correctness_of_answers(
         yaml_data["hash"],
         get_result_file_path(task),
     )
+
 
 
