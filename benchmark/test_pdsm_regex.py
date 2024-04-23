@@ -25,7 +25,12 @@ def test_asymmetry_calculations(
             conversation.append_system_message(m)
             for m in yaml_data["input"]["system_messages"]
         ]
+
         response, _, _ = conversation.query(yaml_data["input"]["prompt"])
+
+        response = (
+            response.lower().replace(".", "").replace("?", "").replace("!", "")
+        ).strip()
 
         score = []
 
