@@ -16,7 +16,7 @@ Pytest functions in the individual Python modules (file names starting with
 `test_`). We also have some Python modules for auxiliary functions, such as
 `load_dataset.py`.
 
-In the following, we will describe a walkthrough of how to implement you own
+In the following, we will describe a walkthrough of how to implement your own
 tests according to our benchmark philosophy.
 
 ## Test setup
