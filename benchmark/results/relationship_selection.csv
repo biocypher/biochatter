@@ -116,6 +116,15 @@ llama-2-chat:7:ggufv2:Q6_K,single_word,0.0/3,5,ad1bb0a492769624275494f925c63e3c,
 llama-2-chat:7:ggufv2:Q8_0,complex,0.0/6,5,452fd25898074c0ad74fedf368140c9e,2024-02-11 01:15:43
 llama-2-chat:7:ggufv2:Q8_0,multi_word,0.0/3,5,20da65f06e21899211b34a6c02f14e1b,2024-02-11 01:11:03
 llama-2-chat:7:ggufv2:Q8_0,single_word,0.0/3,5,ad1bb0a492769624275494f925c63e3c,2024-02-11 01:06:15
+llama-3-instruct:8:ggufv2:Q4_K_M,complex,0.0/6,5,452fd25898074c0ad74fedf368140c9e,2024-04-24 12:00:06
+llama-3-instruct:8:ggufv2:Q4_K_M,multi_word,0.0/3,5,20da65f06e21899211b34a6c02f14e1b,2024-04-24 11:59:28
+llama-3-instruct:8:ggufv2:Q4_K_M,single_word,0.0/3,5,ad1bb0a492769624275494f925c63e3c,2024-04-24 11:59:00
+llama-3-instruct:8:ggufv2:Q6_K,complex,0.0/6,5,452fd25898074c0ad74fedf368140c9e,2024-04-24 12:07:16
+llama-3-instruct:8:ggufv2:Q6_K,multi_word,0.0/3,5,20da65f06e21899211b34a6c02f14e1b,2024-04-24 12:06:35
+llama-3-instruct:8:ggufv2:Q6_K,single_word,0.0/3,5,ad1bb0a492769624275494f925c63e3c,2024-04-24 12:06:03
+llama-3-instruct:8:ggufv2:Q8_0,complex,0.0/6,5,452fd25898074c0ad74fedf368140c9e,2024-04-24 12:17:48
+llama-3-instruct:8:ggufv2:Q8_0,multi_word,0.0/3,5,20da65f06e21899211b34a6c02f14e1b,2024-04-24 12:17:04
+llama-3-instruct:8:ggufv2:Q8_0,single_word,0.0/3,5,ad1bb0a492769624275494f925c63e3c,2024-04-24 12:16:29
 mistral-instruct-v0.2:7:ggufv2:Q2_K,complex,0.0/6,5,452fd25898074c0ad74fedf368140c9e,2024-02-11 01:31:56
 mistral-instruct-v0.2:7:ggufv2:Q2_K,multi_word,0.0/3,5,20da65f06e21899211b34a6c02f14e1b,2024-02-11 01:28:40
 mistral-instruct-v0.2:7:ggufv2:Q2_K,single_word,0.0/3,5,ad1bb0a492769624275494f925c63e3c,2024-02-11 01:25:50
