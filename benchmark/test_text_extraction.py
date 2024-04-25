@@ -33,14 +33,6 @@ def test_sourcedata_info_extraction(
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
 
     def run_test():
-        conversation.reset()
-
-        # Define the system prompt
-        [
-            conversation.append_system_message(
-                yaml_data["input"]["system_messages"]
-            )
-        ]
 
         avg_rouge_scores = []
         for caption, answers in zip(
@@ -53,6 +45,13 @@ def test_sourcedata_info_extraction(
                 ensure_iterable(yaml_data["input"]["format"]),
                 ensure_iterable(answers),
             ):
+                conversation.reset()
+                # Define the system prompt
+                [
+                    conversation.append_system_message(
+                        yaml_data["input"]["system_messages"]
+                    )
+                ]
                 response, _, _ = conversation.query(
                     f"FIGURE CAPTION: {caption} ##\n\n## QUERY: {query} ##\n\n## ANSWER FORMAT: {format_}"
                 )

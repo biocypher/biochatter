@@ -1,7 +1,3 @@
-model_name,subtask,score,iterations,md5_hash,datetime
-gpt-4-0613,source_data_extraction_detailed_description,1.5678951540553807/3,1,d1f701e6be49716f64089368def03eb3,2024-04-25 12:15:56
-gpt-4-0613,source_data_extraction_detailed_description,1.6772217585101301/3,5,d1f701e6be49716f64089368def03eb3,2024-04-25 12:35:54
-gpt-4-0613,source_data_extraction_few_shot,1.5923103382548485/3,1,3f189bc2aafe934fa2c1a238be939f76,2024-04-25 12:17:29
-gpt-4-0613,source_data_extraction_few_shot,1.0529508988293261/3,5,3f189bc2aafe934fa2c1a238be939f76,2024-04-25 12:44:42
-gpt-4-0613,source_data_extraction_simple,1.7348657503129934/3,1,620255e6edc204fe94c5b1191b76fc16,2024-04-25 12:14:26
-gpt-4-0613,source_data_extraction_simple,1.6846610169396126/3,5,620255e6edc204fe94c5b1191b76fc16,2024-04-25 12:28:19
+model_name,subtask,score,iterations,md5_hash,datetime,biochatter_version
+gpt-3.5-turbo-0125,source_data_extraction_simple,1.8045920038372871/3,1,f73dc6b25f81eb160410de76b932518f,2024-04-25 18:34:09,0.4.10
+llama-2-chat:13:ggufv2:Q4_K_M,source_data_extraction_simple,0.02097902097902098/3,1,f73dc6b25f81eb160410de76b932518f,2024-04-25 18:32:22,0.4.10
