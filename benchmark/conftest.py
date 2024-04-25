@@ -136,6 +136,37 @@ XINFERENCE_MODELS = {
             "Q8_0",
         ],
     },
+    "gemma-it": {
+        "model_size_in_billions": [
+            2,
+            7,
+        ],
+        "model_format": "pytorch",
+        "quantization": [
+            "none",
+            "4-bit",
+            "8-bit",
+        ],
+    },
+    "llama-3-instruct": {
+        "model_size_in_billions": [
+            8,
+            70,
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            # 8B model quantisations
+            # "IQ3_M",
+            "Q4_K_M",
+            # "Q5_K_M",
+            "Q6_K",
+            "Q8_0",
+            # 70B model quantisations
+            # "IQ1_M",
+            # "IQ2_XS",
+            "Q4_K_M",
+        ],
+    },
 }
 
 # create concrete benchmark list by concatenating all combinations of model

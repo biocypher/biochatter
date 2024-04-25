@@ -1,9 +1,8 @@
 Full model name,Passed test cases,Total test cases,Accuracy,Iterations
-llama-2-chat:13:ggufv2:Q8_0,6.0,6.0,1.0,5
-llama-2-chat:13:ggufv2:Q4_K_M,6.0,6.0,1.0,5
-llama-2-chat:13:ggufv2:Q6_K,6.0,6.0,1.0,5
-llama-2-chat:70:ggufv2:Q2_K,6.0,6.0,1.0,5
 llama-2-chat:70:ggufv2:Q3_K_M,6.0,6.0,1.0,5
+llama-2-chat:13:ggufv2:Q5_K_M,6.0,6.0,1.0,5
+llama-2-chat:13:ggufv2:Q8_0,6.0,6.0,1.0,5
+llama-2-chat:70:ggufv2:Q2_K,6.0,6.0,1.0,5
 llama-2-chat:70:ggufv2:Q4_K_M,6.0,6.0,1.0,5
 llama-2-chat:70:ggufv2:Q5_K_M,6.0,6.0,1.0,5
 llama-2-chat:7:ggufv2:Q3_K_M,6.0,6.0,1.0,5
@@ -11,6 +10,9 @@ llama-2-chat:7:ggufv2:Q4_K_M,6.0,6.0,1.0,5
 llama-2-chat:7:ggufv2:Q5_K_M,6.0,6.0,1.0,5
 llama-2-chat:7:ggufv2:Q6_K,6.0,6.0,1.0,5
 llama-2-chat:7:ggufv2:Q8_0,6.0,6.0,1.0,5
+llama-3-instruct:8:ggufv2:Q4_K_M,6.0,6.0,1.0,5
+llama-3-instruct:8:ggufv2:Q6_K,6.0,6.0,1.0,5
+llama-3-instruct:8:ggufv2:Q8_0,6.0,6.0,1.0,5
 mistral-instruct-v0.2:7:ggufv2:Q2_K,6.0,6.0,1.0,5
 mistral-instruct-v0.2:7:ggufv2:Q3_K_M,6.0,6.0,1.0,5
 mistral-instruct-v0.2:7:ggufv2:Q4_K_M,6.0,6.0,1.0,5
@@ -22,8 +24,9 @@ openhermes-2.5:7:ggufv2:Q3_K_M,6.0,6.0,1.0,5
 openhermes-2.5:7:ggufv2:Q4_K_M,6.0,6.0,1.0,5
 openhermes-2.5:7:ggufv2:Q5_K_M,6.0,6.0,1.0,5
 openhermes-2.5:7:ggufv2:Q6_K,6.0,6.0,1.0,5
-llama-2-chat:13:ggufv2:Q5_K_M,6.0,6.0,1.0,5
+llama-2-chat:13:ggufv2:Q6_K,6.0,6.0,1.0,5
 openhermes-2.5:7:ggufv2:Q8_0,6.0,6.0,1.0,5
+llama-2-chat:13:ggufv2:Q4_K_M,6.0,6.0,1.0,5
 llama-2-chat:13:ggufv2:Q3_K_M,6.0,6.0,1.0,5
 llama-2-chat:13:ggufv2:Q2_K,6.0,6.0,1.0,5
 gpt-4-0613,6.0,6.0,1.0,5
@@ -43,11 +46,11 @@ code-llama-instruct:13:ggufv2:Q5_K_M,4.0,6.0,0.6666666666666666,5
 code-llama-instruct:34:ggufv2:Q4_K_M,3.0,6.0,0.5,5
 code-llama-instruct:34:ggufv2:Q3_K_M,3.0,6.0,0.5,5
 code-llama-instruct:34:ggufv2:Q2_K,3.0,6.0,0.5,5
-code-llama-instruct:34:ggufv2:Q6_K,2.0,6.0,0.3333333333333333,5
 code-llama-instruct:34:ggufv2:Q8_0,2.0,6.0,0.3333333333333333,5
+code-llama-instruct:34:ggufv2:Q5_K_M,2.0,6.0,0.3333333333333333,5
 code-llama-instruct:13:ggufv2:Q4_K_M,2.0,6.0,0.3333333333333333,5
 code-llama-instruct:7:ggufv2:Q2_K,2.0,6.0,0.3333333333333333,5
-code-llama-instruct:34:ggufv2:Q5_K_M,2.0,6.0,0.3333333333333333,5
+code-llama-instruct:34:ggufv2:Q6_K,2.0,6.0,0.3333333333333333,5
 mixtral-instruct-v0.1:46_7:ggufv2:Q2_K,2.0,6.0,0.3333333333333333,5
 mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,1.0,6.0,0.16666666666666666,5
 mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,0.8,6.0,0.13333333333333333,5

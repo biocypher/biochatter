@@ -6,6 +6,9 @@ openhermes-2.5,7,ggufv2,Q8_0,0.82,0.35
 openhermes-2.5,7,ggufv2,Q4_K_M,0.81,0.36
 openhermes-2.5,7,ggufv2,Q6_K,0.8,0.37
 gpt-3.5-turbo-0613,175,,,0.79,0.22
+llama-3-instruct,8,ggufv2,Q4_K_M,0.72,0.39
+llama-3-instruct,8,ggufv2,Q6_K,0.72,0.37
+llama-3-instruct,8,ggufv2,Q8_0,0.7,0.37
 openhermes-2.5,7,ggufv2,Q3_K_M,0.68,0.35
 gpt-4-0125-preview,Unknown,,,0.65,0.32
 code-llama-instruct,7,ggufv2,Q4_K_M,0.55,0.39
