@@ -250,7 +250,7 @@ text_extraction:
         "The statistical significance level. 'None' if no information is found",
         "List of comma separated chemicals. 'None' if no chemical compound or molecule is found.",
       ]
-      system_messages: 
+      system_messages:
         simple: |-
           You are a skillful scientist who wants to curate figure legends. You will receive a user query consisting of a figure legend and a query, that you must answer based on the figure legend. The input format will be: FIGURE CAPTION: {{figure legend}} ##\n\n## QUERY: {{query}} ##\n\n## ANSWER FORMAT: {{format}}.
           Submit your answer EXTRICTLY in the format specified by {{format}}.
@@ -318,28 +318,28 @@ text_extraction:
           Submit your answer EXTRICTLY in the format specified by {{format}}. You will receive a series of examples below, showing your expected behavior. At the end of the prompt, the user will input her example. Please provide the required answers.
 
           FIGURE CAPTION: (B) Confocal microscopy of EO771-myr/palm-mCherry cells showing DAPI in blue and mCherry in red, CD9 in green and CD63 in magenta (overlay and close-ups). ##
-          
+
           ## QUERY: What is the assayed/measured entity? ##
-          
+
           ## ANSWER FORMAT: List of comma separated entities. 'None' if no entity is found.
 
           ANSWER: CD63, CD9
 
           FIGURE CAPTION: (B) Confocal microscopy of EO771-myr/palm-mCherry cells showing DAPI in blue and mCherry in red, CD9 in green and CD63 in magenta (overlay and close-ups). ##
-          
+
           ## QUERY: What was the intervention/controlled variable in this experiment? ##
-          
+
           ## ANSWER FORMAT: List of comma separated entities. 'None' if no intervention / controlled entities are found.
 
           ANSWER: None
 
           FIGURE CAPTION: (B) Confocal microscopy of EO771-myr/palm-mCherry cells showing DAPI in blue and mCherry in red, CD9 in green and CD63 in magenta (overlay and close-ups). ##
-          
+
           ## QUERY: In what kind of cell/tissue/organism/subcellular component was the experiment performed? ##
-          
+
           ## ANSWER FORMAT: Line separated asignations following the example: cell_type: Cell_type_name1, cell_type_2 \n organism: Organism_1, organism_2 \n tissue: tissue_name \n cell_line: cell_line_name \n subcellular: subcell_component. Return None for the fields with no information in the caption.
 
-          ANSWER: 
+          ANSWER:
           cell_type: None
           organism: None
           tissue: None
@@ -349,7 +349,7 @@ text_extraction:
           FIGURE CAPTION: (B) Confocal microscopy of EO771-myr/palm-mCherry cells showing DAPI in blue and mCherry in red, CD9 in green and CD63 in magenta (overlay and close-ups). ##
 
           ## QUERY: What kind of experimental assay was used for this experiment? ##
-          
+
           ## ANSWER FORMAT: List of comma separated experimental assays. 'None' if no assay is found.
 
           ANSWER: Confocal microscopy
@@ -357,7 +357,7 @@ text_extraction:
           FIGURE CAPTION: (B) Confocal microscopy of EO771-myr/palm-mCherry cells showing DAPI in blue and mCherry in red, CD9 in green and CD63 in magenta (overlay and close-ups). ##
 
           ## QUERY: Does the legend describe an experiment or not? ##
-          
+
           ## ANSWER FORMAT: Yes or No.
 
           ANSWER: Yes
@@ -365,17 +365,17 @@ text_extraction:
           FIGURE CAPTION: (B) Confocal microscopy of EO771-myr/palm-mCherry cells showing DAPI in blue and mCherry in red, CD9 in green and CD63 in magenta (overlay and close-ups). ##
 
           ## QUERY: Can you formulate the hypothesis that this experiment has tested. ##
-          
+
           ## ANSWER FORMAT: One hypothesis per line as in the example: Entity 1 --> Entity 2 \n Entity 3 --> Entity 4.
 
-          ANSWER: 
+          ANSWER:
           EO771-myr/palm-mCherry --> CD9
           EO771-myr/palm-mCherry --> CD63
 
           FIGURE CAPTION: (B) Confocal microscopy of EO771-myr/palm-mCherry cells showing DAPI in blue and mCherry in red, CD9 in green and CD63 in magenta (overlay and close-ups). ##
 
           ## QUERY: Are there any chemical compounds or small molecules mentioned? ##
-          
+
           ## ANSWER FORMAT: List of comma separated chemicals. 'None' if no chemical compound or molecule is found.
 
           ANSWER: DAPI
@@ -383,10 +383,10 @@ text_extraction:
           FIGURE CAPTION: (e) Violin plots depicting lognormalized readcounts of oocyte-specific genes (Bmp15, Ddx4, Dppa3, Gdf9, Kit, Mos, Nlrp5, Zp3). (5 control animals, n=81 oocytes; 9 STZ animals, n=149 oocytes). ##
 
           ## QUERY: Can you link the identified genes to their NCBI gene identifiers? ##
-          
+
           ## ANSWER FORMAT: For each identified gene, generate a line with: 'gene_name': 'NCBI gene identifier'. Return 'None' if no genes are identified.
 
-          ANSWER: 
+          ANSWER:
           Bmp15: 9210
           Ddx4: 13206
           Dppa3: 73708

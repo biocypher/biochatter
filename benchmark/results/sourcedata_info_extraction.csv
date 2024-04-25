@@ -1,4 +1,7 @@
 model_name,subtask,score,iterations,md5_hash,datetime
 gpt-4-0613,source_data_extraction_detailed_description,1.5678951540553807/3,1,d1f701e6be49716f64089368def03eb3,2024-04-25 12:15:56
+gpt-4-0613,source_data_extraction_detailed_description,1.6772217585101301/3,5,d1f701e6be49716f64089368def03eb3,2024-04-25 12:35:54
 gpt-4-0613,source_data_extraction_few_shot,1.5923103382548485/3,1,3f189bc2aafe934fa2c1a238be939f76,2024-04-25 12:17:29
+gpt-4-0613,source_data_extraction_few_shot,1.0529508988293261/3,5,3f189bc2aafe934fa2c1a238be939f76,2024-04-25 12:44:42
 gpt-4-0613,source_data_extraction_simple,1.7348657503129934/3,1,620255e6edc204fe94c5b1191b76fc16,2024-04-25 12:14:26
+gpt-4-0613,source_data_extraction_simple,1.6846610169396126/3,5,620255e6edc204fe94c5b1191b76fc16,2024-04-25 12:28:19
