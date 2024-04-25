@@ -236,7 +236,6 @@ text_extraction:
         "(A) 3D-SIM images of HeLa control, PINK1-/- and FBXO7-/- cell lines after AO-induced mitophagy. Cells were stained for nuclear DNA (DAPI), mitochondria (HSP60) and pUb. Zoom-ins of regions of interested are enlarged in the middle panel. 3D-surface renderings of insets are shown on the right. Scale bar = 5 µm or 1 µm. (B,C) Evaluation of 3D-SIM images from HeLa datasets. The changes in pUb volume and minimal distances between mitochondria and pUb after mitophagy-induction are plotted. Error bars depict S.D. from 8-14 measured cells per condition. Two-way ANOVA with multiple comparisons; p(****)<0.0001.",
         "(B) Mean Acidic:Neutral mtKeima per-cell ratios measured by flow cytometry for HeLa cells expressing Parkin ndicating the number of hours treated with AO (Antimycin A (5 µM) and Oligomycin (10 µM)) or three hours with 25 nM BafilomycinA (BafA). Error bars depict S.D. from biological triplicate measurements from three independent clones. Two-way ANOVA with multiple comparisons; p(****)<0.0001.",
         "(E) Western blot of cell lysate (Lys) from 2x105 cells, 10k and 200k secreted by 20x106 of 10 tumor cell lines (EO771, TS/A, LLC1, KP, B16F10, MCA101, MB49, Raw264.7, 4T1 and MutuDC) and 2 non-tumoral fibroblast cell lines (Pfa1 and Mus Dunni), showing hybridization with antibodies against env (top) and gag (middle) viral proteins and total proteins (bottom). Gag is observed with different sizes, especially the full-length Pr65 (blue circle), and the mature cleaved p30 (blue cross) forms.",
-        "(B) Confocal microscopy of EO771-myr/palm-mCherry cells showing DAPI in blue and mCherry in red, CD9 in green and CD63 in magenta (overlay and close-ups)."
       ]
       format: [
         "List of comma separated entities. 'None' if no entity is found.",
@@ -251,71 +250,159 @@ text_extraction:
         "The statistical significance level. 'None' if no information is found",
         "List of comma separated chemicals. 'None' if no chemical compound or molecule is found.",
       ]
-      system_messages: |-
-        You are a skillful scientist who wants to curate figure legends. You will receive a user query consisting of a figure legend and a query, that you must answer based on the figure legend. The input format will be: FIGURE CAPTION: {{figure legend}} ##\n\n## QUERY: {{query}} ##\n\n## ANSWER FORMAT: {{format}}.
-        Submit your answer EXTRICTLY in the format specified by {{format}}.
+      system_messages: 
+        simple: |-
+          You are a skillful scientist who wants to curate figure legends. You will receive a user query consisting of a figure legend and a query, that you must answer based on the figure legend. The input format will be: FIGURE CAPTION: {{figure legend}} ##\n\n## QUERY: {{query}} ##\n\n## ANSWER FORMAT: {{format}}.
+          Submit your answer EXTRICTLY in the format specified by {{format}}.
 
-        To correctly answer the query, follow the guidelines described next:
-        Experiments in cell and molecular biology involve the empirical manipulation, observation and description of biological entities. Biological and chemical entities can be entire organisms, a subset of their constituents or part of the experimental milieu.
+        detailed_description: |-
+          You are a skillful scientist who wants to curate figure legends. You will receive a user query consisting of a figure legend and a query, that you must answer based on the figure legend. The input format will be: FIGURE CAPTION: {{figure legend}} ##\n\n## QUERY: {{query}} ##\n\n## ANSWER FORMAT: {{format}}.
+          Submit your answer EXTRICTLY in the format specified by {{format}}.
 
-        Examples of entities:
-        - calcium, oligomycin, p53, mitochondria, liver, mus musculus, synapse, HeLa cells are entities.
+          To correctly answer the query, follow the guidelines described next:
+          Experiments in cell and molecular biology involve the empirical manipulation, observation and description of biological entities. Biological and chemical entities can be entire organisms, a subset of their constituents or part of the experimental milieu.
 
-        Examples of no entities:
-        - The cell cycle, apoptosis, wound healing or type II diabetes are not entities.
+          Examples of entities:
+          - calcium, oligomycin, p53, mitochondria, liver, mus musculus, synapse, HeLa cells are entities.
 
-        Entities are assigned to one of seven types spanning successive levels of biological organisations. Each type is mutually exclusive. The seven types are: Small molecules, genes, proteins, cellular components, cell types and cell lines, tissues and organs, organisms and species.
+          Examples of no entities:
+          - The cell cycle, apoptosis, wound healing or type II diabetes are not entities.
 
-        Example of entity classification:
-        - ATP is a small molecule
-        - creb1 is a gene
-        - CREB1 is a protein
-        - the Golgi apparatus is a cellular component
-        - HEK293 cells is a cell line
-        - the retina is a tissue
-        - Saccharomyces cerevisiae and PhiX174 are organisms.
+          Entities are assigned to one of seven types spanning successive levels of biological organisations. Each type is mutually exclusive. The seven types are: Small molecules, genes, proteins, cellular components, cell types and cell lines, tissues and organs, organisms and species.
 
-        If an entity does not fit any of the predefined types, the undefined type is assigned.
-        In general, generic terms referring to broad classes of biological components (eg 'proteins', 'cells', 'animals') SHOULD NOT be tagged unless they refer to the object of an assay.
+          Example of entity classification:
+          - ATP is a small molecule
+          - creb1 is a gene
+          - CREB1 is a protein
+          - the Golgi apparatus is a cellular component
+          - HEK293 cells is a cell line
+          - the retina is a tissue
+          - Saccharomyces cerevisiae and PhiX174 are organisms.
 
-        You should also identify experimental assays. Some examples of these are:
-        - immunoblot
-        - western blot
-        - staining
-        - gene expression
-        - flow cytometry (FACS)
+          If an entity does not fit any of the predefined types, the undefined type is assigned.
+          In general, generic terms referring to broad classes of biological components (eg 'proteins', 'cells', 'animals') SHOULD NOT be tagged unless they refer to the object of an assay.
 
-        Entity roles:
+          You should also identify experimental assays. Some examples of these are:
+          - immunoblot
+          - western blot
+          - staining
+          - gene expression
+          - flow cytometry (FACS)
 
-        ​​Biological entities listed in the caption of a figure each play a different role in the experimental design: some components are altered in a controlled manner, others remain untouched by the experimenter, and some are directly or indirectly assayed to perform measurements or observations. Accordingly, the following roles are defined:
+          Entity roles:
 
-        - Biological component
-        - Assayed component
-        - Controlled variable
+          ​​Biological entities listed in the caption of a figure each play a different role in the experimental design: some components are altered in a controlled manner, others remain untouched by the experimenter, and some are directly or indirectly assayed to perform measurements or observations. Accordingly, the following roles are defined:
 
-        Assayed component:
-        An assayed component is the component that is measured or observed.
+          - Biological component
+          - Assayed component
+          - Controlled variable
 
-        Example for assayed component:
-        - The proteins detected on a Western blot are the assayed components with the exception of the loading control, if any, which is a normalizing component.
+          Assayed component:
+          An assayed component is the component that is measured or observed.
 
-        Controlled variables:
-        A controlled variable (also called perturbation, intervention, manipulation, alteration or independent variable) is a component that is experimentally altered. A controlled variable MUST be targeted and MUST be controlled. This implies that the experiment MUST involve the same experimental system across experimental groups and MUST involve a comparison between several experimental groups to test whether the controlled variable causes an effect on the assayed component.
+          Example for assayed component:
+          - The proteins detected on a Western blot are the assayed components with the exception of the loading control, if any, which is a normalizing component.
 
-        Example for controlled variable:
-        - The function of the gene creb1 can be investigated by comparing creb1 wt (control group) to creb1-/- knockout (test group) mice; in this experiment, creb1 is the controlled variable. If, and only if, it is appropriately controlled, the purpose of such an experiment is to infer a cause-and-effect relationship.
-        - If cells are treated with different doses of the PKA inhibitor H89, H89 is tagged as the controlled variable.
-        - In a siRNA-mediated knock down experiment, the gene targeted by the siRNA is tagged as a controlled variable.
+          Controlled variables:
+          A controlled variable (also called perturbation, intervention, manipulation, alteration or independent variable) is a component that is experimentally altered. A controlled variable MUST be targeted and MUST be controlled. This implies that the experiment MUST involve the same experimental system across experimental groups and MUST involve a comparison between several experimental groups to test whether the controlled variable causes an effect on the assayed component.
 
-        Biological component:
-        A biological component is a generic category for any experimentally relevant component which does not fit any of the other defined roles. Often it will contain the organism, the cell, or a generic treatment that is present across all conditions.
+          Example for controlled variable:
+          - The function of the gene creb1 can be investigated by comparing creb1 wt (control group) to creb1-/- knockout (test group) mice; in this experiment, creb1 is the controlled variable. If, and only if, it is appropriately controlled, the purpose of such an experiment is to infer a cause-and-effect relationship.
+          - If cells are treated with different doses of the PKA inhibitor H89, H89 is tagged as the controlled variable.
+          - In a siRNA-mediated knock down experiment, the gene targeted by the siRNA is tagged as a controlled variable.
+
+          Biological component:
+          A biological component is a generic category for any experimentally relevant component which does not fit any of the other defined roles. Often it will contain the organism, the cell, or a generic treatment that is present across all conditions.
+        few_shot: |-
+          You are a skillful scientist who wants to curate figure legends. You will receive a user query consisting of a figure legend and a query, that you must answer based on the figure legend. The input format will be: FIGURE CAPTION: {{figure legend}} ##\n\n## QUERY: {{query}} ##\n\n## ANSWER FORMAT: {{format}}.
+          Submit your answer EXTRICTLY in the format specified by {{format}}. You will receive a series of examples below, showing your expected behavior. At the end of the prompt, the user will input her example. Please provide the required answers.
+
+          FIGURE CAPTION: (B) Confocal microscopy of EO771-myr/palm-mCherry cells showing DAPI in blue and mCherry in red, CD9 in green and CD63 in magenta (overlay and close-ups). ##
+          
+          ## QUERY: What is the assayed/measured entity? ##
+          
+          ## ANSWER FORMAT: List of comma separated entities. 'None' if no entity is found.
+
+          ANSWER: CD63, CD9
+
+          FIGURE CAPTION: (B) Confocal microscopy of EO771-myr/palm-mCherry cells showing DAPI in blue and mCherry in red, CD9 in green and CD63 in magenta (overlay and close-ups). ##
+          
+          ## QUERY: What was the intervention/controlled variable in this experiment? ##
+          
+          ## ANSWER FORMAT: List of comma separated entities. 'None' if no intervention / controlled entities are found.
+
+          ANSWER: None
+
+          FIGURE CAPTION: (B) Confocal microscopy of EO771-myr/palm-mCherry cells showing DAPI in blue and mCherry in red, CD9 in green and CD63 in magenta (overlay and close-ups). ##
+          
+          ## QUERY: In what kind of cell/tissue/organism/subcellular component was the experiment performed? ##
+          
+          ## ANSWER FORMAT: Line separated asignations following the example: cell_type: Cell_type_name1, cell_type_2 \n organism: Organism_1, organism_2 \n tissue: tissue_name \n cell_line: cell_line_name \n subcellular: subcell_component. Return None for the fields with no information in the caption.
+
+          ANSWER: 
+          cell_type: None
+          organism: None
+          tissue: None
+          cell_line: EO771-myr/palm-mCherry
+          subcellular: None
+
+          FIGURE CAPTION: (B) Confocal microscopy of EO771-myr/palm-mCherry cells showing DAPI in blue and mCherry in red, CD9 in green and CD63 in magenta (overlay and close-ups). ##
+
+          ## QUERY: What kind of experimental assay was used for this experiment? ##
+          
+          ## ANSWER FORMAT: List of comma separated experimental assays. 'None' if no assay is found.
+
+          ANSWER: Confocal microscopy
+
+          FIGURE CAPTION: (B) Confocal microscopy of EO771-myr/palm-mCherry cells showing DAPI in blue and mCherry in red, CD9 in green and CD63 in magenta (overlay and close-ups). ##
+
+          ## QUERY: Does the legend describe an experiment or not? ##
+          
+          ## ANSWER FORMAT: Yes or No.
+
+          ANSWER: Yes
+
+          FIGURE CAPTION: (B) Confocal microscopy of EO771-myr/palm-mCherry cells showing DAPI in blue and mCherry in red, CD9 in green and CD63 in magenta (overlay and close-ups). ##
+
+          ## QUERY: Can you formulate the hypothesis that this experiment has tested. ##
+          
+          ## ANSWER FORMAT: One hypothesis per line as in the example: Entity 1 --> Entity 2 \n Entity 3 --> Entity 4.
+
+          ANSWER: 
+          EO771-myr/palm-mCherry --> CD9
+          EO771-myr/palm-mCherry --> CD63
+
+          FIGURE CAPTION: (B) Confocal microscopy of EO771-myr/palm-mCherry cells showing DAPI in blue and mCherry in red, CD9 in green and CD63 in magenta (overlay and close-ups). ##
+
+          ## QUERY: Are there any chemical compounds or small molecules mentioned? ##
+          
+          ## ANSWER FORMAT: List of comma separated chemicals. 'None' if no chemical compound or molecule is found.
+
+          ANSWER: DAPI
+
+          FIGURE CAPTION: (e) Violin plots depicting lognormalized readcounts of oocyte-specific genes (Bmp15, Ddx4, Dppa3, Gdf9, Kit, Mos, Nlrp5, Zp3). (5 control animals, n=81 oocytes; 9 STZ animals, n=149 oocytes). ##
+
+          ## QUERY: Can you link the identified genes to their NCBI gene identifiers? ##
+          
+          ## ANSWER FORMAT: For each identified gene, generate a line with: 'gene_name': 'NCBI gene identifier'. Return 'None' if no genes are identified.
+
+          ANSWER: 
+          Bmp15: 9210
+          Ddx4: 13206
+          Dppa3: 73708
+          Gdf9: 14566
+          Kit: 16590
+          Mos: 17451
+          Nlrp5: 23968
+          Zp3: 7784
+
     expected:
       answer: [
         ["Ub (pUb), mitochondria, HSP60", "PINK1, FBXO7", "cell_type: None \n organism: None \n tissue: None \n cell_line: HeLa \n subcellular: nucleus, mitochondria", "3D structured illumination microscopy (3D-SIM)", "Yes", "PINK1: 65018 \n FBXO7: 25793", "PINK1 --> pUb \n FBXO7 --> pUb", "None", "Two-way ANOVA with multiple comparisons", "0.0001", "DAPI"],
         ["Mean Acidic:Neutral mtKeima per-cell ratios, HeLa, mitochondria", "Antimycin A, Oligomycin, BafilomycinA (BafA)", "cell_type: None \n organism: None \n tissue: None \n cell_line: HeLa \n subcellular: mitochondria", "Flow cytometry", "Yes", "Parkin: 5071", "Antimycin A --> HeLa \n Oligomycin --> HeLa Mean Acidic:Neutral mtKeima per-cell ratios \n BafilomycinA (BafA) --> HeLa Mean Acidic:Neutral mtKeima per-cell ratios", "None", "Two-way ANOVA with multiple comparisons", "0.0001", "Antimycin A, Oligomycin, BafilomycinA "],
         ["env, gag", "None", "cell_type: fibroblast \n organism: None \n tissue: connective \n cell_line: EO771, TS/A, LLC1, KP, B16F10, MCA101, MB49, Raw264.7, 4T1, MutuDC, Pfa1, Mus Dunni \n subcellular: None", "Western blot", "Yes", "None", "(EO771, TS/A, LLC1, KP, B16F10, MCA101, MB49, Raw264.7, 4T1, MutuDC, Pfa1, Mus Dunni) --> env \n (EO771, TS/A, LLC1, KP, B16F10, MCA101, MB49, Raw264.7, 4T1, MutuDC, Pfa1, Mus Dunni) --> gag ", "None mentioned, Murine leukemia", "None", "None", "None"],
-        ["CD63, CD9", "None", "cell_type: None \n organism: None \n tissue: None \n cell_line: EO771-myr/palm-mCherry \n subcellular: None", "Confocal microscopy", "Yes", "None", " EO771-myr/palm-mCherry --> CD9 \n EO771-myr/palm-mCherry --> CD63 ", "None", "None", "None", "DAPI"],
       ]
+
 kg_schemas:
   gene_kg:
     cell type:
