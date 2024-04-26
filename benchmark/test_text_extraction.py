@@ -1,14 +1,7 @@
-import os
-import ast
 import inspect
 
-from datasets import load_metric
-import pytest
 import evaluate
 
-from biochatter._misc import ensure_iterable
-from biochatter.vectorstore import DocumentReader, DocumentEmbedder
-from .conftest import calculate_test_score
 from .benchmark_utils import (
     skip_if_already_run,
     get_result_file_path,
@@ -34,33 +27,24 @@ def test_sourcedata_info_extraction(
 
     def run_test():
 
-        avg_rouge_scores = []
-        for caption, answers in zip(
-            ensure_iterable(yaml_data["input"]["caption"]),
-            ensure_iterable(yaml_data["expected"]["answer"]),
-        ):
-            rouge_scores = []
-            for query, format_, answer in zip(
-                ensure_iterable(yaml_data["input"]["query"]),
-                ensure_iterable(yaml_data["input"]["format"]),
-                ensure_iterable(answers),
-            ):
-                conversation.reset()
-                # Define the system prompt
-                [
-                    conversation.append_system_message(
-                        yaml_data["input"]["system_messages"]
-                    )
-                ]
-                response, _, _ = conversation.query(
-                    f"FIGURE CAPTION: {caption} ##\n\n## QUERY: {query} ##\n\n## ANSWER FORMAT: {format_}"
-                )
-                rouge_score = evaluate_response(response, answer)
+        conversation.reset()
+        # Define the system prompt
+        [
+            conversation.append_system_message(
+                yaml_data["input"]["system_messages"]
+            )
+        ]
 
-                rouge_scores.append(rouge_score)
-            avg_rouge_scores.append(sum(rouge_scores) / len(rouge_scores))
+        response, _, _ = conversation.query(
+            f"FIGURE CAPTION: {yaml_data['input']['caption']} ##\n\n"
+            f"## QUERY: {yaml_data['input']['query']} ##\n\n"
+            f"## ANSWER FORMAT: {yaml_data['input']['format']}"
+        )
+        rouge_score = calculate_rouge_score(
+            response, yaml_data["expected"]["answer"]
+        )
 
-        return calculate_test_score(avg_rouge_scores)
+        return (rouge_score, 1)
 
     mean_score, max, n_iterations = multiple_testing(run_test)
 
@@ -74,7 +58,7 @@ def test_sourcedata_info_extraction(
     )
 
 
-def evaluate_response(response, expected):
+def calculate_rouge_score(response, expected):
     """Application of the ROUGE metric to evaluate the response of the model."""
     rouge = evaluate.load("rouge")
 
