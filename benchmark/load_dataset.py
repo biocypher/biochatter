@@ -1,5 +1,6 @@
 from ast import literal_eval
 from base64 import b64decode
+import copy
 import itertools
 import os
 import json
@@ -158,18 +159,18 @@ def _expand_multi_instruction(data_dict: dict) -> dict:
             test_list = data_dict[module_key]
             expanded_test_list = []
             for test in test_list:
-                test_input = test["input"]
                 dicts = {
                     key: value
-                    for key, value in test_input.items()
-                    if isinstance(value, dict)
+                    for key, value in test["input"].items()
+                    if isinstance(value, dict) and key != "format"
                 }
                 if not dicts:
                     expanded_test_list.append(test)
                     continue
                 keys_lists = [list(value.keys()) for value in dicts.values()]
                 for combination in itertools.product(*keys_lists):
-                    new_case = test.copy()
+                    query_type = None
+                    new_case = copy.deepcopy(test)
                     new_case["case"] = "_".join(
                         [test["case"]] + [key for key in list(combination)]
                     )
@@ -177,6 +178,15 @@ def _expand_multi_instruction(data_dict: dict) -> dict:
                     key_value_combinations = zip(dict_keys, list(combination))
                     for key, value in key_value_combinations:
                         new_case["input"][key] = dicts[key][value]
+                        if key == "query":
+                            new_case["input"]["format"] = test["input"][
+                                "format"
+                            ][value]
+                            query_type = value
+                        elif key == "caption":
+                            new_case["expected"]["answer"] = test["expected"][
+                                "answer"
+                            ][value][query_type]
 
                     expanded_test_list.append(new_case)
             data_dict[module_key] = expanded_test_list
