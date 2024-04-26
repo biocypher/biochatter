@@ -1,16 +1,1 @@
 model_name,subtask,score,iterations,md5_hash,datetime,biochatter_version
-gpt-3.5-turbo-0125,source_data_extraction_detailed_description,1.8246582121387893/3,1,2a2a2f6485f49b91cc2e324968ca063b,2024-04-25 19:15:26,0.4.10
-gpt-3.5-turbo-0125,source_data_extraction_few_shot,1.8111576604029438/3,1,34bc00a5bb6de6bdea56bf07ea3e7a08,2024-04-25 19:16:33,0.4.10
-gpt-3.5-turbo-0125,source_data_extraction_simple,1.8045920038372871/3,1,f73dc6b25f81eb160410de76b932518f,2024-04-25 18:34:09,0.4.10
-gpt-4-0613,source_data_extraction_detailed_description,1.833420179507541/3,1,2a2a2f6485f49b91cc2e324968ca063b,2024-04-25 19:18:21,0.4.10
-gpt-4-0613,source_data_extraction_few_shot,1.7581217405727383/3,1,34bc00a5bb6de6bdea56bf07ea3e7a08,2024-04-25 19:20:01,0.4.10
-gpt-4-0613,source_data_extraction_simple,1.7581217405727383/3,1,f73dc6b25f81eb160410de76b932518f,2024-04-25 18:59:25,0.4.10
-llama-2-chat:13:ggufv2:Q4_K_M,source_data_extraction_detailed_description,0.02097902097902098/3,1,2a2a2f6485f49b91cc2e324968ca063b,2024-04-25 19:29:44,0.4.10
-llama-2-chat:13:ggufv2:Q4_K_M,source_data_extraction_few_shot,0.02097902097902098/3,1,34bc00a5bb6de6bdea56bf07ea3e7a08,2024-04-25 19:31:18,0.4.10
-llama-2-chat:13:ggufv2:Q4_K_M,source_data_extraction_simple,0.02097902097902098/3,1,f73dc6b25f81eb160410de76b932518f,2024-04-25 18:32:22,0.4.10
-llama-3-instruct:8:ggufv2:Q4_K_M,source_data_extraction_detailed_description,0.0/3,1,2a2a2f6485f49b91cc2e324968ca063b,2024-04-25 19:32:46,0.4.10
-llama-3-instruct:8:ggufv2:Q4_K_M,source_data_extraction_few_shot,0.0/3,1,34bc00a5bb6de6bdea56bf07ea3e7a08,2024-04-25 19:34:12,0.4.10
-llama-3-instruct:8:ggufv2:Q4_K_M,source_data_extraction_simple,0.0/3,1,f73dc6b25f81eb160410de76b932518f,2024-04-25 18:51:22,0.4.10
-openhermes-2.5:7:ggufv2:Q4_K_M,source_data_extraction_detailed_description,1.8260630396444537/3,1,2a2a2f6485f49b91cc2e324968ca063b,2024-04-25 19:12:28,0.4.10
-openhermes-2.5:7:ggufv2:Q4_K_M,source_data_extraction_few_shot,1.8260630396444537/3,1,34bc00a5bb6de6bdea56bf07ea3e7a08,2024-04-25 19:13:47,0.4.10
-openhermes-2.5:7:ggufv2:Q4_K_M,source_data_extraction_simple,1.8260630396444537/3,1,f73dc6b25f81eb160410de76b932518f,2024-04-25 18:54:39,0.4.10
