@@ -24,6 +24,9 @@ def test_sourcedata_info_extraction(
     """
     yaml_data = test_data_text_extraction
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+    skip_if_already_run(
+        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+    )
 
     def run_test():
 
