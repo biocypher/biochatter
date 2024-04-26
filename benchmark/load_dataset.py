@@ -176,7 +176,7 @@ def _expand_multi_instruction(data_dict: dict) -> dict:
                     dict_keys = [key for key in dicts.keys()]
                     key_value_combinations = zip(dict_keys, list(combination))
                     for key, value in key_value_combinations:
-                        new_case["input"][key] = {value: dicts[key][value]}
+                        new_case["input"][key] = dicts[key][value]
 
                     expanded_test_list.append(new_case)
             data_dict[module_key] = expanded_test_list
