@@ -13,7 +13,7 @@ from biochatter.llm_connect import GptConversation, XinferenceConversation
 from .benchmark_utils import benchmark_already_executed
 
 # how often should each benchmark be run?
-N_ITERATIONS = 1
+N_ITERATIONS = 5
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
@@ -136,18 +136,18 @@ XINFERENCE_MODELS = {
             # "Q8_0",
         ],
     },
-    "gemma-it": {
-        "model_size_in_billions": [
-            2,
-            7,
-        ],
-        "model_format": "pytorch",
-        "quantization": [
-            "none",
-            "4-bit",
-            "8-bit",
-        ],
-    },
+    # "gemma-it": {
+    #     "model_size_in_billions": [
+    #         2,
+    #         7,
+    #     ],
+    #     "model_format": "pytorch",
+    #     "quantization": [
+    #         "none",
+    #         "4-bit",
+    #         "8-bit",
+    #     ],
+    # },
     "llama-3-instruct": {
         "model_size_in_billions": [
             8,
