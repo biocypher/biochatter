@@ -1,4 +1,4 @@
-Full model name,Passed test cases,Total test cases,Accuracy,Iterations
+Full model name,Score achieved,Score possible,Accuracy,Iterations
 llama-2-chat:70:ggufv2:Q3_K_M,6.0,6.0,1.0,5
 llama-2-chat:13:ggufv2:Q5_K_M,6.0,6.0,1.0,5
 llama-2-chat:13:ggufv2:Q8_0,6.0,6.0,1.0,5

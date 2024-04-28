@@ -1,4 +1,4 @@
-Full model name,Passed test cases,Total test cases,Accuracy,Iterations
+Full model name,Score achieved,Score possible,Accuracy,Iterations
 gpt-3.5-turbo-0125,8.0,8.0,1.0,5
 openhermes-2.5:7:ggufv2:Q6_K,8.0,8.0,1.0,5
 openhermes-2.5:7:ggufv2:Q3_K_M,9.0,9.0,1.0,5

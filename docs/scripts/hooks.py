@@ -70,43 +70,39 @@ def preprocess_results_for_frontend(
     raw_results["subtask"] = raw_results["subtask"].apply(
         extract_string_after_number
     )
-    raw_results["number_test_cases"] = raw_results["score"].apply(
+    raw_results["score_possible"] = raw_results["score"].apply(
         lambda x: float(x.split("/")[1])
     )
-    raw_results["passed_test_cases"] = raw_results["score"].apply(
+    raw_results["score_achieved"] = raw_results["score"].apply(
         lambda x: float(x.split("/")[0])
     )
     aggregated_scores = raw_results.groupby(["model_name"]).agg(
         {
-            "number_test_cases": "sum",
-            "passed_test_cases": "sum",
+            "score_possible": "sum",
+            "score_achieved": "sum",
             "iterations": "first",
         }
     )
 
     aggregated_scores["Accuracy"] = aggregated_scores.apply(
         lambda row: (
-            row["passed_test_cases"] / row["number_test_cases"]
-            if row["number_test_cases"] != 0
+            row["score_achieved"] / row["score_possible"]
+            if row["score_possible"] != 0
             else 0
         ),
         axis=1,
     )
 
-    aggregated_scores[
-        "Full model name"
-    ] = aggregated_scores.index.get_level_values("model_name")
-    aggregated_scores["Passed test cases"] = aggregated_scores[
-        "passed_test_cases"
-    ]
-    aggregated_scores["Total test cases"] = aggregated_scores[
-        "number_test_cases"
-    ]
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
+    aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
+    aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
     aggregated_scores["Iterations"] = aggregated_scores["iterations"]
     new_order = [
         "Full model name",
-        "Passed test cases",
-        "Total test cases",
+        "Score achieved",
+        "Score possible",
         "Accuracy",
         "Iterations",
     ]
@@ -148,9 +144,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     )
 
     overview_per_quantisation = overview
-    overview_per_quantisation[
-        "Full model name"
-    ] = overview_per_quantisation.index
+    overview_per_quantisation["Full model name"] = (
+        overview_per_quantisation.index
+    )
     overview_per_quantisation[
         ["Model name", "Size", "Version", "Quantisation"]
     ] = overview_per_quantisation["Full model name"].str.split(":", expand=True)
@@ -182,9 +178,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         ]
     ]
     # round mean and sd to 2 decimal places
-    overview_per_quantisation.loc[
-        :, "Median Accuracy"
-    ] = overview_per_quantisation["Median Accuracy"].round(2)
+    overview_per_quantisation.loc[:, "Median Accuracy"] = (
+        overview_per_quantisation["Median Accuracy"].round(2)
+    )
     overview_per_quantisation.loc[:, "SD"] = overview_per_quantisation[
         "SD"
     ].round(2)
@@ -643,9 +639,14 @@ def calculate_stats(overview):
     )
     from scipy.stats import pearsonr
 
-    size_accuracy_corr, size_accuracy_p_value = pearsonr(
-        size, overview_melted["Accuracy"]
-    )
+    # Create a mask of rows where 'Accuracy' is not NaN
+    mask = overview_melted["Accuracy"].notna()
+
+    # Use the mask to select only the rows from 'size' and 'Accuracy' where 'Accuracy' is not NaN
+    size = size[mask]
+    accuracy = overview_melted["Accuracy"][mask]
+
+    size_accuracy_corr, size_accuracy_p_value = pearsonr(size, accuracy)
 
     # plot scatter plot
     plt.figure(figsize=(6, 4))
@@ -669,8 +670,15 @@ def calculate_stats(overview):
     quantisation = overview_melted["Quantisation"].apply(
         lambda x: 16 if x == ">= 16-bit*" else float(x.replace("-bit", ""))
     )
+    # Create a mask of rows where 'Accuracy' is not NaN
+    mask = overview_melted["Accuracy"].notna()
+
+    # Use the mask to select only the rows from 'quantisation' and 'Accuracy' where 'Accuracy' is not NaN
+    quantisation = quantisation[mask]
+    accuracy = overview_melted["Accuracy"][mask]
+
     quant_accuracy_corr, quant_accuracy_p_value = pearsonr(
-        quantisation, overview_melted["Accuracy"]
+        quantisation, accuracy
     )
     # plot scatter plot
     plt.figure(figsize=(6, 4))

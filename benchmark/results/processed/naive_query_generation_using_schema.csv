@@ -1,4 +1,4 @@
-Full model name,Passed test cases,Total test cases,Accuracy,Iterations
+Full model name,Score achieved,Score possible,Accuracy,Iterations
 gpt-4-0613,20.4,30.0,0.6799999999999999,5
 llama-3-instruct:8:ggufv2:Q8_0,20.0,30.0,0.6666666666666666,5
 llama-3-instruct:8:ggufv2:Q6_K,20.0,30.0,0.6666666666666666,5

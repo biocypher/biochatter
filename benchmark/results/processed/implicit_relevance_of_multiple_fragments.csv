@@ -1,4 +1,4 @@
-Full model name,Passed test cases,Total test cases,Accuracy,Iterations
+Full model name,Score achieved,Score possible,Accuracy,Iterations
 chatglm3:6:ggmlv3:q4_0,2.0,2.0,1.0,5
 gpt-3.5-turbo-0613,2.0,2.0,1.0,5
 llama-2-chat:70:ggufv2:Q4_K_M,2.0,2.0,1.0,5
