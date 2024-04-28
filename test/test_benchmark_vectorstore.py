@@ -3,7 +3,7 @@ import os
 
 import pytest
 
-from benchmark.conftest import calculate_test_score
+from benchmark.conftest import calculate_bool_vector_score
 from biochatter.rag_agent import RagAgent, RagAgentModeEnum
 from biochatter.vectorstore import Document, DocumentReader, DocumentEmbedder
 from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
@@ -85,15 +85,18 @@ def test_retrieval_augmented_generation(model, chunk_size):
     reader = DocumentReader()
     doc = reader.document_from_pdf(doc_bytes)
 
-    with patch(
-        "biochatter.vectorstore.OpenAIEmbeddings"
-    ) as mock_openaiembeddings, patch(
-        "biochatter.vectorstore_agent.VectorDatabaseAgentMilvus"
-    ) as mock_host_1, patch(
-        "biochatter.vectorstore.VectorDatabaseAgentMilvus"
-    ) as mock_host, patch(
-        "biochatter.vectorstore.RecursiveCharacterTextSplitter"
-    ) as mock_textsplitter:
+    with (
+        patch(
+            "biochatter.vectorstore.OpenAIEmbeddings"
+        ) as mock_openaiembeddings,
+        patch(
+            "biochatter.vectorstore_agent.VectorDatabaseAgentMilvus"
+        ) as mock_host_1,
+        patch("biochatter.vectorstore.VectorDatabaseAgentMilvus") as mock_host,
+        patch(
+            "biochatter.vectorstore.RecursiveCharacterTextSplitter"
+        ) as mock_textsplitter,
+    ):
         # mocking
         mock_textsplitter.from_huggingface_tokenizer.return_value = (
             mock_textsplitter()
@@ -134,4 +137,4 @@ def test_retrieval_augmented_generation(model, chunk_size):
         ]
 
         # record sum in CSV file
-        assert calculate_test_score(correct) == (3, 3)
+        assert calculate_bool_vector_score(correct) == (3, 3)

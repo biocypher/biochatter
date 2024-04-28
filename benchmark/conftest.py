@@ -222,7 +222,7 @@ def multiple_testing(request):
     return run_multiple_times
 
 
-def calculate_test_score(vector: list[bool]) -> tuple[int, int]:
+def calculate_bool_vector_score(vector: list[bool]) -> tuple[int, int]:
     score = sum(vector)
     max = len(vector)
     return (score, max)
