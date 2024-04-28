@@ -171,7 +171,7 @@ def _expand_multi_instruction(data_dict: dict) -> dict:
                 for combination in itertools.product(*keys_lists):
                     query_type = None
                     new_case = copy.deepcopy(test)
-                    new_case["case"] = "_".join(
+                    new_case["case"] = ":".join(
                         [test["case"]] + [key for key in list(combination)]
                     )
                     dict_keys = [key for key in dicts.keys()]
