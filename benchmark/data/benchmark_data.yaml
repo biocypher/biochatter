@@ -247,7 +247,7 @@ pdsm:
 
   # Math relevant questions
 
-  - case: multiple_answer_math
+  - case: multiple_answer_math_en
     input:
       prompt: A hollow organ of a patient contains 0.5 kg of liquid whose (mass) density is approximately the same as that of water. What is the approximate volume of this hollow organ? (A) 500 mm3 (B) 500 cm3 (C) 0,05 m3 (D) 0,5 m3 (E) 50 m3
       system_messages:
@@ -257,7 +257,7 @@ pdsm:
     expected:
       answer: "b"
 
-  - case: multiple_answer_math
+  - case: multiple_answer_math_en
     input:
       prompt: In a car accident, an occupant weighing 75 kg is restrained by the tight-fitting seat belt, whereby a belt force limiter limits the force acting on the occupant to a maximum of 5,000 N. The acceleration acting on the occupant is thus limited (in terms of amount) to approx. (A) 0.067 m/s2 (B) 15 m/s2 (C) 33 m/s2 (D) 67 m/s2 (E) 375 m/s2
       system_messages:
@@ -267,7 +267,7 @@ pdsm:
     expected:
       answer: "d"
 
-  - case: multiple_answer_math
+  - case: multiple_answer_math_en
     input:
       prompt: Medical oxygen is supplied in pressurised gas cylinders with an internal pressure of usually 200 bar. Manufacturers state that these cylinders should not be heated to over 50 °C and must be stored in a protected environment. By approximately what percentage does this internal pressure increase when such a pressurised gas cylinder is heated from 30 °C to 90 °C? (A) 3 % (B) 20 % (C) 40 % (D) 60 % (E) 300 %
       system_messages:
@@ -279,7 +279,7 @@ pdsm:
 
 # Biochemistry
 
-  - case: multiple_choice_biochemistry
+  - case: multiple_choice_biochemistry_en
     input:
       prompt: A 14-year-old boy from the Mediterranean region has suddenly developed a life-threatening haemolytic crisis (massive breakdown/degradation of red blood cells). When talking to the parents, it turns out that the boy has received high doses of a painkiller, which also has an oxidising effect. The boy is found to have a genetic deficiency of a certain enzyme. A deficiency in which of the following enzymes best fits this description? (A) Fructokinase (B) Glucokinase (C)  Glucose-6-phosphate dehydrogenase (D) pyruvate carboxylase (E) Pyruvate dehydrogenase
       system_messages:
@@ -289,7 +289,7 @@ pdsm:
     expected:
       answer: "c"
 
-  - case: multiple_choice_biochemistry
+  - case: multiple_choice_biochemistry_en
     input:
       prompt: Hepatocytes near the central vein in the hepatic acinus efficiently prevent the escape of ammonium ions from the liver. Which enzyme in these cells is primarily responsible for removing the remaining ammonium ions from the blood that have escaped the other hepatocytes of the hepatic acinus? (A) arginase (B) Carbamoyl phosphate synthetase 1 (C) Carbamoyl phosphate synthetase 2 (D) Glutaminase (E) Glutamine synthetase
       system_messages:
@@ -299,7 +299,7 @@ pdsm:
     expected:
       answer: "e"
 
-  - case: multiple_choice_biochemistry
+  - case: multiple_choice_biochemistry_en
     input:
       prompt: Proteins can be modified post-translationally by ubiquitin. Ubiquitin is a (A) diterpene (B) monosaccharide (C) Oligonucleotide (D) polypeptide (E) triacylglycerol
       system_messages:
@@ -309,7 +309,7 @@ pdsm:
     expected:
       answer: "d"
 
-  - case: yes_no_biochemistry
+  - case: yes_no_biochemistry_en
     input:
       prompt: Is this true? The tendency to thrombosis (thrombophilia) is in many cases genetically determined. Missense mutations in the gene for factor V can be the cause of familial thrombophilia. Due to such mutations, the activated factor V (Va) is less efficiently inactivated by an activated protein C and is therefore particularly stable.
       system_messages:
@@ -319,7 +319,7 @@ pdsm:
     expected:
       answer: "yes"
 
-  - case: yes_no_biochemistry
+  - case: yes_no_biochemistry_en
     input:
       prompt: Is this true? The tendency to thrombosis (thrombophilia) is in many cases genetically determined. Missense mutations in the gene for factor V can be the cause of familial thrombophilia. Due to such mutations, the activated factor V (Va) is less efficiently inactivated by an activated thrombomobilin and is therefore particularly stable.
       system_messages:
@@ -331,7 +331,7 @@ pdsm:
 
 # physiology
 
-  - case: multiple_choice_physiology
+  - case: multiple_choice_physiology_en
     input:
       prompt: Which of these cells is most likely to release interleukin-2 after activation? B lymphocyte eosinophil granulocyte (C) mast cell (D) neutrophil granulocyte (E) T helper cell type 1 (TH1 cell)
       system_messages:
@@ -341,7 +341,7 @@ pdsm:
     expected:
       answer: "e"
 
-  - case: multiple_choice_physiology
+  - case: multiple_choice_physiology_en
     input:
       prompt: Immunoglobulins (Ig) are categorised into different classes. Which statement about the structure or occurrence of the Ig classes is generally correct? (A) The affiliation to the Ig class depends mainly on the structure of the light chain of an Ig. (B) The secreted Ig of all Ig classes are monomeric molecules.(C) IgG is the predominant Ig in oral saliva. (D) IgM is the predominant Ig in blood serum. (E) Mature, naive B lymphocytes have membrane-bound IgM and IgD.
       system_messages:
@@ -351,7 +351,7 @@ pdsm:
     expected:
       answer: "e"
 
-  - case: yes_no_physiology
+  - case: yes_no_physiology_en
     input:
       prompt: Is the apparent viscosity of the blood with a normal haematocrit (and under otherwise identical conditions) typically lower with a vessel diameter of around 8 μm than with a vessel diameter of 4 μm?
       system_messages:
@@ -361,7 +361,7 @@ pdsm:
     expected:
       answer: "yes"
 
-  - case: yes_no_physiology
+  - case: yes_no_physiology_en
     input:
       prompt: Is the apparent (apparente) viscosity of the blood with normal haematocrit (and under otherwise identical conditions) always lower in large vessels than in small vessels?
       system_messages:
@@ -371,7 +371,7 @@ pdsm:
     expected:
       answer: "no"
 
-  - case: one_word_physiology
+  - case: one_word_physiology_en
     input:
       prompt: Which temporal assignment of the ECG section to the states of the heart valves is generally correct when the AV valves are open and the pocket valves are closed? Is it the p-wave or the tp-intervall?
       system_messages:
@@ -383,7 +383,7 @@ pdsm:
 
 # anatomy
 
-  - case: multiple_choice_anatomy
+  - case: multiple_choice_anatomy_en
     input:
       prompt: Which of these muscles is primarily involved in the internal rotation of the humerus in the shoulder joint? (A) M. infraspinatus (B) M. pectoralis minor (C) M. subscapularis (D) M. supraspinatus (E) M. teres minor
       system_messages:
@@ -393,27 +393,97 @@ pdsm:
     expected:
       answer: "c"
 
-#################
-pdsm_regex:
+###########################################################################################################
+# Test case: Working on a datascience project with eeg data
+###########################################################################################################
 
-- case: asymmetry_calculations
-  input:
-    system_messages:
-      [
-        Beantworte die Frage so präzise und kurz wie möglich
-      ]
-    prompt: "Nenne mir die drei gängigsten Berechnungen für die Asymmetrie zwischen Elektrodenpaaren in EEG-Signalen"
-  expected:
-    words_in_response:
-      -
-        - "Absolute Asymmetry"
-        - "Absolute Differenz"
-      -
-        - "Relative Asymmetry"
-        - "Relative Differenz"
-      -
-        - "Coherence"
-        - "Logarithmierte Differenz"
+
+  - case: regex_eeg_data_de
+    input:
+      system_messages:
+        [
+          Beantworte die Frage so präzise und kurz wie möglich
+        ]
+      prompt: "Nenne mir die drei gängigsten Berechnungen für die Asymmetrie zwischen Elektrodenpaaren in EEG-Signalen"
+    expected:
+      words_in_response:
+        -
+          - "Absolute Asymmetry"
+          - "Absolute Differenz"
+        -
+          - "Relative Asymmetry"
+          - "Relative Differenz"
+        -
+          - "Coherence"
+          - "Logarithmierte Differenz"
+
+  - case: regex_eeg_data_de
+    input:
+      system_messages:
+        [
+          Beantworte die Frage so präzise und kurz wie möglich
+        ]
+      prompt: "Nenne alle Channel die in einem 10/20 EEG vertreten sind"
+    expected:
+      words_in_response:
+        - "Fp1"
+        - "Fp2"
+        - "F7"
+        - "F3"
+        - "Fz"
+        - "F4"
+        - "F8"
+        - "T3"
+        - "C3"
+        - "Cz"
+        - "C4"
+        - "T4"
+        - "T5"
+        - "P3"
+        - "Pz"
+        - "P4"
+        - "T6"
+        - "O1"
+        - "O2"
+
+  - case: regex_eeg_data_en
+    input:
+      system_messages:
+        [
+          Answer the question short and precisely
+        ]
+      prompt: "Name all channels represented in a 10/20 EEG"
+    expected:
+      words_in_response:
+        - "Fp1"
+        - "Fp2"
+        - "F7"
+        - "F3"
+        - "Fz"
+        - "F4"
+        - "F8"
+        - "T3"
+        - "C3"
+        - "Cz"
+        - "C4"
+        - "T4"
+        - "T5"
+        - "P3"
+        - "Pz"
+        - "P4"
+        - "T6"
+        - "O1"
+        - "O2"
+
+  - case: multiple_choice_eeg_data_de
+    input:
+      system_messages:
+        [
+          Du erhälst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.
+        ]
+      prompt: "Zu welchem EEG-Frequenzband gehört folgende Frequenz: 40hz? A Alpha B Gamma C Theta D Delta E Beta"
+    expected:
+      answer: "B"
 
 
 

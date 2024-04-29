@@ -1,5 +1,6 @@
 import re
 import inspect
+import pytest
 
 from .conftest import calculate_test_score
 from .benchmark_utils import (
@@ -9,7 +10,7 @@ from .benchmark_utils import (
 )
 
 
-def test_asymmetry_calculations(
+def test_correctness_with_regex(
         model_name,
         test_data_pdsm_regex,
         conversation,
@@ -17,6 +18,12 @@ def test_asymmetry_calculations(
 ):
     yaml_data = test_data_pdsm_regex
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+
+    # Skip if the test needs both words of the pair
+    if "both" in yaml_data["case"]:
+        pytest.skip(
+            f"test case {yaml_data['case']} not supported for {task} benchmark"
+        )
 
     def run_test():
 
@@ -33,15 +40,17 @@ def test_asymmetry_calculations(
         ).strip()
 
         score = []
+        print(response)
 
         expected_word_pairs = yaml_data["expected"]["words_in_response"]
         for pair in expected_word_pairs:
             regex = "|".join(pair)
             if re.search(regex, response, re.IGNORECASE):
+                #print(f"Expected words '{pair}' found in response: {response}")
                 score.append(True)
             else:
                 score.append(False)
-                print(f"Expected words '{pair}' not found in response: {response}")
+                #print(f"Expected words '{pair}' not found in response: {response}")
 
         return calculate_test_score(score)
 
@@ -55,6 +64,3 @@ def test_asymmetry_calculations(
         yaml_data["hash"],
         get_result_file_path(task),
     )
-
-
-
