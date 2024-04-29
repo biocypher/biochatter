@@ -218,7 +218,7 @@ rag_interpretation:
 
 
 # new test cases pdsm
-pdsm:
+correctness:
   # test simple yes / no answer
   - case: single_answer_yes
     input:

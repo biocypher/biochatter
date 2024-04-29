@@ -401,16 +401,12 @@ def pytest_generate_tests(metafunc):
             "test_data_text_extraction",
             data_file["text_extraction"],
         )
-    if "test_data_pdsm" in metafunc.fixturenames:
+    if "test_data_correctness" in metafunc.fixturenames:
         metafunc.parametrize(
-            "test_data_pdsm",
-            data_file["pdsm"],
+            "test_data_correctness",
+            data_file["correctness"],
         )
-    if "test_data_pdsm_regex" in metafunc.fixturenames:
-        metafunc.parametrize(
-            "test_data_pdsm_regex",
-            data_file["pdsm_regex"],
-        )
+
 
 
 @pytest.fixture
