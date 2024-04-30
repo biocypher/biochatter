@@ -1,0 +1,9 @@
+Full model name,Subtask,Score achieved,Score possible,Accuracy,Iterations
+gpt-3.5-turbo-0125,chemical,5.064444444444445,9.0,0.5627160493827161,5
+openhermes-2.5:7:ggufv2:Q4_K_M,chemical,4.955555555555556,9.0,0.5506172839506173,5
+mistral-instruct-v0.2:7:ggufv2:Q4_K_M,chemical,2.8592632749513482,9.0,0.3176959194390387,5
+mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,chemical,1.9268708406662942,9.0,0.2140967600740327,5
+llama-3-instruct:8:ggufv2:Q4_K_M,chemical,0.920791108205296,9.0,0.10231012313392178,5
+chatglm3:6:ggmlv3:q4_0,chemical,0.8392930574865726,9.0,0.09325478416517473,5
+code-llama-instruct:7:ggufv2:Q4_K_M,chemical,0.4418901660280971,9.0,0.049098907336455236,5
+llama-2-chat:7:ggufv2:Q4_K_M,chemical,0.4167017026246235,9.0,0.04630018918051373,5

@@ -48,6 +48,56 @@ Instructions can be explicit ("is this fragment relevant to the question?") or i
 
     {{ read_csv('benchmark/results/processed/implicit_relevance_of_multiple_fragments.csv', colalign=("center","center","center","center","center")) }}
 
-## Semantic search
+## Text Extraction
 
-Coming soon.
+In this set of tasks, we test LLM abilities to extract text from a given document.
+
+=== "Overall Performance"
+
+    {{ read_csv('benchmark/results/processed/sourcedata_info_extraction.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Assay extraction"
+
+    {{ read_csv('benchmark/results/processed/extraction_assay.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Chemical extraction"
+
+    {{ read_csv('benchmark/results/processed/extraction_chemical.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Context extraction"
+
+    {{ read_csv('benchmark/results/processed/extraction_context.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Disease extraction"
+
+    {{ read_csv('benchmark/results/processed/extraction_disease.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Entity extraction"
+
+    {{ read_csv('benchmark/results/processed/extraction_entity.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Experiment extraction (yes or no)"
+
+    {{ read_csv('benchmark/results/processed/extraction_experiment_yes_or_no.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Hypothesis extraction"
+
+    {{ read_csv('benchmark/results/processed/extraction_hypothesis.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Intervention extraction"
+
+    {{ read_csv('benchmark/results/processed/extraction_intervention.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Gene identifier mapping"
+
+    {{ read_csv('benchmark/results/processed/extraction_ncbi_link.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Significance extraction"
+
+    {{ read_csv('benchmark/results/processed/extraction_significance.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Statistics extraction"
+
+    {{ read_csv('benchmark/results/processed/extraction_stats.csv', colalign=("center","center","center","center","center")) }}
+
+![Stripplot Extraction Subtask](images/stripplot-extraction-tasks.png)

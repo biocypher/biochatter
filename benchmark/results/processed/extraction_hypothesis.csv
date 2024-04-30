@@ -1,0 +1,9 @@
+Full model name,Subtask,Score achieved,Score possible,Accuracy,Iterations
+mistral-instruct-v0.2:7:ggufv2:Q4_K_M,hypothesis,3.673388422035481,9.0,0.4081542691150534,5
+gpt-3.5-turbo-0125,hypothesis,2.727753909647235,9.0,0.3030837677385817,5
+openhermes-2.5:7:ggufv2:Q4_K_M,hypothesis,2.573823671693527,9.0,0.2859804079659474,5
+mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,hypothesis,1.8744172787273192,9.0,0.2082685865252577,5
+llama-3-instruct:8:ggufv2:Q4_K_M,hypothesis,1.1359622906940021,9.0,0.12621803229933357,5
+chatglm3:6:ggmlv3:q4_0,hypothesis,0.9867599202917898,9.0,0.1096399911435322,5
+llama-2-chat:7:ggufv2:Q4_K_M,hypothesis,0.6205304508438889,9.0,0.06894782787154322,5
+code-llama-instruct:7:ggufv2:Q4_K_M,hypothesis,0.5723685190976284,9.0,0.06359650212195872,5

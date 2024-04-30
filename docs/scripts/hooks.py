@@ -41,23 +41,6 @@ def on_pre_build(config, **kwargs) -> None:
     calculate_stats(overview)
 
 
-def extract_string_after_number(input_string: str) -> str:
-    """Extracts the string before the first number in a string.
-    e.g. "subtask_name_1_some_text" should return "subtask_name"
-
-    Args:
-        input_string (str): The input string.
-
-    Returns:
-        str: The extracted string.
-    """
-    match = re.search(r"\d+_(.+)", input_string)
-    if match:
-        return match.group(1)
-    else:
-        return input_string
-
-
 def preprocess_results_for_frontend(
     raw_results: pd.DataFrame, path: str, file_name: str
 ) -> None:
@@ -68,9 +51,6 @@ def preprocess_results_for_frontend(
         path (str): The path to the result files.
         file_name (str): The file name of the result file.
     """
-    raw_results["subtask"] = raw_results["subtask"].apply(
-        extract_string_after_number
-    )
     raw_results["score_possible"] = raw_results["score"].apply(
         lambda x: float(x.split("/")[1])
     )
@@ -113,6 +93,67 @@ def preprocess_results_for_frontend(
         f"{path}processed/{file_name}",
         index=False,
     )
+
+    if file_name == "sourcedata_info_extraction.csv":
+        write_individual_extraction_task_results(raw_results)
+
+
+def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
+    """
+    Write one csv file per subtask for sourcedata_info_extraction results in the
+    same format as the other results files.
+    """
+    raw_results["subtask"] = raw_results["subtask"].apply(
+        lambda x: x.split(":")[1]
+    )
+    raw_results["score_possible"] = raw_results["score"].apply(
+        lambda x: float(x.split("/")[1])
+    )
+    raw_results["score_achieved"] = raw_results["score"].apply(
+        lambda x: float(x.split("/")[0])
+    )
+    aggregated_scores = raw_results.groupby(["model_name", "subtask"]).agg(
+        {
+            "score_possible": "sum",
+            "score_achieved": "sum",
+            "iterations": "first",
+        }
+    )
+
+    aggregated_scores["Accuracy"] = aggregated_scores.apply(
+        lambda row: (
+            row["score_achieved"] / row["score_possible"]
+            if row["score_possible"] != 0
+            else 0
+        ),
+        axis=1,
+    )
+
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
+    aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
+        "subtask"
+    )
+    aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
+    aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
+    aggregated_scores["Iterations"] = aggregated_scores["iterations"]
+    new_order = [
+        "Full model name",
+        "Subtask",
+        "Score achieved",
+        "Score possible",
+        "Accuracy",
+        "Iterations",
+    ]
+    results = aggregated_scores[new_order]
+    results = results.sort_values(by="Accuracy", ascending=False)
+    for subtask in results["Subtask"].unique():
+        results_subtask = results[results["Subtask"] == subtask]
+        results_subtask.to_csv(
+            f"benchmark/results/processed/extraction_{subtask}.csv",
+            index=False,
+        )
 
 
 def create_overview_table(result_files_path: str, result_file_names: list[str]):
