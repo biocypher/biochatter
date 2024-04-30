@@ -1,10 +1,10 @@
 Model name,Size,Median Accuracy,SD
 gpt-3.5-turbo-0125,175,0.9,0.23
 gpt-4-0613,Unknown,0.88,0.19
-gpt-3.5-turbo-0613,175,0.79,0.22
 openhermes-2.5,7,0.78,0.35
+gpt-3.5-turbo-0613,175,0.76,0.21
 llama-3-instruct,8,0.7,0.38
-gpt-4-0125-preview,Unknown,0.65,0.32
+gpt-4-0125-preview,Unknown,0.69,0.31
 chatglm3,6,0.47,0.27
 mistral-instruct-v0.2,7,0.46,0.36
 llama-2-chat,70,0.45,0.35

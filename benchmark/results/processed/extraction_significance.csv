@@ -1,5 +1,8 @@
 Full model name,Subtask,Score achieved,Score possible,Accuracy,Iterations
+gpt-4-0613,significance,5.6,9.0,0.6222222222222222,5
+gpt-4-0125-preview,significance,5.183838383838384,9.0,0.5759820426487093,5
 openhermes-2.5:7:ggufv2:Q4_K_M,significance,3.9299621603027175,9.0,0.4366624622558575,5
+gpt-3.5-turbo-0613,significance,3.5856190867955573,9.0,0.39840212075506193,5
 gpt-3.5-turbo-0125,significance,3.517171717171717,9.0,0.3907968574635241,5
 mistral-instruct-v0.2:7:ggufv2:Q4_K_M,significance,2.9383333333333335,9.0,0.3264814814814815,5
 mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,significance,1.0112912805345189,9.0,0.11236569783716877,5

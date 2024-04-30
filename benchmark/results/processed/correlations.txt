@@ -1,4 +1,4 @@
-Size vs accuracy Pearson correlation: 0.15770134495725008
-Size vs accuracy Pearson correlation p-value: 0.00021015824655405327
-Quantisation vs accuracy Pearson correlation: 0.18949719115689884
-Quantisation vs accuracy Pearson correlation p-value: 7.954050786338592e-06
+Size vs accuracy Pearson correlation: 0.1619804275417575
+Size vs accuracy Pearson correlation p-value: 0.000134079336616155
+Quantisation vs accuracy Pearson correlation: 0.19280308291393375
+Quantisation vs accuracy Pearson correlation p-value: 5.156919811050803e-06
