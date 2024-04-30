@@ -21,9 +21,9 @@ def test_correctness_of_answers(
     yaml_data = test_data_correctness
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     # Wieder einkommentieren, wenn benötigt
-    '''skip_if_already_run(
+    skip_if_already_run(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
-    )'''
+    )
 
 
     def run_test():
@@ -49,7 +49,7 @@ def test_correctness_of_answers(
         if "regex" not in yaml_data["case"]:
             score.append(response == yaml_data["expected"]["answer"])
 
-        #calculate for answers with regex
+        # calculate for answers with regex
         else:
             expected_word_pairs = yaml_data["expected"]["words_in_response"]
             for pair in expected_word_pairs:
