@@ -33,7 +33,6 @@ neo4j-utils = "^0.0.7"
 seaborn = "^0.13.2"
 rouge_score = "0.1.2"
 evaluate = "^0.4.1"
-llama-cpp-python = "^0.2.61"
 
 [tool.poetry.extras]
 streamlit = ["streamlit"]
