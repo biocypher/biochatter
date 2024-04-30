@@ -520,6 +520,27 @@ correctness:
     expected:
       answer: "B"
 
+  - case: yes_no_eeg_data_de
+    input:
+      prompt: Bei EEG Signalen sind sogenannte Delta Wellen vor allem im Tiefschlaf zu beobachten
+      system_messages:
+        [
+          "Du erhältst eine Frage, beantworte sie nur mit 'Ja' oder 'Nein'."
+        ]
+    expected:
+      answer: "ja"
+
+  - case: yes_no_eeg_data_en
+    input:
+      prompt: Are so-called delta waves observed in EEG signals, especially during deep sleep?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "ja"
+
+
 
 
 
