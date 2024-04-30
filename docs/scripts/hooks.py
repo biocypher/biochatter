@@ -36,6 +36,7 @@ def on_pre_build(config, **kwargs) -> None:
     plot_scatter_per_quantisation(overview)
     plot_task_comparison(overview)
     plot_rag_tasks(overview)
+    plot_extraction_tasks()
     plot_comparison_naive_biochatter(overview)
     calculate_stats(overview)
 
@@ -571,6 +572,84 @@ def plot_rag_tasks(overview):
         bbox_inches="tight",
     )
     plt.close()
+
+
+def plot_extraction_tasks():
+    """
+    Load raw result file for sourcedata_info_extraction; aggregate based on the
+    subtask name and calculate mean accuracy for each model. Plot a stripplot
+    of the mean accuracy across models, coloured by subtask.
+    """
+    sourcedata_info_extraction = pd.read_csv(
+        "benchmark/results/sourcedata_info_extraction.csv"
+    )
+    # split subtask at colon and use second element
+    sourcedata_info_extraction["subtask"] = sourcedata_info_extraction[
+        "subtask"
+    ].apply(lambda x: x.split(":")[1])
+    sourcedata_info_extraction["score_possible"] = sourcedata_info_extraction[
+        "score"
+    ].apply(lambda x: float(x.split("/")[1]))
+    sourcedata_info_extraction["score_achieved"] = sourcedata_info_extraction[
+        "score"
+    ].apply(lambda x: float(x.split("/")[0]))
+    aggregated_scores = sourcedata_info_extraction.groupby(
+        ["model_name", "subtask"]
+    ).agg(
+        {
+            "score_possible": "sum",
+            "score_achieved": "sum",
+            "iterations": "first",
+        }
+    )
+
+    aggregated_scores["Accuracy"] = aggregated_scores.apply(
+        lambda row: (
+            row["score_achieved"] / row["score_possible"]
+            if row["score_possible"] != 0
+            else 0
+        ),
+        axis=1,
+    )
+
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
+    aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
+        "subtask"
+    )
+    aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
+    aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
+    aggregated_scores["Iterations"] = aggregated_scores["iterations"]
+    new_order = [
+        "Full model name",
+        "Subtask",
+        "Score achieved",
+        "Score possible",
+        "Accuracy",
+        "Iterations",
+    ]
+    results = aggregated_scores[new_order]
+    results = results.sort_values(by="Accuracy", ascending=False)
+
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(6, 4))
+    sns.stripplot(
+        x="Subtask",
+        y="Accuracy",
+        hue="Full model name",
+        data=results,
+    )
+
+    plt.title("Strip plot across models, per subtask, coloured by model name")
+    plt.ylim(-0.1, 1.1)
+    plt.xticks(rotation=45, ha="right")
+    plt.legend(bbox_to_anchor=(1, 1), loc="upper left")
+    plt.savefig(
+        "docs/images/stripplot-extraction-tasks.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
 
 
 def plot_comparison_naive_biochatter(overview):
