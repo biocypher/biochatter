@@ -1,3 +1,7 @@
+"""
+This test needs OPENAI_API_KEY in the environment and a local milvus server.
+"""
+
 from unittest.mock import patch
 import os
 import uuid
@@ -17,10 +21,6 @@ from .mock_pymilvus import (
     connections,
 )
 from .mock_langchain import Milvus, Document, OpenAIEmbeddings
-
-"""
-This test needs OPENAI_API_KEY in the environment and a local milvus server.
-"""
 
 # setup milvus connection
 if os.getenv("DEVCONTAINER"):
@@ -136,22 +136,20 @@ mocked_bc_summary_txt_splitted_texts = [
 
 @pytest.fixture
 def dbHost():
-    with patch(
-        "biochatter.vectorstore_agent.OpenAIEmbeddings", OpenAIEmbeddings
-    ), patch("biochatter.vectorstore_agent.Document", Document), patch(
-        "biochatter.vectorstore_agent.Milvus", Milvus
-    ), patch(
-        "biochatter.vectorstore_agent.connections", connections
-    ), patch(
-        "biochatter.vectorstore_agent.utility", utility
-    ), patch(
-        "biochatter.vectorstore_agent.Collection", Collection
-    ), patch(
-        "biochatter.vectorstore_agent.DataType", DataType
-    ), patch(
-        "biochatter.vectorstore_agent.FieldSchema", FieldSchema
-    ), patch(
-        "biochatter.vectorstore_agent.CollectionSchema", CollectionSchema
+    with (
+        patch(
+            "biochatter.vectorstore_agent.OpenAIEmbeddings", OpenAIEmbeddings
+        ),
+        patch("biochatter.vectorstore_agent.Document", Document),
+        patch("biochatter.vectorstore_agent.Milvus", Milvus),
+        patch("biochatter.vectorstore_agent.connections", connections),
+        patch("biochatter.vectorstore_agent.utility", utility),
+        patch("biochatter.vectorstore_agent.Collection", Collection),
+        patch("biochatter.vectorstore_agent.DataType", DataType),
+        patch("biochatter.vectorstore_agent.FieldSchema", FieldSchema),
+        patch(
+            "biochatter.vectorstore_agent.CollectionSchema", CollectionSchema
+        ),
     ):
         # create dbHost
         dbHost = VectorDatabaseAgentMilvus(

@@ -29,7 +29,6 @@ def test_sourcedata_info_extraction(
     )
 
     def run_test():
-
         conversation.reset()
         # Define the system prompt
         [

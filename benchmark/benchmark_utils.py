@@ -1,7 +1,7 @@
 from datetime import datetime
 
-import importlib_metadata
 import pytest
+import importlib_metadata
 
 import pandas as pd
 

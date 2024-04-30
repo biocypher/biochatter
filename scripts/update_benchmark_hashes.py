@@ -62,9 +62,9 @@ def _update_hashes_in_results():
                             subtask = (
                                 row["subtask"].replace("_", "").replace(":", "")
                             )
-                            result_file.at[index, "md5_hash"] = (
-                                reference_hashes[subtask]
-                            )
+                            result_file.at[
+                                index, "md5_hash"
+                            ] = reference_hashes[subtask]
 
                         result_file.to_csv(file, index=False)
 

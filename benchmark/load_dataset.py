@@ -1,10 +1,10 @@
 from ast import literal_eval
 from base64 import b64decode
-import copy
-import itertools
 import os
+import copy
 import json
 import hashlib
+import itertools
 
 from cryptography.fernet import Fernet
 import rsa
