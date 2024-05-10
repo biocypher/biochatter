@@ -79,6 +79,8 @@ llama-2-chat:7:ggufv2:Q8_0,implicit_relevance:no,0.0/1,5,b24fb31fd761b0f3e308beb
 llama-2-chat:7:ggufv2:Q8_0,implicit_relevance:yes,1.0/1,5,f9d749647929fcb55321c614a3bf8d20,2024-02-11 01:23:05,0.4.10
 llama-3-instruct:8:ggufv2:Q4_K_M,implicit_relevance:no,1.0/1,5,b24fb31fd761b0f3e308bebd70ce4277,2024-04-24 12:01:18,0.4.10
 llama-3-instruct:8:ggufv2:Q4_K_M,implicit_relevance:yes,1.0/1,5,f9d749647929fcb55321c614a3bf8d20,2024-04-24 12:01:43,0.4.10
+llama-3-instruct:8:ggufv2:Q5_K_M,implicit_relevance_no,1.0/1,5,b24fb31fd761b0f3e308bebd70ce4277,2024-05-10 05:11:38,0.4.10
+llama-3-instruct:8:ggufv2:Q5_K_M,implicit_relevance_yes,1.0/1,5,f9d749647929fcb55321c614a3bf8d20,2024-05-10 05:11:58,0.4.10
 llama-3-instruct:8:ggufv2:Q6_K,implicit_relevance:no,1.0/1,5,b24fb31fd761b0f3e308bebd70ce4277,2024-04-24 12:08:25,0.4.10
 llama-3-instruct:8:ggufv2:Q6_K,implicit_relevance:yes,1.0/1,5,f9d749647929fcb55321c614a3bf8d20,2024-04-24 12:08:49,0.4.10
 llama-3-instruct:8:ggufv2:Q8_0,implicit_relevance:no,1.0/1,5,b24fb31fd761b0f3e308bebd70ce4277,2024-04-24 12:18:40,0.4.10

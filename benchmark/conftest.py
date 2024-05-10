@@ -46,7 +46,7 @@ XINFERENCE_MODELS = {
             # "Q5_K_S",
             "Q5_K_M",
             # "Q6_K",
-            "Q8_0",
+            # "Q8_0",
         ],
     },
     "code-llama-instruct": {
