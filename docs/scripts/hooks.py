@@ -1,8 +1,10 @@
 import os
 import re
-import numpy as np
+
 import seaborn as sns
 import matplotlib
+
+import numpy as np
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -34,25 +36,9 @@ def on_pre_build(config, **kwargs) -> None:
     plot_scatter_per_quantisation(overview)
     plot_task_comparison(overview)
     plot_rag_tasks(overview)
+    plot_extraction_tasks()
     plot_comparison_naive_biochatter(overview)
     calculate_stats(overview)
-
-
-def extract_string_after_number(input_string: str) -> str:
-    """Extracts the string before the first number in a string.
-    e.g. "subtask_name_1_some_text" should return "subtask_name"
-
-    Args:
-        input_string (str): The input string.
-
-    Returns:
-        str: The extracted string.
-    """
-    match = re.search(r"\d+_(.+)", input_string)
-    if match:
-        return match.group(1)
-    else:
-        return input_string
 
 
 def preprocess_results_for_frontend(
@@ -65,46 +51,39 @@ def preprocess_results_for_frontend(
         path (str): The path to the result files.
         file_name (str): The file name of the result file.
     """
-    raw_results["subtask"] = raw_results["subtask"].apply(
-        extract_string_after_number
-    )
-    raw_results["number_test_cases"] = raw_results["score"].apply(
+    raw_results["score_possible"] = raw_results["score"].apply(
         lambda x: float(x.split("/")[1])
     )
-    raw_results["passed_test_cases"] = raw_results["score"].apply(
+    raw_results["score_achieved"] = raw_results["score"].apply(
         lambda x: float(x.split("/")[0])
     )
     aggregated_scores = raw_results.groupby(["model_name"]).agg(
         {
-            "number_test_cases": "sum",
-            "passed_test_cases": "sum",
+            "score_possible": "sum",
+            "score_achieved": "sum",
             "iterations": "first",
         }
     )
 
     aggregated_scores["Accuracy"] = aggregated_scores.apply(
         lambda row: (
-            row["passed_test_cases"] / row["number_test_cases"]
-            if row["number_test_cases"] != 0
+            row["score_achieved"] / row["score_possible"]
+            if row["score_possible"] != 0
             else 0
         ),
         axis=1,
     )
 
-    aggregated_scores["Full model name"] = (
-        aggregated_scores.index.get_level_values("model_name")
-    )
-    aggregated_scores["Passed test cases"] = aggregated_scores[
-        "passed_test_cases"
-    ]
-    aggregated_scores["Total test cases"] = aggregated_scores[
-        "number_test_cases"
-    ]
+    aggregated_scores[
+        "Full model name"
+    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
+    aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
     aggregated_scores["Iterations"] = aggregated_scores["iterations"]
     new_order = [
         "Full model name",
-        "Passed test cases",
-        "Total test cases",
+        "Score achieved",
+        "Score possible",
         "Accuracy",
         "Iterations",
     ]
@@ -114,6 +93,67 @@ def preprocess_results_for_frontend(
         f"{path}processed/{file_name}",
         index=False,
     )
+
+    if file_name == "sourcedata_info_extraction.csv":
+        write_individual_extraction_task_results(raw_results)
+
+
+def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
+    """
+    Write one csv file per subtask for sourcedata_info_extraction results in the
+    same format as the other results files.
+    """
+    raw_results["subtask"] = raw_results["subtask"].apply(
+        lambda x: x.split(":")[1]
+    )
+    raw_results["score_possible"] = raw_results["score"].apply(
+        lambda x: float(x.split("/")[1])
+    )
+    raw_results["score_achieved"] = raw_results["score"].apply(
+        lambda x: float(x.split("/")[0])
+    )
+    aggregated_scores = raw_results.groupby(["model_name", "subtask"]).agg(
+        {
+            "score_possible": "sum",
+            "score_achieved": "sum",
+            "iterations": "first",
+        }
+    )
+
+    aggregated_scores["Accuracy"] = aggregated_scores.apply(
+        lambda row: (
+            row["score_achieved"] / row["score_possible"]
+            if row["score_possible"] != 0
+            else 0
+        ),
+        axis=1,
+    )
+
+    aggregated_scores[
+        "Full model name"
+    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
+        "subtask"
+    )
+    aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
+    aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
+    aggregated_scores["Iterations"] = aggregated_scores["iterations"]
+    new_order = [
+        "Full model name",
+        "Subtask",
+        "Score achieved",
+        "Score possible",
+        "Accuracy",
+        "Iterations",
+    ]
+    results = aggregated_scores[new_order]
+    results = results.sort_values(by="Accuracy", ascending=False)
+    for subtask in results["Subtask"].unique():
+        results_subtask = results[results["Subtask"] == subtask]
+        results_subtask.to_csv(
+            f"benchmark/results/processed/extraction_{subtask}.csv",
+            index=False,
+        )
 
 
 def create_overview_table(result_files_path: str, result_file_names: list[str]):
@@ -146,9 +186,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     )
 
     overview_per_quantisation = overview
-    overview_per_quantisation["Full model name"] = (
-        overview_per_quantisation.index
-    )
+    overview_per_quantisation[
+        "Full model name"
+    ] = overview_per_quantisation.index
     overview_per_quantisation[
         ["Model name", "Size", "Version", "Quantisation"]
     ] = overview_per_quantisation["Full model name"].str.split(":", expand=True)
@@ -180,9 +220,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         ]
     ]
     # round mean and sd to 2 decimal places
-    overview_per_quantisation.loc[:, "Median Accuracy"] = (
-        overview_per_quantisation["Median Accuracy"].round(2)
-    )
+    overview_per_quantisation.loc[
+        :, "Median Accuracy"
+    ] = overview_per_quantisation["Median Accuracy"].round(2)
     overview_per_quantisation.loc[:, "SD"] = overview_per_quantisation[
         "SD"
     ].round(2)
@@ -512,7 +552,7 @@ def plot_task_comparison(overview):
         hue="Task",
         data=overview_melted,
     )
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=45, ha="right")
     plt.savefig(
         "docs/images/boxplot-tasks.png",
         bbox_inches="tight",
@@ -573,6 +613,84 @@ def plot_rag_tasks(overview):
         bbox_inches="tight",
     )
     plt.close()
+
+
+def plot_extraction_tasks():
+    """
+    Load raw result file for sourcedata_info_extraction; aggregate based on the
+    subtask name and calculate mean accuracy for each model. Plot a stripplot
+    of the mean accuracy across models, coloured by subtask.
+    """
+    sourcedata_info_extraction = pd.read_csv(
+        "benchmark/results/sourcedata_info_extraction.csv"
+    )
+    # split subtask at colon and use second element
+    sourcedata_info_extraction["subtask"] = sourcedata_info_extraction[
+        "subtask"
+    ].apply(lambda x: x.split(":")[1])
+    sourcedata_info_extraction["score_possible"] = sourcedata_info_extraction[
+        "score"
+    ].apply(lambda x: float(x.split("/")[1]))
+    sourcedata_info_extraction["score_achieved"] = sourcedata_info_extraction[
+        "score"
+    ].apply(lambda x: float(x.split("/")[0]))
+    aggregated_scores = sourcedata_info_extraction.groupby(
+        ["model_name", "subtask"]
+    ).agg(
+        {
+            "score_possible": "sum",
+            "score_achieved": "sum",
+            "iterations": "first",
+        }
+    )
+
+    aggregated_scores["Accuracy"] = aggregated_scores.apply(
+        lambda row: (
+            row["score_achieved"] / row["score_possible"]
+            if row["score_possible"] != 0
+            else 0
+        ),
+        axis=1,
+    )
+
+    aggregated_scores[
+        "Full model name"
+    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
+        "subtask"
+    )
+    aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
+    aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
+    aggregated_scores["Iterations"] = aggregated_scores["iterations"]
+    new_order = [
+        "Full model name",
+        "Subtask",
+        "Score achieved",
+        "Score possible",
+        "Accuracy",
+        "Iterations",
+    ]
+    results = aggregated_scores[new_order]
+    results = results.sort_values(by="Accuracy", ascending=False)
+
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(6, 4))
+    sns.stripplot(
+        x="Subtask",
+        y="Accuracy",
+        hue="Full model name",
+        data=results,
+    )
+
+    plt.title("Strip plot across models, per subtask, coloured by model name")
+    plt.ylim(-0.1, 1.1)
+    plt.xticks(rotation=45, ha="right")
+    plt.legend(bbox_to_anchor=(1, 1), loc="upper left")
+    plt.savefig(
+        "docs/images/stripplot-extraction-tasks.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
 
 
 def plot_comparison_naive_biochatter(overview):
@@ -641,9 +759,14 @@ def calculate_stats(overview):
     )
     from scipy.stats import pearsonr
 
-    size_accuracy_corr, size_accuracy_p_value = pearsonr(
-        size, overview_melted["Accuracy"]
-    )
+    # Create a mask of rows where 'Accuracy' is not NaN
+    mask = overview_melted["Accuracy"].notna()
+
+    # Use the mask to select only the rows from 'size' and 'Accuracy' where 'Accuracy' is not NaN
+    size = size[mask]
+    accuracy = overview_melted["Accuracy"][mask]
+
+    size_accuracy_corr, size_accuracy_p_value = pearsonr(size, accuracy)
 
     # plot scatter plot
     plt.figure(figsize=(6, 4))
@@ -667,8 +790,15 @@ def calculate_stats(overview):
     quantisation = overview_melted["Quantisation"].apply(
         lambda x: 16 if x == ">= 16-bit*" else float(x.replace("-bit", ""))
     )
+    # Create a mask of rows where 'Accuracy' is not NaN
+    mask = overview_melted["Accuracy"].notna()
+
+    # Use the mask to select only the rows from 'quantisation' and 'Accuracy' where 'Accuracy' is not NaN
+    quantisation = quantisation[mask]
+    accuracy = overview_melted["Accuracy"][mask]
+
     quant_accuracy_corr, quant_accuracy_p_value = pearsonr(
-        quantisation, overview_melted["Accuracy"]
+        quantisation, accuracy
     )
     # plot scatter plot
     plt.figure(figsize=(6, 4))

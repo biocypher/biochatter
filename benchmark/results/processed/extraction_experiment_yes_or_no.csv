@@ -1,0 +1,12 @@
+Full model name,Subtask,Score achieved,Score possible,Accuracy,Iterations
+gpt-4-0125-preview,experiment_yes_or_no,9.0,9.0,1.0,5
+chatglm3:6:ggmlv3:q4_0,experiment_yes_or_no,8.6,9.0,0.9555555555555555,5
+openhermes-2.5:7:ggufv2:Q4_K_M,experiment_yes_or_no,8.333333333333332,9.0,0.9259259259259258,5
+gpt-3.5-turbo-0613,experiment_yes_or_no,8.0,9.0,0.8888888888888888,5
+gpt-4-0613,experiment_yes_or_no,8.0,9.0,0.8888888888888888,5
+gpt-3.5-turbo-0125,experiment_yes_or_no,6.033333333333333,9.0,0.6703703703703704,5
+code-llama-instruct:7:ggufv2:Q4_K_M,experiment_yes_or_no,3.0913018439676034,9.0,0.34347798266306706,5
+mistral-instruct-v0.2:7:ggufv2:Q4_K_M,experiment_yes_or_no,2.285101246938712,9.0,0.2539001385487458,5
+llama-2-chat:7:ggufv2:Q4_K_M,experiment_yes_or_no,2.068169014084507,9.0,0.2297965571205008,5
+llama-3-instruct:8:ggufv2:Q4_K_M,experiment_yes_or_no,1.8993506493506493,9.0,0.21103896103896103,5
+mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,experiment_yes_or_no,1.2999067071672985,9.0,0.14443407857414428,5

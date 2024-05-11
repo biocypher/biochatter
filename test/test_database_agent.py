@@ -1,5 +1,6 @@
 import unittest.mock as mock
-from biochatter.database_agent import DatabaseAgent, Document
+
+from biochatter.database_agent import Document, DatabaseAgent
 
 
 def test_get_query_results():
@@ -25,12 +26,15 @@ def test_get_query_results():
         with mock.patch.object(
             db_agent.driver,
             "query",
-            return_value=[[
-                {"key": "value"},
-                {"key": "value"},
-                {"key": "value"},
-                {"key": "value"},
-            ], {}],
+            return_value=[
+                [
+                    {"key": "value"},
+                    {"key": "value"},
+                    {"key": "value"},
+                    {"key": "value"},
+                ],
+                {},
+            ],
         ):
             result = db_agent.get_query_results("test_query", 3)
 

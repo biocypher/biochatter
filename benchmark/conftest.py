@@ -1,8 +1,8 @@
 import os
 
-import requests
 from xinference.client import Client
 import pytest
+import requests
 
 import numpy as np
 import pandas as pd
@@ -20,10 +20,10 @@ BENCHMARK_DATASET = get_benchmark_dataset()
 
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
-    "gpt-3.5-turbo-0613",
+    # "gpt-3.5-turbo-0613",
     "gpt-3.5-turbo-0125",
-    "gpt-4-0613",
-    "gpt-4-0125-preview",
+    # "gpt-4-0613",
+    # "gpt-4-0125-preview",
 ]
 
 XINFERENCE_MODELS = {
@@ -45,30 +45,30 @@ XINFERENCE_MODELS = {
             # "Q5_0",
             # "Q5_K_S",
             "Q5_K_M",
-            "Q6_K",
-            "Q8_0",
+            # "Q6_K",
+            # "Q8_0",
         ],
     },
     "code-llama-instruct": {
         "model_size_in_billions": [
             7,
-            13,
-            34,
+            # 13,
+            # 34,
         ],
         "model_format": "ggufv2",
         "quantization": [
-            "Q2_K",
+            # "Q2_K",
             # "Q3_K_L",
-            "Q3_K_M",
+            # "Q3_K_M",
             # "Q3_K_S",
             # "Q4_0",
             "Q4_K_M",
             # "Q4_K_S",
             # "Q5_0",
-            "Q5_K_M",
+            # "Q5_K_M",
             # "Q5_K_S",
-            "Q6_K",
-            "Q8_0",
+            # "Q6_K",
+            # "Q8_0",
         ],
     },
     "mixtral-instruct-v0.1": {
@@ -136,35 +136,35 @@ XINFERENCE_MODELS = {
             "Q8_0",
         ],
     },
-    "gemma-it": {
-        "model_size_in_billions": [
-            2,
-            7,
-        ],
-        "model_format": "pytorch",
-        "quantization": [
-            "none",
-            "4-bit",
-            "8-bit",
-        ],
-    },
+    # "gemma-it": {
+    #     "model_size_in_billions": [
+    #         2,
+    #         7,
+    #     ],
+    #     "model_format": "pytorch",
+    #     "quantization": [
+    #         "none",
+    #         "4-bit",
+    #         "8-bit",
+    #     ],
+    # },
     "llama-3-instruct": {
         "model_size_in_billions": [
             8,
-            70,
+            # 70,
         ],
         "model_format": "ggufv2",
         "quantization": [
             # 8B model quantisations
             # "IQ3_M",
             "Q4_K_M",
-            # "Q5_K_M",
+            "Q5_K_M",
             "Q6_K",
             "Q8_0",
             # 70B model quantisations
             # "IQ1_M",
             # "IQ2_XS",
-            "Q4_K_M",
+            # "Q4_K_M",
         ],
     },
 }
@@ -217,12 +217,14 @@ def multiple_testing(request):
             score, max = test_func(*args, **kwargs)
             scores.append(score)
         mean_score = sum(scores) / N_ITERATIONS
+        sd_score = np.std(scores)
+        # TODO return standard deviation with score
         return (mean_score, max, N_ITERATIONS)
 
     return run_multiple_times
 
 
-def calculate_test_score(vector: list[bool]) -> tuple[int, int]:
+def calculate_bool_vector_score(vector: list[bool]) -> tuple[int, int]:
     score = sum(vector)
     max = len(vector)
     return (score, max)

@@ -1,8 +1,9 @@
-import importlib_metadata
+from datetime import datetime
+
 import pytest
+import importlib_metadata
 
 import pandas as pd
-from datetime import datetime
 
 
 def benchmark_already_executed(

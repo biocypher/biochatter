@@ -31,7 +31,7 @@ https://github.com/biocypher/biochatter-next;
 - a RESTful API server for use by the Next frontend (and any other REST-based
 application) at https://github.com/biocypher/biochatter-server.
 
-BioChatter is part of the [BioCypher](https://github.com/biocypher) ecosystem, 
+BioChatter is part of the [BioCypher](https://github.com/biocypher) ecosystem,
 connecting natively to BioCypher knowledge graphs. The BioChatter paper is
 being written [here](https://github.com/biocypher/biochatter-paper).
 

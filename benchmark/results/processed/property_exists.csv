@@ -1,4 +1,4 @@
-Full model name,Passed test cases,Total test cases,Accuracy,Iterations
+Full model name,Score achieved,Score possible,Accuracy,Iterations
 code-llama-instruct:34:ggufv2:Q4_K_M,7.8,8.0,0.975,5
 code-llama-instruct:34:ggufv2:Q5_K_M,7.6,8.0,0.95,5
 code-llama-instruct:34:ggufv2:Q8_0,7.4,8.0,0.925,5

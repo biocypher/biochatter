@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-import argparse
 import os
+import argparse
+
 from biochatter.podcast import Podcaster
 from biochatter.vectorstore import DocumentReader
 
