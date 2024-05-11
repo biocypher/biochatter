@@ -41,11 +41,6 @@ def test_sourcedata_info_extraction(
             f"FIGURE CAPTION: {yaml_data['input']['caption']} ##\n\n"
             f"## QUERY: {yaml_data['input']['query']} ##\n\n"
             f"## ANSWER FORMAT: {yaml_data['input']['format']}"
-        ) if "llama" not in model_name.lower() else (
-            f"FIGURE CAPTION: {yaml_data['input']['caption']} ##\n\n"
-            f"## QUERY: {yaml_data['input']['query']} ##\n\n"
-            f"## ANSWER FORMAT: {yaml_data['input']['format']}"
-            f"## ANSWER: "
         )
 
         response, _, _ = conversation.query(user_query)
