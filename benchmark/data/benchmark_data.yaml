@@ -397,14 +397,15 @@ correctness:
 # Test case: Working on a datascience project with eeg data
 ###########################################################################################################
 
+# regex
 
   - case: regex_eeg_data_de
     input:
+      prompt: Nenne mir die drei gängigsten Berechnungen für die Asymmetrie zwischen Elektrodenpaaren in EEG-Signalen
       system_messages:
         [
-          Beantworte die Frage so präzise und kurz wie möglich
+          "Beantworte die Frage so präzise und kurz wie möglich"
         ]
-      prompt: "Nenne mir die drei gängigsten Berechnungen für die Asymmetrie zwischen Elektrodenpaaren in EEG-Signalen"
     expected:
       words_in_response:
         -
@@ -419,11 +420,11 @@ correctness:
 
   - case: regex_eeg_data_de
     input:
+      prompt: Nenne alle Channel die in einem 10/20 EEG vertreten sind
       system_messages:
         [
-          Beantworte die Frage so präzise und kurz wie möglich
+          "Beantworte die Frage so präzise und kurz wie möglich"
         ]
-      prompt: "Nenne alle Channel die in einem 10/20 EEG vertreten sind"
     expected:
       words_in_response:
         - "Fp1"
@@ -448,11 +449,11 @@ correctness:
 
   - case: regex_eeg_data_en
     input:
+      prompt: Name all channels represented in a 10/20 EEG
       system_messages:
         [
-          Answer the question short and precisely
+          "Answer the question short and precisely"
         ]
-      prompt: "Name all channels represented in a 10/20 EEG"
     expected:
       words_in_response:
         - "Fp1"
@@ -475,15 +476,70 @@ correctness:
         - "O1"
         - "O2"
 
-  - case: multiple_choice_eeg_data_de
+  - case: regex_eeg_data_en
     input:
+      prompt: What is the name for the smooth curve outlining the extremes of a signal (eg EEG) and thus generalizes the concept of a constant amplitude into an instantaneous amplitude.
       system_messages:
         [
-          Du erhälst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.
+          "Answer the question short and precisely"
         ]
-      prompt: "Zu welchem EEG-Frequenzband gehört folgende Frequenz: 40hz? A Alpha B Gamma C Theta D Delta E Beta"
+    expected:
+      words_in_response:
+        - "envelope"
+
+  - case: regex_eeg_data_de
+    input:
+      prompt: Wie nennt man die glatte Kurve, die die Extremwerte eines Signals (z. B. EEG) umreißt und somit das Konzept einer konstanten Amplitude in eine momentane Amplitude verallgemeinert.
+      system_messages:
+        [
+          "Beantworte die Frage so präzise und kurz wie möglich"
+        ]
+    expected:
+      words_in_response:
+        - "envelope"
+
+# multiple choice
+
+  - case: multiple_choice_eeg_data_de
+    input:
+      prompt: Zu welchem EEG-Frequenzband gehört folgende Frequenz 40hz? A Alpha B Gamma C Theta D Delta E Beta
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
+        ]
     expected:
       answer: "B"
+
+  - case: multiple_choice_eeg_data_en
+    input:
+      prompt: To which EEG frequency band does the following frequency belong 40hz? A Alpha B Gamma C Theta D Delta E Beta
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it concisely by answering only the correct letter of the question in lower case. Remember to use only one lower-case letter and not the whole right answer"
+        ]
+    expected:
+      answer: "B"
+
+  - case: yes_no_eeg_data_de
+    input:
+      prompt: Bei EEG Signalen sind sogenannte Delta Wellen vor allem im Tiefschlaf zu beobachten
+      system_messages:
+        [
+          "Du erhältst eine Frage, beantworte sie nur mit 'Ja' oder 'Nein'."
+        ]
+    expected:
+      answer: "ja"
+
+  - case: yes_no_eeg_data_en
+    input:
+      prompt: Are so-called delta waves observed in EEG signals, especially during deep sleep?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "ja"
+
 
 
 
