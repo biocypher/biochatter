@@ -544,6 +544,168 @@ correctness:
 
 
 
+###########################################################################################################
+  # Test case: Questions about “emergency medicine” for prospective emergency physicians
+  # Language: German
+###########################################################################################################
+
+pdsm_emergency:
+
+  # Level 1: Yes or no questions
+  - case: yes_no_emergency
+    input:
+      prompt: Bei einem Herzinfarkt wird typischerweise Aspirin eingesetzt?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+        ]
+    expected:
+      answer: "ja"
+
+  - case: yes_no_emergency
+    input:
+      prompt: Ist RHUB ist die Abkürzung für einen Rettungshubschrauber?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+        ]
+    expected:
+      answer: "nein"
+
+  - case: yes_no_emergency
+    input:
+      prompt: Bei einem epileptischen Anfall immer versuchen die Person festzuhalten?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+        ]
+    expected:
+      answer: "nein"
+
+  - case: yes_no_emergency
+    input:
+      prompt: Bei CPR sind Kompressionen wichtiger als die Luftzufuhr?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+        ]
+    expected:
+      answer: "ja"
+
+  - case: yes_no_emergency
+    input:
+      prompt: Kann man einen automatisierten externen Defibrillator (AED) auch bei Epilepsie verwenden?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+        ]
+    expected:
+      answer: "nein"
+
+   # Level 2: Multiple choice questions
+
+  - case: multiple_choice_emergency
+    input:
+      prompt: Welches „Stresshormon“ steigert Blutdruck und Herzfrequenz?? (A) Insulin (B) Adrenalin (C) Melatonin (D) Leptin
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden"
+        ]
+    expected:
+      answer: "b"
+
+  - case: multiple_choice_emergency
+    input:
+      prompt: Welcher Wirkstoff wird bei einem aktuten Asthmaanfall indiziert? (A) Verapamil (B) Fenoterol (C) Haloperidol (D) 4-Dimethylaminophenol
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden"
+        ]
+    expected:
+      answer: "b"
+
+  - case: multiple_choice_emergency
+    input:
+      prompt: Was bezeichnet der systolische Blutdruckwert? (A) Den unteren Wert, also den Druck in der Entspannungsphase des Herzens  (B) Den über eine Minute gemittelten Druck (C) Den höchsten Druck direkt nach Ventrikelkontraktion (D) Das Gleiche, wie der diastolische Wert
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden"
+        ]
+    expected:
+      answer: "c"
+
+  - case: multiple_choice_emergency
+    input:
+      prompt: Bei welchem Blutzuckerwert besteht die Gefahr eines diabetischen Komas? (A) < 20 mg/dl (B) < 50 mg/dl (C) < 90 mg/dl (D) > 110 mg/dl (E) > 300 mg/dl
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden"
+        ]
+    expected:
+      answer: "e"
+
+  - case: multiple_choice_emergency
+    input:
+      prompt: Bei welcher Diagnose ist die Hochlagerung der Beine kontraindiziert? (A) Hypovolämischer Schock (B) Anaphylaktischer Schock (C) Hypoglykämischer Schock (D) Kardiogener Schock (E) Septisch-Toxischer Schock
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden"
+        ]
+    expected:
+      answer: "d"
+
+
+   # Level 3: Word questions
+
+  - case: one_word_emergency
+    input:
+      prompt: Was ist der erste Schritt bei der Erste-Hilfe-Leistung nach dem ABCDE Schema?
+      system_messages:
+        [
+          "Beantworten Sie die folgende Frage mit nur einem Wort"
+        ]
+    expected:
+      answer: "Atemwege"
+
+  - case: one_word_emergency
+    input:
+      prompt: Welche Art von Blut führt die Lungenvene?
+      system_messages:
+        [
+          "Beantworten Sie die folgende Frage mit nur einem Wort"
+        ]
+    expected:
+      answer: "Sauerstoffreiches"
+
+  - case: one_word_emergency
+    input:
+      prompt: Welche Blutgruppe gibt bei unbekannten Notfällen?
+      system_messages:
+        [
+          "Beantworten Sie die folgende Frage mit nur einem Wort. Bei der Antwort Null, verwenden Sie bitte die Zahl 0."
+        ]
+    expected:
+      answer: "0"
+
+  - case: short_words_emergency
+    input:
+      prompt: Was erfordert der Einsatz eines Guedeltubus?
+      system_messages:
+        [
+          "Beantworten Sie die folgende Frage so kurz wie möglich"
+        ]
+    expected:
+      answer: "Tiefe Bewusstlosigkeit"
+
+  - case: short_words_emergency
+    input:
+      prompt: Wofür stehen die Buchstaben der RICE-Methode?
+      system_messages:
+        [
+          "Beantworten Sie die folgende Frage so kurz wie möglich und verwenden sie die original Begriffe auf Englisch."
+        ]
+    expected:
+      answer: "Rest, Ice, Compression, Elevation"
 
 
 
