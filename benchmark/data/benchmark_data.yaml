@@ -532,50 +532,51 @@ correctness:
 ###########################################################################################################
 # Test case: Using LLM for patient interview in progress -> Differenzialdiagnose
 ###########################################################################################################
-- case: patient_single_answer_yes
-  input:
-    prompt: "Haben Sie in letzter Zeit Veränderungen in Ihrem Gesundheitszustand bemerkt?"
-    system_messages: [
-      "Sie erhalten eine Frage, die Sie nur mit ‚Ja‘ oder ‚Nein‘ beantworten sollten"
-        ]
-  expected:
-    answer: "ja"
-- case: patient_multiple_choice
-  input:
-    prompt: "Welche Beschwerden haben Sie derzeit? (a) Kopfschmerzen, (b) Bauchschmerzen, (c) Rückenschmerzen, (d) Keine Beschwerden"
-    system_messages:  [
-      "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie sie kurz und bündig, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben angeben. Denken Sie daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
-        ]
-  expected:
-    answer: "d"
-- case: patient_free_text
-  input:
-    prompt: "Können Sie etwas über Ihre bisherige Krankengeschichte erzählen?"
-    system_messages: [
-       "Bitte geben Sie Ihre Antwort frei ein."
-    ]
+  - case: patient_single_answer_yes
+    input:
+      prompt: "Haben Sie in letzter Zeit Veränderungen in Ihrem Gesundheitszustand bemerkt?"
+      system_messages: [
+        "Sie erhalten eine Frage, die Sie nur mit ‚Ja‘ oder ‚Nein‘ beantworten sollten"
+          ]
     expected:
-      behaviour: "answer"
+      answer: "ja"
+  - case: patient_multiple_choice
+    input:
+      prompt: "Welche Beschwerden haben Sie derzeit? (a) Kopfschmerzen, (b) Bauchschmerzen, (c) Rückenschmerzen, (d) Keine Beschwerden"
+      system_messages:  [
+        "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie sie kurz und bündig, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben angeben. Denken Sie daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
+          ]
+    expected:
+      answer: "d"
+  - case: patient_free_text
+    input:
+      prompt: "Können Sie etwas über Ihre bisherige Krankengeschichte erzählen?"
+      system_messages: [
+         "Bitte geben Sie Ihre Antwort frei ein."
+      ]
+      expected:
+        behaviour: "answer"
 ###########################################################################################################
 # Test case: Medication
 ###########################################################################################################
-- case: medication_single_choice_no
-  input:
-    prompt: "Kann Ibuprofen sicher zusammen mit Antihypertensiva eingenommen werden?"
-    system_messages: [
-      "Sie erhalten eine Frage, die Sie nur mit ‚Ja‘ oder ‚Nein‘ beantworten sollten"
-        ]
-    expected:
-      answer: "nein"
+  - case: medication_single_choice_no
+    input:
+      prompt: "Kann Ibuprofen sicher zusammen mit Antihypertensiva eingenommen werden?"
+      system_messages: [
+        "Sie erhalten eine Frage, die Sie nur mit ‚Ja‘ oder ‚Nein‘ beantworten sollten"
+          ]
+      expected:
+        answer: "nein"
 
-- case: medication_single_choice_yes
-  input:
-    prompt: "Besteht eine potenzielle Wechselwirkung zwischen Antibiotika und oralen Kontrazeptiva?"
-    system_messages: [
-      "Sie erhalten eine Frage, die Sie nur mit ‚Ja‘ oder ‚Nein‘ beantworten sollten"
-    ]
-    expected:
-      answer: "ja"
+  - case: medication_single_choice_yes
+    input:
+      prompt: "Besteht eine potenzielle Wechselwirkung zwischen Antibiotika und oralen Kontrazeptiva?"
+      system_messages: [
+        "Sie erhalten eine Frage, die Sie nur mit ‚Ja‘ oder ‚Nein‘ beantworten sollten"
+      ]
+      expected:
+        answer: "ja"
+
   - case: yes_no_eeg_data_en
     input:
       prompt: Are so-called delta waves observed in EEG signals, especially during deep sleep?
@@ -583,26 +584,26 @@ correctness:
         [
           "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
         ]
-    expected:
+      expected:
       answer: "ja"
 
-- case: _medication_multiple_choice
-  input:
-    prompt: "Welche Medikamentenklasse hat das höchste Risiko für Wechselwirkungen mit Statinen? (a) Antikoagulanzien, (b) Antazida, (c) Antimykotika, (d) Antidepressiva"
-    system_messages: [
-      "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie sie kurz und bündig, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben angeben. Denken Sie daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
-    ]
-    expected:
-      answer: "c"
+  - case: _medication_multiple_choice
+    input:
+      prompt: "Welche Medikamentenklasse hat das höchste Risiko für Wechselwirkungen mit Statinen? (a) Antikoagulanzien, (b) Antazida, (c) Antimykotika, (d) Antidepressiva"
+      system_messages: [
+        "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie sie kurz und bündig, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben angeben. Denken Sie daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
+      ]
+      expected:
+        answer: "c"
 
-- case: multiple_choice_frage
-  input:
-    prompt: "Welche Medikamentenpaarung sollte bei Patienten vermieden werden, die MAO-Hemmer einnehmen?  (a) Serotonin-Wiederaufnahmehemmer, (b) ACE-Hemmer, (c) Beta-Blocker, (d) Kalziumkanalblocker"
-    system_messages: [
-      "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie sie kurz und bündig, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben angeben. Denken Sie daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
-    ]
-    expected:
-      answer: "a"
+  - case: multiple_choice_frage
+    input:
+      prompt: "Welche Medikamentenpaarung sollte bei Patienten vermieden werden, die MAO-Hemmer einnehmen?  (a) Serotonin-Wiederaufnahmehemmer, (b) ACE-Hemmer, (c) Beta-Blocker, (d) Kalziumkanalblocker"
+      system_messages: [
+        "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie sie kurz und bündig, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben angeben. Denken Sie daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
+      ]
+      expected:
+        answer: "a"
 
 
 
@@ -769,21 +770,21 @@ pdsm_emergency:
     expected:
       answer: "Rest, Ice, Compression, Elevation"
 
-- case: medication_free_text
-  input:
-    prompt: "Können Sie Beispiele für Medikamente nennen, die nicht mit NSAR (nichtsteroidalen Antirheumatika) wie Ibuprofen oder Naproxen eingenommen werden sollten, um das Risiko von Magengeschwüren zu minimieren?"
-    system_messages:
-      [
-        Beantworte die Frage so präzise und kurz wie möglich
-      ]
-    expected:
-      words_in_response:
-        -
-          - "orale Steroide"
-          - "selektive Serotonin-Wiederaufnahmehemmer"
-        -
-          - "SSRI"
-          - "Antikoagulanzien"
+  - case: medication_free_text
+    input:
+      prompt: "Können Sie Beispiele für Medikamente nennen, die nicht mit NSAR (nichtsteroidalen Antirheumatika) wie Ibuprofen oder Naproxen eingenommen werden sollten, um das Risiko von Magengeschwüren zu minimieren?"
+      system_messages:
+        [
+          Beantworte die Frage so präzise und kurz wie möglich
+        ]
+      expected:
+        words_in_response:
+          -
+            - "orale Steroide"
+            - "selektive Serotonin-Wiederaufnahmehemmer"
+          -
+            - "SSRI"
+            - "Antikoagulanzien"
 
 
 
