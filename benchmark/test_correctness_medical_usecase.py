@@ -39,8 +39,9 @@ def test_correctness_of_answers(
             response.lower().replace(".", "").replace("?", "").replace("!", "")
         ).strip()
 
+        print(yaml_data["case"])
         print(response)
-        print(get_result_file_path(task))
+        # print(get_result_file_path(task))
 
         # calculate score of correct answers
         score = []
