@@ -529,6 +529,7 @@ correctness:
         ]
     expected:
       answer: "ja"
+
   - case: yes_no_eeg_data_en
     input:
       prompt: Are so-called delta waves observed in EEG signals, especially during deep sleep?
@@ -536,8 +537,9 @@ correctness:
         [
           "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
         ]
-      expected:
-      answer: "ja"
+    expected:
+      answer: "yes"
+
 ###########################################################################################################
 # Test case: Using LLM for patient interview in progress -> Differenzialdiagnose
 ###########################################################################################################
@@ -557,26 +559,29 @@ correctness:
           ]
     expected:
       answer: "d"
+
   - case: patient_free_text
     input:
       prompt: "Können Sie etwas über Ihre bisherige Krankengeschichte erzählen?"
       system_messages: [
          "Bitte geben Sie Ihre Antwort frei ein."
       ]
-      expected:
-        behaviour: "answer"
+    expected:
+      behaviour: "answer"
+
 ###########################################################################################################
 # Test case: Medication
 ###########################################################################################################
   # Level 1: Yes or no questions
+
   - case: medication_single_choice_no
     input:
       prompt: "Kann Ibuprofen sicher zusammen mit Antihypertensiva eingenommen werden?"
       system_messages: [
         "Sie erhalten eine Frage, die Sie nur mit ‚Ja‘ oder ‚Nein‘ beantworten sollten"
           ]
-      expected:
-        answer: "nein"
+    expected:
+      answer: "nein"
 
   - case: medication_single_choice_yes
     input:
@@ -584,6 +589,8 @@ correctness:
       system_messages: [
         "Sie erhalten eine Frage, die Sie nur mit ‚Ja‘ oder ‚Nein‘ beantworten sollten"
       ]
+    expected:
+      answer: "ja"
       expected:
         answer: "ja"
   - case: ras_medication_single_choice_no
@@ -594,6 +601,7 @@ correctness:
       ]
       expected:
         answer: "nein"
+
 
   - case: no_pde_medication_single_choice_no
     input:
@@ -612,8 +620,8 @@ correctness:
       system_messages: [
         "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie sie kurz und bündig, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben angeben. Denken Sie daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
       ]
-      expected:
-        answer: "c"
+    expected:
+      answer: "c"
 
   - case: mao_multiple_choice_frage
     input:
@@ -621,8 +629,8 @@ correctness:
       system_messages: [
         "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie sie kurz und bündig, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben angeben. Denken Sie daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
       ]
-      expected:
-        answer: "a"
+    expected:
+      answer: "a"
 
   - case: ass_ multiple_choice_frage
     input:
@@ -689,7 +697,6 @@ correctness:
   # Language: German
 ###########################################################################################################
 
-pdsm_emergency:
 
   # Level 1: Yes or no questions
   - case: yes_no_emergency
@@ -846,6 +853,187 @@ pdsm_emergency:
         ]
     expected:
       answer: "Rest, Ice, Compression, Elevation"
+
+  - case: medication_regex
+    input:
+      prompt: "Können Sie Beispiele für Medikamente nennen, die nicht mit NSAR (nichtsteroidalen Antirheumatika) wie Ibuprofen oder Naproxen eingenommen werden sollten, um das Risiko von Magengeschwüren zu minimieren?"
+      system_messages:
+        [
+          "Beantworte die Frage so präzise und kurz wie möglich"
+        ]
+    expected:
+      words_in_response:
+        -
+          - "orale Steroide"
+          - "selektive Serotonin-Wiederaufnahmehemmer"
+        -
+          - "SSRI"
+          - "Antikoagulanzien"
+
+###########################################################################################################
+  # Test case: Questions about mental disorders for psychotherapists, psychology students or psychiatrists in training
+  # Language: German
+###########################################################################################################
+
+  # Level 1: Yes or no questions
+  - case: yes_no_mental_diseases_autism_de_1
+    input:
+      prompt: Ist das Asperger-Syndrom eine Form der Autismus-Spektrum-Störungen?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+        ]
+    expected:
+      answer: "ja"
+
+  - case: yes_no_mental_diseases_anorexia_de_1
+    input:
+      prompt: Die Gestalttherapie wird häufig bei der Therapie von Anorexie angewendet und konzentriert sich auf das Identifizierung und Verändern dysfunktionaler Gedanken- und Verhaltensmuster.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. "
+        ]
+    expected:
+      answer: "nein"
+
+  - case: yes_no_mental_diseases_anxiety_de_1
+    input:
+      prompt: In der Psychotherapie der generalisierten Angststörung ist das Erlernen von Vermeidungsstrategien, um die Sorgen loszuwerden, eine gängige Technik.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. "
+        ]
+    expected:
+      answer: "nein"
+
+  - case: yes_no_mental_diseases_anxiety_de_2
+    input:
+      prompt: Menschen mit generalisierter Angststörung halten ihre Sorgen meist für sinnlos und wollen sie am liebsten vollständig loswerden.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. "
+        ]
+    expected:
+      answer: "ja"
+
+  - case: yes_no_mental_diseases_mania_de_2
+    input:
+      prompt: Wird eine Manie mit Medikamenten behandelt, steigt die Gefahr, dass psychotische Symptome auftreten.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. "
+        ]
+    expected:
+      answer: "nein"
+
+  # Level 2: Multiple choice questions
+
+  - case: multiple_choice_autism_de_1
+    input:
+      prompt: Welche der folgenden sind übliche Therapieansätze bei Autismus? A Hypnotherapie, B Tanztherapie, C Psychoanalyse, D Kognitive Verhaltenstherapie, E Applied Behavior Analysis, F Entwicklungsbasierte Interventionen, G tiefenpsychologisch fundierte Psychotherapie, H Homöopathie, I Akupunktur, J Aromatherapie
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Wähle aus den Antwortmöglichkeiten alle passenden Antworten aus und gebe die zugehörigen Buchstaben zurück. Gebe dabei ausschließlich die Buchstaben zurück und nicht die kompletten Antworten. Verknüpfe diese dann mit ','."
+        ]
+    expected:
+      answer: "d,e,f"
+
+
+  - case: multiple_choice_anorexia_de_1
+    input:
+      prompt: Welche Art von Medikamenten wird bei Anorexie-Patienten häufig verwendet, um Begleiterkrankungen wie Depressionen oder Angststörungen zu behandeln? A Antihistaminika, B Antibiotika, C Antidepressiva, D Betablocker
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gebe dabei nur den Buchstaben zurück und nicht die ganze Antwort."
+        ]
+    expected:
+      answer: "c"
+
+  - case: multiple_choice_anxiety_de_1
+    input:
+      prompt: Was trifft auf den GAD-7 zu? Der GAD-7 ist … A … ein schnell durchführbarer Test für generalisierte Angststörung, B … sehr zeitaufwändig, aber aussagekräftig, C … nicht wissenschaftlich untermauert, D … für die Diagnose einer generalisierten Angststörung völlig ausreichend
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gebe dabei nur den Buchstaben zurück und nicht die ganze Antwort."
+        ]
+    expected:
+      answer: "a"
+
+  - case: multiple_choice_mania_de_1
+    input:
+      prompt: Welches ist kein Frühwarnzeichen der Manie? A Unruhe, B euphorische Stimmung, C erhöhte Reizbarkeit, D vermehrter Schlaf
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gebe dabei nur den Buchstaben zurück und nicht die ganze Antwort."
+        ]
+    expected:
+      answer: "d"
+
+  # Level 3: Word questions
+  - case: regex_autism_de_1
+    input:
+      prompt: Nenne alle üblichen Ziele der Autismustherapie.
+      system_messages:
+        [
+          "Antworte so kurz und präzise wie möglich."
+        ]
+    expected:
+      words_in_response:
+        - "kommunikation"
+        - "interaktion"
+        - "verhalten"
+        - "selbstständigkeit"
+
+  - case: regex_anorexia_de_1
+    input:
+      prompt: Wodurch zeichnet sich restriktive Anorexie aus?
+      system_messages:
+        [
+          "Antworte so kurz und präzise wie möglich."
+        ]
+    expected:
+      words_in_response:
+        -
+          - "weniger"
+          - "nahrung"
+        -
+          - "mehr"
+          - "sport"
+
+  - case: regex_anxiety_de_1
+    input:
+      prompt: Kopfschmerzen und Zittern sind bei der generalisierten Angststörung häufig Symptome einer dauerhaft erhöhten ...
+      system_messages:
+        [
+          "Vervollständige den Satz mit 2 Wörtern. Gebe dabei nur beiden gesuchten Wörter aus."
+        ]
+    expected:
+      words_in_response:
+        - "körperliche anstrengung"
+
+  - case: regex_mania_de_1
+    input:
+      prompt: Welche Therapiephase findet direkt nach der akuten Manie-Phase statt?
+      system_messages:
+        [
+          "Antworte so kurz und präzise wie möglich."
+        ]
+    expected:
+      words_in_response:
+        - "erhaltungstherapie"
+
+  - case: regex_mania_de_2
+    input:
+      prompt: Bei den Ursachen der Manie geht man heute von einem Zusammenspiel zwischen ... und ... Faktoren sowie Störungen der ... aus.
+      system_messages:
+        [
+          "Vervollständige den Satz so kurz wie möglich. Gebe dabei nur die Wörter aus, die die Lücken füllen sollen."
+        ]
+    expected:
+      words_in_response:
+        - "genetischen"
+        - "psychosozialen"
+        - "Neurotransmitter"
 
 
 
