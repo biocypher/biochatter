@@ -45,6 +45,8 @@ gpt-4-0125-preview,implicit_relevance:no,0.0/1,5,b24fb31fd761b0f3e308bebd70ce427
 gpt-4-0125-preview,implicit_relevance:yes,1.0/1,5,f9d749647929fcb55321c614a3bf8d20,2024-02-12 08:39:16,0.4.10
 gpt-4-0613,implicit_relevance:no,1.0/1,5,b24fb31fd761b0f3e308bebd70ce4277,2024-02-10 12:03:37,0.4.10
 gpt-4-0613,implicit_relevance:yes,1.0/1,5,f9d749647929fcb55321c614a3bf8d20,2024-02-10 12:03:51,0.4.10
+gpt-4o-2024-05-13,implicit_relevance_no,0.4/1,5,b24fb31fd761b0f3e308bebd70ce4277,2024-05-15 11:48:08,0.4.10
+gpt-4o-2024-05-13,implicit_relevance_yes,1.0/1,5,f9d749647929fcb55321c614a3bf8d20,2024-05-15 11:48:22,0.4.10
 llama-2-chat:13:ggufv2:Q2_K,implicit_relevance:no,0.0/1,5,b24fb31fd761b0f3e308bebd70ce4277,2024-02-10 12:37:59,0.4.10
 llama-2-chat:13:ggufv2:Q2_K,implicit_relevance:yes,1.0/1,5,f9d749647929fcb55321c614a3bf8d20,2024-02-10 12:39:36,0.4.10
 llama-2-chat:13:ggufv2:Q3_K_M,implicit_relevance:no,0.0/1,5,b24fb31fd761b0f3e308bebd70ce4277,2024-02-10 13:10:40,0.4.10
