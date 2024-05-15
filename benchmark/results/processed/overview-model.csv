@@ -1,16 +1,17 @@
 Model name,Size,Median Accuracy,SD
 gpt-3.5-turbo-0125,175,0.9,0.23
 gpt-4-0613,Unknown,0.88,0.19
-openhermes-2.5,7,0.78,0.35
 gpt-3.5-turbo-0613,175,0.76,0.21
-llama-3-instruct,8,0.7,0.38
+openhermes-2.5,7,0.74,0.33
 gpt-4-0125-preview,Unknown,0.69,0.31
+llama-3-instruct,8,0.67,0.38
+gpt-4o-2024-05-13,Unknown,0.65,0.37
 chatglm3,6,0.47,0.27
-mistral-instruct-v0.2,7,0.46,0.36
-llama-2-chat,70,0.45,0.35
+mistral-instruct-v0.2,7,0.45,0.34
+llama-2-chat,70,0.42,0.34
 code-llama-instruct,7,0.4,0.35
-llama-2-chat,13,0.4,0.34
 code-llama-instruct,13,0.38,0.33
 code-llama-instruct,34,0.38,0.35
+llama-2-chat,13,0.35,0.34
 llama-2-chat,7,0.34,0.32
-mixtral-instruct-v0.1,"46,7",0.34,0.3
+mixtral-instruct-v0.1,"46,7",0.33,0.3

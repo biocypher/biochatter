@@ -74,9 +74,9 @@ def preprocess_results_for_frontend(
         axis=1,
     )
 
-    aggregated_scores[
-        "Full model name"
-    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
     aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
     aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
     aggregated_scores["Iterations"] = aggregated_scores["iterations"]
@@ -129,9 +129,9 @@ def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
         axis=1,
     )
 
-    aggregated_scores[
-        "Full model name"
-    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
         "subtask"
     )
@@ -186,9 +186,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     )
 
     overview_per_quantisation = overview
-    overview_per_quantisation[
-        "Full model name"
-    ] = overview_per_quantisation.index
+    overview_per_quantisation["Full model name"] = (
+        overview_per_quantisation.index
+    )
     overview_per_quantisation[
         ["Model name", "Size", "Version", "Quantisation"]
     ] = overview_per_quantisation["Full model name"].str.split(":", expand=True)
@@ -220,9 +220,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         ]
     ]
     # round mean and sd to 2 decimal places
-    overview_per_quantisation.loc[
-        :, "Median Accuracy"
-    ] = overview_per_quantisation["Median Accuracy"].round(2)
+    overview_per_quantisation.loc[:, "Median Accuracy"] = (
+        overview_per_quantisation["Median Accuracy"].round(2)
+    )
     overview_per_quantisation.loc[:, "SD"] = overview_per_quantisation[
         "SD"
     ].round(2)
@@ -310,6 +310,7 @@ def plot_accuracy_per_task(overview):
             "gpt-3.5-turbo-0125": "gpt-3.5-turbo",
             "gpt-4-0613": "gpt-4",
             "gpt-4-0125-preview": "gpt-4",
+            "gpt-4o-2024-05-13": "gpt-4",
         },
         regex=True,
     )
@@ -464,6 +465,7 @@ def plot_scatter_per_quantisation(overview):
         "gpt-3.5-turbo-0125": palette[1],
         "gpt-4-0613": palette[2],
         "gpt-4-0125-preview": palette[3],
+        "gpt-4o-2024-05-13": palette[4],
         "openhermes-2.5": palette[5],
         "llama-2-chat": palette[6],
         "llama-3-instruct": palette[7],
@@ -492,6 +494,7 @@ def plot_scatter_per_quantisation(overview):
         "openhermes-2.5",
         "gpt-4-0125-preview",
         "gpt-4-0613",
+        "gpt-4o-2024-05-13",
         "llama-2-chat",
         "llama-3-instruct",
         "code-llama-instruct",
@@ -653,9 +656,9 @@ def plot_extraction_tasks():
         axis=1,
     )
 
-    aggregated_scores[
-        "Full model name"
-    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
         "subtask"
     )

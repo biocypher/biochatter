@@ -21,6 +21,7 @@ code-llama-instruct:34:ggufv2:Q3_K_M,3.0,12.0,0.25,5
 mixtral-instruct-v0.1:46_7:ggufv2:Q5_K_M,3.0,12.0,0.25,5
 llama-2-chat:70:ggufv2:Q4_K_M,3.0,12.0,0.25,5
 mistral-instruct-v0.2:7:ggufv2:Q6_K,0.0,12.0,0.0,5
+llama-3-instruct:8:ggufv2:Q6_K,0.0,12.0,0.0,5
 llama-3-instruct:8:ggufv2:Q8_0,0.0,12.0,0.0,5
 mistral-instruct-v0.2:7:ggufv2:Q2_K,0.0,12.0,0.0,5
 mistral-instruct-v0.2:7:ggufv2:Q3_K_M,0.0,12.0,0.0,5
@@ -36,10 +37,10 @@ code-llama-instruct:13:ggufv2:Q6_K,0.0,12.0,0.0,5
 code-llama-instruct:13:ggufv2:Q5_K_M,0.0,12.0,0.0,5
 code-llama-instruct:13:ggufv2:Q4_K_M,0.0,12.0,0.0,5
 code-llama-instruct:13:ggufv2:Q3_K_M,0.0,12.0,0.0,5
-llama-3-instruct:8:ggufv2:Q6_K,0.0,12.0,0.0,5
+llama-3-instruct:8:ggufv2:Q5_K_M,0.0,12.0,0.0,5
 llama-2-chat:7:ggufv2:Q5_K_M,0.0,12.0,0.0,5
 llama-2-chat:7:ggufv2:Q8_0,0.0,12.0,0.0,5
-llama-2-chat:13:ggufv2:Q3_K_M,0.0,12.0,0.0,5
+llama-2-chat:7:ggufv2:Q6_K,0.0,12.0,0.0,5
 code-llama-instruct:7:ggufv2:Q4_K_M,0.0,12.0,0.0,5
 code-llama-instruct:7:ggufv2:Q5_K_M,0.0,12.0,0.0,5
 code-llama-instruct:7:ggufv2:Q6_K,0.0,12.0,0.0,5
@@ -47,9 +48,10 @@ code-llama-instruct:7:ggufv2:Q8_0,0.0,12.0,0.0,5
 code-llama-instruct:34:ggufv2:Q6_K,0.0,12.0,0.0,5
 code-llama-instruct:34:ggufv2:Q5_K_M,0.0,12.0,0.0,5
 code-llama-instruct:34:ggufv2:Q4_K_M,0.0,12.0,0.0,5
+gpt-4o-2024-05-13,0.0,12.0,0.0,5
 llama-2-chat:13:ggufv2:Q2_K,0.0,12.0,0.0,5
+llama-2-chat:13:ggufv2:Q3_K_M,0.0,12.0,0.0,5
 llama-2-chat:13:ggufv2:Q4_K_M,0.0,12.0,0.0,5
-llama-2-chat:7:ggufv2:Q6_K,0.0,12.0,0.0,5
 llama-2-chat:13:ggufv2:Q5_K_M,0.0,12.0,0.0,5
 llama-2-chat:13:ggufv2:Q6_K,0.0,12.0,0.0,5
 llama-2-chat:13:ggufv2:Q8_0,0.0,12.0,0.0,5
