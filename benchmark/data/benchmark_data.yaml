@@ -543,31 +543,7 @@ correctness:
 ###########################################################################################################
 # Test case: Using LLM for patient interview in progress -> Differenzialdiagnose
 ###########################################################################################################
-  - case: patient_single_answer_yes
-    input:
-      prompt: "Haben Sie in letzter Zeit Veränderungen in Ihrem Gesundheitszustand bemerkt?"
-      system_messages: [
-        "Sie erhalten eine Frage, die Sie nur mit ‚Ja‘ oder ‚Nein‘ beantworten sollten"
-          ]
-    expected:
-      answer: "ja"
-  - case: patient_multiple_choice
-    input:
-      prompt: "Welche Beschwerden haben Sie derzeit? (a) Kopfschmerzen, (b) Bauchschmerzen, (c) Rückenschmerzen, (d) Keine Beschwerden"
-      system_messages:  [
-        "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie sie kurz und bündig, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben angeben. Denken Sie daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
-          ]
-    expected:
-      answer: "d"
 
-  - case: patient_free_text
-    input:
-      prompt: "Können Sie etwas über Ihre bisherige Krankengeschichte erzählen?"
-      system_messages: [
-         "Bitte geben Sie Ihre Antwort frei ein."
-      ]
-    expected:
-      behaviour: "answer"
 
 ###########################################################################################################
 # Test case: Medication
@@ -578,7 +554,7 @@ correctness:
     input:
       prompt: "Kann Ibuprofen sicher zusammen mit Antihypertensiva eingenommen werden?"
       system_messages: [
-        "Sie erhalten eine Frage, die Sie nur mit ‚Ja‘ oder ‚Nein‘ beantworten sollten"
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
           ]
     expected:
       answer: "nein"
@@ -587,34 +563,33 @@ correctness:
     input:
       prompt: "Besteht eine potenzielle Wechselwirkung zwischen Antibiotika und oralen Kontrazeptiva?"
       system_messages: [
-        "Sie erhalten eine Frage, die Sie nur mit ‚Ja‘ oder ‚Nein‘ beantworten sollten"
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
       ]
     expected:
       answer: "ja"
-      expected:
-        answer: "ja"
-  - case: ras_medication_single_choice_no
+
+  - case: medication_single_choice_no
     input:
       prompt: "Hat es Vorteile verschiedene RAS-Hemmer zu kombinieren?"
       system_messages: [
-        "Sie erhalten eine Frage, die Sie nur mit ‚Ja‘ oder ‚Nein‘ beantworten sollten"
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
       ]
-      expected:
-        answer: "nein"
+    expected:
+      answer: "nein"
 
 
-  - case: no_pde_medication_single_choice_no
+  - case: medication_single_choice_no
     input:
       prompt: "Sollten NO-Donatoren und PDE5-Hemmern gleichzeitig verabreicht werden?"
       system_messages: [
-        "Sie erhalten eine Frage, die Sie nur mit ‚Ja‘ oder ‚Nein‘ beantworten sollten"
+        "Sie erhalten eine Frage, die Sie nur mit ‚ja‘ oder ‚nein‘ beantworten sollten"
       ]
-      expected:
-        answer: "nein"
+    expected:
+      answer: "Nein"
 
   # Level 2: Multiple Choice
 
-  - case: statinen_medication_multiple_choice
+  - case: medication_multiple_choice
     input:
       prompt: "Welche Medikamentenklasse hat das höchste Risiko für Wechselwirkungen mit Statinen? (a) Antikoagulanzien, (b) Antazida, (c) Antimykotika, (d) Antidepressiva"
       system_messages: [
@@ -623,7 +598,7 @@ correctness:
     expected:
       answer: "c"
 
-  - case: mao_multiple_choice_frage
+  - case: medication_multiple_choice
     input:
       prompt: "Welche Medikamentenpaarung sollte bei Patienten vermieden werden, die MAO-Hemmer einnehmen?  (a) Serotonin-Wiederaufnahmehemmer, (b) ACE-Hemmer, (c) Beta-Blocker, (d) Kalziumkanalblocker"
       system_messages: [
@@ -632,17 +607,17 @@ correctness:
     expected:
       answer: "a"
 
-  - case: ass_ multiple_choice_frage
+  - case: medication_multiple_choice
     input:
-      prompt: "Was kann auftreten, wenn Acetylsalicylsäure und Cumarine zusammen eingenommen wird?  (a) höherer Blutdruck, (b) Koomplexbildung, (c) Verstärkte Blutgerinnungshemmung, (d) Herzrhythmusstörung"
+      prompt: "Was kann auftreten, wenn Acetylsalicylsäure und Cumarine zusammen eingenommen wird?  a) höherer Blutdruck, b) Koomplexbildung, c) Verstärkte Blutgerinnungshemmung, d) Herzrhythmusstörung"
       system_messages: [
         "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie sie kurz und bündig, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben angeben. Denken Sie daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
       ]
-      expected:
-        answer: "c"
+    expected:
+      answer: "c"
 
   #Level 3: Free text
-  - case: one_word_medication
+  - case: medication_free_text
     input:
       prompt: "Mit welcher Frucht sollten Statine nicht eingenommen werden?"
       system_messages:
@@ -653,45 +628,45 @@ correctness:
       answer: "Grapefruit"
 
 
-  - case: medication_free_text_nsar
+  - case: regex_medication_free_text
     input:
       prompt: "Können Sie Beispiele für Medikamente nennen, die nicht mit NSAR (nichtsteroidalen Antirheumatika) wie Ibuprofen oder Naproxen eingenommen werden sollten, um das Risiko von Magengeschwüren zu minimieren?"
       system_messages:
         [
-          Beantworte die Frage so präzise und kurz wie möglich
+          "Beantworte die Frage so präzise und kurz wie möglich"
         ]
-      expected:
-        words_in_response:
-          - - "orale Steroide"
-            - "selektive Serotonin-Wiederaufnahmehemmer"
-          - - "SSRI"
-            - "Antikoagulanzien"
-            -
-  - case: medication_free_text_forms
+    expected:
+      words_in_response:
+        - - "orale Steroide"
+          - "selektive Serotonin-Wiederaufnahmehemmer"
+        - - "SSRI"
+          - "Antikoagulanzien"
+
+  - case: medication_free_text
     input:
       prompt: "Welche zwei Formen der Arzneimittelwechselwirkung unterscheidet man grundsätzlich?"
       system_messages:
         [
-          Beantworte die Frage so präzise und kurz wie möglich
+          "Beantworte die Frage so präzise und kurz wie möglich, mit wenigen Worten"
         ]
-      expected:
-      answer: "Pharmakodynamische und pharmakokinetische Wechselwirkungen"
+    expected:
+      answer: "Pharmakodynamisch und pharmakokinetisch"
 
-  - case: medication_free_text_ibu
+  - case: regex_medication_free_text
     input:
       prompt: "Mit welchen Wirkstoffen sollte Ibuprofen nicht eingenommen werden?"
       system_messages:
         [
-          Beantworte die Frage so präzise und kurz wie möglich. Mehrere Antworten sind erlaubt
+          "Beantworte die Frage so präzise und kurz wie möglich. Mehrere Antworten sind erlaubt"
         ]
-      expected:
-        words_in_response:
-          - - "Kortison-Präparate"
-            - "Acetylsalicylsäure"
-            - "ASS"
-          - - "Clopidogrel"
-            - "NSAR"
-            - "NSAID"
+    expected:
+      words_in_response:
+        - - "Kortison-Präparate"
+          - "Acetylsalicylsäure"
+          - "ASS"
+        - - "Clopidogrel"
+          - "NSAR"
+          - "NSAID"
 ###########################################################################################################
   # Test case: Questions about “emergency medicine” for prospective emergency physicians
   # Language: German
