@@ -60,7 +60,21 @@ by BioChatter can be seen in use in the
 [ChatGSE](https://github.com/biocypher/ChatGSE) code base.
 [![Built with Material for MkDocs](https://img.shields.io/badge/Material_for_MkDocs-526CFE?style=for-the-badge&logo=MaterialForMkDocs&logoColor=white)](https://squidfunk.github.io/mkdocs-material/)
 
-# More information about LLMs
+## 🤝 Getting involved
+
+We are very happy about contributions from the community, large and small!
+If you would like to contribute to BioCypher development, please refer to
+our [contribution guidelines](CONTRIBUTING.md) and the [developer
+docs](DEVELOPER.md). :)
+
+If you want to ask informal questions, talk about dev things, or just chat,
+please join our community at https://biocypher.zulipchat.com!
+
+> **Imposter syndrome disclaimer:** We want your help. No, really. There may be a little voice inside your head that is telling you that you're not ready, that you aren't skilled enough to contribute. We assure you that the little voice in your head is wrong. Most importantly, there are many valuable ways to contribute besides writing code.
+>
+> This disclaimer was adapted from the [Pooch](https://github.com/fatiando/pooch) project.
+
+## More information about LLMs
 
 Check out [this repository](https://github.com/csbl-br/awesome-compbio-chatgpt)
 for more info on computational biology usage of large language models.
