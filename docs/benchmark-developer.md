@@ -250,7 +250,7 @@ workflow).
 
 We re-run the benchmark automatically if a test case has changed (reflected in
 a different md5 hash) or if there is a new `biochatter` version (potentially
-introducing changes in the behviour of the framework). If a test case has
+introducing changes in the behaviour of the framework). If a test case has
 changed, the old result is automatically removed from the result files. You can
 also force a rerun of all tests by using the `--run-all` flag:
 
