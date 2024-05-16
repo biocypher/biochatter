@@ -57,7 +57,7 @@ def test_api_agent_functions():
     assert os.path.isfile(BLAST_result_file_path)
     print(BLAST_result_file_path)
     final_answer = answer_extraction(question, BLAST_result_file_path, 150)
-    assert final_answer is str
+    assert isinstance(final_answer, str)
     print(final_answer)
     # return final_answer
 
