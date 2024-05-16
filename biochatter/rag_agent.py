@@ -19,13 +19,19 @@ class RagAgent:
         embedding_func: Optional[object] = None,
         documentids_workspace: Optional[List[str]] = None,
     ) -> None:
+        ######
+        ##TO DO 
+        ######
+        # mode: 'API' for the case where the agent is querying an API
+        # use_prompt: default TRUE for self.mode == API
+
         """
         Create a RAG agent that can return results from a database or vector
         store using a query engine.
 
         Args:
             mode (str): The mode of the agent. Either "kg" or "vectorstore".
-
+            
             model_name (str): The name of the model to use.
 
             connection_args (dict): A dictionary of arguments to connect to the
