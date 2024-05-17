@@ -410,13 +410,13 @@ files = [
 
 [[package]]
 name = "botocore"
-version = "1.34.106"
+version = "1.34.107"
 description = "Low-level, data-driven core of boto 3."
 optional = true
 python-versions = ">=3.8"
 files = [
-    {file = "botocore-1.34.106-py3-none-any.whl", hash = "sha256:4baf0e27c2dfc4f4d0dee7c217c716e0782f9b30e8e1fff983fce237d88f73ae"},
-    {file = "botocore-1.34.106.tar.gz", hash = "sha256:921fa5202f88c3e58fdcb4b3acffd56d65b24bca47092ee4b27aa988556c0be6"},
+    {file = "botocore-1.34.107-py3-none-any.whl", hash = "sha256:98bfab930391a21d24ed7a7bc86ec2ec076607318ab8de0c37d2587f73a88d89"},
+    {file = "botocore-1.34.107.tar.gz", hash = "sha256:4620286a814c3c8abc59145203650a6b2a4f538e887552fa1bc6896b6d11b28b"},
 ]
 
 [package.dependencies]
@@ -5717,13 +5717,13 @@ files = [
 
 [[package]]
 name = "xinference"
-version = "0.11.0"
+version = "0.11.1"
 description = "Model Serving Made Easy"
 optional = true
 python-versions = "*"
 files = [
-    {file = "xinference-0.11.0-py3-none-any.whl", hash = "sha256:6ae10c9739b6b4982b6b116a191f5a194bbf874d84c130e93dcea2cba6cebf1a"},
-    {file = "xinference-0.11.0.tar.gz", hash = "sha256:bb70fbacbddca10f4e626b0959c212e718d1cdf6f9621e1f6faaf7352f8e128d"},
+    {file = "xinference-0.11.1-py3-none-any.whl", hash = "sha256:682ecaea2b5232e1590fb2dfa712210480150df090452371521b06526e66cfa8"},
+    {file = "xinference-0.11.1.tar.gz", hash = "sha256:d815679b6edb0c6ab02201f686d6a747b06127133c27a9b784375ed310eac2a5"},
 ]
 
 [package.dependencies]
@@ -6074,4 +6074,4 @@ xinference = ["botocore", "xinference"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "172d3d93241aca891196d1ad7119f31717f8e7cc838cb75cee19859114029961"
+content-hash = "dfeb5fc9ea7dacc4b5072b1498dfa514b1b87cf58cb1f8cce6311fe879a46265"
