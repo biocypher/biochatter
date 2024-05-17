@@ -1,4 +1,3 @@
-// Does not currently work
 {
     "version": 1,
     "context_length": 8192,
@@ -7,9 +6,9 @@
         "en"
     ],
     "model_ability": [
-        "generate"
+        "chat"
     ],
-    "model_family": "llama-3",
+    "model_family": "llama-3-instruct",
     "model_specs": [
         {
             "model_format": "ggufv2",

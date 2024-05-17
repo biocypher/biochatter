@@ -177,6 +177,15 @@ XINFERENCE_MODELS = {
     #         "IQ1_M",
     #     ],
     # },
+    "openbiollm-llama3-8b": {
+        "model_size_in_billions": [
+            8,
+        ],
+        "model_format": "pytorch",
+        "quantization": [
+            "none",
+        ],
+    },
 }
 
 # create concrete benchmark list by concatenating all combinations of model
@@ -208,16 +217,29 @@ def client():
     return client
 
 
-@pytest.fixture(scope="session", autouse=False)
+@pytest.fixture(scope="session", autouse=True)
 def register_model(client):
     """
     Register custom (non-builtin) models with the Xinference server. Should only
     happen once per session.
     """
-    with open("benchmark/models/llama-3-instruct-70b.json") as fd:
+
+    registrations = client.list_model_registrations(model_type="LLM")
+    registered_models = [
+        registration["model_name"] for registration in registrations
+    ]
+
+    with open("benchmark/models/openbiollm-llama3-8b.json") as fd:
         model = fd.read()
 
-    client.register_model(model_type="LLM", model=model, persist=False)
+    if "openbiollm-llama3-8b" not in registered_models:
+        client.register_model(model_type="LLM", model=model, persist=False)
+
+    with open("benchmark/models/custom-llama-3-instruct-70b.json") as fd:
+        model = fd.read()
+
+    if "custom-llama-3-instruct-70b" not in registered_models:
+        client.register_model(model_type="LLM", model=model, persist=False)
 
 
 def pytest_collection_modifyitems(items):
