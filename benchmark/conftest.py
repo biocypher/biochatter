@@ -13,7 +13,7 @@ from biochatter.llm_connect import GptConversation, XinferenceConversation
 from .benchmark_utils import benchmark_already_executed
 
 # how often should each benchmark be run?
-N_ITERATIONS = 5
+N_ITERATIONS = 1
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
@@ -168,6 +168,15 @@ XINFERENCE_MODELS = {
             # "Q4_K_M",
         ],
     },
+    # "custom-llama-3-instruct": {
+    #     "model_size_in_billions": [
+    #         70,
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         "IQ1_M",
+    #     ],
+    # },
 }
 
 # create concrete benchmark list by concatenating all combinations of model
@@ -185,6 +194,30 @@ BENCHMARKED_MODELS.sort()
 
 # Xinference IP and port
 BENCHMARK_URL = "http://localhost:9997"
+
+
+@pytest.fixture(scope="session")
+def client():
+    try:
+        client = Client(base_url=BENCHMARK_URL)
+    except requests.exceptions.ConnectionError:
+        raise ConnectionError(
+            f"Could not connect to Xinference server at {BENCHMARK_URL}. "
+            "Please make sure that the server is running."
+        )
+    return client
+
+
+@pytest.fixture(scope="session", autouse=False)
+def register_model(client):
+    """
+    Register custom (non-builtin) models with the Xinference server. Should only
+    happen once per session.
+    """
+    with open("benchmark/models/llama-3-instruct-70b.json") as fd:
+        model = fd.read()
+
+    client.register_model(model_type="LLM", model=model, persist=False)
 
 
 def pytest_collection_modifyitems(items):
@@ -247,7 +280,7 @@ def prompt_engine(request, model_name):
 
 
 @pytest.fixture
-def conversation(request, model_name):
+def conversation(request, model_name, client):
     """
     Decides whether to run the test or skip due to the test having been run
     before. If not skipped, will create a conversation object for interfacing
@@ -280,15 +313,6 @@ def conversation(request, model_name):
         if not "_" in _model_size:
             _model_size = int(_model_size)
 
-        # get running models
-        try:
-            client = Client(base_url=BENCHMARK_URL)
-        except requests.exceptions.ConnectionError:
-            raise ConnectionError(
-                f"Could not connect to Xinference server at {BENCHMARK_URL}. "
-                "Please make sure that the server is running."
-            )
-
         # if exact model already running, return conversation
         running_models = client.list_models()
         if running_models:
@@ -313,7 +337,12 @@ def conversation(request, model_name):
             client.terminate_model(running_model)
 
         # and launch model to be tested
+        if _model_format == "pytorch":
+            _model_engine = "transformers"
+        elif _model_format in ["ggufv2", "ggmlv3"]:
+            _model_engine = "llama.cpp"
         client.launch_model(
+            model_engine=_model_engine,
             model_name=_model_name,
             model_size_in_billions=_model_size,
             model_format=_model_format,
