@@ -17,7 +17,7 @@
                 "IQ1_M"
             ],
             "model_id": "aaditya/OpenBioLLM-Llama3-8B",
-            "model_uri": "/Users/slobentanzer/.cache/huggingface/hub/models--aaditya--Llama3-OpenBioLLM-8B/"
+            "model_uri": "/Users/slobentanzer/.cache/huggingface/hub/models--aaditya--Llama3-OpenBioLLM-8B/snapshots/000c725dc3a680e35260b2c213163387581c974f"
         }
     ]
 }
