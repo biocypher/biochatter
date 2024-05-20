@@ -1,10 +1,9 @@
+from unittest.mock import Mock, patch
 import re
-from unittest.mock import patch, Mock
 
 import pytest
 
 from biochatter.query_interaction import BioCypherQueryHandler
-
 
 _kg = {
     "entities": {

@@ -29,7 +29,7 @@ podcaster.podcast_to_file("test/test.mp3", model="tts-1-hd", voice="alloy")
 ```
 
 If you do not want audio output, you can simply access the generated text though
-the function `podcaster.podcast_to_text()`. 
+the function `podcaster.podcast_to_text()`.
 
 This example uses the paid OpenAI text-to-speech API to generate the audio file.
 The default of the `podcast_to_file` function is to use the free Google

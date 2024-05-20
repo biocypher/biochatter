@@ -1,4 +1,4 @@
-site_name: BioChatter Documentation
+site_name: BioChatter
 
 theme:
   name: material
@@ -42,6 +42,9 @@ plugins:
   - mkdocstrings:
       default_handler: python
   - table-reader
+  - social
+
+site_url: https://biochatter.org/
 
 nav:
   - Home: index.md
@@ -56,6 +59,7 @@ nav:
   - Benchmark:
       - Overview: benchmark.md
       - All Results: benchmark-results.md
+      - Developer Guide: benchmark-developer.md
   - Vignettes:
       - Knowledge Graph RAG: vignette-kg.md
       - Retrieval-Augmented Generation (RAG): vignette-rag.md
@@ -93,6 +97,8 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - attr_list
   - md_in_html
+  - admonition
+  - pymdownx.details
 
 extra_javascript:
   - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js

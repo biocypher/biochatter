@@ -1,7 +1,9 @@
+from datetime import datetime
+
 import pytest
+import importlib_metadata
 
 import pandas as pd
-from datetime import datetime
 
 
 def benchmark_already_executed(
@@ -90,6 +92,7 @@ def return_or_create_result_file(
                 "iterations",
                 "md5_hash",
                 "datetime",
+                "biochatter_version",
             ]
         )
         results.to_csv(file_path, index=False)
@@ -116,8 +119,9 @@ def write_results_to_file(
     """
     results = pd.read_csv(file_path, header=0)
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    bc_version = importlib_metadata.version("biochatter")
     new_row = pd.DataFrame(
-        [[model_name, subtask, score, iterations, md5_hash, now]],
+        [[model_name, subtask, score, iterations, md5_hash, now, bc_version]],
         columns=results.columns,
     )
     results = pd.concat([results, new_row], ignore_index=True).sort_values(

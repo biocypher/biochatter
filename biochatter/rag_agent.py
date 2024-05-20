@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional
 
 
 class RagAgentModeEnum:
@@ -17,7 +17,7 @@ class RagAgent:
         schema_config_or_info_dict: Optional[dict] = None,
         conversation_factory: Optional[callable] = None,
         embedding_func: Optional[object] = None,
-        documentids_workspace: Optional[List[str]] = None,
+        documentids_workspace: Optional[list[str]] = None,
     ) -> None:
         """
         Create a RAG agent that can return results from a database or vector
@@ -34,6 +34,9 @@ class RagAgent:
 
             n_results: the number of results to return for method
                 generate_response
+
+            use_prompt (bool): Whether to use the prompt for the query. If
+                False, will not retrieve any results and return an empty list.
 
             schema_config_or_info_dict (dict): A dictionary of schema
                 information for the database. Required if mode is "kg".

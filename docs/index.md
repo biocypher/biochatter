@@ -1,3 +1,7 @@
+---
+title: BioChatter - Conversational AI for Biomedical Applications
+description: A framework for deploying, testing, and evaluating conversational AI models in the biomedical domain.
+---
 # Home
 
 Generative AI models have shown tremendous usefulness in increasing
@@ -33,9 +37,22 @@ check out our two web app implementations:
 
 </div>
 
-BioChatter is part of the [BioCypher](https://github.com/biocypher) ecosystem, 
-connecting natively to BioCypher knowledge graphs. The BioChatter paper is
-being written [here](https://github.com/biocypher/biochatter-paper).
+BioChatter is part of the [BioCypher](https://github.com/biocypher) ecosystem,
+connecting natively to BioCypher knowledge graphs. The BioChatter paper is being
+written [here](https://github.com/biocypher/biochatter-paper) and the current
+version can be read [here](https://biocypher.github.io/biochatter-paper).
+
+![BioChatter Overview](images/biochatter_overview.png)
+
+!!! note "Hot Topics"
+
+    BioChatter natively extends [BioCypher](https://biocypher.org) knowledge
+    graphs. Check there for more information.
+
+    We have also recently published a perspective on connecting knowledge and
+    machine learning to enable causal reasoning in biomedicine, with a
+    particular focus on the currently emerging "foundation models." You can read
+    it [here](https://arxiv.org/abs/2401.09558).
 
 ## Installation
 

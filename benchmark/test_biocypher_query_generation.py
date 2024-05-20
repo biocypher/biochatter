@@ -1,12 +1,11 @@
-import json
 import re
+import json
 import inspect
 
 import pytest
-import yaml
 
 from biochatter.prompts import BioCypherPromptEngine
-from .conftest import calculate_test_score
+from .conftest import calculate_bool_vector_score
 from .benchmark_utils import (
     skip_if_already_run,
     get_result_file_path,
@@ -14,27 +13,10 @@ from .benchmark_utils import (
 )
 
 
-def get_prompt_engine(
-    kg_schema_file_name: str,
-    create_prompt_engine,
-) -> BioCypherPromptEngine:
-    """Helper function to create the prompt engine for the test.
-
-    Args:
-        kg_schema_file_name (str): The KG schema file name
-        create_prompt_engine: The function to create the BioCypherPromptEngine
-
-    Returns:
-        BioCypherPromptEngine: The prompt engine for the test
-    """
-    return create_prompt_engine(
-        kg_schema_path=f"./benchmark/data/{kg_schema_file_name}"
-    )
-
-
 def test_naive_query_generation_using_schema(
     model_name,
     test_data_biocypher_query_generation,
+    kg_schemas,
     conversation,
     multiple_testing,
 ):
@@ -43,8 +25,7 @@ def test_naive_query_generation_using_schema(
     skip_if_already_run(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
-    with open(f"./benchmark/data/{yaml_data['input']['kg_path']}", "r") as f:
-        schema = yaml.safe_load(f)
+    schema = kg_schemas[yaml_data["input"]["kg_schema"]]
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
@@ -72,7 +53,7 @@ def test_naive_query_generation_using_schema(
                 score.append(
                     (re.search(expected_part_of_query, query) is not None)
                 )
-        return calculate_test_score(score)
+        return calculate_bool_vector_score(score)
 
     mean_score, max, n_iterations = multiple_testing(run_test)
 
@@ -86,10 +67,27 @@ def test_naive_query_generation_using_schema(
     )
 
 
+def get_prompt_engine(
+    kg_schema_dict: dict,
+    create_prompt_engine,
+) -> BioCypherPromptEngine:
+    """Helper function to create the prompt engine for the test.
+
+    Args:
+        kg_schema_dict (dict): The KG schema
+        create_prompt_engine: The function to create the BioCypherPromptEngine
+
+    Returns:
+        BioCypherPromptEngine: The prompt engine for the test
+    """
+    return create_prompt_engine(kg_schema_dict=kg_schema_dict)
+
+
 def test_entity_selection(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
+    kg_schemas,
     conversation,
     multiple_testing,
 ):
@@ -99,7 +97,7 @@ def test_entity_selection(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_path"], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
     )
 
     def run_test():
@@ -113,7 +111,7 @@ def test_entity_selection(
         score = []
         for expected_entity in yaml_data["expected"]["entities"]:
             score.append(expected_entity in prompt_engine.selected_entities)
-        return calculate_test_score(score)
+        return calculate_bool_vector_score(score)
 
     mean_score, max, n_iterations = multiple_testing(run_test)
 
@@ -131,6 +129,7 @@ def test_relationship_selection(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
+    kg_schemas,
     conversation,
     multiple_testing,
 ):
@@ -142,7 +141,7 @@ def test_relationship_selection(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_path"], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
     )
 
     prompt_engine.question = yaml_data["input"]["prompt"]
@@ -176,7 +175,7 @@ def test_relationship_selection(
                     )
                 except KeyError:
                     score.append(False)
-        return calculate_test_score(score)
+        return calculate_bool_vector_score(score)
 
     mean_score, max, n_iterations = multiple_testing(run_test)
 
@@ -194,6 +193,7 @@ def test_property_selection(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
+    kg_schemas,
     conversation,
     multiple_testing,
 ):
@@ -203,7 +203,7 @@ def test_property_selection(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_path"], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
     )
 
     prompt_engine.question = yaml_data["input"]["prompt"]
@@ -249,7 +249,7 @@ def test_property_selection(
             )
             score = [False] * total_properties
 
-        return calculate_test_score(score)
+        return calculate_bool_vector_score(score)
 
     mean_score, max, n_iterations = multiple_testing(run_test)
 
@@ -267,6 +267,7 @@ def test_query_generation(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
+    kg_schemas,
     conversation,
     multiple_testing,
 ):
@@ -276,7 +277,7 @@ def test_query_generation(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_path"], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
     )
 
     def run_test():
@@ -301,7 +302,7 @@ def test_query_generation(
                 score.append(
                     (re.search(expected_part_of_query, query) is not None)
                 )
-        return calculate_test_score(score)
+        return calculate_bool_vector_score(score)
 
     mean_score, max, n_iterations = multiple_testing(run_test)
 
@@ -319,6 +320,7 @@ def test_end_to_end_query_generation(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
+    kg_schemas,
     conversation,
     multiple_testing,
 ):
@@ -328,7 +330,7 @@ def test_end_to_end_query_generation(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_path"], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
     )
 
     def run_test():
@@ -354,7 +356,7 @@ def test_end_to_end_query_generation(
         except ValueError as e:
             score = [False for _ in yaml_data["expected"]["parts_of_query"]]
 
-        return calculate_test_score(score)
+        return calculate_bool_vector_score(score)
 
     mean_score, max, n_iterations = multiple_testing(run_test)
 
@@ -455,6 +457,7 @@ def test_property_exists(
     model_name,
     prompt_engine,
     test_data_biocypher_query_generation,
+    kg_schemas,
     conversation,
     multiple_testing,
 ):
@@ -464,7 +467,7 @@ def test_property_exists(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
     prompt_engine = get_prompt_engine(
-        yaml_data["input"]["kg_path"], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
     )
 
     def run_test():
@@ -512,7 +515,7 @@ def test_property_exists(
         # if score is shorter than the least expected number of properties, add
         # False values until the length is reached
         score += [False] * (len(yaml_data["expected"]["entities"]) - len(score))
-        return calculate_test_score(score)
+        return calculate_bool_vector_score(score)
 
     mean_score, max, n_iterations = multiple_testing(run_test)
 

@@ -1,14 +1,16 @@
-import hashlib
-import io
-import json
-import os
 from ast import literal_eval
 from base64 import b64decode
+import os
+import copy
+import json
+import hashlib
+import itertools
 
-import pandas as pd
+from cryptography.fernet import Fernet
 import rsa
 import yaml
-from cryptography.fernet import Fernet
+
+import pandas as pd
 
 
 def get_benchmark_dataset() -> dict[str, pd.DataFrame | dict[str, str]]:
@@ -63,23 +65,26 @@ def _load_test_data_from_this_repository():
                     yaml_data = yaml.safe_load(stream)
 
                     if "_data" in file_path:
-                        # expand multi-instruction tests
-                        yaml_data = _expand_multi_instruction(yaml_data)
+                        yaml_data = _get_yaml_data(yaml_data)
 
-                        # generate hash for each case
-                        yaml_data = _hash_each_case(yaml_data)
+                    file_name = os.path.basename(file_path)
 
-                        # delete benchmark results that have outdated hashes
-                        _delete_outdated_benchmark_results(yaml_data)
-
-                    test_data[file_path.replace("./benchmark/", "./")] = (
-                        yaml_data
-                    )
+                    test_data[file_name] = yaml_data
 
                 except yaml.YAMLError as exc:
                     print(exc)
 
     return test_data
+
+
+def _get_yaml_data(yaml_data):
+    # expand multi-instruction tests
+    yaml_data = _expand_multi_instruction(yaml_data)
+    # generate hash for each case
+    yaml_data = _hash_each_case(yaml_data)
+    # delete benchmark results that have outdated hashes
+    _delete_outdated_benchmark_results(yaml_data)
+    return yaml_data
 
 
 def _delete_outdated_benchmark_results(data_dict: dict) -> None:
@@ -89,7 +94,7 @@ def _delete_outdated_benchmark_results(data_dict: dict) -> None:
     that have hashes that are not in the current test data.
 
     Args:
-        yaml_data (dict): The yaml data.
+        data_dict (dict): The yaml data.
     """
 
     # get all current hashes for comparison
@@ -150,18 +155,41 @@ def _expand_multi_instruction(data_dict: dict) -> dict:
         dict: The expanded yaml data.
     """
     for module_key in data_dict.keys():
-        test_list = data_dict[module_key]
-        for test in test_list:
-            test_input = test["input"]
-            for case, potential_subcase in test_input.items():
-                if isinstance(potential_subcase, dict):
-                    for key, value in potential_subcase.items():
-                        new_case = test.copy()
-                        new_case["case"] = "_".join([test["case"], key])
-                        new_case["input"][case] = value
-                        test_list.append(new_case)
-                    test_list.remove(test)
-        data_dict[module_key] = test_list
+        if "kg_schemas" not in module_key:
+            test_list = data_dict[module_key]
+            expanded_test_list = []
+            for test in test_list:
+                dicts = {
+                    key: value
+                    for key, value in test["input"].items()
+                    if isinstance(value, dict) and key != "format"
+                }
+                if not dicts:
+                    expanded_test_list.append(test)
+                    continue
+                keys_lists = [list(value.keys()) for value in dicts.values()]
+                for combination in itertools.product(*keys_lists):
+                    query_type = None
+                    new_case = copy.deepcopy(test)
+                    new_case["case"] = ":".join(
+                        [test["case"]] + [key for key in list(combination)]
+                    )
+                    dict_keys = [key for key in dicts.keys()]
+                    key_value_combinations = zip(dict_keys, list(combination))
+                    for key, value in key_value_combinations:
+                        new_case["input"][key] = dicts[key][value]
+                        if key == "query":
+                            new_case["input"]["format"] = test["input"][
+                                "format"
+                            ][value]
+                            query_type = value
+                        elif key == "caption":
+                            new_case["expected"]["answer"] = test["expected"][
+                                "answer"
+                            ][value][query_type]
+
+                    expanded_test_list.append(new_case)
+            data_dict[module_key] = expanded_test_list
 
     return data_dict
 
@@ -211,22 +239,17 @@ def _decrypt_data(
     decrypted_test_data = {}
     for key in encrypted_test_data.keys():
         decrypted = _decrypt(encrypted_test_data[key], private_key)
-        if key.endswith(".csv"):
-            df = pd.read_csv(io.StringIO(decrypted), sep=";")
-            _apply_literal_eval(
-                df,
-                [
-                    "entities",
-                    "relationships",
-                    "relationship_labels",
-                    "properties",
-                    "parts_of_query",
-                    "system_messages",
-                ],
-            )
-            decrypted_test_data[key] = df
-        elif key.endswith(".yaml"):
-            decrypted_test_data[key] = yaml.safe_load(decrypted)
+
+        if key.endswith(".yaml"):
+            try:
+                yaml_data = yaml.safe_load(decrypted)
+                if "_data" in key:
+                    yaml_data = _get_yaml_data(yaml_data)
+
+                decrypted_test_data[key] = yaml_data
+            except yaml.YAMLError as exc:
+                print(exc)
+
     return decrypted_test_data
 
 

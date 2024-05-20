@@ -11,20 +11,19 @@ except ImportError:
     st = None
 
 from abc import ABC, abstractmethod
+from typing import Optional
+import json
 import logging
-from typing import Optional, List, Tuple
+
+from langchain.llms import HuggingFaceHub
+from langchain.schema import AIMessage, HumanMessage, SystemMessage
+from langchain.chat_models import ChatOpenAI, AzureChatOpenAI
+import nltk
 import openai
 
-from langchain.chat_models import ChatOpenAI, AzureChatOpenAI
-from langchain.schema import AIMessage, HumanMessage, SystemMessage
-from langchain.llms import HuggingFaceHub
-
-import nltk
-import json
-
-from .vectorstore import DocumentEmbedder
-from .rag_agent import RagAgent
 from ._stats import get_stats
+from .rag_agent import RagAgent
+from .vectorstore import DocumentEmbedder
 
 logger = logging.getLogger(__name__)
 
@@ -84,7 +83,7 @@ class Conversation(ABC):
         self.prompts = prompts
         self.correct = correct
         self.split_correction = split_correction
-        self.rag_agents: List[RagAgent] = []
+        self.rag_agents: list[RagAgent] = []
         self.history = []
         self.messages = []
         self.ca_messages = []
@@ -106,7 +105,7 @@ class Conversation(ABC):
             # update
             self.rag_agents[i] = agent
 
-    def _find_rag_agent(self, mode: str) -> Tuple[int, RagAgent]:
+    def _find_rag_agent(self, mode: str) -> tuple[int, RagAgent]:
         for i, val in enumerate(self.rag_agents):
             if val.mode == mode:
                 return i, val
@@ -285,7 +284,7 @@ class Conversation(ABC):
                 else:
                     self.append_system_message(prompt)
 
-    def get_last_injected_context(self) -> List[dict]:
+    def get_last_injected_context(self) -> list[dict]:
         """
         Get a formatted list of the last context injected into the
         conversation. Contains one dictionary for each RAG mode.

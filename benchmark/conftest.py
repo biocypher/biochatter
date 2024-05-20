@@ -2,6 +2,7 @@ import os
 
 from xinference.client import Client
 import pytest
+import requests
 
 import numpy as np
 import pandas as pd
@@ -23,6 +24,7 @@ OPENAI_MODEL_NAMES = [
     "gpt-3.5-turbo-0125",
     "gpt-4-0613",
     "gpt-4-0125-preview",
+    "gpt-4o-2024-05-13",
 ]
 
 XINFERENCE_MODELS = {
@@ -44,30 +46,30 @@ XINFERENCE_MODELS = {
             # "Q5_0",
             # "Q5_K_S",
             "Q5_K_M",
-            "Q6_K",
-            "Q8_0",
+            # "Q6_K",
+            # "Q8_0",
         ],
     },
     "code-llama-instruct": {
         "model_size_in_billions": [
             7,
-            13,
-            34,
+            # 13,
+            # 34,
         ],
         "model_format": "ggufv2",
         "quantization": [
-            "Q2_K",
+            # "Q2_K",
             # "Q3_K_L",
-            "Q3_K_M",
+            # "Q3_K_M",
             # "Q3_K_S",
             # "Q4_0",
             "Q4_K_M",
             # "Q4_K_S",
             # "Q5_0",
-            "Q5_K_M",
+            # "Q5_K_M",
             # "Q5_K_S",
-            "Q6_K",
-            "Q8_0",
+            # "Q6_K",
+            # "Q8_0",
         ],
     },
     "mixtral-instruct-v0.1": {
@@ -135,6 +137,37 @@ XINFERENCE_MODELS = {
             "Q8_0",
         ],
     },
+    # "gemma-it": {
+    #     "model_size_in_billions": [
+    #         2,
+    #         7,
+    #     ],
+    #     "model_format": "pytorch",
+    #     "quantization": [
+    #         "none",
+    #         "4-bit",
+    #         "8-bit",
+    #     ],
+    # },
+    "llama-3-instruct": {
+        "model_size_in_billions": [
+            8,
+            # 70,
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            # 8B model quantisations
+            # "IQ3_M",
+            "Q4_K_M",
+            "Q5_K_M",
+            "Q6_K",
+            "Q8_0",
+            # 70B model quantisations
+            # "IQ1_M",
+            # "IQ2_XS",
+            # "Q4_K_M",
+        ],
+    },
 }
 
 # create concrete benchmark list by concatenating all combinations of model
@@ -185,12 +218,14 @@ def multiple_testing(request):
             score, max = test_func(*args, **kwargs)
             scores.append(score)
         mean_score = sum(scores) / N_ITERATIONS
+        sd_score = np.std(scores)
+        # TODO return standard deviation with score
         return (mean_score, max, N_ITERATIONS)
 
     return run_multiple_times
 
 
-def calculate_test_score(vector: list[bool]) -> tuple[int, int]:
+def calculate_bool_vector_score(vector: list[bool]) -> tuple[int, int]:
     score = sum(vector)
     max = len(vector)
     return (score, max)
@@ -202,9 +237,9 @@ def prompt_engine(request, model_name):
     Generates a constructor for the prompt engine for the current model name.
     """
 
-    def setup_prompt_engine(kg_schema_path):
+    def setup_prompt_engine(kg_schema_dict):
         return BioCypherPromptEngine(
-            schema_config_or_info_path=kg_schema_path,
+            schema_config_or_info_dict=kg_schema_dict,
             model_name=model_name,
         )
 
@@ -246,7 +281,13 @@ def conversation(request, model_name):
             _model_size = int(_model_size)
 
         # get running models
-        client = Client(base_url=BENCHMARK_URL)
+        try:
+            client = Client(base_url=BENCHMARK_URL)
+        except requests.exceptions.ConnectionError:
+            raise ConnectionError(
+                f"Could not connect to Xinference server at {BENCHMARK_URL}. "
+                "Please make sure that the server is running."
+            )
 
         # if exact model already running, return conversation
         running_models = client.list_models()
@@ -371,7 +412,7 @@ def pytest_generate_tests(metafunc):
     If fixture is part of test declaration, the test is parametrized.
     """
     # Load the data file
-    data_file = BENCHMARK_DATASET["./data/benchmark_data.yaml"]
+    data_file = BENCHMARK_DATASET["benchmark_data.yaml"]
 
     # Parametrize the fixtures with the collected rows
     if "test_data_biocypher_query_generation" in metafunc.fixturenames:
@@ -389,3 +430,9 @@ def pytest_generate_tests(metafunc):
             "test_data_text_extraction",
             data_file["text_extraction"],
         )
+
+
+@pytest.fixture
+def kg_schemas():
+    data_file = BENCHMARK_DATASET["benchmark_data.yaml"]
+    return data_file["kg_schemas"]

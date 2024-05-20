@@ -7,12 +7,15 @@ The procedure of the living benchmark follows the idea of test-driven developmen
 For cases where a model does not yield a perfect response out of the box, which will be most cases, modifications to the components of the framework, such as prompts or functions, are made to improve the model's performance.
 By tracking model performance on these tests over time, we can gain insights into the reliability of the framework and identify the gaps to be addressed.
 
+## Running the benchmark
+
 The benchmark uses the pytest framework to orchestrate the evaluation of a number of models on a number of tasks.
-The benchmark is run on a regular basis, and the results are published in the [benchmark section](https://biochatter.org/benchmark/).
+The benchmark is run on a regular basis, and the results are published in the [benchmark section](benchmark.md).
 The benchmarking suite can be found in the `benchmark` directory of the BioChatter repository.
 It can be executed using standard pytest syntax, e.g., `poetry run pytest benchmark`.
 As default behavior it checks, which test cases have already been executed and only executes the tests that have not been executed yet.
 To run all benchmarks again, use `poetry run pytest benchmark --run-all`.
+If you want to develop and debug the benchmark instead of just running it, please refer to the [developer docs](benchmark-developer.md).
 
 To allow flexible extension of the benchmark, we have implemeted a modular test framework that uses pytest fixtures to allow easy addition of new models and tasks.
 All setup is done in the `conftest.py` file in the `benchmark` directory.
@@ -81,4 +84,3 @@ For instance, the length and overlap of fragments, the embedding algorithms, as 
 
 There is a wide range of tasks that are potentially useful to BioChatter users.
 To cover most scenarios of research and development use, as well as clinical applications, we test a variety of tasks and LLM personas.
-

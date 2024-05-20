@@ -1,8 +1,10 @@
-import os
-from biochatter.llm_connect import GptConversation
-from biochatter.prompts import BioCypherPromptEngine
-import pytest
 from unittest.mock import Mock, patch
+import os
+
+import pytest
+
+from biochatter.prompts import BioCypherPromptEngine
+from biochatter.llm_connect import GptConversation
 
 ## THIS IS LARGELY BENCHMARK MATERIAL, TO BE MOCKED FOR UNIT TESTING
 
@@ -22,6 +24,7 @@ def test_biocypher_prompts(prompt_engine):
         "CellType",
     ]
     assert list(prompt_engine.relationships.keys()) == [
+        "PostTranslationalInteraction",
         "Phosphorylation",
         "GeneToPhenotypeAssociation",
         "GeneToDiseaseAssociation",
@@ -50,7 +53,7 @@ def test_entity_selection(prompt_engine):
 
     """
     with patch("biochatter.prompts.Conversation") as mock_conversation:
-        system_msg = "You have access to a knowledge graph that contains these entities: Protein, Gene, Disease, CellType. Your task is to select the ones that are relevant to the user's question for subsequent use in a query. Only return the entities, comma-separated, without any additional text. "
+        system_msg = "You have access to a knowledge graph that contains these entity types: Protein, Gene, Disease, CellType. Your task is to select the entity types that are relevant to the user's question for subsequent use in a query. Only return the entity types, comma-separated, without any additional text. Do not return entity names, relationships, or properties."
         mock_conversation.return_value.query.return_value = [
             "Gene,Disease",
             Mock(),
@@ -154,6 +157,26 @@ def test_relationship_selection_with_incomplete_entities(prompt_engine):
         )
 
         assert "Protein" in prompt_engine.selected_entities
+
+
+def test_relationship_selection_does_not_create_none_entities(prompt_engine):
+    prompt_engine.question = "Which proteins interact post-translationally?"
+    prompt_engine.selected_entities = ["Protein"]
+    with patch("biochatter.prompts.Conversation") as mock_conversation:
+        mock_conversation.return_value.query.return_value = [
+            "PostTranslationalInteraction",
+            Mock(),
+            None,
+        ]
+        mock_append_system_messages = Mock()
+        mock_conversation.return_value.append_system_message = (
+            mock_append_system_messages
+        )
+        success = prompt_engine._select_relationships(
+            conversation=mock_conversation.return_value
+        )
+        assert success
+        assert None not in prompt_engine.selected_entities
 
 
 def test_property_selection(prompt_engine):

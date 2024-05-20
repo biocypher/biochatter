@@ -42,7 +42,10 @@ Xinference models,
 [here](https://github.com/biocypher/xinference-docker-builtin). It will soon be
 available via Dockerhub. There is another workflow that allows mounting
 (potentially) any compatible model from HuggingFace,
-[here](https://github.com/AndiMajore/xinference-docker-hf).
+[here](https://github.com/AndiMajore/xinference-docker-hf). Note that, due to
+graphics driver limitations, this currently only works for Linux machines with
+dedicated Nvidia graphics cards. If you have a different setup, please check
+below for deploying Xinference without the Docker workflow.
 
 ## Deploying locally without Docker
 
@@ -83,10 +86,3 @@ model.chat(
     generate_config={"max_tokens": 1024}
 )
 ```
-
-## Public endpoint
-
-We maintain a public API endpoint of an xinference instance at
-`https://llm.biocypher.org/v1`. Please note that this is a testing endpoint that
-may be subject to rapid changes or downtimes. It usually runs one conversational
-and one embedding model.

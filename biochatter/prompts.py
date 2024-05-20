@@ -1,8 +1,10 @@
 from typing import Optional
-import yaml
-import json
 import os
-from ._misc import sentencecase_to_pascalcase, ensure_iterable
+import json
+
+import yaml
+
+from ._misc import ensure_iterable, sentencecase_to_pascalcase
 from .llm_connect import Conversation, GptConversation
 
 
@@ -92,13 +94,13 @@ class BioCypherPromptEngine:
                         value["represented_as"] == "node"
                         and name_indicates_relationship
                     ):
-                        self.relationships[sentencecase_to_pascalcase(key)] = (
-                            value
-                        )
+                        self.relationships[
+                            sentencecase_to_pascalcase(key)
+                        ] = value
                     elif value["represented_as"] == "edge":
-                        self.relationships[sentencecase_to_pascalcase(key)] = (
-                            value
-                        )
+                        self.relationships[
+                            sentencecase_to_pascalcase(key)
+                        ] = value
         else:
             for key, value in schema_config.items():
                 if not isinstance(value, dict):
@@ -248,10 +250,11 @@ class BioCypherPromptEngine:
         conversation.append_system_message(
             (
                 "You have access to a knowledge graph that contains "
-                f"these entities: {', '.join(self.entities)}. Your task is "
-                "to select the ones that are relevant to the user's question "
-                "for subsequent use in a query. Only return the entities, "
-                "comma-separated, without any additional text. "
+                f"these entity types: {', '.join(self.entities)}. Your task is "
+                "to select the entity types that are relevant to the user's question "
+                "for subsequent use in a query. Only return the entity types, "
+                "comma-separated, without any additional text. Do not return "
+                "entity names, relationships, or properties."
             )
         )
 
@@ -407,9 +410,13 @@ class BioCypherPromptEngine:
                 sources = ensure_iterable(value["source"])
                 targets = ensure_iterable(value["target"])
                 for source in sources:
+                    if source is None:
+                        continue
                     if source not in self.selected_entities:
                         self.selected_entities.append(source)
                 for target in targets:
+                    if target is None:
+                        continue
                     if target not in self.selected_entities:
                         self.selected_entities.append(target)
 
