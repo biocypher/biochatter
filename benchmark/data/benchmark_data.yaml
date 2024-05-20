@@ -550,7 +550,7 @@ correctness:
 ###########################################################################################################
   # Level 1: Yes or no questions
 
-  - case: medication_single_choice_no
+  - case: single_choice_medication_de
     input:
       prompt: "Kann Ibuprofen sicher zusammen mit Antihypertensiva eingenommen werden?"
       system_messages: [
@@ -559,7 +559,7 @@ correctness:
     expected:
       answer: "nein"
 
-  - case: medication_single_choice_yes
+  - case: single_choice_medication_de
     input:
       prompt: "Besteht eine potenzielle Wechselwirkung zwischen Antibiotika und oralen Kontrazeptiva?"
       system_messages: [
@@ -568,7 +568,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: medication_single_choice_no
+  - case: single_choice_medication_de
     input:
       prompt: "Hat es Vorteile verschiedene RAS-Hemmer zu kombinieren?"
       system_messages: [
@@ -578,7 +578,7 @@ correctness:
       answer: "nein"
 
 
-  - case: medication_single_choice_no
+  - case: single_choice_medication_de
     input:
       prompt: "Sollten NO-Donatoren und PDE5-Hemmern gleichzeitig verabreicht werden?"
       system_messages: [
@@ -587,9 +587,47 @@ correctness:
     expected:
       answer: "Nein"
 
+  - case: single_choice_medication_en
+    input:
+      prompt: "Can ibuprofen be safely taken together with antihypertensives?"
+      system_messages: [
+          "You receive a question and should only answer it with the words 'yes' or 'no'."
+          ]
+    expected:
+      answer: "no"
+
+  - case: single_choice_medication_en
+    input:
+      prompt: "Is there a potential interaction between antibiotics and oral contraceptives?"
+      system_messages: [
+          "You will receive a question and should only answer with the words 'yes' or 'no'."
+      ]
+    expected:
+      answer: "yes"
+
+  - case: single_choice_medication_en
+    input:
+      prompt: "Are there advantages to combining different RAS inhibitors?"
+      system_messages: [
+          "You will receive a question and should only answer it with the words 'yes' or 'no'."
+      ]
+    expected:
+      answer: "no"
+
+
+  - case: single_choice_medication_en
+    input:
+      prompt: "Should NO donors and PDE5 inhibitors be administered at the same time?"
+      system_messages: [
+        "You will receive a question that you should only answer with 'yes' or 'no'"
+      ]
+    expected:
+      answer: "No"
+
+
   # Level 2: Multiple Choice
 
-  - case: medication_multiple_choice
+  - case: multiple_choice_medication_de
     input:
       prompt: "Welche Medikamentenklasse hat das höchste Risiko für Wechselwirkungen mit Statinen? (a) Antikoagulanzien, (b) Antazida, (c) Antimykotika, (d) Antidepressiva"
       system_messages: [
@@ -598,7 +636,7 @@ correctness:
     expected:
       answer: "c"
 
-  - case: medication_multiple_choice
+  - case: multiple_choice_medication_de
     input:
       prompt: "Welche Medikamentenpaarung sollte bei Patienten vermieden werden, die MAO-Hemmer einnehmen?  (a) Serotonin-Wiederaufnahmehemmer, (b) ACE-Hemmer, (c) Beta-Blocker, (d) Kalziumkanalblocker"
       system_messages: [
@@ -607,7 +645,7 @@ correctness:
     expected:
       answer: "a"
 
-  - case: medication_multiple_choice
+  - case: multiple_choice_medication_de
     input:
       prompt: "Was kann auftreten, wenn Acetylsalicylsäure und Cumarine zusammen eingenommen wird?  a) höherer Blutdruck, b) Koomplexbildung, c) Verstärkte Blutgerinnungshemmung, d) Herzrhythmusstörung"
       system_messages: [
@@ -616,8 +654,37 @@ correctness:
     expected:
       answer: "c"
 
+  - case: multiple_choice_medication_en
+    input:
+      prompt: "Which drug class has the highest risk of interaction with statins? (a) anticoagulants, (b) antacids, (c) antifungals, (d) antidepressants"
+      system_messages: [
+        "You will receive a multiple-choice question. Answer it briefly and concisely by giving only the correct letter of the question in lower case. Remember to use only one lowercase letter and not the entire correct answer."
+      ]
+    expected:
+      answer: "c"
+
+  - case: multiple_choice_medication_en
+    input:
+      prompt: "Which medication pairing should be avoided in patients taking MAO inhibitors?  (a) serotonin reuptake inhibitors, (b) ACE inhibitors, (c) beta-blockers, (d) calcium channel blockers"
+      system_messages: [
+        "You will receive a multiple choice question. Answer it briefly and concisely, using only the correct letter of the question in lower case. Remember to use only one lowercase letter and not the entire correct answer."
+      ]
+    expected:
+      answer: "a"
+
+
+  - case: multiple_choice_medication_en
+    input:
+      prompt: "What can occur if acetylsalicylic acid and coumarins are taken together? a) higher blood pressure, b) co-complex formation, c) increased blood clotting inhibition, d) cardiac arrhythmia"
+      system_messages: [
+      "You will receive a multiple-choice question.Answer it briefly and concisely by indicating only the correct letter of the question in lower case.Remember to use only one lowercase letter and not the entire correct answer."
+      ]
+    expected:
+      answer: "c"
+
+
   #Level 3: Free text
-  - case: medication_free_text
+  - case: one_word_medication_de
     input:
       prompt: "Mit welcher Frucht sollten Statine nicht eingenommen werden?"
       system_messages:
@@ -628,7 +695,7 @@ correctness:
       answer: "Grapefruit"
 
 
-  - case: regex_medication_free_text
+  - case: regex_medication_de
     input:
       prompt: "Können Sie Beispiele für Medikamente nennen, die nicht mit NSAR (nichtsteroidalen Antirheumatika) wie Ibuprofen oder Naproxen eingenommen werden sollten, um das Risiko von Magengeschwüren zu minimieren?"
       system_messages:
@@ -642,7 +709,7 @@ correctness:
         - - "SSRI"
           - "Antikoagulanzien"
 
-  - case: medication_free_text
+  - case: one_word_medication_de
     input:
       prompt: "Welche zwei Formen der Arzneimittelwechselwirkung unterscheidet man grundsätzlich?"
       system_messages:
@@ -652,7 +719,7 @@ correctness:
     expected:
       answer: "Pharmakodynamisch und pharmakokinetisch"
 
-  - case: regex_medication_free_text
+  - case: regex_medication_de
     input:
       prompt: "Mit welchen Wirkstoffen sollte Ibuprofen nicht eingenommen werden?"
       system_messages:
@@ -667,7 +734,59 @@ correctness:
         - - "Clopidogrel"
           - "NSAR"
           - "NSAID"
-###########################################################################################################
+
+  - case: one_word_medication_en
+    input:
+      prompt: "With which fruit should statins not be taken?"
+      system_messages:
+        [
+          "Answer the following question with just one word"
+        ]
+    expected:
+     answer: "Grapefruit"
+
+
+  - case: regex_medication_en
+    input:
+      prompt: "Can you give examples of medications that should not be taken with NSAIDs (non-steroidal anti-inflammatory drugs) such as ibuprofen or naproxen to minimize the risk of stomach ulcers?"
+      system_messages:
+        [
+          "Answer the question as precisely and briefly as possible"
+        ]
+    expected:
+      words_in_response:
+        - - "oral steroids"
+          - "selective serotonin reuptake inhibitors"
+        - - "SSRIS"
+          - "anticoagulants"
+
+  - case: one_word_medication_en
+    input:
+      prompt: "What are the two basic forms of drug interaction?"
+      system_messages:
+        [
+          "Answer the question as precisely and briefly as possible, in a few words"
+        ]
+    expected:
+      answer: "Pharmacodynamic and pharmacokinetic"
+
+
+  - case: regex_medication_en
+    input:
+      prompt: "With which active substances should ibuprofen not be taken?"
+      system_messages:
+        [
+          "Answer the question as precisely and briefly as possible. Multiple answers are allowed"
+        ]
+    expected:
+      words_in_response:
+        - - "cortisone preparations"
+          - "Acetylsalicylic acid"
+          - "ASS"
+        - - "Clopidogrel"
+          - "NSAID"
+          - "NSAID"
+    ###########################################################################################################
   # Test case: Questions about “emergency medicine” for prospective emergency physicians
   # Language: German
 ###########################################################################################################
