@@ -541,10 +541,191 @@ correctness:
       answer: "yes"
 
 ###########################################################################################################
-# Test case: Using LLM for patient interview in progress -> Differenzialdiagnose
+# Test case: Oncology and radiation therapy
 ###########################################################################################################
+  # Level 1: Yes or no questions
 
+  - case: single_choice_oncology_de
+    input:
+      prompt: "Ist Chemotherapie die einzige mögliche Therapie bei Krebs?"
+      system_messages: [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+          ]
+    expected:
+      answer: "nein"
 
+  - case: single_choice_oncology_de
+    input:
+      prompt: "Sind die BRCA 1 und BRCA 2 Gene für erblich bedingten Brustkrebs verantwortlich ?"
+      system_messages: [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+          ]
+    expected:
+      answer: "ja"
+
+  - case: single_choice_oncology_de
+    input:
+      prompt: "Die Strahlentherapie ist eine häufige Behandlungsmethode bei Glioblastom-Patienten?"
+      system_messages: [
+        "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+      ]
+    expected:
+      answer: "ja"
+
+  - case: single_choice_oncology_en
+    input:
+      prompt: "Is chemotherapy the only possible treatment for cancer?"
+      system_messages: [
+          "You receive a question and should only answer it with the words 'yes'  or 'no'."
+          ]
+    expected:
+      answer: "no"
+
+  - case: single_choice_oncology_en
+    input:
+      prompt: "Are the BRCA 1 and BRCA 2 genes responsible for hereditary breast cancer ?"
+      system_messages: [
+          "You receive a question and should only answer it with the words 'yes'  or 'no'."
+          ]
+    expected:
+      answer: "yes"
+
+  - case: single_choice_oncology_en
+    input:
+      prompt: "Radiotherapy is a common treatment method for glioblastoma patients?"
+      system_messages: [
+        "You will receive a question and should only answer with the words 'yes'  or 'no'."
+      ]
+    expected:
+      answer: "yes"
+  # Level 2: Multiple Choice
+
+  - case: multiple_choice_oncology_de
+    input:
+      prompt: "Welche Art von Krebs wird häufig mit dem Tumormarker CA-125 überwacht?  a) Lungenkrebs b) Ovarialkarzinom c) Bauchspeicheldrüsenkrebs d) Kolorektalkarzinom"
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
+        ]
+    expected:
+      answer: "b"
+  - case: multiple_choice_oncology_de
+    input:
+      prompt: "Welches Medikament wird häufig als Antiemetikum zur Vorbeugung von Übelkeit und Erbrechen bei Chemotherapie-Patienten verwendet?  a) Ondansetron b) Paracetamol c) Ibuprofen d) Loratadin"
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
+        ]
+    expected:
+      answer: "a"
+
+  - case: multiple_choice_oncology_de
+    input:
+      prompt: "Welche Bestrahlungstechnik gilt als Standart der Strahlentherapie! a) perkutane Strahlentherapie b) fraktionierte Bestrahlung c)Brachytherapie d) Röntgentherapie"
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
+        ]
+    expected:
+      answer: "a"
+
+  - case: multiple_choice_oncology_en
+    input:
+      prompt: "Which type of cancer is frequently monitored with the tumor marker CA-125? a) Lung cancer b) Ovarian cancer c) Pancreatic cancer d) Colorectal cancer"
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it briefly and concisely by entering only the correct letter of the question in lower case. Remember to use only one lowercase letter and not the whole correct answer."
+        ]
+    expected:
+      answer: "b"
+  - case: multiple_choice_oncology_en
+    input:
+      prompt: "Which drug is often used as an antiemetic to prevent nausea and vomiting in chemotherapy patients? a) Ondansetron b) Paracetamol c) Ibuprofen d) Loratadin"
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it briefly and concisely by entering only the correct letter of the question as a lowercase letter. Remember to use only one lowercase letter and not the whole correct answer."
+        ]
+    expected:
+      answer: "a"
+
+  - case: multiple_choice_oncology_en
+    input:
+      prompt: "Which radiation technique is considered the standard for radiation therapy? a) Percutaneous radiation therapy b) Fractionated radiation c)Brachytherapy d) X-ray therapy"
+      system_messages:
+        [
+          "You will receive a multiple choice question.Answer it briefly and concisely by entering only the correct letter of the question in lower case.Remember to use only one lowercase letter and not the whole correct answer."
+        ]
+    expected:
+      answer: "a"
+
+  # Level 3: Free text
+  - case: one_word_oncology_de
+    input:
+      prompt: "Wie heißen die drei Tumorvolumina, abgekürzt, bei der Strahlentherapie?"
+      system_messages:
+        [
+          "Beantworte die Frage so präzise und kurz wie möglich, mit wenigen Worten"
+        ]
+    expected:
+      answer: "GTV,CTV,PTV"
+
+  - case: regex_oncology_de
+    input:
+      prompt: "Was sind einige typische Symptome für maligne Tumore?"
+      system_messages:
+        [
+          "Beantworte die Frage so präzise und kurz wie möglich"
+        ]
+    expected:
+      words_in_response:
+        - "Gewichtsverlust"
+        - "Knoten"
+        - "Müdigkeit"
+        - "Husten"
+
+  - case: one_word_oncology_de
+    input:
+      prompt: "Was ist die häufigste Krebsart bei Frauen?"
+      system_messages:
+        [
+          "Beantworte die Frage so präzise und kurz wie möglich"
+        ]
+    expected:
+      answer: 'Brustkrebs'
+
+  - case: one_word_oncology_en
+    input:
+      prompt: "What are the three tumor volumes, abbreviated, in radiotherapy?"
+      system_messages:
+        [
+          "Answer the question as precisely and briefly as possible, in a few words"
+        ]
+    expected:
+      answer: "GTV,CTV,PTV"
+
+  - case: regex_oncology_en
+    input:
+      prompt: "What are some typical symptoms for malignant tumors?"
+      system_messages:
+        [
+          "Answer the question as precisely and briefly as possible"
+        ]
+    expected:
+      words_in_response:
+        - "weight loss"
+        - "lump"
+        - "fatigue"
+        - "cough"
+
+  - case: one_word_oncology_en
+    input:
+      prompt: "What is the most common type of cancer in women?"
+      system_messages:
+        [
+          "Answer the question as precisely and briefly as possible"
+        ]
+    expected:
+      answer: 'Breast cancer'
 ###########################################################################################################
 # Test case: Medication
 ###########################################################################################################
@@ -704,10 +885,10 @@ correctness:
         ]
     expected:
       words_in_response:
-        - - "orale Steroide"
-          - "selektive Serotonin-Wiederaufnahmehemmer"
-        - - "SSRI"
-          - "Antikoagulanzien"
+        -  "orale Steroide"
+        -  - "selektive Serotonin-Wiederaufnahmehemmer"
+           - "SSRI"
+        - "Antikoagulanzien"
 
   - case: one_word_medication_de
     input:
@@ -728,12 +909,12 @@ correctness:
         ]
     expected:
       words_in_response:
-        - - "Kortison-Präparate"
-          - "Acetylsalicylsäure"
+        - "Kortison-Präparate"
+        - - "Acetylsalicylsäure"
           - "ASS"
-        - - "Clopidogrel"
-          - "NSAR"
-          - "NSAID"
+        - "Clopidogrel"
+        - "NSAR"
+        - "NSAID"
 
   - case: one_word_medication_en
     input:
@@ -755,10 +936,10 @@ correctness:
         ]
     expected:
       words_in_response:
-        - - "oral steroids"
-          - "selective serotonin reuptake inhibitors"
-        - - "SSRIS"
-          - "anticoagulants"
+        - "oral steroids"
+        - - "selective serotonin reuptake inhibitors"
+          - "SSRIS"
+        - "anticoagulants"
 
   - case: one_word_medication_en
     input:
@@ -780,12 +961,12 @@ correctness:
         ]
     expected:
       words_in_response:
-        - - "cortisone preparations"
-          - "Acetylsalicylic acid"
+        - "cortisone preparations"
+        - - "Acetylsalicylic acid"
           - "ASS"
-        - - "Clopidogrel"
-          - "NSAID"
-          - "NSAID"
+        - "Clopidogrel"
+        - "NSAID"
+        - "NSAID"
     ###########################################################################################################
   # Test case: Questions about “emergency medicine” for prospective emergency physicians
   # Language: German
