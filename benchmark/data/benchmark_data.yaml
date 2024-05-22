@@ -309,7 +309,7 @@ correctness:
     expected:
       answer: "d"
 
-  - case: yes_no_biochemistry_en
+  - case: dichotomous_biochemistry_en
     input:
       prompt: Is this true? The tendency to thrombosis (thrombophilia) is in many cases genetically determined. Missense mutations in the gene for factor V can be the cause of familial thrombophilia. Due to such mutations, the activated factor V (Va) is less efficiently inactivated by an activated protein C and is therefore particularly stable.
       system_messages:
@@ -319,7 +319,7 @@ correctness:
     expected:
       answer: "yes"
 
-  - case: yes_no_biochemistry_en
+  - case: dichotomous_biochemistry_en
     input:
       prompt: Is this true? The tendency to thrombosis (thrombophilia) is in many cases genetically determined. Missense mutations in the gene for factor V can be the cause of familial thrombophilia. Due to such mutations, the activated factor V (Va) is less efficiently inactivated by an activated thrombomobilin and is therefore particularly stable.
       system_messages:
@@ -351,7 +351,7 @@ correctness:
     expected:
       answer: "e"
 
-  - case: yes_no_physiology_en
+  - case: dichotomous_physiology_en
     input:
       prompt: Is the apparent viscosity of the blood with a normal haematocrit (and under otherwise identical conditions) typically lower with a vessel diameter of around 8 μm than with a vessel diameter of 4 μm?
       system_messages:
@@ -361,7 +361,7 @@ correctness:
     expected:
       answer: "yes"
 
-  - case: yes_no_physiology_en
+  - case: dichotomous_physiology_en
     input:
       prompt: Is the apparent (apparente) viscosity of the blood with normal haematocrit (and under otherwise identical conditions) always lower in large vessels than in small vessels?
       system_messages:
@@ -462,7 +462,7 @@ correctness:
     expected:
       answer: "d"
 
-  - case: yes_no_biochemistry_de
+  - case: dichotomous_biochemistry_de
     input:
       prompt: Stimmt das? Die Neigung zu Thrombosen (Thrombophilie) ist in vielen Fällen genetisch bedingt. Missensemutationen im Gen für Faktor V können die Ursache einer familiären Thrombophilie sein. Durch solche Mutationen wird der aktivierte Faktor V (Va) weniger effizient durch ein aktiviertes Protein C inaktiviert und ist daher besonders stabil.
       system_messages:
@@ -472,7 +472,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: yes_no_biochemistry_de
+  - case: dichotomous_biochemistry_de
     input:
       prompt: Stimmt das? Die Neigung zu Thrombosen (Thrombophilie) ist in vielen Fällen genetisch bedingt. Missensemutationen im Gen für Faktor V können die Ursache einer familiären Thrombophilie sein. Durch solche Mutationen wird der aktivierte Faktor V (Va) weniger effizient durch ein aktiviertes Thrombomobilin inaktiviert und ist daher besonders stabil.
       system_messages:
@@ -504,7 +504,7 @@ correctness:
     expected:
       answer: "e"
 
-  - case: yes_no_physiology_de
+  - case: dichotomous_physiology_de
     input:
       prompt: Ist die scheinbare Viskosität des Blutes bei normalem Hämatokrit (und unter sonst gleichen Bedingungen) bei einem Gefäßdurchmesser von etwa 8 μm typischerweise niedriger als bei einem Gefäßdurchmesser von 4 μm?
       system_messages:
@@ -514,7 +514,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: yes_no_physiology_de
+  - case: dichotomous_physiology_de
     input:
       prompt: Ist die scheinbare (apparente) Viskosität des Blutes bei normalem Hämatokrit (und unter sonst gleichen Bedingungen) in großen Gefäßen immer niedriger als in kleinen Gefäßen?
       system_messages:
@@ -605,9 +605,9 @@ correctness:
     expected:
       answer: "b"
 
-  #yes_no
+  #dichotomous
 
-  - case: yes_no_eeg_data_en
+  - case: dichotomous_eeg_data_en
     input:
       prompt: Are so-called delta waves observed in EEG signals, especially during deep sleep?
       system_messages:
@@ -695,9 +695,9 @@ correctness:
     expected:
       answer: "b"
 
-# yes_no
+# dichotomous
 
-  - case: yes_no_eeg_data_de
+  - case: dichotomous_eeg_data_de
     input:
       prompt: Bei EEG Signalen sind sogenannte Delta Wellen vor allem im Tiefschlaf zu beobachten
       system_messages:
@@ -954,16 +954,16 @@ correctness:
         - - "Clopidogrel"
           - "NSAID"
           - "NSAID"
-    ###########################################################################################################
+###########################################################################################################
   # Test case: Questions about “emergency medicine” for prospective emergency physicians
   # Language: German
 ###########################################################################################################
 
 
   # Level 1: Yes or no questions
-  - case: yes_no_emergency
+  - case: dichotomous_emergency_de
     input:
-      prompt: Bei einem Herzinfarkt wird typischerweise Aspirin eingesetzt?
+      prompt: Wird bei einem Herzinfarkt typischerweise Aspirin eingesetzt?
       system_messages:
         [
           "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
@@ -971,7 +971,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: yes_no_emergency
+  - case: dichotomous_emergency_de
     input:
       prompt: Ist RHUB ist die Abkürzung für einen Rettungshubschrauber?
       system_messages:
@@ -981,9 +981,9 @@ correctness:
     expected:
       answer: "nein"
 
-  - case: yes_no_emergency
+  - case: dichotomous_emergency_de
     input:
-      prompt: Bei einem epileptischen Anfall immer versuchen die Person festzuhalten?
+      prompt: Sollte man bei einem epileptischen Anfall immer versuchen die Person festzuhalten?
       system_messages:
         [
           "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
@@ -991,9 +991,9 @@ correctness:
     expected:
       answer: "nein"
 
-  - case: yes_no_emergency
+  - case: dichotomous_emergency_de
     input:
-      prompt: Bei CPR sind Kompressionen wichtiger als die Luftzufuhr?
+      prompt: Sind bei CPR die Kompressionen wichtiger als die Luftzufuhr?
       system_messages:
         [
           "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
@@ -1001,7 +1001,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: yes_no_emergency
+  - case: dichotomous_emergency_de
     input:
       prompt: Kann man einen automatisierten externen Defibrillator (AED) auch bei Epilepsie verwenden?
       system_messages:
@@ -1011,9 +1011,9 @@ correctness:
     expected:
       answer: "nein"
 
-   # Level 2: Multiple choice questions
+   # Level 2: Single or Multiple choice questions
 
-  - case: multiple_choice_emergency
+  - case: single_choice_emergency_de
     input:
       prompt: Welches „Stresshormon“ steigert Blutdruck und Herzfrequenz?? (A) Insulin (B) Adrenalin (C) Melatonin (D) Leptin
       system_messages:
@@ -1023,7 +1023,7 @@ correctness:
     expected:
       answer: "b"
 
-  - case: multiple_choice_emergency
+  - case: single_choice_emergency_de
     input:
       prompt: Welcher Wirkstoff wird bei einem aktuten Asthmaanfall indiziert? (A) Verapamil (B) Fenoterol (C) Haloperidol (D) 4-Dimethylaminophenol
       system_messages:
@@ -1033,7 +1033,7 @@ correctness:
     expected:
       answer: "b"
 
-  - case: multiple_choice_emergency
+  - case: single_choice_emergency_de
     input:
       prompt: Was bezeichnet der systolische Blutdruckwert? (A) Den unteren Wert, also den Druck in der Entspannungsphase des Herzens  (B) Den über eine Minute gemittelten Druck (C) Den höchsten Druck direkt nach Ventrikelkontraktion (D) Das Gleiche, wie der diastolische Wert
       system_messages:
@@ -1043,7 +1043,7 @@ correctness:
     expected:
       answer: "c"
 
-  - case: multiple_choice_emergency
+  - case: single_choice_emergency_de
     input:
       prompt: Bei welchem Blutzuckerwert besteht die Gefahr eines diabetischen Komas? (A) < 20 mg/dl (B) < 50 mg/dl (C) < 90 mg/dl (D) > 110 mg/dl (E) > 300 mg/dl
       system_messages:
@@ -1053,7 +1053,7 @@ correctness:
     expected:
       answer: "e"
 
-  - case: multiple_choice_emergency
+  - case: single_choice_emergency_de
     input:
       prompt: Bei welcher Diagnose ist die Hochlagerung der Beine kontraindiziert? (A) Hypovolämischer Schock (B) Anaphylaktischer Schock (C) Hypoglykämischer Schock (D) Kardiogener Schock (E) Septisch-Toxischer Schock
       system_messages:
@@ -1066,7 +1066,7 @@ correctness:
 
    # Level 3: Word questions
 
-  - case: one_word_emergency
+  - case: one_word_emergency_de
     input:
       prompt: Was ist der erste Schritt bei der Erste-Hilfe-Leistung nach dem ABCDE Schema?
       system_messages:
@@ -1076,7 +1076,7 @@ correctness:
     expected:
       answer: "Atemwege"
 
-  - case: one_word_emergency
+  - case: one_word_emergency_de
     input:
       prompt: Welche Art von Blut führt die Lungenvene?
       system_messages:
@@ -1086,7 +1086,7 @@ correctness:
     expected:
       answer: "Sauerstoffreiches"
 
-  - case: one_word_emergency
+  - case: one_word_emergency_de
     input:
       prompt: Welche Blutgruppe gibt bei unbekannten Notfällen?
       system_messages:
@@ -1096,7 +1096,7 @@ correctness:
     expected:
       answer: "0"
 
-  - case: short_words_emergency
+  - case: short_words_emergency_de
     input:
       prompt: Was erfordert der Einsatz eines Guedeltubus?
       system_messages:
@@ -1106,7 +1106,7 @@ correctness:
     expected:
       answer: "Tiefe Bewusstlosigkeit"
 
-  - case: short_words_emergency
+  - case: short_words_emergency_de
     input:
       prompt: Wofür stehen die Buchstaben der RICE-Methode?
       system_messages:
@@ -1115,6 +1115,163 @@ correctness:
         ]
     expected:
       answer: "Rest, Ice, Compression, Elevation"
+
+
+###########################################################################################################
+  # Test case: Questions about “emergency medicine” for prospective emergency physicians
+  # Language: English
+###########################################################################################################
+
+
+  # Level 1: Yes or no questions
+  - case: dichotomous_emergency_en
+    input:
+      prompt: Is Aspirin is typically used for a heart attack?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous_emergency_en
+    input:
+      prompt: Should you always try to hold the person during an epileptic seizure?
+      system_messages:
+        [
+         "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous_emergency_en
+    input:
+      prompt: Are the compressions more important than the air supply during CPR?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous_emergency_en
+    input:
+      prompt: Can an automated external defibrillator (AED) also be used for epilepsy?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "yes"
+
+   # Level 2: Single or Multiple choice questions
+
+  - case: single_choice_emergency_en
+    input:
+      prompt: Which "stress hormone" increases blood pressure and heart rate? (A) Insulin (B) Adrenaline (C) Melatonin (D) Leptin
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "b"
+
+  - case: single_choice_emergency_en
+    input:
+      prompt: Which drug is indicated for an acute asthma attack? (A) Verapamil (B) Fenoterol (C) Haloperidol (D) 4-Dimethylaminophenol
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "b"
+
+  - case: single_choice_emergency_en
+    input:
+      prompt: What is the systolic blood pressure value? (A) The lower value, i.e. the pressure in the relaxation phase of the heart (B) The pressure averaged over one minute (C) The highest pressure directly after ventricular contraction (D) The same as the diastolic value
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice_emergency_en
+    input:
+      prompt: At which blood glucose level is there a risk of diabetic coma?  (A) < 20 mg/dl (B) < 50 mg/dl (C) < 90 mg/dl (D) > 110 mg/dl (E) > 300 mg/dl
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "e"
+
+  - case: single_choice_emergency_en
+    input:
+      prompt: For which diagnosis is elevation of the legs contraindicated? (A) Hypovolemic shock (B) Anaphylactic shock (C) Hypoglycemic shock (D) Cardiogenic shock (E) Septic-toxic shock
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "d"
+
+
+   # Level 3: Word questions
+
+  - case: one_word_emergency_en
+    input:
+      prompt: What is the first step in providing first aid according to the ABCDE scheme?
+      system_messages:
+        [
+          "Answer the following question with just one word"
+        ]
+    expected:
+      answer: "Airways"
+
+  - case: one_word_emergency_en
+    input:
+      prompt: What type of blood does the pulmonary vein carry?
+      system_messages:
+        [
+          "Answer the following question with just one word"
+        ]
+    expected:
+      answer: "Oxygen-rich"
+
+  - case: one_word_emergency_en
+    input:
+      prompt: Which blood group is used for unknown emergencies?
+      system_messages:
+        [
+          "Answer the following question with just one word. If the answer is zero, please use the number 0."
+        ]
+    expected:
+      answer: "0"
+
+  - case: short_words_emergency_en
+    input:
+      prompt: What does the use of a Guedel tube require?
+      system_messages:
+        [
+          "Answer the following question with maximal two words."
+        ]
+    expected:
+      answer: "Deep unconsciousness"
+
+  - case: short_words_emergency_en
+    input:
+      prompt: What do the letters of the RICE method stand for?
+      system_messages:
+        [
+          "Answer the following question with just one word per letter"
+        ]
+    expected:
+      answer: "Rest, Ice, Compression, Elevation"
+
+
+
+
 
   - case: medication_regex
     input:
