@@ -394,10 +394,235 @@ correctness:
       answer: "c"
 
 ###########################################################################################################
-# Test case: Working on a datascience project with eeg data
+# Test case: Student preparing for the Physikum for medical studies
+# Language: german
 ###########################################################################################################
 
-# regex
+  # Math relevant questions
+
+  - case: multiple_choice_math_de
+    input:
+      prompt: Ein Hohlorgan eines Patienten enthält 0,5 kg einer Flüssigkeit, deren (Massen-)Dichte ungefähr der von Wasser entspricht. Wie groß ist das ungefähre Volumen dieses Hohlorgans? (A) 500 mm3 (B) 500 cm3 (C) 0,05 m3 (D) 0,5 m3 (E) 50 m3
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
+        ]
+    expected:
+      answer: "b"
+
+  - case: multiple_choice_math_de
+    input:
+      prompt: Bei einem Autounfall wird ein 75 kg schwerer Insasse durch den eng anliegenden Sicherheitsgurt zurückgehalten, wobei ein Gurtkraftbegrenzer die auf den Insassen wirkende Kraft auf maximal 5.000 N begrenzt. Die auf den Insassen wirkende Beschleunigung ist damit (betragsmäßig) auf ca. (A) 0,067 m/s2 (B) 15 m/s2 (C) 33 m/s2 (D) 67 m/s2 (E) 375 m/s2 begrenzt.
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
+        ]
+    expected:
+      answer: "d"
+
+  - case: multiple_choice_math_en
+    input:
+      prompt: Medizinischer Sauerstoff wird in Druckgasflaschen mit einem Innendruck von normalerweise 200 bar geliefert. Die Hersteller geben an, dass diese Flaschen nicht auf über 50 °C erhitzt werden dürfen und in einer geschützten Umgebung gelagert werden müssen. Um wie viel Prozent erhöht sich dieser Innendruck ungefähr, wenn eine solche Druckgasflasche von 30 °C auf 90 °C erhitzt wird? (A) 3 % (B) 20 % (C) 40 % (D) 60 % (E) 300 %
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
+        ]
+    expected:
+      answer: "b"
+
+# Biochemistry
+
+  - case: multiple_choice_biochemistry_de
+    input:
+      prompt: Ein 14-jähriger Junge aus dem Mittelmeerraum hat plötzlich eine lebensbedrohliche hämolytische Krise (massiver Abbau von roten Blutkörperchen) entwickelt. Im Gespräch mit den Eltern stellt sich heraus, dass der Junge hohe Dosen eines Schmerzmittels erhalten hat, das auch eine oxidierende Wirkung hat. Es wird festgestellt, dass der Junge einen genetischen Mangel an einem bestimmten Enzym hat. Welcher Mangel an welchem der folgenden Enzyme passt am besten zu dieser Beschreibung? (A) Fructokinase (B) Glucokinase (C) Glucose-6-phosphat-Dehydrogenase (D) Pyruvat-Carboxylase (E) Pyruvat-Dehydrogenase
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
+        ]
+    expected:
+      answer: "c"
+
+  - case: multiple_choice_biochemistry_de
+    input:
+      prompt: Hepatozyten in der Nähe der Zentralvene im Leberazinus verhindern wirksam das Entweichen von Ammoniumionen aus der Leber. Welches Enzym in diesen Zellen ist in erster Linie für die Entfernung der verbleibenden Ammoniumionen aus dem Blut verantwortlich, die den anderen Hepatozyten des hepatischen Acinus entkommen sind? (A) Arginase (B) Carbamoylphosphat-Synthetase 1 (C) Carbamoylphosphat-Synthetase 2 (D) Glutaminase (E) Glutamin-Synthetase
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
+        ]
+    expected:
+      answer: "e"
+
+  - case: multiple_choice_biochemistry_de
+    input:
+      prompt: Proteine können posttranslational durch Ubiquitin modifiziert werden. Ubiquitin ist ein (A) Diterpen (B) Monosaccharid (C) Oligonukleotid (D) Polypeptid (E) Triacylglycerin
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
+        ]
+    expected:
+      answer: "d"
+
+  - case: yes_no_biochemistry_de
+    input:
+      prompt: Stimmt das? Die Neigung zu Thrombosen (Thrombophilie) ist in vielen Fällen genetisch bedingt. Missensemutationen im Gen für Faktor V können die Ursache einer familiären Thrombophilie sein. Durch solche Mutationen wird der aktivierte Faktor V (Va) weniger effizient durch ein aktiviertes Protein C inaktiviert und ist daher besonders stabil.
+      system_messages:
+        [
+          "Sie erhalten eine Frage, die Sie nur mit „ja“ oder „nein“ beantworten sollten."
+        ]
+    expected:
+      answer: "ja"
+
+  - case: yes_no_biochemistry_de
+    input:
+      prompt: Stimmt das? Die Neigung zu Thrombosen (Thrombophilie) ist in vielen Fällen genetisch bedingt. Missensemutationen im Gen für Faktor V können die Ursache einer familiären Thrombophilie sein. Durch solche Mutationen wird der aktivierte Faktor V (Va) weniger effizient durch ein aktiviertes Thrombomobilin inaktiviert und ist daher besonders stabil.
+      system_messages:
+        [
+          "Sie erhalten eine Frage, die Sie nur mit „ja“ oder „nein“ beantworten sollten."
+        ]
+    expected:
+      answer: "nein"
+
+# physiology
+
+  - case: multiple_choice_physiology_de
+    input:
+      prompt: Welche dieser Zellen wird nach der Aktivierung am ehesten Interleukin-2 freisetzen? B-Lymphozyt eosinophiler Granulozyt (C) Mastzelle (D) neutrophiler Granulozyt (E) T-Helferzelle Typ 1 (TH1-Zelle)
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
+        ]
+    expected:
+      answer: "e"
+
+  - case: multiple_choice_physiology_de
+    input:
+      prompt: Die Immunglobuline (Ig) werden in verschiedene Klassen eingeteilt. Welche Aussage über den Aufbau bzw. das Vorkommen der Ig-Klassen ist generell richtig? (A) Die Zugehörigkeit zu einer Ig-Klasse hängt hauptsächlich von der Struktur der leichten Kette eines Ig ab. (B) Die sezernierten Ig aller Ig-Klassen sind monomere Moleküle. (C) IgG ist das vorherrschende Ig im oralen Speichel. (D) IgM ist das vorherrschende Ig im Blutserum. (E) Reife, naive B-Lymphozyten haben membrangebundenes IgM und IgD.
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
+        ]
+    expected:
+      answer: "e"
+
+  - case: yes_no_physiology_de
+    input:
+      prompt: Ist die scheinbare Viskosität des Blutes bei normalem Hämatokrit (und unter sonst gleichen Bedingungen) bei einem Gefäßdurchmesser von etwa 8 μm typischerweise niedriger als bei einem Gefäßdurchmesser von 4 μm?
+      system_messages:
+        [
+          "Sie erhalten eine Frage, die Sie nur mit „ja“ oder „nein“ beantworten sollten."
+        ]
+    expected:
+      answer: "ja"
+
+  - case: yes_no_physiology_de
+    input:
+      prompt: Ist die scheinbare (apparente) Viskosität des Blutes bei normalem Hämatokrit (und unter sonst gleichen Bedingungen) in großen Gefäßen immer niedriger als in kleinen Gefäßen?
+      system_messages:
+        [
+          "Sie erhalten eine Frage, die Sie nur mit „ja“ oder „nein“ beantworten sollten."
+        ]
+    expected:
+      answer: "nein"
+
+  - case: one_word_physiology_de
+    input:
+      prompt: Welche zeitliche Zuordnung des EKG-Abschnittes zu den Zuständen der Herzklappen ist generell richtig, wenn die AV-Klappen geöffnet und die Taschenklappen geschlossen sind? Ist es die p-Welle oder der tp-Intervall?
+      system_messages:
+        [
+          "Beantworte die folgende Frage mit nur einem Wort"
+        ]
+    expected:
+      answer: "p-welle"
+
+# anatomy
+
+  - case: multiple_choice_anatomy_de
+    input:
+      prompt: Welcher dieser Muskeln ist hauptsächlich an der Innenrotation des Oberarmknochens im Schultergelenk beteiligt? (A) M. infraspinatus (B) M. pectoralis minor (C) M. subscapularis (D) M. supraspinatus (E) M. teres minor
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
+        ]
+    expected:
+      answer: "c"
+
+###########################################################################################################
+# Test case: Working on a datascience project with eeg data
+# Language: english
+###########################################################################################################
+
+  # regex
+
+  - case: regex_eeg_data_en
+    input:
+      prompt: Name all channels represented in a 10/20 EEG
+      system_messages:
+        [
+          "Answer the question short and precisely"
+        ]
+    expected:
+      words_in_response:
+        - "Fp1"
+        - "Fp2"
+        - "F7"
+        - "F3"
+        - "Fz"
+        - "F4"
+        - "F8"
+        - "T3"
+        - "C3"
+        - "Cz"
+        - "C4"
+        - "T4"
+        - "T5"
+        - "P3"
+        - "Pz"
+        - "P4"
+        - "T6"
+        - "O1"
+        - "O2"
+
+  - case: regex_eeg_data_en
+    input:
+      prompt: What is the name for the smooth curve outlining the extremes of a signal (eg EEG) and thus generalizes the concept of a constant amplitude into an instantaneous amplitude.
+      system_messages:
+        [
+          "Answer the question short and precisely"
+        ]
+    expected:
+      words_in_response:
+        - "envelope"
+
+  # multiple choice
+
+  - case: multiple_choice_eeg_data_en
+    input:
+      prompt: To which EEG frequency band does the following frequency belong 40hz? A Alpha B Gamma C Theta D Delta E Beta
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it concisely by answering only the correct letter of the question in lower case. Remember to use only one lower-case letter and not the whole right answer"
+        ]
+    expected:
+      answer: "b"
+
+  #yes_no
+
+  - case: yes_no_eeg_data_en
+    input:
+      prompt: Are so-called delta waves observed in EEG signals, especially during deep sleep?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "yes"
+
+###########################################################################################################
+# Test case: Working on a datascience project with eeg data
+# Language: german
+###########################################################################################################
+
+  #regex
 
   - case: regex_eeg_data_de
     input:
@@ -447,46 +672,6 @@ correctness:
         - "O1"
         - "O2"
 
-  - case: regex_eeg_data_en
-    input:
-      prompt: Name all channels represented in a 10/20 EEG
-      system_messages:
-        [
-          "Answer the question short and precisely"
-        ]
-    expected:
-      words_in_response:
-        - "Fp1"
-        - "Fp2"
-        - "F7"
-        - "F3"
-        - "Fz"
-        - "F4"
-        - "F8"
-        - "T3"
-        - "C3"
-        - "Cz"
-        - "C4"
-        - "T4"
-        - "T5"
-        - "P3"
-        - "Pz"
-        - "P4"
-        - "T6"
-        - "O1"
-        - "O2"
-
-  - case: regex_eeg_data_en
-    input:
-      prompt: What is the name for the smooth curve outlining the extremes of a signal (eg EEG) and thus generalizes the concept of a constant amplitude into an instantaneous amplitude.
-      system_messages:
-        [
-          "Answer the question short and precisely"
-        ]
-    expected:
-      words_in_response:
-        - "envelope"
-
   - case: regex_eeg_data_de
     input:
       prompt: Wie nennt man die glatte Kurve, die die Extremwerte eines Signals (z. B. EEG) umreißt und somit das Konzept einer konstanten Amplitude in eine momentane Amplitude verallgemeinert.
@@ -508,17 +693,9 @@ correctness:
           "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
         ]
     expected:
-      answer: "B"
+      answer: "b"
 
-  - case: multiple_choice_eeg_data_en
-    input:
-      prompt: To which EEG frequency band does the following frequency belong 40hz? A Alpha B Gamma C Theta D Delta E Beta
-      system_messages:
-        [
-          "You will receive a multiple choice question. Answer it concisely by answering only the correct letter of the question in lower case. Remember to use only one lower-case letter and not the whole right answer"
-        ]
-    expected:
-      answer: "B"
+# yes_no
 
   - case: yes_no_eeg_data_de
     input:
@@ -530,15 +707,6 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: yes_no_eeg_data_en
-    input:
-      prompt: Are so-called delta waves observed in EEG signals, especially during deep sleep?
-      system_messages:
-        [
-          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
-        ]
-    expected:
-      answer: "yes"
 
 ###########################################################################################################
 # Test case: Using LLM for patient interview in progress -> Differenzialdiagnose
