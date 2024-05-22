@@ -1138,7 +1138,7 @@ correctness:
 ###########################################################################################################
 
   # Level 1: Yes or no questions
-  - case: yes_no_mental_diseases_autism_de_1
+  - case: single_choice_mental_disorders_de
     input:
       prompt: Ist das Asperger-Syndrom eine Form der Autismus-Spektrum-Störungen?
       system_messages:
@@ -1148,7 +1148,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: yes_no_mental_diseases_anorexia_de_1
+  - case: single_choice_mental_disorders_de
     input:
       prompt: Die Gestalttherapie wird häufig bei der Therapie von Anorexie angewendet und konzentriert sich auf das Identifizierung und Verändern dysfunktionaler Gedanken- und Verhaltensmuster.
       system_messages:
@@ -1158,7 +1158,7 @@ correctness:
     expected:
       answer: "nein"
 
-  - case: yes_no_mental_diseases_anxiety_de_1
+  - case: single_choice_mental_disorders_de
     input:
       prompt: In der Psychotherapie der generalisierten Angststörung ist das Erlernen von Vermeidungsstrategien, um die Sorgen loszuwerden, eine gängige Technik.
       system_messages:
@@ -1168,7 +1168,7 @@ correctness:
     expected:
       answer: "nein"
 
-  - case: yes_no_mental_diseases_anxiety_de_2
+  - case: single_choice_mental_disorders_de
     input:
       prompt: Menschen mit generalisierter Angststörung halten ihre Sorgen meist für sinnlos und wollen sie am liebsten vollständig loswerden.
       system_messages:
@@ -1178,7 +1178,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: yes_no_mental_diseases_mania_de_2
+  - case: single_choice_mental_disorders_de
     input:
       prompt: Wird eine Manie mit Medikamenten behandelt, steigt die Gefahr, dass psychotische Symptome auftreten.
       system_messages:
@@ -1188,9 +1188,59 @@ correctness:
     expected:
       answer: "nein"
 
+  - case: single_choice_mental_disorders_de
+    input:
+      prompt: Verlustangst und Bindungsangst sind zwei gegenteilige Phänomene.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. "
+        ]
+    expected:
+      answer: "nein"
+
+  - case: single_choice_mental_disorders_de
+    input:
+      prompt: Bei einer bipolaren Störung hält eine depressive Episode mindestens 14 Tage an.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. "
+        ]
+    expected:
+      answer: "ja"
+
+  - case: single_choice_mental_disorders_de
+    input:
+      prompt: Die Anfälligkeit dafür, eine Depression zu entwickeln, kann vererbt werden.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. "
+        ]
+    expected:
+      answer: "ja"
+
+  - case: single_choice_mental_disorders_de
+    input:
+      prompt: Die Erkrankung Multiple Persönlichkeit kann aufgrund ihrer Schwere oft kaum behandelt werden.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. "
+        ]
+    expected:
+      answer: "nein"
+
+  - case: single_choice_mental_disorders_de
+    input:
+      prompt: Im Gegensatz zur Magersucht ist die Binge-Eating-Störung nicht tödlich.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. "
+        ]
+    expected:
+      answer: "nein"
+
   # Level 2: Multiple choice questions
 
-  - case: multiple_choice_autism_de_1
+  - case: multiple_choice_mental_disorders_de
     input:
       prompt: Welche der folgenden sind übliche Therapieansätze bei Autismus? A Hypnotherapie, B Tanztherapie, C Psychoanalyse, D Kognitive Verhaltenstherapie, E Applied Behavior Analysis, F Entwicklungsbasierte Interventionen, G tiefenpsychologisch fundierte Psychotherapie, H Homöopathie, I Akupunktur, J Aromatherapie
       system_messages:
@@ -1201,7 +1251,7 @@ correctness:
       answer: "d,e,f"
 
 
-  - case: multiple_choice_anorexia_de_1
+  - case: multiple_choice_mental_disorders_de
     input:
       prompt: Welche Art von Medikamenten wird bei Anorexie-Patienten häufig verwendet, um Begleiterkrankungen wie Depressionen oder Angststörungen zu behandeln? A Antihistaminika, B Antibiotika, C Antidepressiva, D Betablocker
       system_messages:
@@ -1211,7 +1261,17 @@ correctness:
     expected:
       answer: "c"
 
-  - case: multiple_choice_anxiety_de_1
+  - case: multiple_choice_mental_disorders_de
+    input:
+      prompt: Was ist ein Hauptziel der Ernährungstherapie bei der Behandlung von Anorexie? A Förderung einer veganen Ernährungsweise, B Eliminierung bestimmter Lebensmittelgruppen aus der Ernährung, C Wiederherstellung des Körpergewichts und Etablierung eines gesunden Essverhaltens, D Konzentration auf Sport und Fitness zur Gewichtsreduktion
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gebe dabei nur den Buchstaben zurück und nicht die ganze Antwort."
+        ]
+    expected:
+      answer: "c"
+
+  - case: multiple_choice_mental_disorders_de
     input:
       prompt: Was trifft auf den GAD-7 zu? Der GAD-7 ist … A … ein schnell durchführbarer Test für generalisierte Angststörung, B … sehr zeitaufwändig, aber aussagekräftig, C … nicht wissenschaftlich untermauert, D … für die Diagnose einer generalisierten Angststörung völlig ausreichend
       system_messages:
@@ -1221,7 +1281,7 @@ correctness:
     expected:
       answer: "a"
 
-  - case: multiple_choice_mania_de_1
+  - case: multiple_choice_mental_disorders_de
     input:
       prompt: Welches ist kein Frühwarnzeichen der Manie? A Unruhe, B euphorische Stimmung, C erhöhte Reizbarkeit, D vermehrter Schlaf
       system_messages:
@@ -1231,8 +1291,58 @@ correctness:
     expected:
       answer: "d"
 
+  - case: multiple_choice_mental_disorders_de
+    input:
+      prompt: Zu welcher Art von psychischen Störungen gehört die Manie? A affektive Störungen, B euphorische Störungen, C Zwangsstörungen, D Aktivitätsstörungen
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gebe dabei nur den Buchstaben zurück und nicht die ganze Antwort."
+        ]
+    expected:
+      answer: "a"
+
+  - case: multiple_choice_mental_disorders_de
+    input:
+      prompt: Was können Ursachen einer sozialen Phobie sein? A genetische Veranlagung, B Persönlichkeitsmerkmale, C bestimmte Denkstile, D unangenehme Erfahrungen mit anderen Menschen, E Interessenskonflikte, F Mangelernährung
+      system_messages:
+        [
+          "Wähle aus den Antwortmöglichkeiten alle passenden Antworten aus und gebe die zugehörigen Buchstaben zurück. Gib dabei ausschließlich die Buchstaben zurück und nicht die kompletten Antworten. Verknüpfe diese dann mit ','. In der Antwort sollen keine Leerzeichen auftauchen."
+        ]
+    expected:
+      answer: "a,b,c,d"
+
+  - case: multiple_choice_mental_disorders_de
+    input:
+      prompt: Welche psychosozialen Faktoren können zur Entwicklung einer Depression beitragen? A Verlust eines Elternteils in der Kindheit, B enge Eltern-Kind-Bindung, C zu hohes Selbstwertgefühl, D Traumata wie das Erleben von Gewalt, E mangelndes Selbstwertgefühl, F Persönlichkeitstyp Typus melancholicus
+      system_messages:
+        [
+          "Wähle aus den Antwortmöglichkeiten alle passenden Antworten aus und gebe die zugehörigen Buchstaben zurück. Gib dabei ausschließlich die Buchstaben zurück und nicht die kompletten Antworten. Verknüpfe diese dann mit ','. In der Antwort sollen keine Leerzeichen auftauchen."
+        ]
+    expected:
+      answer: "a,d,e,f"
+
+  - case: multiple_choice_mental_disorders_de
+    input:
+      prompt: Von allen psychischen Erkrankungen besitzt die Magersucht … A … die geringste Anzahl an Erkrankten, B … die höchste Heilungsquote, C … den harmlosesten Verlauf, D … die höchste Sterberate
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gebe dabei nur den Buchstaben zurück und nicht die ganze Antwort."
+        ]
+    expected:
+      answer: "d"
+
+  - case: multiple_choice_mental_disorders_de
+    input:
+      prompt: Was sind typische Kennzeichen der Anorexie? A ständige Übelkeit, B anhaltendes Untergewicht, C Angst vor dem Zunehmen oder Zudicksein, D starke Gewichtsschwankungen, E Appetitlosigkeit
+      system_messages:
+        [
+          "Wähle aus den Antwortmöglichkeiten alle passenden Antworten aus und gebe die zugehörigen Buchstaben zurück. Gib dabei ausschließlich die Buchstaben zurück und nicht die kompletten Antworten. Verknüpfe diese dann mit ','. In der Antwort sollen keine Leerzeichen auftauchen."
+        ]
+    expected:
+      answer: "b,c,e"
+
   # Level 3: Word questions
-  - case: regex_autism_de_1
+  - case: regex_mental_disorders_de
     input:
       prompt: Nenne alle üblichen Ziele der Autismustherapie.
       system_messages:
@@ -1246,7 +1356,7 @@ correctness:
         - "verhalten"
         - "selbstständigkeit"
 
-  - case: regex_anorexia_de_1
+  - case: regex_mental_disorders_de
     input:
       prompt: Wodurch zeichnet sich restriktive Anorexie aus?
       system_messages:
@@ -1261,8 +1371,10 @@ correctness:
         -
           - "mehr"
           - "sport"
+          - "bewegung"
+          - "gewichtsverlust"
 
-  - case: regex_anxiety_de_1
+  - case: regex_mental_disorders_de
     input:
       prompt: Kopfschmerzen und Zittern sind bei der generalisierten Angststörung häufig Symptome einer dauerhaft erhöhten ...
       system_messages:
@@ -1273,7 +1385,7 @@ correctness:
       words_in_response:
         - "körperliche anstrengung"
 
-  - case: regex_mania_de_1
+  - case: regex_mental_disorders_de
     input:
       prompt: Welche Therapiephase findet direkt nach der akuten Manie-Phase statt?
       system_messages:
@@ -1282,9 +1394,12 @@ correctness:
         ]
     expected:
       words_in_response:
-        - "erhaltungstherapie"
+        - "erhaltung"
+        -
+          - "therapie"
+          - "phase"
 
-  - case: regex_mania_de_2
+  - case: regex_mental_disorders_de
     input:
       prompt: Bei den Ursachen der Manie geht man heute von einem Zusammenspiel zwischen ... und ... Faktoren sowie Störungen der ... aus.
       system_messages:
@@ -1297,6 +1412,432 @@ correctness:
         - "psychosozialen"
         - "Neurotransmitter"
 
+  - case: regex_mental_disorders_de
+    input:
+      prompt: Welche beiden Behandlungsmethoden werden am häufigsten bei einer sozialen Phobie angewandt?
+      system_messages:
+        [
+          "Antworte so kurz und präzise wie möglich."
+        ]
+    expected:
+      words_in_response:
+        -
+          - "kognitive Verhaltenstherapie"
+          - "Verhaltenstherapie"
+        -
+          - "Medikamente"
+          - "Medikamentöse Therapie"
+
+  - case: regex_mental_disorders_de
+    input:
+      prompt: Nenne die beiden Therapiearten, deren Kombination bei der Behandlung von Depressionen in der Regel am besten wirkt.
+      system_messages:
+        [
+          "Antworte so kurz und präzise wie möglich."
+        ]
+    expected:
+      words_in_response:
+        - "Psychotherapie"
+        -
+          - "Medikamente"
+          - "Medikamentöse Therapie"
+
+  - case: regex_mental_disorders_de
+    input:
+      prompt: Zwischen welchen Formen von Anorexie wird unterschieden?
+      system_messages:
+        [
+          "Antworte so kurz und präzise wie möglich."
+        ]
+    expected:
+      words_in_response:
+        - "Restriktiv"
+        - "Binge"
+
+  - case: regex_mental_disorders_de
+    input:
+      prompt: Unter welchen Störungen ist die dissoziative Identitätsstörung im ICD-11?
+      system_messages:
+        [
+          "Antworte so kurz und präzise wie möglich."
+        ]
+    expected:
+      words_in_response:
+        -
+          - "Konversionsstörungen"
+          - "Konversion"
+
+  - case: regex_mental_disorders_de
+    input:
+      prompt: Wozu dient die Abspaltung von der eigenen Persönlichkeit in den meisten Fällen bei Personen mit einer Multiplen Persönlichkeit?
+      system_messages:
+        [
+          "Antworte so kurz und präzise wie möglich."
+        ]
+    expected:
+      words_in_response:
+        - "Schutz"
+        -
+          - "Trauma"
+          - "traumatisch"
+        - "Erinnerungen"
+
+
+###########################################################################################################
+  # Test case: Questions about mental disorders for psychotherapists, psychology students or psychiatrists in training
+  # Language: English
+###########################################################################################################
+
+  # Level 1: Yes or no questions
+  - case: single_choice_mental_disorders_en
+    input:
+      prompt: Is Asperger syndrome a form of autism spectrum disorder?
+      system_messages:
+        [
+          "You receive a question and should only answer it with the words 'yes' or 'no'."
+        ]
+    expected:
+      answer: "yes"
+
+  - case: single_choice_mental_disorders_en
+    input:
+      prompt: Gestalt therapy is often used in the treatment of anorexia and focuses on identifying and changing dysfunctional thought and behaviour patterns.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'."
+        ]
+    expected:
+      answer: "no"
+
+  - case: single_choice_mental_disorders_en
+    input:
+      prompt: In psychotherapy for generalised anxiety disorder, learning avoidance strategies to get rid of worries is a common technique.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'."
+        ]
+    expected:
+      answer: "no"
+
+  - case: single_choice_mental_disorders_en
+    input:
+      prompt: People with generalised anxiety disorder usually consider their worries to be pointless and would prefer to get rid of them completely.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'."
+        ]
+    expected:
+      answer: "yes"
+
+  - case: single_choice_mental_disorders_en
+    input:
+      prompt: If mania is treated with medication, the risk of psychotic symptoms increases.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'."
+        ]
+    expected:
+      answer: "no"
+
+  - case: single_choice_mental_disorders_en
+    input:
+      prompt: Fear of loss and fear of commitment are two opposing phenomena.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'."
+        ]
+    expected:
+      answer: "no"
+
+  - case: single_choice_mental_disorders_en
+    input:
+      prompt: In bipolar disorder, a depressive episode lasts at least 14 days.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'."
+        ]
+    expected:
+      answer: "yes"
+
+  - case: single_choice_mental_disorders_en
+    input:
+      prompt: The susceptibility to developing depression can be inherited.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'."
+        ]
+    expected:
+      answer: "yes"
+
+  - case: single_choice_mental_disorders_en
+    input:
+      prompt: Due to its severity, multiple personality disorder is often almost impossible to treat.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'."
+        ]
+    expected:
+      answer: "no"
+
+  - case: single_choice_mental_disorders_en
+    input:
+      prompt: In contrast to anorexia, binge eating disorder is not fatal.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'."
+        ]
+    expected:
+      answer: "no"
+
+  # Level 2: Multiple choice questions
+
+  - case: multiple_choice_mental_disorders_en
+    input:
+      prompt: Which of the following are common therapeutic approaches for autism? A Hypnotherapy, B Dance therapy, C Psychoanalysis, D Cognitive behavioural therapy, E Applied behaviour analysis, F Development-based interventions, G Depth psychology-based psychotherapy, H Homeopathy, I Acupuncture, J Aromatherapy
+      system_messages:
+        [
+          "You will receive a multiple choice question. Select all suitable answers from the possible answers and return the corresponding letters. Only return the letters and not the complete answers. Then link these with ','. Do not include whitespaces in your answer."
+        ]
+    expected:
+      answer: "d,e,f"
+
+
+  - case: multiple_choice_mental_disorders_en
+    input:
+      prompt: Which type of medication is often used in anorexia patients to treat concomitant illnesses such as depression or anxiety disorders? A Antihistamines, B Antibiotics, C Antidepressants, D Beta-blockers
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "c"
+
+  - case: multiple_choice_mental_disorders_en
+    input:
+      prompt: What is one of the main aims of nutritional therapy in the treatment of anorexia? A Promoting a vegan diet, B Eliminating certain food groups from the diet, C Restoring body weight and establishing healthy eating behaviour, D Focusing on sport and fitness to reduce weight
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "c"
+
+  - case: multiple_choice_mental_disorders_en
+    input:
+      prompt: What is true of the GAD-7? The GAD-7 is ... A ... a quick test for generalised anxiety disorder, B ... very time-consuming, but meaningful, C ... not scientifically substantiated, D ... completely sufficient for the diagnosis of generalised anxiety disorder
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "a"
+
+  - case: multiple_choice_mental_disorders_en
+    input:
+      prompt: Which of the following is not an early warning sign of mania? A restlessness, B euphoric mood, C increased irritability, D increased sleep
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "d"
+
+  - case: multiple_choice_mental_disorders_en
+    input:
+      prompt: To which type of mental disorder does mania belong? A affective disorders, B euphoric disorders, C obsessive-compulsive disorders, D activity disorders
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "a"
+
+  - case: multiple_choice_mental_disorders_en
+    input:
+      prompt: What can be the causes of a social phobia? A genetic predisposition, B personality traits, C certain thinking styles, D unpleasant experiences with other people, E conflicts of interest, F malnutrition
+      system_messages:
+        [
+          "You will receive a multiple choice question. Select all suitable answers from the possible answers and return the corresponding letters. Only return the letters and not the complete answers. Then link these with ','. Do not include whitespaces in your answer."
+        ]
+    expected:
+      answer: "a,b,c,d"
+
+  - case: multiple_choice_mental_disorders_en
+    input:
+      prompt: Which psychosocial factors can contribute to the development of depression? A Loss of a parent in childhood, B Close parent-child bond, C Too high self-esteem, D Traumas such as experiencing violence, E Lack of self-esteem, F Melancholic personality type
+      system_messages:
+        [
+          "You will receive a multiple choice question. Select all suitable answers from the possible answers and return the corresponding letters. Only return the letters and not the complete answers. Then link these with ','. Do not include whitespaces in your answer."
+        ]
+    expected:
+      answer: "a,d,e,f"
+
+  - case: multiple_choice_mental_disorders_en
+    input:
+      prompt: Of all mental illnesses, anorexia has ... A ... the lowest number of sufferers, B ... the highest recovery rate, C ... the most harmless course, D ... the highest mortality rate
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "d"
+
+  - case: multiple_choice_mental_disorders_en
+    input:
+      prompt: What are the typical characteristics of anorexia? A constant nausea, B persistent underweight, C fear of gaining weight or being overweight, D severe weight fluctuations, E loss of appetite
+      system_messages:
+        [
+          "You will receive a multiple choice question. Select all suitable answers from the possible answers and return the corresponding letters. Only return the letters and not the complete answers. Then link these with ','. Do not include whitespaces in your answer."
+        ]
+    expected:
+      answer: "b,c,e"
+
+  # Level 3: Word questions
+  - case: regex_mental_disorders_en
+    input:
+      prompt: List all the common goals of autism therapy.
+      system_messages:
+        [
+          "Answer as briefly and concisely as possible."
+        ]
+    expected:
+      words_in_response:
+        - "communication"
+        - "interaction"
+        - "behaviour"
+        - "independence"
+
+  - case: regex_mental_disorders_en
+    input:
+      prompt: What characterises restrictive anorexia?
+      system_messages:
+        [
+          "Answer as briefly and concisely as possible."
+        ]
+    expected:
+      words_in_response:
+        -
+          - "less"
+          - "nutrition"
+          - "food"
+        -
+          - "low"
+          - "lose"
+          - "reduce"
+          - "weight"
+          - "loss"
+
+  - case: regex_mental_disorders_en
+    input:
+      prompt: In generalised anxiety disorder, headaches and tremors are often symptoms of a permanently increased ...
+      system_messages:
+        [
+          "Complete the sentence with 2 words. Only fill in the two words you are looking for."
+        ]
+    expected:
+      words_in_response:
+        - "physical exertion"
+
+  - case: regex_mental_disorders_en
+    input:
+      prompt: Which therapy phase takes place directly after the acute mania phase?
+      system_messages:
+        [
+          "Answer as briefly and concisely as possible."
+        ]
+    expected:
+      words_in_response:
+        -
+          - "conservation"
+          - "maintenance"
+        -
+          - "therapy"
+          - "phase"
+
+  - case: regex_mental_disorders_en
+    input:
+      prompt: The causes of mania are now thought to be an interplay between ... and ... factors as well as ... disorders.
+      system_messages:
+        [
+          "Complete the sentence as briefly as possible. Only fill in the words that should fill the gaps."
+        ]
+    expected:
+      words_in_response:
+        - "genetic"
+        - "psychosocial"
+        - "neurotransmitter"
+
+  - case: regex_mental_disorders_en
+    input:
+      prompt: Which two treatment methods are most commonly used for social phobia?
+      system_messages:
+        [
+          "Answer as briefly and concisely as possible."
+        ]
+    expected:
+      words_in_response:
+        -
+          - "cognitive behavioural therapy"
+          - "behavioural therapy"
+        -
+          - "medication"
+          - "drug"
+          - "drug therapy"
+
+  - case: regex_mental_disorders_en
+    input:
+      prompt: Name the two types of therapy whose combination usually works best in the treatment of depression.
+      system_messages:
+        [
+          "Answer as briefly and concisely as possible."
+        ]
+    expected:
+      words_in_response:
+        - "psychotherapy"
+        -
+          - "medication"
+          - "drug"
+          - "drug therapy"
+
+  - case: regex_mental_disorders_en
+    input:
+      prompt: What are the different types of anorexia?
+      system_messages:
+        [
+          "Answer as briefly and concisely as possible."
+        ]
+    expected:
+      words_in_response:
+        - "restrictive"
+        - "binge"
+
+  - case: regex_mental_disorders_en
+    input:
+      prompt: Which disorders does dissociative identity disorder fall under in ICD-11?
+      system_messages:
+        [
+          "Answer as briefly and concisely as possible."
+        ]
+    expected:
+      words_in_response:
+        -
+          - "conversion disorders"
+          - "conversion"
+
+  - case: regex_mental_disorders_en
+    input:
+      prompt: What is the purpose of splitting off from one's own personality in most cases in people with a multiple personality?
+      system_messages:
+        [
+          "Answer as briefly and concisely as possible."
+        ]
+    expected:
+      words_in_response:
+        - "protection"
+        -
+          - "trauma"
+          - "traumatic"
+        - "memories"
 
 
 
