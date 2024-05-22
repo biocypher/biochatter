@@ -1,6 +1,7 @@
 import os
 
 import requests
+from dotenv import load_dotenv
 from xinference.client import Client
 import pytest
 
@@ -8,22 +9,20 @@ import numpy as np
 import pandas as pd
 
 from biochatter.prompts import BioCypherPromptEngine
-from benchmark.load_dataset import get_benchmark_dataset
+from .load_dataset import get_benchmark_dataset
 from biochatter.llm_connect import GptConversation, XinferenceConversation
 from .benchmark_utils import benchmark_already_executed
 
 # how often should each benchmark be run?
-N_ITERATIONS = 5
+N_ITERATIONS = 1
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
 
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
-    "gpt-3.5-turbo-0613",
-    "gpt-3.5-turbo-0125",
-    "gpt-4-0613",
-    "gpt-4-0125-preview",
+    "gpt-3.5-turbo-0125"
+    #"gpt-4-0613"
 ]
 
 XINFERENCE_MODELS = {
@@ -148,7 +147,7 @@ XINFERENCE_MODEL_NAMES = [
     for quantization in XINFERENCE_MODELS[model_name]["quantization"]
 ]
 
-BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
+BENCHMARKED_MODELS = OPENAI_MODEL_NAMES #+ XINFERENCE_MODEL_NAMES
 BENCHMARKED_MODELS.sort()
 
 # Xinference IP and port
@@ -233,6 +232,9 @@ def conversation(request, model_name):
             prompts={},
             correct=False,
         )
+        # delete first dots if venv is in project env
+        cus_path = os.getcwd() + "../../venv/bin/.env"
+        load_dotenv(cus_path)
         conversation.set_api_key(
             os.getenv("OPENAI_API_KEY"), user="benchmark_user"
         )
@@ -304,6 +306,9 @@ def evaluation_conversation():
         prompts={},
         correct=False,
     )
+    # delete first dots if venv is in project env
+    cus_path = os.getcwd() + "../../venv/bin/.env"
+    load_dotenv(cus_path)
     conversation.set_api_key(os.getenv("OPENAI_API_KEY"), user="benchmark_user")
     return conversation
 
@@ -396,6 +401,12 @@ def pytest_generate_tests(metafunc):
             "test_data_text_extraction",
             data_file["text_extraction"],
         )
+    if "test_data_correctness" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "test_data_correctness",
+            data_file["correctness"],
+        )
+
 
 
 @pytest.fixture
