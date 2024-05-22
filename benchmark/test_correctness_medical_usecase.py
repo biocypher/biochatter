@@ -10,7 +10,8 @@ from .benchmark_utils import (
     get_result_file_path,
     get_wrong_result_file_path,
     write_results_to_file,
-    write_wrong_results_to_file
+    write_wrong_results_to_file,
+    categorize_failures
 )
 
 
@@ -34,6 +35,7 @@ def test_correctness_of_answers(
     def run_test():
         nonlocal wrong_answer
         nonlocal expected_answer
+        nonlocal failure_group
         conversation.reset()  # needs to be reset for each test
         [
             conversation.append_system_message(m)
@@ -60,6 +62,7 @@ def test_correctness_of_answers(
             score.append(is_correct)
             if not is_correct:
                 wrong_answer = response
+                failure_group = categorize_failures(wrong_answer, expected_answer)
 
         # calculate for answers with regex
         else:
@@ -73,6 +76,8 @@ def test_correctness_of_answers(
                     score.append(False)
 
         return calculate_test_score(score)
+
+
 
     mean_score, max, n_iterations = multiple_testing(run_test)
 

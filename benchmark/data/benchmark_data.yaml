@@ -508,7 +508,7 @@ correctness:
           "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort."
         ]
     expected:
-      answer: "B"
+      answer: "b"
 
   - case: multiple_choice_eeg_data_en
     input:
@@ -518,7 +518,7 @@ correctness:
           "You will receive a multiple choice question. Answer it concisely by answering only the correct letter of the question in lower case. Remember to use only one lower-case letter and not the whole right answer"
         ]
     expected:
-      answer: "B"
+      answer: "b"
 
   - case: yes_no_eeg_data_de
     input:

@@ -1,6 +1,7 @@
 import pytest
 
 import pandas as pd
+import re
 from datetime import datetime
 
 
@@ -200,6 +201,25 @@ def write_wrong_results_to_file(
         by=["model_name", "subtask"]
     )
     results.to_csv(file_path, index=False)
+
+
+def categorize_failures(wrong_answer, expected_answer):
+    if wrong_answer.lower() == expected_answer.lower():
+        return "Case Sensitivity"
+    elif wrong_answer in expected_answer or expected_answer in wrong_answer:
+        return "Partial Match"
+    elif re.sub(r'\s+', '', wrong_answer.lower()) == re.sub(r'\s+', '', expected_answer.lower()):
+        return "Format Error"
+    elif re.search(r'\b' + re.escape(wrong_answer) + r'\b', expected_answer) or re.search(r'\b' + re.escape(expected_answer) + r'\b', wrong_answer):
+        return "Synonym"
+    elif re.search(r'\w+', wrong_answer) and re.search(r'\w+', expected_answer) and any(char.isdigit() for char in wrong_answer) != any(char.isdigit() for char in expected_answer):
+        return "Format Error"
+    elif any(char.isdigit() for char in wrong_answer) or any(char.isdigit() for char in expected_answer):
+        return "Format Error"
+    elif wrong_answer.lower() in expected_answer.lower() or expected_answer.lower() in wrong_answer.lower():
+        return "Partial Match"
+    else:
+        return "Other"
 
 
 # TODO should we use SQLite? An online database (REDIS)?
