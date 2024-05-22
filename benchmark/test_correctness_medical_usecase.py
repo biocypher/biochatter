@@ -1,4 +1,5 @@
 import inspect
+import nltk
 import re
 
 import pytest
@@ -21,9 +22,12 @@ def test_correctness_of_answers(
     conversation,
     multiple_testing,
 ):
+    # Downloads the naturale language synonym toolkit, just need to be done once per device
+    # nltk.download()
+
     yaml_data = test_data_correctness
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
-    # Wieder einkommentieren, wenn benötigt
+
     skip_if_already_run(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
@@ -69,11 +73,14 @@ def test_correctness_of_answers(
             expected_word_pairs = yaml_data["expected"]["words_in_response"]
             for pair in expected_word_pairs:
                 regex = "|".join(pair)
+                expected_answer = regex
                 if re.search(regex, response, re.IGNORECASE):
                     # print(f"Expected words '{pair}' found in response: {response}")
                     score.append(True)
                 else:
                     score.append(False)
+                    wrong_answer = wrong_answer + response
+                    failure_group = categorize_failures(wrong_answer, expected_answer, True)
 
         return calculate_test_score(score)
 

@@ -2,6 +2,7 @@ import pytest
 
 import pandas as pd
 import re
+from nltk.corpus import wordnet
 from datetime import datetime
 
 
@@ -204,25 +205,34 @@ def write_wrong_results_to_file(
 
 
 def categorize_failures(wrong_answer, expected_answer, regex=False):
+
     if not regex:
 
-        # Check if the answer is right, but the case sensitivity was wrong
+        # Check if the answer is right, but the case sensitivity was wrong (e.g. a / A)
         if wrong_answer.lower() == expected_answer.lower():
             return "Case Sensitivity"
 
-        # Check
+        # Check if some of the answer is right (e.g. "a headache instead of a")
         elif wrong_answer in expected_answer or expected_answer in wrong_answer:
             return "Partial Match"
+
+        # Check if the format of the answer is wrong, but the answer otherwise is right (e.g. "a b" instead of "ab")
         elif re.sub(r'\s+', '', wrong_answer.lower()) == re.sub(r'\s+', '', expected_answer.lower()):
             return "Format Error"
-        elif re.search(r'\b' + re.escape(wrong_answer) + r'\b', expected_answer) or re.search(r'\b' + re.escape(expected_answer) + r'\b', wrong_answer):
+
+        # Check if the answer is a synonym with nltk (e.g. Illness / Sickness)
+        elif is_synonym(wrong_answer, expected_answer):
             return "Synonym"
+
+        # Check if the format of the answer is wrong due to numerical or alphabetic differences (e.g. "123" vs "one two three")
         elif re.search(r'\w+', wrong_answer) and re.search(r'\w+', expected_answer) and any(char.isdigit() for char in wrong_answer) != any(char.isdigit() for char in expected_answer):
             return "Format Error"
-        elif any(char.isdigit() for char in wrong_answer) or any(char.isdigit() for char in expected_answer):
-            return "Format Error"
+
+        # Check if partial match with case sensitivity
         elif wrong_answer.lower() in expected_answer.lower() or expected_answer.lower() in wrong_answer.lower():
-            return "Partial Match"
+            return "Partial Match / case Sensitivity"
+
+        # Else the answer may be completely wrong
         else:
             return "Other"
 
@@ -232,13 +242,26 @@ def categorize_failures(wrong_answer, expected_answer, regex=False):
             return "Words Missing"
 
         # Check if some words in wrong_answer are incorrect (present in wrong_answer but not in expected_answer)
-        elif any(word not in expected_answer for word in wrong_answer.split()):
-            return "Incorrect Words"
+        #elif any(word not in expected_answer for word in wrong_answer.split()):
+        #   return "Incorrect Words"
 
         # Check if the entire wrong_answer is completely different from the expected_answer
         else:
             return "Entire Answer Incorrect"
 
+
+def is_synonym(word1, word2):
+    if word2 is "yes" or "no" or "ja" or "nein":
+        return False
+
+    synsets1 = wordnet.synsets(word1)
+    synsets2 = wordnet.synsets(word2)
+
+    for synset1 in synsets1:
+        for synset2 in synsets2:
+            if synset1.wup_similarity(synset2) is not None:
+                return True
+    return False
 
 
 # TODO should we use SQLite? An online database (REDIS)?
