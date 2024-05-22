@@ -548,9 +548,81 @@ correctness:
 
 ###########################################################################################################
 # Test case: Working on a datascience project with eeg data
+# Language: english
 ###########################################################################################################
 
-# regex
+  # regex
+
+  - case: regex_eeg_data_en
+    input:
+      prompt: Name all channels represented in a 10/20 EEG
+      system_messages:
+        [
+          "Answer the question short and precisely"
+        ]
+    expected:
+      words_in_response:
+        - "Fp1"
+        - "Fp2"
+        - "F7"
+        - "F3"
+        - "Fz"
+        - "F4"
+        - "F8"
+        - "T3"
+        - "C3"
+        - "Cz"
+        - "C4"
+        - "T4"
+        - "T5"
+        - "P3"
+        - "Pz"
+        - "P4"
+        - "T6"
+        - "O1"
+        - "O2"
+
+  - case: regex_eeg_data_en
+    input:
+      prompt: What is the name for the smooth curve outlining the extremes of a signal (eg EEG) and thus generalizes the concept of a constant amplitude into an instantaneous amplitude.
+      system_messages:
+        [
+          "Answer the question short and precisely"
+        ]
+    expected:
+      words_in_response:
+        - "envelope"
+
+  # multiple choice
+
+  - case: multiple_choice_eeg_data_en
+    input:
+      prompt: To which EEG frequency band does the following frequency belong 40hz? A Alpha B Gamma C Theta D Delta E Beta
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it concisely by answering only the correct letter of the question in lower case. Remember to use only one lower-case letter and not the whole right answer"
+        ]
+    expected:
+      answer: "B"
+
+  #yes_no
+
+  - case: yes_no_eeg_data_en
+    input:
+      prompt: Are so-called delta waves observed in EEG signals, especially during deep sleep?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "yes"
+
+###########################################################################################################
+# Test case: Working on a datascience project with eeg data
+# Language: german
+###########################################################################################################
+
+  #regex
 
   - case: regex_eeg_data_de
     input:
@@ -600,46 +672,6 @@ correctness:
         - "O1"
         - "O2"
 
-  - case: regex_eeg_data_en
-    input:
-      prompt: Name all channels represented in a 10/20 EEG
-      system_messages:
-        [
-          "Answer the question short and precisely"
-        ]
-    expected:
-      words_in_response:
-        - "Fp1"
-        - "Fp2"
-        - "F7"
-        - "F3"
-        - "Fz"
-        - "F4"
-        - "F8"
-        - "T3"
-        - "C3"
-        - "Cz"
-        - "C4"
-        - "T4"
-        - "T5"
-        - "P3"
-        - "Pz"
-        - "P4"
-        - "T6"
-        - "O1"
-        - "O2"
-
-  - case: regex_eeg_data_en
-    input:
-      prompt: What is the name for the smooth curve outlining the extremes of a signal (eg EEG) and thus generalizes the concept of a constant amplitude into an instantaneous amplitude.
-      system_messages:
-        [
-          "Answer the question short and precisely"
-        ]
-    expected:
-      words_in_response:
-        - "envelope"
-
   - case: regex_eeg_data_de
     input:
       prompt: Wie nennt man die glatte Kurve, die die Extremwerte eines Signals (z. B. EEG) umreißt und somit das Konzept einer konstanten Amplitude in eine momentane Amplitude verallgemeinert.
@@ -663,15 +695,7 @@ correctness:
     expected:
       answer: "B"
 
-  - case: multiple_choice_eeg_data_en
-    input:
-      prompt: To which EEG frequency band does the following frequency belong 40hz? A Alpha B Gamma C Theta D Delta E Beta
-      system_messages:
-        [
-          "You will receive a multiple choice question. Answer it concisely by answering only the correct letter of the question in lower case. Remember to use only one lower-case letter and not the whole right answer"
-        ]
-    expected:
-      answer: "B"
+# yes_no
 
   - case: yes_no_eeg_data_de
     input:
@@ -683,15 +707,6 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: yes_no_eeg_data_en
-    input:
-      prompt: Are so-called delta waves observed in EEG signals, especially during deep sleep?
-      system_messages:
-        [
-          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
-        ]
-    expected:
-      answer: "yes"
 
 ###########################################################################################################
 # Test case: Using LLM for patient interview in progress -> Differenzialdiagnose
