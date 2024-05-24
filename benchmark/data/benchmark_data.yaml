@@ -217,32 +217,15 @@ rag_interpretation:
       behaviour: "answer"
 
 
-# new test cases pdsm
-correctness:
-  # test simple yes / no answer
-  - case: single_answer_yes
-    input:
-      prompt: Does taking blood thinners have the potential to reduce the risk of a stroke?
-      system_messages:
-        [
-          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
-        ]
-    expected:
-      answer: "yes"
+  ###########################################################################################################
+  # Here start the PDSM Test Cases
+  ###########################################################################################################
 
-  # test multiple choice answer
-  - case: multiple_answer_a
-    input:
-      prompt: Which of the following is a known risk factor for stroke? A) High cholesterol B) Low blood pressure C) Regular exercise D) Vitamin D deficiency
-      system_messages:
-        [
-          "You will receive a multiple choice question. Answer it concisely by answering only the correct letter of the question in lower case. Remember to use only one lower-case letter and not the whole right answer"
-        ]
-    expected:
-      answer: "a"
+correctness:
 
   ###########################################################################################################
   # Test case: Student preparing for the Physikum for medical studies
+  # Language: English
   ###########################################################################################################
 
   # Math relevant questions
@@ -309,7 +292,7 @@ correctness:
     expected:
       answer: "d"
 
-  - case: yes_no_biochemistry_en
+  - case: dichotomous_biochemistry_en
     input:
       prompt: Is this true? The tendency to thrombosis (thrombophilia) is in many cases genetically determined. Missense mutations in the gene for factor V can be the cause of familial thrombophilia. Due to such mutations, the activated factor V (Va) is less efficiently inactivated by an activated protein C and is therefore particularly stable.
       system_messages:
@@ -319,7 +302,7 @@ correctness:
     expected:
       answer: "yes"
 
-  - case: yes_no_biochemistry_en
+  - case: dichotomous_biochemistry_en
     input:
       prompt: Is this true? The tendency to thrombosis (thrombophilia) is in many cases genetically determined. Missense mutations in the gene for factor V can be the cause of familial thrombophilia. Due to such mutations, the activated factor V (Va) is less efficiently inactivated by an activated thrombomobilin and is therefore particularly stable.
       system_messages:
@@ -351,7 +334,7 @@ correctness:
     expected:
       answer: "e"
 
-  - case: yes_no_physiology_en
+  - case: dichotomous_physiology_en
     input:
       prompt: Is the apparent viscosity of the blood with a normal haematocrit (and under otherwise identical conditions) typically lower with a vessel diameter of around 8 μm than with a vessel diameter of 4 μm?
       system_messages:
@@ -361,7 +344,7 @@ correctness:
     expected:
       answer: "yes"
 
-  - case: yes_no_physiology_en
+  - case: dichotomous_physiology_en
     input:
       prompt: Is the apparent (apparente) viscosity of the blood with normal haematocrit (and under otherwise identical conditions) always lower in large vessels than in small vessels?
       system_messages:
@@ -395,7 +378,7 @@ correctness:
 
 ###########################################################################################################
 # Test case: Student preparing for the Physikum for medical studies
-# Language: german
+# Language: German
 ###########################################################################################################
 
   # Math relevant questions
@@ -462,7 +445,7 @@ correctness:
     expected:
       answer: "d"
 
-  - case: yes_no_biochemistry_de
+  - case: dichotomous_biochemistry_de
     input:
       prompt: Stimmt das? Die Neigung zu Thrombosen (Thrombophilie) ist in vielen Fällen genetisch bedingt. Missensemutationen im Gen für Faktor V können die Ursache einer familiären Thrombophilie sein. Durch solche Mutationen wird der aktivierte Faktor V (Va) weniger effizient durch ein aktiviertes Protein C inaktiviert und ist daher besonders stabil.
       system_messages:
@@ -472,7 +455,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: yes_no_biochemistry_de
+  - case: dichotomous_biochemistry_de
     input:
       prompt: Stimmt das? Die Neigung zu Thrombosen (Thrombophilie) ist in vielen Fällen genetisch bedingt. Missensemutationen im Gen für Faktor V können die Ursache einer familiären Thrombophilie sein. Durch solche Mutationen wird der aktivierte Faktor V (Va) weniger effizient durch ein aktiviertes Thrombomobilin inaktiviert und ist daher besonders stabil.
       system_messages:
@@ -504,7 +487,7 @@ correctness:
     expected:
       answer: "e"
 
-  - case: yes_no_physiology_de
+  - case: dichotomous_physiology_de
     input:
       prompt: Ist die scheinbare Viskosität des Blutes bei normalem Hämatokrit (und unter sonst gleichen Bedingungen) bei einem Gefäßdurchmesser von etwa 8 μm typischerweise niedriger als bei einem Gefäßdurchmesser von 4 μm?
       system_messages:
@@ -514,7 +497,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: yes_no_physiology_de
+  - case: dichotomous_physiology_de
     input:
       prompt: Ist die scheinbare (apparente) Viskosität des Blutes bei normalem Hämatokrit (und unter sonst gleichen Bedingungen) in großen Gefäßen immer niedriger als in kleinen Gefäßen?
       system_messages:
@@ -548,7 +531,7 @@ correctness:
 
 ###########################################################################################################
 # Test case: Working on a datascience project with eeg data
-# Language: english
+# Language: English
 ###########################################################################################################
 
   # regex
@@ -605,9 +588,9 @@ correctness:
     expected:
       answer: "b"
 
-  #yes_no
+  #dichotomous
 
-  - case: yes_no_eeg_data_en
+  - case: dichotomous_eeg_data_en
     input:
       prompt: Are so-called delta waves observed in EEG signals, especially during deep sleep?
       system_messages:
@@ -619,7 +602,7 @@ correctness:
 
 ###########################################################################################################
 # Test case: Working on a datascience project with eeg data
-# Language: german
+# Language: German
 ###########################################################################################################
 
   #regex
@@ -695,9 +678,9 @@ correctness:
     expected:
       answer: "b"
 
-# yes_no
+# dichotomous
 
-  - case: yes_no_eeg_data_de
+  - case: dichotomous_eeg_data_de
     input:
       prompt: Bei EEG Signalen sind sogenannte Delta Wellen vor allem im Tiefschlaf zu beobachten
       system_messages:
@@ -707,40 +690,13 @@ correctness:
     expected:
       answer: "ja"
 
-
-###########################################################################################################
+##########################################################################################################
 # Test case: Oncology and radiation therapy
+# Language: English
 ###########################################################################################################
-  # Level 1: Yes or no questions
 
-  - case: single_choice_oncology_de
-    input:
-      prompt: "Ist Chemotherapie die einzige mögliche Therapie bei Krebs?"
-      system_messages: [
-          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
-          ]
-    expected:
-      answer: "nein"
-
-  - case: single_choice_oncology_de
-    input:
-      prompt: "Sind die BRCA 1 und BRCA 2 Gene für erblich bedingten Brustkrebs verantwortlich ?"
-      system_messages: [
-          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
-          ]
-    expected:
-      answer: "ja"
-
-  - case: single_choice_oncology_de
-    input:
-      prompt: "Die Strahlentherapie ist eine häufige Behandlungsmethode bei Glioblastom-Patienten?"
-      system_messages: [
-        "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
-      ]
-    expected:
-      answer: "ja"
-
-  - case: single_choice_oncology_en
+# Level 1: Yes or no questions
+  - case: dichotomous_oncology_en
     input:
       prompt: "Is chemotherapy the only possible treatment for cancer?"
       system_messages: [
@@ -749,7 +705,7 @@ correctness:
     expected:
       answer: "no"
 
-  - case: single_choice_oncology_en
+  - case: dichotomous_oncology_en
     input:
       prompt: "Are the BRCA 1 and BRCA 2 genes responsible for hereditary breast cancer ?"
       system_messages: [
@@ -758,7 +714,7 @@ correctness:
     expected:
       answer: "yes"
 
-  - case: single_choice_oncology_en
+  - case: dichotomous_oncology_en
     input:
       prompt: "Radiotherapy is a common treatment method for glioblastoma patients?"
       system_messages: [
@@ -766,6 +722,107 @@ correctness:
       ]
     expected:
       answer: "yes"
+
+# Level 2: Multiple Choice
+
+  - case: multiple_choice_oncology_en
+    input:
+      prompt: "Which type of cancer is frequently monitored with the tumor marker CA-125? a) Lung cancer b) Ovarian cancer c) Pancreatic cancer d) Colorectal cancer"
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it briefly and concisely by entering only the correct letter of the question in lower case. Remember to use only one lowercase letter and not the whole correct answer."
+        ]
+    expected:
+      answer: "b"
+  - case: multiple_choice_oncology_en
+    input:
+      prompt: "Which drug is often used as an antiemetic to prevent nausea and vomiting in chemotherapy patients? a) Ondansetron b) Paracetamol c) Ibuprofen d) Loratadin"
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it briefly and concisely by entering only the correct letter of the question as a lowercase letter. Remember to use only one lowercase letter and not the whole correct answer."
+        ]
+    expected:
+      answer: "a"
+
+  - case: multiple_choice_oncology_en
+    input:
+      prompt: "Which radiation technique is considered the standard for radiation therapy? a) Percutaneous radiation therapy b) Fractionated radiation c)Brachytherapy d) X-ray therapy"
+      system_messages:
+        [
+          "You will receive a multiple choice question.Answer it briefly and concisely by entering only the correct letter of the question in lower case.Remember to use only one lowercase letter and not the whole correct answer."
+        ]
+    expected:
+      answer: "a"
+
+  # Level 3: Free text
+
+  - case: one_word_oncology_en
+    input:
+      prompt: "What are the three tumor volumes, abbreviated, in radiotherapy?"
+      system_messages:
+        [
+          "Answer the question as precisely and briefly as possible, in a few words"
+        ]
+    expected:
+      answer: "GTV,CTV,PTV"
+
+  - case: regex_oncology_en
+    input:
+      prompt: "What are some typical symptoms for malignant tumors?"
+      system_messages:
+        [
+          "Answer the question as precisely and briefly as possible"
+        ]
+    expected:
+      words_in_response:
+        - "weight loss"
+        - "lump"
+        - "fatigue"
+        - "cough"
+
+  - case: one_word_oncology_en
+    input:
+      prompt: "What is the most common type of cancer in women?"
+      system_messages:
+        [
+          "Answer the question as precisely and briefly as possible"
+        ]
+    expected:
+      answer: 'Breast cancer'
+
+###########################################################################################################
+# Test case: Oncology and radiation therapy
+# Language: German
+###########################################################################################################
+  # Level 1: Yes or no questions
+
+  - case: dichotomous_oncology_de
+    input:
+      prompt: "Ist Chemotherapie die einzige mögliche Therapie bei Krebs?"
+      system_messages: [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+          ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous_oncology_de
+    input:
+      prompt: "Sind die BRCA 1 und BRCA 2 Gene für erblich bedingten Brustkrebs verantwortlich ?"
+      system_messages: [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+          ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous_oncology_de
+    input:
+      prompt: "Die Strahlentherapie ist eine häufige Behandlungsmethode bei Glioblastom-Patienten?"
+      system_messages: [
+        "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+      ]
+    expected:
+      answer: "ja"
+
   # Level 2: Multiple Choice
 
   - case: multiple_choice_oncology_de
@@ -797,34 +854,6 @@ correctness:
     expected:
       answer: "a"
 
-  - case: multiple_choice_oncology_en
-    input:
-      prompt: "Which type of cancer is frequently monitored with the tumor marker CA-125? a) Lung cancer b) Ovarian cancer c) Pancreatic cancer d) Colorectal cancer"
-      system_messages:
-        [
-          "You will receive a multiple choice question. Answer it briefly and concisely by entering only the correct letter of the question in lower case. Remember to use only one lowercase letter and not the whole correct answer."
-        ]
-    expected:
-      answer: "b"
-  - case: multiple_choice_oncology_en
-    input:
-      prompt: "Which drug is often used as an antiemetic to prevent nausea and vomiting in chemotherapy patients? a) Ondansetron b) Paracetamol c) Ibuprofen d) Loratadin"
-      system_messages:
-        [
-          "You will receive a multiple choice question. Answer it briefly and concisely by entering only the correct letter of the question as a lowercase letter. Remember to use only one lowercase letter and not the whole correct answer."
-        ]
-    expected:
-      answer: "a"
-
-  - case: multiple_choice_oncology_en
-    input:
-      prompt: "Which radiation technique is considered the standard for radiation therapy? a) Percutaneous radiation therapy b) Fractionated radiation c)Brachytherapy d) X-ray therapy"
-      system_messages:
-        [
-          "You will receive a multiple choice question.Answer it briefly and concisely by entering only the correct letter of the question in lower case.Remember to use only one lowercase letter and not the whole correct answer."
-        ]
-    expected:
-      answer: "a"
 
   # Level 3: Free text
   - case: one_word_oncology_de
@@ -861,82 +890,13 @@ correctness:
     expected:
       answer: 'Brustkrebs'
 
-  - case: one_word_oncology_en
-    input:
-      prompt: "What are the three tumor volumes, abbreviated, in radiotherapy?"
-      system_messages:
-        [
-          "Answer the question as precisely and briefly as possible, in a few words"
-        ]
-    expected:
-      answer: "GTV,CTV,PTV"
-
-  - case: regex_oncology_en
-    input:
-      prompt: "What are some typical symptoms for malignant tumors?"
-      system_messages:
-        [
-          "Answer the question as precisely and briefly as possible"
-        ]
-    expected:
-      words_in_response:
-        - "weight loss"
-        - "lump"
-        - "fatigue"
-        - "cough"
-
-  - case: one_word_oncology_en
-    input:
-      prompt: "What is the most common type of cancer in women?"
-      system_messages:
-        [
-          "Answer the question as precisely and briefly as possible"
-        ]
-    expected:
-      answer: 'Breast cancer'
 ###########################################################################################################
 # Test case: Medication
+# Language: English
 ###########################################################################################################
-  # Level 1: Yes or no questions
+# Level 1: Yes or no questions
 
-  - case: single_choice_medication_de
-    input:
-      prompt: "Kann Ibuprofen sicher zusammen mit Antihypertensiva eingenommen werden?"
-      system_messages: [
-          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
-          ]
-    expected:
-      answer: "nein"
-
-  - case: single_choice_medication_de
-    input:
-      prompt: "Besteht eine potenzielle Wechselwirkung zwischen Antibiotika und oralen Kontrazeptiva?"
-      system_messages: [
-          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
-      ]
-    expected:
-      answer: "ja"
-
-  - case: single_choice_medication_de
-    input:
-      prompt: "Hat es Vorteile verschiedene RAS-Hemmer zu kombinieren?"
-      system_messages: [
-          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
-      ]
-    expected:
-      answer: "nein"
-
-
-  - case: single_choice_medication_de
-    input:
-      prompt: "Sollten NO-Donatoren und PDE5-Hemmern gleichzeitig verabreicht werden?"
-      system_messages: [
-        "Sie erhalten eine Frage, die Sie nur mit ‚ja‘ oder ‚nein‘ beantworten sollten"
-      ]
-    expected:
-      answer: "Nein"
-
-  - case: single_choice_medication_en
+  - case: dichotomous_medication_en
     input:
       prompt: "Can ibuprofen be safely taken together with antihypertensives?"
       system_messages: [
@@ -945,7 +905,7 @@ correctness:
     expected:
       answer: "no"
 
-  - case: single_choice_medication_en
+  - case: dichotomous_medication_en
     input:
       prompt: "Is there a potential interaction between antibiotics and oral contraceptives?"
       system_messages: [
@@ -954,7 +914,7 @@ correctness:
     expected:
       answer: "yes"
 
-  - case: single_choice_medication_en
+  - case: dichotomous_medication_en
     input:
       prompt: "Are there advantages to combining different RAS inhibitors?"
       system_messages: [
@@ -964,7 +924,7 @@ correctness:
       answer: "no"
 
 
-  - case: single_choice_medication_en
+  - case: dichotomous_medication_en
     input:
       prompt: "Should NO donors and PDE5 inhibitors be administered at the same time?"
       system_messages: [
@@ -972,6 +932,134 @@ correctness:
       ]
     expected:
       answer: "No"
+
+  # Level 2: Multiple Choice
+
+  - case: multiple_choice_medication_en
+    input:
+      prompt: "Which drug class has the highest risk of interaction with statins? (a) anticoagulants, (b) antacids, (c) antifungals, (d) antidepressants"
+      system_messages: [
+        "You will receive a multiple-choice question. Answer it briefly and concisely by giving only the correct letter of the question in lower case. Remember to use only one lowercase letter and not the entire correct answer."
+      ]
+    expected:
+      answer: "c"
+
+  - case: multiple_choice_medication_en
+    input:
+      prompt: "Which medication pairing should be avoided in patients taking MAO inhibitors?  (a) serotonin reuptake inhibitors, (b) ACE inhibitors, (c) beta-blockers, (d) calcium channel blockers"
+      system_messages: [
+        "You will receive a multiple choice question. Answer it briefly and concisely, using only the correct letter of the question in lower case. Remember to use only one lowercase letter and not the entire correct answer."
+      ]
+    expected:
+      answer: "a"
+
+
+  - case: multiple_choice_medication_en
+    input:
+      prompt: "What can occur if acetylsalicylic acid and coumarins are taken together? a) higher blood pressure, b) co-complex formation, c) increased blood clotting inhibition, d) cardiac arrhythmia"
+      system_messages: [
+        "You will receive a multiple-choice question.Answer it briefly and concisely by indicating only the correct letter of the question in lower case.Remember to use only one lowercase letter and not the entire correct answer."
+      ]
+    expected:
+      answer: "c"
+
+  #Level 3: Free text
+
+  - case: one_word_medication_en
+    input:
+      prompt: "With which fruit should statins not be taken?"
+      system_messages:
+        [
+          "Answer the following question with just one word"
+        ]
+    expected:
+      answer: "Grapefruit"
+
+
+  - case: regex_medication_en
+    input:
+      prompt: "Can you give examples of medications that should not be taken with NSAIDs (non-steroidal anti-inflammatory drugs) such as ibuprofen or naproxen to minimize the risk of stomach ulcers?"
+      system_messages:
+        [
+          "Answer the question as precisely and briefly as possible"
+        ]
+    expected:
+      words_in_response:
+        - "oral steroids"
+        - - "selective serotonin reuptake inhibitors"
+          - "SSRIS"
+        - "anticoagulants"
+
+  - case: one_word_medication_en
+    input:
+      prompt: "What are the two basic forms of drug interaction?"
+      system_messages:
+        [
+          "Answer the question as precisely and briefly as possible, in a few words"
+        ]
+    expected:
+      answer: "Pharmacodynamic and pharmacokinetic"
+
+
+  - case: regex_medication_en
+    input:
+      prompt: "With which active substances should ibuprofen not be taken?"
+      system_messages:
+        [
+          "Answer the question as precisely and briefly as possible. Multiple answers are allowed"
+        ]
+    expected:
+      words_in_response:
+        - "cortisone preparations"
+        - - "Acetylsalicylic acid"
+          - "ASS"
+        - "Clopidogrel"
+        - "NSAID"
+        - "NSAID"
+
+###########################################################################################################
+# Test case: Medication
+# Language: German
+###########################################################################################################
+  # Level 1: Yes or no questions
+
+  - case: dichotomous_medication_de
+    input:
+      prompt: "Kann Ibuprofen sicher zusammen mit Antihypertensiva eingenommen werden?"
+      system_messages: [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+          ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous_medication_de
+    input:
+      prompt: "Besteht eine potenzielle Wechselwirkung zwischen Antibiotika und oralen Kontrazeptiva?"
+      system_messages: [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+      ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous_medication_de
+    input:
+      prompt: "Hat es Vorteile verschiedene RAS-Hemmer zu kombinieren?"
+      system_messages: [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+      ]
+    expected:
+      answer: "nein"
+
+
+  - case: dichotomous_medication_de
+    input:
+      prompt: "Sollten NO-Donatoren und PDE5-Hemmern gleichzeitig verabreicht werden?"
+      system_messages: [
+        "Sie erhalten eine Frage, die Sie nur mit ‚ja‘ oder ‚nein‘ beantworten sollten"
+      ]
+    expected:
+      answer: "Nein"
+
 
 
   # Level 2: Multiple Choice
@@ -1002,35 +1090,6 @@ correctness:
       ]
     expected:
       answer: "c"
-
-  - case: multiple_choice_medication_en
-    input:
-      prompt: "Which drug class has the highest risk of interaction with statins? (a) anticoagulants, (b) antacids, (c) antifungals, (d) antidepressants"
-      system_messages: [
-        "You will receive a multiple-choice question. Answer it briefly and concisely by giving only the correct letter of the question in lower case. Remember to use only one lowercase letter and not the entire correct answer."
-      ]
-    expected:
-      answer: "c"
-
-  - case: multiple_choice_medication_en
-    input:
-      prompt: "Which medication pairing should be avoided in patients taking MAO inhibitors?  (a) serotonin reuptake inhibitors, (b) ACE inhibitors, (c) beta-blockers, (d) calcium channel blockers"
-      system_messages: [
-        "You will receive a multiple choice question. Answer it briefly and concisely, using only the correct letter of the question in lower case. Remember to use only one lowercase letter and not the entire correct answer."
-      ]
-    expected:
-      answer: "a"
-
-
-  - case: multiple_choice_medication_en
-    input:
-      prompt: "What can occur if acetylsalicylic acid and coumarins are taken together? a) higher blood pressure, b) co-complex formation, c) increased blood clotting inhibition, d) cardiac arrhythmia"
-      system_messages: [
-      "You will receive a multiple-choice question.Answer it briefly and concisely by indicating only the correct letter of the question in lower case.Remember to use only one lowercase letter and not the entire correct answer."
-      ]
-    expected:
-      answer: "c"
-
 
   #Level 3: Free text
   - case: one_word_medication_de
@@ -1084,67 +1143,17 @@ correctness:
         - "NSAR"
         - "NSAID"
 
-  - case: one_word_medication_en
-    input:
-      prompt: "With which fruit should statins not be taken?"
-      system_messages:
-        [
-          "Answer the following question with just one word"
-        ]
-    expected:
-     answer: "Grapefruit"
 
-
-  - case: regex_medication_en
-    input:
-      prompt: "Can you give examples of medications that should not be taken with NSAIDs (non-steroidal anti-inflammatory drugs) such as ibuprofen or naproxen to minimize the risk of stomach ulcers?"
-      system_messages:
-        [
-          "Answer the question as precisely and briefly as possible"
-        ]
-    expected:
-      words_in_response:
-        - "oral steroids"
-        - - "selective serotonin reuptake inhibitors"
-          - "SSRIS"
-        - "anticoagulants"
-
-  - case: one_word_medication_en
-    input:
-      prompt: "What are the two basic forms of drug interaction?"
-      system_messages:
-        [
-          "Answer the question as precisely and briefly as possible, in a few words"
-        ]
-    expected:
-      answer: "Pharmacodynamic and pharmacokinetic"
-
-
-  - case: regex_medication_en
-    input:
-      prompt: "With which active substances should ibuprofen not be taken?"
-      system_messages:
-        [
-          "Answer the question as precisely and briefly as possible. Multiple answers are allowed"
-        ]
-    expected:
-      words_in_response:
-        - "cortisone preparations"
-        - - "Acetylsalicylic acid"
-          - "ASS"
-        - "Clopidogrel"
-        - "NSAID"
-        - "NSAID"
-    ###########################################################################################################
+###########################################################################################################
   # Test case: Questions about “emergency medicine” for prospective emergency physicians
   # Language: German
 ###########################################################################################################
 
 
   # Level 1: Yes or no questions
-  - case: yes_no_emergency
+  - case: dichotomous_emergency_de
     input:
-      prompt: Bei einem Herzinfarkt wird typischerweise Aspirin eingesetzt?
+      prompt: Wird bei einem Herzinfarkt typischerweise Aspirin eingesetzt?
       system_messages:
         [
           "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
@@ -1152,7 +1161,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: yes_no_emergency
+  - case: dichotomous_emergency_de
     input:
       prompt: Ist RHUB ist die Abkürzung für einen Rettungshubschrauber?
       system_messages:
@@ -1162,9 +1171,9 @@ correctness:
     expected:
       answer: "nein"
 
-  - case: yes_no_emergency
+  - case: dichotomous_emergency_de
     input:
-      prompt: Bei einem epileptischen Anfall immer versuchen die Person festzuhalten?
+      prompt: Sollte man bei einem epileptischen Anfall immer versuchen die Person festzuhalten?
       system_messages:
         [
           "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
@@ -1172,9 +1181,9 @@ correctness:
     expected:
       answer: "nein"
 
-  - case: yes_no_emergency
+  - case: dichotomous_emergency_de
     input:
-      prompt: Bei CPR sind Kompressionen wichtiger als die Luftzufuhr?
+      prompt: Sind bei CPR die Kompressionen wichtiger als die Luftzufuhr?
       system_messages:
         [
           "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
@@ -1182,7 +1191,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: yes_no_emergency
+  - case: dichotomous_emergency_de
     input:
       prompt: Kann man einen automatisierten externen Defibrillator (AED) auch bei Epilepsie verwenden?
       system_messages:
@@ -1192,9 +1201,9 @@ correctness:
     expected:
       answer: "nein"
 
-   # Level 2: Multiple choice questions
+   # Level 2: Single or Multiple choice questions
 
-  - case: multiple_choice_emergency
+  - case: single_choice_emergency_de
     input:
       prompt: Welches „Stresshormon“ steigert Blutdruck und Herzfrequenz?? (A) Insulin (B) Adrenalin (C) Melatonin (D) Leptin
       system_messages:
@@ -1204,7 +1213,7 @@ correctness:
     expected:
       answer: "b"
 
-  - case: multiple_choice_emergency
+  - case: single_choice_emergency_de
     input:
       prompt: Welcher Wirkstoff wird bei einem aktuten Asthmaanfall indiziert? (A) Verapamil (B) Fenoterol (C) Haloperidol (D) 4-Dimethylaminophenol
       system_messages:
@@ -1214,7 +1223,7 @@ correctness:
     expected:
       answer: "b"
 
-  - case: multiple_choice_emergency
+  - case: single_choice_emergency_de
     input:
       prompt: Was bezeichnet der systolische Blutdruckwert? (A) Den unteren Wert, also den Druck in der Entspannungsphase des Herzens  (B) Den über eine Minute gemittelten Druck (C) Den höchsten Druck direkt nach Ventrikelkontraktion (D) Das Gleiche, wie der diastolische Wert
       system_messages:
@@ -1224,7 +1233,7 @@ correctness:
     expected:
       answer: "c"
 
-  - case: multiple_choice_emergency
+  - case: single_choice_emergency_de
     input:
       prompt: Bei welchem Blutzuckerwert besteht die Gefahr eines diabetischen Komas? (A) < 20 mg/dl (B) < 50 mg/dl (C) < 90 mg/dl (D) > 110 mg/dl (E) > 300 mg/dl
       system_messages:
@@ -1234,7 +1243,7 @@ correctness:
     expected:
       answer: "e"
 
-  - case: multiple_choice_emergency
+  - case: single_choice_emergency_de
     input:
       prompt: Bei welcher Diagnose ist die Hochlagerung der Beine kontraindiziert? (A) Hypovolämischer Schock (B) Anaphylaktischer Schock (C) Hypoglykämischer Schock (D) Kardiogener Schock (E) Septisch-Toxischer Schock
       system_messages:
@@ -1247,7 +1256,7 @@ correctness:
 
    # Level 3: Word questions
 
-  - case: one_word_emergency
+  - case: one_word_emergency_de
     input:
       prompt: Was ist der erste Schritt bei der Erste-Hilfe-Leistung nach dem ABCDE Schema?
       system_messages:
@@ -1257,7 +1266,7 @@ correctness:
     expected:
       answer: "Atemwege"
 
-  - case: one_word_emergency
+  - case: one_word_emergency_de
     input:
       prompt: Welche Art von Blut führt die Lungenvene?
       system_messages:
@@ -1267,7 +1276,7 @@ correctness:
     expected:
       answer: "Sauerstoffreiches"
 
-  - case: one_word_emergency
+  - case: one_word_emergency_de
     input:
       prompt: Welche Blutgruppe gibt bei unbekannten Notfällen?
       system_messages:
@@ -1277,7 +1286,7 @@ correctness:
     expected:
       answer: "0"
 
-  - case: short_words_emergency
+  - case: short_words_emergency_de
     input:
       prompt: Was erfordert der Einsatz eines Guedeltubus?
       system_messages:
@@ -1287,7 +1296,7 @@ correctness:
     expected:
       answer: "Tiefe Bewusstlosigkeit"
 
-  - case: short_words_emergency
+  - case: short_words_emergency_de
     input:
       prompt: Wofür stehen die Buchstaben der RICE-Methode?
       system_messages:
@@ -1296,6 +1305,163 @@ correctness:
         ]
     expected:
       answer: "Rest, Ice, Compression, Elevation"
+
+
+###########################################################################################################
+  # Test case: Questions about “emergency medicine” for prospective emergency physicians
+  # Language: English
+###########################################################################################################
+
+
+  # Level 1: Yes or no questions
+  - case: dichotomous_emergency_en
+    input:
+      prompt: Is Aspirin is typically used for a heart attack?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous_emergency_en
+    input:
+      prompt: Should you always try to hold the person during an epileptic seizure?
+      system_messages:
+        [
+         "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous_emergency_en
+    input:
+      prompt: Are the compressions more important than the air supply during CPR?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous_emergency_en
+    input:
+      prompt: Can an automated external defibrillator (AED) also be used for epilepsy?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "yes"
+
+   # Level 2: Single or Multiple choice questions
+
+  - case: single_choice_emergency_en
+    input:
+      prompt: Which "stress hormone" increases blood pressure and heart rate? (A) Insulin (B) Adrenaline (C) Melatonin (D) Leptin
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "b"
+
+  - case: single_choice_emergency_en
+    input:
+      prompt: Which drug is indicated for an acute asthma attack? (A) Verapamil (B) Fenoterol (C) Haloperidol (D) 4-Dimethylaminophenol
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "b"
+
+  - case: single_choice_emergency_en
+    input:
+      prompt: What is the systolic blood pressure value? (A) The lower value, i.e. the pressure in the relaxation phase of the heart (B) The pressure averaged over one minute (C) The highest pressure directly after ventricular contraction (D) The same as the diastolic value
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice_emergency_en
+    input:
+      prompt: At which blood glucose level is there a risk of diabetic coma?  (A) < 20 mg/dl (B) < 50 mg/dl (C) < 90 mg/dl (D) > 110 mg/dl (E) > 300 mg/dl
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "e"
+
+  - case: single_choice_emergency_en
+    input:
+      prompt: For which diagnosis is elevation of the legs contraindicated? (A) Hypovolemic shock (B) Anaphylactic shock (C) Hypoglycemic shock (D) Cardiogenic shock (E) Septic-toxic shock
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "d"
+
+
+   # Level 3: Word questions
+
+  - case: one_word_emergency_en
+    input:
+      prompt: What is the first step in providing first aid according to the ABCDE scheme?
+      system_messages:
+        [
+          "Answer the following question with just one word"
+        ]
+    expected:
+      answer: "Airways"
+
+  - case: one_word_emergency_en
+    input:
+      prompt: What type of blood does the pulmonary vein carry?
+      system_messages:
+        [
+          "Answer the following question with just one word"
+        ]
+    expected:
+      answer: "Oxygen-rich"
+
+  - case: one_word_emergency_en
+    input:
+      prompt: Which blood group is used for unknown emergencies?
+      system_messages:
+        [
+          "Answer the following question with just one word. If the answer is zero, please use the number 0."
+        ]
+    expected:
+      answer: "0"
+
+  - case: short_words_emergency_en
+    input:
+      prompt: What does the use of a Guedel tube require?
+      system_messages:
+        [
+          "Answer the following question with maximal two words."
+        ]
+    expected:
+      answer: "Deep unconsciousness"
+
+  - case: short_words_emergency_en
+    input:
+      prompt: What do the letters of the RICE method stand for?
+      system_messages:
+        [
+          "Answer the following question with just one word per letter"
+        ]
+    expected:
+      answer: "Rest, Ice, Compression, Elevation"
+
+
+
+
 
   - case: medication_regex
     input:
@@ -1319,7 +1485,7 @@ correctness:
 ###########################################################################################################
 
   # Level 1: Yes or no questions
-  - case: single_choice_mental_disorders_de
+  - case: dichotomous_mental_disorders_de
     input:
       prompt: Ist das Asperger-Syndrom eine Form der Autismus-Spektrum-Störungen?
       system_messages:
@@ -1329,7 +1495,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: single_choice_mental_disorders_de
+  - case: dichotomous_mental_disorders_de
     input:
       prompt: Die Gestalttherapie wird häufig bei der Therapie von Anorexie angewendet und konzentriert sich auf das Identifizierung und Verändern dysfunktionaler Gedanken- und Verhaltensmuster.
       system_messages:
@@ -1339,7 +1505,7 @@ correctness:
     expected:
       answer: "nein"
 
-  - case: single_choice_mental_disorders_de
+  - case: dichotomous_mental_disorders_de
     input:
       prompt: In der Psychotherapie der generalisierten Angststörung ist das Erlernen von Vermeidungsstrategien, um die Sorgen loszuwerden, eine gängige Technik.
       system_messages:
@@ -1349,7 +1515,7 @@ correctness:
     expected:
       answer: "nein"
 
-  - case: single_choice_mental_disorders_de
+  - case: dichotomous_mental_disorders_de
     input:
       prompt: Menschen mit generalisierter Angststörung halten ihre Sorgen meist für sinnlos und wollen sie am liebsten vollständig loswerden.
       system_messages:
@@ -1359,7 +1525,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: single_choice_mental_disorders_de
+  - case: dichotomous_mental_disorders_de
     input:
       prompt: Wird eine Manie mit Medikamenten behandelt, steigt die Gefahr, dass psychotische Symptome auftreten.
       system_messages:
@@ -1369,7 +1535,7 @@ correctness:
     expected:
       answer: "nein"
 
-  - case: single_choice_mental_disorders_de
+  - case: dichotomous_mental_disorders_de
     input:
       prompt: Verlustangst und Bindungsangst sind zwei gegenteilige Phänomene.
       system_messages:
@@ -1379,7 +1545,7 @@ correctness:
     expected:
       answer: "nein"
 
-  - case: single_choice_mental_disorders_de
+  - case: dichotomous_mental_disorders_de
     input:
       prompt: Bei einer bipolaren Störung hält eine depressive Episode mindestens 14 Tage an.
       system_messages:
@@ -1389,7 +1555,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: single_choice_mental_disorders_de
+  - case: dichotomous_mental_disorders_de
     input:
       prompt: Die Anfälligkeit dafür, eine Depression zu entwickeln, kann vererbt werden.
       system_messages:
@@ -1399,7 +1565,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: single_choice_mental_disorders_de
+  - case: dichotomous_mental_disorders_de
     input:
       prompt: Die Erkrankung Multiple Persönlichkeit kann aufgrund ihrer Schwere oft kaum behandelt werden.
       system_messages:
@@ -1409,7 +1575,7 @@ correctness:
     expected:
       answer: "nein"
 
-  - case: single_choice_mental_disorders_de
+  - case: dichotomous_mental_disorders_de
     input:
       prompt: Im Gegensatz zur Magersucht ist die Binge-Eating-Störung nicht tödlich.
       system_messages:
@@ -1670,7 +1836,7 @@ correctness:
 ###########################################################################################################
 
   # Level 1: Yes or no questions
-  - case: single_choice_mental_disorders_en
+  - case: dichotomous_mental_disorders_en
     input:
       prompt: Is Asperger syndrome a form of autism spectrum disorder?
       system_messages:
@@ -1680,7 +1846,7 @@ correctness:
     expected:
       answer: "yes"
 
-  - case: single_choice_mental_disorders_en
+  - case: dichotomous_mental_disorders_en
     input:
       prompt: Gestalt therapy is often used in the treatment of anorexia and focuses on identifying and changing dysfunctional thought and behaviour patterns.
       system_messages:
@@ -1690,7 +1856,7 @@ correctness:
     expected:
       answer: "no"
 
-  - case: single_choice_mental_disorders_en
+  - case: dichotomous_mental_disorders_en
     input:
       prompt: In psychotherapy for generalised anxiety disorder, learning avoidance strategies to get rid of worries is a common technique.
       system_messages:
@@ -1700,7 +1866,7 @@ correctness:
     expected:
       answer: "no"
 
-  - case: single_choice_mental_disorders_en
+  - case: dichotomous_mental_disorders_en
     input:
       prompt: People with generalised anxiety disorder usually consider their worries to be pointless and would prefer to get rid of them completely.
       system_messages:
@@ -1710,7 +1876,7 @@ correctness:
     expected:
       answer: "yes"
 
-  - case: single_choice_mental_disorders_en
+  - case: dichotomous_mental_disorders_en
     input:
       prompt: If mania is treated with medication, the risk of psychotic symptoms increases.
       system_messages:
@@ -1720,7 +1886,7 @@ correctness:
     expected:
       answer: "no"
 
-  - case: single_choice_mental_disorders_en
+  - case: dichotomous_mental_disorders_en
     input:
       prompt: Fear of loss and fear of commitment are two opposing phenomena.
       system_messages:
@@ -1730,7 +1896,7 @@ correctness:
     expected:
       answer: "no"
 
-  - case: single_choice_mental_disorders_en
+  - case: dichotomous_mental_disorders_en
     input:
       prompt: In bipolar disorder, a depressive episode lasts at least 14 days.
       system_messages:
@@ -1740,7 +1906,7 @@ correctness:
     expected:
       answer: "yes"
 
-  - case: single_choice_mental_disorders_en
+  - case: dichotomous_mental_disorders_en
     input:
       prompt: The susceptibility to developing depression can be inherited.
       system_messages:
@@ -1750,7 +1916,7 @@ correctness:
     expected:
       answer: "yes"
 
-  - case: single_choice_mental_disorders_en
+  - case: dichotomous_mental_disorders_en
     input:
       prompt: Due to its severity, multiple personality disorder is often almost impossible to treat.
       system_messages:
@@ -1760,7 +1926,7 @@ correctness:
     expected:
       answer: "no"
 
-  - case: single_choice_mental_disorders_en
+  - case: dichotomous_mental_disorders_en
     input:
       prompt: In contrast to anorexia, binge eating disorder is not fatal.
       system_messages:
@@ -2020,7 +2186,328 @@ correctness:
           - "traumatic"
         - "memories"
 
+###########################################################################################################
+  # Test case: Questions about “emergency medicine” for prospective emergency physicians
+  # Language: German
+###########################################################################################################
 
+
+  # Level 1: Yes or no questions
+  - case: dichotomous_cardiology_de
+    input:
+      prompt: Bei einer arrhythmogene rechtsventrikuläre Kardiomyopathie (ARVC) muss eine dominierenden RV-Dilatation und eine Dysfunktion bei histologischer Beteiligung vorhanden sein?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous_cardiology_de
+    input:
+      prompt: Muss eine bei einer routinemäßigen Nachuntersuchung stabilen Patienten mit einer Kardiomyopathie immer ein EKG und ein Echokardiographie durchgeführt werden ?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+        ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous_cardiology_de
+    input:
+      prompt: Wird bei Patienten mit Ruhe- oder provozierbarer LVOTO, Digoxin und arterielle und venöse Dilatatoren empfohlen?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous_cardiology_de
+    input:
+      prompt: Welches Geschlecht ist von Morbus Fabry häufiger betroffen?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „Mann“ oder „Frau“ beantworten."
+        ]
+    expected:
+      answer: "Mann"
+
+  - case: dichotomous_cardiology_de
+    input:
+      prompt: Haben medikamentöse Therapien Einfluss auf den natürlichen Verlauf von Aortenklappenstenose?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
+        ]
+    expected:
+      answer: "nein"
+
+   # Level 2: Single or Multiple choice questions
+
+  - case: single_choice_cardiology_de
+    input:
+      prompt: Welches dieser Merkmale deutet nicht eindeutig auf eine Ätiologie oder morphologische Diagnose? (A) Grundrhythmus und Herzfrequenz (B) Atrioventrikuläre Block (AV-Block) (C) Ventrikuläres Präexzitationsmuster (D) Verteilung der Repolarisationsanomalien
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden"
+        ]
+    expected:
+      answer: "a"
+
+  - case: single_choice_cardiology_de
+    input:
+      prompt: Welches Merkmale wird nicht mit der Hilfe von Echokardiographie und CMR beurteilt? (A) Ventrikelfunktion (B) Hypertrophie (C) Myokardiale Ischämie (D) Dilatation
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden"
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice_cardiology_de
+    input:
+      prompt: Welcher dieser Genotypen ist kein Hochrisiko Indikator für den plötzlichen Herztod bei Patienten mit DCM und NDLVC? (A) PLN  (B) TMEM43  (C) APOE  (D) DSP
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden"
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice_cardiology_de
+    input:
+      prompt: Welche dieser Erkankungen ist keine Endomyokardiale Störungen? (A) Morbus Fabry (B) Hypereosinophilie (C) Karzinoide (D) Endokardiale Fibroelastose
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden"
+        ]
+    expected:
+      answer: "a"
+
+  - case: single_choice_cardiology_de
+    input:
+      prompt: Ab welcher Breite der Vena contracta (in mm) kann eine hochgradigen Aortenklappeninsuffizienz diagnostiziert werden? (A) >50 (B) >6 (C) >12 (D) >23
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden"
+        ]
+    expected:
+      answer: "b"
+
+
+   # Level 3: Word questions
+
+  - case: one_word_cardiology_de
+    input:
+      prompt: Welches bildgebende Verfahren wird beim Verdacht auf Amyloidose verwendet?
+      system_messages:
+        [
+          "Beantworten Sie die folgende Frage mit nur einem Wort"
+        ]
+    expected:
+      answer: "Knochenszintigraphie"
+
+  - case: one_word_cardiology_de
+    input:
+      prompt: Was ist das empfohlen Maximum an Zeitspanne zwischen Nachunterschung bei klinisch stabilen Patienten mit einer Kardiomyopathie?
+      system_messages:
+        [
+          "Beantworten Sie die folgende Frage mit nur einer Angabe in Jahren. Nur die Zahl ohne weitere Beschreibung"
+        ]
+    expected:
+      answer: "2"
+
+  - case: one_word_cardiology_de
+    input:
+      prompt: Welche Methode wird zum Abschätzung des 5-Jahres-Risikos für einen plötzlichen Tod bei Patienten im Alter von ≥ 16 Jahren verwendet ?
+      system_messages:
+        [
+          "Beantworten Sie die folgende Frage mit nur einem Wort."
+        ]
+    expected:
+      answer: "HCM-SCD-Risikorechner"
+
+  - case: one_word_cardiology_de
+    input:
+      prompt: Wie viele Wochen nach einer Intervation bei einer periphere arterielle Verschlusskrankheit muss ein Patienten mindestens warten bis er wieder einen Bus fahren kann?
+      system_messages:
+        [
+          "Beantworten Sie die folgende Frage mit nur einer Angabe in Wochen. Nur die Zahl ohne weitere Beschreibung"
+        ]
+    expected:
+      answer: "1"
+
+  - case: one_word_cardiology_de
+    input:
+      prompt: Welches standardisierte Medikament sollte in Erwägung gezogen werden, wenn die Herzfrequenz eines Patienten trotz Betablockertherapie hoch bleibt?
+      system_messages:
+        [
+          "Beantworten Sie die folgende Frage mit nur einem Wort."
+        ]
+    expected:
+      answer: "Digoxin"
+
+
+###########################################################################################################
+  # Test case: Questions about “emergency medicine” for prospective emergency physicians
+  # Language: English
+###########################################################################################################
+
+  # Level 1: Yes or no questions
+  - case: dichotomous_cardiology_en
+    input:
+      prompt: Do drug therapies influence the natural progression of aortic valve stenosis?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous_cardiology_en
+    input:
+      prompt: Which gender is more frequently affected by Fabry disease?
+      system_messages:
+        [
+         "You will receive a question and you should answer it with only using the word 'Men' or 'Woman'"
+        ]
+    expected:
+      answer: "Men"
+
+  - case: dichotomous_cardiology_en
+    input:
+      prompt: Does a routine follow-up examination of stable patients with cardiomyopathy always include an ECG and an echocardiogram?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous_cardiology_en
+    input:
+      prompt:  Arrhythmogenic right ventricular cardiomyopathy (ARVC) must have dominant RV dilatation and dysfunction with histologic involvement?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous_cardiology_en
+    input:
+      prompt: Is digoxin and arterial and venous dilators recommended in patients with resting or provocable LVOTO?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "no"
+
+   # Level 2: Single or Multiple choice questions
+
+  - case: single_choice_cardiology_en
+    input:
+      prompt: From which width of the vena contracta (in mm) can a high-grade aortic valve insufficiency be diagnosed? (A) >50 (B) >6 (C) >12 (D) >23
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "a"
+
+  - case: single_choice_cardiology_en
+    input:
+      prompt: Which of these genotypes is not a high-risk indicator for sudden cardiac death in patients with DCM and NDLVC? (A) PLN (B) TMEM43 (C) APOE (D) DSP
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice_cardiology_en
+    input:
+      prompt: Which features are not assessed using echocardiography and CMR? (A) Ventricular function (B) Hypertrophy (C) Myocardial ischemia (D) Dilatation
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice_cardiology_en
+    input:
+      prompt: Which of these features does not clearly indicate an etiologic or morphologic diagnosis? (A) Baseline rhythm and heart rate (B) Atrioventricular block (AV block) (C) Ventricular preexcitation pattern (D) Distribution of repolarization abnormalities
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "a"
+
+  - case: single_choice_cardiology_en
+    input:
+      prompt: Which of these diseases is not an endomyocardial disorder? (A) Fabry disease (B) Hypereosinophilia (C) Carcinoids (D) Endocardial fibroelastosis
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "a"
+
+   # Level 3: Word questions
+
+  - case: one_word_cardiology_en
+    input:
+      prompt: Which imaging procedure is used for suspected amyloidosis?
+      system_messages:
+        [
+          "Answer the following question with just two words"
+        ]
+    expected:
+      answer: "Bone scintigraphy"
+
+  - case: one_word_cardiology_en
+    input:
+      prompt: What is the recommended maximum time between follow-up examinations in clinically stable patients with cardiomyopathy?
+      system_messages:
+        [
+          "Answer the following question in years only. Just the number without further description."
+        ]
+    expected:
+      answer: "2"
+
+  - case: one_word_cardiology_en
+    input:
+      prompt: Which method is used to estimate the 5-year risk of sudden death in patients aged ≥ 16 years ?
+      system_messages:
+        [
+          "Answer the following question with just with the name of the method"
+        ]
+    expected:
+      answer: "HCM Risk-SCD Calculator"
+
+  - case: one_word_cardiology_en
+    input:
+      prompt: How many weeks after an intervention for peripheral arterial occlusive disease does a patient have to wait at least until he can drive a bus again?
+      system_messages:
+        [
+           "Answer the following question in weeks only. Just the number without further description."
+        ]
+    expected:
+      answer: "1"
+
+  - case: one_word_cardiology_en
+    input:
+      prompt: Which standardized medication should be considered if a patient's heart rate remains high despite beta-blocker therapy?
+      system_messages:
+        [
+           "Answer the following question with just one words"
+        ]
+    expected:
+      answer: "Digoxin"
 
 kg_schemas:
   gene_kg:
