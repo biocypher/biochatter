@@ -2025,7 +2025,7 @@ correctness:
 
   - case: dichotomous_cardiology_de
     input:
-      prompt: Wir bei Patienten mit Ruhe- oder provozierbarer LVOTO, Digoxin und arterielle und venöse Dilatatoren empfohlen?
+      prompt: Wird bei Patienten mit Ruhe- oder provozierbarer LVOTO, Digoxin und arterielle und venöse Dilatatoren empfohlen?
       system_messages:
         [
           "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten."
@@ -2077,7 +2077,7 @@ correctness:
 
   - case: single_choice_cardiology_de
     input:
-      prompt: Welcher dieser Genotypen ist nicht Hochrisiko Idikator für den plötzlichen Herztod bei Patienten mit DCM und NDLVC? (A) PLN  (B) TMEM43  (C) APOE  (D) DSP
+      prompt: Welcher dieser Genotypen ist kein Hochrisiko Indikator für den plötzlichen Herztod bei Patienten mit DCM und NDLVC? (A) PLN  (B) TMEM43  (C) APOE  (D) DSP
       system_messages:
         [
           "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden"
@@ -2097,7 +2097,7 @@ correctness:
 
   - case: single_choice_cardiology_de
     input:
-      prompt: Ab welcher Breite der Vena contracta (in mm) kann eine hochgradigen Aortenklappeninsuffizienz diagnitiziert werden? (A) >50 (B) >6 (C) >12 (D) >23
+      prompt: Ab welcher Breite der Vena contracta (in mm) kann eine hochgradigen Aortenklappeninsuffizienz diagnostiziert werden? (A) >50 (B) >6 (C) >12 (D) >23
       system_messages:
         [
           "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden"
@@ -2148,7 +2148,6 @@ correctness:
     expected:
       answer: "1"
 
-
   - case: one_word_cardiology_de
     input:
       prompt: Welches standardisierte Medikament sollte in Erwägung gezogen werden, wenn die Herzfrequenz eines Patienten trotz Betablockertherapie hoch bleibt?
@@ -2160,33 +2159,35 @@ correctness:
       answer: "Digoxin"
 
 
-
-
+###########################################################################################################
+  # Test case: Questions about “emergency medicine” for prospective emergency physicians
+  # Language: English
+###########################################################################################################
 
   # Level 1: Yes or no questions
-  - case: dichotomous_emergency_en
+  - case: dichotomous_cardiology_en
     input:
-      prompt: Is Aspirin is typically used for a heart attack?
+      prompt: Do drug therapies influence the natural progression of aortic valve stenosis?
       system_messages:
         [
           "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
-        ]
-    expected:
-      answer: "yes"
-
-  - case: dichotomous_emergency_en
-    input:
-      prompt: Should you always try to hold the person during an epileptic seizure?
-      system_messages:
-        [
-         "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
         ]
     expected:
       answer: "no"
 
-  - case: dichotomous_emergency_en
+  - case: dichotomous_cardiology_en
     input:
-      prompt: Are the compressions more important than the air supply during CPR?
+      prompt: Which gender is more frequently affected by Fabry disease?
+      system_messages:
+        [
+         "You will receive a question and you should answer it with only using the word 'Men' or 'Woman'"
+        ]
+    expected:
+      answer: "Men"
+
+  - case: dichotomous_cardiology_en
+    input:
+      prompt: Does a routine follow-up examination of stable patients with cardiomyopathy always include an ECG and an echocardiogram?
       system_messages:
         [
           "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
@@ -2194,41 +2195,41 @@ correctness:
     expected:
       answer: "yes"
 
-  - case: dichotomous_emergency_en
+  - case: dichotomous_cardiology_en
     input:
-      prompt: Can an automated external defibrillator (AED) also be used for epilepsy?
+      prompt:  Arrhythmogenic right ventricular cardiomyopathy (ARVC) must have dominant RV dilatation and dysfunction with histologic involvement?
       system_messages:
         [
           "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
         ]
     expected:
-      answer: "yes"
+      answer: "no"
+
+  - case: dichotomous_cardiology_en
+    input:
+      prompt: Is digoxin and arterial and venous dilators recommended in patients with resting or provocable LVOTO?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'"
+        ]
+    expected:
+      answer: "no"
 
    # Level 2: Single or Multiple choice questions
 
-  - case: single_choice_emergency_en
+  - case: single_choice_cardiology_en
     input:
-      prompt: Which "stress hormone" increases blood pressure and heart rate? (A) Insulin (B) Adrenaline (C) Melatonin (D) Leptin
+      prompt: From which width of the vena contracta (in mm) can a high-grade aortic valve insufficiency be diagnosed? (A) >50 (B) >6 (C) >12 (D) >23
       system_messages:
         [
           "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
         ]
     expected:
-      answer: "b"
+      answer: "a"
 
-  - case: single_choice_emergency_en
+  - case: single_choice_cardiology_en
     input:
-      prompt: Which drug is indicated for an acute asthma attack? (A) Verapamil (B) Fenoterol (C) Haloperidol (D) 4-Dimethylaminophenol
-      system_messages:
-        [
-          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
-        ]
-    expected:
-      answer: "b"
-
-  - case: single_choice_emergency_en
-    input:
-      prompt: What is the systolic blood pressure value? (A) The lower value, i.e. the pressure in the relaxation phase of the heart (B) The pressure averaged over one minute (C) The highest pressure directly after ventricular contraction (D) The same as the diastolic value
+      prompt: Which of these genotypes is not a high-risk indicator for sudden cardiac death in patients with DCM and NDLVC? (A) PLN (B) TMEM43 (C) APOE (D) DSP
       system_messages:
         [
           "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
@@ -2236,78 +2237,87 @@ correctness:
     expected:
       answer: "c"
 
-  - case: single_choice_emergency_en
+  - case: single_choice_cardiology_en
     input:
-      prompt: At which blood glucose level is there a risk of diabetic coma?  (A) < 20 mg/dl (B) < 50 mg/dl (C) < 90 mg/dl (D) > 110 mg/dl (E) > 300 mg/dl
+      prompt: Which features are not assessed using echocardiography and CMR? (A) Ventricular function (B) Hypertrophy (C) Myocardial ischemia (D) Dilatation
       system_messages:
         [
           "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
         ]
     expected:
-      answer: "e"
+      answer: "c"
 
-  - case: single_choice_emergency_en
+  - case: single_choice_cardiology_en
     input:
-      prompt: For which diagnosis is elevation of the legs contraindicated? (A) Hypovolemic shock (B) Anaphylactic shock (C) Hypoglycemic shock (D) Cardiogenic shock (E) Septic-toxic shock
+      prompt: Which of these features does not clearly indicate an etiologic or morphologic diagnosis? (A) Baseline rhythm and heart rate (B) Atrioventricular block (AV block) (C) Ventricular preexcitation pattern (D) Distribution of repolarization abnormalities
       system_messages:
         [
           "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
         ]
     expected:
-      answer: "d"
+      answer: "a"
 
+  - case: single_choice_cardiology_en
+    input:
+      prompt: Which of these diseases is not an endomyocardial disorder? (A) Fabry disease (B) Hypereosinophilia (C) Carcinoids (D) Endocardial fibroelastosis
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
+        ]
+    expected:
+      answer: "a"
 
    # Level 3: Word questions
 
-  - case: one_word_emergency_en
+  - case: one_word_cardiology_en
     input:
-      prompt: What is the first step in providing first aid according to the ABCDE scheme?
+      prompt: Which imaging procedure is used for suspected amyloidosis?
       system_messages:
         [
-          "Answer the following question with just one word"
+          "Answer the following question with just two words"
         ]
     expected:
-      answer: "Airways"
+      answer: "Bone scintigraphy"
 
-  - case: one_word_emergency_en
+  - case: one_word_cardiology_en
     input:
-      prompt: What type of blood does the pulmonary vein carry?
+      prompt: What is the recommended maximum time between follow-up examinations in clinically stable patients with cardiomyopathy?
       system_messages:
         [
-          "Answer the following question with just one word"
+          "Answer the following question in years only. Just the number without further description."
         ]
     expected:
-      answer: "Oxygen-rich"
+      answer: "2"
 
-  - case: one_word_emergency_en
+  - case: one_word_cardiology_en
     input:
-      prompt: Which blood group is used for unknown emergencies?
+      prompt: Which method is used to estimate the 5-year risk of sudden death in patients aged ≥ 16 years ?
       system_messages:
         [
-          "Answer the following question with just one word. If the answer is zero, please use the number 0."
+          "Answer the following question with just with the name of the method"
         ]
     expected:
-      answer: "0"
+      answer: "HCM Risk-SCD Calculator"
 
-  - case: short_words_emergency_en
+  - case: one_word_cardiology_en
     input:
-      prompt: What does the use of a Guedel tube require?
+      prompt: How many weeks after an intervention for peripheral arterial occlusive disease does a patient have to wait at least until he can drive a bus again?
       system_messages:
         [
-          "Answer the following question with maximal two words."
+           "Answer the following question in weeks only. Just the number without further description."
         ]
     expected:
-      answer: "Deep unconsciousness"
+      answer: "1"
 
-  - case: short_words_emergency_en
+  - case: one_word_cardiology_en
     input:
-      prompt: What do the letters of the RICE method stand for?
+      prompt: Which standardized medication should be considered if a patient's heart rate remains high despite beta-blocker therapy?
       system_messages:
         [
-          "Answer the following question with just one word per letter"
+           "Answer the following question with just one words"
         ]
     expected:
-      answer: "Rest, Ice, Compression, Elevation"
+      answer: "Digoxin"
 
 kg_schemas:
   gene_kg:
