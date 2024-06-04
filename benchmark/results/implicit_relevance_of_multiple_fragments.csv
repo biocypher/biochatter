@@ -38,9 +38,7 @@ code-llama-instruct:7:ggufv2:Q6_K,implicit_relevance_yes,1.0/1,5,f9d749647929fcb
 code-llama-instruct:7:ggufv2:Q8_0,implicit_relevance_no,0.0/1,5,b24fb31fd761b0f3e308bebd70ce4277,2024-02-10 11:49:53
 code-llama-instruct:7:ggufv2:Q8_0,implicit_relevance_yes,1.0/1,5,f9d749647929fcb55321c614a3bf8d20,2024-02-10 11:50:22
 gpt-3.5-turbo-0125,implicit_relevance_no,0.8/1,5,b24fb31fd761b0f3e308bebd70ce4277,2024-02-12 08:31:33
-gpt-3.5-turbo-0125,implicit_relevance_no,1.0/1,1,b24fb31fd761b0f3e308bebd70ce4277,2024-04-29 14:13:53
 gpt-3.5-turbo-0125,implicit_relevance_yes,1.0/1,5,f9d749647929fcb55321c614a3bf8d20,2024-02-12 08:31:42
-gpt-3.5-turbo-0125,implicit_relevance_yes,1.0/1,1,f9d749647929fcb55321c614a3bf8d20,2024-04-29 14:13:56
 gpt-3.5-turbo-0613,implicit_relevance_no,1.0/1,5,b24fb31fd761b0f3e308bebd70ce4277,2024-02-10 11:56:18
 gpt-3.5-turbo-0613,implicit_relevance_yes,1.0/1,5,f9d749647929fcb55321c614a3bf8d20,2024-02-10 11:56:37
 gpt-4-0125-preview,implicit_relevance_no,0.0/1,5,b24fb31fd761b0f3e308bebd70ce4277,2024-02-12 08:38:56
