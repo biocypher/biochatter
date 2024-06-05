@@ -3,7 +3,7 @@
 # 1. User asks question req. BLAST to find the answer
 # 2. rag_agent receives the question and sends it to the api_agent // api_agent is manually selected 
 # 3. api_agent writes query for BLAST specific to the question
-    # 3.1 question + BLAST prompt template + BlastQueryRequest are input into 
+    # 3.1 question + BLAST prompt template + BlastQuery are input into 
     # langchain.chains.openai_functions.create_structured_output_runnable -> returns a structured output which is our API call object
 # 4. BLAST API call 
     # 4.1 BLAST API call is made using the structured output from 3.1
@@ -43,8 +43,8 @@ openai_api_key = os.getenv("OPENAI_API_KEY")
 llm = ChatOpenAI(model_name='gpt-4', temperature=0, openai_api_key=openai_api_key)
     
     
-class BlastQueryRequest(BaseModel):
-    """BlastQueryRequest is a Pydantic model for the BLAST query request.
+class BlastQuery(BaseModel):
+    """BlastQuery is a Pydantic model for the BLAST query request.
     A Pydantic model for configuring and sending a request to the NCBI BLAST query API.
     """
     
@@ -101,9 +101,12 @@ class BlastQueryRequest(BaseModel):
         description="Url used for the blast query"
     )
 
+class BlastQueryBuilder(BaseModel):
+    """A pydantic class for building a BlastQuery object."""
 
-def BLAST_api_query_generator(question: str, BLAST_prompt_file_path: str) -> BlastQueryRequest:
-    BLAST_structured_output_prompt = ChatPromptTemplate.from_messages(
+    @property
+    def BLAST_structured_output_prompt(self) -> ChatPromptTemplate:
+        return ChatPromptTemplate.from_messages(
         [
             (
                 "system",
@@ -116,65 +119,73 @@ def BLAST_api_query_generator(question: str, BLAST_prompt_file_path: str) -> Bla
             ("human", "Tip: Make sure to answer in the correct format"),
         ]
     )
-    try:
-        with open(BLAST_prompt_file_path, 'r') as file:
-            BLAST_prompt = file.read()
-    except FileNotFoundError:
-        print("The file was not found at the specified path.")
-    except Exception as e:
-        print("An error occurred while reading the file:", str(e))
+    def read_blast_promot(self, BLAST_prompt_file_path: str) -> str:
+        try:
+            with open(BLAST_prompt_file_path, 'r') as file:
+                return file.read()
+        except FileNotFoundError:
+             return "The file was not found at the specified path."
+        except Exception as e:
+            return "An error occurred while reading the file:", str(e)
+    
+    def create_runnable(self, llm, blast_query_class) -> callable:
+        return create_structured_output_runnable(blast_query_class, llm, self.BLAST_structured_output_prompt)
+    
+    def generate_blast_query(self, question: str, BLAST_prompt: str, llm) -> BlastQuery:
+        """
+        Generates a BlastQuery object based on the given question, file path, and llm.
 
-    # Debugging: print the prompt to ensure it is read correctly
-    print(f"BLAST Prompt: {BLAST_prompt}")
+        Args:
+            question (str): The question to be answered.
+            file_path (str): The path to the file containing the BLAST prompt.
+            llm: The llm object used for creating the BlastQuery.
+
+        Returns:
+            BlastQuery: The generated BlastQuery object.
+        """
+        runnable = self.create_runnable(llm, BlastQuery)
+        blast_call_obj = runnable.invoke({"input": f"Answer:\n{question} based on:\n {BLAST_prompt}"})
+        blast_call_obj.question_uuid = str(uuid.uuid4())
+        return blast_call_obj
+
+    def submit_blast_query(self, request_data: BlastQuery) -> str:
+        """Function to POST the BLAST query and retrieve RID.
+        It submits the structured BlastQuery obj and return the RID.
         
-    runnable = create_structured_output_runnable(BlastQueryRequest, llm, BLAST_structured_output_prompt)
-    blast_call_obj = runnable.invoke({"input": f"Answer:\n{question} based on:\n {BLAST_prompt}"})
-    
-    # Debugging: print the generated blast_call_obj to check its structure
-    print(f"Generated BLAST Call Object: {blast_call_obj}")
-    
-    blast_call_obj.question_uuid = str(uuid.uuid4())
-    return blast_call_obj
+        Args:
+            request_data: BlastQuery object containing the BLAST query parameters.
+        Returns:
+            str: The Request ID (RID) for the submitted BLAST query.
+        """
+        data = {
+            'CMD': request_data.cmd,
+            'PROGRAM': request_data.program,
+            'DATABASE': request_data.database,
+            'QUERY': request_data.query,
+            'FORMAT_TYPE': request_data.format_type,
+            'MEGABLAST':request_data.megablast,
+            'HITLIST_SIZE':request_data.max_hits,
+        }
+        # Include any other_params if provided
+        if request_data.other_params:
+            data.update(request_data.other_params)
+        # Make the API call
+        query_string = urlencode(data)
+        # Combine base URL with the query string
+        full_url = f"{request_data.url}?{query_string}"
+        # Print the full URL
+        request_data.full_url = full_url
+        print("Full URL built by retriever:\n", request_data.full_url)
+        response = requests.post(request_data.url, data=data)
+        response.raise_for_status()
+        # Extract RID from response
+        match = re.search(r"RID = (\w+)", response.text)
+        if match:
+            return match.group(1)
+        else:
+            raise ValueError("RID not found in BLAST submission response.")
 
-
-def submit_blast_query(request_data: BlastQueryRequest) -> str:
-    """Function to POST the BLAST query and retrieve RID.
-    It submits the structured BlastQueryRequest obj and return the RID.
-    
-    Args:
-        request_data: BlastQueryRequest object containing the BLAST query parameters.
-    Returns:
-        str: The Request ID (RID) for the submitted BLAST query.
-    """
-    data = {
-        'CMD': request_data.cmd,
-        'PROGRAM': request_data.program,
-        'DATABASE': request_data.database,
-        'QUERY': request_data.query,
-        'FORMAT_TYPE': request_data.format_type,
-        'MEGABLAST':request_data.megablast,
-        'HITLIST_SIZE':request_data.max_hits,
-    }
-    # Include any other_params if provided
-    if request_data.other_params:
-        data.update(request_data.other_params)
-    # Make the API call
-    query_string = urlencode(data)
-    # Combine base URL with the query string
-    full_url = f"{request_data.url}?{query_string}"
-    # Print the full URL
-    request_data.full_url = full_url
-    print("Full URL built by retriever:\n", request_data.full_url)
-    response = requests.post(request_data.url, data=data)
-    response.raise_for_status()
-    # Extract RID from response
-    match = re.search(r"RID = (\w+)", response.text)
-    if match:
-        return match.group(1)
-    else:
-        raise ValueError("RID not found in BLAST submission response.")
-
-def fetch_and_save_blast_results(request_data: BlastQueryRequest, blast_query_return: str, save_path: str , 
+def fetch_and_save_blast_results(request_data: BlastQuery, blast_query_return: str, save_path: str , 
                                 max_attempts: int = 10000):
     """SECOND function to be called for a BLAST query.
     Will look for the RID to fetch the data
@@ -236,23 +247,19 @@ def fetch_and_save_blast_results(request_data: BlastQueryRequest, blast_query_re
     return file_name
 
 
-    
-# blast_prompt_path = "docs/api_agent/BLAST_tool/persistent_files/api_documentation/BLAST.txt"
-# base_dir = os.getcwd()
-
-def api_agent(question, blast_prompt_path, BLAST_result_dir):
-    """Short term solution to test"""
-    base_dir = os.getcwd()
-    BLAST_prompt_file_path = os.path.join(base_dir, blast_prompt_path)
-    #blast_result 
-    BLAST_result_path = os.path.join(base_dir, BLAST_result_dir)
-    query_request = BLAST_api_query_generator(question, BLAST_prompt_file_path)
-    print(query_request)
-    rid = submit_blast_query(query_request)
-    print(rid)
-    BLAST_file_name = fetch_and_save_blast_results(query_request, rid, BLAST_result_path, 10000)
-    print(BLAST_file_name)
-    return BLAST_file_name
+# def api_agent(question, blast_prompt_path, BLAST_result_dir):
+#     """Short term solution to test"""
+#     base_dir = os.getcwd()
+#     BLAST_prompt_file_path = os.path.join(base_dir, blast_prompt_path)
+#     #blast_result 
+#     BLAST_result_path = os.path.join(base_dir, BLAST_result_dir)
+#     query_request = BLAST_api_query_generator(question, BLAST_prompt_file_path)
+#     print(query_request)
+#     rid = submit_blast_query(query_request)
+#     print(rid)
+#     BLAST_file_name = fetch_and_save_blast_results(query_request, rid, BLAST_result_path, 10000)
+#     print(BLAST_file_name)
+#     return BLAST_file_name
 
 
 ### answer extraction 
