@@ -30,6 +30,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
 from langchain_core.output_parsers import StrOutputParser
 from langchain.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 from langchain.chat_models import ChatOpenAI
 
 from langchain.chains.openai_functions import (
@@ -131,7 +132,7 @@ class BlastQueryBuilder(BaseModel):
     def create_runnable(self, llm, blast_query_class) -> callable:
         return create_structured_output_runnable(blast_query_class, llm, self.BLAST_structured_output_prompt)
     
-    def generate_blast_query(self, question: str, BLAST_prompt: str, llm) -> BlastQuery:
+    def generate_blast_query(self, question: str, BLAST_prompt_path: str, llm) -> BlastQuery:
         """
         Generates a BlastQuery object based on the given question, file path, and llm.
 
@@ -144,6 +145,7 @@ class BlastQueryBuilder(BaseModel):
             BlastQuery: The generated BlastQuery object.
         """
         runnable = self.create_runnable(llm, BlastQuery)
+        BLAST_prompt = self.read_blast_promot(BLAST_prompt_path)
         blast_call_obj = runnable.invoke({"input": f"Answer:\n{question} based on:\n {BLAST_prompt}"})
         blast_call_obj.question_uuid = str(uuid.uuid4())
         return blast_call_obj
@@ -179,73 +181,144 @@ class BlastQueryBuilder(BaseModel):
         response = requests.post(request_data.url, data=data)
         response.raise_for_status()
         # Extract RID from response
+        print(response)
         match = re.search(r"RID = (\w+)", response.text)
         if match:
             return match.group(1)
         else:
             raise ValueError("RID not found in BLAST submission response.")
 
-def fetch_and_save_blast_results(request_data: BlastQuery, blast_query_return: str, save_path: str , 
-                                max_attempts: int = 10000):
-    """SECOND function to be called for a BLAST query.
-    Will look for the RID to fetch the data
-    """
-    file_name = f'BLAST_results_{request_data.question_uuid}.txt'
-    ###
-    ###    TO DO: Implement logging for all BLAST queries
-    ###
-    # log_question_uuid_json(request_data.question_uuid,question, file_name, save_path, log_file_path,request_data.full_url)        
-    base_url = "https://blast.ncbi.nlm.nih.gov/Blast.cgi"
-    check_status_params = {
-        'CMD': 'Get',
-        'FORMAT_OBJECT': 'SearchInfo',
-        'RID': blast_query_return
-    }
-    get_results_params = {
-        'CMD': 'Get',
-        'FORMAT_TYPE': 'XML',
-        'RID': blast_query_return
-    }
-    # Check the status of the BLAST job
-    for attempt in range(max_attempts):
-        status_response = requests.get(base_url, params=check_status_params)
-        status_response.raise_for_status()
-        status_text = status_response.text
-        print('evaluating status')
-        if 'Status=WAITING' in status_text:
-            print(f"{request_data.question_uuid} results not ready, waiting...")
-            time.sleep(15)
-        elif 'Status=FAILED' in status_text:
-            with open(f'{save_path}{file_name}', 'w') as file:
-                file.write("BLAST query FAILED.")
-        elif 'Status=UNKNOWN' in status_text:
-            with open(f'{save_path}{file_name}', 'w') as file:
-                file.write("BLAST query expired or does not exist.")
-            raise 
-        elif 'Status=READY' in status_text:
-            if 'ThereAreHits=yes' in status_text:
-                print(f"{request_data.question_uuid} results are ready, retrieving and saving...")
-                results_response = requests.get(base_url, params=get_results_params)
-                results_response.raise_for_status()
-                # Save the results to a file
-                print(f'{save_path}{file_name}')
+class BlastFetcher(BaseModel):
+    def fetch_and_save_blast_results(self, question_uuid: uuid, blast_query_return: str, save_path: str , 
+                                    max_attempts: int = 10000):
+        """SECOND function to be called for a BLAST query.
+        Will look for the RID to fetch the data
+        """
+        file_name = f'BLAST_results_{question_uuid}.txt'
+        ###
+        ###    TO DO: Implement logging for all BLAST queries
+        ###
+        # log_question_uuid_json(request_data.question_uuid,question, file_name, save_path, log_file_path,request_data.full_url)        
+        base_url = "https://blast.ncbi.nlm.nih.gov/Blast.cgi"
+        check_status_params = {
+            'CMD': 'Get',
+            'FORMAT_OBJECT': 'SearchInfo',
+            'RID': blast_query_return
+        }
+        get_results_params = {
+            'CMD': 'Get',
+            'FORMAT_TYPE': 'XML',
+            'RID': blast_query_return
+        }
+        #checking path: should end with '/'
+        if not save_path.endswith('/'):
+            save_path += '/'
+        # Check the status of the BLAST job
+        for attempt in range(max_attempts):
+            status_response = requests.get(base_url, params=check_status_params)
+            status_response.raise_for_status()
+            status_text = status_response.text
+            print('evaluating status')
+            if 'Status=WAITING' in status_text:
+                print(f"{question_uuid} results not ready, waiting...")
+                time.sleep(15)
+            elif 'Status=FAILED' in status_text:
                 with open(f'{save_path}{file_name}', 'w') as file:
-                    file.write(results_response.text)
-                print(f'Results saved in BLAST_results_{request_data.question_uuid}.txt')
-                break
+                    file.write("BLAST query FAILED.")
+            elif 'Status=UNKNOWN' in status_text:
+                with open(f'{save_path}{file_name}', 'w') as file:
+                    file.write("BLAST query expired or does not exist.")
+                raise 
+            elif 'Status=READY' in status_text:
+                if 'ThereAreHits=yes' in status_text:
+                    print(f"{question_uuid} results are ready, retrieving and saving...")
+                    results_response = requests.get(base_url, params=get_results_params)
+                    results_response.raise_for_status()
+                    # Save the results to a file
+                    print(f'{save_path}{file_name}')
+                    with open(f'{save_path}{file_name}', 'w') as file:
+                        file.write(results_response.text)
+                    print(f'Results saved in BLAST_results_{question_uuid}.txt')
+                    break
+                else:
+                    with open(f'{save_path}{file_name}', 'w') as file:
+                        file.write("No hits found")
+                    break
             else:
+                print('Unknown status')
                 with open(f'{save_path}{file_name}', 'w') as file:
-                    file.write("No hits found")
-                break
-        else:
-            print('Unknown status')
-            with open(f'{save_path}{file_name}', 'w') as file:
-                file.write("Unknown status")
-            break 
-    if attempt == max_attempts - 1:
-        raise TimeoutError("Maximum attempts reached. Results may not be ready.")
-    return file_name
+                    file.write("Unknown status")
+                break 
+        if attempt == max_attempts - 1:
+            raise TimeoutError("Maximum attempts reached. Results may not be ready.")
+        return file_name
 
+
+    def read_first_n_lines(self, file_path: str, n: int):
+        """
+        Reads the first n lines from a file and returns them as a string.
+
+        Args:
+            file_path (str): The path to the file.
+            n (int): The number of lines to read.
+
+        Returns:
+            str: The first n lines from the file as a string.
+
+        Raises:
+            FileNotFoundError: If the file is not found.
+            Exception: If any other error occurs during file reading.
+
+        """
+        try:
+            with open(file_path, 'r') as file:
+                lines = []
+                for i in range(n):
+                    line = file.readline()
+                    if not line:
+                        break
+                    lines.append(line.strip())
+                #to test:
+                #more efficient with \n or without?
+                return '\n'.join(lines)
+        except FileNotFoundError:
+            return "The file was not found."
+        except Exception as e:
+            return f"An error occurred: {e}"
+
+
+    def answer_extraction(self, question:str, file_path: str, n: int) -> str:
+        """
+        Function to extract the answer from the BLAST results.
+
+        Args:
+            question (str): The question to be answered.
+            file_path (str): The path to the BLAST results file.
+            n (int): The number of lines to read from the file.
+
+        Returns:
+            str: The extracted answer from the BLAST results.
+
+        """
+        prompt = ChatPromptTemplate.from_messages([
+        ("system", "You are a world class molecular biologist who knows everything about NCBI and BLAST results."),
+        ("user", "{input}")
+        ])
+
+        context = self.read_first_n_lines(file_path, n)
+        BLAST_file_answer_extractor_prompt = f"""
+                You have to answer the question: {question} in a clear and concise manner. Be factual!\n\
+                If you are asked what organism a specific sequence belongs to, check the 'Hit_def' fields. If you find a synthetic construct or predicted entry, move to the next one and look for an organism name.\n\
+                Try to use the hits with the best identity score to answer the question. If it is not possible, move to the next one.\n\
+                Be clear, and if organism names are present in ANY of the results, please include them in the answer. Do not make up information and mention how relevant the found information is based on the identity scores.\n\
+                Use the same reasoning for any potential BLAST results. If you find information that is manually curated, please use it and state it. You may also state other results, but always include the context.\n\
+                Based on the information given here:\n\
+                {context}
+                """
+        output_parser = StrOutputParser()
+        chain = prompt | llm | output_parser
+        BLAST_answer = chain.invoke({"input": {BLAST_file_answer_extractor_prompt}})
+        return BLAST_answer
 
 # def api_agent(question, blast_prompt_path, BLAST_result_dir):
 #     """Short term solution to test"""
@@ -264,72 +337,5 @@ def fetch_and_save_blast_results(request_data: BlastQuery, blast_query_return: s
 
 ### answer extraction 
 
-from langchain_core.prompts import ChatPromptTemplate
 
 # file_path = 'docs/api_agent/BLAST_tool/BLAST_response/BLAST_results_1a4862a5-b185-4c87-a24b-a83c1d1bc2b4.txt'
-
-def read_first_n_lines(file_path: str, n: int):
-    """
-    Reads the first n lines from a file and returns them as a string.
-
-    Args:
-        file_path (str): The path to the file.
-        n (int): The number of lines to read.
-
-    Returns:
-        str: The first n lines from the file as a string.
-
-    Raises:
-        FileNotFoundError: If the file is not found.
-        Exception: If any other error occurs during file reading.
-
-    """
-    try:
-        with open(file_path, 'r') as file:
-            lines = []
-            for i in range(n):
-                line = file.readline()
-                if not line:
-                    break
-                lines.append(line.strip())
-            #to test:
-            #more efficient with \n or without?
-            return '\n'.join(lines)
-    except FileNotFoundError:
-        return "The file was not found."
-    except Exception as e:
-        return f"An error occurred: {e}"
-
-
-def answer_extraction(question:str, file_path: str, n: int) -> str:
-    """
-    Function to extract the answer from the BLAST results.
-
-    Args:
-        question (str): The question to be answered.
-        file_path (str): The path to the BLAST results file.
-        n (int): The number of lines to read from the file.
-
-    Returns:
-        str: The extracted answer from the BLAST results.
-
-    """
-    prompt = ChatPromptTemplate.from_messages([
-    ("system", "You are a world class molecular biologist who knows everything about NCBI and BLAST results."),
-    ("user", "{input}")
-    ])
-
-    context = read_first_n_lines(file_path, n)
-    BLAST_file_answer_extractor_prompt = f"""
-            You have to answer the question: {question} in a clear and concise manner. Be factual!\n\
-            If you are asked what organism a specific sequence belongs to, check the 'Hit_def' fields. If you find a synthetic construct or predicted entry, move to the next one and look for an organism name.\n\
-            Try to use the hits with the best identity score to answer the question. If it is not possible, move to the next one.\n\
-            Be clear, and if organism names are present in ANY of the results, please include them in the answer. Do not make up information and mention how relevant the found information is based on the identity scores.\n\
-            Use the same reasoning for any potential BLAST results. If you find information that is manually curated, please use it and state it. You may also state other results, but always include the context.\n\
-            Based on the information given here:\n\
-            {context}
-            """
-    output_parser = StrOutputParser()
-    chain = prompt | llm | output_parser
-    BLAST_answer = chain.invoke({"input": {BLAST_file_answer_extractor_prompt}})
-    return BLAST_answer
