@@ -35,7 +35,7 @@ def benchmark_already_executed(
     task_results = return_or_create_result_file(task)
 
     # check if failure group csv already exists
-    return_or_create_wrong_result_file(task)
+    return_or_create_failure_mode_file(task)
 
     if task_results.empty:
         return False
@@ -104,17 +104,18 @@ def return_or_create_result_file(
     return results
 
 
-def return_or_create_wrong_result_file(task: str):
+def return_or_create_failure_mode_file(task: str):
     """
-    Returns the wrong result file for the task or creates it if it does not exist.
+    Returns the failure mode file for the task or creates it if it does not
+    exist.
 
     Args:
         task (str): The benchmark task, e.g. "biocypher_query_generation"
 
     Returns:
-        pd.DataFrame: The wrong result file for the task
+        pd.DataFrame: The failure mode recording file for the task
     """
-    file_path = get_wrong_result_file_path(task)
+    file_path = get_failure_mode_file_path(task)
     try:
         results = pd.read_csv(file_path, header=0)
     except (pd.errors.EmptyDataError, FileNotFoundError):
@@ -122,9 +123,9 @@ def return_or_create_wrong_result_file(task: str):
             columns=[
                 "model_name",
                 "subtask",
-                "wrong_answer",
+                "actual_answer",
                 "expected_answer",
-                "failure_groups",
+                "failure_modes",
                 "md5_hash",
                 "datetime",
             ]
@@ -133,16 +134,18 @@ def return_or_create_wrong_result_file(task: str):
     return results
 
 
-def get_wrong_result_file_path(task: str) -> str:
-    """Returns the path to the wrong result file.
+def get_failure_mode_file_path(task: str) -> str:
+    """
+
+    Returns the path to the failure mode recording file.
 
     Args:
         task (str): The benchmark task, e.g. "biocypher_query_generation"
 
     Returns:
-        str: The path to the wrong result file
+        str: The path to the failure mode file
     """
-    return f"benchmark/results/{task}_failure_groups.csv"
+    return f"benchmark/results/{task}_failure_modes.csv"
 
 
 def write_results_to_file(
@@ -176,24 +179,34 @@ def write_results_to_file(
     results.to_csv(file_path, index=False)
 
 
-def write_wrong_results_to_file(
+def write_failure_modes_to_file(
     model_name: str,
     subtask: str,
-    wrong_answer: str,
+    actual_answer: str,
     expected_answer: str,
-    failure_groups: str,
+    failure_modes: str,
     md5_hash: str,
     file_path: str,
 ):
-    """Writes the wrong benchmark results for the subtask to the result file.
+    """
+
+    Writes the failure modes identified for a given response to a subtask to
+    the given file path.
 
     Args:
         model_name (str): The model name, e.g. "gpt-3.5-turbo"
+
         subtask (str): The benchmark subtask test case, e.g. "entities"
-        wrong_answer (str): The wrong answer given to the subtask
-        expected_answer (str): The expected for the subtask
-        failure_groups (str): The group of the failure e.g. "Wrong count of words"
+
+        actual_answer (str): The actual response given to the subtask question
+
+        expected_answer (str): The expected response for the subtask
+
+        failure_modes (str): The mode of failure, e.g. "Wrong word count",
+        "Formatting", etc.
+
         md5_hash (str): The md5 hash of the test case
+
         file_path (str): The path to the result file
     """
     results = pd.read_csv(file_path, header=0)
@@ -203,9 +216,9 @@ def write_wrong_results_to_file(
             [
                 model_name,
                 subtask,
-                wrong_answer,
+                actual_answer,
                 expected_answer,
-                failure_groups,
+                failure_modes,
                 md5_hash,
                 now,
             ]
@@ -218,39 +231,58 @@ def write_wrong_results_to_file(
     results.to_csv(file_path, index=False)
 
 
-def categorize_failures(wrong_answer, expected_answer, regex=False):
+def categorize_failure_modes(
+    actual_answer, expected_answer, regex=False
+) -> str:
+    """
+    Categorises the mode of failure for a given response to a subtask.
+
+    Args:
+        actual_answer (str): The actual response given to the subtask question
+
+        expected_answer (str): The expected response for the subtask
+
+        regex (bool): Whether the expected answer is a regex expression
+
+    Returns:
+        str: The mode of failure, e.g. "Case Sensitivity", "Partial Match",
+            "Format Error", "Synonym", "Words Missing", "Entire Answer Incorrect",
+            "Other"
+    """
     if not regex:
         # Check if the answer is right, but the case sensitivity was wrong (e.g. a / A)
-        if wrong_answer.lower() == expected_answer.lower():
+        if actual_answer.lower() == expected_answer.lower():
             return "Case Sensitivity"
 
         # Check if some of the answer is right (e.g. "a headache instead of a")
-        elif wrong_answer in expected_answer or expected_answer in wrong_answer:
+        elif (
+            actual_answer in expected_answer or expected_answer in actual_answer
+        ):
             return "Partial Match"
 
         # Check if the format of the answer is wrong, but the answer otherwise is right (e.g. "a b" instead of "ab")
-        elif re.sub(r"\s+", "", wrong_answer.lower()) == re.sub(
+        elif re.sub(r"\s+", "", actual_answer.lower()) == re.sub(
             r"\s+", "", expected_answer.lower()
         ):
             return "Format Error"
 
         # Check if the answer is a synonym with nltk (e.g. Illness / Sickness)
-        elif is_synonym(wrong_answer, expected_answer):
+        elif is_synonym(actual_answer, expected_answer):
             return "Synonym"
 
         # Check if the format of the answer is wrong due to numerical or alphabetic differences (e.g. "123" vs "one two three")
         elif (
-            re.search(r"\w+", wrong_answer)
+            re.search(r"\w+", actual_answer)
             and re.search(r"\w+", expected_answer)
-            and any(char.isdigit() for char in wrong_answer)
+            and any(char.isdigit() for char in actual_answer)
             != any(char.isdigit() for char in expected_answer)
         ):
             return "Format Error"
 
         # Check if partial match with case sensitivity
         elif (
-            wrong_answer.lower() in expected_answer.lower()
-            or expected_answer.lower() in wrong_answer.lower()
+            actual_answer.lower() in expected_answer.lower()
+            or expected_answer.lower() in actual_answer.lower()
         ):
             return "Partial Match / case Sensitivity"
 
@@ -259,15 +291,15 @@ def categorize_failures(wrong_answer, expected_answer, regex=False):
             return "Other"
 
     else:
-        # Check if all the words in wrong_answer are expected but some of the expected are missing
-        if all(word in expected_answer for word in wrong_answer.split()):
+        # Check if all the words in actual_answer are expected but some of the expected are missing
+        if all(word in expected_answer for word in actual_answer.split()):
             return "Words Missing"
 
-        # Check if some words in wrong_answer are incorrect (present in wrong_answer but not in expected_answer)
-        # elif any(word not in expected_answer for word in wrong_answer.split()):
+        # Check if some words in actual_answer are incorrect (present in actual_answer but not in expected_answer)
+        # elif any(word not in expected_answer for word in actual_answer.split()):
         #   return "Incorrect Words"
 
-        # Check if the entire wrong_answer is completely different from the expected_answer
+        # Check if the entire actual_answer is completely different from the expected_answer
         else:
             return "Entire Answer Incorrect"
 
