@@ -1,18 +1,20 @@
+from unittest.mock import Mock, patch
 import os
-import openai
-from openai._exceptions import NotFoundError
+
 from xinference.client import Client
-from biochatter.llm_connect import (
-    GptConversation,
-    AzureGptConversation,
-    SystemMessage,
-    HumanMessage,
-    AIMessage,
-    XinferenceConversation,
-    WasmConversation,
-)
+from openai._exceptions import NotFoundError
+import openai
 import pytest
-from unittest.mock import patch, Mock
+
+from biochatter.llm_connect import (
+    AIMessage,
+    HumanMessage,
+    SystemMessage,
+    GptConversation,
+    WasmConversation,
+    AzureGptConversation,
+    XinferenceConversation,
+)
 
 
 @pytest.fixture(scope="module", autouse=True)

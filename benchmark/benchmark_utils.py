@@ -1,4 +1,7 @@
+from datetime import datetime
+
 import pytest
+import importlib_metadata
 
 import pandas as pd
 import re
@@ -95,6 +98,7 @@ def return_or_create_result_file(
                 "iterations",
                 "md5_hash",
                 "datetime",
+                "biochatter_version",
             ]
         )
         results.to_csv(file_path, index=False)
@@ -162,8 +166,9 @@ def write_results_to_file(
     """
     results = pd.read_csv(file_path, header=0)
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    bc_version = importlib_metadata.version("biochatter")
     new_row = pd.DataFrame(
-        [[model_name, subtask, score, iterations, md5_hash, now]],
+        [[model_name, subtask, score, iterations, md5_hash, now, bc_version]],
         columns=results.columns,
     )
     results = pd.concat([results, new_row], ignore_index=True).sort_values(
@@ -195,7 +200,17 @@ def write_wrong_results_to_file(
     results = pd.read_csv(file_path, header=0)
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     new_row = pd.DataFrame(
-        [[model_name, subtask, wrong_answer, expected_answer, failure_groups, md5_hash, now]],
+        [
+            [
+                model_name,
+                subtask,
+                wrong_answer,
+                expected_answer,
+                failure_groups,
+                md5_hash,
+                now,
+            ]
+        ],
         columns=results.columns,
     )
     results = pd.concat([results, new_row], ignore_index=True).sort_values(
@@ -217,7 +232,9 @@ def categorize_failures(wrong_answer, expected_answer, regex=False):
             return "Partial Match"
 
         # Check if the format of the answer is wrong, but the answer otherwise is right (e.g. "a b" instead of "ab")
-        elif re.sub(r'\s+', '', wrong_answer.lower()) == re.sub(r'\s+', '', expected_answer.lower()):
+        elif re.sub(r"\s+", "", wrong_answer.lower()) == re.sub(
+            r"\s+", "", expected_answer.lower()
+        ):
             return "Format Error"
 
         # Check if the answer is a synonym with nltk (e.g. Illness / Sickness)
@@ -225,11 +242,19 @@ def categorize_failures(wrong_answer, expected_answer, regex=False):
             return "Synonym"
 
         # Check if the format of the answer is wrong due to numerical or alphabetic differences (e.g. "123" vs "one two three")
-        elif re.search(r'\w+', wrong_answer) and re.search(r'\w+', expected_answer) and any(char.isdigit() for char in wrong_answer) != any(char.isdigit() for char in expected_answer):
+        elif (
+            re.search(r"\w+", wrong_answer)
+            and re.search(r"\w+", expected_answer)
+            and any(char.isdigit() for char in wrong_answer)
+            != any(char.isdigit() for char in expected_answer)
+        ):
             return "Format Error"
 
         # Check if partial match with case sensitivity
-        elif wrong_answer.lower() in expected_answer.lower() or expected_answer.lower() in wrong_answer.lower():
+        elif (
+            wrong_answer.lower() in expected_answer.lower()
+            or expected_answer.lower() in wrong_answer.lower()
+        ):
             return "Partial Match / case Sensitivity"
 
         # Else the answer may be completely wrong
@@ -242,7 +267,7 @@ def categorize_failures(wrong_answer, expected_answer, regex=False):
             return "Words Missing"
 
         # Check if some words in wrong_answer are incorrect (present in wrong_answer but not in expected_answer)
-        #elif any(word not in expected_answer for word in wrong_answer.split()):
+        # elif any(word not in expected_answer for word in wrong_answer.split()):
         #   return "Incorrect Words"
 
         # Check if the entire wrong_answer is completely different from the expected_answer

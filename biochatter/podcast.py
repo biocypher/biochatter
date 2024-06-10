@@ -1,11 +1,12 @@
 from collections import deque
-from typing import List
-from langchain.schema import Document
-from .llm_connect import GptConversation
-from gtts import gTTS
-import nltk
 import os
+
+from gtts import gTTS
 from openai import OpenAI
+from langchain.schema import Document
+import nltk
+
+from .llm_connect import GptConversation
 
 FIRST_PROMPT = (
     "You are tasked with summarising a scientific manuscript for consumption as"
@@ -89,7 +90,7 @@ class Podcaster:
 
         # summarise the summaries
 
-    def _split_text(self, text: str) -> List[str]:
+    def _split_text(self, text: str) -> list[str]:
         """
         Splits consecutive text into sentences.
         """

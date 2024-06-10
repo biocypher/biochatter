@@ -1,4 +1,4 @@
-name: Docs 
+name: Docs
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
         with:
           python-version: 3.x
 
-      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
 
       - name: Restore cache
         uses: actions/cache@v3

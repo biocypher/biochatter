@@ -1,17 +1,20 @@
-import logging, uuid, random
-from typing import List, Optional, Tuple, Dict
+from typing import Tuple, Optional
+import uuid
+import random
+import logging
+
 from pymilvus import (
-    MilvusException,
-    connections,
-    Collection,
-    utility,
     DataType,
+    Collection,
     FieldSchema,
+    MilvusException,
     CollectionSchema,
+    utility,
+    connections,
 )
-from langchain.vectorstores import Milvus
-from langchain.embeddings import OpenAIEmbeddings
 from langchain.schema import Document
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import Milvus
 
 logger = logging.getLogger(__name__)
 
@@ -35,8 +38,8 @@ METADATA_FIELDS = [
 
 
 def align_metadata(
-    metadata: List[Dict], isDeleted: Optional[bool] = False
-) -> List[List]:
+    metadata: list[dict], isDeleted: Optional[bool] = False
+) -> list[list]:
     """
 
     Ensure that specific metadata fields are present; if not provided, fill with
@@ -69,7 +72,7 @@ def align_metadata(
     return ret
 
 
-def align_embeddings(docs: List[Document], meta_id: int) -> List[Document]:
+def align_embeddings(docs: list[Document], meta_id: int) -> list[Document]:
     """
     Ensure that the metadata id is present in each document.
 
@@ -130,7 +133,7 @@ class VectorDatabaseAgentMilvus:
     def __init__(
         self,
         embedding_func: OpenAIEmbeddings,
-        connection_args: Optional[Dict] = None,
+        connection_args: Optional[dict] = None,
         embedding_collection_name: Optional[str] = None,
         metadata_collection_name: Optional[str] = None,
     ):
@@ -376,7 +379,7 @@ class VectorDatabaseAgentMilvus:
             )
             raise e
 
-    def _insert_data(self, documents: List[Document]) -> str:
+    def _insert_data(self, documents: list[Document]) -> str:
         """
         Insert documents into the currently active database.
 
@@ -416,7 +419,7 @@ class VectorDatabaseAgentMilvus:
             raise e
         return meta_id
 
-    def store_embeddings(self, documents: List[Document]) -> str:
+    def store_embeddings(self, documents: list[Document]) -> str:
         """
         Store documents in the currently active database.
 
@@ -433,7 +436,7 @@ class VectorDatabaseAgentMilvus:
         return self._insert_data(documents)
 
     def _build_embedding_search_expression(
-        self, meta_ids: List[Dict]
+        self, meta_ids: list[dict]
     ) -> Optional[str]:
         """
         Build search expression for embedding collection. The generated
@@ -456,8 +459,8 @@ class VectorDatabaseAgentMilvus:
         return built_expr
 
     def _join_embedding_and_metadata_results(
-        self, result_embedding: List[Document], result_meta: List[Dict]
-    ) -> List[Document]:
+        self, result_embedding: list[Document], result_meta: list[dict]
+    ) -> list[Document]:
         """
         Join the search results of embedding collection and results of metadata.
 
@@ -473,8 +476,8 @@ class VectorDatabaseAgentMilvus:
         """
 
         def _find_metadata_by_id(
-            metadata: List[Dict], id: str
-        ) -> Optional[Dict]:
+            metadata: list[dict], id: str
+        ) -> Optional[dict]:
             for d in metadata:
                 if str(d["id"]) == id:
                     return d
@@ -495,7 +498,7 @@ class VectorDatabaseAgentMilvus:
 
     @staticmethod
     def _build_meta_col_query_expr_for_all_documents(
-        doc_ids: Optional[List[str]] = None,
+        doc_ids: Optional[list[str]] = None,
     ) -> str:
         """
         Build metadata collection query expression to obtain all documents.
@@ -516,8 +519,8 @@ class VectorDatabaseAgentMilvus:
         return expr.replace('"', "").replace("'", "")
 
     def similarity_search(
-        self, query: str, k: int = 3, doc_ids: List[str] = None
-    ) -> List[Document]:
+        self, query: str, k: int = 3, doc_ids: list[str] = None
+    ) -> list[Document]:
         """
         Perform similarity search insider the currently active database
         according to the input query.
@@ -555,7 +558,7 @@ class VectorDatabaseAgentMilvus:
         )
 
     def remove_document(
-        self, doc_id: str, doc_ids: Optional[List[str]] = None
+        self, doc_id: str, doc_ids: Optional[list[str]] = None
     ) -> bool:
         """
         Remove the document include meta data and its embeddings.
@@ -598,8 +601,8 @@ class VectorDatabaseAgentMilvus:
             raise e
 
     def get_all_documents(
-        self, doc_ids: Optional[List[str]] = None
-    ) -> List[Dict]:
+        self, doc_ids: Optional[list[str]] = None
+    ) -> list[dict]:
         """
         Get all non-deleted documents from the currently active database.
 

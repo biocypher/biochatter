@@ -4,6 +4,7 @@ import requests
 from dotenv import load_dotenv
 from xinference.client import Client
 import pytest
+import requests
 
 import numpy as np
 import pandas as pd
@@ -137,6 +138,37 @@ XINFERENCE_MODELS = {
     #         "Q8_0",
     #     ],
     # },
+    # "gemma-it": {
+    #     "model_size_in_billions": [
+    #         2,
+    #         7,
+    #     ],
+    #     "model_format": "pytorch",
+    #     "quantization": [
+    #         "none",
+    #         "4-bit",
+    #         "8-bit",
+    #     ],
+    # },
+    # "llama-3-instruct": {
+    #     "model_size_in_billions": [
+    #         8,
+    #         # 70,
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         # 8B model quantisations
+    #         # "IQ3_M",
+    #         "Q4_K_M",
+    #         "Q5_K_M",
+    #         "Q6_K",
+    #         "Q8_0",
+    #         # 70B model quantisations
+    #         # "IQ1_M",
+    #         # "IQ2_XS",
+    #         # "Q4_K_M",
+    #     ],
+    # },
 }
 
 # create concrete benchmark list by concatenating all combinations of model
@@ -187,12 +219,14 @@ def multiple_testing(request):
             score, max = test_func(*args, **kwargs)
             scores.append(score)
         mean_score = sum(scores) / N_ITERATIONS
+        sd_score = np.std(scores)
+        # TODO return standard deviation with score
         return (mean_score, max, N_ITERATIONS)
 
     return run_multiple_times
 
 
-def calculate_test_score(vector: list[bool]) -> tuple[int, int]:
+def calculate_bool_vector_score(vector: list[bool]) -> tuple[int, int]:
     score = sum(vector)
     max = len(vector)
     return (score, max)

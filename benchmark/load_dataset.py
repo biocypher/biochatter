@@ -1,8 +1,10 @@
 from ast import literal_eval
 from base64 import b64decode
 import os
+import copy
 import json
 import hashlib
+import itertools
 
 from cryptography.fernet import Fernet
 import rsa
@@ -155,18 +157,39 @@ def _expand_multi_instruction(data_dict: dict) -> dict:
     for module_key in data_dict.keys():
         if "kg_schemas" not in module_key:
             test_list = data_dict[module_key]
+            expanded_test_list = []
             for test in test_list:
-                test_input = test["input"]
-                for case, potential_subcase in test_input.items():
-                    if "kg_schema" not in case:
-                        if isinstance(potential_subcase, dict):
-                            for key, value in potential_subcase.items():
-                                new_case = test.copy()
-                                new_case["case"] = "_".join([test["case"], key])
-                                new_case["input"][case] = value
-                                test_list.append(new_case)
-                            test_list.remove(test)
-            data_dict[module_key] = test_list
+                dicts = {
+                    key: value
+                    for key, value in test["input"].items()
+                    if isinstance(value, dict) and key != "format"
+                }
+                if not dicts:
+                    expanded_test_list.append(test)
+                    continue
+                keys_lists = [list(value.keys()) for value in dicts.values()]
+                for combination in itertools.product(*keys_lists):
+                    query_type = None
+                    new_case = copy.deepcopy(test)
+                    new_case["case"] = ":".join(
+                        [test["case"]] + [key for key in list(combination)]
+                    )
+                    dict_keys = [key for key in dicts.keys()]
+                    key_value_combinations = zip(dict_keys, list(combination))
+                    for key, value in key_value_combinations:
+                        new_case["input"][key] = dicts[key][value]
+                        if key == "query":
+                            new_case["input"]["format"] = test["input"][
+                                "format"
+                            ][value]
+                            query_type = value
+                        elif key == "caption":
+                            new_case["expected"]["answer"] = test["expected"][
+                                "answer"
+                            ][value][query_type]
+
+                    expanded_test_list.append(new_case)
+            data_dict[module_key] = expanded_test_list
 
     return data_dict
 
