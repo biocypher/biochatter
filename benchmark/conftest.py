@@ -229,17 +229,15 @@ def register_model(client):
         registration["model_name"] for registration in registrations
     ]
 
-    with open("benchmark/models/openbiollm-llama3-8b.json") as fd:
-        model = fd.read()
-
     if "openbiollm-llama3-8b" not in registered_models:
+        with open("benchmark/models/openbiollm-llama3-8b.json") as fd:
+            model = fd.read()
         client.register_model(model_type="LLM", model=model, persist=False)
 
-    with open("benchmark/models/custom-llama-3-instruct-70b.json") as fd:
-        model = fd.read()
-
-    if "custom-llama-3-instruct-70b" not in registered_models:
-        client.register_model(model_type="LLM", model=model, persist=False)
+    # if "custom-llama-3-instruct-70b" not in registered_models:
+    #     with open("benchmark/models/custom-llama-3-instruct-70b.json") as fd:
+    #         model = fd.read()
+    #     client.register_model(model_type="LLM", model=model, persist=False)
 
 
 def pytest_collection_modifyitems(items):
