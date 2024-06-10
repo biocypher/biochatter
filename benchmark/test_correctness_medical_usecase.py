@@ -1,18 +1,18 @@
-import inspect
-import nltk
 import re
+import inspect
 
+import nltk
 import pytest
 
 from biochatter._misc import ensure_iterable
 from .conftest import calculate_test_score
 from .benchmark_utils import (
+    categorize_failures,
     skip_if_already_run,
     get_result_file_path,
-    get_wrong_result_file_path,
     write_results_to_file,
+    get_wrong_result_file_path,
     write_wrong_results_to_file,
-    categorize_failures
 )
 
 
@@ -34,7 +34,6 @@ def test_correctness_of_answers(
     failure_group = "other"
     wrong_answer = ""
     expected_answer = ""
-
 
     def run_test():
         nonlocal wrong_answer
@@ -66,7 +65,9 @@ def test_correctness_of_answers(
             score.append(is_correct)
             if not is_correct:
                 wrong_answer = response
-                failure_group = categorize_failures(wrong_answer, expected_answer)
+                failure_group = categorize_failures(
+                    wrong_answer, expected_answer
+                )
 
         # calculate for answers with regex
         else:
@@ -80,11 +81,11 @@ def test_correctness_of_answers(
                 else:
                     score.append(False)
                     wrong_answer = wrong_answer + response
-                    failure_group = categorize_failures(wrong_answer, expected_answer, True)
+                    failure_group = categorize_failures(
+                        wrong_answer, expected_answer, True
+                    )
 
         return calculate_test_score(score)
-
-
 
     mean_score, max, n_iterations = multiple_testing(run_test)
 
@@ -104,5 +105,5 @@ def test_correctness_of_answers(
             expected_answer,
             failure_group,
             yaml_data["hash"],
-            get_wrong_result_file_path(task)
+            get_wrong_result_file_path(task),
         )

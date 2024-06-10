@@ -1,12 +1,11 @@
 from datetime import datetime
+import re
 
+from nltk.corpus import wordnet
 import pytest
 import importlib_metadata
 
 import pandas as pd
-import re
-from nltk.corpus import wordnet
-from datetime import datetime
 
 
 def benchmark_already_executed(
@@ -220,9 +219,7 @@ def write_wrong_results_to_file(
 
 
 def categorize_failures(wrong_answer, expected_answer, regex=False):
-
     if not regex:
-
         # Check if the answer is right, but the case sensitivity was wrong (e.g. a / A)
         if wrong_answer.lower() == expected_answer.lower():
             return "Case Sensitivity"

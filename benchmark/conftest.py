@@ -1,6 +1,5 @@
 import os
 
-import requests
 from dotenv import load_dotenv
 from xinference.client import Client
 import pytest
@@ -10,8 +9,8 @@ import numpy as np
 import pandas as pd
 
 from biochatter.prompts import BioCypherPromptEngine
-from .load_dataset import get_benchmark_dataset
 from biochatter.llm_connect import GptConversation, XinferenceConversation
+from .load_dataset import get_benchmark_dataset
 from .benchmark_utils import benchmark_already_executed
 
 # how often should each benchmark be run?
