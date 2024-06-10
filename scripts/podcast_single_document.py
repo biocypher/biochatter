@@ -41,7 +41,7 @@ args.output_path = os.path.abspath(args.output_path)
 print("Input path: " + args.input_path)
 print("Output path: " + args.output_path)
 
-# Test wether input file exists
+# Test whether input file exists
 if not os.path.isfile(args.input_path):
     print("Input file does not exist.")
     exit(1)
