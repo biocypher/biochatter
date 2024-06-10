@@ -5,7 +5,7 @@ import nltk
 import pytest
 
 from biochatter._misc import ensure_iterable
-from .conftest import calculate_test_score
+from .conftest import calculate_bool_vector_score
 from .benchmark_utils import (
     categorize_failures,
     skip_if_already_run,
@@ -85,7 +85,7 @@ def test_correctness_of_answers(
                         wrong_answer, expected_answer, True
                     )
 
-        return calculate_test_score(score)
+        return calculate_bool_vector_score(score)
 
     mean_score, max, n_iterations = multiple_testing(run_test)
 
