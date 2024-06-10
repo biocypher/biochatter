@@ -14,7 +14,7 @@ from .load_dataset import get_benchmark_dataset
 from .benchmark_utils import benchmark_already_executed
 
 # how often should each benchmark be run?
-N_ITERATIONS = 1
+N_ITERATIONS = 2
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
@@ -270,10 +270,8 @@ def multiple_testing(request):
         for _ in range(N_ITERATIONS):
             score, max = test_func(*args, **kwargs)
             scores.append(score)
-        mean_score = sum(scores) / N_ITERATIONS
-        sd_score = np.std(scores)
-        # TODO return standard deviation with score
-        return (mean_score, max, N_ITERATIONS)
+        score_string = ";".join([str(score) for score in scores])
+        return (score_string, max, N_ITERATIONS)
 
     return run_multiple_times
 

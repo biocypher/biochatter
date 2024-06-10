@@ -88,12 +88,12 @@ def test_correctness_of_answers(
 
         return calculate_bool_vector_score(score)
 
-    mean_score, max, n_iterations = multiple_testing(run_test)
+    scores, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         model_name,
         yaml_data["case"],
-        f"{mean_score}/{max}",
+        f"{scores}/{max}",
         f"{n_iterations}",
         yaml_data["hash"],
         get_result_file_path(task),
