@@ -3563,5 +3563,3 @@ mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,source_data_extraction:stats:flow_cyto:si
 mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,source_data_extraction:stats:western:detailed_description,0.04545454545454545/1,5,3a24f2260884e4bec422badb0dfc0083,2024-05-11 05:49:12,0.4.10
 mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,source_data_extraction:stats:western:few_shot,0.015873015873015872/1,5,6a4cffd582817749f01ac0ab3794b7fc,2024-05-11 05:51:59,0.4.10
 mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,source_data_extraction:stats:western:simple,0.07999999999999999/1,5,43fcb671748967174b9538f34e1713bd,2024-05-11 05:48:48,0.4.10
-openhermes-2.5:7:ggufv2:Q2_K,source_data_extraction:entity:3d_sim:detailed_description,0.061855670103092786;0.061855670103092786/1,2,46200f75f003f555f862c45062aea429,2024-06-10 19:29:44,0.4.11
-openhermes-2.5:7:ggufv2:Q2_K,source_data_extraction:entity:3d_sim:simple,0.5;0.5/1,2,85529afad023d7ed58e1c87acad9a060,2024-06-10 19:29:19,0.4.11
