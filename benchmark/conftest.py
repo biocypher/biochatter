@@ -483,10 +483,10 @@ def pytest_generate_tests(metafunc):
             "test_data_text_extraction",
             data_file["text_extraction"],
         )
-    if "test_data_correctness" in metafunc.fixturenames:
+    if "test_data_medical_exam" in metafunc.fixturenames:
         metafunc.parametrize(
-            "test_data_correctness",
-            data_file["correctness"],
+            "test_data_medical_exam",
+            data_file["medical_exam"],
         )
 
 

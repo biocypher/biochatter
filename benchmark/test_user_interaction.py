@@ -16,16 +16,16 @@ from .benchmark_utils import (
 )
 
 
-def test_correctness_of_answers(
+def test_medical_exam(
     model_name,
-    test_data_correctness,
+    test_data_medical_exam,
     conversation,
     multiple_testing,
 ):
     # Downloads the naturale language synonym toolkit, just need to be done once per device
     # nltk.download()
 
-    yaml_data = test_data_correctness
+    yaml_data = test_data_medical_exam
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
 
     skip_if_already_run(
