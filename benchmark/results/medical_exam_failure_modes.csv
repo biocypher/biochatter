@@ -1,2 +1,810 @@
 model_name,subtask,actual_answer,expected_answer,failure_modes,md5_hash,datetime
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_biochemistry_de,ich habe die angegebene informationen verstanden möchten sie weitere informationen dazu erfahren oder möchten sie eine antwort auf die frage geben,ja,Other,f0c6efe14638906dd6fad3f4c91b0d27,2024-06-11 14:01:57
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_biochemistry_de,do you need assistance with translating this text or is there a specific question related to the content,nein,Other,20f87725f06d426c512e2655de6d2c37,2024-06-11 14:01:57
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_biochemistry_en,yes,no,Other,e0294c6cf320f9d615ef3821fd29019f,2024-06-11 14:02:59
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_cardiology_de,"ja, bei einer arrhythmogenen rechtsventrikulären kardiomyopathie (arvc) muss eine dominante rv-dilatation und eine dysfunktion bei histologischer beteiligung vorhanden sein die diagnose erfordert die erfüllung der mayo-klassifikationskriterien, die sich auf diese kriterien basieren",nein,Other,677aa7dac567b5a5c39e0ce724bb91ea,2024-06-11 14:01:36
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_cardiology_de,"ja, eine routinemässige nachuntersuchung bei einem patienten mit einer kardiomyopathie sollte immer ein ekg und ein echokardiographie beinhalten diese untersuchungen helfen, die funktion des herzens zu überprüfen und mögliche veränderungen zu erkennen",ja,Partial Match,a38030a374851c88e56b6358635862f2,2024-06-11 14:01:38
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_cardiology_de,"ich bin ein künstlicher intelligenz, der zweck meiner existenz besteht darin, dem benutzer bei seinen anfragen zu helfen um eine antwort auf ihre frage zu geben, benötige ich jedoch mehr informationen über den kontext und die spezifischen begriffe, die sie verwenden bitte stellen sie eine klarere frage, und ich werde mich anstrengen, ihnen die bestmögliche antwort zu geben",nein,Other,0d6af8e072580d712079edb593cc494b,2024-06-11 14:01:41
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_cardiology_de,"die häufigkeit der morbus fabry-erkrankung zwischen männern und frauen variiert je nach studie und population allgemein gilt es jedoch als bekannt, dass männer häufiger von dieser seltenen erkrankung betroffen sind",Mann,Other,0c70f6b2387bc03d939dfdaf8461763b,2024-06-11 14:01:43
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_cardiology_de,"ja, medikamentöse therapien können den natürlichen verlauf der aortenklappenstenose beeinflussen",nein,Other,c706124240a713a054296da767c1fa84,2024-06-11 14:01:44
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_cardiology_en,yes,no,Other,928b3b9802b743d760d0b495abb4da7b,2024-06-11 14:01:47
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_cardiology_en,men,Men,Case Sensitivity,e81cd67e1b4eb0daded9a6649f468eea,2024-06-11 14:01:48
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_cardiology_en,yes,no,Other,c6d778819b369ef16c013ed05e3542dd,2024-06-11 14:01:48
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_emergency_de,"ja, aspirin wird typischerweise bei einem herzinfarkt eingesetzt, um die blutung zu verlangsamen und schädigungen im herzen zu verhindern",ja,Partial Match,a395ceb25fe39d8813d3f4eb29646382,2024-06-11 14:03:17
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_emergency_de,"ja, rhub ist eine abkürzung für einen rettungshubschrauber",nein,Other,0f7f38638d68d1d49efae0d6b17beb46,2024-06-11 14:03:17
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_emergency_de,"nein, bei einem epileptischen anfall sollte man stattdessen sicherheitshalber den betroffenen in ruhe lassen und eine leichte kühlung anbieten versuche nicht, die person festzuhalten, sondern ermögliche ihr, sich in einer sicheren position zu begeben",nein,Partial Match,276c1f7d959fce95896cefe93e0e5575,2024-06-11 14:03:19
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_emergency_de,"nein, bei cpr sind beide schritte, die kompressionen und die luftzufuhr, gleichwichtig für den erhalt von lebensenergie es ist jedoch wichtig, zuerst die kompressionen durchzuführen, bevor die luftzufuhr beginnt",ja,Other,b66b33429572ed907031eab79f53f82e,2024-06-11 14:03:21
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_emergency_de,"nein, einen automatisierten externen defibrillator (aed) sollte man bei epilepsie nicht verwenden aeds sind für die behandlung von herzstillständen entwickelt und sollten nur in solchen fällen eingesetzt werden für epilepsie gibt es spezielle maßnahmen, die jedoch abhängig von der art der epilepsie und dem jeweiligen patienten sein können",nein,Partial Match,79da06e8425a8b1301c944d8be992ac8,2024-06-11 14:03:24
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_emergency_en,no,yes,Other,3a401e18366b9d10bcf50e36fbafcfa2,2024-06-11 14:03:29
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_emergency_en,no,yes,Other,4b6435319ea2e433f6e72eb780834c5d,2024-06-11 14:03:29
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_emergency_en,no,yes,Other,abf6a748104165c4b327841e355f9db5,2024-06-11 14:03:29
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_medication_de,"ja, es kann sicher zusammen mit antihypertensiva eingenommen werden, sofern die dosierung des ibuprofen entsprechend den anweisungen der verpackung ist und der arzt dafür zustimmte es gibt jedoch einige interaktionen zwischen verschiedenen medikamenten, die überprüft werden müssen, bevor sie zusammen eingenommen werden sollten",nein,Other,b0a9039a528c23db4efc60ead627b7b0,2024-06-11 14:02:50
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_medication_de,"ich bin ein künstlicher intelligenz, nicht ein mensch ich kann jedoch informationen bereitstellen, die ihnen helfen könnten, um eine entscheidung zu treffen es gibt keine daten, die zeigen, dass antibiotika und orale kontrazeptiva wechselseitig wechselwirken wenn sie sich unsicher sind, ob ein arzt konsultieren sollten, empfehle ich ihnen, dies zu tun",ja,Other,d7f97cd6ea418daa6e2aa04e566268dc,2024-06-11 14:02:53
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_medication_de,"ich werde meinen antworten die verwendung von ""ja"" oder ""nein"" begrenzen, wie sie es gewünscht haben in bezug auf die kombination verschiedener ras-hemmer: es ist in einigen fällen sinnvoll, verschiedene ras-hemmer zu kombinieren, um den individuellen bedürfnissen des patienten gerecht zu werden und mögliche nebenwirkungen zu minimieren es ist jedoch ratsam, mit einem qualifizierten arzt über die passenden hemmer in ihrem fall zu sprechen",nein,Partial Match,3d316fc325dc1a78d030cda00d13e3a6,2024-06-11 14:02:56
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_medication_de,"sollten no-donatoren und pde5-hemmern gleichzeitig verabreicht werden
+
+es ist wichtig, dass sie sich vor dem verzehr dieser medikamente mit ihrem arzt oder einer qualifizierten beraterin besprochen haben allgemein gilt es jedoch als unerwünscht, diese medikamente gleichzeitig zu nehmen, da es zu interaktiven wirkungen führen kann",Nein,Format Error,efc7f248eb2c0a55b98cec9d1773a03d,2024-06-11 14:02:59
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_medication_en,yes,no,Other,77305fef6ce239ae400bacb44cead08a,2024-06-11 14:02:37
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_medication_en,yes,no,Other,a65e3f6feebae5df673e1da1ee04b537,2024-06-11 14:02:37
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_medication_en,no,No,Case Sensitivity,1cb9c7fdd2107c679a879eadd4863be3,2024-06-11 14:02:37
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_mental_disorders_de,"ja, asperger-syndrom ist eine form von autismus-spektrum-störung es zeichnet sich durch schwierigkeiten bei sozialen interaktionen und repetitiven verhaltensmustern aus, ohne dass sich ein allgemein anerkannter intelligenz-mangel zeigt",ja,Partial Match,01677a8f6396d44c328804a2ccfcd02a,2024-06-11 14:00:45
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_mental_disorders_de,ja,nein,Other,3ab07d923c486bc360a30f0041b186a7,2024-06-11 14:00:45
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_mental_disorders_de,ja,nein,Other,c4558a9edb9e5d1959d7a170e53aab26,2024-06-11 14:00:45
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_mental_disorders_de,ja,nein,Other,d91d00800609f44ebf30be07754015c5,2024-06-11 14:00:46
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_mental_disorders_de,ja,nein,Other,ebd1a622be5a9d5d2fed67ce5cbb6b25,2024-06-11 14:00:46
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_mental_disorders_de,ja,nein,Other,dcbc1aee04c905ba095b9dae86ca77ef,2024-06-11 14:00:46
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_mental_disorders_de,ja,nein,Other,f9e0f9b75d1a74ce2ebb8b88e87dc378,2024-06-11 14:00:47
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_mental_disorders_en,yes,no,Other,c3986ce46829b48f08c96a019b9f1818,2024-06-11 14:01:16
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_mental_disorders_en,yes,no,Other,cef2b51309c72cb4e87412ba89983741,2024-06-11 14:01:16
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_mental_disorders_en,yes,no,Other,47007afb69a62f3ed854dbc53d40e756,2024-06-11 14:01:17
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_mental_disorders_en,yes,no,Other,e167974c3c7ec1b3e8a505ea57dc2b91,2024-06-11 14:01:17
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_mental_disorders_en,yes,no,Other,6b8c43fff8e8712d3a9ebdf13b19c3a5,2024-06-11 14:01:17
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_mental_disorders_en,yes,no,Other,2b21be26d9506f645700f1c4c467a033,2024-06-11 14:01:17
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_oncology_de,"nein, obwohl chemotherapie eine häufige behandlungsmethode für krebs ist, gibt es andere möglichkeiten wie strahlentherapie und immuntherapie die passende behandlung hängt von verschiedenen faktoren ab, einschließlich des tumororts und der individuellen situation des patienten",nein,Partial Match,5b2e1a8db8899f2579b6bb04e3875dfd,2024-06-11 14:02:31
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_oncology_de,"ja, die mutationen in brca1 und brca2 genen können einen erhöhten risiko für brustkrebs haben",ja,Partial Match,b5079b4fad7a27426950d1308a372bb9,2024-06-11 14:02:31
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_oncology_de,"ja, strahlentherapie ist eine häufige behandlungsmethode bei patienten mit glioblastom",ja,Partial Match,4a49238f869b16e7c8b82eab39ab73d1,2024-06-11 14:02:32
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_physiology_de,"ja, die scheinbare viskosität des blutes ist unter normalem hämatokrit meistens niedriger bei einem gefäßdurchmesser von etwa 8 µm im vergleich zu einem gefäßdurchmesser von 4 µm dies liegt daran, dass die blutflüssigkeit in kleineren gefäßen mehr widerstand erfährt und somit eine niedrigere viskosität benötigt wird, um den gleichen fluss zu ermöglichen",ja,Partial Match,bfda46eab239900d5df10cc3c5957342,2024-06-11 14:02:02
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_physiology_de,"ja, die scheinbare viskosität des blutes in großen gefäßen ist tatsächlich niedriger als in kleinen gefäßen dies liegt daran, dass die roten blutkörperchen (erythrozyten) in größeren gefäßen eine höhere konzentration aufweisen und somit ein größeres hämatokrit-volumen haben die viskosität ist hierbei umso niedriger, je höher die flächentemperatur der blutkomponenten ist",nein,Other,14059bd76c70530e13e532e1da47e268,2024-06-11 14:02:05
+openhermes-2.5:7:ggufv2:Q2_K,dichotomous_physiology_en,yes,no,Other,4bfc02ff6e4dbd33f8868853da76c670,2024-06-11 14:00:45
+openhermes-2.5:7:ggufv2:Q2_K,medication_regex,"ja, hier sind einige beispiele für medikamente, die nicht mit nsa-r (nichtsteroidalen antirheumatika) wie ibuprofen oder naproxen eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren:
+
+1 acetaminophen (paracetamol): ein oft empfohlenes medikament zur schmerz- und fieberlinderung, das in kombination mit nsa-r eingenommen werden sollte
+2 metamizole: ein früher verwendetes antirheumatikum, das aufgrund von magengeschwür-risiken abgelehnt wurde
+3 dexibuprofen: eine spezielle form von ibuprofen mit einer verlangsamten magenauflösung, die weniger risiko für magengeschwüre hat
+4 celecoxib: ein cox-2-spezifischer nsa, der möglicherweise ein niedrigeres risiko für magengeschwüre hat als andere nsa
+5 piroxicam: ein nsa, das langsam in den magen freigesetzt wird und daher weniger risikos für magengeschwür hat
+
+es ist wichtig zu beachten, dass diese empfehlungen allgemein gelten und je nach individuellen umständen variieren können es ist immer ratsam, mit einem arzt zu sprechen, bevor man eine medikamentkombination beginntja, hier sind einige beispiele für medikamente, die nicht mit nsa-r (nichtsteroidalen antirheumatika) wie ibuprofen oder naproxen eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren:
+
+1 acetaminophen (paracetamol): ein oft empfohlenes medikament zur schmerz- und fieberlinderung, das in kombination mit nsa-r eingenommen werden sollte
+2 metamizole: ein früher verwendetes antirheumatikum, das aufgrund von magengeschwür-risiken abgelehnt wurde
+3 dexibuprofen: eine spezielle form von ibuprofen mit einer verlangsamten magenauflösung, die weniger risiko für magengeschwüre hat
+4 celecoxib: ein cox-2-spezifischer nsa, der möglicherweise ein niedrigeres risiko für magengeschwüre hat als andere nsa
+5 piroxicam: ein nsa, das langsam in den magen freigesetzt wird und daher weniger risikos für magengeschwür hat
+
+es ist wichtig zu beachten, dass diese empfehlungen allgemein gelten und je nach individuellen umständen variieren können es ist immer ratsam, mit einem arzt zu sprechen, bevor man eine medikamentkombination beginnt",SSRI|Antikoagulanzien,Entire Answer Incorrect,1ea21994f83c8550259948b11739202a,2024-06-11 14:00:43
 openhermes-2.5:7:ggufv2:Q2_K,multiple_answer_math_en,d,b,Other,ef2663aa098bb994ef143dec64270478,2024-06-11 13:58:54
+openhermes-2.5:7:ggufv2:Q2_K,multiple_answer_math_en,c,b,Other,c06398a8f6ee6b8c341e9ecb6d456ef7,2024-06-11 14:01:56
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_anatomy_en,d,c,Other,7fd337f97389e37a004253d60c05ec18,2024-06-11 14:01:00
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_biochemistry_de,a,e,Other,bef740fb05b83d130cef123ce7ec3cf3,2024-06-11 14:01:47
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_biochemistry_de,(d),d,Partial Match,a2d6898225921c8159ab7dd12be5c691,2024-06-11 14:01:50
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_biochemistry_en,a,e,Other,f8301a28c3ec6c94e44881a4f3c83873,2024-06-11 14:02:26
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_math_de,d,b,Other,06e85f85f99009e6c18bf066ac9d752c,2024-06-11 14:01:16
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_math_de,c,d,Other,8eed232ace339fb268509642b2b56a35,2024-06-11 14:01:19
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_math_en,c,b,Other,9db6f00088ff9a6435be4ea546ff0eea,2024-06-11 14:01:25
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_medication_en,c,a,Other,a737f70a276c72d8346bf4bb4aeb8c0a,2024-06-11 14:02:38
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_mental_disorders_de,c wiederherstellung des körpergewichts und etablierung eines gesunden essverhalten,c,Partial Match,c9c89f19cdf783ece93ea2ad0fd5c298,2024-06-11 14:00:48
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_mental_disorders_de,c,a,Other,3a28ae71bcae19aad743afdea49d077a,2024-06-11 14:00:49
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_mental_disorders_de,"c
+e
+r
+i
+e
+h
+a
+t
+e
+r
+o
+s
+t",d,Other,63d18c297a432afdc99d677c82e301e5,2024-06-11 14:00:49
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_mental_disorders_de,"abcdef,","a,b,c,d",Other,d1e7117f59e1edf93f9c51d1c952d356,2024-06-11 14:00:50
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_mental_disorders_de,"abcdef,d","a,d,e,f",Other,97d020c95635c8067b66fd78721a8347,2024-06-11 14:00:50
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_mental_disorders_de,abcde,"b,c,e",Other,660f329fe0920127ec02b417af9c06f2,2024-06-11 14:00:51
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_mental_disorders_en,c,d,Other,efb9877e58a71062d491bd651ce9a6c9,2024-06-11 14:01:19
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_mental_disorders_en,"a,b,d,e","a,b,c,d",Other,55e93f938cc241bd79f24c1e7e64abc9,2024-06-11 14:01:20
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_mental_disorders_en,"a,d,e","a,d,e,f",Partial Match,98bcd2f43e5f2f0295616688fb7b357c,2024-06-11 14:01:20
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_mental_disorders_en,a,d,Other,2509912e9e4fd9a5bb4d12f23f082d5d,2024-06-11 14:01:20
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_mental_disorders_en,"c,e","b,c,e",Partial Match,928854e2e5e6e884fada6750e99d9329,2024-06-11 14:01:20
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_oncology_de,a) ondansetron,a,Partial Match,56b2cb781d0c572992f200eac168181f,2024-06-11 14:02:33
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_oncology_de,c,a,Other,6fc6ae195efd7956e60b15caa97e3bd7,2024-06-11 14:02:34
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_oncology_en,a) ondansetron,a,Partial Match,9b15ea86f85c85a2867da8cacdc1a1bf,2024-06-11 14:02:26
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_oncology_en,b,a,Other,5f3b3fdee41b147d32644d131a9ed910,2024-06-11 14:02:26
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_physiology_de,c,e,Other,4457282e3276b64825ee1cd71030649b,2024-06-11 14:01:58
+openhermes-2.5:7:ggufv2:Q2_K,multiple_choice_physiology_de,d,e,Other,0029a268763ac0ca6e88e368bcb8756c,2024-06-11 14:01:58
+openhermes-2.5:7:ggufv2:Q2_K,one_word_cardiology_de,mrt,Knochenszintigraphie,Other,d95c7ea81e8fb2e3f542b3ce9ea98635,2024-06-11 14:01:46
+openhermes-2.5:7:ggufv2:Q2_K,one_word_cardiology_de,5,2,Other,61e933bd48605073a98454bb4bcff017,2024-06-11 14:01:46
+openhermes-2.5:7:ggufv2:Q2_K,one_word_cardiology_de,international classification of diseases,HCM-SCD-Risikorechner,Other,1250fa64334b7724cd8f868a39cb0138,2024-06-11 14:01:46
+openhermes-2.5:7:ggufv2:Q2_K,one_word_cardiology_de,12,1,Partial Match,5857204c630ae59717a602a075ec2cbe,2024-06-11 14:01:47
+openhermes-2.5:7:ggufv2:Q2_K,one_word_cardiology_de,labetalol,Digoxin,Other,7de8b9d9fe42f674e97e2e87b29b1a67,2024-06-11 14:01:47
+openhermes-2.5:7:ggufv2:Q2_K,one_word_cardiology_en,mri scan,Bone scintigraphy,Other,4b81a360e1162bdae9dbdd552aac2cd2,2024-06-11 14:01:51
+openhermes-2.5:7:ggufv2:Q2_K,one_word_cardiology_en,"the recommended maximum time between follow-up examinations in clinically stable patients with cardiomyopathy can vary depending on various factors such as the severity of the condition, the patient's overall health, and the specific type of cardiomyopathy it is essential for a healthcare professional to determine the appropriate interval for each individual case",2,Format Error,903f040d8c1421caafe62a0f47f7a461,2024-06-11 14:01:53
+openhermes-2.5:7:ggufv2:Q2_K,one_word_cardiology_en,framingham risk score,HCM Risk-SCD Calculator,Other,92c7207a908490e35605e45bfa250ff8,2024-06-11 14:01:53
+openhermes-2.5:7:ggufv2:Q2_K,one_word_cardiology_en,"i am unable to provide an exact time frame as it would depend on various factors such as the severity of the condition, the effectiveness of the treatment, and individual recovery rates it is generally advised that patients should not drive for at least 2 weeks after any medical intervention, but this can vary based on the specific situation please consult with a healthcare professional for personalized advice",1,Other,f4254d5c9b7045880bb35506b3b08656,2024-06-11 14:01:55
+openhermes-2.5:7:ggufv2:Q2_K,one_word_cardiology_en,labetalol,Digoxin,Other,eacabec542abe52b3c0966e7759fec29,2024-06-11 14:01:55
+openhermes-2.5:7:ggufv2:Q2_K,one_word_emergency_de,assess,Atemwege,Other,0844abd3a40615e702807d74fcddad52,2024-06-11 14:03:25
+openhermes-2.5:7:ggufv2:Q2_K,one_word_emergency_de,lymphatic,Sauerstoffreiches,Other,1949045cb0f5a7ce5c532aefa5cc487f,2024-06-11 14:03:25
+openhermes-2.5:7:ggufv2:Q2_K,one_word_emergency_de,,0,Format Error,983bb312e805f2191b0075967ad4d4f0,2024-06-11 14:03:25
+openhermes-2.5:7:ggufv2:Q2_K,one_word_emergency_en,airway,Airways,Partial Match / case Sensitivity,fe12a7b5cd592eda0775a3ce924a1038,2024-06-11 14:00:33
+openhermes-2.5:7:ggufv2:Q2_K,one_word_emergency_en,oxygenated,Oxygen-rich,Other,11e8bf547f5a1daf292083d9eff0e102,2024-06-11 14:00:33
+openhermes-2.5:7:ggufv2:Q2_K,one_word_emergency_en,o,0,Format Error,15f63dd145b59ce61ce9cff672ac1cc9,2024-06-11 14:00:34
+openhermes-2.5:7:ggufv2:Q2_K,one_word_medication_de,papaya,Grapefruit,Other,d16b8dcb91ebf733eba01030951b8edf,2024-06-11 14:03:00
+openhermes-2.5:7:ggufv2:Q2_K,one_word_medication_de,"1 pharmakodynamische wechselwirkungen: sie betreffen die wirkungsmechanismen der arzneistoffe
+2 pharmakokinetische wechselwirkungen: sie beziehen sich auf den transport, metabolismus und ausscheidung von arzneistoffen im körper",Pharmakodynamisch und pharmakokinetisch,Format Error,8bfcda44283002250cc3b9cd5dd26e7f,2024-06-11 14:03:11
+openhermes-2.5:7:ggufv2:Q2_K,one_word_medication_en,grapefruit,Grapefruit,Case Sensitivity,097a059a9bc315bbcad4f96277caa4d6,2024-06-11 14:02:38
+openhermes-2.5:7:ggufv2:Q2_K,one_word_medication_en,direct (pharmacodynamic) and indirect (pharmacokinetic) interactions,Pharmacodynamic and pharmacokinetic,Other,d908ab2aa056ea9f39575d496a976094,2024-06-11 14:02:44
+openhermes-2.5:7:ggufv2:Q2_K,one_word_oncology_de,"tumorvolumen 1, 2, 3","GTV,CTV,PTV",Format Error,43e1064c99a84b7a5c93b4d045046743,2024-06-11 14:02:34
+openhermes-2.5:7:ggufv2:Q2_K,one_word_oncology_de,die häufigste krebsart bei frauen ist brustkrebs,Brustkrebs,Partial Match / case Sensitivity,9e54c8876efb9a35f173b49bb8e4c4d8,2024-06-11 14:02:36
+openhermes-2.5:7:ggufv2:Q2_K,one_word_oncology_en,"v1, v2, and v3 (volume receiving specified doses of radiation)","GTV,CTV,PTV",Format Error,63799a9a6e77cbef3197010808f36b58,2024-06-11 14:02:27
+openhermes-2.5:7:ggufv2:Q2_K,one_word_oncology_en,the most common type of cancer in women is breast cancer,Breast cancer,Partial Match / case Sensitivity,73e7ae02294d14d6abd8719fde70b550,2024-06-11 14:02:28
+openhermes-2.5:7:ggufv2:Q2_K,one_word_physiology_en,tp-interval,p-wave,Other,4719e28fc4309dd95cfc38754eb705fb,2024-06-11 14:00:48
+openhermes-2.5:7:ggufv2:Q2_K,regex_eeg_data_de,"die drei häufigsten berechnungen zur untersuchung der asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 lateralität: diese methode ermittelt den unterschied zwischen linken und rechten hirnhemisphären basierend auf eeg-aktivität dies kann helfen, laterale funktionsunterschiede oder laterale veränderungen im zusammenhang mit bestimmten hirnprozessen zu identifizieren
+2 frontalität: hierbei wird die unterschiede zwischen vorderen und hinteren elektrodenpaaren analysiert, um zb kognitive prozesse oder emotionen zu untersuchen
+3 temporalität: diese methode betrachtet den zeitlichen ablauf von eeg-signalen, um die zeitverzögerung zwischen elektrodenpaaren zu ermitteln und somit zeitliche asymmetrien in der hirnaktivität zu identifizierendie drei häufigsten berechnungen zur untersuchung der asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 lateralität: diese methode ermittelt den unterschied zwischen linken und rechten hirnhemisphären basierend auf eeg-aktivität dies kann helfen, laterale funktionsunterschiede oder laterale veränderungen im zusammenhang mit bestimmten hirnprozessen zu identifizieren
+2 frontalität: hierbei wird die unterschiede zwischen vorderen und hinteren elektrodenpaaren analysiert, um zb kognitive prozesse oder emotionen zu untersuchen
+3 temporalität: diese methode betrachtet den zeitlichen ablauf von eeg-signalen, um die zeitverzögerung zwischen elektrodenpaaren zu ermitteln und somit zeitliche asymmetrien in der hirnaktivität zu identifizierendie drei häufigsten berechnungen zur untersuchung der asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 lateralität: diese methode ermittelt den unterschied zwischen linken und rechten hirnhemisphären basierend auf eeg-aktivität dies kann helfen, laterale funktionsunterschiede oder laterale veränderungen im zusammenhang mit bestimmten hirnprozessen zu identifizieren
+2 frontalität: hierbei wird die unterschiede zwischen vorderen und hinteren elektrodenpaaren analysiert, um zb kognitive prozesse oder emotionen zu untersuchen
+3 temporalität: diese methode betrachtet den zeitlichen ablauf von eeg-signalen, um die zeitverzögerung zwischen elektrodenpaaren zu ermitteln und somit zeitliche asymmetrien in der hirnaktivität zu identifizieren",Coherence|Logarithmierte Differenz,Entire Answer Incorrect,13abc3c6d60d0415371e6bfd05086feb,2024-06-11 14:02:17
+openhermes-2.5:7:ggufv2:Q2_K,regex_medication_de,"ja, hier sind einige beispiele für medikamente, die nicht mit nsa-r (nichtsteroidalen antirheumatika) wie ibuprofen oder naproxen eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren:
+
+1 acetaminophen (paracetamol): ein oft empfohlenes medikament zur schmerz- und fieberlinderung, das in kombination mit nsa-r eingenommen werden sollte
+2 metamizole: ein früher verwendetes antirheumatikum, das aufgrund von magengeschwür-risiken abgelehnt wurde
+3 dexibuprofen: eine spezielle form von ibuprofen mit einer verlangsamten magenauflösung, die weniger risiko für magengeschwüre hat
+4 celecoxib: ein cox-2-spezifischer nsa, der möglicherweise ein niedrigeres risiko für magengeschwüre hat als andere nsa
+5 piroxicam: ein nsa, das langsam in den magen freigesetzt wird und daher weniger risikos für magengeschwür hat
+
+es ist wichtig zu beachten, dass diese empfehlungen allgemein gelten und je nach individuellen umständen variieren können es ist immer ratsam, mit einem arzt zu sprechen, bevor man eine medikamentkombination beginnt",A|n|t|i|k|o|a|g|u|l|a|n|z|i|e|n,Entire Answer Incorrect,9bc6726f9c0a6029ab039de9c838fbe5,2024-06-11 14:03:09
+openhermes-2.5:7:ggufv2:Q2_K,regex_medication_en,"ibuprofen should not be taken with:
+1 other nsaids (nonsteroidal anti-inflammatory drugs) like aspirin or naproxen, as it can increase the risk of ulcers and bleeding
+2 corticosteroids, as they may interact and reduce the effectiveness of ibuprofen in managing inflammation
+3 anticoagulants (blood thinners), as they can increase the risk of bleeding when combined with nsaids like ibuprofen
+4 methotrexate, a medication used to treat certain autoimmune diseases and cancer, as it may cause an increased risk of side effects when taken together with ibuprofen",N|S|A|I|D,Entire Answer Incorrect,3b1fa1ae3bbb6b94ad87667d857aa337,2024-06-11 14:02:48
+openhermes-2.5:7:ggufv2:Q2_K,regex_mental_disorders_de,"restriktive anorexie ist eine essstörige erkrankung, bei der der körpergewichtverlust durch extreme körperpflege und ernährungskontrolle erreicht wird sie zeichnet sich durch die überwichtigung von nahrungsaufnahme, spezifische speisepläne und den verzicht auf bestimmte lebensmittel aus",mehr|sport|bewegung|gewichtsverlust,Entire Answer Incorrect,b3822c7a436c199bd3036fc7ddfc405d,2024-06-11 14:01:00
+openhermes-2.5:7:ggufv2:Q2_K,regex_mental_disorders_de,die beiden am häufigsten angewandten behandlungsmethoden für eine soziale phobie sind kognitive verhaltenstherapie (kvt) und expositions-basierte therapie,Medikamente|Medikamentöse Therapie,Entire Answer Incorrect,4690e12b78a940d2ab9577bc424df592,2024-06-11 14:01:04
+openhermes-2.5:7:ggufv2:Q2_K,regex_mental_disorders_de,"die dissoziative identitätsstörung (dis) wird im international classification of diseases 11th revision (icd-11) unter der störungskode ""f443"" klassifiziert",Konversionsstörungen|Konversion,Entire Answer Incorrect,158a27937f6536ae1b178b53cced5f31,2024-06-11 14:01:12
+openhermes-2.5:7:ggufv2:Q2_K,regex_mental_disorders_de,"die abspaltung von der eigenen persönlichkeit bei menschen mit einer multiplen persönlichkeitsdisposition dient dazu, verschiedene psychologische belastungen zu bewältigen jede abgetrennte persönlichkeit ist auf spezifische aspekte der umwelt ausgerichtet und hilft, indem sie unterschiedliche strategien anwendet, um mit diesen herausforderungen umzugehen diese mechanismus ermöglicht es dem menschen, mehrere rollen in verschiedenen lebensbereichen zu spielen und somit eine bessere anpassungsfähigkeit zu zeigen",E|r|i|n|n|e|r|u|n|g|e|n,Entire Answer Incorrect,fa8ec819abf35edf08af45fed9351e92,2024-06-11 14:01:15
+openhermes-2.5:7:ggufv2:Q2_K,regex_mental_disorders_en,"the therapy phase that occurs immediately after the acute mania phase is called the ""acute treatment"" or ""stabilization"" phase this is when the individual receives targeted interventions to manage their symptoms and restore balance",therapy|phase,Entire Answer Incorrect,e07c3f2a92ea91b8579aa68f4c11aa1d,2024-06-11 14:01:27
+openhermes-2.5:7:ggufv2:Q2_K,regex_mental_disorders_en,the two most common treatments for social phobia are cognitive-behavioral therapy (cbt) and selective serotonin reuptake inhibitors (ssris)the two most common treatments for social phobia are cognitive-behavioral therapy (cbt) and selective serotonin reuptake inhibitors (ssris),medication|drug|drug therapy,Entire Answer Incorrect,4d1cf4f2bf75196cec619b79b20e5cf0,2024-06-11 14:01:28
+openhermes-2.5:7:ggufv2:Q2_K,regex_mental_disorders_en,dissociative identity disorder falls under the category f608 in the icd-11 classification system,conversion disorders|conversion,Entire Answer Incorrect,f97ec4136fa18fdead9fb15833775161,2024-06-11 14:01:32
+openhermes-2.5:7:ggufv2:Q2_K,short_words_emergency_de,"ein guerillatube (guedeltubus) erfordert den einsatz von spezialkenntnissen und ausrüstung, um effektiv in guerilla-kämpfe eingesetzt zu werden diese beinhalten taktik, disziplin, feldbeherrschung und geeignete waffen",Tiefe Bewusstlosigkeit,Other,630df142b11916534a4a5d8b60a73ff7,2024-06-11 14:03:28
+openhermes-2.5:7:ggufv2:Q2_K,short_words_emergency_de,"die rice-methode steht für: rest, ice, compression, elevation","Rest, Ice, Compression, Elevation",Partial Match / case Sensitivity,29765310cc3e0b17b98f8100aefe2b8b,2024-06-11 14:03:28
+openhermes-2.5:7:ggufv2:Q2_K,short_words_emergency_en,patience and knowledge,Deep unconsciousness,Other,07702b80596917d9bd0018f879481e9b,2024-06-11 14:00:34
+openhermes-2.5:7:ggufv2:Q2_K,short_words_emergency_en,"r - recognize
+i - interpret
+c - categorize
+e - execute","Rest, Ice, Compression, Elevation",Other,ea5e51f6bf643f798df26c295b133b94,2024-06-11 14:00:34
+openhermes-2.5:7:ggufv2:Q2_K,single_choice_cardiology_de,d,a,Other,052541d562bfef50e6c4b1fedc0a9980,2024-06-11 14:01:45
+openhermes-2.5:7:ggufv2:Q2_K,single_choice_cardiology_de,b,c,Other,df581bb7c7f4ededa016a96400221f14,2024-06-11 14:01:45
+openhermes-2.5:7:ggufv2:Q2_K,single_choice_cardiology_de,b,a,Other,f80be494684f1af924955b9caf58f063,2024-06-11 14:01:45
+openhermes-2.5:7:ggufv2:Q2_K,single_choice_cardiology_en,"the correct answer is (b) >6 the vena contracta width for diagnosing high-grade aortic valve insufficiency should be greater than 6 mm so, the letter is b",a,Partial Match,58384a1dd2385339553eb3bcaa47db6b,2024-06-11 14:01:49
+openhermes-2.5:7:ggufv2:Q2_K,single_choice_cardiology_en,c,a,Other,257a1c0a98744542acfd15f6f90cd30d,2024-06-11 14:01:50
+openhermes-2.5:7:ggufv2:Q2_K,single_choice_cardiology_en,d,a,Other,177d0553e29a68d0e941a40fa646aceb,2024-06-11 14:01:50
+openhermes-2.5:7:ggufv2:Q2_K,single_choice_emergency_de,d,e,Other,e2e857ee1b0ff475eea2c64d7594b29b,2024-06-11 14:03:25
+openhermes-2.5:7:ggufv2:Q2_K,single_choice_emergency_de,c,d,Other,5bce5732ab1748d2258e0bfd7100a756,2024-06-11 14:03:25
+openhermes-2.5:7:ggufv2:Q2_K,single_choice_emergency_en,(e) > 300 mg/dl,e,Partial Match,f5583b8d1450e586ba8c640df60b0b9e,2024-06-11 14:03:30
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_biochemistry_de,"ja, die neigung zu thrombosen kann in vielen fällen genetisch bedingt sein, und missensemutationen im gen für faktor v können eine ursache für familiäre thrombophilie sein diese mutationen führen dazu, dass der aktivierte faktor v (va) weniger effizient durch ein aktiviertes protein c inaktiviert wird und daher besonders stabil ist",ja,Partial Match,f0c6efe14638906dd6fad3f4c91b0d27,2024-06-11 14:04:42
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_biochemistry_de,"ja, die neigung zu thrombosen kann in vielen fällen genetisch bedingt sein, und missensemutationen im gen für faktor v können eine ursache für familiäre thrombophilie sein diese mutationen führen dazu, dass der aktivierte faktor v weniger effizient durch ein aktiviertes thrombomobilin inaktiviert wird und daher besonders stabil ist",nein,Other,20f87725f06d426c512e2655de6d2c37,2024-06-11 14:04:46
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_biochemistry_en,yes,no,Other,e0294c6cf320f9d615ef3821fd29019f,2024-06-11 14:05:27
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_cardiology_de,ja,nein,Other,677aa7dac567b5a5c39e0ce724bb91ea,2024-06-11 14:04:24
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_cardiology_de,"nein, ein stabiler patient mit kardiomyopathie braucht nicht bei jeder routinemäßigen nachuntersuchung ein ekg und eine echokardiografie durchführen zu lassen die häufigkeit und art der untersuchungen sollten individuell abgewogen werden, basierend auf dem patienten und seiner krankheitsverlauf",ja,Other,a38030a374851c88e56b6358635862f2,2024-06-11 14:04:27
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_cardiology_de,mann,Mann,Case Sensitivity,0c70f6b2387bc03d939dfdaf8461763b,2024-06-11 14:04:28
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_cardiology_de,"nein, medikamentöse therapien haben keinen einfluss auf den natürlichen verlauf von aortenklappenstenose",nein,Partial Match,c706124240a713a054296da767c1fa84,2024-06-11 14:04:29
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_cardiology_en,yes,no,Other,928b3b9802b743d760d0b495abb4da7b,2024-06-11 14:04:33
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_cardiology_en,men,Men,Case Sensitivity,e81cd67e1b4eb0daded9a6649f468eea,2024-06-11 14:04:33
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_cardiology_en,yes,no,Other,c6d778819b369ef16c013ed05e3542dd,2024-06-11 14:04:33
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_emergency_de,"nein, man sollte nicht versuchen die person festzuhalten bei einem epileptischen anfall ist es besser, die person in eine sichere lage zu bringen und sie aufzurüsten",nein,Partial Match,276c1f7d959fce95896cefe93e0e5575,2024-06-11 14:05:39
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_emergency_de,nein,ja,Other,b66b33429572ed907031eab79f53f82e,2024-06-11 14:05:40
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_emergency_en,no,yes,Other,3a401e18366b9d10bcf50e36fbafcfa2,2024-06-11 14:05:49
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_emergency_en,yes,no,Other,176c27512140c06b24722dcdf88c5a53,2024-06-11 14:05:50
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_emergency_en,no,yes,Other,4b6435319ea2e433f6e72eb780834c5d,2024-06-11 14:05:50
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_emergency_en,no,yes,Other,abf6a748104165c4b327841e355f9db5,2024-06-11 14:05:50
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_medication_de,"nein, es ist nicht empfehlenswert, ibuprofen zusammen mit antihypertensiva einzunehmen, da dies zu potenziellen nebenwirkungen führen kann es ist besser, sich vor der kombination von medikamenten mit einem arzt oder pharma-experten zu beraten",nein,Partial Match,b0a9039a528c23db4efc60ead627b7b0,2024-06-11 14:05:24
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_medication_de,"nein, es gibt keine bekannte wechselwirkung zwischen antibiotika und oralen kontrazeptiva",ja,Other,d7f97cd6ea418daa6e2aa04e566268dc,2024-06-11 14:05:25
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_medication_de,"nein, no-donatoren und pde5-hemmern sollten nicht gleichzeitig verabreicht werden dies kann zu potenziell schwerwiegenden nebenwirkungen führen",Nein,Format Error,efc7f248eb2c0a55b98cec9d1773a03d,2024-06-11 14:05:27
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_medication_en,yes,no,Other,77305fef6ce239ae400bacb44cead08a,2024-06-11 14:05:14
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_medication_en,yes,no,Other,a65e3f6feebae5df673e1da1ee04b537,2024-06-11 14:05:14
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_medication_en,yes,No,Other,1cb9c7fdd2107c679a879eadd4863be3,2024-06-11 14:05:15
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_mental_disorders_de,ja,nein,Other,3ab07d923c486bc360a30f0041b186a7,2024-06-11 14:03:50
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_mental_disorders_de,ja,nein,Other,c4558a9edb9e5d1959d7a170e53aab26,2024-06-11 14:03:50
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_mental_disorders_de,ja,nein,Other,d91d00800609f44ebf30be07754015c5,2024-06-11 14:03:50
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_mental_disorders_de,ja,nein,Other,ebd1a622be5a9d5d2fed67ce5cbb6b25,2024-06-11 14:03:51
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_mental_disorders_de,nein,ja,Other,f230e42e46678e7e571c4acd75fd7284,2024-06-11 14:03:51
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_mental_disorders_de,ja,nein,Other,dcbc1aee04c905ba095b9dae86ca77ef,2024-06-11 14:03:51
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_mental_disorders_de,ja,nein,Other,f9e0f9b75d1a74ce2ebb8b88e87dc378,2024-06-11 14:03:51
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_mental_disorders_en,yes,no,Other,c3986ce46829b48f08c96a019b9f1818,2024-06-11 14:04:10
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_mental_disorders_en,yes,no,Other,cef2b51309c72cb4e87412ba89983741,2024-06-11 14:04:10
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_mental_disorders_en,yes,no,Other,47007afb69a62f3ed854dbc53d40e756,2024-06-11 14:04:11
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_mental_disorders_en,yes,no,Other,e167974c3c7ec1b3e8a505ea57dc2b91,2024-06-11 14:04:11
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_mental_disorders_en,yes,no,Other,6b8c43fff8e8712d3a9ebdf13b19c3a5,2024-06-11 14:04:12
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_mental_disorders_en,yes,no,Other,2b21be26d9506f645700f1c4c467a033,2024-06-11 14:04:12
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_physiology_de,"ja, die scheinbare viskosität des blutes ist normalerweise höher in kleineren gefäßen mit einem durchmesser von etwa 4 μm im vergleich zu größeren gefäßen mit einem durchmesser von etwa 8 μm dies liegt daran, dass die zellularität und proteine an den gefäßwänden interagieren und die viskosität beeinflussen",ja,Partial Match,bfda46eab239900d5df10cc3c5957342,2024-06-11 14:04:50
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_physiology_de,"ja, die scheinbare viskosität des blutes ist bei normalem hämatokrit in großen gefäßen meist niedriger als in kleinen gefäßen dies liegt daran, dass die roten blutkörperchen und plasmazellen in den kleineren gefäßen eine höhere viskosität verursachen, was dazu führt, dass das blut in diesen gefäßen seltener fließt und somit eine höhere scheinbare viskosität ergibt",nein,Other,14059bd76c70530e13e532e1da47e268,2024-06-11 14:04:54
+openhermes-2.5:7:ggufv2:Q3_K_M,dichotomous_physiology_en,yes,no,Other,4bfc02ff6e4dbd33f8868853da76c670,2024-06-11 14:03:50
+openhermes-2.5:7:ggufv2:Q3_K_M,medication_regex,"nein, ich kann keine spezifischen medikamente nennen es ist jedoch empfohlen, nsa-r-freundliche medikamente wie acetylsalicylsäure (aspirin) oder antikoagulanzien (blutgerinnungshemmer) mit vorsicht oder unter anleitung eines arztes einnehmen, um das risiko von magengeschwüren zu minimieren",SSRI|Antikoagulanzien,Entire Answer Incorrect,1ea21994f83c8550259948b11739202a,2024-06-11 14:03:49
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_answer_math_en,d,b,Other,ef2663aa098bb994ef143dec64270478,2024-06-11 14:03:44
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_answer_math_en,a,d,Other,deea34abd98497619ccbfc85da67c71c,2024-06-11 14:03:45
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_answer_math_en,d,b,Other,c06398a8f6ee6b8c341e9ecb6d456ef7,2024-06-11 14:04:39
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_biochemistry_de,a,e,Other,bef740fb05b83d130cef123ce7ec3cf3,2024-06-11 14:04:32
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_biochemistry_en,d,e,Other,f8301a28c3ec6c94e44881a4f3c83873,2024-06-11 14:05:07
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_math_de,d,b,Other,06e85f85f99009e6c18bf066ac9d752c,2024-06-11 14:04:11
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_math_de,a,d,Other,8eed232ace339fb268509642b2b56a35,2024-06-11 14:04:13
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_math_en,d,b,Other,9db6f00088ff9a6435be4ea546ff0eea,2024-06-11 14:04:18
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_medication_de,a,c,Other,54c1e57dd808faafbb7a92eba966fb7d,2024-06-11 14:05:28
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_medication_de,b,c,Other,4e609082a7f867a4d1fa524a8e33d12d,2024-06-11 14:05:28
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_mental_disorders_de,"d, e, f, g","d,e,f",Other,25da4c7876247708b50a6310ba25f567,2024-06-11 14:03:52
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_mental_disorders_de,c,d,Other,63d18c297a432afdc99d677c82e301e5,2024-06-11 14:03:53
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_mental_disorders_de,"a,b,c,d,e","a,b,c,d",Partial Match,d1e7117f59e1edf93f9c51d1c952d356,2024-06-11 14:03:54
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_mental_disorders_de,"abcde,f","a,d,e,f",Other,97d020c95635c8067b66fd78721a8347,2024-06-11 14:03:54
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_mental_disorders_de,b,d,Other,924f73cfacf0ce6602d4dd4b5d103f60,2024-06-11 14:03:55
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_mental_disorders_de,"a,b,c,d,e","b,c,e",Other,660f329fe0920127ec02b417af9c06f2,2024-06-11 14:03:55
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_mental_disorders_en,"d,e,f,g","d,e,f",Partial Match,3a3150cea644a463b1042333107dec48,2024-06-11 14:04:12
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_mental_disorders_en,d increased sleep,d,Partial Match,efb9877e58a71062d491bd651ce9a6c9,2024-06-11 14:04:14
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_mental_disorders_en,"a, d, e, f","a,d,e,f",Format Error,98bcd2f43e5f2f0295616688fb7b357c,2024-06-11 14:04:15
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_oncology_de,b,a,Other,6fc6ae195efd7956e60b15caa97e3bd7,2024-06-11 14:05:12
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_oncology_en,o,a,Other,9b15ea86f85c85a2867da8cacdc1a1bf,2024-06-11 14:05:07
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_oncology_en,d,a,Other,5f3b3fdee41b147d32644d131a9ed910,2024-06-11 14:05:08
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_physiology_de,d,e,Other,0029a268763ac0ca6e88e368bcb8756c,2024-06-11 14:04:47
+openhermes-2.5:7:ggufv2:Q3_K_M,multiple_choice_physiology_en,d,e,Other,7a5de46c4470744dce21aa79abba64ca,2024-06-11 14:05:46
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_cardiology_de,mrt,Knochenszintigraphie,Other,d95c7ea81e8fb2e3f542b3ce9ea98635,2024-06-11 14:04:31
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_cardiology_de,actuarial,HCM-SCD-Risikorechner,Other,1250fa64334b7724cd8f868a39cb0138,2024-06-11 14:04:31
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_cardiology_de,12,1,Partial Match,5857204c630ae59717a602a075ec2cbe,2024-06-11 14:04:32
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_cardiology_de,nebivolol,Digoxin,Other,7de8b9d9fe42f674e97e2e87b29b1a67,2024-06-11 14:04:33
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_cardiology_en,ct scan,Bone scintigraphy,Other,4b81a360e1162bdae9dbdd552aac2cd2,2024-06-11 14:04:35
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_cardiology_en,3,2,Other,903f040d8c1421caafe62a0f47f7a461,2024-06-11 14:04:36
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_cardiology_en,framingham risk score,HCM Risk-SCD Calculator,Other,92c7207a908490e35605e45bfa250ff8,2024-06-11 14:04:36
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_cardiology_en,"it is difficult to provide an exact number of weeks as it depends on the severity of the condition, the effectiveness of the intervention, and the individual's recovery progress however, a general guideline would be around 4-6 weeks after successful intervention before a patient can safely drive a bus again",1,Other,f4254d5c9b7045880bb35506b3b08656,2024-06-11 14:04:38
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_cardiology_en,calcium channel blocker,Digoxin,Other,eacabec542abe52b3c0966e7759fec29,2024-06-11 14:04:38
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_emergency_de,assess,Atemwege,Other,0844abd3a40615e702807d74fcddad52,2024-06-11 14:05:42
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_emergency_de,pulmonale,Sauerstoffreiches,Other,1949045cb0f5a7ce5c532aefa5cc487f,2024-06-11 14:05:42
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_emergency_de,"o
+```
+in response to the user's request for a single-word answer regarding blood type in unknown emergencies, i provided the word ""o"" this is because ""o"" represents blood type o, which is the universal donor and can be safely given to any other blood type in this context, using the letter ""o"" instead of the number ""0"" helps avoid confusion between the letter and the digit",0,Partial Match,983bb312e805f2191b0075967ad4d4f0,2024-06-11 14:05:46
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_emergency_en,a,Airways,Partial Match,fe12a7b5cd592eda0775a3ce924a1038,2024-06-11 14:03:45
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_emergency_en,oxygenated,Oxygen-rich,Other,11e8bf547f5a1daf292083d9eff0e102,2024-06-11 14:03:45
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_emergency_en,o+,0,Format Error,15f63dd145b59ce61ce9cff672ac1cc9,2024-06-11 14:03:46
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_medication_de,grapefruit,Grapefruit,Case Sensitivity,d16b8dcb91ebf733eba01030951b8edf,2024-06-11 14:05:29
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_medication_de,pharmakodynamische und pharmakokinetische wechselwirkungen,Pharmakodynamisch und pharmakokinetisch,Other,8bfcda44283002250cc3b9cd5dd26e7f,2024-06-11 14:05:33
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_medication_en,grapefruit,Grapefruit,Case Sensitivity,097a059a9bc315bbcad4f96277caa4d6,2024-06-11 14:05:16
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_medication_en,pharmacodynamic and pharmacokinetic interactions,Pharmacodynamic and pharmacokinetic,Partial Match / case Sensitivity,d908ab2aa056ea9f39575d496a976094,2024-06-11 14:05:19
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_oncology_de,"gadolinium, iodine, gold","GTV,CTV,PTV",Other,43e1064c99a84b7a5c93b4d045046743,2024-06-11 14:05:12
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_oncology_de,brustkrebs,Brustkrebs,Case Sensitivity,9e54c8876efb9a35f173b49bb8e4c4d8,2024-06-11 14:05:14
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_oncology_en,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,63799a9a6e77cbef3197010808f36b58,2024-06-11 14:05:08
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_oncology_en,the most common type of cancer in women is breast cancer,Breast cancer,Partial Match / case Sensitivity,73e7ae02294d14d6abd8719fde70b550,2024-06-11 14:05:10
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_physiology_de,tp-interval,p-welle,Other,e5dde882846e71b556f2137fe4a4c29d,2024-06-11 14:04:55
+openhermes-2.5:7:ggufv2:Q3_K_M,one_word_physiology_en,tp-interval,p-wave,Other,4719e28fc4309dd95cfc38754eb705fb,2024-06-11 14:03:53
+openhermes-2.5:7:ggufv2:Q3_K_M,regex_eeg_data_de,"1 amplitudenunterschied (amplitude difference)
+2 phasendifferenz (phase difference)
+3 aktivitätssynchronisation (activity synchronization)1 amplitudenunterschied (amplitude difference)
+2 phasendifferenz (phase difference)
+3 aktivitätssynchronisation (activity synchronization)1 amplitudenunterschied (amplitude difference)
+2 phasendifferenz (phase difference)
+3 aktivitätssynchronisation (activity synchronization)",Coherence|Logarithmierte Differenz,Entire Answer Incorrect,13abc3c6d60d0415371e6bfd05086feb,2024-06-11 14:05:00
+openhermes-2.5:7:ggufv2:Q3_K_M,regex_medication_de,"nein, ich kann keine spezifischen medikamente nennen es ist jedoch empfohlen, nsa-r-freundliche medikamente wie acetylsalicylsäure (aspirin) oder antikoagulanzien (blutgerinnungshemmer) mit vorsicht oder unter anleitung eines arztes einnehmen, um das risiko von magengeschwüren zu minimieren",A|n|t|i|k|o|a|g|u|l|a|n|z|i|e|n,Entire Answer Incorrect,9bc6726f9c0a6029ab039de9c838fbe5,2024-06-11 14:05:32
+openhermes-2.5:7:ggufv2:Q3_K_M,regex_medication_de,"ibuprofen sollte nicht kombiniert werden mit medikamenten, die blutdrucksenkung oder störungen des herzrhythmus verursachen auch sollte es nicht mit antikoagulanzien kombiniert werden, da dies das risiko für blutungen erhöht es ist auch kontraindiziert bei patienten mit einer allergischen reaktion auf ibuprofen oder anderen nsaid-präparaten",N|S|A|I|D,Entire Answer Incorrect,803a8885655cf8e278434a57275df13c,2024-06-11 14:05:37
+openhermes-2.5:7:ggufv2:Q3_K_M,regex_medication_en,"certain medications to avoid with nsaids include:
+1 warfarin (blood thinner)
+2 lithium (mood stabilizer)
+3 methotrexate (cancer treatment)
+4 corticosteroids (anti-inflammatory drugs)
+5 diuretics (water pills)",a|n|t|i|c|o|a|g|u|l|a|n|t|s,Entire Answer Incorrect,f0b937ef1e445c7d0e95ed5debfbabf0,2024-06-11 14:05:19
+openhermes-2.5:7:ggufv2:Q3_K_M,regex_medication_en,"ibuprofen should not be taken with alcohol, anticoagulants, corticosteroids, and other nsaids without consulting a healthcare professional",N|S|A|I|D,Entire Answer Incorrect,3b1fa1ae3bbb6b94ad87667d857aa337,2024-06-11 14:05:21
+openhermes-2.5:7:ggufv2:Q3_K_M,regex_mental_disorders_de,kognitive verhaltenstherapie (cbt) und antidepressiva,Medikamente|Medikamentöse Therapie,Entire Answer Incorrect,6a807d9cc851d3abdab652586bf6fa6e,2024-06-11 14:04:05
+openhermes-2.5:7:ggufv2:Q3_K_M,regex_mental_disorders_de,die dissoziative identitätsstörung ist unter der störungsnummer f412 im international classification of diseases (icd-11) klassifiziert,Konversionsstörungen|Konversion,Entire Answer Incorrect,158a27937f6536ae1b178b53cced5f31,2024-06-11 14:04:07
+openhermes-2.5:7:ggufv2:Q3_K_M,regex_mental_disorders_en,"restrictive anorexia is characterized by caloric restriction and excessive exercise for weight loss, leading to a significantly low body weight and intense fear of weight gain",low|lose|reduce|weight|loss,Entire Answer Incorrect,679645a4d9ea6886af1a3be0dcc213bd,2024-06-11 14:04:18
+openhermes-2.5:7:ggufv2:Q3_K_M,regex_mental_disorders_en,"the therapy phase that follows the acute mania phase is called ""stabilization""",therapy|phase,Entire Answer Incorrect,e07c3f2a92ea91b8579aa68f4c11aa1d,2024-06-11 14:04:19
+openhermes-2.5:7:ggufv2:Q3_K_M,regex_mental_disorders_en,cognitive-behavioral therapy (cbt) and selective serotonin reuptake inhibitors (ssris)cognitive-behavioral therapy (cbt) and selective serotonin reuptake inhibitors (ssris),medication|drug|drug therapy,Entire Answer Incorrect,4d1cf4f2bf75196cec619b79b20e5cf0,2024-06-11 14:04:21
+openhermes-2.5:7:ggufv2:Q3_K_M,regex_mental_disorders_en,cognitive behavioral therapy (cbt) and interpersonal therapy (ipt),medication|drug|drug therapy,Entire Answer Incorrect,a65334cead6a1eb33888801b13083993,2024-06-11 14:04:22
+openhermes-2.5:7:ggufv2:Q3_K_M,regex_mental_disorders_en,dissociative identity disorder falls under f44 in icd-11,conversion disorders|conversion,Entire Answer Incorrect,f97ec4136fa18fdead9fb15833775161,2024-06-11 14:04:23
+openhermes-2.5:7:ggufv2:Q3_K_M,short_words_emergency_de,"ein gasdurchschlagsrohr (guedeltubus) benötigt anwendungsszenarien, in denen gasdetektion und -messung notwendig ist",Tiefe Bewusstlosigkeit,Other,630df142b11916534a4a5d8b60a73ff7,2024-06-11 14:05:48
+openhermes-2.5:7:ggufv2:Q3_K_M,short_words_emergency_de,"rice stands for rest, ice, compression, and elevation","Rest, Ice, Compression, Elevation",Other,29765310cc3e0b17b98f8100aefe2b8b,2024-06-11 14:05:49
+openhermes-2.5:7:ggufv2:Q3_K_M,short_words_emergency_en,consciousness and breathing,Deep unconsciousness,Other,07702b80596917d9bd0018f879481e9b,2024-06-11 14:03:46
+openhermes-2.5:7:ggufv2:Q3_K_M,short_words_emergency_en,"r - rapid
+i - instructional
+c - contextualized
+e - explanation","Rest, Ice, Compression, Elevation",Other,ea5e51f6bf643f798df26c295b133b94,2024-06-11 14:03:47
+openhermes-2.5:7:ggufv2:Q3_K_M,single_choice_cardiology_de,d,a,Other,052541d562bfef50e6c4b1fedc0a9980,2024-06-11 14:04:30
+openhermes-2.5:7:ggufv2:Q3_K_M,single_choice_cardiology_de,d,c,Other,df581bb7c7f4ededa016a96400221f14,2024-06-11 14:04:30
+openhermes-2.5:7:ggufv2:Q3_K_M,single_choice_cardiology_de,b,a,Other,f80be494684f1af924955b9caf58f063,2024-06-11 14:04:31
+openhermes-2.5:7:ggufv2:Q3_K_M,single_choice_cardiology_en,d,a,Other,257a1c0a98744542acfd15f6f90cd30d,2024-06-11 14:04:35
+openhermes-2.5:7:ggufv2:Q3_K_M,single_choice_cardiology_en,b,a,Other,177d0553e29a68d0e941a40fa646aceb,2024-06-11 14:04:35
+openhermes-2.5:7:ggufv2:Q3_K_M,single_choice_emergency_de,d,e,Other,e2e857ee1b0ff475eea2c64d7594b29b,2024-06-11 14:05:42
+openhermes-2.5:7:ggufv2:Q3_K_M,single_choice_emergency_de,b,d,Other,5bce5732ab1748d2258e0bfd7100a756,2024-06-11 14:05:42
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_biochemistry_de,"ja, die neigung zu thrombosen kann in vielen fällen genetisch bedingt sein, und missensemutationen im gen für faktor v können eine ursache für familiäre thrombophilie sein durch solche mutationen wird der aktivierte faktor v (va) weniger effizient durch ein aktiviertes protein c inaktiviert und ist daher besonders stabil",ja,Partial Match,f0c6efe14638906dd6fad3f4c91b0d27,2024-06-11 14:07:18
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_biochemistry_de,"ja, die neigung zu thrombosen kann in vielen fällen genetisch bedingt sein, und missensemutationen im gen für faktor v können eine ursache für familiäre thrombophilie sein durch solche mutationen wird der aktivierte faktor v (va) weniger effizient durch ein aktiviertes thrombomobilin inaktiviert und ist daher besonders stabil",nein,Other,20f87725f06d426c512e2655de6d2c37,2024-06-11 14:07:22
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_biochemistry_en,yes,no,Other,e0294c6cf320f9d615ef3821fd29019f,2024-06-11 14:08:02
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_cardiology_de,ja,nein,Other,677aa7dac567b5a5c39e0ce724bb91ea,2024-06-11 14:07:04
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_cardiology_de,mann,Mann,Case Sensitivity,0c70f6b2387bc03d939dfdaf8461763b,2024-06-11 14:07:05
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_cardiology_de,"nein, medikamentöse therapien haben keinen einfluss auf den natürlichen verlauf von aortenklappenstenose",nein,Partial Match,c706124240a713a054296da767c1fa84,2024-06-11 14:07:06
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_cardiology_en,yes,no,Other,928b3b9802b743d760d0b495abb4da7b,2024-06-11 14:07:10
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_cardiology_en,men,Men,Case Sensitivity,e81cd67e1b4eb0daded9a6649f468eea,2024-06-11 14:07:10
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_cardiology_en,yes,no,Other,c6d778819b369ef16c013ed05e3542dd,2024-06-11 14:07:11
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_emergency_de,"ja, aspirin wird bei einem herzinfarkt oft eingesetzt, um blutungen zu verhindern und den blutzirkulation zu unterstützen",ja,Partial Match,a395ceb25fe39d8813d3f4eb29646382,2024-06-11 14:08:09
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_emergency_de,"nein, es ist wichtig, eine sichere umgebung zu schaffen und den betroffenen ruhig und still zu behandeln festhalten sollte man nicht versuchen",nein,Partial Match,276c1f7d959fce95896cefe93e0e5575,2024-06-11 14:08:11
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_emergency_de,nein,ja,Other,b66b33429572ed907031eab79f53f82e,2024-06-11 14:08:12
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_emergency_en,no,yes,Other,3a401e18366b9d10bcf50e36fbafcfa2,2024-06-11 14:08:17
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_emergency_en,no,yes,Other,4b6435319ea2e433f6e72eb780834c5d,2024-06-11 14:08:17
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_emergency_en,no,yes,Other,abf6a748104165c4b327841e355f9db5,2024-06-11 14:08:18
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_medication_de,"nein, es ist nicht empfehlenswert, ibuprofen zusammen mit antihypertensiva einzunehmen, da dies das blutdruckmedikament wirksamer werden lassen kann und das risiko von nebenwirkungen erhöhen könnte es ist besser, einen arzt oder eine ärztin zu konsultieren, bevor sie beide medikamente gleichzeitig einnehmen",nein,Partial Match,b0a9039a528c23db4efc60ead627b7b0,2024-06-11 14:07:56
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_medication_de,"nein, es besteht keine direkte wechselwirkung zwischen antibiotika und oralen kontrazeptiva allerdings kann ein antibiotikum die wirksamkeit von oralen kontrazeptiva verringern, wenn es zu einer reduktion der leverbilanz kommt es ist empfehlenswert, den arzt oder gynäkologen über die einnahme von antibiotika in kombination mit oralen kontrazeptiva zu informieren",ja,Other,d7f97cd6ea418daa6e2aa04e566268dc,2024-06-11 14:08:00
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_medication_de,"nein, no-donatoren und pde5-hemmern sollten nicht gleichzeitig verabreicht werden dies kann zu potenziell gefährlichen interaktionen führen, einschließlich einer möglichen gefahr für das herz und blutgefäße",Nein,Format Error,efc7f248eb2c0a55b98cec9d1773a03d,2024-06-11 14:08:02
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_medication_en,yes,no,Other,77305fef6ce239ae400bacb44cead08a,2024-06-11 14:07:47
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_medication_en,yes,no,Other,a65e3f6feebae5df673e1da1ee04b537,2024-06-11 14:07:47
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_medication_en,yes,No,Other,1cb9c7fdd2107c679a879eadd4863be3,2024-06-11 14:07:48
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_mental_disorders_de,ja,nein,Other,3ab07d923c486bc360a30f0041b186a7,2024-06-11 14:06:10
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_mental_disorders_de,ja,nein,Other,c4558a9edb9e5d1959d7a170e53aab26,2024-06-11 14:06:11
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_mental_disorders_de,ja,nein,Other,d91d00800609f44ebf30be07754015c5,2024-06-11 14:06:12
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_mental_disorders_de,ja,nein,Other,ebd1a622be5a9d5d2fed67ce5cbb6b25,2024-06-11 14:06:12
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_mental_disorders_de,ja,nein,Other,dcbc1aee04c905ba095b9dae86ca77ef,2024-06-11 14:06:12
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_mental_disorders_de,ja,nein,Other,f9e0f9b75d1a74ce2ebb8b88e87dc378,2024-06-11 14:06:13
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_mental_disorders_en,yes,no,Other,c3986ce46829b48f08c96a019b9f1818,2024-06-11 14:06:46
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_mental_disorders_en,yes,no,Other,cef2b51309c72cb4e87412ba89983741,2024-06-11 14:06:46
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_mental_disorders_en,yes,no,Other,47007afb69a62f3ed854dbc53d40e756,2024-06-11 14:06:47
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_mental_disorders_en,yes,no,Other,e167974c3c7ec1b3e8a505ea57dc2b91,2024-06-11 14:06:48
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_mental_disorders_en,yes,no,Other,6b8c43fff8e8712d3a9ebdf13b19c3a5,2024-06-11 14:06:48
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_mental_disorders_en,yes,no,Other,2b21be26d9506f645700f1c4c467a033,2024-06-11 14:06:48
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_physiology_de,"ja, die scheinbare viskosität des blutes ist normalerweise niedriger bei einem gefäßdurchmesser von etwa 8 μm im vergleich zu einem gefäßdurchmesser von 4 μm",ja,Partial Match,bfda46eab239900d5df10cc3c5957342,2024-06-11 14:07:25
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_physiology_de,"ja, die scheinbare viskosität des blutes ist tatsächlich niedriger in großen gefäßen im vergleich zu kleinen gefäßen bei normalem hämatokrit und unter gleichbleibenden bedingungen",nein,Other,14059bd76c70530e13e532e1da47e268,2024-06-11 14:07:26
+openhermes-2.5:7:ggufv2:Q4_K_M,dichotomous_physiology_en,yes,no,Other,4bfc02ff6e4dbd33f8868853da76c670,2024-06-11 14:06:11
+openhermes-2.5:7:ggufv2:Q4_K_M,medication_regex,"nsaid-uncompatible medications: acetaminophen (paracetamol), muscle relaxants, antihistamines, opioidsnsaid-uncompatible medications: acetaminophen (paracetamol), muscle relaxants, antihistamines, opioids",SSRI|Antikoagulanzien,Entire Answer Incorrect,1ea21994f83c8550259948b11739202a,2024-06-11 14:06:10
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_answer_math_en,d,b,Other,ef2663aa098bb994ef143dec64270478,2024-06-11 14:06:05
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_answer_math_en,a,d,Other,deea34abd98497619ccbfc85da67c71c,2024-06-11 14:06:06
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_answer_math_en,d,b,Other,c06398a8f6ee6b8c341e9ecb6d456ef7,2024-06-11 14:07:15
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_biochemistry_de,a,e,Other,bef740fb05b83d130cef123ce7ec3cf3,2024-06-11 14:07:09
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_math_de,d,b,Other,06e85f85f99009e6c18bf066ac9d752c,2024-06-11 14:06:47
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_math_de,a,d,Other,8eed232ace339fb268509642b2b56a35,2024-06-11 14:06:50
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_math_en,c,b,Other,9db6f00088ff9a6435be4ea546ff0eea,2024-06-11 14:06:57
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_medication_de,a,c,Other,54c1e57dd808faafbb7a92eba966fb7d,2024-06-11 14:08:03
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_mental_disorders_de,"d, e, f","d,e,f",Format Error,25da4c7876247708b50a6310ba25f567,2024-06-11 14:06:13
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_mental_disorders_de,c,d,Other,63d18c297a432afdc99d677c82e301e5,2024-06-11 14:06:15
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_mental_disorders_de,"a,b,d,e","a,b,c,d",Other,d1e7117f59e1edf93f9c51d1c952d356,2024-06-11 14:06:16
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_mental_disorders_de,"a, b, d, e","a,d,e,f",Other,97d020c95635c8067b66fd78721a8347,2024-06-11 14:06:17
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_mental_disorders_de,b,d,Other,924f73cfacf0ce6602d4dd4b5d103f60,2024-06-11 14:06:17
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_mental_disorders_en,"b,d,e,f","d,e,f",Partial Match,3a3150cea644a463b1042333107dec48,2024-06-11 14:06:49
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_mental_disorders_en,"a,b,d","a,b,c,d",Other,55e93f938cc241bd79f24c1e7e64abc9,2024-06-11 14:06:51
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_mental_disorders_en,"a,d,e","a,d,e,f",Partial Match,98bcd2f43e5f2f0295616688fb7b357c,2024-06-11 14:06:52
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_mental_disorders_en,"b,c","b,c,e",Partial Match,928854e2e5e6e884fada6750e99d9329,2024-06-11 14:06:52
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_oncology_de,b,a,Other,6fc6ae195efd7956e60b15caa97e3bd7,2024-06-11 14:07:45
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_oncology_en,o,a,Other,9b15ea86f85c85a2867da8cacdc1a1bf,2024-06-11 14:07:40
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_oncology_en,d,a,Other,5f3b3fdee41b147d32644d131a9ed910,2024-06-11 14:07:40
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_physiology_de,d,e,Other,0029a268763ac0ca6e88e368bcb8756c,2024-06-11 14:07:23
+openhermes-2.5:7:ggufv2:Q4_K_M,multiple_choice_physiology_en,d,e,Other,7a5de46c4470744dce21aa79abba64ca,2024-06-11 14:08:14
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_cardiology_de,ct,Knochenszintigraphie,Other,d95c7ea81e8fb2e3f542b3ce9ea98635,2024-06-11 14:07:08
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_cardiology_de,actuarial,HCM-SCD-Risikorechner,Other,1250fa64334b7724cd8f868a39cb0138,2024-06-11 14:07:09
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_cardiology_de,12,1,Partial Match,5857204c630ae59717a602a075ec2cbe,2024-06-11 14:07:10
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_cardiology_de,nebivolol,Digoxin,Other,7de8b9d9fe42f674e97e2e87b29b1a67,2024-06-11 14:07:10
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_cardiology_en,nuclear medicine scan,Bone scintigraphy,Other,4b81a360e1162bdae9dbdd552aac2cd2,2024-06-11 14:07:13
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_cardiology_en,framingham risk score,HCM Risk-SCD Calculator,Other,92c7207a908490e35605e45bfa250ff8,2024-06-11 14:07:14
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_cardiology_en,12 weeks,1,Partial Match,f4254d5c9b7045880bb35506b3b08656,2024-06-11 14:07:14
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_cardiology_en,calcium channel blocker,Digoxin,Other,eacabec542abe52b3c0966e7759fec29,2024-06-11 14:07:14
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_emergency_de,auffinden,Atemwege,Other,0844abd3a40615e702807d74fcddad52,2024-06-11 14:08:13
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_emergency_de,oxygeniert,Sauerstoffreiches,Other,1949045cb0f5a7ce5c532aefa5cc487f,2024-06-11 14:08:14
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_emergency_de,a,0,Format Error,983bb312e805f2191b0075967ad4d4f0,2024-06-11 14:08:14
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_emergency_en,air,Airways,Partial Match / case Sensitivity,fe12a7b5cd592eda0775a3ce924a1038,2024-06-11 14:06:07
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_emergency_en,oxygenated,Oxygen-rich,Other,11e8bf547f5a1daf292083d9eff0e102,2024-06-11 14:06:07
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_emergency_en,o+,0,Format Error,15f63dd145b59ce61ce9cff672ac1cc9,2024-06-11 14:06:07
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_medication_de,grapefruit,Grapefruit,Case Sensitivity,d16b8dcb91ebf733eba01030951b8edf,2024-06-11 14:08:04
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_medication_de,pharmakodynamische und pharmakokinetische wechselwirkungen,Pharmakodynamisch und pharmakokinetisch,Other,8bfcda44283002250cc3b9cd5dd26e7f,2024-06-11 14:08:06
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_medication_en,grapefruit,Grapefruit,Case Sensitivity,097a059a9bc315bbcad4f96277caa4d6,2024-06-11 14:07:49
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_medication_en,pharmacodynamic and pharmacokinetic interactions,Pharmacodynamic and pharmacokinetic,Partial Match / case Sensitivity,d908ab2aa056ea9f39575d496a976094,2024-06-11 14:07:51
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_oncology_de,"gadolinium, iodine, gold","GTV,CTV,PTV",Other,43e1064c99a84b7a5c93b4d045046743,2024-06-11 14:07:45
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_oncology_de,die häufigste krebsart bei frauen ist brustkrebs,Brustkrebs,Partial Match / case Sensitivity,9e54c8876efb9a35f173b49bb8e4c4d8,2024-06-11 14:07:47
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_oncology_en,"gtv: gross tumor volume, ctv: clinical target volume, ptv: planning target volume","GTV,CTV,PTV",Other,63799a9a6e77cbef3197010808f36b58,2024-06-11 14:07:41
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_oncology_en,the most common type of cancer in women is breast cancer,Breast cancer,Partial Match / case Sensitivity,73e7ae02294d14d6abd8719fde70b550,2024-06-11 14:07:43
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_physiology_de,tp-interval,p-welle,Other,e5dde882846e71b556f2137fe4a4c29d,2024-06-11 14:07:27
+openhermes-2.5:7:ggufv2:Q4_K_M,one_word_physiology_en,tp-interval,p-wave,Other,4719e28fc4309dd95cfc38754eb705fb,2024-06-11 14:06:15
+openhermes-2.5:7:ggufv2:Q4_K_M,regex_eeg_data_de,"1 differenz (difference)
+2 koherenz (coherence)
+3 größe des phasenverschobenen produkts (cross-spectral density)1 differenz (difference)
+2 koherenz (coherence)
+3 größe des phasenverschobenen produkts (cross-spectral density)",Coherence|Logarithmierte Differenz,Entire Answer Incorrect,13abc3c6d60d0415371e6bfd05086feb,2024-06-11 14:07:36
+openhermes-2.5:7:ggufv2:Q4_K_M,regex_medication_de,"nsaid-uncompatible medications: acetaminophen (paracetamol), muscle relaxants, antihistamines, opioids",A|n|t|i|k|o|a|g|u|l|a|n|z|i|e|n,Entire Answer Incorrect,9bc6726f9c0a6029ab039de9c838fbe5,2024-06-11 14:08:05
+openhermes-2.5:7:ggufv2:Q4_K_M,regex_medication_de,"ibuprofen sollte nicht kombiniert werden mit anderen arzneimitteln, die blutgerinnung hemmen (antikoagulanzien), den magen-darm-trakt irritieren oder den blutdruck senken es ist auch kontraindiziert für menschen mit bestimmten allergien oder leber-/nierenschäden",N|S|A|I|D,Entire Answer Incorrect,803a8885655cf8e278434a57275df13c,2024-06-11 14:08:08
+openhermes-2.5:7:ggufv2:Q4_K_M,regex_medication_en,"medications to avoid when taking nsaids include: anticoagulants (eg, warfarin), corticosteroids, and other nsaids consult a healthcare professional for specific advice on medication interactions",a|n|t|i|c|o|a|g|u|l|a|n|t|s,Entire Answer Incorrect,f0b937ef1e445c7d0e95ed5debfbabf0,2024-06-11 14:07:51
+openhermes-2.5:7:ggufv2:Q4_K_M,regex_medication_en,"ibuprofen should not be taken with other nonsteroidal anti-inflammatory drugs (nsaids), anticoagulants, corticosteroids, and methotrexate it is also not recommended for use during the third trimester of pregnancy or in individuals with a history of stomach ulcers or bleeding disorders",N|S|A|I|D,Entire Answer Incorrect,3b1fa1ae3bbb6b94ad87667d857aa337,2024-06-11 14:07:53
+openhermes-2.5:7:ggufv2:Q4_K_M,regex_mental_disorders_de,"restriktive anorexie ist eine essstörige erkrankung, bei der die betroffene person ihre ernährung stark einschränkt, um ihr gewicht und körperbild zu kontrollieren sie zeichnet sich durch extreme kälberie, vorliebe für niederkalorische lebensmittel und den verzicht auf bestimmte nahrungsgruppen aus",mehr|sport|bewegung|gewichtsverlust,Entire Answer Incorrect,b3822c7a436c199bd3036fc7ddfc405d,2024-06-11 14:06:25
+openhermes-2.5:7:ggufv2:Q4_K_M,regex_mental_disorders_de,die dissoziative identitätsstörung wird im icd-11 unter der codes g4701 und f44 klassifiziert,Konversionsstörungen|Konversion,Entire Answer Incorrect,158a27937f6536ae1b178b53cced5f31,2024-06-11 14:06:42
+openhermes-2.5:7:ggufv2:Q4_K_M,regex_mental_disorders_en,cognitive-behavioral therapy (cbt) and selective serotonin reuptake inhibitors (ssris)cognitive-behavioral therapy (cbt) and selective serotonin reuptake inhibitors (ssris),medication|drug|drug therapy,Entire Answer Incorrect,4d1cf4f2bf75196cec619b79b20e5cf0,2024-06-11 14:07:00
+openhermes-2.5:7:ggufv2:Q4_K_M,regex_mental_disorders_en,cognitive-behavioral therapy (cbt) and interpersonal therapy (ipt),medication|drug|drug therapy,Entire Answer Incorrect,a65334cead6a1eb33888801b13083993,2024-06-11 14:07:00
+openhermes-2.5:7:ggufv2:Q4_K_M,regex_mental_disorders_en,icd-11: f442,conversion disorders|conversion,Entire Answer Incorrect,f97ec4136fa18fdead9fb15833775161,2024-06-11 14:07:03
+openhermes-2.5:7:ggufv2:Q4_K_M,short_words_emergency_de,"ein guided tube (guedeltube) erfordert spezialkenntnisse in robotik, navigation und programmierung es benötigt auch einen geeigneten arbeitsumfeld wie fabriken oder werkstätten",Tiefe Bewusstlosigkeit,Other,630df142b11916534a4a5d8b60a73ff7,2024-06-11 14:08:16
+openhermes-2.5:7:ggufv2:Q4_K_M,short_words_emergency_de,"r - reach
+i - information radiators
+c - commitment to learning
+e - evaluate frequently","Rest, Ice, Compression, Elevation",Other,29765310cc3e0b17b98f8100aefe2b8b,2024-06-11 14:08:17
+openhermes-2.5:7:ggufv2:Q4_K_M,short_words_emergency_en,monitoring and observation,Deep unconsciousness,Other,07702b80596917d9bd0018f879481e9b,2024-06-11 14:06:07
+openhermes-2.5:7:ggufv2:Q4_K_M,short_words_emergency_en,"r - reflect
+i - identify
+c - challenge
+e - experiment","Rest, Ice, Compression, Elevation",Other,ea5e51f6bf643f798df26c295b133b94,2024-06-11 14:06:08
+openhermes-2.5:7:ggufv2:Q4_K_M,single_choice_cardiology_de,d,a,Other,052541d562bfef50e6c4b1fedc0a9980,2024-06-11 14:07:07
+openhermes-2.5:7:ggufv2:Q4_K_M,single_choice_cardiology_de,d,c,Other,df581bb7c7f4ededa016a96400221f14,2024-06-11 14:07:08
+openhermes-2.5:7:ggufv2:Q4_K_M,single_choice_cardiology_de,b,a,Other,f80be494684f1af924955b9caf58f063,2024-06-11 14:07:08
+openhermes-2.5:7:ggufv2:Q4_K_M,single_choice_cardiology_de,c,b,Other,c102e12f28de81c09979164fa11110dc,2024-06-11 14:07:08
+openhermes-2.5:7:ggufv2:Q4_K_M,single_choice_cardiology_en,(a) >50,a,Partial Match,58384a1dd2385339553eb3bcaa47db6b,2024-06-11 14:07:12
+openhermes-2.5:7:ggufv2:Q4_K_M,single_choice_cardiology_en,d,a,Other,257a1c0a98744542acfd15f6f90cd30d,2024-06-11 14:07:13
+openhermes-2.5:7:ggufv2:Q4_K_M,single_choice_cardiology_en,c,a,Other,177d0553e29a68d0e941a40fa646aceb,2024-06-11 14:07:13
+openhermes-2.5:7:ggufv2:Q4_K_M,single_choice_emergency_de,d,e,Other,e2e857ee1b0ff475eea2c64d7594b29b,2024-06-11 14:08:13
+openhermes-2.5:7:ggufv2:Q4_K_M,single_choice_emergency_de,c,d,Other,5bce5732ab1748d2258e0bfd7100a756,2024-06-11 14:08:13
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_biochemistry_de,"ja, die neigung zu thrombosen kann in vielen fällen genetisch bedingt sein, und missensemutationen im gen für faktor v können eine ursache einer familiären thrombophilie sein durch solche mutationen wird der aktivierte faktor v (va) weniger effizient durch ein aktiviertes protein c inaktiviert und ist daher besonders stabil",ja,Partial Match,f0c6efe14638906dd6fad3f4c91b0d27,2024-06-11 14:09:39
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_biochemistry_de,"ja, die neigung zu thrombosen kann in vielen fällen genetisch bedingt sein, und missensemutationen im gen für faktor v können eine ursache einer familiären thrombophilie sein durch solche mutationen wird der aktivierte faktor v (va) weniger effizient durch ein aktiviertes thrombomobilin inaktiviert und ist daher besonders stabil",nein,Other,20f87725f06d426c512e2655de6d2c37,2024-06-11 14:09:43
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_biochemistry_en,yes,no,Other,e0294c6cf320f9d615ef3821fd29019f,2024-06-11 14:10:22
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_cardiology_de,ja,nein,Other,677aa7dac567b5a5c39e0ce724bb91ea,2024-06-11 14:09:22
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_cardiology_de,frau,Mann,Other,0c70f6b2387bc03d939dfdaf8461763b,2024-06-11 14:09:24
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_cardiology_de,ja,nein,Other,c706124240a713a054296da767c1fa84,2024-06-11 14:09:24
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_cardiology_en,yes,no,Other,928b3b9802b743d760d0b495abb4da7b,2024-06-11 14:09:28
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_cardiology_en,men,Men,Case Sensitivity,e81cd67e1b4eb0daded9a6649f468eea,2024-06-11 14:09:28
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_cardiology_en,yes,no,Other,c6d778819b369ef16c013ed05e3542dd,2024-06-11 14:09:28
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_emergency_de,"ja, aspirin wird oft bei einem herzinfarkt eingesetzt",ja,Partial Match,a395ceb25fe39d8813d3f4eb29646382,2024-06-11 14:10:32
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_emergency_de,ja,nein,Other,0f7f38638d68d1d49efae0d6b17beb46,2024-06-11 14:10:32
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_emergency_de,"nein, es ist wichtig, eine sichere umgebung zu schaffen und den betroffenen ruhig und sicher zu behandeln festziehen sollte vermieden werden",nein,Partial Match,276c1f7d959fce95896cefe93e0e5575,2024-06-11 14:10:34
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_emergency_en,no,yes,Other,3a401e18366b9d10bcf50e36fbafcfa2,2024-06-11 14:10:42
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_emergency_en,yes,no,Other,176c27512140c06b24722dcdf88c5a53,2024-06-11 14:10:42
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_emergency_en,no,yes,Other,4b6435319ea2e433f6e72eb780834c5d,2024-06-11 14:10:42
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_emergency_en,no,yes,Other,abf6a748104165c4b327841e355f9db5,2024-06-11 14:10:42
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_medication_de,"nein, es ist nicht empfehlenswert, ibuprofen und antihypertensiva gleichzeitig einzunehmen, da dies das risiko für nebenwirkungen erhöhen kann es ist besser, sich vor der einnahme mit einem arzt oder apotheker zu beraten",nein,Partial Match,b0a9039a528c23db4efc60ead627b7b0,2024-06-11 14:10:18
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_medication_de,nein,ja,Other,d7f97cd6ea418daa6e2aa04e566268dc,2024-06-11 14:10:18
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_medication_de,"nein, no-donatoren und pde5-hemmern sollten nicht gleichzeitig verabreicht werden, da dies zu potenziellen interaktionen und nebenwirkungen führen kann es ist empfehlenswert, vor der einnahme von medikamenten mit ihrem arzt oder einer apothekerin zu sprechen, um sicherzustellen, dass die medikamente sicher zusammen genommen werden können",Nein,Format Error,efc7f248eb2c0a55b98cec9d1773a03d,2024-06-11 14:10:22
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_medication_en,yes,no,Other,77305fef6ce239ae400bacb44cead08a,2024-06-11 14:10:09
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_medication_en,yes,no,Other,a65e3f6feebae5df673e1da1ee04b537,2024-06-11 14:10:10
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_medication_en,yes,No,Other,1cb9c7fdd2107c679a879eadd4863be3,2024-06-11 14:10:10
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_mental_disorders_de,ja,nein,Other,3ab07d923c486bc360a30f0041b186a7,2024-06-11 14:08:39
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_mental_disorders_de,ja,nein,Other,c4558a9edb9e5d1959d7a170e53aab26,2024-06-11 14:08:39
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_mental_disorders_de,ja,nein,Other,d91d00800609f44ebf30be07754015c5,2024-06-11 14:08:40
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_mental_disorders_de,ja,nein,Other,ebd1a622be5a9d5d2fed67ce5cbb6b25,2024-06-11 14:08:40
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_mental_disorders_de,ja,nein,Other,dcbc1aee04c905ba095b9dae86ca77ef,2024-06-11 14:08:40
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_mental_disorders_de,ja,nein,Other,f9e0f9b75d1a74ce2ebb8b88e87dc378,2024-06-11 14:08:41
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_mental_disorders_en,yes,no,Other,c3986ce46829b48f08c96a019b9f1818,2024-06-11 14:09:04
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_mental_disorders_en,yes,no,Other,cef2b51309c72cb4e87412ba89983741,2024-06-11 14:09:04
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_mental_disorders_en,yes,no,Other,47007afb69a62f3ed854dbc53d40e756,2024-06-11 14:09:05
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_mental_disorders_en,yes,no,Other,e167974c3c7ec1b3e8a505ea57dc2b91,2024-06-11 14:09:05
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_mental_disorders_en,yes,no,Other,6b8c43fff8e8712d3a9ebdf13b19c3a5,2024-06-11 14:09:06
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_mental_disorders_en,yes,no,Other,2b21be26d9506f645700f1c4c467a033,2024-06-11 14:09:06
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_physiology_de,"nein, die scheinbare viskosität des blutes hängt nicht vom gefäßdurchmesser ab sie wird durch faktoren wie hämatokrit und temperatur beeinflusst",ja,Other,bfda46eab239900d5df10cc3c5957342,2024-06-11 14:09:46
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_physiology_de,"ja, die scheinbare viskosität des blutes ist bei normalem hämatokrit in großen gefäßen immer niedriger als in kleinen gefäßen dies liegt daran, dass die blutströmung in kleineren gefäßen schneller ist und dadurch mehr widerstand aufweist",nein,Other,14059bd76c70530e13e532e1da47e268,2024-06-11 14:09:49
+openhermes-2.5:7:ggufv2:Q5_K_M,dichotomous_physiology_en,yes,no,Other,4bfc02ff6e4dbd33f8868853da76c670,2024-06-11 14:08:39
+openhermes-2.5:7:ggufv2:Q5_K_M,medication_regex,"als beispiele für medikamente, die nicht mit nsar wie ibuprofen oder naproxen kombiniert werden sollten, um das risiko von magengeschwüren zu minimieren, können folgende arzneistoffe genannt werden: acetylsalicylsäure (aspirin), paracetamol (acetaminophen) und metamizolals beispiele für medikamente, die nicht mit nsar wie ibuprofen oder naproxen kombiniert werden sollten, um das risiko von magengeschwüren zu minimieren, können folgende arzneistoffe genannt werden: acetylsalicylsäure (aspirin), paracetamol (acetaminophen) und metamizol",SSRI|Antikoagulanzien,Entire Answer Incorrect,1ea21994f83c8550259948b11739202a,2024-06-11 14:08:38
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_answer_math_en,d,b,Other,ef2663aa098bb994ef143dec64270478,2024-06-11 14:08:32
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_answer_math_en,a,d,Other,deea34abd98497619ccbfc85da67c71c,2024-06-11 14:08:32
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_answer_math_en,d,b,Other,c06398a8f6ee6b8c341e9ecb6d456ef7,2024-06-11 14:09:36
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_biochemistry_de,a,e,Other,bef740fb05b83d130cef123ce7ec3cf3,2024-06-11 14:09:27
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_math_de,d,b,Other,06e85f85f99009e6c18bf066ac9d752c,2024-06-11 14:09:05
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_math_de,a,d,Other,8eed232ace339fb268509642b2b56a35,2024-06-11 14:09:08
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_math_en,c,b,Other,9db6f00088ff9a6435be4ea546ff0eea,2024-06-11 14:09:14
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_medication_de,a,c,Other,54c1e57dd808faafbb7a92eba966fb7d,2024-06-11 14:10:23
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_mental_disorders_de,"d, e, f","d,e,f",Format Error,25da4c7876247708b50a6310ba25f567,2024-06-11 14:08:41
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_mental_disorders_de,c,d,Other,63d18c297a432afdc99d677c82e301e5,2024-06-11 14:08:43
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_mental_disorders_de,"a,b,c,d,e","a,b,c,d",Partial Match,d1e7117f59e1edf93f9c51d1c952d356,2024-06-11 14:08:44
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_mental_disorders_de,"a,b,d,e","a,d,e,f",Other,97d020c95635c8067b66fd78721a8347,2024-06-11 14:08:44
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_mental_disorders_de,b,d,Other,924f73cfacf0ce6602d4dd4b5d103f60,2024-06-11 14:08:45
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_mental_disorders_de,"a,b,c,e","b,c,e",Partial Match,660f329fe0920127ec02b417af9c06f2,2024-06-11 14:08:45
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_mental_disorders_en,"b,d,e,f","d,e,f",Partial Match,3a3150cea644a463b1042333107dec48,2024-06-11 14:09:06
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_mental_disorders_en,"a,d,e","a,d,e,f",Partial Match,98bcd2f43e5f2f0295616688fb7b357c,2024-06-11 14:09:09
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_mental_disorders_en,a,d,Other,2509912e9e4fd9a5bb4d12f23f082d5d,2024-06-11 14:09:10
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_mental_disorders_en,"c,e","b,c,e",Partial Match,928854e2e5e6e884fada6750e99d9329,2024-06-11 14:09:10
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_oncology_de,b,a,Other,6fc6ae195efd7956e60b15caa97e3bd7,2024-06-11 14:10:05
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_oncology_en,o,a,Other,9b15ea86f85c85a2867da8cacdc1a1bf,2024-06-11 14:10:01
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_oncology_en,b,a,Other,5f3b3fdee41b147d32644d131a9ed910,2024-06-11 14:10:01
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_physiology_de,d,e,Other,0029a268763ac0ca6e88e368bcb8756c,2024-06-11 14:09:44
+openhermes-2.5:7:ggufv2:Q5_K_M,multiple_choice_physiology_en,d,e,Other,7a5de46c4470744dce21aa79abba64ca,2024-06-11 14:10:38
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_cardiology_de,ct,Knochenszintigraphie,Other,d95c7ea81e8fb2e3f542b3ce9ea98635,2024-06-11 14:09:26
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_cardiology_de,2 jahre,2,Partial Match,61e933bd48605073a98454bb4bcff017,2024-06-11 14:09:26
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_cardiology_de,actuarial,HCM-SCD-Risikorechner,Other,1250fa64334b7724cd8f868a39cb0138,2024-06-11 14:09:26
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_cardiology_de,8,1,Other,5857204c630ae59717a602a075ec2cbe,2024-06-11 14:09:27
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_cardiology_de,nebivolol,Digoxin,Other,7de8b9d9fe42f674e97e2e87b29b1a67,2024-06-11 14:09:28
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_cardiology_en,ct scan,Bone scintigraphy,Other,4b81a360e1162bdae9dbdd552aac2cd2,2024-06-11 14:09:30
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_cardiology_en,"the recommended maximum time between follow-up examinations for clinically stable patients with cardiomyopathy varies depending on the specific type of cardiomyopathy and individual patient factors generally, it is advised to have follow-ups every 3 to 12 months",2,Partial Match,903f040d8c1421caafe62a0f47f7a461,2024-06-11 14:09:33
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_cardiology_en,framingham risk score,HCM Risk-SCD Calculator,Other,92c7207a908490e35605e45bfa250ff8,2024-06-11 14:09:33
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_cardiology_en,it is difficult for me to provide an exact number of weeks without more information about the specific intervention and the patient's recovery progress i recommend consulting with a healthcare professional for personalized guidance on when it would be safe for the patient to resume driving duties,1,Format Error,f4254d5c9b7045880bb35506b3b08656,2024-06-11 14:09:35
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_cardiology_en,calcium channel blocker,Digoxin,Other,eacabec542abe52b3c0966e7759fec29,2024-06-11 14:09:35
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_emergency_de,airway,Atemwege,Other,0844abd3a40615e702807d74fcddad52,2024-06-11 14:10:36
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_emergency_de,oxygeniert,Sauerstoffreiches,Other,1949045cb0f5a7ce5c532aefa5cc487f,2024-06-11 14:10:36
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_emergency_de,"o
+
+explanation: o-negative (o-) is the universal blood type, which can be safely given to patients with any blood type in emergency situations",0,Format Error,983bb312e805f2191b0075967ad4d4f0,2024-06-11 14:10:38
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_emergency_en,air,Airways,Partial Match / case Sensitivity,fe12a7b5cd592eda0775a3ce924a1038,2024-06-11 14:08:33
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_emergency_en,oxygenated,Oxygen-rich,Other,11e8bf547f5a1daf292083d9eff0e102,2024-06-11 14:08:33
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_emergency_en,o,0,Format Error,15f63dd145b59ce61ce9cff672ac1cc9,2024-06-11 14:08:33
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_medication_de,grapefruit,Grapefruit,Case Sensitivity,d16b8dcb91ebf733eba01030951b8edf,2024-06-11 14:10:24
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_medication_de,pharmakokinetische und pharmakodynamische wechselwirkungen,Pharmakodynamisch und pharmakokinetisch,Other,8bfcda44283002250cc3b9cd5dd26e7f,2024-06-11 14:10:28
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_medication_en,grapefruit,Grapefruit,Case Sensitivity,097a059a9bc315bbcad4f96277caa4d6,2024-06-11 14:10:11
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_medication_en,pharmacokinetic and pharmacodynamic interactions,Pharmacodynamic and pharmacokinetic,Other,d908ab2aa056ea9f39575d496a976094,2024-06-11 14:10:14
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_oncology_de,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,43e1064c99a84b7a5c93b4d045046743,2024-06-11 14:10:06
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_oncology_de,die häufigste krebsart bei frauen ist brustkrebs,Brustkrebs,Partial Match / case Sensitivity,9e54c8876efb9a35f173b49bb8e4c4d8,2024-06-11 14:10:09
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_oncology_en,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,63799a9a6e77cbef3197010808f36b58,2024-06-11 14:10:01
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_oncology_en,the most common type of cancer in women is breast cancer,Breast cancer,Partial Match / case Sensitivity,73e7ae02294d14d6abd8719fde70b550,2024-06-11 14:10:03
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_physiology_de,tp-interval,p-welle,Other,e5dde882846e71b556f2137fe4a4c29d,2024-06-11 14:09:49
+openhermes-2.5:7:ggufv2:Q5_K_M,one_word_physiology_en,tp-interval,p-wave,Other,4719e28fc4309dd95cfc38754eb705fb,2024-06-11 14:08:42
+openhermes-2.5:7:ggufv2:Q5_K_M,regex_eeg_data_de,"1 differenz (difference)
+2 integral (integrated)
+3 quotient (quotient)1 differenz (difference)
+2 integral (integrated)
+3 quotient (quotient)1 differenz (difference)
+2 integral (integrated)
+3 quotient (quotient)",Coherence|Logarithmierte Differenz,Entire Answer Incorrect,13abc3c6d60d0415371e6bfd05086feb,2024-06-11 14:09:56
+openhermes-2.5:7:ggufv2:Q5_K_M,regex_medication_de,"als beispiele für medikamente, die nicht mit nsar wie ibuprofen oder naproxen kombiniert werden sollten, um das risiko von magengeschwüren zu minimieren, können folgende arzneistoffe genannt werden: acetylsalicylsäure (aspirin), paracetamol (acetaminophen) und metamizol",A|n|t|i|k|o|a|g|u|l|a|n|z|i|e|n,Entire Answer Incorrect,9bc6726f9c0a6029ab039de9c838fbe5,2024-06-11 14:10:27
+openhermes-2.5:7:ggufv2:Q5_K_M,regex_medication_de,"ibuprofen sollte nicht kombiniert werden mit anderen medikamenten, die blutgerinnung hemmen oder blutdruck senken, wie zb aspirin, heparin oder antikoagulanzien auch alkohol und andere nsaids (nonsteroidal anti-inflammatory drugs) sollten vermieden werden, da sie das risiko für magen-darm-bleeding erhöhen können",N|S|A|I|D,Entire Answer Incorrect,803a8885655cf8e278434a57275df13c,2024-06-11 14:10:31
+openhermes-2.5:7:ggufv2:Q5_K_M,regex_medication_en,"some medications to avoid taking with nsaids include:
+1 warfarin (blood thinner)
+2 methotrexate (immune system suppressant)
+3 lithium (mood stabilizer)
+4 diuretics (water pills)",a|n|t|i|c|o|a|g|u|l|a|n|t|s,Entire Answer Incorrect,f0b937ef1e445c7d0e95ed5debfbabf0,2024-06-11 14:10:14
+openhermes-2.5:7:ggufv2:Q5_K_M,regex_medication_en,"ibuprofen should not be taken with alcohol, blood thinners, corticosteroids, and other nsaids without consulting a healthcare professional",N|S|A|I|D,Entire Answer Incorrect,3b1fa1ae3bbb6b94ad87667d857aa337,2024-06-11 14:10:15
+openhermes-2.5:7:ggufv2:Q5_K_M,regex_mental_disorders_de,"restriktive anorexie ist eine essstörung, bei der die betroffene person übermäßig auf das konsumverbot von fett und kohlenhydraten besteht sie versucht, ihr gewicht durch extreme kostengewalt zu reduzieren und sich anschließend durch erbrechen oder unzureichendes essen weiter zu verringernrestriktive anorexie ist eine essstörung, bei der die betroffene person übermäßig auf das konsumverbot von fett und kohlenhydraten besteht sie versucht, ihr gewicht durch extreme kostengewalt zu reduzieren und sich anschließend durch erbrechen oder unzureichendes essen weiter zu verringern",mehr|sport|bewegung|gewichtsverlust,Entire Answer Incorrect,b3822c7a436c199bd3036fc7ddfc405d,2024-06-11 14:08:51
+openhermes-2.5:7:ggufv2:Q5_K_M,regex_mental_disorders_de,kognitiver verhaltenstherapie (cbt) und elektrische gehirnstimulation (tns/tdcs),Medikamente|Medikamentöse Therapie,Entire Answer Incorrect,6a807d9cc851d3abdab652586bf6fa6e,2024-06-11 14:08:58
+openhermes-2.5:7:ggufv2:Q5_K_M,regex_mental_disorders_de,die dissoziative identitätsstörung ist unter den f51-störungen im icd-11 aufgeführt,Konversionsstörungen|Konversion,Entire Answer Incorrect,158a27937f6536ae1b178b53cced5f31,2024-06-11 14:09:00
+openhermes-2.5:7:ggufv2:Q5_K_M,regex_mental_disorders_en,cognitive-behavioral therapy (cbt) and selective serotonin reuptake inhibitors (ssris)cognitive-behavioral therapy (cbt) and selective serotonin reuptake inhibitors (ssris),medication|drug|drug therapy,Entire Answer Incorrect,4d1cf4f2bf75196cec619b79b20e5cf0,2024-06-11 14:09:17
+openhermes-2.5:7:ggufv2:Q5_K_M,regex_mental_disorders_en,cognitive behavioral therapy (cbt) and interpersonal therapy (ipt),medication|drug|drug therapy,Entire Answer Incorrect,a65334cead6a1eb33888801b13083993,2024-06-11 14:09:18
+openhermes-2.5:7:ggufv2:Q5_K_M,regex_mental_disorders_en,dissociative identity disorder falls under the category of dissociative disorders in icd-11,conversion disorders|conversion,Entire Answer Incorrect,f97ec4136fa18fdead9fb15833775161,2024-06-11 14:09:20
+openhermes-2.5:7:ggufv2:Q5_K_M,short_words_emergency_de,"ein gasdichteboden (guedeltubus) erfordert spezialisierte kenntnisse und ausrüstung zur handhabung, montage und inbetriebnahme",Tiefe Bewusstlosigkeit,Other,630df142b11916534a4a5d8b60a73ff7,2024-06-11 14:10:40
+openhermes-2.5:7:ggufv2:Q5_K_M,short_words_emergency_de,"r - reach (erreichung)
+i - information (information)
+c - coordination (koordination)
+e - evaluation (bewertung)
+m - monitoring (überwachung)","Rest, Ice, Compression, Elevation",Other,29765310cc3e0b17b98f8100aefe2b8b,2024-06-11 14:10:42
+openhermes-2.5:7:ggufv2:Q5_K_M,short_words_emergency_en,monitoring and observation,Deep unconsciousness,Other,07702b80596917d9bd0018f879481e9b,2024-06-11 14:08:34
+openhermes-2.5:7:ggufv2:Q5_K_M,short_words_emergency_en,"r - recognize
+i - issue
+c - cause
+e - effect","Rest, Ice, Compression, Elevation",Other,ea5e51f6bf643f798df26c295b133b94,2024-06-11 14:08:34
+openhermes-2.5:7:ggufv2:Q5_K_M,single_choice_cardiology_de,d,a,Other,052541d562bfef50e6c4b1fedc0a9980,2024-06-11 14:09:24
+openhermes-2.5:7:ggufv2:Q5_K_M,single_choice_cardiology_de,d,c,Other,df581bb7c7f4ededa016a96400221f14,2024-06-11 14:09:25
+openhermes-2.5:7:ggufv2:Q5_K_M,single_choice_cardiology_de,b,a,Other,f80be494684f1af924955b9caf58f063,2024-06-11 14:09:25
+openhermes-2.5:7:ggufv2:Q5_K_M,single_choice_cardiology_en,d,a,Other,257a1c0a98744542acfd15f6f90cd30d,2024-06-11 14:09:30
+openhermes-2.5:7:ggufv2:Q5_K_M,single_choice_cardiology_en,c,a,Other,177d0553e29a68d0e941a40fa646aceb,2024-06-11 14:09:30
+openhermes-2.5:7:ggufv2:Q5_K_M,single_choice_emergency_de,d,e,Other,e2e857ee1b0ff475eea2c64d7594b29b,2024-06-11 14:10:36
+openhermes-2.5:7:ggufv2:Q5_K_M,single_choice_emergency_de,b,d,Other,5bce5732ab1748d2258e0bfd7100a756,2024-06-11 14:10:36
+openhermes-2.5:7:ggufv2:Q5_K_M,single_choice_emergency_en,b,d,Other,f88534de4a12281d869a0c1846331abd,2024-06-11 14:08:33
+openhermes-2.5:7:ggufv2:Q5_K_M,single_choice_emergency_en,(e) > 300 mg/dl,e,Partial Match,f5583b8d1450e586ba8c640df60b0b9e,2024-06-11 14:10:44
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_biochemistry_de,"ja, die neigung zu thrombosen kann in vielen fällen genetisch bedingt sein, und missensemutationen im gen für faktor v können eine ursache einer familiären thrombophilie sein durch solche mutationen wird der aktivierte faktor v (va) weniger effizient durch ein aktiviertes protein c inaktiviert und ist daher besonders stabil",ja,Partial Match,f0c6efe14638906dd6fad3f4c91b0d27,2024-06-11 14:12:06
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_biochemistry_de,"ja, die neigung zu thrombosen kann in vielen fällen genetisch bedingt sein, und missensemutationen im gen für faktor v können eine ursache einer familiären thrombophilie sein durch solche mutationen wird der aktivierte faktor v (va) weniger effizient durch ein aktiviertes thrombomobilin inaktiviert und ist daher besonders stabil",nein,Other,20f87725f06d426c512e2655de6d2c37,2024-06-11 14:12:10
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_biochemistry_en,yes,no,Other,e0294c6cf320f9d615ef3821fd29019f,2024-06-11 14:13:03
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_cardiology_de,ja,nein,Other,677aa7dac567b5a5c39e0ce724bb91ea,2024-06-11 14:11:48
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_cardiology_de,frau,Mann,Other,0c70f6b2387bc03d939dfdaf8461763b,2024-06-11 14:11:49
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_cardiology_de,"nein, medikamentöse therapien haben keinen einfluss auf den natürlichen verlauf von aortenklappenstenose",nein,Partial Match,c706124240a713a054296da767c1fa84,2024-06-11 14:11:50
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_cardiology_en,yes,no,Other,928b3b9802b743d760d0b495abb4da7b,2024-06-11 14:11:54
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_cardiology_en,men,Men,Case Sensitivity,e81cd67e1b4eb0daded9a6649f468eea,2024-06-11 14:11:54
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_cardiology_en,yes,no,Other,c6d778819b369ef16c013ed05e3542dd,2024-06-11 14:11:55
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_emergency_de,"ja, aspirin wird bei einem herzinfarkt oft eingesetzt, um blutgerinnung zu verlangsamen und eine bessere durchblutung des herzens zu ermöglichen",ja,Partial Match,a395ceb25fe39d8813d3f4eb29646382,2024-06-11 14:13:13
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_emergency_de,ja,nein,Other,0f7f38638d68d1d49efae0d6b17beb46,2024-06-11 14:13:13
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_emergency_de,"nein, es ist wichtig, eine sichere umgebung zu schaffen und den betroffenen ruhig und still beizustehen festziehen sollte vermieden werden",nein,Partial Match,276c1f7d959fce95896cefe93e0e5575,2024-06-11 14:13:15
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_emergency_en,no,yes,Other,3a401e18366b9d10bcf50e36fbafcfa2,2024-06-11 14:13:23
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_emergency_en,yes,no,Other,176c27512140c06b24722dcdf88c5a53,2024-06-11 14:13:23
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_emergency_en,no,yes,Other,4b6435319ea2e433f6e72eb780834c5d,2024-06-11 14:13:23
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_emergency_en,no,yes,Other,abf6a748104165c4b327841e355f9db5,2024-06-11 14:13:23
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_medication_de,"nein, es ist nicht empfohlen, ibuprofen und antihypertensiva gleichzeitig zu nehmen, da dies das risiko für nebenwirkungen erhöhen kann sie sollten sich immer mit einem arzt über die verträglichkeit von medikamenten austauschen",nein,Partial Match,b0a9039a528c23db4efc60ead627b7b0,2024-06-11 14:12:57
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_medication_de,"nein, allgemein besteht keine direkte wechselwirkung zwischen antibiotika und oralen kontrazeptiva es gibt jedoch einige ausnahmen, bei denen bestimmte arten von antibiotika die wirksamkeit von oralen kontrazeptiva beeinflussen können in solchen fällen sollte eine ärztliche beratung eingeholt werden",ja,Other,d7f97cd6ea418daa6e2aa04e566268dc,2024-06-11 14:13:00
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_medication_de,"nein, no-donatoren und pde5-hemmern sollten nicht gleichzeitig verabreicht werden dies kann zu einer gefährlichen interaktion führen, die blutdruckabfall und andere unerwünschte nebenwirkungen verursachen kann",Nein,Format Error,efc7f248eb2c0a55b98cec9d1773a03d,2024-06-11 14:13:03
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_medication_en,yes,no,Other,77305fef6ce239ae400bacb44cead08a,2024-06-11 14:12:45
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_medication_en,yes,no,Other,a65e3f6feebae5df673e1da1ee04b537,2024-06-11 14:12:46
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_medication_en,yes,No,Other,1cb9c7fdd2107c679a879eadd4863be3,2024-06-11 14:12:46
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_mental_disorders_de,"ja, asperger-syndrom ist eine form der autismus-spektrum-störungen",ja,Partial Match,01677a8f6396d44c328804a2ccfcd02a,2024-06-11 14:11:04
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_mental_disorders_de,ja,nein,Other,3ab07d923c486bc360a30f0041b186a7,2024-06-11 14:11:05
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_mental_disorders_de,ja,nein,Other,c4558a9edb9e5d1959d7a170e53aab26,2024-06-11 14:11:05
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_mental_disorders_de,ja,nein,Other,d91d00800609f44ebf30be07754015c5,2024-06-11 14:11:06
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_mental_disorders_de,ja,nein,Other,ebd1a622be5a9d5d2fed67ce5cbb6b25,2024-06-11 14:11:06
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_mental_disorders_de,ja,nein,Other,dcbc1aee04c905ba095b9dae86ca77ef,2024-06-11 14:11:06
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_mental_disorders_de,ja,nein,Other,f9e0f9b75d1a74ce2ebb8b88e87dc378,2024-06-11 14:11:07
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_mental_disorders_en,yes,no,Other,c3986ce46829b48f08c96a019b9f1818,2024-06-11 14:11:29
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_mental_disorders_en,yes,no,Other,cef2b51309c72cb4e87412ba89983741,2024-06-11 14:11:29
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_mental_disorders_en,yes,no,Other,47007afb69a62f3ed854dbc53d40e756,2024-06-11 14:11:30
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_mental_disorders_en,yes,no,Other,e167974c3c7ec1b3e8a505ea57dc2b91,2024-06-11 14:11:30
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_mental_disorders_en,yes,no,Other,6b8c43fff8e8712d3a9ebdf13b19c3a5,2024-06-11 14:11:31
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_mental_disorders_en,yes,no,Other,2b21be26d9506f645700f1c4c467a033,2024-06-11 14:11:31
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_physiology_de,"ja, die scheinbare viskosität des blutes ist typischerweise niedriger bei einem gefäßdurchmesser von etwa 8 μm im vergleich zu einem durchmesser von 4 μm dies liegt daran, dass sich die blutzellen bei kleineren gefäßen stärker an die wände anheften und dadurch die viskosität erhöhen",ja,Partial Match,bfda46eab239900d5df10cc3c5957342,2024-06-11 14:12:15
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_physiology_de,"ja, die scheinbare viskosität des blutes ist bei normalem hämatokrit in großen gefäßen immer niedriger als in kleinen gefäßen dies liegt daran, dass sich die roten blutkörperchen aufgrund der größe und form der gefäße unterschiedlich stark an die wände der gefäße drücken und dadurch den strömungswiderstand beeinflussen",nein,Other,14059bd76c70530e13e532e1da47e268,2024-06-11 14:12:18
+openhermes-2.5:7:ggufv2:Q6_K,dichotomous_physiology_en,yes,no,Other,4bfc02ff6e4dbd33f8868853da76c670,2024-06-11 14:11:05
+openhermes-2.5:7:ggufv2:Q6_K,medication_regex,"als beispiele für medikamente, die nicht mit nsar wie ibuprofen oder naproxen kombiniert werden sollten, um das risiko von magengeschwüren zu minimieren, können folgende arzneistoffe genannt werden: acetylsalicylsäure (aspirin), paracetamol und metamizolals beispiele für medikamente, die nicht mit nsar wie ibuprofen oder naproxen kombiniert werden sollten, um das risiko von magengeschwüren zu minimieren, können folgende arzneistoffe genannt werden: acetylsalicylsäure (aspirin), paracetamol und metamizol",SSRI|Antikoagulanzien,Entire Answer Incorrect,1ea21994f83c8550259948b11739202a,2024-06-11 14:11:03
+openhermes-2.5:7:ggufv2:Q6_K,multiple_answer_math_en,d,b,Other,ef2663aa098bb994ef143dec64270478,2024-06-11 14:10:58
+openhermes-2.5:7:ggufv2:Q6_K,multiple_answer_math_en,a,d,Other,deea34abd98497619ccbfc85da67c71c,2024-06-11 14:10:58
+openhermes-2.5:7:ggufv2:Q6_K,multiple_answer_math_en,d,b,Other,c06398a8f6ee6b8c341e9ecb6d456ef7,2024-06-11 14:12:02
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_biochemistry_de,a,e,Other,bef740fb05b83d130cef123ce7ec3cf3,2024-06-11 14:11:53
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_math_de,d,b,Other,06e85f85f99009e6c18bf066ac9d752c,2024-06-11 14:11:30
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_math_de,a,d,Other,8eed232ace339fb268509642b2b56a35,2024-06-11 14:11:33
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_math_en,c,b,Other,9db6f00088ff9a6435be4ea546ff0eea,2024-06-11 14:11:39
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_medication_de,a,c,Other,54c1e57dd808faafbb7a92eba966fb7d,2024-06-11 14:13:04
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_mental_disorders_de,"b, d, e, f","d,e,f",Other,25da4c7876247708b50a6310ba25f567,2024-06-11 14:11:07
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_mental_disorders_de,c,d,Other,63d18c297a432afdc99d677c82e301e5,2024-06-11 14:11:09
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_mental_disorders_de,"a,b,d,e","a,b,c,d",Other,d1e7117f59e1edf93f9c51d1c952d356,2024-06-11 14:11:10
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_mental_disorders_de,"a, b, d, e","a,d,e,f",Other,97d020c95635c8067b66fd78721a8347,2024-06-11 14:11:10
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_mental_disorders_de,"a,b,c,e","b,c,e",Partial Match,660f329fe0920127ec02b417af9c06f2,2024-06-11 14:11:11
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_mental_disorders_en,"b,d,e,f","d,e,f",Partial Match,3a3150cea644a463b1042333107dec48,2024-06-11 14:11:31
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_mental_disorders_en,"a,d,e","a,d,e,f",Partial Match,98bcd2f43e5f2f0295616688fb7b357c,2024-06-11 14:11:34
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_mental_disorders_en,"c,e","b,c,e",Partial Match,928854e2e5e6e884fada6750e99d9329,2024-06-11 14:11:35
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_oncology_de,b,a,Other,6fc6ae195efd7956e60b15caa97e3bd7,2024-06-11 14:12:41
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_oncology_en,o,a,Other,9b15ea86f85c85a2867da8cacdc1a1bf,2024-06-11 14:12:37
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_oncology_en,d,a,Other,5f3b3fdee41b147d32644d131a9ed910,2024-06-11 14:12:37
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_physiology_de,d,e,Other,0029a268763ac0ca6e88e368bcb8756c,2024-06-11 14:12:11
+openhermes-2.5:7:ggufv2:Q6_K,multiple_choice_physiology_en,d,e,Other,7a5de46c4470744dce21aa79abba64ca,2024-06-11 14:13:20
+openhermes-2.5:7:ggufv2:Q6_K,one_word_cardiology_de,ct,Knochenszintigraphie,Other,d95c7ea81e8fb2e3f542b3ce9ea98635,2024-06-11 14:11:52
+openhermes-2.5:7:ggufv2:Q6_K,one_word_cardiology_de,2 jahre,2,Partial Match,61e933bd48605073a98454bb4bcff017,2024-06-11 14:11:52
+openhermes-2.5:7:ggufv2:Q6_K,one_word_cardiology_de,actuarial,HCM-SCD-Risikorechner,Other,1250fa64334b7724cd8f868a39cb0138,2024-06-11 14:11:53
+openhermes-2.5:7:ggufv2:Q6_K,one_word_cardiology_de,8,1,Other,5857204c630ae59717a602a075ec2cbe,2024-06-11 14:11:53
+openhermes-2.5:7:ggufv2:Q6_K,one_word_cardiology_de,nebivolol,Digoxin,Other,7de8b9d9fe42f674e97e2e87b29b1a67,2024-06-11 14:11:54
+openhermes-2.5:7:ggufv2:Q6_K,one_word_cardiology_en,ct scan,Bone scintigraphy,Other,4b81a360e1162bdae9dbdd552aac2cd2,2024-06-11 14:11:57
+openhermes-2.5:7:ggufv2:Q6_K,one_word_cardiology_en,"the recommended maximum time between follow-up examinations for clinically stable patients with cardiomyopathy varies depending on the specific type of cardiomyopathy and individual patient factors however, a general guideline is to have follow-ups every 12 months",2,Partial Match,903f040d8c1421caafe62a0f47f7a461,2024-06-11 14:11:59
+openhermes-2.5:7:ggufv2:Q6_K,one_word_cardiology_en,framingham risk score,HCM Risk-SCD Calculator,Other,92c7207a908490e35605e45bfa250ff8,2024-06-11 14:11:59
+openhermes-2.5:7:ggufv2:Q6_K,one_word_cardiology_en,"it is difficult to provide an exact number of weeks as it depends on the individual's recovery and the severity of their condition however, a general guideline is that a patient should wait for at least 4-6 weeks after an intervention before resuming driving duties it is essential to consult with a healthcare professional for personalized advice",1,Other,f4254d5c9b7045880bb35506b3b08656,2024-06-11 14:12:02
+openhermes-2.5:7:ggufv2:Q6_K,one_word_cardiology_en,calcium channel blocker,Digoxin,Other,eacabec542abe52b3c0966e7759fec29,2024-06-11 14:12:02
+openhermes-2.5:7:ggufv2:Q6_K,one_word_emergency_de,airway,Atemwege,Other,0844abd3a40615e702807d74fcddad52,2024-06-11 14:13:17
+openhermes-2.5:7:ggufv2:Q6_K,one_word_emergency_de,pulmonal,Sauerstoffreiches,Other,1949045cb0f5a7ce5c532aefa5cc487f,2024-06-11 14:13:18
+openhermes-2.5:7:ggufv2:Q6_K,one_word_emergency_de,"o
+
+explanation: o-negative (o-) is the universal blood type, which can be safely given to patients with any blood type in emergency situations",0,Format Error,983bb312e805f2191b0075967ad4d4f0,2024-06-11 14:13:19
+openhermes-2.5:7:ggufv2:Q6_K,one_word_emergency_en,airway,Airways,Partial Match / case Sensitivity,fe12a7b5cd592eda0775a3ce924a1038,2024-06-11 14:10:59
+openhermes-2.5:7:ggufv2:Q6_K,one_word_emergency_en,oxygenated,Oxygen-rich,Other,11e8bf547f5a1daf292083d9eff0e102,2024-06-11 14:10:59
+openhermes-2.5:7:ggufv2:Q6_K,one_word_emergency_en,o+,0,Format Error,15f63dd145b59ce61ce9cff672ac1cc9,2024-06-11 14:10:59
+openhermes-2.5:7:ggufv2:Q6_K,one_word_medication_de,grapefruit,Grapefruit,Case Sensitivity,d16b8dcb91ebf733eba01030951b8edf,2024-06-11 14:13:04
+openhermes-2.5:7:ggufv2:Q6_K,one_word_medication_de,pharmakodynamische und pharmakokinetische wechselwirkungen,Pharmakodynamisch und pharmakokinetisch,Other,8bfcda44283002250cc3b9cd5dd26e7f,2024-06-11 14:13:08
+openhermes-2.5:7:ggufv2:Q6_K,one_word_medication_en,grapefruit,Grapefruit,Case Sensitivity,097a059a9bc315bbcad4f96277caa4d6,2024-06-11 14:12:47
+openhermes-2.5:7:ggufv2:Q6_K,one_word_medication_en,pharmacokinetic and pharmacodynamic interactions,Pharmacodynamic and pharmacokinetic,Other,d908ab2aa056ea9f39575d496a976094,2024-06-11 14:12:51
+openhermes-2.5:7:ggufv2:Q6_K,one_word_oncology_de,"ctv, ptv, gtv","GTV,CTV,PTV",Other,43e1064c99a84b7a5c93b4d045046743,2024-06-11 14:12:42
+openhermes-2.5:7:ggufv2:Q6_K,one_word_oncology_de,die häufigste krebsart bei frauen ist brustkrebs,Brustkrebs,Partial Match / case Sensitivity,9e54c8876efb9a35f173b49bb8e4c4d8,2024-06-11 14:12:45
+openhermes-2.5:7:ggufv2:Q6_K,one_word_oncology_en,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,63799a9a6e77cbef3197010808f36b58,2024-06-11 14:12:37
+openhermes-2.5:7:ggufv2:Q6_K,one_word_oncology_en,the most common type of cancer in women is breast cancer,Breast cancer,Partial Match / case Sensitivity,73e7ae02294d14d6abd8719fde70b550,2024-06-11 14:12:39
+openhermes-2.5:7:ggufv2:Q6_K,one_word_physiology_de,tp-interval,p-welle,Other,e5dde882846e71b556f2137fe4a4c29d,2024-06-11 14:12:18
+openhermes-2.5:7:ggufv2:Q6_K,one_word_physiology_en,tp-interval,p-wave,Other,4719e28fc4309dd95cfc38754eb705fb,2024-06-11 14:11:08
+openhermes-2.5:7:ggufv2:Q6_K,regex_eeg_data_de,"1 differenz (difference)
+2 ratio (ratio)
+3 integral (integral)1 differenz (difference)
+2 ratio (ratio)
+3 integral (integral)1 differenz (difference)
+2 ratio (ratio)
+3 integral (integral)",Coherence|Logarithmierte Differenz,Entire Answer Incorrect,13abc3c6d60d0415371e6bfd05086feb,2024-06-11 14:12:26
+openhermes-2.5:7:ggufv2:Q6_K,regex_medication_de,"als beispiele für medikamente, die nicht mit nsar wie ibuprofen oder naproxen kombiniert werden sollten, um das risiko von magengeschwüren zu minimieren, können folgende arzneistoffe genannt werden: acetylsalicylsäure (aspirin), paracetamol und metamizol",A|n|t|i|k|o|a|g|u|l|a|n|z|i|e|n,Entire Answer Incorrect,9bc6726f9c0a6029ab039de9c838fbe5,2024-06-11 14:13:08
+openhermes-2.5:7:ggufv2:Q6_K,regex_medication_en,"ibuprofen should not be taken with:
+1 alcohol, as it increases the risk of stomach bleeding
+2 anticoagulant medications, as they can also increase the risk of bleeding
+3 corticosteroids, as they may increase the risk of gastrointestinal side effects
+4 methotrexate, a chemotherapy drug, as it can lead to kidney toxicity",N|S|A|I|D,Entire Answer Incorrect,3b1fa1ae3bbb6b94ad87667d857aa337,2024-06-11 14:12:55
+openhermes-2.5:7:ggufv2:Q6_K,regex_mental_disorders_de,"restriktive anorexie ist durch extreme körpergewichtsreduzierung, fokus auf nahrungsmenge und zusammensetzung sowie verhaltensweisen zur gewichtskontrolle wie übelkeitseindruck oder übertreibung gekennzeichnet",mehr|sport|bewegung|gewichtsverlust,Entire Answer Incorrect,b3822c7a436c199bd3036fc7ddfc405d,2024-06-11 14:11:16
+openhermes-2.5:7:ggufv2:Q6_K,regex_mental_disorders_de,kognitive verhaltenstherapie (cbt) und elektrische gehirnstimulation (tecs),Medikamente|Medikamentöse Therapie,Entire Answer Incorrect,6a807d9cc851d3abdab652586bf6fa6e,2024-06-11 14:11:22
+openhermes-2.5:7:ggufv2:Q6_K,regex_mental_disorders_de,die dissoziative identitätsstörung ist unter den f51 (f50 in icd-10) im icd-11 zu finden,Konversionsstörungen|Konversion,Entire Answer Incorrect,158a27937f6536ae1b178b53cced5f31,2024-06-11 14:11:25
+openhermes-2.5:7:ggufv2:Q6_K,regex_mental_disorders_en,"restrictive anorexia is characterized by excessive calorie restriction, leading to significantly low body weight, intense fear of weight gain, and distorted body image",low|lose|reduce|weight|loss,Entire Answer Incorrect,679645a4d9ea6886af1a3be0dcc213bd,2024-06-11 14:11:38
+openhermes-2.5:7:ggufv2:Q6_K,regex_mental_disorders_en,"the therapy phase that follows the acute mania phase is called ""stabilization""",therapy|phase,Entire Answer Incorrect,e07c3f2a92ea91b8579aa68f4c11aa1d,2024-06-11 14:11:40
+openhermes-2.5:7:ggufv2:Q6_K,regex_mental_disorders_en,cognitive-behavioral therapy (cbt) and selective serotonin reuptake inhibitors (ssris)cognitive-behavioral therapy (cbt) and selective serotonin reuptake inhibitors (ssris),medication|drug|drug therapy,Entire Answer Incorrect,4d1cf4f2bf75196cec619b79b20e5cf0,2024-06-11 14:11:42
+openhermes-2.5:7:ggufv2:Q6_K,regex_mental_disorders_en,cognitive behavioral therapy (cbt) and interpersonal therapy (ipt),medication|drug|drug therapy,Entire Answer Incorrect,a65334cead6a1eb33888801b13083993,2024-06-11 14:11:43
+openhermes-2.5:7:ggufv2:Q6_K,regex_mental_disorders_en,dissociative identity disorder falls under f44 in icd-11,conversion disorders|conversion,Entire Answer Incorrect,f97ec4136fa18fdead9fb15833775161,2024-06-11 14:11:46
+openhermes-2.5:7:ggufv2:Q6_K,short_words_emergency_de,"ein gasdichteboden (guedeltube) erfordert sicherheitsvorkehrungen, kalibrierung und geeignete anwendungen in labor-, industrie- oder medizinischen prozessen",Tiefe Bewusstlosigkeit,Other,630df142b11916534a4a5d8b60a73ff7,2024-06-11 14:13:21
+openhermes-2.5:7:ggufv2:Q6_K,short_words_emergency_de,"r - reach
+i - identify
+c - collect
+e - analyze
+m - monitor","Rest, Ice, Compression, Elevation",Other,29765310cc3e0b17b98f8100aefe2b8b,2024-06-11 14:13:22
+openhermes-2.5:7:ggufv2:Q6_K,short_words_emergency_en,monitoring and observation,Deep unconsciousness,Other,07702b80596917d9bd0018f879481e9b,2024-06-11 14:10:59
+openhermes-2.5:7:ggufv2:Q6_K,short_words_emergency_en,"r - relevance
+i - importance
+c - credibility
+e - evidence","Rest, Ice, Compression, Elevation",Other,ea5e51f6bf643f798df26c295b133b94,2024-06-11 14:11:00
+openhermes-2.5:7:ggufv2:Q6_K,single_choice_cardiology_de,d,a,Other,052541d562bfef50e6c4b1fedc0a9980,2024-06-11 14:11:51
+openhermes-2.5:7:ggufv2:Q6_K,single_choice_cardiology_de,d,c,Other,2f313fe88d424db69286c676d557afc8,2024-06-11 14:11:51
+openhermes-2.5:7:ggufv2:Q6_K,single_choice_cardiology_de,d,c,Other,df581bb7c7f4ededa016a96400221f14,2024-06-11 14:11:51
+openhermes-2.5:7:ggufv2:Q6_K,single_choice_cardiology_de,b,a,Other,f80be494684f1af924955b9caf58f063,2024-06-11 14:11:52
+openhermes-2.5:7:ggufv2:Q6_K,single_choice_cardiology_en,d,a,Other,257a1c0a98744542acfd15f6f90cd30d,2024-06-11 14:11:56
+openhermes-2.5:7:ggufv2:Q6_K,single_choice_cardiology_en,c,a,Other,177d0553e29a68d0e941a40fa646aceb,2024-06-11 14:11:56
+openhermes-2.5:7:ggufv2:Q6_K,single_choice_emergency_de,d,e,Other,e2e857ee1b0ff475eea2c64d7594b29b,2024-06-11 14:13:17
+openhermes-2.5:7:ggufv2:Q6_K,single_choice_emergency_de,b,d,Other,5bce5732ab1748d2258e0bfd7100a756,2024-06-11 14:13:17
+openhermes-2.5:7:ggufv2:Q6_K,single_choice_emergency_en,b,d,Other,f88534de4a12281d869a0c1846331abd,2024-06-11 14:10:58
+openhermes-2.5:7:ggufv2:Q6_K,single_choice_emergency_en,(e) > 300 mg/dl,e,Partial Match,f5583b8d1450e586ba8c640df60b0b9e,2024-06-11 14:13:24
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_biochemistry_de,"ja, die neigung zu thrombosen kann in vielen fällen genetisch bedingt sein, und missensemutationen im gen für faktor v können eine ursache einer familiären thrombophilie sein durch solche mutationen wird der aktivierte faktor v (va) weniger effizient durch ein aktiviertes protein c inaktiviert und ist daher besonders stabil",ja,Partial Match,f0c6efe14638906dd6fad3f4c91b0d27,2024-06-11 14:14:37
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_biochemistry_de,"ja, die neigung zu thrombosen kann in vielen fällen genetisch bedingt sein, und missensemutationen im gen für faktor v können eine ursache einer familiären thrombophilie sein durch solche mutationen wird der aktivierte faktor v (va) weniger effizient durch ein aktiviertes thrombomobilin inaktiviert und ist daher besonders stabil",nein,Other,20f87725f06d426c512e2655de6d2c37,2024-06-11 14:14:41
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_biochemistry_en,yes,no,Other,e0294c6cf320f9d615ef3821fd29019f,2024-06-11 14:15:24
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_cardiology_de,ja,nein,Other,677aa7dac567b5a5c39e0ce724bb91ea,2024-06-11 14:14:21
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_cardiology_de,frau,Mann,Other,0c70f6b2387bc03d939dfdaf8461763b,2024-06-11 14:14:22
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_cardiology_de,"nein, medikamentöse therapien haben keinen einfluss auf den natürlichen verlauf von aortenklappenstenose",nein,Partial Match,c706124240a713a054296da767c1fa84,2024-06-11 14:14:23
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_cardiology_en,yes,no,Other,928b3b9802b743d760d0b495abb4da7b,2024-06-11 14:14:26
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_cardiology_en,men,Men,Case Sensitivity,e81cd67e1b4eb0daded9a6649f468eea,2024-06-11 14:14:27
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_cardiology_en,yes,no,Other,c6d778819b369ef16c013ed05e3542dd,2024-06-11 14:14:27
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_emergency_de,"ja, aspirin wird bei einem herzinfarkt oft eingesetzt, um blutgerinnung zu verhindern und das risiko von schäden an den herzen zu reduzieren",ja,Partial Match,a395ceb25fe39d8813d3f4eb29646382,2024-06-11 14:15:35
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_emergency_de,ja,nein,Other,0f7f38638d68d1d49efae0d6b17beb46,2024-06-11 14:15:35
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_emergency_de,"nein, es ist wichtig, eine sichere umgebung zu schaffen und den betroffenen ruhig und still zu behandeln festziehen sollte vermieden werden",nein,Partial Match,276c1f7d959fce95896cefe93e0e5575,2024-06-11 14:15:37
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_emergency_en,no,yes,Other,3a401e18366b9d10bcf50e36fbafcfa2,2024-06-11 14:15:44
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_emergency_en,yes,no,Other,176c27512140c06b24722dcdf88c5a53,2024-06-11 14:15:44
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_emergency_en,no,yes,Other,4b6435319ea2e433f6e72eb780834c5d,2024-06-11 14:15:44
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_emergency_en,no,yes,Other,abf6a748104165c4b327841e355f9db5,2024-06-11 14:15:45
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_medication_de,"nein, es ist nicht empfehlenswert, ibuprofen und antihypertensiva gleichzeitig einzunehmen, da dies das risiko für nebenwirkungen erhöhen kann es ist besser, sich vor der einnahme mit einem arzt oder apotheker zu beraten",nein,Partial Match,b0a9039a528c23db4efc60ead627b7b0,2024-06-11 14:15:19
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_medication_de,"nein, allgemein gibt es keine direkte wechselwirkung zwischen antibiotika und oralen kontrazeptiva es ist jedoch wichtig, dass sie ihren arzt oder apotheker konsultieren, um spezifische medikamente und interaktionen in ihrem fall zu besprechen",ja,Other,d7f97cd6ea418daa6e2aa04e566268dc,2024-06-11 14:15:21
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_medication_de,"nein, no-donatoren und pde5-hemmern sollten nicht gleichzeitig verabreicht werden dies kann zu blutdruckabfall und anderen unerwünschten wirkungen führen es ist empfehlenswert, sich vor der einnahme von medikamenten mit einem arzt oder apotheker zu beraten",Nein,Format Error,efc7f248eb2c0a55b98cec9d1773a03d,2024-06-11 14:15:24
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_medication_en,yes,no,Other,77305fef6ce239ae400bacb44cead08a,2024-06-11 14:15:08
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_medication_en,yes,no,Other,a65e3f6feebae5df673e1da1ee04b537,2024-06-11 14:15:08
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_medication_en,yes,No,Other,1cb9c7fdd2107c679a879eadd4863be3,2024-06-11 14:15:08
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_mental_disorders_de,"ja, asperger-syndrom ist eine form der autismus-spektrum-störungen",ja,Partial Match,01677a8f6396d44c328804a2ccfcd02a,2024-06-11 14:13:42
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_mental_disorders_de,ja,nein,Other,3ab07d923c486bc360a30f0041b186a7,2024-06-11 14:13:42
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_mental_disorders_de,ja,nein,Other,c4558a9edb9e5d1959d7a170e53aab26,2024-06-11 14:13:42
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_mental_disorders_de,ja,nein,Other,d91d00800609f44ebf30be07754015c5,2024-06-11 14:13:43
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_mental_disorders_de,ja,nein,Other,ebd1a622be5a9d5d2fed67ce5cbb6b25,2024-06-11 14:13:43
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_mental_disorders_de,ja,nein,Other,dcbc1aee04c905ba095b9dae86ca77ef,2024-06-11 14:13:44
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_mental_disorders_de,ja,nein,Other,f9e0f9b75d1a74ce2ebb8b88e87dc378,2024-06-11 14:13:44
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_mental_disorders_en,yes,no,Other,c3986ce46829b48f08c96a019b9f1818,2024-06-11 14:14:05
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_mental_disorders_en,yes,no,Other,cef2b51309c72cb4e87412ba89983741,2024-06-11 14:14:05
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_mental_disorders_en,yes,no,Other,47007afb69a62f3ed854dbc53d40e756,2024-06-11 14:14:05
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_mental_disorders_en,yes,no,Other,e167974c3c7ec1b3e8a505ea57dc2b91,2024-06-11 14:14:06
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_mental_disorders_en,yes,no,Other,6b8c43fff8e8712d3a9ebdf13b19c3a5,2024-06-11 14:14:06
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_mental_disorders_en,yes,no,Other,2b21be26d9506f645700f1c4c467a033,2024-06-11 14:14:06
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_physiology_de,"ja, die scheinbare viskosität des blutes ist typischerweise niedriger bei einem gefäßdurchmesser von etwa 8 μm im vergleich zu einem gefäßdurchmesser von 4 μm dies liegt daran, dass sich die viskosität des blutes an der gefäße-größe anpasst, um eine optimale strömung und durchblutung zu gewährleisten",ja,Partial Match,bfda46eab239900d5df10cc3c5957342,2024-06-11 14:14:45
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_physiology_de,"ja, die scheinbare viskosität des blutes ist bei normalem hämatokrit und unter gleichbleibenden bedingungen in großen gefäßen immer niedriger als in kleinen gefäßen dies liegt daran, dass das blut in größeren gefäßen langsamer fließt und somit weniger reibung verursacht",nein,Other,14059bd76c70530e13e532e1da47e268,2024-06-11 14:14:48
+openhermes-2.5:7:ggufv2:Q8_0,dichotomous_physiology_en,yes,no,Other,4bfc02ff6e4dbd33f8868853da76c670,2024-06-11 14:13:42
+openhermes-2.5:7:ggufv2:Q8_0,medication_regex,"medikamente, die nicht mit nsar kombiniert werden sollten, um das risiko von magengeschwürern zu minimieren, sind: protonenpumpenhemmer (zb omeprazol) und h2-rezeptor-antagonisten (zb ranitidin)medikamente, die nicht mit nsar kombiniert werden sollten, um das risiko von magengeschwürern zu minimieren, sind: protonenpumpenhemmer (zb omeprazol) und h2-rezeptor-antagonisten (zb ranitidin)",SSRI|Antikoagulanzien,Entire Answer Incorrect,1ea21994f83c8550259948b11739202a,2024-06-11 14:13:41
+openhermes-2.5:7:ggufv2:Q8_0,multiple_answer_math_en,d,b,Other,ef2663aa098bb994ef143dec64270478,2024-06-11 14:13:36
+openhermes-2.5:7:ggufv2:Q8_0,multiple_answer_math_en,a,d,Other,deea34abd98497619ccbfc85da67c71c,2024-06-11 14:13:36
+openhermes-2.5:7:ggufv2:Q8_0,multiple_answer_math_en,d,b,Other,c06398a8f6ee6b8c341e9ecb6d456ef7,2024-06-11 14:14:34
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_biochemistry_de,a,e,Other,bef740fb05b83d130cef123ce7ec3cf3,2024-06-11 14:14:26
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_math_de,d,b,Other,06e85f85f99009e6c18bf066ac9d752c,2024-06-11 14:14:05
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_math_de,a,d,Other,8eed232ace339fb268509642b2b56a35,2024-06-11 14:14:08
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_math_en,c,b,Other,9db6f00088ff9a6435be4ea546ff0eea,2024-06-11 14:14:13
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_medication_de,a,c,Other,54c1e57dd808faafbb7a92eba966fb7d,2024-06-11 14:15:25
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_mental_disorders_de,"b, d, e, f, g","d,e,f",Other,25da4c7876247708b50a6310ba25f567,2024-06-11 14:13:44
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_mental_disorders_de,c,d,Other,63d18c297a432afdc99d677c82e301e5,2024-06-11 14:13:46
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_mental_disorders_de,"a,b,c,d,e","a,b,c,d",Partial Match,d1e7117f59e1edf93f9c51d1c952d356,2024-06-11 14:13:47
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_mental_disorders_de,"a, b, d, e","a,d,e,f",Other,97d020c95635c8067b66fd78721a8347,2024-06-11 14:13:47
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_mental_disorders_de,"a,b,c,e","b,c,e",Partial Match,660f329fe0920127ec02b417af9c06f2,2024-06-11 14:13:48
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_mental_disorders_en,"b,d,e,f","d,e,f",Partial Match,3a3150cea644a463b1042333107dec48,2024-06-11 14:14:07
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_mental_disorders_en,"a,d,e","a,d,e,f",Partial Match,98bcd2f43e5f2f0295616688fb7b357c,2024-06-11 14:14:09
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_mental_disorders_en,"c,e","b,c,e",Partial Match,928854e2e5e6e884fada6750e99d9329,2024-06-11 14:14:10
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_oncology_de,b,a,Other,6fc6ae195efd7956e60b15caa97e3bd7,2024-06-11 14:15:05
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_oncology_en,o,a,Other,9b15ea86f85c85a2867da8cacdc1a1bf,2024-06-11 14:15:01
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_oncology_en,b,a,Other,5f3b3fdee41b147d32644d131a9ed910,2024-06-11 14:15:01
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_physiology_de,d,e,Other,0029a268763ac0ca6e88e368bcb8756c,2024-06-11 14:14:41
+openhermes-2.5:7:ggufv2:Q8_0,multiple_choice_physiology_en,d,e,Other,7a5de46c4470744dce21aa79abba64ca,2024-06-11 14:15:41
+openhermes-2.5:7:ggufv2:Q8_0,one_word_cardiology_de,mrt,Knochenszintigraphie,Other,d95c7ea81e8fb2e3f542b3ce9ea98635,2024-06-11 14:14:25
+openhermes-2.5:7:ggufv2:Q8_0,one_word_cardiology_de,actuarial,HCM-SCD-Risikorechner,Other,1250fa64334b7724cd8f868a39cb0138,2024-06-11 14:14:25
+openhermes-2.5:7:ggufv2:Q8_0,one_word_cardiology_de,8,1,Other,5857204c630ae59717a602a075ec2cbe,2024-06-11 14:14:26
+openhermes-2.5:7:ggufv2:Q8_0,one_word_cardiology_de,nebivolol,Digoxin,Other,7de8b9d9fe42f674e97e2e87b29b1a67,2024-06-11 14:14:26
+openhermes-2.5:7:ggufv2:Q8_0,one_word_cardiology_en,ct scan,Bone scintigraphy,Other,4b81a360e1162bdae9dbdd552aac2cd2,2024-06-11 14:14:29
+openhermes-2.5:7:ggufv2:Q8_0,one_word_cardiology_en,"the recommended maximum time between follow-up examinations for clinically stable patients with cardiomyopathy varies depending on the specific type of cardiomyopathy and individual patient factors however, a general guideline is to have follow-ups every 12 months",2,Partial Match,903f040d8c1421caafe62a0f47f7a461,2024-06-11 14:14:31
+openhermes-2.5:7:ggufv2:Q8_0,one_word_cardiology_en,framingham risk score,HCM Risk-SCD Calculator,Other,92c7207a908490e35605e45bfa250ff8,2024-06-11 14:14:31
+openhermes-2.5:7:ggufv2:Q8_0,one_word_cardiology_en,it is difficult for me to provide an exact number of weeks without more information about the specific intervention and the patient's recovery progress i recommend consulting with a healthcare professional for personalized guidance on when it would be safe for the patient to resume driving duties,1,Format Error,f4254d5c9b7045880bb35506b3b08656,2024-06-11 14:14:33
+openhermes-2.5:7:ggufv2:Q8_0,one_word_cardiology_en,calcium channel blocker,Digoxin,Other,eacabec542abe52b3c0966e7759fec29,2024-06-11 14:14:33
+openhermes-2.5:7:ggufv2:Q8_0,one_word_emergency_de,airway,Atemwege,Other,0844abd3a40615e702807d74fcddad52,2024-06-11 14:15:39
+openhermes-2.5:7:ggufv2:Q8_0,one_word_emergency_de,pulmonal,Sauerstoffreiches,Other,1949045cb0f5a7ce5c532aefa5cc487f,2024-06-11 14:15:39
+openhermes-2.5:7:ggufv2:Q8_0,one_word_emergency_de,"o
+
+explanation: o is the universal blood donor type, which can be given to individuals with any blood group in emergency situations when their own blood group is unknown",0,Format Error,983bb312e805f2191b0075967ad4d4f0,2024-06-11 14:15:41
+openhermes-2.5:7:ggufv2:Q8_0,one_word_emergency_en,airway,Airways,Partial Match / case Sensitivity,fe12a7b5cd592eda0775a3ce924a1038,2024-06-11 14:13:37
+openhermes-2.5:7:ggufv2:Q8_0,one_word_emergency_en,oxygenated,Oxygen-rich,Other,11e8bf547f5a1daf292083d9eff0e102,2024-06-11 14:13:37
+openhermes-2.5:7:ggufv2:Q8_0,one_word_emergency_en,o+,0,Format Error,15f63dd145b59ce61ce9cff672ac1cc9,2024-06-11 14:13:37
+openhermes-2.5:7:ggufv2:Q8_0,one_word_medication_de,grapefruit,Grapefruit,Case Sensitivity,d16b8dcb91ebf733eba01030951b8edf,2024-06-11 14:15:26
+openhermes-2.5:7:ggufv2:Q8_0,one_word_medication_de,pharmakodynamische und pharmakokinetische wechselwirkungen,Pharmakodynamisch und pharmakokinetisch,Other,8bfcda44283002250cc3b9cd5dd26e7f,2024-06-11 14:15:29
+openhermes-2.5:7:ggufv2:Q8_0,one_word_medication_en,grapefruit,Grapefruit,Case Sensitivity,097a059a9bc315bbcad4f96277caa4d6,2024-06-11 14:15:10
+openhermes-2.5:7:ggufv2:Q8_0,one_word_medication_en,pharmacokinetic and pharmacodynamic interactions,Pharmacodynamic and pharmacokinetic,Other,d908ab2aa056ea9f39575d496a976094,2024-06-11 14:15:13
+openhermes-2.5:7:ggufv2:Q8_0,one_word_oncology_de,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,43e1064c99a84b7a5c93b4d045046743,2024-06-11 14:15:06
+openhermes-2.5:7:ggufv2:Q8_0,one_word_oncology_de,die häufigste krebsart bei frauen ist brustkrebs,Brustkrebs,Partial Match / case Sensitivity,9e54c8876efb9a35f173b49bb8e4c4d8,2024-06-11 14:15:08
+openhermes-2.5:7:ggufv2:Q8_0,one_word_oncology_en,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,63799a9a6e77cbef3197010808f36b58,2024-06-11 14:15:02
+openhermes-2.5:7:ggufv2:Q8_0,one_word_oncology_en,the most common type of cancer in women is breast cancer,Breast cancer,Partial Match / case Sensitivity,73e7ae02294d14d6abd8719fde70b550,2024-06-11 14:15:03
+openhermes-2.5:7:ggufv2:Q8_0,one_word_physiology_de,tp-interval,p-welle,Other,e5dde882846e71b556f2137fe4a4c29d,2024-06-11 14:14:48
+openhermes-2.5:7:ggufv2:Q8_0,one_word_physiology_en,tp-interval,p-wave,Other,4719e28fc4309dd95cfc38754eb705fb,2024-06-11 14:13:45
+openhermes-2.5:7:ggufv2:Q8_0,regex_eeg_data_de,"1 differenz (difference)
+2 ratio (ratio)
+3 integral (integral)1 differenz (difference)
+2 ratio (ratio)
+3 integral (integral)1 differenz (difference)
+2 ratio (ratio)
+3 integral (integral)",Coherence|Logarithmierte Differenz,Entire Answer Incorrect,13abc3c6d60d0415371e6bfd05086feb,2024-06-11 14:14:55
+openhermes-2.5:7:ggufv2:Q8_0,regex_medication_de,"medikamente, die nicht mit nsar kombiniert werden sollten, um das risiko von magengeschwürern zu minimieren, sind: protonenpumpenhemmer (zb omeprazol) und h2-rezeptor-antagonisten (zb ranitidin)",A|n|t|i|k|o|a|g|u|l|a|n|z|i|e|n,Entire Answer Incorrect,9bc6726f9c0a6029ab039de9c838fbe5,2024-06-11 14:15:28
+openhermes-2.5:7:ggufv2:Q8_0,regex_medication_en,"ibuprofen should not be taken with:
+1 alcohol, as it increases the risk of stomach bleeding
+2 anticoagulant medications, as they can also increase bleeding risks
+3 corticosteroids, as they may increase the risk of gastrointestinal side effects
+4 methotrexate, a chemotherapy drug, as it can lead to kidney toxicity",N|S|A|I|D,Entire Answer Incorrect,3b1fa1ae3bbb6b94ad87667d857aa337,2024-06-11 14:15:16
+openhermes-2.5:7:ggufv2:Q8_0,regex_mental_disorders_de,"restriktive anorexie ist durch folgende merkmale gekennzeichnet: 1 extreme körpergewichtsreduktion, 2 intensives gewichtskontrollverhalten, 3 verringerte essmenge und -vielfalt, 4 überbewertung der größe und des gewichts sowie der angst vor gewichtszunahmerestriktive anorexie ist durch folgende merkmale gekennzeichnet: 1 extreme körpergewichtsreduktion, 2 intensives gewichtskontrollverhalten, 3 verringerte essmenge und -vielfalt, 4 überbewertung der größe und des gewichts sowie der angst vor gewichtszunahme",mehr|sport|bewegung|gewichtsverlust,Entire Answer Incorrect,b3822c7a436c199bd3036fc7ddfc405d,2024-06-11 14:13:53
+openhermes-2.5:7:ggufv2:Q8_0,regex_mental_disorders_de,kognitiver verhaltenstherapie (cbt) und elektrische gehirnstimulation (egs),Medikamente|Medikamentöse Therapie,Entire Answer Incorrect,6a807d9cc851d3abdab652586bf6fa6e,2024-06-11 14:13:59
+openhermes-2.5:7:ggufv2:Q8_0,regex_mental_disorders_de,die dissoziative identitätsstörung ist unter den f510 im icd-11 klassifiziert,Konversionsstörungen|Konversion,Entire Answer Incorrect,158a27937f6536ae1b178b53cced5f31,2024-06-11 14:14:01
+openhermes-2.5:7:ggufv2:Q8_0,regex_mental_disorders_en,"the therapy phase that follows the acute mania phase is called ""stabilization""",therapy|phase,Entire Answer Incorrect,e07c3f2a92ea91b8579aa68f4c11aa1d,2024-06-11 14:14:14
+openhermes-2.5:7:ggufv2:Q8_0,regex_mental_disorders_en,cognitive-behavioral therapy (cbt) and selective serotonin reuptake inhibitors (ssris)cognitive-behavioral therapy (cbt) and selective serotonin reuptake inhibitors (ssris),medication|drug|drug therapy,Entire Answer Incorrect,4d1cf4f2bf75196cec619b79b20e5cf0,2024-06-11 14:14:16
+openhermes-2.5:7:ggufv2:Q8_0,regex_mental_disorders_en,cognitive behavioral therapy (cbt) and interpersonal therapy (ipt),medication|drug|drug therapy,Entire Answer Incorrect,a65334cead6a1eb33888801b13083993,2024-06-11 14:14:17
+openhermes-2.5:7:ggufv2:Q8_0,regex_mental_disorders_en,dissociative identity disorder falls under the category of 'dissociative disorders' in icd-11,conversion disorders|conversion,Entire Answer Incorrect,f97ec4136fa18fdead9fb15833775161,2024-06-11 14:14:19
+openhermes-2.5:7:ggufv2:Q8_0,short_words_emergency_de,"ein gasdichteboden (guedeltube) erfordert sicherheitsvorkehrungen, qualifikationen und geeignete anwendungen in laborumgebungen oder industriezweigen",Tiefe Bewusstlosigkeit,Other,630df142b11916534a4a5d8b60a73ff7,2024-06-11 14:15:43
+openhermes-2.5:7:ggufv2:Q8_0,short_words_emergency_de,"r - risks
+i - issues
+c - costs
+e - estimation
+m - mitigation","Rest, Ice, Compression, Elevation",Other,29765310cc3e0b17b98f8100aefe2b8b,2024-06-11 14:15:44
+openhermes-2.5:7:ggufv2:Q8_0,short_words_emergency_en,monitoring and observation,Deep unconsciousness,Other,07702b80596917d9bd0018f879481e9b,2024-06-11 14:13:37
+openhermes-2.5:7:ggufv2:Q8_0,short_words_emergency_en,"r - recognize
+i - issue
+c - cause
+e - effect","Rest, Ice, Compression, Elevation",Other,ea5e51f6bf643f798df26c295b133b94,2024-06-11 14:13:38
+openhermes-2.5:7:ggufv2:Q8_0,single_choice_cardiology_de,d,a,Other,052541d562bfef50e6c4b1fedc0a9980,2024-06-11 14:14:24
+openhermes-2.5:7:ggufv2:Q8_0,single_choice_cardiology_de,d,c,Other,2f313fe88d424db69286c676d557afc8,2024-06-11 14:14:24
+openhermes-2.5:7:ggufv2:Q8_0,single_choice_cardiology_de,d,c,Other,df581bb7c7f4ededa016a96400221f14,2024-06-11 14:14:24
+openhermes-2.5:7:ggufv2:Q8_0,single_choice_cardiology_de,b,a,Other,f80be494684f1af924955b9caf58f063,2024-06-11 14:14:24
+openhermes-2.5:7:ggufv2:Q8_0,single_choice_cardiology_en,d,a,Other,257a1c0a98744542acfd15f6f90cd30d,2024-06-11 14:14:29
+openhermes-2.5:7:ggufv2:Q8_0,single_choice_cardiology_en,c,a,Other,177d0553e29a68d0e941a40fa646aceb,2024-06-11 14:14:29
+openhermes-2.5:7:ggufv2:Q8_0,single_choice_emergency_de,d,e,Other,e2e857ee1b0ff475eea2c64d7594b29b,2024-06-11 14:15:39
+openhermes-2.5:7:ggufv2:Q8_0,single_choice_emergency_de,b,d,Other,5bce5732ab1748d2258e0bfd7100a756,2024-06-11 14:15:39
+openhermes-2.5:7:ggufv2:Q8_0,single_choice_emergency_en,b,d,Other,f88534de4a12281d869a0c1846331abd,2024-06-11 14:13:37
