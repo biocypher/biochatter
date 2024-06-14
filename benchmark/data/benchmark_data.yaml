@@ -1497,7 +1497,7 @@ correctness:
 
   - case: dichotomous_mental_disorders_de
     input:
-      prompt: Die Gestalttherapie wird häufig bei der Therapie von Anorexie angewendet und konzentriert sich auf das Identifizierung und Verändern dysfunktionaler Gedanken- und Verhaltensmuster.
+      prompt: Die Gestalttherapie wird häufig bei der Therapie von Anorexie angewendet und konzentriert sich auf die Identifizierung und Veränderung dysfunktionaler Gedanken- und Verhaltensmuster.
       system_messages:
         [
           "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. "
@@ -1698,8 +1698,8 @@ correctness:
         ]
     expected:
       words_in_response:
-        - "kommunikation"
-        - "interaktion"
+        - - "kommunikation"
+          - "interaktion"
         - "verhalten"
         - "selbstständigkeit"
 
@@ -1720,6 +1720,7 @@ correctness:
           - "sport"
           - "bewegung"
           - "gewichtsverlust"
+          - "untergewicht"
 
   - case: regex_mental_disorders_de
     input:
@@ -1730,7 +1731,8 @@ correctness:
         ]
     expected:
       words_in_response:
-        - "körperliche anstrengung"
+        - - "anstrengung"
+          - "anspannung"
 
   - case: regex_mental_disorders_de
     input:
@@ -1757,7 +1759,7 @@ correctness:
       words_in_response:
         - "genetischen"
         - "psychosozialen"
-        - "Neurotransmitter"
+        - "neurotransmitter"
 
   - case: regex_mental_disorders_de
     input:
@@ -1784,10 +1786,10 @@ correctness:
         ]
     expected:
       words_in_response:
-        - "Psychotherapie"
+        - "psychotherapie"
         -
-          - "Medikamente"
-          - "Medikamentöse Therapie"
+          - "medikamente"
+          - "medikamentöse Therapie"
 
   - case: regex_mental_disorders_de
     input:
@@ -1798,8 +1800,8 @@ correctness:
         ]
     expected:
       words_in_response:
-        - "Restriktiv"
-        - "Binge"
+        - "restriktiv"
+        - "binge"
 
   - case: regex_mental_disorders_de
     input:
@@ -1811,8 +1813,8 @@ correctness:
     expected:
       words_in_response:
         -
-          - "Konversionsstörungen"
-          - "Konversion"
+          - "konversionsstörungen"
+          - "konversion"
 
   - case: regex_mental_disorders_de
     input:
@@ -1823,11 +1825,12 @@ correctness:
         ]
     expected:
       words_in_response:
-        - "Schutz"
+        - - "schutz"
+          - "bewältigung"
         -
           - "Trauma"
-          - "traumatisch"
-        - "Erinnerungen"
+          - "traumatische erinnerungen"
+          - "traumatische erfahrungen"
 
 
 ###########################################################################################################
@@ -2049,8 +2052,8 @@ correctness:
         ]
     expected:
       words_in_response:
-        - "communication"
-        - "interaction"
+        - - "communication"
+          - "interaction"
         - "behaviour"
         - "independence"
 
@@ -2183,8 +2186,8 @@ correctness:
         - "protection"
         -
           - "trauma"
-          - "traumatic"
-        - "memories"
+          - "traumatic memories"
+          - "traumatic experiences"
 
 ###########################################################################################################
   # Test case: Questions about “emergency medicine” for prospective emergency physicians
@@ -2515,7 +2518,7 @@ correctness:
 ###########################################################################################################
 
   # Level 1: Yes or no questions
-  - case: dichotomous_dermatology_de
+  - case: dichotomous:dermatology:de
     input:
       prompt: Die Erkrankung Rosazea kann sich durch Koffein, Alkohol, Nikotin, UV-Strahlen und Stress verschlechtern.
       system_messages:
@@ -2525,7 +2528,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: dichotomous_dermatology_de
+  - case: dichotomous:dermatology:de
     input:
       prompt: Bestimmte Nahrungsmittel können die Ursache für eine chronische Nesselsucht bei Erwachsenen darstellen.
       system_messages:
@@ -2535,7 +2538,7 @@ correctness:
     expected:
       answer: "nein"
 
-  - case: dichotomous_dermatology_de
+  - case: dichotomous:dermatology:de
     input:
       prompt: Bei einem mittelgradigem differenzierten Plattenepithelkarzinom am Fingerrücken mit einer Tumordicke von 6mm ist die einzige Behandlungsoption die Fingeramputation.
       system_messages:
@@ -2545,7 +2548,7 @@ correctness:
     expected:
       answer: "nein"
 
-  - case: dichotomous_dermatology_de
+  - case: dichotomous:dermatology:de
     input:
       prompt: Die Immunsuppression ist ein Risikofaktor für NMSC (Weißer Hautkrebs).
       system_messages:
@@ -2555,7 +2558,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: dichotomous_dermatology_de
+  - case: dichotomous:dermatology:de
     input:
       prompt: Bei der BRAF-Mutation wird Vemurafenib als wirksames Medikament verwendet.
       system_messages:
@@ -2565,7 +2568,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: dichotomous_dermatology_de
+  - case: dichotomous:dermatology:de
     input:
       prompt: Ursache für ein Angioödem kann eine Typ 4 Reaktion nach Coombs sein.
       system_messages:
@@ -2575,7 +2578,7 @@ correctness:
     expected:
       answer: "nein"
 
-  - case: dichotomous_dermatology_de
+  - case: dichotomous:dermatology:de
     input:
       prompt: Das Nikolski-Zeichen kann bei Verbrühungen und Verätzungen auftreten.
       system_messages:
@@ -2585,7 +2588,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: dichotomous_dermatology_de
+  - case: dichotomous:dermatology:de
     input:
       prompt: Nicht-melanozytäre Hauttumore können an lichtexponierter Haut entstehen.
       system_messages:
@@ -2595,7 +2598,7 @@ correctness:
     expected:
       answer: "ja"
 
-  - case: dichotomous_dermatology_de
+  - case: dichotomous:dermatology:de
     input:
       prompt: Die Melanominzidenz hat in den letzten Jahrzehnten deutlich abgenommen.
       system_messages:
@@ -2605,7 +2608,7 @@ correctness:
     expected:
       answer: "nein"
 
-  - case: dichotomous_dermatology_de
+  - case: dichotomous:dermatology:de
     input:
       prompt: Bei Mundsoor treten typischerweise Koplik-Flecken auf der Zunge auf.
       system_messages:
@@ -2617,7 +2620,7 @@ correctness:
 
   # Level 2: Single or Multiple choice questions
 
-  - case: multiple_choice_dermatology_de
+  - case: multiple_choice:dermatology:de
     input:
       prompt: Für welche Erkrankungen sind rötlich-livide, ulzerierte Knoten verdächtig? A Merkelzellkarzinom, B Talgdrüsenkarzinom, C Plattenepithelkarzinom, D Ameloplastisches malignes Melanom, E Basalzellkarzinom
       system_messages:
@@ -2627,7 +2630,7 @@ correctness:
     expected:
       answer: "a,b,c,d,e"
 
-  - case: single_choice_dermatology_de
+  - case: single_choice:dermatology:de
     input:
       prompt: Durch was unterscheiden sich Akne vulgaris und Rosazea klinisch? A Granulome, B Pusteln, C Erytheme, D Papeln, E Comedone
       system_messages:
@@ -2635,9 +2638,9 @@ correctness:
           "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gib dabei nur den Buchstaben zurück und nicht die ganze Antwort."
         ]
     expected:
-      answer: "e"
+      answer: "c"
 
-  - case: multiple_choice_dermatology_de
+  - case: multiple_choice:dermatology:de
     input:
       prompt: Welche Erkrankungen haben ein erhöhtes Risiko für Kontaktallergien? A Lichen Planus, B Acne vulgaris, C Psoriasis vulgaris, D Ulcus cruris, E Atopisches Ekzem
       system_messages:
@@ -2647,7 +2650,7 @@ correctness:
     expected:
       answer: "d,e"
 
-  - case: multiple_choice_dermatology_de
+  - case: multiple_choice:dermatology:de
     input:
       prompt: Patienten mit einem Befall welcher Hautfalten zeigen ein höheres Risiko für Psoriasis-Arthritis? A Kniekehle, B Kopfhaut, C Halsbeugen, D Nagel, E Pofalte
       system_messages:
@@ -2657,7 +2660,7 @@ correctness:
     expected:
       answer: "b,d,e"
 
-  - case: single_choice_dermatology_de
+  - case: single_choice:dermatology:de
     input:
       prompt: Welche Erkrankung liegt vor, wenn nach einem Zeckenstich eine ringförmige Rötung entsteht? A Erythema elevatum, B Erythema anulare centrifugum, C Erythema chronicum migrans, D Erythema circinatum, E Erythema Granulate
       system_messages:
@@ -2667,7 +2670,7 @@ correctness:
     expected:
       answer: "c"
 
-  - case: multiple_choice_dermatology_de
+  - case: multiple_choice:dermatology:de
     input:
       prompt: Welche Anzeichen sich typsich für AGEP (akute generalisierte exanthematische Pustulose)? A Virale Pusteln, B Sterile Pusteln, C Follikulär gebundene Pusteln, D Bakterielle Pusteln, E Nicht follikulär gebundene Pusteln
       system_messages:
@@ -2677,7 +2680,7 @@ correctness:
     expected:
       answer: "b,e"
 
-  - case: single_choice_dermatology_de
+  - case: single_choice:dermatology:de
     input:
       prompt: Bei welcher Erkrankung sind Papeln vorzufinden? A Psoriasis, B Herpes zoster, C Lichen planus
       system_messages:
@@ -2687,7 +2690,7 @@ correctness:
     expected:
       answer: "c"
 
-  - case: single_choice_dermatology_de
+  - case: single_choice:dermatology:de
     input:
       prompt: Welche der folgenden Optionen stimmt bei Furunkeln nicht? A Furunkel an der Oberlippe können Ursache einer Sinus cavernosus Infektion sein, B häufigster Erreger sind Streptokokken, C häufige Rezidive können Hinweis auf eine Immuninsuffizienz sein, D wird mit penicillinrsistentem AB behandelt, E es handelt  sich um eine massive Perifollikulitis mit Nekrose
       system_messages:
@@ -2697,7 +2700,7 @@ correctness:
     expected:
       answer: "b"
 
-  - case: single_choice_dermatology_de
+  - case: single_choice:dermatology:de
     input:
       prompt: Welches Medikament gehört nicht zum Therapiespektrum der Akne vulgaris? A Isotretionin (oral), B Itraconazol, C Benzylperoxid (topisch), D Antiandrogen (bei Frauen), E Minocyclin
       system_messages:
@@ -2707,7 +2710,7 @@ correctness:
     expected:
       answer: "b"
 
-  - case: single_choice_dermatology_de
+  - case: single_choice:dermatology:de
     input:
       prompt: Welche Eigenschaft weisen die Nägel Bei Psoriasis auf? A Ölflecken, B Bruchnägel, C Längsstreifung, D Glanznägel
       system_messages:
@@ -2719,7 +2722,7 @@ correctness:
 
   # Level 3: Word questions
 
-  - case: regex_dermatology_de
+  - case: regex:dermatology:de
     input:
       prompt: Welche begleitende, medikamentöse Therapie von Akne ist bei der Gabe von Isotretionin nötig?
       system_messages:
@@ -2731,7 +2734,7 @@ correctness:
         - - "kontrazeption"
           - "verhütung"
 
-  - case: regex_dermatology_de
+  - case: regex:dermatology:de
     input:
       prompt: Was ist die häufigste Ursache für Erythema nodosum?
       system_messages:
@@ -2742,7 +2745,7 @@ correctness:
       words_in_response:
         - "streptokokken"
 
-  - case: regex_dermatology_de
+  - case: regex:dermatology:de
     input:
       prompt: Bei welchen Erkrankungen tritt das Köbner-Phänomen besonders häufig auf?
       system_messages:
@@ -2751,10 +2754,11 @@ correctness:
         ]
     expected:
       words_in_response:
-        - "lichen ruber planus"
+        - - "lichen ruber planus"
+          - "lichen planus"
         - "psoriasis"
 
-  - case: regex_dermatology_de
+  - case: regex:dermatology:de
     input:
       prompt: Welche HPV-Typen sind onkogene Hochrisikoviren?
       system_messages:
@@ -2766,7 +2770,7 @@ correctness:
         - "16"
         - "18"
 
-  - case: regex_dermatology_de
+  - case: regex:dermatology:de
     input:
       prompt: Welche klinische Formen des Basalzellkarzinoms gibt es?
       system_messages:
@@ -2784,7 +2788,7 @@ correctness:
         - - "destruiert"
           - "destruierend"
 
-  - case: regex_dermatology_de
+  - case: regex:dermatology:de
     input:
       prompt: Mit welchem Wirkstoff wird Erysipel medikamentös behandelt?
       system_messages:
@@ -2795,7 +2799,7 @@ correctness:
       words_in_response:
         - "penicillin"
 
-  - case: regex_dermatology_de
+  - case: regex:dermatology:de
     input:
       prompt: Welche Wirkstoffe sollten in einem Notfallkoffer für Allergiker sein?
       system_messages:
@@ -2808,7 +2812,7 @@ correctness:
         - "antihistaminika"
         - "adrenalin"
 
-  - case: regex_dermatology_de
+  - case: regex:dermatology:de
     input:
       prompt: Welcher Botenstoff wird von Mastzellen bei der allergischen Reaktion ausgeschüttet?
       system_messages:
@@ -2819,7 +2823,7 @@ correctness:
       words_in_response:
         - "histamin"
 
-  - case: regex_dermatology_de
+  - case: regex:dermatology:de
     input:
       prompt: Welche Personen sind oft von Mundsoor betroffen?
       system_messages:
@@ -2828,11 +2832,17 @@ correctness:
         ]
     expected:
       words_in_response:
-        - "kleinkinder"
-        - "immunsupprimierte"
-        - "alte"
+        - - "kleinkinder"
+          - "Kinder"
+          - "Babies"
+          - "Säuglinge"
+        - - "immunsupprimierte"
+          - "schwaches immunsystem"
+          - "geschwächtes immunsystem"
+        - - "alte"
+          - "ältere"
 
-  - case: regex_dermatology_de
+  - case: regex:dermatology:de
     input:
       prompt: Welche Erkrankung zeigt polygonale, juckende und violett erscheinende Papeln?
       system_messages:
@@ -2841,7 +2851,8 @@ correctness:
         ]
     expected:
       words_in_response:
-        - "lichen ruber planus"
+        - - "lichen ruber planus"
+          - "lichen planus"
 
 ###########################################################################################################
   # Test case: Questions about “dermatology” for dermatology physicians
@@ -2849,7 +2860,7 @@ correctness:
 ###########################################################################################################
 
   # Level 1: Yes or no questions
-  - case: dichotomous_dermatology_en
+  - case: dichotomous:dermatology:en
     input:
       prompt: Rosacea can be worsened by caffeine, alcohol, nicotine, UV rays and stress.
       system_messages:
@@ -2859,7 +2870,7 @@ correctness:
     expected:
       answer: "yes"
 
-  - case: dichotomous_dermatology_en
+  - case: dichotomous:dermatology:en
     input:
       prompt: Certain foods can be the cause of chronic hives in adults.
       system_messages:
@@ -2869,7 +2880,7 @@ correctness:
     expected:
       answer: "no"
 
-  - case: dichotomous_dermatology_en
+  - case: dichotomous:dermatology:en
     input:
       prompt: In the case of a moderately differentiated squamous cell carcinoma on the back of the finger with a tumour thickness of 6 mm, the only treatment option is finger amputation.
       system_messages:
@@ -2879,7 +2890,7 @@ correctness:
     expected:
       answer: "no"
 
-  - case: dichotomous_dermatology_en
+  - case: dichotomous:dermatology:en
     input:
       prompt: Immunosuppression is a risk factor for NMSC (white skin cancer).
       system_messages:
@@ -2889,7 +2900,7 @@ correctness:
     expected:
       answer: "yes"
 
-  - case: dichotomous_dermatology_en
+  - case: dichotomous:dermatology:en
     input:
       prompt: Vemurafenib is used as an effective drug for BRAF mutations.
       system_messages:
@@ -2899,7 +2910,7 @@ correctness:
     expected:
       answer: "yes"
 
-  - case: dichotomous_dermatology_en
+  - case: dichotomous:dermatology:en
     input:
       prompt: Angioedema can be caused by a type 4 reaction according to Coombs.
       system_messages:
@@ -2909,7 +2920,7 @@ correctness:
     expected:
       answer: "no"
 
-  - case: dichotomous_dermatology_en
+  - case: dichotomous:dermatology:en
     input:
       prompt: The Nikolski sign can occur with scalds and burns.
       system_messages:
@@ -2919,7 +2930,7 @@ correctness:
     expected:
       answer: "yes"
 
-  - case: dichotomous_dermatology_en
+  - case: dichotomous:dermatology:en
     input:
       prompt: Non-melanocytic skin tumours can develop on skin exposed to light.
       system_messages:
@@ -2929,7 +2940,7 @@ correctness:
     expected:
       answer: "yes"
 
-  - case: dichotomous_dermatology_en
+  - case: dichotomous:dermatology:en
     input:
       prompt: The incidence of melanoma has decreased significantly in recent decades.
       system_messages:
@@ -2939,7 +2950,7 @@ correctness:
     expected:
       answer: "no"
 
-  - case: dichotomous_dermatology_en
+  - case: dichotomous:dermatology:en
     input:
       prompt: Oral thrush is typically characterised by Koplik's spots on the tongue.
       system_messages:
@@ -2951,7 +2962,7 @@ correctness:
 
   # Level 2: Single or Multiple choice questions
 
-  - case: multiple_choice_dermatology_en
+  - case: multiple_choice:dermatology:en
     input:
       prompt: For which diseases are reddish-livid, ulcerated nodules suspicious? A Merkel cell carcinoma, B Sebaceous gland carcinoma, C Squamous cell carcinoma, D Ameloplastic malignant melanoma, E Basal cell carcinoma
       system_messages:
@@ -2961,7 +2972,7 @@ correctness:
     expected:
       answer: "a,b,c,d,e"
 
-  - case: single_choice_dermatology_en
+  - case: single_choice:dermatology:en
     input:
       prompt: What is the clinical difference between acne vulgaris and rosacea? A granulomas, B pustules, C erythema, D papules, E comedones
       system_messages:
@@ -2969,9 +2980,9 @@ correctness:
           "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer."
         ]
     expected:
-      answer: "e"
+      answer: "c"
 
-  - case: multiple_choice_dermatology_en
+  - case: multiple_choice:dermatology:en
     input:
       prompt: Which diseases have an increased risk of contact allergies? A Lichen planus, B Acne vulgaris, C Psoriasis vulgaris, D Ulcus cruris, E Atopic eczema
       system_messages:
@@ -2981,7 +2992,7 @@ correctness:
     expected:
       answer: "d,e"
 
-  - case: multiple_choice_dermatology_en
+  - case: multiple_choice:dermatology:en
     input:
       prompt: Patients with an infestation of which skin folds show a higher risk of psoriatic arthritis? A hollow of the knee, B scalp, C bend of the neck, D nail, E buttock crease
       system_messages:
@@ -2991,7 +3002,7 @@ correctness:
     expected:
       answer: "b,d,e"
 
-  - case: single_choice_dermatology_en
+  - case: single_choice:dermatology:en
     input:
       prompt: Which disease is present when a ring-shaped reddening develops after a tick bite? A Erythema elevatum, B Erythema anulare centrifugum, C Erythema chronicum migrans, D Erythema circinatum, E Erythema granulate
       system_messages:
@@ -3001,7 +3012,7 @@ correctness:
     expected:
       answer: "c"
 
-  - case: multiple_choice_dermatology_en
+  - case: multiple_choice:dermatology:en
     input:
       prompt: Which signs are typical of AGEP (acute generalised exanthematous pustulosis)? A Viral pustules, B Sterile pustules, C Follicularly bound pustules, D Bacterial pustules, E Non-follicularly bound pustules
       system_messages:
@@ -3011,7 +3022,7 @@ correctness:
     expected:
       answer: "b,e"
 
-  - case: single_choice_dermatology_en
+  - case: single_choice:dermatology:en
     input:
       prompt: In which disease are papules found? A Psoriasis, B Herpes zoster, C Lichen planus
       system_messages:
@@ -3021,7 +3032,7 @@ correctness:
     expected:
       answer: "c"
 
-  - case: single_choice_dermatology_en
+  - case: single_choice:dermatology:en
     input:
       prompt: Which of the following options is not correct for boils? A boils on the upper lip can be the cause of a cavernous sinus infection, B the most common pathogen is streptococci, C frequent recurrences can be an indication of immune insufficiency, D is treated with penicillin-resistant AB, E it is a massive perifolliculitis with necrosis
       system_messages:
@@ -3031,7 +3042,7 @@ correctness:
     expected:
       answer: "b"
 
-  - case: single_choice_dermatology_en
+  - case: single_choice:dermatology:en
     input:
       prompt: Which medication is not part of the treatment spectrum for acne vulgaris? A Isotretionin (oral), B Itraconazole, C Benzyl peroxide (topical), D Antiandrogen (for women), E Minocycline
       system_messages:
@@ -3041,7 +3052,7 @@ correctness:
     expected:
       answer: "b"
 
-  - case: single_choice_dermatology_en
+  - case: single_choice:dermatology:en
     input:
       prompt: Which characteristic do the nails have in psoriasis? A oil stains, B broken nails, C longitudinal striation, D shiny nails
       system_messages:
@@ -3053,7 +3064,7 @@ correctness:
 
   # Level 3: Word questions
 
-  - case: regex_dermatology_en
+  - case: regex:dermatology:en
     input:
       prompt: What concomitant drug therapy for acne is necessary when administering Isotretionin?
       system_messages:
@@ -3064,8 +3075,10 @@ correctness:
       words_in_response:
         - - "contraception"
           - "prevention"
+          - "contraceptive"
+          - "contraceptiva"
 
-  - case: regex_dermatology_en
+  - case: regex:dermatology:en
     input:
       prompt: What is the most common cause of erythema nodosum?
       system_messages:
@@ -3078,7 +3091,7 @@ correctness:
           - "streptococcus"
           - "streptococcal"
 
-  - case: regex_dermatology_en
+  - case: regex:dermatology:en
     input:
       prompt: In which diseases does the Köbner phenomenon occur particularly frequently?
       system_messages:
@@ -3087,10 +3100,11 @@ correctness:
         ]
     expected:
       words_in_response:
-        - "lichen ruber planus"
+        - - "lichen ruber planus"
+          - "lichen planus"
         - "psoriasis"
 
-  - case: regex_dermatology_en
+  - case: regex:dermatology:en
     input:
       prompt: Which HPV types are high-risk oncogenic viruses?
       system_messages:
@@ -3102,7 +3116,7 @@ correctness:
         - "16"
         - "18"
 
-  - case: regex_dermatology_en
+  - case: regex:dermatology:en
     input:
       prompt: What clinical forms of basal cell carcinoma are there?
       system_messages:
@@ -3125,7 +3139,7 @@ correctness:
           - "destroying"
           - "destructive"
 
-  - case: regex_dermatology_en
+  - case: regex:dermatology:en
     input:
       prompt: Which active substance is used to treat erysipelas with medication?
       system_messages:
@@ -3136,9 +3150,9 @@ correctness:
       words_in_response:
         - "penicillin"
 
-  - case: regex_dermatology_en
+  - case: regex:dermatology:en
     input:
-      prompt: Which active ingredients should be in an emergency kit for allergy sufferers?
+      prompt: Which substances should be in an emergency kit for allergy sufferers?
       system_messages:
         [
           "Answer as briefly and concisely as possible."
@@ -3150,7 +3164,7 @@ correctness:
           - "antihistaminics"
         - "adrenalin"
 
-  - case: regex_dermatology_en
+  - case: regex:dermatology:en
     input:
       prompt: Which messenger substance is released by mast cells during an allergic reaction?
       system_messages:
@@ -3159,9 +3173,9 @@ correctness:
         ]
     expected:
       words_in_response:
-        - "histamin"
+        - "histamine"
 
-  - case: regex_dermatology_en
+  - case: regex:dermatology:en
     input:
       prompt: Which people are often affected by oral thrush?
       system_messages:
@@ -3176,10 +3190,12 @@ correctness:
           - "babies"
         - - "immunocompromised"
           - "immunosuppressed"
+          - "weak immune system"
+          - "weakened immune system"
         - - "old"
           - "elder"
 
-  - case: regex_dermatology_en
+  - case: regex:dermatology:en
     input:
       prompt: Which disease is characterised by polygonal, itchy and purple papules?
       system_messages:
@@ -3188,7 +3204,8 @@ correctness:
         ]
     expected:
       words_in_response:
-        - "lichen ruber planus"
+        - - "lichen ruber planus"
+          - "lichen planus"
 
 
 kg_schemas:
