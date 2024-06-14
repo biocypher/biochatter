@@ -320,22 +320,79 @@ class BlastFetcher(BaseModel):
         BLAST_answer = chain.invoke({"input": {BLAST_file_answer_extractor_prompt}})
         return BLAST_answer
 
-# def api_agent(question, blast_prompt_path, BLAST_result_dir):
-#     """Short term solution to test"""
-#     base_dir = os.getcwd()
-#     BLAST_prompt_file_path = os.path.join(base_dir, blast_prompt_path)
-#     #blast_result 
-#     BLAST_result_path = os.path.join(base_dir, BLAST_result_dir)
-#     query_request = BLAST_api_query_generator(question, BLAST_prompt_file_path)
-#     print(query_request)
-#     rid = submit_blast_query(query_request)
-#     print(rid)
-#     BLAST_file_name = fetch_and_save_blast_results(query_request, rid, BLAST_result_path, 10000)
-#     print(BLAST_file_name)
-#     return BLAST_file_name
+## Agent class
+class APIAgent:
+    def __init__(self, llm):
+        self.llm = llm
+        self.blast_result_path = "docs/api_agent/BLAST_tool/BLAST_response/results"
+        self.blast_prompt_path = "docs/api_agent/BLAST_tool/persistent_files/api_documentation/BLAST.txt"
+        self.builder = BlastQueryBuilder()
+        self.fetcher = BlastFetcher()
 
+    def generate_blast_query(self, question: str) -> Optional[BlastQuery]:
+        try:
+            return self.builder.generate_blast_query(question, self.blast_prompt_path, self.llm)
+        except Exception as e:
+            print(f"Error generating BLAST query: {e}")
+            return None
 
-### answer extraction 
+    def submit_blast_query(self, blast_query: BlastQuery) -> Optional[str]:
+        try:
+            return self.builder.submit_blast_query(blast_query)
+        except Exception as e:
+            print(f"Error submitting BLAST query: {e}")
+            return None
 
+    def fetch_blast_results(self, question_uuid: str, rid: str) -> Optional[str]:
+        try:
+            return self.fetcher.fetch_and_save_blast_results(question_uuid, rid, self.blast_result_path, 100)
+        except Exception as e:
+            print(f"Error fetching BLAST results: {e}")
+            return None
 
-# file_path = 'docs/api_agent/BLAST_tool/BLAST_response/BLAST_results_1a4862a5-b185-4c87-a24b-a83c1d1bc2b4.txt'
+    def extract_answer(self, question: str, blast_file_name: str) -> Optional[str]:
+        try:
+            file_path = os.path.join(self.blast_result_path, blast_file_name)
+            return self.fetcher.answer_extraction(question, file_path, 100)
+        except Exception as e:
+            print(f"Error extracting answer: {e}")
+            return None
+
+    def test_fetch_blast_results(self, question: str):
+        # Generate BLAST query
+        blast_query = self.generate_blast_query(question)
+        if not blast_query:
+            print("Failed to generate BLAST query.")
+            return
+        
+        print(f"Generated BLAST query: {blast_query}")
+
+        # Submit BLAST query and get RID
+        rid = self.submit_blast_query(blast_query)
+        if not rid:
+            print("Failed to submit BLAST query.")
+            return
+        
+        print(f"Received RID: {rid}")
+
+        # Fetch BLAST results
+        blast_file_name = self.fetch_blast_results(blast_query.question_uuid, rid)
+        if not blast_file_name:
+            print("Failed to fetch BLAST results.")
+            return
+
+        # Extract answer from BLAST results
+        final_answer = self.extract_answer(question, blast_file_name)
+        if not final_answer:
+            print("Failed to extract answer from BLAST results.")
+            return
+
+        print(f"Final Answer: {final_answer}")
+
+# How to use it: the code below has to be integrated into the RAG
+# openai_api_key = os.getenv("OPENAI_API_KEY")
+# llm = ChatOpenAI(model_name='gpt-4', temperature=0, openai_api_key=openai_api_key)
+
+# api_agent = ApiAgent(llm)
+# question = "Which organism does the DNA sequence come from: TTCATCGGTCTGAGCAGAGGATGAAGTTGCAAATGATGCAAGCAAAACAGCTCAAAGATGAAGAGGAAAAGGCTATACACAACAGGAGCAATGTAGATACAGAAGGT"
+# api_agent.test_fetch_blast_results(question)
