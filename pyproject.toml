@@ -15,7 +15,6 @@ python = ">=3.10,<3.12"
 langchain = "^0.0.347"
 openai = "^1.1.0"
 pymupdf = "^1.22.3"
-pydantic_core = "2.10.1"
 pymilvus = "2.2.8"
 tiktoken = "^0.5.2"
 nltk = "^3.8.1"
@@ -32,6 +31,7 @@ neo4j-utils = "^0.0.7"
 seaborn = "^0.13.2"
 rouge_score = "0.1.2"
 evaluate = "^0.4.1"
+pydantic = "^2.7.4"
 
 [tool.poetry.extras]
 streamlit = ["streamlit"]
