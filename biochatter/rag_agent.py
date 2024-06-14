@@ -98,6 +98,11 @@ class RagAgent:
             self.agent.connect()
 
             self.query_func = self.agent.similarity_search
+
+        elif self.mode == "API":
+            from .api_agent import api_agent
+
+            self.query_func = api_agent
         else:
             raise ValueError(
                 "Invalid mode. Choose either 'kg' or 'vectorstore'."
@@ -143,6 +148,14 @@ class RagAgent:
                 )
                 for result in results
             ]
+        elif self.mode == "API":
+            response = self.query_func(user_question)
+            # response = [
+            #     (
+            #         response,
+            #         {"name": "API Response", "description": "API Response"},
+            #     )
+            # ]
         else:
             raise ValueError(
                 "Invalid mode. Choose either 'kg' or 'vectorstore'."
