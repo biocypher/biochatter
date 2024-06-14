@@ -19,13 +19,19 @@ class RagAgent:
         embedding_func: Optional[object] = None,
         documentids_workspace: Optional[list[str]] = None,
     ) -> None:
+        ######
+        ##TO DO 
+        ######
+        # mode: 'API' for the case where the agent is querying an API
+        # use_prompt: default TRUE for self.mode == API
+
         """
         Create a RAG agent that can return results from a database or vector
         store using a query engine.
 
         Args:
             mode (str): The mode of the agent. Either "kg" or "vectorstore".
-
+            
             model_name (str): The name of the model to use.
 
             connection_args (dict): A dictionary of arguments to connect to the
@@ -92,6 +98,11 @@ class RagAgent:
             self.agent.connect()
 
             self.query_func = self.agent.similarity_search
+
+        elif self.mode == "API":
+            from .api_agent import api_agent
+
+            self.query_func = api_agent
         else:
             raise ValueError(
                 "Invalid mode. Choose either 'kg' or 'vectorstore'."
@@ -137,6 +148,14 @@ class RagAgent:
                 )
                 for result in results
             ]
+        elif self.mode == "API":
+            response = self.query_func(user_question)
+            # response = [
+            #     (
+            #         response,
+            #         {"name": "API Response", "description": "API Response"},
+            #     )
+            # ]
         else:
             raise ValueError(
                 "Invalid mode. Choose either 'kg' or 'vectorstore'."
