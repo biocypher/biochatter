@@ -12,6 +12,7 @@ from typing import (
 )
 from collections.abc import Iterable
 import re
+
 import stringcase
 
 __all__ = ["LIST_LIKE", "SIMPLE_TYPES", "ensure_iterable", "to_list"]

@@ -1,12 +1,14 @@
+from unittest.mock import MagicMock, patch
+import os
+
+from xinference.client import Client
+
 from biochatter.vectorstore import (
-    DocumentEmbedder,
-    DocumentReader,
     Document,
+    DocumentReader,
+    DocumentEmbedder,
     XinferenceDocumentEmbedder,
 )
-import os
-from xinference.client import Client
-from unittest.mock import patch, MagicMock
 
 print(os.getcwd())
 
@@ -46,6 +48,7 @@ splitted_docs = [
         },
     ),
 ]
+
 
 @patch("biochatter.vectorstore.OpenAIEmbeddings")
 @patch("biochatter.vectorstore.VectorDatabaseAgentMilvus")

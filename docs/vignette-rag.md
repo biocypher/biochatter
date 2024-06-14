@@ -61,7 +61,7 @@ different answer. The free version of ChatGPT cannot search the internet, and
 does not provide any citations for the general answer it provides. You can read
 the full answer
 [here](https://chat.openai.com/share/810075aa-69fe-4c06-859d-229e250f4c41). For
-convenience, all three conversations are copied below. 
+convenience, all three conversations are copied below.
 
 ## Conclusion
 

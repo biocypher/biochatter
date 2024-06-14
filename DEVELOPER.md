@@ -14,7 +14,8 @@ before starting development.
 
 - Install dependencies from the lock file: `poetry install`
 
-- Select extras for the functions you want to use: `poetry install -E <extras>`
+- Select extras for the functions you want to use: `poetry install -E <extras>`.
+You can also install all extras with `poetry install --all-extras`.
 
 - Use the environment: You can either run commands directly with `poetry run
 <command>` or open a shell with `poetry shell` and then run commands directly.

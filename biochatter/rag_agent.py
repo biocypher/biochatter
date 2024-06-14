@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional
 
 
 class RagAgentModeEnum:
@@ -17,7 +17,7 @@ class RagAgent:
         schema_config_or_info_dict: Optional[dict] = None,
         conversation_factory: Optional[callable] = None,
         embedding_func: Optional[object] = None,
-        documentids_workspace: Optional[List[str]] = None,
+        documentids_workspace: Optional[list[str]] = None,
     ) -> None:
         ######
         ##TO DO 

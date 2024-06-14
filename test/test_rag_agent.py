@@ -1,6 +1,8 @@
-import json
-import pytest
 from unittest.mock import MagicMock, patch
+import json
+
+import pytest
+
 from biochatter.rag_agent import RagAgent, RagAgentModeEnum
 from biochatter.vectorstore_agent import Document
 
@@ -113,7 +115,9 @@ def test_rag_agent_vectorstore_mode():
         assert type(result) == list
         assert type(result[0]) == tuple
         MockVectorDatabaseAgentMilvus.assert_called_once()
-        mock_agent.similarity_search.assert_called_once_with("test question", 3, doc_ids=None)
+        mock_agent.similarity_search.assert_called_once_with(
+            "test question", 3, doc_ids=None
+        )
 
 
 def test_rag_agent_invalid_mode():

@@ -168,7 +168,34 @@ rag_interpretation:
 ```
 
 Upon instantiation of the test matrix, this definition will be expanded into
-three full tests, each with their respective prompt setup.
+three full tests, each with their respective prompt setup. You can define as
+many combinations as you like (for instance, you could also define a list of
+prompts in this example), but be aware that the number of tests will grow
+exponentially with the number of combinations.
+
+## Setting up the test data pipeline
+
+Test data are provided to the test functions via fixtures. The fixtures are
+defined in the `conftest.py` file and are used to load the test data from the
+YAML files. If you add a new test module or a function with a new kind of test
+data, you need to add the corresponding fixture to the `pytest_generate_tests`
+function in `conftest.py`. This function is responsible for loading the test
+data and providing appropriately named fixtures to the test functions. For the
+tests defined above, this equates to:
+
+```python
+def pytest_generate_tests(metafunc):
+    data_file = BENCHMARK_DATASET["benchmark_data.yaml"]
+    if "test_data_rag_interpretation" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "test_data_rag_interpretation",
+            data_file["rag_interpretation"],
+        )
+```
+
+We prepend the fixtures with `test_data_` for consistency and higher code
+readability. For more information, see the [Pytest
+Documentation](https://docs.pytest.org/en/latest/example/parametrize.html).
 
 ## Creating new test procedures
 
@@ -180,23 +207,56 @@ to fixtures for their data inputs.  Such a test function typically has as
 parameters:
 
 - the `model_name` fixture, to be able to record a model-specific benchmark
-metric
+metric;
 
 - a `test_data` object that is generated from the benchmark dataset according to
-the name of the test module (e.g., `test_data_rag_interpretation`)
+the name of the test module (e.g., `test_data_rag_interpretation`). This is the
+fixture you defined above in `conftest.py`;
 
-- a `conversation` instance (the connection to the LLM to be tested)
+- a `conversation` instance (the connection to the LLM to be tested);
 
 - the `multiple_testing` fixture that implements running the test multiple times
-and averaging the results
+and averaging the results;
 
-- any number of additional inputs that may be required for the tests
+- any number of additional inputs that may be required for the tests.
 
 For instance, the knowledge graph query generation tests acquire additional
 tests inputs from the YAML definition (the schema of the BioCypher knowledge
 graph underlying the test) and additional functionality from BioChatter (an
 instance of the prompt engine class that generates the knowledge graph query
 using the aforementioned schema).
+
+## Running the benchmark
+
+If everything is set up correctly, you can run the benchmark by executing the
+following command in the root directory of the repository:
+
+```bash
+poetry run pytest benchmark
+```
+
+We need to specify the `benchmark` directory to run the benchmark tests, because
+we also have regular tests in the `test` directory. If you want to run only a
+specific test module, you can specify the file name (or use any other Pytest
+workflow).
+
+!!! warning "Skipping tests"
+
+    For efficiency reasons, we by default do not rerun tests that have already
+    been executed for a given model and test case. For this purpose, we store
+    the results in the `benchmark/results` directory, including, for every test
+    case, an md5 hash of the input data. If you want to rerun a test, you can
+    delete the corresponding line (or entire file) in the `results` directory.
+
+We re-run the benchmark automatically if a test case has changed (reflected in
+a different md5 hash) or if there is a new `biochatter` version (potentially
+introducing changes in the behaviour of the framework). If a test case has
+changed, the old result is automatically removed from the result files. You can
+also force a rerun of all tests by using the `--run-all` flag:
+
+```bash
+poetry run pytest benchmark --run-all
+```
 
 ## Running open-source models
 
