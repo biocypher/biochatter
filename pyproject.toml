@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "biochatter"
-version = "0.4.10"
+version = "0.4.11"
 description = "Backend library for conversational AI in biomedicine"
 authors = [
     "Sebastian Lobentanzer <sebastian.lobentanzer@gmail.com>",
@@ -31,12 +31,11 @@ neo4j-utils = "^0.0.7"
 seaborn = "^0.13.2"
 rouge_score = "0.1.2"
 evaluate = "^0.4.1"
-pydantic = "^2.7.4"
 
 [tool.poetry.extras]
 streamlit = ["streamlit"]
 podcast = ["gTTS"]
-xinference = ["botocore", "xinference"]
+xinference = ["xinference"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
