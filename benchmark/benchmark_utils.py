@@ -212,8 +212,12 @@ def categorize_failures(wrong_answer, expected_answer, regex=False):
         if wrong_answer.lower() == expected_answer.lower():
             return "Case Sensitivity"
 
-        # Check if some of the answer is right (e.g. "a headache instead of a")
-        elif wrong_answer in expected_answer or expected_answer in wrong_answer:
+        # Check if the wrong answer contains the expected answer followed by ")"
+        elif wrong_answer.strip() == expected_answer + ")":
+            return "Format Error"
+
+        # Check if some of the answer is partially right, but only if it's more than one letter
+        elif len(expected_answer) > 1 and (wrong_answer in expected_answer or expected_answer in wrong_answer):
             return "Partial Match"
 
         # Check if the format of the answer is wrong, but the answer otherwise is right (e.g. "a b" instead of "ab")
