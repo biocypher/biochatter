@@ -1,6 +1,5 @@
 from datetime import datetime
 import re
-
 from nltk.corpus import wordnet
 import pytest
 import importlib_metadata
@@ -254,10 +253,12 @@ def categorize_failure_modes(
         if actual_answer.lower() == expected_answer.lower():
             return "Case Sensitivity"
 
-        # Check if some of the answer is right (e.g. "a headache instead of a")
-        elif (
-            actual_answer in expected_answer or expected_answer in actual_answer
-        ):
+        # Check if the wrong answer contains the expected answer followed by ")"
+        elif actual_answer.strip() == expected_answer + ")":
+            return "Format Error"
+
+        # Check if some of the answer is partially right, but only if it's more than one letter
+        elif len(expected_answer) > 1 and (actual_answer in expected_answer or expected_answer in actual_answer):
             return "Partial Match"
 
         # Check if the format of the answer is wrong, but the answer otherwise is right (e.g. "a b" instead of "ab")
