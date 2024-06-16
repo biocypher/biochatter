@@ -322,12 +322,26 @@ class BlastFetcher(BaseModel):
 
 ## Agent class
 class APIAgent:
+    """
+    A class to interact with the BLAST tool for querying and fetching results.
+
+    Attributes:
+        llm (object): The language model to be used.
+        blast_result_path (str): The path to save BLAST results.
+        blast_prompt_path (str): The path to the BLAST prompt file.
+        builder (BlastQueryBuilder): An instance to build BLAST queries.
+        fetcher (BlastFetcher): An instance to fetch BLAST results.
+    """    
     def __init__(self, llm):
         self.llm = llm
-        self.blast_result_path = "docs/api_agent/BLAST_tool/BLAST_response/results"
+        self.blast_result_path = ".blast"
         self.blast_prompt_path = "docs/api_agent/BLAST_tool/persistent_files/api_documentation/BLAST.txt"
         self.builder = BlastQueryBuilder()
         self.fetcher = BlastFetcher()
+        self.final_answer = None
+        self.error = None
+    
+        os.makedirs(self.blast_result_path, exist_ok=True)
 
     def generate_blast_query(self, question: str) -> Optional[BlastQuery]:
         try:
@@ -358,11 +372,12 @@ class APIAgent:
             print(f"Error extracting answer: {e}")
             return None
 
-    def test_fetch_blast_results(self, question: str):
+    def execute(self, question: str):
         # Generate BLAST query
         blast_query = self.generate_blast_query(question)
         if not blast_query:
             print("Failed to generate BLAST query.")
+            self.error = "Failed to generate BLAST query."
             return
         
         print(f"Generated BLAST query: {blast_query}")
@@ -371,6 +386,7 @@ class APIAgent:
         rid = self.submit_blast_query(blast_query)
         if not rid:
             print("Failed to submit BLAST query.")
+            self.error = "Failed to submit BLAST query."
             return
         
         print(f"Received RID: {rid}")
@@ -379,20 +395,17 @@ class APIAgent:
         blast_file_name = self.fetch_blast_results(blast_query.question_uuid, rid)
         if not blast_file_name:
             print("Failed to fetch BLAST results.")
+            self.error = "Failed to fetch BLAST results."
             return
 
         # Extract answer from BLAST results
         final_answer = self.extract_answer(question, blast_file_name)
         if not final_answer:
             print("Failed to extract answer from BLAST results.")
+            self.error = f"Failed to extract answer from BLAST results."
             return
 
-        print(f"Final Answer: {final_answer}")
-
-# How to use it: the code below has to be integrated into the RAG
-# openai_api_key = os.getenv("OPENAI_API_KEY")
-# llm = ChatOpenAI(model_name='gpt-4', temperature=0, openai_api_key=openai_api_key)
-
-# api_agent = ApiAgent(llm)
-# question = "Which organism does the DNA sequence come from: TTCATCGGTCTGAGCAGAGGATGAAGTTGCAAATGATGCAAGCAAAACAGCTCAAAGATGAAGAGGAAAAGGCTATACACAACAGGAGCAATGTAGATACAGAAGGT"
-# api_agent.test_fetch_blast_results(question)
+        if final_answer:
+            print(f"Final Answer: {final_answer}")
+            self.final_answer = final_answer
+            return 
