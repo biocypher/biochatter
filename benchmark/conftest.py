@@ -1,16 +1,16 @@
 import os
 
-import requests
 from dotenv import load_dotenv
 from xinference.client import Client
 import pytest
+import requests
 
 import numpy as np
 import pandas as pd
 
 from biochatter.prompts import BioCypherPromptEngine
-from .load_dataset import get_benchmark_dataset
 from biochatter.llm_connect import GptConversation, XinferenceConversation
+from .load_dataset import get_benchmark_dataset
 from .benchmark_utils import benchmark_already_executed
 
 # how often should each benchmark be run?
@@ -21,8 +21,10 @@ BENCHMARK_DATASET = get_benchmark_dataset()
 
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
-    "gpt-3.5-turbo-0125"
-    #"gpt-4-0613"
+    # "gpt-3.5-turbo-0613",
+    "gpt-3.5-turbo-0125",
+    # "gpt-4-0613",
+    # "gpt-4-0125-preview",
 ]
 
 XINFERENCE_MODELS = {
@@ -30,60 +32,60 @@ XINFERENCE_MODELS = {
         "model_size_in_billions": [
             7,
             13,
-            70,
+            # 70,
         ],
         "model_format": "ggufv2",
         "quantization": [
-            "Q2_K",
+            # "Q2_K",
             # "Q3_K_S",
-            "Q3_K_M",
+            # "Q3_K_M",
             # "Q3_K_L",
             # "Q4_0",
             # "Q4_K_S",
             "Q4_K_M",
             # "Q5_0",
             # "Q5_K_S",
-            "Q5_K_M",
-            "Q6_K",
-            "Q8_0",
+            # "Q5_K_M",
+            # "Q6_K",
+            # "Q8_0",
         ],
     },
-    "code-llama-instruct": {
-        "model_size_in_billions": [
-            7,
-            13,
-            34,
-        ],
-        "model_format": "ggufv2",
-        "quantization": [
-            "Q2_K",
-            # "Q3_K_L",
-            "Q3_K_M",
-            # "Q3_K_S",
-            # "Q4_0",
-            "Q4_K_M",
-            # "Q4_K_S",
-            # "Q5_0",
-            "Q5_K_M",
-            # "Q5_K_S",
-            "Q6_K",
-            "Q8_0",
-        ],
-    },
+    # "code-llama-instruct": {
+    #     "model_size_in_billions": [
+    #         7,
+    #         13,
+    #         34,
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         "Q2_K",
+    #         # "Q3_K_L",
+    #         "Q3_K_M",
+    #         # "Q3_K_S",
+    #         # "Q4_0",
+    #         "Q4_K_M",
+    #         # "Q4_K_S",
+    #         # "Q5_0",
+    #         "Q5_K_M",
+    #         # "Q5_K_S",
+    #         "Q6_K",
+    #         "Q8_0",
+    #     ],
+    # },
     "mixtral-instruct-v0.1": {
         "model_size_in_billions": [
             "46_7",
         ],
         "model_format": "ggufv2",
         "quantization": [
-            "Q2_K",
-            "Q3_K_M",
+            # "Q2_K",
+            # "Q3_K_M",
             # "Q4_0",
             "Q4_K_M",
             # "Q5_0",
-            "Q5_K_M",
-            "Q6_K",
-            "Q8_0",
+            # "Q5_K_M",
+            # "Q6_K",
+            # "Q8_0",
         ],
     },
     "openhermes-2.5": {
@@ -92,18 +94,18 @@ XINFERENCE_MODELS = {
         ],
         "model_format": "ggufv2",
         "quantization": [
-            "Q2_K",
+            # "Q2_K",
             # "Q3_K_S",
-            "Q3_K_M",
+            # "Q3_K_M",
             # "Q3_K_L",
             # "Q4_0",
             # "Q4_K_S",
             "Q4_K_M",
             # "Q5_0",
             # "Q5_K_S",
-            "Q5_K_M",
-            "Q6_K",
-            "Q8_0",
+            # "Q5_K_M",
+            # "Q6_K",
+            # "Q8_0",
         ],
     },
     "chatglm3": {
@@ -121,20 +123,69 @@ XINFERENCE_MODELS = {
         ],
         "model_format": "ggufv2",
         "quantization": [
-            "Q2_K",
+            # "Q2_K",
             # "Q3_K_S",
-            "Q3_K_M",
+            # "Q3_K_M",
             # "Q3_K_L",
             # "Q4_0",
             # "Q4_K_S",
             "Q4_K_M",
             # "Q5_0",
             # "Q5_K_S",
-            "Q5_K_M",
-            "Q6_K",
-            "Q8_0",
+            # "Q5_K_M",
+            # "Q6_K",
+            # "Q8_0",
         ],
     },
+    # "gemma-it": {
+    #     "model_size_in_billions": [
+    #         2,
+    #         7,
+    #     ],
+    #     "model_format": "pytorch",
+    #     "quantization": [
+    #         "none",
+    #         "4-bit",
+    #         "8-bit",
+    #     ],
+    # },
+    "llama-3-instruct": {
+        "model_size_in_billions": [
+            8,
+            # 70,
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            # 8B model quantisations
+            # "IQ3_M",
+            "Q4_K_M",
+            # "Q5_K_M",
+            # "Q6_K",
+            # "Q8_0",
+            # 70B model quantisations
+            # "IQ1_M",
+            # "IQ2_XS",
+            # "Q4_K_M",
+        ],
+    },
+    # "custom-llama-3-instruct": {
+    #     "model_size_in_billions": [
+    #         70,
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         "IQ1_M",
+    #     ],
+    # },
+    # "openbiollm-llama3-8b": {
+    #     "model_size_in_billions": [
+    #         8,
+    #     ],
+    #     "model_format": "pytorch",
+    #     "quantization": [
+    #         "none",
+    #     ],
+    # },
 }
 
 # create concrete benchmark list by concatenating all combinations of model
@@ -147,11 +198,46 @@ XINFERENCE_MODEL_NAMES = [
     for quantization in XINFERENCE_MODELS[model_name]["quantization"]
 ]
 
-BENCHMARKED_MODELS = OPENAI_MODEL_NAMES #+ XINFERENCE_MODEL_NAMES
+BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
 BENCHMARKED_MODELS.sort()
 
 # Xinference IP and port
 BENCHMARK_URL = "http://localhost:9997"
+
+
+@pytest.fixture(scope="session")
+def client():
+    try:
+        client = Client(base_url=BENCHMARK_URL)
+    except requests.exceptions.ConnectionError:
+        raise ConnectionError(
+            f"Could not connect to Xinference server at {BENCHMARK_URL}. "
+            "Please make sure that the server is running."
+        )
+    return client
+
+
+@pytest.fixture(scope="session", autouse=True)
+def register_model(client):
+    """
+    Register custom (non-builtin) models with the Xinference server. Should only
+    happen once per session.
+    """
+
+    registrations = client.list_model_registrations(model_type="LLM")
+    registered_models = [
+        registration["model_name"] for registration in registrations
+    ]
+
+    if "openbiollm-llama3-8b" not in registered_models:
+        with open("benchmark/models/openbiollm-llama3-8b.json") as fd:
+            model = fd.read()
+        client.register_model(model_type="LLM", model=model, persist=False)
+
+    # if "custom-llama-3-instruct-70b" not in registered_models:
+    #     with open("benchmark/models/custom-llama-3-instruct-70b.json") as fd:
+    #         model = fd.read()
+    #     client.register_model(model_type="LLM", model=model, persist=False)
 
 
 def pytest_collection_modifyitems(items):
@@ -184,13 +270,13 @@ def multiple_testing(request):
         for _ in range(N_ITERATIONS):
             score, max = test_func(*args, **kwargs)
             scores.append(score)
-        mean_score = sum(scores) / N_ITERATIONS
-        return (mean_score, max, N_ITERATIONS)
+        score_string = ";".join([str(score) for score in scores])
+        return (score_string, max, N_ITERATIONS)
 
     return run_multiple_times
 
 
-def calculate_test_score(vector: list[bool]) -> tuple[int, int]:
+def calculate_bool_vector_score(vector: list[bool]) -> tuple[int, int]:
     score = sum(vector)
     max = len(vector)
     return (score, max)
@@ -212,7 +298,7 @@ def prompt_engine(request, model_name):
 
 
 @pytest.fixture
-def conversation(request, model_name):
+def conversation(request, model_name, client):
     """
     Decides whether to run the test or skip due to the test having been run
     before. If not skipped, will create a conversation object for interfacing
@@ -248,15 +334,6 @@ def conversation(request, model_name):
         if not "_" in _model_size:
             _model_size = int(_model_size)
 
-        # get running models
-        try:
-            client = Client(base_url=BENCHMARK_URL)
-        except requests.exceptions.ConnectionError:
-            raise ConnectionError(
-                f"Could not connect to Xinference server at {BENCHMARK_URL}. "
-                "Please make sure that the server is running."
-            )
-
         # if exact model already running, return conversation
         running_models = client.list_models()
         if running_models:
@@ -281,7 +358,12 @@ def conversation(request, model_name):
             client.terminate_model(running_model)
 
         # and launch model to be tested
+        if _model_format == "pytorch":
+            _model_engine = "transformers"
+        elif _model_format in ["ggufv2", "ggmlv3"]:
+            _model_engine = "llama.cpp"
         client.launch_model(
+            model_engine=_model_engine,
             model_name=_model_name,
             model_size_in_billions=_model_size,
             model_format=_model_format,
@@ -401,12 +483,11 @@ def pytest_generate_tests(metafunc):
             "test_data_text_extraction",
             data_file["text_extraction"],
         )
-    if "test_data_correctness" in metafunc.fixturenames:
+    if "test_data_medical_exam" in metafunc.fixturenames:
         metafunc.parametrize(
-            "test_data_correctness",
-            data_file["correctness"],
+            "test_data_medical_exam",
+            data_file["medical_exam"],
         )
-
 
 
 @pytest.fixture

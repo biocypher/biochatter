@@ -119,9 +119,9 @@ This will (hopefully) return a query that can be used in the database query
 language (e.g., Cypher).
 
 ### Query interaction
-As an optional follow-up, you can interact with the returned query using the 
-`BioCypherQueryHandler` class (`query_interaction.py`). It takes the query, 
-the original question and the KG information so that the interaction is still aware of the KG. 
+As an optional follow-up, you can interact with the returned query using the
+`BioCypherQueryHandler` class (`query_interaction.py`). It takes the query,
+the original question and the KG information so that the interaction is still aware of the KG.
 
 ```python
 from biochatter.query_interaction import BioCypherQueryHandler
@@ -152,10 +152,10 @@ request = "Only return 10 results and sort them alphabetically"
 explanation = query_handler.update_query(request)
 ```
 
-NB: for updates, it might sometimes be relevant that all the KG 
-enitites/relationships/properties are known to the LLM instead 
+NB: for updates, it might sometimes be relevant that all the KG
+enitites/relationships/properties are known to the LLM instead
 of only those that were selected to be relevant for the original question.
-For this, you can optionally pass them as input to the query handler 
+For this, you can optionally pass them as input to the query handler
 with `kg` (similar to `kg_selected`).
 
 (Tip: the prompt_engine object contains both the selected and non-selected as attributes)

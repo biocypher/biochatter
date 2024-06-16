@@ -1,4 +1,4 @@
-from typing import Dict, Optional, List, Union, Any
+from typing import Any, Union, Optional
 import uuid
 
 from pymilvus import DataType, FieldSchema
@@ -9,7 +9,7 @@ def has_collection(name, using: Optional[str] = None):
 
 
 class CollectionSchema(object):
-    def __init__(self, fields: List[FieldSchema]):
+    def __init__(self, fields: list[FieldSchema]):
         pass
 
 
@@ -55,13 +55,13 @@ class Collection(object):
         return []
 
     def create_index(
-        self, field_name: str, index_params: Dict[str, Any], using: str
+        self, field_name: str, index_params: dict[str, Any], using: str
     ):
         pass
 
     def insert(
         self,
-        data: Union[List, Dict],
+        data: Union[list, dict],
         partition_name: Optional[str] = None,
         timeout: Optional[float] = None,
         **kwargs,
@@ -73,12 +73,12 @@ class Collection(object):
 
 class Connections(object):
     def connect(
-        self, 
-        host: str, 
-        port: str, 
-        alias: Optional[str] = None, 
-        user: Optional[str]="", 
-        password: Optional[str]=""
+        self,
+        host: str,
+        port: str,
+        alias: Optional[str] = None,
+        user: Optional[str] = "",
+        password: Optional[str] = "",
     ):
         pass
 

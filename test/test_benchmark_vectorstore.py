@@ -1,10 +1,12 @@
 from unittest.mock import patch
-from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
-from biochatter.vectorstore import DocumentEmbedder, DocumentReader, Document
-from biochatter.rag_agent import RagAgent, RagAgentModeEnum
 import os
+
 import pytest
-from benchmark.conftest import calculate_test_score
+
+from benchmark.conftest import calculate_bool_vector_score
+from biochatter.rag_agent import RagAgent, RagAgentModeEnum
+from biochatter.vectorstore import Document, DocumentReader, DocumentEmbedder
+from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
 
 # setup milvus connection
 if os.getenv("DEVCONTAINER"):
@@ -72,6 +74,7 @@ search_docs = [
     ),
 ]
 
+
 @pytest.mark.parametrize("model", EMBEDDING_MODELS)
 @pytest.mark.parametrize("chunk_size", CHUNK_SIZES)
 def test_retrieval_augmented_generation(model, chunk_size):
@@ -82,15 +85,18 @@ def test_retrieval_augmented_generation(model, chunk_size):
     reader = DocumentReader()
     doc = reader.document_from_pdf(doc_bytes)
 
-    with patch(
-        "biochatter.vectorstore.OpenAIEmbeddings"
-    ) as mock_openaiembeddings, patch(
-        "biochatter.vectorstore_agent.VectorDatabaseAgentMilvus"
-    ) as mock_host_1, patch(
-        "biochatter.vectorstore.VectorDatabaseAgentMilvus"
-    ) as mock_host, patch(
-        "biochatter.vectorstore.RecursiveCharacterTextSplitter"
-    ) as mock_textsplitter:
+    with (
+        patch(
+            "biochatter.vectorstore.OpenAIEmbeddings"
+        ) as mock_openaiembeddings,
+        patch(
+            "biochatter.vectorstore_agent.VectorDatabaseAgentMilvus"
+        ) as mock_host_1,
+        patch("biochatter.vectorstore.VectorDatabaseAgentMilvus") as mock_host,
+        patch(
+            "biochatter.vectorstore.RecursiveCharacterTextSplitter"
+        ) as mock_textsplitter,
+    ):
         # mocking
         mock_textsplitter.from_huggingface_tokenizer.return_value = (
             mock_textsplitter()
@@ -115,7 +121,7 @@ def test_retrieval_augmented_generation(model, chunk_size):
             mode=RagAgentModeEnum.VectorStore,
             model_name=model,
             connection_args={"host": _HOST, "port": _PORT},
-            embedding_func=mock_openaiembeddings
+            embedding_func=mock_openaiembeddings,
         )
         doc_embedder.connect()
         doc_ids.append(doc_embedder.save_document(doc))
@@ -125,7 +131,10 @@ def test_retrieval_augmented_generation(model, chunk_size):
         correct = ["BioCypher" in result[0] for result in results]
 
         # delete embeddings
-        [doc_embedder.database_host.remove_document(doc_id) for doc_id in doc_ids]
+        [
+            doc_embedder.database_host.remove_document(doc_id)
+            for doc_id in doc_ids
+        ]
 
         # record sum in CSV file
-        assert calculate_test_score(correct) == (3, 3)
+        assert calculate_bool_vector_score(correct) == (3, 3)

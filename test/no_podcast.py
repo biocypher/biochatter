@@ -1,7 +1,9 @@
+import os
+
+import pytest
+
 from biochatter.podcast import Podcaster
 from biochatter.vectorstore import DocumentReader
-import os
-import pytest
 
 
 @pytest.mark.skip(

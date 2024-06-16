@@ -1,16 +1,15 @@
-from typing import List, Optional, Dict
+from typing import Optional
 
+from transformers import GPT2TokenizerFast
 from langchain.schema import Document
-import openai
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.embeddings.azure_openai import AzureOpenAIEmbeddings
 from langchain.embeddings import XinferenceEmbeddings
+from langchain.vectorstores import Milvus
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.document_loaders import TextLoader
-from langchain.vectorstores import Milvus
-
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.embeddings.azure_openai import AzureOpenAIEmbeddings
 import fitz  # this is PyMuPDF (PyPI pymupdf package, not fitz)
-from transformers import GPT2TokenizerFast
+import openai
 
 from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
 
@@ -36,7 +35,7 @@ class DocumentEmbedder:
         azure_endpoint: Optional[str] = None,
         base_url: Optional[str] = None,
         embeddings: Optional[OpenAIEmbeddings | XinferenceEmbeddings] = None,
-        documentids_workspace: Optional[List[str]] = None,
+        documentids_workspace: Optional[list[str]] = None,
     ) -> None:
         """
         Class that handles the retrieval-augmented generation (RAG) functionality
@@ -201,7 +200,7 @@ class DocumentEmbedder:
             else self._tokens_splitter()
         )
 
-    def save_document(self, doc: List[Document]) -> str:
+    def save_document(self, doc: list[Document]) -> str:
         """
         This function saves document to the vector database
         Args:
@@ -213,17 +212,17 @@ class DocumentEmbedder:
         splitted = self._split_document(doc)
         return self._store_embeddings(splitted)
 
-    def _split_document(self, document: List[Document]) -> List[Document]:
+    def _split_document(self, document: list[Document]) -> list[Document]:
         text_splitter = self._text_splitter()
         return text_splitter.split_documents(document)
 
-    def _store_embeddings(self, doc: List[Document]) -> str:
+    def _store_embeddings(self, doc: list[Document]) -> str:
         return self.database_host.store_embeddings(documents=doc)
 
     def connect(self) -> None:
         self.database_host.connect()
 
-    def get_all_documents(self) -> List[Dict]:
+    def get_all_documents(self) -> list[dict]:
         return self.database_host.get_all_documents(
             doc_ids=self.documentids_workspace
         )
@@ -250,7 +249,7 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
         metadata_collection_name: Optional[str] = None,
         api_key: Optional[str] = "none",
         base_url: Optional[str] = None,
-        documentids_workspace: Optional[List[str]] = None,
+        documentids_workspace: Optional[list[str]] = None,
     ):
         """
         Extension of the DocumentEmbedder class that uses Xinference for
@@ -363,7 +362,7 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
 
 
 class DocumentReader:
-    def load_document(self, path: str) -> List[Document]:
+    def load_document(self, path: str) -> list[Document]:
         """
         Loads a document from a path; accepts txt and pdf files. Txt files are
         loaded as-is, pdf files are converted to text using fitz.
@@ -394,7 +393,7 @@ class DocumentReader:
                 )
             ]
 
-    def document_from_pdf(self, pdf: bytes) -> List[Document]:
+    def document_from_pdf(self, pdf: bytes) -> list[Document]:
         """
         Receive a byte representation of a pdf file and return a list of Documents
         with metadata.
@@ -420,7 +419,7 @@ class DocumentReader:
             )
         ]
 
-    def document_from_txt(self, txt: bytes) -> List[Document]:
+    def document_from_txt(self, txt: bytes) -> list[Document]:
         """
         Receive a byte representation of a txt file and return a list of Documents
         with metadata.

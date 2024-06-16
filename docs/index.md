@@ -37,7 +37,7 @@ check out our two web app implementations:
 
 </div>
 
-BioChatter is part of the [BioCypher](https://github.com/biocypher) ecosystem, 
+BioChatter is part of the [BioCypher](https://github.com/biocypher) ecosystem,
 connecting natively to BioCypher knowledge graphs. The BioChatter paper is being
 written [here](https://github.com/biocypher/biochatter-paper) and the current
 version can be read [here](https://biocypher.github.io/biochatter-paper).
