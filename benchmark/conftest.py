@@ -14,7 +14,7 @@ from .load_dataset import get_benchmark_dataset
 from .benchmark_utils import benchmark_already_executed
 
 # how often should each benchmark be run?
-N_ITERATIONS = 1
+N_ITERATIONS = 3
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
@@ -22,7 +22,7 @@ BENCHMARK_DATASET = get_benchmark_dataset()
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
     # "gpt-3.5-turbo-0613",
-    "gpt-3.5-turbo-0125",
+    # "gpt-3.5-turbo-0125",
     # "gpt-4-0613",
     # "gpt-4-0125-preview",
 ]
@@ -317,12 +317,6 @@ def conversation(request, model_name, client):
             model_name=model_name,
             prompts={},
             correct=False,
-        )
-        # delete first dots if venv is in project env
-        cus_path = os.getcwd() + "../../venv/bin/.env"
-        load_dotenv(cus_path)
-        conversation.set_api_key(
-            os.getenv("OPENAI_API_KEY"), user="benchmark_user"
         )
     elif model_name in XINFERENCE_MODEL_NAMES:
         (
