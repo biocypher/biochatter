@@ -21,7 +21,7 @@ class RagAgent:
         documentids_workspace: Optional[List[str]] = None,
     ) -> None:
         ######
-        ##TO DO 
+        ##TO DO
         ######
         # mode: 'API' for the case where the agent is querying an API
         # use_prompt: default TRUE for self.mode == API
@@ -32,7 +32,7 @@ class RagAgent:
 
         Args:
             mode (str): The mode of the agent. Either "kg" or "vectorstore".
-            
+
             model_name (str): The name of the model to use.
 
             connection_args (dict): A dictionary of arguments to connect to the
