@@ -1,5 +1,6 @@
-from typing import Optional
-
+from typing import Optional, List
+import os 
+from langchain.chat_models import ChatOpenAI
 
 class RagAgentModeEnum:
     VectorStore = "vectorstore"
@@ -17,7 +18,7 @@ class RagAgent:
         schema_config_or_info_dict: Optional[dict] = None,
         conversation_factory: Optional[callable] = None,
         embedding_func: Optional[object] = None,
-        documentids_workspace: Optional[list[str]] = None,
+        documentids_workspace: Optional[List[str]] = None,
     ) -> None:
         ######
         ##TO DO 
@@ -100,9 +101,9 @@ class RagAgent:
             self.query_func = self.agent.similarity_search
 
         elif self.mode == "API":
-            from .api_agent import api_agent
-
-            self.query_func = api_agent
+            from .api_agent import ApiAgent
+            llm = ChatOpenAI(model_name='gpt-4', temperature=0, openai_api_key=os.getenv("OPENAI_API_KEY"))
+            self.query_func = ApiAgent(llm)
         else:
             raise ValueError(
                 "Invalid mode. Choose either 'kg' or 'vectorstore'."
@@ -149,13 +150,13 @@ class RagAgent:
                 for result in results
             ]
         elif self.mode == "API":
-            response = self.query_func(user_question)
-            # response = [
-            #     (
-            #         response,
-            #         {"name": "API Response", "description": "API Response"},
-            #     )
-            # ]
+            api_agent_response = self.query_func(user_question)
+            response = [
+                (
+                    api_agent_response,
+                    {"name": "API Response", "description": "API Response"},
+                )
+            ]
         else:
             raise ValueError(
                 "Invalid mode. Choose either 'kg' or 'vectorstore'."
