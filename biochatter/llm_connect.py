@@ -11,6 +11,7 @@ except ImportError:
     st = None
 
 from abc import ABC, abstractmethod
+import base64
 from typing import Optional
 import json
 import logging
@@ -20,6 +21,7 @@ from langchain.schema import AIMessage, HumanMessage, SystemMessage
 from langchain.chat_models import ChatOpenAI, AzureChatOpenAI
 import nltk
 import openai
+import urllib.parse
 
 from ._stats import get_stats
 from .rag_agent import RagAgent
@@ -54,6 +56,12 @@ TOKEN_LIMITS = {
     "bigscience/bloom": 1000,
     "custom-endpoint": 1,  # Reasonable value?
 }
+
+
+# Function to encode the image
+def encode_image(image_path):
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode("utf-8")
 
 
 class Conversation(ABC):
@@ -160,7 +168,7 @@ class Conversation(ABC):
             ),
         )
 
-    def append_user_message(self, message: str):
+    def append_user_message(self, message: str) -> None:
         """
         Add a message from the user to the conversation.
 
@@ -173,15 +181,27 @@ class Conversation(ABC):
             ),
         )
 
-    def append_image_message(self, message: str, image_url: str):
+    def append_image_message(
+        self, message: str, image_url: str, local: bool = False
+    ) -> None:
         """
-        Add a user message with an image to the conversation.
+        Add a user message with an image to the conversation. Also checks, in
+        addition to the `local` flag, if the image URL is a local file path.
+        If it is local, the image will be encoded as a base64 string to be
+        passed to the LLM.
 
         Args:
             message (str): The message from the user.
 
             image_url (str): The URL of the image.
+
+            local (bool): Whether the image is local or not. If local, it will
+                be encoded as a base64 string to be passed to the LLM.
         """
+        parsed_url = urllib.parse.urlparse(image_url)
+        if local or not parsed_url.netloc:
+            image_url = f"data:image/jpeg;base64,{encode_image(image_url)}"
+
         self.messages.append(
             HumanMessage(
                 content=[
