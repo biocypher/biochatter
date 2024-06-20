@@ -761,8 +761,8 @@ class OllamaConversation(Conversation):
     ):
         """
 
-        Connect to an open-source LLM via the Ollama/Langchain library and set
-        up a conversation with the user.  Also initialise a second
+        Connect to an Ollama LLM via the Ollama/Langchain library and set
+        up a conversation with the user. Also initialise a second
         conversational agent to provide corrections to the model output, if
         necessary.
 
@@ -772,9 +772,7 @@ class OllamaConversation(Conversation):
 
             prompts (dict): A dictionary of prompts to use for the conversation.
 
-            model_name (str): The name of the model to use. Will be mapped to
-            the according uid from the list of available models. Can be set to
-            "auto" to use the first available model.
+            model_name (str): The name of the model to use. Can be any model name available in your Ollama instance.
 
             correct (bool): Whether to correct the model output.
 
@@ -791,7 +789,8 @@ class OllamaConversation(Conversation):
             correct=correct,
             split_correction=split_correction,
         )
-        self.model = ChatOllama(base_url=base_url, model=model_name, temperature=0.0)
+        self.model_name =model_name
+        self.model = ChatOllama(base_url=base_url, model=self.model_name, temperature=0.0)
 
         self.ca_model_name = "mixtral:latest"
 
@@ -800,7 +799,7 @@ class OllamaConversation(Conversation):
 
     def append_system_message(self, message: str):
         """
-        We override the system message addition because Xinference does not
+        We override the system message addition because Ollama does not
         accept multiple system messages. We concatenate them if there are
         multiple.
 
@@ -825,7 +824,7 @@ class OllamaConversation(Conversation):
         """
 
         We also override the system message addition for the correcting agent,
-        likewise because Xinference does not accept multiple system messages. We
+        likewise because Ollama does not accept multiple system messages. We
         concatenate them if there are multiple.
 
         TODO this currently assumes that the correcting agent is the same model
@@ -851,20 +850,13 @@ class OllamaConversation(Conversation):
     def _primary_query(self):
         """
 
-        Query the Xinference client API with the user's message and return the
+        Query the Ollama client API with the user's message and return the
         response using the message history (flattery system messages, prior
         conversation) as context. Correct the response if necessary.
 
-        LLaMA2 architecture does not accept separate system messages, so we
-        concatenate the system message with the user message to form the prompt.
-        'LLaMA enforces a strict rule that chats should alternate
-        user/assistant/user/assistant, and the system message, if present,
-        should be embedded into the first user message.' (from
-        https://discuss.huggingface.co/t/issue-with-llama-2-chat-template-and-out-of-date-documentation/61645/3)
-
         Returns:
 
-            tuple: A tuple containing the response from the Xinference API
+            tuple: A tuple containing the response from the Ollama API
             (formatted similarly to responses from the OpenAI API) and the token
             usage.
 
@@ -920,7 +912,7 @@ class OllamaConversation(Conversation):
     def _correct_response(self, msg: str):
         """
 
-        Correct the response from the Xinference API by sending it to a
+        Correct the response from the Ollama API by sending it to a
         secondary language model. Optionally split the response into single
         sentences and correct each sentence individually. Update usage stats.
 
