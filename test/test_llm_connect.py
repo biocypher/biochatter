@@ -328,7 +328,7 @@ def test_multiple_cycles_of_ai_and_human(xinference_conversation):
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
-def test_append_local_image():
+def test_append_local_image_gpt():
     convo = GptConversation(
         model_name="gpt-4o",
         prompts={},
@@ -355,7 +355,7 @@ def test_append_local_image():
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
-def test_local_image_query():
+def test_local_image_query_gpt():
     convo = GptConversation(
         model_name="gpt-4o",
         prompts={},
@@ -376,7 +376,7 @@ def test_local_image_query():
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
-def test_append_online_image():
+def test_append_online_image_gpt():
     convo = GptConversation(
         model_name="gpt-4o",
         prompts={},
@@ -395,7 +395,7 @@ def test_append_online_image():
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
-def test_online_image_query():
+def test_online_image_query_gpt():
     convo = GptConversation(
         model_name="gpt-4o",
         prompts={},
@@ -409,3 +409,20 @@ def test_online_image_query():
         image_url="https://upload.wikimedia.org/wikipedia/commons/8/8f/The-Transformer-model-architecture.png",
     )
     assert "transformer" in result.lower()
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_local_image_query_xinference():
+    url = "http://localhost:9997"
+    convo = XinferenceConversation(
+        base_url=url,
+        prompts={},
+        correct=False,
+    )
+    assert convo.set_api_key()
+
+    result, _, _ = convo.query(
+        "Does this text describe the attached image: Live confocal imaging of liver stage P. berghei expressing UIS4-mCherry and cytoplasmic GFP reveals different morphologies of the LS-TVN: elongated membrane clusters (left), vesicles in the host cell cytoplasm (center), and a thin tubule protruding from the PVM (right). Live imaging was performed 20?h after infection of hepatoma cells. Features are marked with white arrowheads.",
+        image_url="test/figure_panel.jpg",
+    )
+    assert isinstance(result, str)
