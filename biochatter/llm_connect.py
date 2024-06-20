@@ -991,6 +991,8 @@ class AzureGptConversation(GptConversation):
 
             prompts (dict): A dictionary of prompts to use for the conversation.
 
+            correct (bool): Whether to correct the model output.
+
             split_correction (bool): Whether to correct the model output by
                 splitting the output into sentences and correcting each
                 sentence individually.
