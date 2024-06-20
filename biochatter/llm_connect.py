@@ -747,6 +747,229 @@ class XinferenceConversation(Conversation):
         return names
 
 
+class OllamaConversation(Conversation):
+    def set_api_key(self, api_key: str, user: Optional[str] = None):
+        pass
+
+    def __init__(
+        self,
+        base_url: str,
+        prompts: dict,
+        model_name: str = "llama3",
+        correct: bool = True,
+        split_correction: bool = False,
+    ):
+        """
+
+        Connect to an open-source LLM via the Ollama/Langchain library and set
+        up a conversation with the user.  Also initialise a second
+        conversational agent to provide corrections to the model output, if
+        necessary.
+
+        Args:
+
+            base_url (str): The base URL of the Ollama instance.
+
+            prompts (dict): A dictionary of prompts to use for the conversation.
+
+            model_name (str): The name of the model to use. Will be mapped to
+            the according uid from the list of available models. Can be set to
+            "auto" to use the first available model.
+
+            correct (bool): Whether to correct the model output.
+
+            split_correction (bool): Whether to correct the model output by
+            splitting the output into sentences and correcting each sentence
+            individually.
+
+        """
+        from langchain.chat_models import ChatOllama
+
+        super().__init__(
+            model_name=model_name,
+            prompts=prompts,
+            correct=correct,
+            split_correction=split_correction,
+        )
+        self.model = ChatOllama(base_url=base_url, model=model_name, temperature=0.0)
+
+        self.ca_model_name = "mixtral:latest"
+
+        self.ca_model = ChatOllama(base_url=base_url, model_name=self.ca_model_name, temperature=0.0)
+
+
+    def append_system_message(self, message: str):
+        """
+        We override the system message addition because Xinference does not
+        accept multiple system messages. We concatenate them if there are
+        multiple.
+
+        Args:
+            message (str): The message to append.
+        """
+        # if there is not already a system message in self.messages
+        if not any(isinstance(m, SystemMessage) for m in self.messages):
+            self.messages.append(
+                SystemMessage(
+                    content=message,
+                ),
+            )
+        else:
+            # if there is a system message, append to the last one
+            for i, msg in enumerate(self.messages):
+                if isinstance(msg, SystemMessage):
+                    self.messages[i].content += f"\n{message}"
+                    break
+
+    def append_ca_message(self, message: str):
+        """
+
+        We also override the system message addition for the correcting agent,
+        likewise because Xinference does not accept multiple system messages. We
+        concatenate them if there are multiple.
+
+        TODO this currently assumes that the correcting agent is the same model
+        as the primary one.
+
+        Args:
+            message (str): The message to append.
+        """
+        # if there is not already a system message in self.messages
+        if not any(isinstance(m, SystemMessage) for m in self.ca_messages):
+            self.ca_messages.append(
+                SystemMessage(
+                    content=message,
+                ),
+            )
+        else:
+            # if there is a system message, append to the last one
+            for i, msg in enumerate(self.ca_messages):
+                if isinstance(msg, SystemMessage):
+                    self.ca_messages[i].content += f"\n{message}"
+                    break
+
+    def _primary_query(self):
+        """
+
+        Query the Xinference client API with the user's message and return the
+        response using the message history (flattery system messages, prior
+        conversation) as context. Correct the response if necessary.
+
+        LLaMA2 architecture does not accept separate system messages, so we
+        concatenate the system message with the user message to form the prompt.
+        'LLaMA enforces a strict rule that chats should alternate
+        user/assistant/user/assistant, and the system message, if present,
+        should be embedded into the first user message.' (from
+        https://discuss.huggingface.co/t/issue-with-llama-2-chat-template-and-out-of-date-documentation/61645/3)
+
+        Returns:
+
+            tuple: A tuple containing the response from the Xinference API
+            (formatted similarly to responses from the OpenAI API) and the token
+            usage.
+
+        """
+        try:
+            messages = self._create_history(self.messages)
+            response = self.model.invoke(
+                messages
+                # ,generate_config={"max_tokens": 2048, "temperature": 0},
+            )
+        except (
+            openai._exceptions.APIError,
+            openai._exceptions.OpenAIError,
+            openai._exceptions.ConflictError,
+            openai._exceptions.NotFoundError,
+            openai._exceptions.APIStatusError,
+            openai._exceptions.RateLimitError,
+            openai._exceptions.APITimeoutError,
+            openai._exceptions.BadRequestError,
+            openai._exceptions.APIConnectionError,
+            openai._exceptions.AuthenticationError,
+            openai._exceptions.InternalServerError,
+            openai._exceptions.PermissionDeniedError,
+            openai._exceptions.UnprocessableEntityError,
+            openai._exceptions.APIResponseValidationError,
+        ) as e:
+            return str(e), None
+        response = response.dict()
+        msg = response["content"]
+        token_usage = response["response_metadata"]["eval_count"]
+
+        self._update_usage_stats(self.model_name, token_usage)
+
+        self.append_ai_message(msg)
+
+        return msg, token_usage
+
+    def _create_history(self, messages):
+        from langchain_core.messages import HumanMessage as LC_HumanMessage
+        from langchain_core.messages import SystemMessage as LC_SystemMessage
+        from langchain_core.messages import AIMessage as LC_AIMessage
+        history = []
+        for i, m in enumerate(messages):
+            if isinstance(m, AIMessage):
+                history.append(LC_AIMessage(content=m.content))
+            elif isinstance(m, HumanMessage):
+                history.append(LC_HumanMessage(content=m.content))
+            elif isinstance(m, SystemMessage):
+                history.append(LC_SystemMessage(content=m.content))
+
+        return history
+
+    def _correct_response(self, msg: str):
+        """
+
+        Correct the response from the Xinference API by sending it to a
+        secondary language model. Optionally split the response into single
+        sentences and correct each sentence individually. Update usage stats.
+
+        Args:
+            msg (str): The response from the model.
+
+        Returns:
+            str: The corrected response (or OK if no correction necessary).
+        """
+        ca_messages = self.ca_messages.copy()
+        ca_messages.append(
+            HumanMessage(
+                content=msg,
+            ),
+        )
+        ca_messages.append(
+            SystemMessage(
+                content="If there is nothing to correct, please respond "
+                "with just 'OK', and nothing else!",
+            ),
+        )
+        response = self.ca_model.invoke(
+            chat_history=self._create_history(self.messages)
+        )
+        response.dict()
+        correction = response["content"]
+        token_usage = response["eval_count"]
+
+        self._update_usage_stats(self.ca_model_name, token_usage)
+
+        return correction
+
+    def _update_usage_stats(self, model: str, token_usage: dict):
+        """
+        Update redis database with token usage statistics using the usage_stats
+        object with the increment method.
+
+        Args:
+            model (str): The model name.
+
+            token_usage (dict): The token usage statistics.
+        """
+        # if self.user == "community":
+        # self.usage_stats.increment(
+        #     f"usage:[date]:[user]",
+        #     {f"{k}:{model}": v for k, v in token_usage.items()},
+        # )
+
+
 class GptConversation(Conversation):
     def __init__(
         self,

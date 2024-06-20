@@ -14,6 +14,7 @@ from biochatter.llm_connect import (
     WasmConversation,
     AzureGptConversation,
     XinferenceConversation,
+    OllamaConversation
 )
 
 
@@ -218,6 +219,31 @@ def test_generic_chatting():
         assert token_usage["completion_tokens"] > 0
 
 
+def test_ollama_chatting():
+    base_url = os.getenv("OLLAMA_BASE_URL", "http://llm.biocypher.org")
+    with patch("langchain.chat_models.ChatOllama") as mock_client:
+        response = {'content': "Hello there! It's great to meet you!", 'additional_kwargs': {},
+                    'response_metadata': {'model': 'llama3', 'created_at': '2024-06-20T17:19:45.376245476Z',
+                                          'message': {'role': 'assistant', 'content': ''}, 'done_reason': 'stop',
+                                          'done': True, 'total_duration': 256049685, 'load_duration': 3096978,
+                                          'prompt_eval_duration': 15784000, 'eval_count': 11,
+                                          'eval_duration': 107658000}, 'type': 'ai', 'name': None,
+                    'id': 'run-698c8654-13e6-4bbb-8d59-67e520f78eb3-0', 'example': False, 'tool_calls': [],
+                    'invalid_tool_calls': [], 'usage_metadata': None}
+
+        mock_client.return_value.get_model.return_value.invoke.return_value = (
+            response
+        )
+        convo = OllamaConversation(
+            base_url=base_url,
+            model_name="llama3",
+            prompts={},
+            correct=False,
+        )
+        (msg, token_usage, correction) = convo.query("Hello, world!")
+        assert token_usage > 0
+
+
 def test_wasm_conversation():
     # Initialize the class
     wasm_convo = WasmConversation(
@@ -292,7 +318,7 @@ def test_multiple_system_messages_before_human(xinference_conversation):
 
 
 def test_multiple_messages_including_ai_before_system_and_human(
-    xinference_conversation,
+        xinference_conversation,
 ):
     xinference_conversation.messages = [
         HumanMessage(content="Human message history"),
