@@ -221,7 +221,7 @@ def test_generic_chatting():
 
 def test_ollama_chatting():
     base_url = os.getenv("OLLAMA_BASE_URL", "http://llm.biocypher.org")
-    with patch("langchain.chat_models.ChatOllama") as mock_client:
+    with patch("langchain.chat_models.ChatOllama") as mock_model:
         response = {'content': "Hello there! It's great to meet you!", 'additional_kwargs': {},
                     'response_metadata': {'model': 'llama3', 'created_at': '2024-06-20T17:19:45.376245476Z',
                                           'message': {'role': 'assistant', 'content': ''}, 'done_reason': 'stop',
@@ -231,9 +231,8 @@ def test_ollama_chatting():
                     'id': 'run-698c8654-13e6-4bbb-8d59-67e520f78eb3-0', 'example': False, 'tool_calls': [],
                     'invalid_tool_calls': [], 'usage_metadata': None}
 
-        mock_client.return_value.get_model.return_value.invoke.return_value = (
-            response
-        )
+        mock_model.return_value.invoke.return_value.dict.return_value = response
+
         convo = OllamaConversation(
             base_url=base_url,
             model_name="llama3",

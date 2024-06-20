@@ -796,7 +796,6 @@ class OllamaConversation(Conversation):
 
         self.ca_model = ChatOllama(base_url=base_url, model_name=self.ca_model_name, temperature=0.0)
 
-
     def append_system_message(self, message: str):
         """
         We override the system message addition because Ollama does not
@@ -866,7 +865,7 @@ class OllamaConversation(Conversation):
             response = self.model.invoke(
                 messages
                 # ,generate_config={"max_tokens": 2048, "temperature": 0},
-            )
+            ).dict()
         except (
             openai._exceptions.APIError,
             openai._exceptions.OpenAIError,
@@ -884,7 +883,6 @@ class OllamaConversation(Conversation):
             openai._exceptions.APIResponseValidationError,
         ) as e:
             return str(e), None
-        response = response.dict()
         msg = response["content"]
         token_usage = response["response_metadata"]["eval_count"]
 
@@ -936,8 +934,7 @@ class OllamaConversation(Conversation):
         )
         response = self.ca_model.invoke(
             chat_history=self._create_history(self.messages)
-        )
-        response.dict()
+        ).dict()
         correction = response["content"]
         token_usage = response["eval_count"]
 
