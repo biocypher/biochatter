@@ -1,3 +1,4 @@
+import base64
 from unittest.mock import Mock, patch
 import os
 
@@ -324,3 +325,40 @@ def test_multiple_cycles_of_ai_and_human(xinference_conversation):
         "role": "user",
         "content": "System message\nHuman message",
     }
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_image_message():
+    convo = GptConversation(
+        model_name="gpt-4o",
+        prompts={},
+        correct=False,
+        split_correction=False,
+    )
+    convo.set_api_key(api_key=os.getenv("OPENAI_API_KEY"), user="test_user")
+
+    convo.append_system_message(
+        "You are an editorial assistant to a journal in biomedical science."
+    )
+
+    # Path to your image
+    image_path = "test/figure_panel.jpg"
+
+    # Function to encode the image
+    def encode_image(image_path):
+        with open(image_path, "rb") as image_file:
+            return base64.b64encode(image_file.read()).decode("utf-8")
+
+    # Getting the base64 string
+    base64_image = encode_image(image_path)
+
+    convo.append_image_message(
+        message=(
+            "This text describes the attached image: "
+            "Live confocal imaging of liver stage P. berghei expressing UIS4-mCherry and cytoplasmic GFP reveals different morphologies of the LS-TVN: elongated membrane clusters (left), vesicles in the host cell cytoplasm (center), and a thin tubule protruding from the PVM (right). Live imaging was performed 20?h after infection of hepatoma cells. Features are marked with white arrowheads."
+        ),
+        image_url=f"data:image/jpeg;base64,{base64_image}",
+    )
+
+    result, _, _ = convo.query("Is the description accurate?")
+    assert "yes" in result.lower()

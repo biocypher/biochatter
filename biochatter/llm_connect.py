@@ -121,21 +121,39 @@ class Conversation(ABC):
     def set_prompts(self, prompts: dict):
         self.prompts = prompts
 
-    def append_ai_message(self, message: str):
+    def append_ai_message(self, message: str) -> None:
+        """
+        Add a message from the AI to the conversation.
+
+        Args:
+            message (str): The message from the AI.
+        """
         self.messages.append(
             AIMessage(
                 content=message,
             ),
         )
 
-    def append_system_message(self, message: str):
+    def append_system_message(self, message: str) -> None:
+        """
+        Add a system message to the conversation.
+
+        Args:
+            message (str): The system message.
+        """
         self.messages.append(
             SystemMessage(
                 content=message,
             ),
         )
 
-    def append_ca_message(self, message: str):
+    def append_ca_message(self, message: str) -> None:
+        """
+        Add a message to the correcting agent conversation.
+
+        Args:
+            message (str): The message to the correcting agent.
+        """
         self.ca_messages.append(
             SystemMessage(
                 content=message,
@@ -143,9 +161,33 @@ class Conversation(ABC):
         )
 
     def append_user_message(self, message: str):
+        """
+        Add a message from the user to the conversation.
+
+        Args:
+            message (str): The message from the user.
+        """
         self.messages.append(
             HumanMessage(
                 content=message,
+            ),
+        )
+
+    def append_image_message(self, message: str, image_url: str):
+        """
+        Add a user message with an image to the conversation.
+
+        Args:
+            message (str): The message from the user.
+
+            image_url (str): The URL of the image.
+        """
+        self.messages.append(
+            HumanMessage(
+                content=[
+                    {"type": "text", "text": message},
+                    {"type": "image_url", "image_url": {"url": image_url}},
+                ],
             ),
         )
 
