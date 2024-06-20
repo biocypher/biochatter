@@ -220,8 +220,27 @@ class Conversation(ABC):
                 msg = self.prompts["tool_prompts"][tool_name].format(df=df)
                 self.append_system_message(msg)
 
-    def query(self, text: str):
-        self.append_user_message(text)
+    def query(self, text: str, image_url: str = None) -> tuple[str, dict, str]:
+        """
+        The main workflow for querying the LLM API. Appends the most recent
+        query to the conversation, optionally injects context from the RAG
+        agent, and runs the primary query method of the child class.
+
+        Args:
+            text (str): The user query.
+
+            image_url (str): The URL of an image to include in the conversation.
+                Optional and only supported for models with vision capabilities.
+
+        Returns:
+            tuple: A tuple containing the response from the API, the token usage
+                information, and the correction if necessary/desired.
+        """
+
+        if not image_url:
+            self.append_user_message(text)
+        else:
+            self.append_image_message(text, image_url)
 
         self._inject_context(text)
 
