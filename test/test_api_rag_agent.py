@@ -3,6 +3,8 @@ import pytest
 
 from biochatter.rag_agent import RagAgent
 
+
+@pytest.mark.skip(reason="Live test for development purposes")
 def test_api_agent():
     """
     Test the API agent with a specific DNA sequence question.

@@ -80,11 +80,14 @@ class TestBlastQueryBuilder(unittest.TestCase):
 import os
 import pytest
 @pytest.fixture
+@pytest.mark.skip(reason="Live test for development purposes")
 def api_agent():
     openai_api_key = os.getenv("OPENAI_API_KEY")
     llm = ChatOpenAI(model_name='gpt-4', temperature=0, openai_api_key=openai_api_key)
     return APIAgent(llm)
 
+
+@pytest.mark.skip(reason="Live test for development purposes")
 def test_fetch_blast_results(api_agent):
     question = "Which organism does the DNA sequence come from: TTCATCGGTCTGAGCAGAGGATGAAGTTGCAAATGATGCAAGCAAAACAGCTCAAAGATGAAGAGGAAAAGGCTATACACAACAGGAGCAATGTAGATACAGAAGGT"
     
