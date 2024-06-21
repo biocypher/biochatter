@@ -8,6 +8,7 @@ from biochatter.api_agent import (  # Adjust the import as necessary
     BlastFetcher,
     BlastQueryBuilder,
     llm,
+    APIAgent
 )
 from langchain.chat_models import ChatOpenAI
 
