@@ -5,7 +5,7 @@ from langchain.chat_models import ChatOpenAI
 class RagAgentModeEnum:
     VectorStore = "vectorstore"
     KG = "kg"
-
+    API = "API"
 
 class RagAgent:
     def __init__(
@@ -100,13 +100,13 @@ class RagAgent:
 
             self.query_func = self.agent.similarity_search
 
-        elif self.mode == "API":
+        elif self.mode == RagAgentModeEnum.API:
             from .api_agent import APIAgent
             llm = ChatOpenAI(model_name='gpt-4', temperature=0, openai_api_key=os.getenv("OPENAI_API_KEY"))
             self.query_func = APIAgent(llm)
         else:
             raise ValueError(
-                "Invalid mode. Choose either 'kg' or 'vectorstore'."
+                "Invalid mode. Choose either 'kg', 'vectorstore' or 'API'."
             )
 
     def generate_responses(self, user_question: str) -> list[tuple]:
@@ -149,17 +149,16 @@ class RagAgent:
                 )
                 for result in results
             ]
-        elif self.mode == "API":
-            api_agent_response = self.query_func(user_question)
-            response = [
-                (
-                    api_agent_response,
-                    {"name": "API Response", "description": "API Response"},
-                )
-            ]
+        elif self.mode == RagAgentModeEnum.API:
+            self.query_func.execute(user_question)
+            if self.query_func.final_answer is not None:
+                response = [('response', self.query_func.final_answer)]
+            else:
+                response = [('error', self.query_func.final_answer)]
+
         else:
             raise ValueError(
-                "Invalid mode. Choose either 'kg' or 'vectorstore'."
+                "Invalid mode. Choose either 'kg', 'vectorstore' or 'API'."
             )
         self.last_response = response
         return response
