@@ -17,15 +17,16 @@ def test_api_agent():
         connection_args={},  # Add necessary connection arguments if needed
         use_prompt=True  # Ensure prompts are used to get responses
     )
+    assert api_agent.mode == "API", "Agent mode should be 'API'"
 
     # Generate responses using the test question
-    responses = api_agent.execute(question)
-    print(responses)
-    # Print the responses
-    # for response in responses:
-    #     print("Response Text:", response[0])
-    #     print("Response Metadata:", response[1])
+    responses = api_agent.generate_responses(question)
+    assert responses, "No responses generated"
+    assert isinstance(responses, list), "Responses should be a list"
+    assert all(isinstance(response, tuple) for response in responses), "Each response should be a tuple"
 
-# Run the test function
-output = test_api_agent()
-print(output)
+    if responses:
+        print("Test response:", responses[0][1])
+
+
+test_api_agent()
