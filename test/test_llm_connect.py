@@ -1,3 +1,4 @@
+import base64
 from unittest.mock import Mock, patch
 import os
 
@@ -324,3 +325,104 @@ def test_multiple_cycles_of_ai_and_human(xinference_conversation):
         "role": "user",
         "content": "System message\nHuman message",
     }
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_append_local_image_gpt():
+    convo = GptConversation(
+        model_name="gpt-4o",
+        prompts={},
+        correct=False,
+        split_correction=False,
+    )
+    convo.set_api_key(api_key=os.getenv("OPENAI_API_KEY"), user="test_user")
+
+    convo.append_system_message(
+        "You are an editorial assistant to a journal in biomedical science."
+    )
+
+    convo.append_image_message(
+        message=(
+            "This text describes the attached image: "
+            "Live confocal imaging of liver stage P. berghei expressing UIS4-mCherry and cytoplasmic GFP reveals different morphologies of the LS-TVN: elongated membrane clusters (left), vesicles in the host cell cytoplasm (center), and a thin tubule protruding from the PVM (right). Live imaging was performed 20?h after infection of hepatoma cells. Features are marked with white arrowheads."
+        ),
+        image_url="test/figure_panel.jpg",
+        local=True,
+    )
+
+    result, _, _ = convo.query("Is the description accurate?")
+    assert "yes" in result.lower()
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_local_image_query_gpt():
+    convo = GptConversation(
+        model_name="gpt-4o",
+        prompts={},
+        correct=False,
+        split_correction=False,
+    )
+    convo.set_api_key(api_key=os.getenv("OPENAI_API_KEY"), user="test_user")
+
+    convo.append_system_message(
+        "You are an editorial assistant to a journal in biomedical science."
+    )
+
+    result, _, _ = convo.query(
+        "Does this text describe the attached image: Live confocal imaging of liver stage P. berghei expressing UIS4-mCherry and cytoplasmic GFP reveals different morphologies of the LS-TVN: elongated membrane clusters (left), vesicles in the host cell cytoplasm (center), and a thin tubule protruding from the PVM (right). Live imaging was performed 20?h after infection of hepatoma cells. Features are marked with white arrowheads.",
+        image_url="test/figure_panel.jpg",
+    )
+    assert "yes" in result.lower()
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_append_online_image_gpt():
+    convo = GptConversation(
+        model_name="gpt-4o",
+        prompts={},
+        correct=False,
+        split_correction=False,
+    )
+    convo.set_api_key(api_key=os.getenv("OPENAI_API_KEY"), user="test_user")
+
+    convo.append_image_message(
+        "This is a picture from the internet.",
+        image_url="https://upload.wikimedia.org/wikipedia/commons/8/8f/The-Transformer-model-architecture.png",
+    )
+
+    result, _, _ = convo.query("What does this picture show?")
+    assert "transformer" in result.lower()
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_online_image_query_gpt():
+    convo = GptConversation(
+        model_name="gpt-4o",
+        prompts={},
+        correct=False,
+        split_correction=False,
+    )
+    convo.set_api_key(api_key=os.getenv("OPENAI_API_KEY"), user="test_user")
+
+    result, _, _ = convo.query(
+        "What does this picture show?",
+        image_url="https://upload.wikimedia.org/wikipedia/commons/8/8f/The-Transformer-model-architecture.png",
+    )
+    assert "transformer" in result.lower()
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_local_image_query_xinference():
+    url = "http://localhost:9997"
+    convo = XinferenceConversation(
+        base_url=url,
+        prompts={},
+        correct=False,
+    )
+    assert convo.set_api_key()
+
+    result, _, _ = convo.query(
+        "Does this text describe the attached image: Live confocal imaging of liver stage P. berghei expressing UIS4-mCherry and cytoplasmic GFP reveals different morphologies of the LS-TVN: elongated membrane clusters (left), vesicles in the host cell cytoplasm (center), and a thin tubule protruding from the PVM (right). Live imaging was performed 20?h after infection of hepatoma cells. Features are marked with white arrowheads.",
+        image_url="test/figure_panel.jpg",
+    )
+    assert isinstance(result, str)
