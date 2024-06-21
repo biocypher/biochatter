@@ -21,6 +21,7 @@ from langchain.chat_models import ChatOpenAI
 import unittest
 from biochatter.api_agent import BlastQueryBuilder, BlastQuery, BlastFetcher, llm  # Adjust the import as necessary
 
+@pytest.mark.skip(reason="Live test for development purposes")
 class TestBlastQueryBuilder(unittest.TestCase):
     def setUp(self):
         self.builder = BlastQueryBuilder()
