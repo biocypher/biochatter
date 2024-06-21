@@ -101,9 +101,9 @@ class RagAgent:
             self.query_func = self.agent.similarity_search
 
         elif self.mode == "API":
-            from .api_agent import ApiAgent
+            from .api_agent import APIAgent
             llm = ChatOpenAI(model_name='gpt-4', temperature=0, openai_api_key=os.getenv("OPENAI_API_KEY"))
-            self.query_func = ApiAgent(llm)
+            self.query_func = APIAgent(llm)
         else:
             raise ValueError(
                 "Invalid mode. Choose either 'kg' or 'vectorstore'."
