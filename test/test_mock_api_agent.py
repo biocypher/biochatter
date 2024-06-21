@@ -4,11 +4,11 @@ import uuid
 import unittest
 
 import requests
-
 from biochatter.api_agent import (
     BlastQuery,
     BlastFetcher,
     BlastQueryBuilder,
+    APIAgent,
     llm,
 )
 
@@ -124,3 +124,47 @@ class TestBlastFetcher(unittest.TestCase):
             self.assertEqual(result, "Mocked Answer")
             mock_read_first_n_lines.assert_called_once_with(file_path, n)
             mock_parser_instance.invoke.assert_called_once()
+
+
+class TestAPIAgent(unittest.TestCase):
+    """TO DO: add test for errors in the APIAgent class."""
+    @patch("biochatter.api_agent.BlastQueryBuilder")
+    @patch("biochatter.api_agent.BlastFetcher")
+    def test_execute_blast_query(
+        self,
+        mock_blast_fetcher,
+        mock_blast_query_builder,
+
+    ):
+        api_agent = APIAgent(llm)
+
+        # Prepare mocks
+        question = "Which organism does the DNA sequence come from: TTCATCGGTCTGAGCAGAGGATGAAGTTGCAAATGATGCAAGCAAAACAGCTCAAAGATGAAGAGGAAAAGGCTATACACAACAGGAGCAATGTAGATACAGAAGGT"
+        mock_blast_query = Mock(spec=BlastQuery)
+        mock_blast_query_builder_instance = mock_blast_query_builder.return_value
+        mock_blast_query_builder_instance.generate_blast_query.return_value = mock_blast_query
+        mock_blast_query.question_uuid = str(uuid.uuid4())
+        mock_blast_query_builder_instance.submit_blast_query.return_value = "MOCK_RID"
+        mock_blast_fetcher_instance = mock_blast_fetcher.return_value
+        mock_blast_fetcher_instance.fetch_and_save_blast_results.return_value = "mock_file.txt"
+        mock_blast_fetcher_instance.answer_extraction.return_value = "Mocked Answer"
+        
+        # Mock the LLM-related functions
+        mock_runnable = Mock()
+        mock_blast_query_builder_instance.create_runnable.return_value = mock_runnable
+        mock_runnable.invoke.return_value = mock_blast_query
+
+        # Run the method to test
+        api_agent.execute(question)
+
+        # Assertions
+        self.assertEqual(api_agent.final_answer, "Mocked Answer")
+        self.assertIsNone(api_agent.error)
+        # Verify the method calls within APIAgent
+        mock_blast_query_builder_instance.generate_blast_query.assert_called_once_with(question, api_agent.blast_prompt_path, llm)
+        mock_blast_query_builder_instance.submit_blast_query.assert_called_once_with(mock_blast_query)
+        mock_blast_fetcher_instance.fetch_and_save_blast_results.assert_called_once_with(mock_blast_query.question_uuid, "MOCK_RID", api_agent.blast_result_path, 100)
+        mock_blast_fetcher_instance.answer_extraction.assert_called_once_with(question, ".blast/mock_file.txt", 100)
+
+if __name__ == "__main__":
+    unittest.main()
