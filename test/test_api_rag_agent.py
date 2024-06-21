@@ -29,4 +29,5 @@ def test_api_agent():
         print("Test response:", responses[0][1])
 
 
-test_api_agent()
+if __name__ == "__main__":
+    pytest.main()
