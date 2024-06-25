@@ -8,9 +8,11 @@ import requests
 
 from biochatter.api_agent.api_agent import (
     APIAgent,
-    BlastQuery,
-    BlastFetcher,
+)
+from biochatter.api_agent.blast import (
     BlastQueryBuilder,
+    BlastFetcher,
+    BlastQuery,
 )
 from biochatter.llm_connect import GptConversation
 

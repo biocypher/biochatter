@@ -10,7 +10,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain.chains.openai_functions import create_structured_output_runnable
 import requests
 from biochatter.llm_connect import Conversation
-from .abc import BaseFetcher, BaseQueryBuilder
+from .abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
 
 BLAST_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats. Your task is to use NCBI Web APIs to answer genomic questions.
@@ -181,7 +181,7 @@ class BlastFetcher(BaseFetcher):
     def fetch_and_save_results(
         self,
         question_uuid: uuid,
-        blast_query_return: str,
+        query_return: str,
         save_path: str,
         max_attempts: int = 10000,
     ):
@@ -197,12 +197,12 @@ class BlastFetcher(BaseFetcher):
         check_status_params = {
             "CMD": "Get",
             "FORMAT_OBJECT": "SearchInfo",
-            "RID": blast_query_return,
+            "RID": query_return,
         }
         get_results_params = {
             "CMD": "Get",
             "FORMAT_TYPE": "XML",
-            "RID": blast_query_return,
+            "RID": query_return,
         }
         # checking path: should end with '/'
         if not save_path.endswith("/"):
@@ -254,21 +254,22 @@ class BlastFetcher(BaseFetcher):
         return file_name
 
 
-class BlastInterpreter(BaseModel):
-    def answer_extraction(
+class BlastInterpreter(BaseInterpreter):
+    def summarise_answer(
         self,
         question: str,
         conversation_factory: callable,
         file_path: str,
-        n: int,
+        n_lines: int,
     ) -> str:
         """
         Function to extract the answer from the BLAST results.
 
         Args:
             question (str): The question to be answered.
+            conversation_factory: A BioChatter conversation object.
             file_path (str): The path to the BLAST results file.
-            n (int): The number of lines to read from the file.
+            n_lines (int): The number of lines to read from the file.
 
         Returns:
             str: The extracted answer from the BLAST results.
@@ -284,8 +285,8 @@ class BlastInterpreter(BaseModel):
             ]
         )
 
-        context = self.read_first_n_lines(file_path, n)
-        BLAST_file_answer_extractor_prompt = f"""
+        context = self.read_first_n_lines(file_path, n_lines)
+        BLAST_SUMMARY_PROMPT = f"""
                 You have to answer this question in a clear and concise manner: {question} Be factual!\n\
                 If you are asked what organism a specific sequence belongs to, check the 'Hit_def' fields. If you find a synthetic construct or predicted entry, move to the next one and look for an organism name.\n\
                 Try to use the hits with the best identity score to answer the question. If it is not possible, move to the next one.\n\
@@ -297,18 +298,16 @@ class BlastInterpreter(BaseModel):
         output_parser = StrOutputParser()
         conversation = conversation_factory()
         chain = prompt | conversation.chat | output_parser
-        BLAST_answer = chain.invoke(
-            {"input": {BLAST_file_answer_extractor_prompt}}
-        )
-        return BLAST_answer
+        answer = chain.invoke({"input": {BLAST_SUMMARY_PROMPT}})
+        return answer
 
-    def read_first_n_lines(self, file_path: str, n: int):
+    def read_first_n_lines(self, file_path: str, n_lines: int):
         """
         Reads the first n lines from a file and returns them as a string.
 
         Args:
             file_path (str): The path to the file.
-            n (int): The number of lines to read.
+            n_lines (int): The number of lines to read.
 
         Returns:
             str: The first n lines from the file as a string.
@@ -321,7 +320,7 @@ class BlastInterpreter(BaseModel):
         try:
             with open(file_path, "r") as file:
                 lines = []
-                for i in range(n):
+                for i in range(n_lines):
                     line = file.readline()
                     if not line:
                         break

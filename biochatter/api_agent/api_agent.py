@@ -14,9 +14,8 @@
 
 from typing import Optional
 import os
-
-from .blast import BlastFetcher, BlastQueryBuilder, BlastQuery, BlastInterpreter
-from .abc import BaseQueryBuilder
+from pydantic import BaseModel
+from .abc import BaseQueryBuilder, BaseFetcher, BaseInterpreter
 
 
 ## Agent class
@@ -32,24 +31,25 @@ class APIAgent:
 
         result_path (str): The path to save results.
 
-        query_builder (BlastQueryBuilder): An instance of the BlastQueryBuilder
+        query_builder (BaseQueryBuilder): An instance of a child of the
+            BaseQueryBuilder class.
+
+        result_fetcher (BaseFetcher): An instance of a child of the BaseFetcher
             class.
 
-        result_fetcher (BlastFetcher): An instance of the BlastFetcher class.
-
-        result_interpreter (BlastInterpreter): An instance of the
-            BlastInterpreter class.
+        result_interpreter (BaseInterpreter): An instance of a child of the
+            BaseInterpreter class.
     """
 
     def __init__(
         self,
         conversation_factory: callable,
         query_builder: "BaseQueryBuilder",
-        result_fetcher: "BlastFetcher",
-        result_interpreter: "BlastInterpreter",
+        result_fetcher: "BaseFetcher",
+        result_interpreter: "BaseInterpreter",
     ):
         self.conversation_factory = conversation_factory
-        self.result_path = ".blast"
+        self.result_path = ".api_results/"
         self.query_builder = query_builder
         self.result_fetcher = result_fetcher
         self.result_interpreter = result_interpreter
@@ -58,7 +58,7 @@ class APIAgent:
 
         os.makedirs(self.result_path, exist_ok=True)
 
-    def generate_query(self, question: str) -> Optional[BlastQuery]:
+    def generate_query(self, question: str) -> Optional[BaseModel]:
         try:
             conversation = self.conversation_factory()
             return self.query_builder.generate_query(question, conversation)
@@ -66,7 +66,7 @@ class APIAgent:
             print(f"Error generating query: {e}")
             return None
 
-    def submit_query(self, api_fields: BlastQuery) -> Optional[str]:
+    def submit_query(self, api_fields: BaseModel) -> Optional[str]:
         try:
             return self.result_fetcher.submit_query(api_fields)
         except Exception as e:
@@ -85,7 +85,7 @@ class APIAgent:
     def extract_answer(self, question: str, file_name: str) -> Optional[str]:
         try:
             file_path = os.path.join(self.result_path, file_name)
-            return self.result_interpreter.answer_extraction(
+            return self.result_interpreter.summarise_answer(
                 question, file_path, 100
             )
         except Exception as e:

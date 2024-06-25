@@ -92,9 +92,52 @@ class BaseFetcher(ABC):
 
     @abstractmethod
     def fetch_and_save_results(
-        self, question_uuid, blast_query_return, save_path, max_attempts=10000
+        self,
+        question_uuid,
+        query_return,
+        save_path,
+        max_attempts=10000,
     ):
         """
         Fetches and saves the results of a query.
+        """
+        pass
+
+
+class BaseInterpreter(ABC):
+    """
+    Abstract base class for result interpreters. The interpreter is aware of the
+    nature and structure of the results and can extract and summarise
+    information from them.
+    """
+
+    @abstractmethod
+    def summarise_answer(
+        self,
+        question: str,
+        conversation_factory: Callable,
+        file_path: str,
+        n_lines: int,
+    ) -> str:
+        """
+        Summarises an answer based on the given parameters.
+
+        Args:
+            question (str): The question that was asked.
+
+            conversation_factory (Callable): A function that creates a
+                BioChatter conversation.
+
+            file_path (str): The path to the file containing the query results.
+
+            n_lines (int): The number of lines to include from the result file.
+
+        Returns:
+            A summary of the answer.
+
+        Todo:
+            Genericise (remove file path and n_lines parameters, and use a
+            generic way to get the results). The child classes should manage the
+            specifics of the results.
         """
         pass

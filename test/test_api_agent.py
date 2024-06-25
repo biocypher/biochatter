@@ -5,8 +5,10 @@ import pytest
 
 from biochatter.api_agent.api_agent import (  # Adjust the import as necessary
     APIAgent,
-    BlastFetcher,
+)
+from biochatter.api_agent.blast import (
     BlastQueryBuilder,
+    BlastFetcher,
     BlastInterpreter,
 )
 from biochatter.llm_connect import GptConversation
