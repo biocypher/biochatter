@@ -10,6 +10,23 @@ from langchain_core.pydantic_v1 import Field, BaseModel
 from langchain_core.output_parsers import StrOutputParser
 from langchain.chains.openai_functions import create_structured_output_runnable
 import requests
+from biochatter.llm_connect import Conversation
+
+BLAST_QUERY_PROMPT = """
+You are a world class algorithm for creating queries in structured formats. Your task is to use NCBI Web APIs to answer genomic questions.
+
+For questions about DNA sequences (other than genome alignments) you can use BLAST by: "[https://blast.ncbi.nlm.nih.gov/blast/Blast.cgi?CMD={Put|Get}&PROGRAM=blastn&MEGABLAST=on&DATABASE=nt&FORMAT_TYPE={XML|Text}&QUERY={sequence}&HITLIST_SIZE={max_hit_size}]".
+BLAST maps a specific DNA {sequence} to DNA sequences among different specices.
+Use it if you need information about a DNA sequence, see example questions 1.
+You need to first PUT the BLAST request and then GET the results using the RID returned by PUT.
+
+Example Question 1: Which organism does this DNA sequence come from: AGGGGCAGCAAACACCGGGACACACCCATTCGTGCACTAATCAGAAACTTTTTTTTCTCAAATAATTCAAACAATCAAAATTGGTTTTTTCGAGCAAGGTGGGAAATTTTTCGAT
+Use BLASTn for such a question -> [https://blast.ncbi.nlm.nih.gov/Blast.cgi??CMD=Put&PROGRAM=blastn&DATABASE=nt&QUERY=AGGGGCAGCAAACACCGGGACACACCCATTCGTGCACTAATCAGAAACTTTTTTTTCTCAAATAATTCAAACAATCAAAATTGGTTTTTTCGAGCAAGGTGGGAAATTTTTCGAT&FORMAT_TYPE=Text&MEGABLAST=on&HITLIST_SIZE=15&email=noah.bruderer%40uib.no]
+
+For questions about protein sequences you can also use BLAST, but this time by: [https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Put&PROGRAM=blastp&DATABASE=nr&FORMAT_TYPE=XML&QUERY=sequence&HITLIST_SIZE=max_hit_size]
+Example Question 2: What do you find about protein sequence: MEEPQSDPSV
+Use BLASTp for such a question -> https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Put&PROGRAM=blastp&DATABASE=nr&FORMAT_TYPE=XML&QUERY=MEEPQSDPSV&HITLIST_SIZE=10"
+"""
 
 
 class BlastQuery(BaseModel):
@@ -98,7 +115,9 @@ class BlastQueryBuilder(BaseModel):
         except Exception as e:
             return "An error occurred while reading the file:", str(e)
 
-    def create_runnable(self, conversation, blast_query_class) -> callable:
+    def create_runnable(
+        self, conversation: "Conversation", blast_query_class
+    ) -> callable:
         return create_structured_output_runnable(
             blast_query_class,
             conversation.chat,
@@ -106,7 +125,9 @@ class BlastQueryBuilder(BaseModel):
         )
 
     def generate_blast_query(
-        self, question: str, BLAST_prompt_path: str, conversation
+        self,
+        question: str,
+        conversation: "Conversation",
     ) -> BlastQuery:
         """
         Generates a BlastQuery object based on the given question, file path, and conversation.
@@ -123,9 +144,8 @@ class BlastQueryBuilder(BaseModel):
             BlastQuery: The generated BlastQuery object.
         """
         runnable = self.create_runnable(conversation, BlastQuery)
-        BLAST_prompt = self.read_blast_prompt(BLAST_prompt_path)
         blast_call_obj = runnable.invoke(
-            {"input": f"Answer:\n{question} based on:\n {BLAST_prompt}"}
+            {"input": f"Answer:\n{question} based on:\n {BLAST_QUERY_PROMPT}"}
         )
         blast_call_obj.question_uuid = str(uuid.uuid4())
         return blast_call_obj

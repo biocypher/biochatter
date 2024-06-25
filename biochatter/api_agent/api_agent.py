@@ -39,7 +39,6 @@ class APIAgent:
     def __init__(self, conversation_factory: callable):
         self.conversation_factory = conversation_factory
         self.blast_result_path = ".blast"
-        self.blast_prompt_path = "docs/api_agent/BLAST_tool/persistent_files/api_documentation/BLAST.txt"
         self.builder = BlastQueryBuilder()
         self.fetcher = BlastFetcher()
         self.interpreter = BlastInterpreter()
@@ -51,9 +50,7 @@ class APIAgent:
     def generate_blast_query(self, question: str) -> Optional[BlastQuery]:
         try:
             conversation = self.conversation_factory()
-            return self.builder.generate_blast_query(
-                question, self.blast_prompt_path, conversation
-            )
+            return self.builder.generate_blast_query(question, conversation)
         except Exception as e:
             print(f"Error generating BLAST query: {e}")
             return None

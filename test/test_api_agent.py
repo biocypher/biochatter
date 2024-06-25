@@ -96,7 +96,7 @@ def api_agent():
     return APIAgent(conversation_factory=conversation_factory)
 
 
-@pytest.mark.skip(reason="Live test for development purposes")
+# @pytest.mark.skip(reason="Live test for development purposes")
 def test_fetch_blast_results(api_agent):
     question = "Which organism does the DNA sequence come from: TTCATCGGTCTGAGCAGAGGATGAAGTTGCAAATGATGCAAGCAAAACAGCTCAAAGATGAAGAGGAAAAGGCTATACACAACAGGAGCAATGTAGATACAGAAGGT"
 
