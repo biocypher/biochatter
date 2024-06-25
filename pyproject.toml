@@ -37,7 +37,6 @@ langchain-community = "^0.2.5"
 streamlit = ["streamlit"]
 podcast = ["gTTS"]
 xinference = ["xinference"]
-ollama = ["langchain-community"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
