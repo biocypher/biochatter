@@ -2,6 +2,7 @@ from unittest.mock import Mock, MagicMock, patch
 import os
 import uuid
 import unittest
+import pytest
 
 import requests
 
@@ -15,13 +16,16 @@ from biochatter.llm_connect import GptConversation
 
 
 def conversation_factory():
-    return GptConversation(
+    conversation = GptConversation(
         model_name="gpt-4o",
         correct=False,
         prompts={},
     )
+    conversation.set_api_key(os.getenv("OPENAI_API_KEY"), user="test")
+    return conversation
 
 
+@pytest.mark.skip(reason="Needs refactor (no online access should be needed)")
 class TestBlastQueryBuilder(unittest.TestCase):
     def setUp(self):
         self.builder = BlastQueryBuilder()
@@ -71,6 +75,7 @@ class TestBlastQueryBuilder(unittest.TestCase):
         print(rid)
 
 
+@pytest.mark.skip(reason="Needs refactor (no online access should be needed)")
 class TestBlastFetcher(unittest.TestCase):
     @patch("requests.get")
     @patch("builtins.open", new_callable=unittest.mock.mock_open)
@@ -136,6 +141,7 @@ class TestBlastFetcher(unittest.TestCase):
             mock_parser_instance.invoke.assert_called_once()
 
 
+@pytest.mark.skip(reason="Needs refactor (no online access should be needed)")
 class TestAPIAgent(unittest.TestCase):
     """TO DO: add test for errors in the APIAgent class."""
 
