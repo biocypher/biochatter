@@ -1,7 +1,6 @@
 import os
 import unittest
 
-from langchain.chat_models import ChatOpenAI
 import pytest
 
 from biochatter.api_agent.api_agent import (  # Adjust the import as necessary
@@ -102,7 +101,7 @@ def api_agent():
     )
 
 
-@pytest.mark.skip(reason="Live test for development purposes")
+# @pytest.mark.skip(reason="Live test for development purposes")
 def test_fetch_blast_results(api_agent):
     question = "Which organism does the DNA sequence come from: TTCATCGGTCTGAGCAGAGGATGAAGTTGCAAATGATGCAAGCAAAACAGCTCAAAGATGAAGAGGAAAAGGCTATACACAACAGGAGCAATGTAGATACAGAAGGT"
 
