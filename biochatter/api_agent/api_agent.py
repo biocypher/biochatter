@@ -67,7 +67,7 @@ class APIAgent:
 
     def submit_blast_query(self, blast_query: BlastQuery) -> Optional[str]:
         try:
-            return self.query_builder.submit_blast_query(blast_query)
+            return self.result_fetcher.submit_blast_query(blast_query)
         except Exception as e:
             print(f"Error submitting BLAST query: {e}")
             return None

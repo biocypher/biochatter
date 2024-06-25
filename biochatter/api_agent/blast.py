@@ -152,6 +152,9 @@ class BlastQueryBuilder(BaseModel):
         blast_call_obj.question_uuid = str(uuid.uuid4())
         return blast_call_obj
 
+
+class BlastFetcher(BaseModel):
+
     def submit_blast_query(self, request_data: BlastQuery) -> str:
         """Function to POST the BLAST query and retrieve RID.
         It submits the structured BlastQuery obj and return the RID.
@@ -191,8 +194,6 @@ class BlastQueryBuilder(BaseModel):
         else:
             raise ValueError("RID not found in BLAST submission response.")
 
-
-class BlastFetcher(BaseModel):
     def fetch_and_save_blast_results(
         self,
         question_uuid: uuid,
