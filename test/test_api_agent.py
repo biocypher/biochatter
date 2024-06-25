@@ -15,7 +15,7 @@ from biochatter.api_agent.api_agent import (  # Adjust the import as necessary
 
 
 @pytest.fixture
-def api_agent():
+def blast_api_agent():
     def conversation_factory():
         conversation = GptConversation(
             model_name="gpt-4o",
@@ -34,12 +34,12 @@ def api_agent():
     )
 
 
-# @pytest.mark.skip(reason="Live test for development purposes")
-def test_fetch_blast_results(api_agent):
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_fetch_blast_results(blast_api_agent):
     question = "Which organism does the DNA sequence come from: TTCATCGGTCTGAGCAGAGGATGAAGTTGCAAATGATGCAAGCAAAACAGCTCAAAGATGAAGAGGAAAAGGCTATACACAACAGGAGCAATGTAGATACAGAAGGT"
 
     # Run the method to test
-    answer = api_agent.execute(question)
+    answer = blast_api_agent.execute(question)
     assert "rattus norwegicus" in answer.lower()
 
 
