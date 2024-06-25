@@ -134,6 +134,10 @@ class BlastQueryBuilder(BaseQueryBuilder):
 
 
 class BlastFetcher(BaseModel):
+    """
+    A pydantic class for retrieving API results from BLAST given a parameterised
+    query.
+    """
 
     def submit_query(self, request_data: BlastQuery) -> str:
         """Function to POST the BLAST query and retrieve RID.
