@@ -306,6 +306,10 @@ def categorize_failure_modes(
 
 
 def is_synonym(word1, word2):
+    """
+    Tests, if the input arguments word1 and word2 are synonyms of each other.
+    If yes, the function returns True, False otherwise. 
+    """
     if word2 is "yes" or "no" or "ja" or "nein":
         return False
 

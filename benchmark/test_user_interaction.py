@@ -22,6 +22,15 @@ def test_medical_exam(
     conversation,
     multiple_testing,
 ):
+    """Test medical exam data by the model.
+    The user input is a medical question with answer options. The system prompt 
+    has the guidelines to answer the question, and the expected answer is the 
+    information that the model should reply from the given question. If the case 
+    contains the word 'regex', the test is successful if the extracted information 
+    occures in the words in response. If it is a different question, the test is 
+    successful if the extracted information matches the expected answer exactly.
+    For all false answers also calculate the failure mode of the answer. 
+    """
     # Downloads the naturale language synonym toolkit, just need to be done once per device
     # nltk.download()
 
@@ -40,13 +49,15 @@ def test_medical_exam(
         nonlocal expected_answer
         nonlocal failure_mode
         conversation.reset()  # needs to be reset for each test
+        # Define the system prompt
         [
             conversation.append_system_message(m)
             for m in yaml_data["input"]["system_messages"]
         ]
+        # Define the user prompt
         response, _, _ = conversation.query(yaml_data["input"]["prompt"])
 
-        # lower case, remove punctuation
+        # Set response to lower case and remove punctuation
         response = (
             response.lower().replace(".", "").replace("?", "").replace("!", "")
         ).strip()
