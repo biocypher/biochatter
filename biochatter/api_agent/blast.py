@@ -122,8 +122,8 @@ class BlastQueryBuilder(BaseModel):
         conversation: "Conversation",
     ) -> BlastQuery:
         """
-        Generates a BlastQuery object based on the given question, file path,
-        and conversation.
+        Generates a BlastQuery object based on the given question, prompt,
+        and conversation. Uses a Pydantic model to define the API fields.
 
         Args:
             question (str): The question to be answered.
