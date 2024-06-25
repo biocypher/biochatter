@@ -98,7 +98,7 @@ class TestBlastFetcher(unittest.TestCase):
             mock_results_response,
         ]
 
-        file_name = fetcher.fetch_and_save_blast_results(
+        file_name = fetcher.fetch_and_save_results(
             question_uuid, blast_query_return, BLAST_result_path, 100
         )
         # assert file name is correct
@@ -199,7 +199,7 @@ class TestAPIAgent(unittest.TestCase):
         mock_blast_fetcher_instance.fetch_and_save_blast_results.assert_called_once_with(
             mock_blast_query.question_uuid,
             "MOCK_RID",
-            api_agent.blast_result_path,
+            api_agent.result_path,
             100,
         )
         mock_blast_fetcher_instance.answer_extraction.assert_called_once_with(

@@ -4,13 +4,13 @@ from typing import Optional
 from urllib.parse import urlencode
 import uuid
 from pydantic import Field, BaseModel
-from langchain.prompts import ChatPromptTemplate
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import Field, BaseModel
 from langchain_core.output_parsers import StrOutputParser
 from langchain.chains.openai_functions import create_structured_output_runnable
 import requests
 from biochatter.llm_connect import Conversation
+from .abc import AbstractQueryBuilder
 
 BLAST_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats. Your task is to use NCBI Web APIs to answer genomic questions.
@@ -88,55 +88,44 @@ class BlastQuery(BaseModel):
     )
 
 
-class BlastQueryBuilder(BaseModel):
+class BlastQueryBuilder(AbstractQueryBuilder):
     """A pydantic class for building a BlastQuery object."""
 
-    @property
-    def BLAST_structured_output_prompt(self) -> ChatPromptTemplate:
-        return ChatPromptTemplate.from_messages(
-            [
-                (
-                    "system",
-                    "You are a world class algorithm for extracting information in structured formats.",
-                ),
-                (
-                    "human",
-                    "Use the given format to extract information from the following input: {input}",
-                ),
-                ("human", "Tip: Make sure to answer in the correct format"),
-            ]
-        )
-
     def create_runnable(
-        self, conversation: "Conversation", blast_query_class
+        self,
+        api_fields: "BlastQuery",
+        conversation: "Conversation",
     ) -> callable:
         return create_structured_output_runnable(
-            blast_query_class,
-            conversation.chat,
-            self.BLAST_structured_output_prompt,
+            output_schema=api_fields,
+            llm=conversation.chat,
+            prompt=self.structured_output_prompt,
         )
 
-    def generate_blast_query(
+    def generate_query(
         self,
         question: str,
         conversation: "Conversation",
     ) -> BlastQuery:
         """
-        Generates a BlastQuery object based on the given question, prompt,
-        and conversation. Uses a Pydantic model to define the API fields.
+        Generates a BlastQuery object based on the given question, prompt, and
+        BioChatter conversation. Uses a Pydantic model to define the API fields.
+        Creates a runnable that can be invoked on LLMs that are qualified to
+        parameterise functions.
 
         Args:
             question (str): The question to be answered.
 
-            file_path (str): The path to the file containing the BLAST prompt.
-
-            conversation: The conversation object used for creating the
+            conversation: The conversation object used for parameterising the
                 BlastQuery.
 
         Returns:
-            BlastQuery: The generated BlastQuery object.
+            BlastQuery: the parameterised query object (Pydantic model)
         """
-        runnable = self.create_runnable(conversation, BlastQuery)
+        runnable = self.create_runnable(
+            api_fields=BlastQuery,
+            conversation=conversation,
+        )
         blast_call_obj = runnable.invoke(
             {"input": f"Answer:\n{question} based on:\n {BLAST_QUERY_PROMPT}"}
         )
@@ -146,7 +135,7 @@ class BlastQueryBuilder(BaseModel):
 
 class BlastFetcher(BaseModel):
 
-    def submit_blast_query(self, request_data: BlastQuery) -> str:
+    def submit_query(self, request_data: BlastQuery) -> str:
         """Function to POST the BLAST query and retrieve RID.
         It submits the structured BlastQuery obj and return the RID.
 
@@ -185,7 +174,7 @@ class BlastFetcher(BaseModel):
         else:
             raise ValueError("RID not found in BLAST submission response.")
 
-    def fetch_and_save_blast_results(
+    def fetch_and_save_results(
         self,
         question_uuid: uuid,
         blast_query_return: str,

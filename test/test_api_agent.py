@@ -71,7 +71,7 @@ class TestBlastQueryBuilder(unittest.TestCase):
 
     # def test_blast_structured_output_prompt(self):
     #   builder = BlastQueryBuilder()
-    #   prompt_template = builder.BLAST_structured_output_prompt
+    #   prompt_template = builder.structured_output_prompt
     #   self.assertIsNotNone(prompt_template)
 
     # def test_read_blast_prompt(self):
