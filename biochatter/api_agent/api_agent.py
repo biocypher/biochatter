@@ -12,8 +12,11 @@
 # 5. Read response from BLAST and uses it to answer question
 # 6. answer is returned to rag_agent
 
+from abc import ABC, abstractmethod
 from typing import Optional
 import os
+
+from pydantic import BaseModel, Field
 
 from .blast import BlastFetcher, BlastQueryBuilder, BlastQuery, BlastInterpreter
 
@@ -143,3 +146,25 @@ class APIAgent:
             print(f"Final Answer: {final_answer}")
             self.final_answer = final_answer
             return
+
+
+class BaseAPIQuery(BaseModel, ABC):
+    """
+    Abstract base class for any API query request, providing a generic
+    structure that can be extended for specific APIs.
+    """
+
+    url: Optional[str] = Field(
+        default=None,
+        description=(
+            "Base URL for the API endpoint. "
+            "Must be overridden by subclasses."
+        ),
+    )
+    cmd: Optional[str] = Field(
+        default="Put",
+        description=(
+            "Command to execute against the API. "
+            "'Put' for submitting a query, 'Get' for retrieving results."
+        ),
+    )
