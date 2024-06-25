@@ -5,7 +5,7 @@ from biochatter.llm_connect import Conversation
 from pydantic import BaseModel
 
 
-class AbstractQueryBuilder(ABC):
+class BaseQueryBuilder(ABC):
     """
     An abstract base class for query builders.
     """

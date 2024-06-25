@@ -10,7 +10,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain.chains.openai_functions import create_structured_output_runnable
 import requests
 from biochatter.llm_connect import Conversation
-from .abc import AbstractQueryBuilder
+from .abc import BaseQueryBuilder
 
 BLAST_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats. Your task is to use NCBI Web APIs to answer genomic questions.
@@ -88,7 +88,7 @@ class BlastQuery(BaseModel):
     )
 
 
-class BlastQueryBuilder(AbstractQueryBuilder):
+class BlastQueryBuilder(BaseQueryBuilder):
     """A pydantic class for building a BlastQuery object."""
 
     def create_runnable(

@@ -16,7 +16,7 @@ from typing import Optional
 import os
 
 from .blast import BlastFetcher, BlastQueryBuilder, BlastQuery, BlastInterpreter
-from .abc import AbstractQueryBuilder
+from .abc import BaseQueryBuilder
 
 
 ## Agent class
@@ -44,7 +44,7 @@ class APIAgent:
     def __init__(
         self,
         conversation_factory: callable,
-        query_builder: "AbstractQueryBuilder",
+        query_builder: "BaseQueryBuilder",
         result_fetcher: "BlastFetcher",
         result_interpreter: "BlastInterpreter",
     ):
