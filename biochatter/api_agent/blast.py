@@ -107,15 +107,6 @@ class BlastQueryBuilder(BaseModel):
             ]
         )
 
-    def read_blast_prompt(self, BLAST_prompt_file_path: str) -> str:
-        try:
-            with open(BLAST_prompt_file_path, "r") as file:
-                return file.read()
-        except FileNotFoundError:
-            return "The file was not found at the specified path."
-        except Exception as e:
-            return "An error occurred while reading the file:", str(e)
-
     def create_runnable(
         self, conversation: "Conversation", blast_query_class
     ) -> callable:
