@@ -11,7 +11,6 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain.chains.openai_functions import create_structured_output_runnable
 import requests
 from biochatter.llm_connect import Conversation
-from .abc import BaseAPIQuery
 
 BLAST_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats. Your task is to use NCBI Web APIs to answer genomic questions.
@@ -30,7 +29,7 @@ Use BLASTp for such a question -> https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=P
 """
 
 
-class BlastQuery(BaseAPIQuery):
+class BlastQuery(BaseModel):
     """
     BlastQuery is a Pydantic model for the BLAST query request, used for
     configuring and sending a request to the NCBI BLAST query API. The fields
