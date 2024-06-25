@@ -255,7 +255,7 @@ class BlastFetcher(BaseFetcher):
 
 
 class BlastInterpreter(BaseInterpreter):
-    def summarise_answer(
+    def summarise_results(
         self,
         question: str,
         conversation_factory: callable,

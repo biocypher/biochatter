@@ -112,7 +112,7 @@ class BaseInterpreter(ABC):
     """
 
     @abstractmethod
-    def summarise_answer(
+    def summarise_results(
         self,
         question: str,
         conversation_factory: Callable,

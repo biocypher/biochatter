@@ -59,6 +59,10 @@ class APIAgent:
         os.makedirs(self.result_path, exist_ok=True)
 
     def generate_query(self, question: str) -> Optional[BaseModel]:
+        """
+        Use LLM to generate a query (a Pydantic model) based on the given
+        question using a BioChatter conversation instance.
+        """
         try:
             conversation = self.conversation_factory()
             return self.query_builder.generate_query(question, conversation)
@@ -67,6 +71,9 @@ class APIAgent:
             return None
 
     def submit_query(self, api_fields: BaseModel) -> Optional[str]:
+        """
+        Submit the generated query to the API and return the RID.
+        """
         try:
             return self.result_fetcher.submit_query(api_fields)
         except Exception as e:
@@ -74,6 +81,10 @@ class APIAgent:
             return None
 
     def fetch_results(self, question_uuid: str, rid: str) -> Optional[str]:
+        """
+        Fetch the results of the query using the RID and save them. Implements
+        retry logic to fetch results.
+        """
         try:
             return self.result_fetcher.fetch_and_save_results(
                 question_uuid, rid, self.result_path, 100
@@ -82,10 +93,13 @@ class APIAgent:
             print(f"Error fetching results: {e}")
             return None
 
-    def extract_answer(self, question: str, file_name: str) -> Optional[str]:
+    def summarise_results(self, question: str, file_name: str) -> Optional[str]:
+        """
+        Summarise the retrieved results to extract the answer to the question.
+        """
         try:
             file_path = os.path.join(self.result_path, file_name)
-            return self.result_interpreter.summarise_answer(
+            return self.result_interpreter.summarise_results(
                 question, file_path, 100
             )
         except Exception as e:
@@ -128,7 +142,7 @@ class APIAgent:
             return
 
         # Extract answer from results
-        final_answer = self.extract_answer(question, file_name)
+        final_answer = self.summarise_results(question, file_name)
         if not final_answer:
             print("Failed to extract answer from results.")
             self.error = f"Failed to extract answer from results."
