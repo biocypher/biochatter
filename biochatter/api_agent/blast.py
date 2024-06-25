@@ -10,7 +10,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain.chains.openai_functions import create_structured_output_runnable
 import requests
 from biochatter.llm_connect import Conversation
-from .abc import BaseQueryBuilder
+from .abc import BaseFetcher, BaseQueryBuilder
 
 BLAST_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats. Your task is to use NCBI Web APIs to answer genomic questions.
@@ -89,7 +89,7 @@ class BlastQuery(BaseModel):
 
 
 class BlastQueryBuilder(BaseQueryBuilder):
-    """A pydantic class for building a BlastQuery object."""
+    """A class for building a BlastQuery object."""
 
     def create_runnable(
         self,
@@ -133,10 +133,10 @@ class BlastQueryBuilder(BaseQueryBuilder):
         return blast_call_obj
 
 
-class BlastFetcher(BaseModel):
+class BlastFetcher(BaseFetcher):
     """
-    A pydantic class for retrieving API results from BLAST given a parameterised
-    query.
+    A class for retrieving API results from BLAST given a parameterised
+    BlastQuery.
     """
 
     def submit_query(self, request_data: BlastQuery) -> str:
@@ -253,38 +253,6 @@ class BlastFetcher(BaseModel):
             )
         return file_name
 
-    def read_first_n_lines(self, file_path: str, n: int):
-        """
-        Reads the first n lines from a file and returns them as a string.
-
-        Args:
-            file_path (str): The path to the file.
-            n (int): The number of lines to read.
-
-        Returns:
-            str: The first n lines from the file as a string.
-
-        Raises:
-            FileNotFoundError: If the file is not found.
-            Exception: If any other error occurs during file reading.
-
-        """
-        try:
-            with open(file_path, "r") as file:
-                lines = []
-                for i in range(n):
-                    line = file.readline()
-                    if not line:
-                        break
-                    lines.append(line.strip())
-                # to test:
-                # more efficient with \n or without?
-                return "\n".join(lines)
-        except FileNotFoundError:
-            return "The file was not found."
-        except Exception as e:
-            return f"An error occurred: {e}"
-
 
 class BlastInterpreter(BaseModel):
     def answer_extraction(
@@ -333,3 +301,35 @@ class BlastInterpreter(BaseModel):
             {"input": {BLAST_file_answer_extractor_prompt}}
         )
         return BLAST_answer
+
+    def read_first_n_lines(self, file_path: str, n: int):
+        """
+        Reads the first n lines from a file and returns them as a string.
+
+        Args:
+            file_path (str): The path to the file.
+            n (int): The number of lines to read.
+
+        Returns:
+            str: The first n lines from the file as a string.
+
+        Raises:
+            FileNotFoundError: If the file is not found.
+            Exception: If any other error occurs during file reading.
+
+        """
+        try:
+            with open(file_path, "r") as file:
+                lines = []
+                for i in range(n):
+                    line = file.readline()
+                    if not line:
+                        break
+                    lines.append(line.strip())
+                # to test:
+                # more efficient with \n or without?
+                return "\n".join(lines)
+        except FileNotFoundError:
+            return "The file was not found."
+        except Exception as e:
+            return f"An error occurred: {e}"

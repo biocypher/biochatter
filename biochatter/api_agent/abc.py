@@ -74,3 +74,27 @@ class BaseQueryBuilder(ABC):
             A parameterised instance of the query object (Pydantic BaseModel)
         """
         pass
+
+
+class BaseFetcher(ABC):
+    """
+    Abstract base class for fetchers. A fetcher is responsible for submitting
+    queries (in systems where submission and fetching are separate) and fetching
+    and saving results of queries.
+    """
+
+    @abstractmethod
+    def submit_query(self, request_data):
+        """
+        Submits a query and retrieves an identifier.
+        """
+        pass
+
+    @abstractmethod
+    def fetch_and_save_results(
+        self, question_uuid, blast_query_return, save_path, max_attempts=10000
+    ):
+        """
+        Fetches and saves the results of a query.
+        """
+        pass
