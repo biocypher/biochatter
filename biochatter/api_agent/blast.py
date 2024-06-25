@@ -1,14 +1,17 @@
-import re
-import time
 from typing import Optional
 from urllib.parse import urlencode
+from collections.abc import Callable
+import re
+import time
 import uuid
+
 from pydantic import Field, BaseModel
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import Field, BaseModel
 from langchain_core.output_parsers import StrOutputParser
 from langchain.chains.openai_functions import create_structured_output_runnable
 import requests
+
 from biochatter.llm_connect import Conversation
 from .abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
 
@@ -29,11 +32,13 @@ Use BLASTp for such a question -> https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=P
 """
 
 
-class BlastQuery(BaseModel):
+class BlastQueryParameters(BaseModel):
     """
-    BlastQuery is a Pydantic model for the BLAST query request, used for
-    configuring and sending a request to the NCBI BLAST query API. The fields
-    are dynamically configured by the LLM based on the user's question.
+
+    BlastQuery is a Pydantic model for the parameters of a BLAST query request,
+    used for configuring and sending a request to the NCBI BLAST query API. The
+    fields are dynamically configured by the LLM based on the user's question.
+
     """
 
     url: Optional[str] = Field(
@@ -93,20 +98,33 @@ class BlastQueryBuilder(BaseQueryBuilder):
 
     def create_runnable(
         self,
-        api_fields: "BlastQuery",
+        query_parameters: "BlastQueryParameters",
         conversation: "Conversation",
-    ) -> callable:
+    ) -> Callable:
+        """
+        Creates a runnable object for executing queries using the LangChain
+        `create_structured_output_runnable` method.
+
+        Args:
+            query_parameters: A Pydantic data model that specifies the fields of
+                the API that should be queried.
+
+            conversation: A BioChatter conversation object.
+
+        Returns:
+            A Callable object that can execute the query.
+        """
         return create_structured_output_runnable(
-            output_schema=api_fields,
+            output_schema=query_parameters,
             llm=conversation.chat,
             prompt=self.structured_output_prompt,
         )
 
-    def generate_query(
+    def parameterise_query(
         self,
         question: str,
         conversation: "Conversation",
-    ) -> BlastQuery:
+    ) -> BlastQueryParameters:
         """
         Generates a BlastQuery object based on the given question, prompt, and
         BioChatter conversation. Uses a Pydantic model to define the API fields.
@@ -123,7 +141,7 @@ class BlastQueryBuilder(BaseQueryBuilder):
             BlastQuery: the parameterised query object (Pydantic model)
         """
         runnable = self.create_runnable(
-            api_fields=BlastQuery,
+            query_parameters=BlastQueryParameters,
             conversation=conversation,
         )
         blast_call_obj = runnable.invoke(
@@ -139,7 +157,7 @@ class BlastFetcher(BaseFetcher):
     BlastQuery.
     """
 
-    def submit_query(self, request_data: BlastQuery) -> str:
+    def submit_query(self, request_data: BlastQueryParameters) -> str:
         """Function to POST the BLAST query and retrieve RID.
         It submits the structured BlastQuery obj and return the RID.
 
@@ -258,7 +276,7 @@ class BlastInterpreter(BaseInterpreter):
     def summarise_results(
         self,
         question: str,
-        conversation_factory: callable,
+        conversation_factory: Callable,
         file_path: str,
         n_lines: int,
     ) -> str:

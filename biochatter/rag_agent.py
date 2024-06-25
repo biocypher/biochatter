@@ -1,7 +1,5 @@
 from typing import Optional
-import os
-
-from langchain.chat_models import ChatOpenAI
+from collections.abc import Callable
 
 
 class RagAgentModeEnum:
@@ -19,7 +17,7 @@ class RagAgent:
         n_results: Optional[int] = 3,
         use_prompt: Optional[bool] = False,
         schema_config_or_info_dict: Optional[dict] = None,
-        conversation_factory: Optional[callable] = None,
+        conversation_factory: Optional[Callable] = None,
         embedding_func: Optional[object] = None,
         documentids_workspace: Optional[list[str]] = None,
     ) -> None:
@@ -51,7 +49,7 @@ class RagAgent:
             schema_config_or_info_dict (dict): A dictionary of schema
                 information for the database. Required if mode is "kg".
 
-            conversation_factory (callable): A function used to create a
+            conversation_factory (Callable): A function used to create a
                 conversation for creating the KG query. Required if mode is
                 "kg".
 
@@ -104,12 +102,12 @@ class RagAgent:
             self.query_func = self.agent.similarity_search
 
         elif self.mode == RagAgentModeEnum.API:
-            from .api_agent.api_agent import APIAgent
             from .api_agent.blast import (
-                BlastQueryBuilder,
                 BlastFetcher,
                 BlastInterpreter,
+                BlastQueryBuilder,
             )
+            from .api_agent.api_agent import APIAgent
 
             self.query_func = APIAgent(
                 conversation_factory=conversation_factory,

@@ -2,19 +2,17 @@ from unittest.mock import Mock, MagicMock, patch
 import os
 import uuid
 import unittest
-import pytest
 
+import pytest
 import requests
 
-from biochatter.api_agent.api_agent import (
-    APIAgent,
-)
-from biochatter.api_agent.blast import (
-    BlastQueryBuilder,
-    BlastFetcher,
-    BlastQuery,
-)
 from biochatter.llm_connect import GptConversation
+from biochatter.api_agent.blast import (
+    BlastFetcher,
+    BlastQueryBuilder,
+    BlastQueryParameters,
+)
+from biochatter.api_agent.api_agent import APIAgent
 
 
 def conversation_factory():
@@ -39,7 +37,7 @@ class TestBlastQueryBuilder(unittest.TestCase):
         blast_prompt_path = "docs/api_agent/BLAST_tool/persistent_files/api_documentation/BLAST.txt"
         blast_prompt = builder.read_blast_prompt(blast_prompt_path)
         self.assertIsNotNone(blast_prompt)
-        runnable = builder.create_runnable(self.llm, BlastQuery)
+        runnable = builder.create_runnable(self.llm, BlastQueryParameters)
         self.assertIsNotNone(runnable)
 
     @patch("biochatter.api_agent.create_structured_output_runnable")
@@ -57,7 +55,7 @@ class TestBlastQueryBuilder(unittest.TestCase):
 
     @patch("requests.post")
     def test_submit_blast_query(self, mock_post):
-        blast_query = BlastQuery(
+        blast_query = BlastQueryParameters(
             cmd="blastn",
             program="blastn",
             database="nt",
@@ -158,7 +156,7 @@ class TestAPIAgent(unittest.TestCase):
 
         # Prepare mocks
         question = "Which organism does the DNA sequence come from: TTCATCGGTCTGAGCAGAGGATGAAGTTGCAAATGATGCAAGCAAAACAGCTCAAAGATGAAGAGGAAAAGGCTATACACAACAGGAGCAATGTAGATACAGAAGGT"
-        mock_blast_query = Mock(spec=BlastQuery)
+        mock_blast_query = Mock(spec=BlastQueryParameters)
         mock_blast_query_builder_instance = (
             mock_blast_query_builder.return_value
         )

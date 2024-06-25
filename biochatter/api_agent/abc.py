@@ -1,8 +1,11 @@
 from abc import ABC, abstractmethod
-from typing import Any, Callable
-from langchain_core.prompts import ChatPromptTemplate
-from biochatter.llm_connect import Conversation
+from typing import Any
+from collections.abc import Callable
+
 from pydantic import BaseModel
+from langchain_core.prompts import ChatPromptTemplate
+
+from biochatter.llm_connect import Conversation
 
 
 class BaseQueryBuilder(ABC):
@@ -34,34 +37,35 @@ class BaseQueryBuilder(ABC):
     @abstractmethod
     def create_runnable(
         self,
-        api_fields: "BaseModel",
+        query_parameters: "BaseModel",
         conversation: "Conversation",
     ) -> Callable:
         """
         Creates a runnable object for executing queries. Must be implemented by
         subclasses. Should use the LangChain `create_structured_output_runnable`
-        method to generate the callable.
+        method to generate the Callable.
 
         Args:
-            api_fields: A Pydantic data model that specifies the fields of the
-                API that should be queried.
+            query_parameters: A Pydantic data model that specifies the fields of
+                the API that should be queried.
 
             conversation: A BioChatter conversation object.
 
         Returns:
-            A callable object that can execute the query.
+            A Callable object that can execute the query.
         """
         pass
 
     @abstractmethod
-    def generate_query(
+    def parameterise_query(
         self,
         question: str,
         conversation: "Conversation",
     ) -> BaseModel:
         """
-        Generates a query object (a parameterised Pydantic model with the fields
-        of the API) based on the given question using a BioChatter conversation
+
+        Parameterises a query object (a Pydantic model with the fields of the
+        API) based on the given question using a BioChatter conversation
         instance. Must be implemented by subclasses.
 
         Args:

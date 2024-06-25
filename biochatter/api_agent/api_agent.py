@@ -1,3 +1,11 @@
+from typing import Optional
+from collections.abc import Callable
+import os
+
+from pydantic import BaseModel
+
+from .abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
+
 ### logic
 
 # 1. User asks question req. API to find the answer
@@ -12,11 +20,6 @@
 # 5. Read response from and uses it to answer question
 # 6. answer is returned to rag_agent
 
-from typing import Optional
-import os
-from pydantic import BaseModel
-from .abc import BaseQueryBuilder, BaseFetcher, BaseInterpreter
-
 
 ## Agent class
 class APIAgent:
@@ -26,7 +29,7 @@ class APIAgent:
     used (i.e., parameterised by the LLM) in the query builder.
 
     Attributes:
-        conversation_factory (callable): A function used to create a
+        conversation_factory (Callable): A function used to create a
             BioChatter conversation.
 
         result_path (str): The path to save results.
@@ -43,7 +46,7 @@ class APIAgent:
 
     def __init__(
         self,
-        conversation_factory: callable,
+        conversation_factory: Callable,
         query_builder: "BaseQueryBuilder",
         result_fetcher: "BaseFetcher",
         result_interpreter: "BaseInterpreter",
@@ -58,14 +61,14 @@ class APIAgent:
 
         os.makedirs(self.result_path, exist_ok=True)
 
-    def generate_query(self, question: str) -> Optional[BaseModel]:
+    def parameterise_query(self, question: str) -> Optional[BaseModel]:
         """
-        Use LLM to generate a query (a Pydantic model) based on the given
+        Use LLM to parameterise a query (a Pydantic model) based on the given
         question using a BioChatter conversation instance.
         """
         try:
             conversation = self.conversation_factory()
-            return self.query_builder.generate_query(question, conversation)
+            return self.query_builder.parameterise_query(question, conversation)
         except Exception as e:
             print(f"Error generating query: {e}")
             return None
@@ -106,7 +109,7 @@ class APIAgent:
             print(f"Error extracting answer: {e}")
             return None
 
-    def execute(self, question: str):
+    def execute(self, question: str) -> Optional[str]:
         """
         Wrapper that uses class methods to execute the API agent logic. Consists
         of 1) query generation, 2) query submission, 3) results fetching, and
@@ -117,7 +120,7 @@ class APIAgent:
             question (str): The question to be answered.
         """
         # Generate query
-        query = self.generate_query(question)
+        query = self.parameterise_query(question)
         if not query:
             print("Failed to generate query.")
             self.error = "Failed to generate query."
@@ -146,9 +149,6 @@ class APIAgent:
         if not final_answer:
             print("Failed to extract answer from results.")
             self.error = f"Failed to extract answer from results."
-            return
+            return None
 
-        if final_answer:
-            print(f"Final Answer: {final_answer}")
-            self.final_answer = final_answer
-            return
+        return final_answer
