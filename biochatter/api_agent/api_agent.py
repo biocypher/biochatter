@@ -22,6 +22,8 @@ from .blast import BlastFetcher, BlastQueryBuilder, BlastQuery, BlastInterpreter
 class APIAgent:
     """
     A class to interact with the BLAST tool for querying and fetching results.
+    The query fields have to be defined in a Pydantic model (`BaseModel`) and
+    used (i.e., parameterised by the LLM) in the query builder.
 
     Attributes:
         conversation_factory (callable): A function used to create a
