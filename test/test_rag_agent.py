@@ -136,14 +136,14 @@ def test_rag_agent_api_mode():
     # Define the test question
     question = "Which organism does the DNA sequence come from: TTCATCGGTCTGAGCAGAGGATGAAGTTGCAAATGATGCAAGCAAAACAGCTCAAAGATGAAGAGGAAAAGGCTATACACAACAGGAGCAATGTAGATACAGAAGGT"
 
-    # Create an instance of RagAgent in 'API' mode
+    # Create an instance of RagAgent in 'api' mode
     api_agent = RagAgent(
-        mode="API",
+        mode="api",
         model_name="gpt-4",
         connection_args={},  # Add necessary connection arguments if needed
         use_prompt=True,  # Ensure prompts are used to get responses
     )
-    assert api_agent.mode == "API", "Agent mode should be 'API'"
+    assert api_agent.mode == "api", "Agent mode should be 'api'"
 
     # Generate responses using the test question
     responses = api_agent.generate_responses(question)

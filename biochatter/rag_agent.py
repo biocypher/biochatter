@@ -7,7 +7,7 @@ from langchain.chat_models import ChatOpenAI
 class RagAgentModeEnum:
     VectorStore = "vectorstore"
     KG = "kg"
-    API = "API"
+    API = "api"
 
 
 class RagAgent:
@@ -26,8 +26,8 @@ class RagAgent:
         ######
         ##TO DO
         ######
-        # mode: 'API' for the case where the agent is querying an API
-        # use_prompt: default TRUE for self.mode == API
+        # mode: 'api' for the case where the agent is querying an API
+        # use_prompt: default TRUE for self.mode == api
 
         """
         Create a RAG agent that can return results from a database or vector
@@ -119,7 +119,7 @@ class RagAgent:
             )
         else:
             raise ValueError(
-                "Invalid mode. Choose either 'kg', 'vectorstore', or 'API'."
+                "Invalid mode. Choose either 'kg', 'vectorstore', or 'api'."
             )
 
     def generate_responses(self, user_question: str) -> list[tuple]:
@@ -171,7 +171,7 @@ class RagAgent:
 
         else:
             raise ValueError(
-                "Invalid mode. Choose either 'kg', 'vectorstore' or 'API'."
+                "Invalid mode. Choose either 'kg', 'vectorstore' or 'api'."
             )
         self.last_response = response
         return response
