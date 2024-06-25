@@ -11,19 +11,29 @@ from biochatter.api_agent import (
     BlastFetcher,
     BlastQueryBuilder,
 )
+from biochatter.llm_connect import GptConversation
+
+
+def conversation_factory():
+    return GptConversation(
+        model_name="gpt-4o",
+        correct=False,
+        prompts={},
+    )
 
 
 class TestBlastQueryBuilder(unittest.TestCase):
     def setUp(self):
         self.builder = BlastQueryBuilder()
-        self.llm = llm
+        conversation = conversation_factory()
+        self.llm = conversation.chat
 
     def test_create_runnable(self):
         builder = BlastQueryBuilder()
         blast_prompt_path = "docs/api_agent/BLAST_tool/persistent_files/api_documentation/BLAST.txt"
         blast_prompt = builder.read_blast_prompt(blast_prompt_path)
         self.assertIsNotNone(blast_prompt)
-        runnable = builder.create_runnable(llm, BlastQuery)
+        runnable = builder.create_runnable(self.llm, BlastQuery)
         self.assertIsNotNone(runnable)
 
     @patch("biochatter.api_agent.create_structured_output_runnable")
@@ -35,7 +45,7 @@ class TestBlastQueryBuilder(unittest.TestCase):
         mock_blast_call_obj = Mock()
         mock_runnable.invoke.return_value = mock_blast_call_obj
         blast_query = self.builder.generate_blast_query(
-            question, blast_prompt_path, llm
+            question, blast_prompt_path, self.llm
         )
         print(blast_query.question_uuid)
 
@@ -136,7 +146,7 @@ class TestAPIAgent(unittest.TestCase):
         mock_blast_fetcher,
         mock_blast_query_builder,
     ):
-        api_agent = APIAgent(llm)
+        api_agent = APIAgent(conversation_factory=conversation_factory)
 
         # Prepare mocks
         question = "Which organism does the DNA sequence come from: TTCATCGGTCTGAGCAGAGGATGAAGTTGCAAATGATGCAAGCAAAACAGCTCAAAGATGAAGAGGAAAAGGCTATACACAACAGGAGCAATGTAGATACAGAAGGT"
@@ -173,8 +183,9 @@ class TestAPIAgent(unittest.TestCase):
         self.assertEqual(api_agent.final_answer, "Mocked Answer")
         self.assertIsNone(api_agent.error)
         # Verify the method calls within APIAgent
+        conversation = conversation_factory()
         mock_blast_query_builder_instance.generate_blast_query.assert_called_once_with(
-            question, api_agent.blast_prompt_path, llm
+            question, api_agent.blast_prompt_path, conversation.chat
         )
         mock_blast_query_builder_instance.submit_blast_query.assert_called_once_with(
             mock_blast_query
