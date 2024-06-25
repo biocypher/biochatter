@@ -286,7 +286,7 @@ class BlastInterpreter(BaseModel):
 
         context = self.read_first_n_lines(file_path, n)
         BLAST_file_answer_extractor_prompt = f"""
-                You have to answer the question: {question} in a clear and concise manner. Be factual!\n\
+                You have to answer this question in a clear and concise manner: {question} Be factual!\n\
                 If you are asked what organism a specific sequence belongs to, check the 'Hit_def' fields. If you find a synthetic construct or predicted entry, move to the next one and look for an organism name.\n\
                 Try to use the hits with the best identity score to answer the question. If it is not possible, move to the next one.\n\
                 Be clear, and if organism names are present in ANY of the results, please include them in the answer. Do not make up information and mention how relevant the found information is based on the identity scores.\n\
