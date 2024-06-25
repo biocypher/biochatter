@@ -10,7 +10,6 @@ from biochatter.api_agent import (
     BlastQuery,
     BlastFetcher,
     BlastQueryBuilder,
-    llm,
 )
 
 

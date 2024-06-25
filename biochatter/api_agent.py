@@ -25,20 +25,11 @@ import uuid
 
 from pydantic import Field, BaseModel
 from langchain.prompts import ChatPromptTemplate
-from langchain.chat_models import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import Field, BaseModel
 from langchain_core.output_parsers import StrOutputParser
 from langchain.chains.openai_functions import create_structured_output_runnable
 import requests
-
-###
-###     TO DO: IMPLEMENT LLM CALLING LOGIC THROUGH llm_connect.py
-###
-openai_api_key = os.getenv("OPENAI_API_KEY")
-llm = ChatOpenAI(
-    model_name="gpt-4", temperature=0, openai_api_key=openai_api_key
-)
 
 
 class BlastQuery(BaseModel):
@@ -127,26 +118,31 @@ class BlastQueryBuilder(BaseModel):
         except Exception as e:
             return "An error occurred while reading the file:", str(e)
 
-    def create_runnable(self, llm, blast_query_class) -> callable:
+    def create_runnable(self, conversation, blast_query_class) -> callable:
         return create_structured_output_runnable(
-            blast_query_class, llm, self.BLAST_structured_output_prompt
+            blast_query_class,
+            conversation.chat,
+            self.BLAST_structured_output_prompt,
         )
 
     def generate_blast_query(
-        self, question: str, BLAST_prompt_path: str, llm
+        self, question: str, BLAST_prompt_path: str, conversation
     ) -> BlastQuery:
         """
-        Generates a BlastQuery object based on the given question, file path, and llm.
+        Generates a BlastQuery object based on the given question, file path, and conversation.
 
         Args:
             question (str): The question to be answered.
+
             file_path (str): The path to the file containing the BLAST prompt.
-            llm: The llm object used for creating the BlastQuery.
+
+            conversation: The conversation object used for creating the
+                BlastQuery.
 
         Returns:
             BlastQuery: The generated BlastQuery object.
         """
-        runnable = self.create_runnable(llm, BlastQuery)
+        runnable = self.create_runnable(conversation, BlastQuery)
         BLAST_prompt = self.read_blast_prompt(BLAST_prompt_path)
         blast_call_obj = runnable.invoke(
             {"input": f"Answer:\n{question} based on:\n {BLAST_prompt}"}
@@ -301,7 +297,13 @@ class BlastFetcher(BaseModel):
         except Exception as e:
             return f"An error occurred: {e}"
 
-    def answer_extraction(self, question: str, file_path: str, n: int) -> str:
+    def answer_extraction(
+        self,
+        question: str,
+        conversation_factory: callable,
+        file_path: str,
+        n: int,
+    ) -> str:
         """
         Function to extract the answer from the BLAST results.
 
@@ -335,7 +337,8 @@ class BlastFetcher(BaseModel):
                 {context}
                 """
         output_parser = StrOutputParser()
-        chain = prompt | llm | output_parser
+        conversation = conversation_factory()
+        chain = prompt | conversation.chat | output_parser
         BLAST_answer = chain.invoke(
             {"input": {BLAST_file_answer_extractor_prompt}}
         )
@@ -348,15 +351,20 @@ class APIAgent:
     A class to interact with the BLAST tool for querying and fetching results.
 
     Attributes:
-        llm (object): The language model to be used.
+        conversation_factory (callable): A function used to create a
+            BioChatter conversation.
+
         blast_result_path (str): The path to save BLAST results.
+
         blast_prompt_path (str): The path to the BLAST prompt file.
+
         builder (BlastQueryBuilder): An instance to build BLAST queries.
+
         fetcher (BlastFetcher): An instance to fetch BLAST results.
     """
 
-    def __init__(self, llm):
-        self.llm = llm
+    def __init__(self, conversation_factory: callable):
+        self.conversation_factory = conversation_factory
         self.blast_result_path = ".blast"
         self.blast_prompt_path = "docs/api_agent/BLAST_tool/persistent_files/api_documentation/BLAST.txt"
         self.builder = BlastQueryBuilder()
@@ -368,8 +376,9 @@ class APIAgent:
 
     def generate_blast_query(self, question: str) -> Optional[BlastQuery]:
         try:
+            conversation = self.conversation_factory()
             return self.builder.generate_blast_query(
-                question, self.blast_prompt_path, self.llm
+                question, self.blast_prompt_path, conversation
             )
         except Exception as e:
             print(f"Error generating BLAST query: {e}")
@@ -404,6 +413,15 @@ class APIAgent:
             return None
 
     def execute(self, question: str):
+        """
+        Wrapper that uses class methods to execute the API agent logic. Consists
+        of 1) query generation, 2) query submission, 3) results fetching, and
+        4) answer extraction. The final answer is stored in the final_answer
+        attribute.
+
+        Args:
+            question (str): The question to be answered.
+        """
         # Generate BLAST query
         blast_query = self.generate_blast_query(question)
         if not blast_query:

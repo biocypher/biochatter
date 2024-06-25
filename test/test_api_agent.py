@@ -9,8 +9,8 @@ from biochatter.api_agent import (  # Adjust the import as necessary
     BlastQuery,
     BlastFetcher,
     BlastQueryBuilder,
-    llm,
 )
+from biochatter.llm_connect import GptConversation
 
 ###
 ### TO DO
@@ -82,13 +82,18 @@ import pytest
 
 
 @pytest.fixture
-@pytest.mark.skip(reason="Live test for development purposes")
 def api_agent():
-    openai_api_key = os.getenv("OPENAI_API_KEY")
-    llm = ChatOpenAI(
-        model_name="gpt-4", temperature=0, openai_api_key=openai_api_key
-    )
-    return APIAgent(llm)
+    def conversation_factory():
+        conversation = GptConversation(
+            model_name="gpt-4o",
+            prompts={},
+            correct=False,
+        )
+        conversation.set_api_key(os.getenv("OPENAI_API_KEY"), user="test")
+
+        return conversation
+
+    return APIAgent(conversation_factory=conversation_factory)
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
