@@ -1,6 +1,6 @@
-import base64
 from unittest.mock import Mock, patch
 import os
+import base64
 
 from xinference.client import Client
 from openai._exceptions import NotFoundError

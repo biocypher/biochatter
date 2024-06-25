@@ -1,11 +1,14 @@
-from typing import Optional, List
-import os 
+from typing import Optional
+import os
+
 from langchain.chat_models import ChatOpenAI
+
 
 class RagAgentModeEnum:
     VectorStore = "vectorstore"
     KG = "kg"
     API = "API"
+
 
 class RagAgent:
     def __init__(
@@ -18,7 +21,7 @@ class RagAgent:
         schema_config_or_info_dict: Optional[dict] = None,
         conversation_factory: Optional[callable] = None,
         embedding_func: Optional[object] = None,
-        documentids_workspace: Optional[List[str]] = None,
+        documentids_workspace: Optional[list[str]] = None,
     ) -> None:
         ######
         ##TO DO
@@ -102,7 +105,12 @@ class RagAgent:
 
         elif self.mode == RagAgentModeEnum.API:
             from .api_agent import APIAgent
-            llm = ChatOpenAI(model_name='gpt-4', temperature=0, openai_api_key=os.getenv("OPENAI_API_KEY"))
+
+            llm = ChatOpenAI(
+                model_name="gpt-4",
+                temperature=0,
+                openai_api_key=os.getenv("OPENAI_API_KEY"),
+            )
             self.query_func = APIAgent(llm)
         else:
             raise ValueError(
@@ -152,9 +160,9 @@ class RagAgent:
         elif self.mode == RagAgentModeEnum.API:
             self.query_func.execute(user_question)
             if self.query_func.final_answer is not None:
-                response = [('response', self.query_func.final_answer)]
+                response = [("response", self.query_func.final_answer)]
             else:
-                response = [('error', self.query_func.final_answer)]
+                response = [("error", self.query_func.final_answer)]
 
         else:
             raise ValueError(

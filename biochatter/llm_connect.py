@@ -11,17 +11,17 @@ except ImportError:
     st = None
 
 from abc import ABC, abstractmethod
-import base64
 from typing import Optional
 import json
+import base64
 import logging
+import urllib.parse
 
 from langchain.llms import HuggingFaceHub
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 from langchain.chat_models import ChatOpenAI, AzureChatOpenAI
 import nltk
 import openai
-import urllib.parse
 
 from ._stats import get_stats
 from .rag_agent import RagAgent

@@ -351,7 +351,8 @@ class APIAgent:
         blast_prompt_path (str): The path to the BLAST prompt file.
         builder (BlastQueryBuilder): An instance to build BLAST queries.
         fetcher (BlastFetcher): An instance to fetch BLAST results.
-    """    
+    """
+
     def __init__(self, llm):
         self.llm = llm
         self.blast_result_path = ".blast"
@@ -360,7 +361,7 @@ class APIAgent:
         self.fetcher = BlastFetcher()
         self.final_answer = None
         self.error = None
-    
+
         os.makedirs(self.blast_result_path, exist_ok=True)
 
     def generate_blast_query(self, question: str) -> Optional[BlastQuery]:
@@ -438,4 +439,4 @@ class APIAgent:
         if final_answer:
             print(f"Final Answer: {final_answer}")
             self.final_answer = final_answer
-            return 
+            return
