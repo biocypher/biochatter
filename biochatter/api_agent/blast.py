@@ -130,7 +130,8 @@ class BlastQueryBuilder(BaseModel):
         conversation: "Conversation",
     ) -> BlastQuery:
         """
-        Generates a BlastQuery object based on the given question, file path, and conversation.
+        Generates a BlastQuery object based on the given question, file path,
+        and conversation.
 
         Args:
             question (str): The question to be answered.
@@ -155,7 +156,8 @@ class BlastQueryBuilder(BaseModel):
         It submits the structured BlastQuery obj and return the RID.
 
         Args:
-            request_data: BlastQuery object containing the BLAST query parameters.
+            request_data: BlastQuery object containing the BLAST query
+                parameters.
         Returns:
             str: The Request ID (RID) for the submitted BLAST query.
         """

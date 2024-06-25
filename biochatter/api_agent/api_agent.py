@@ -29,19 +29,27 @@ class APIAgent:
 
         blast_result_path (str): The path to save BLAST results.
 
-        blast_prompt_path (str): The path to the BLAST prompt file.
+        query_builder (BlastQueryBuilder): An instance of the BlastQueryBuilder
+            class.
 
-        builder (BlastQueryBuilder): An instance to build BLAST queries.
+        result_fetcher (BlastFetcher): An instance of the BlastFetcher class.
 
-        fetcher (BlastFetcher): An instance to fetch BLAST results.
+        result_interpreter (BlastInterpreter): An instance of the
+            BlastInterpreter class.
     """
 
-    def __init__(self, conversation_factory: callable):
+    def __init__(
+        self,
+        conversation_factory: callable,
+        query_builder: "BlastQueryBuilder",
+        result_fetcher: "BlastFetcher",
+        result_interpreter: "BlastInterpreter",
+    ):
         self.conversation_factory = conversation_factory
         self.blast_result_path = ".blast"
-        self.builder = BlastQueryBuilder()
-        self.fetcher = BlastFetcher()
-        self.interpreter = BlastInterpreter()
+        self.query_builder = query_builder
+        self.result_fetcher = result_fetcher
+        self.result_interpreter = result_interpreter
         self.final_answer = None
         self.error = None
 
@@ -50,14 +58,16 @@ class APIAgent:
     def generate_blast_query(self, question: str) -> Optional[BlastQuery]:
         try:
             conversation = self.conversation_factory()
-            return self.builder.generate_blast_query(question, conversation)
+            return self.query_builder.generate_blast_query(
+                question, conversation
+            )
         except Exception as e:
             print(f"Error generating BLAST query: {e}")
             return None
 
     def submit_blast_query(self, blast_query: BlastQuery) -> Optional[str]:
         try:
-            return self.builder.submit_blast_query(blast_query)
+            return self.query_builder.submit_blast_query(blast_query)
         except Exception as e:
             print(f"Error submitting BLAST query: {e}")
             return None
@@ -66,7 +76,7 @@ class APIAgent:
         self, question_uuid: str, rid: str
     ) -> Optional[str]:
         try:
-            return self.fetcher.fetch_and_save_blast_results(
+            return self.result_fetcher.fetch_and_save_blast_results(
                 question_uuid, rid, self.blast_result_path, 100
             )
         except Exception as e:
@@ -78,7 +88,9 @@ class APIAgent:
     ) -> Optional[str]:
         try:
             file_path = os.path.join(self.blast_result_path, blast_file_name)
-            return self.interpreter.answer_extraction(question, file_path, 100)
+            return self.result_interpreter.answer_extraction(
+                question, file_path, 100
+            )
         except Exception as e:
             print(f"Error extracting answer: {e}")
             return None

@@ -128,7 +128,7 @@ def test_rag_agent_invalid_mode():
     assert "Invalid mode. Choose either" in str(excinfo.value)
 
 
-@pytest.mark.skip(reason="Live test for development purposes")
+# @pytest.mark.skip(reason="Live test for development purposes")
 def test_rag_agent_api_mode():
     """
     Test the API agent with a specific DNA sequence question.

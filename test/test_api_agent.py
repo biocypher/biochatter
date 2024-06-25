@@ -6,9 +6,9 @@ import pytest
 
 from biochatter.api_agent.api_agent import (  # Adjust the import as necessary
     APIAgent,
-    BlastQuery,
     BlastFetcher,
     BlastQueryBuilder,
+    BlastInterpreter,
 )
 from biochatter.llm_connect import GptConversation
 
@@ -23,6 +23,7 @@ class TestBlastQueryBuilder(unittest.TestCase):
     def setUp(self):
         self.builder = BlastQueryBuilder()
         self.fetcher = BlastFetcher()
+        self.interpreter = BlastInterpreter()
 
     # def test_blast_structured_output_prompt(self):
     #   builder = BlastQueryBuilder()
@@ -93,7 +94,12 @@ def api_agent():
 
         return conversation
 
-    return APIAgent(conversation_factory=conversation_factory)
+    return APIAgent(
+        conversation_factory=conversation_factory,
+        query_builder=BlastQueryBuilder(),
+        result_fetcher=BlastFetcher(),
+        result_interpreter=BlastInterpreter(),
+    )
 
 
 # @pytest.mark.skip(reason="Live test for development purposes")

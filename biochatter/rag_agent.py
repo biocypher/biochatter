@@ -105,13 +105,21 @@ class RagAgent:
 
         elif self.mode == RagAgentModeEnum.API:
             from .api_agent.api_agent import APIAgent
+            from .api_agent.blast import (
+                BlastQueryBuilder,
+                BlastFetcher,
+                BlastInterpreter,
+            )
 
             self.query_func = APIAgent(
-                conversation_factory=conversation_factory
+                conversation_factory=conversation_factory,
+                query_builder=BlastQueryBuilder(),
+                result_fetcher=BlastFetcher(),
+                result_interpreter=BlastInterpreter(),
             )
         else:
             raise ValueError(
-                "Invalid mode. Choose either 'kg', 'vectorstore' or 'API'."
+                "Invalid mode. Choose either 'kg', 'vectorstore', or 'API'."
             )
 
     def generate_responses(self, user_question: str) -> list[tuple]:
