@@ -5,7 +5,7 @@ import unittest
 
 import requests
 
-from biochatter.api_agent import (
+from biochatter.api_agent.api_agent import (
     APIAgent,
     BlastQuery,
     BlastFetcher,

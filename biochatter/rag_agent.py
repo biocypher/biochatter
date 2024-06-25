@@ -104,7 +104,7 @@ class RagAgent:
             self.query_func = self.agent.similarity_search
 
         elif self.mode == RagAgentModeEnum.API:
-            from .api_agent import APIAgent
+            from .api_agent.api_agent import APIAgent
 
             self.query_func = APIAgent(
                 conversation_factory=conversation_factory

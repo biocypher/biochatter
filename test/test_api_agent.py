@@ -4,7 +4,7 @@ import unittest
 from langchain.chat_models import ChatOpenAI
 import pytest
 
-from biochatter.api_agent import (  # Adjust the import as necessary
+from biochatter.api_agent.api_agent import (  # Adjust the import as necessary
     APIAgent,
     BlastQuery,
     BlastFetcher,
