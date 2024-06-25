@@ -277,6 +277,8 @@ class BlastFetcher(BaseModel):
         except Exception as e:
             return f"An error occurred: {e}"
 
+
+class BlastInterpreter(BaseModel):
     def answer_extraction(
         self,
         question: str,

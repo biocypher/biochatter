@@ -15,7 +15,7 @@
 from typing import Optional
 import os
 
-from .blast import BlastFetcher, BlastQueryBuilder, BlastQuery
+from .blast import BlastFetcher, BlastQueryBuilder, BlastQuery, BlastInterpreter
 
 
 ## Agent class
@@ -42,6 +42,7 @@ class APIAgent:
         self.blast_prompt_path = "docs/api_agent/BLAST_tool/persistent_files/api_documentation/BLAST.txt"
         self.builder = BlastQueryBuilder()
         self.fetcher = BlastFetcher()
+        self.interpreter = BlastInterpreter()
         self.final_answer = None
         self.error = None
 
@@ -80,7 +81,7 @@ class APIAgent:
     ) -> Optional[str]:
         try:
             file_path = os.path.join(self.blast_result_path, blast_file_name)
-            return self.fetcher.answer_extraction(question, file_path, 100)
+            return self.interpreter.answer_extraction(question, file_path, 100)
         except Exception as e:
             print(f"Error extracting answer: {e}")
             return None
