@@ -12,10 +12,6 @@
 # 5. Read response from BLAST and uses it to answer question
 # 6. answer is returned to rag_agent
 
-###
-###     TO DO: Handle all dependencies and imports with poetry
-###
-
 from typing import Optional
 import os
 
