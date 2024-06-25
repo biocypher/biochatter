@@ -42,8 +42,10 @@ llm = ChatOpenAI(
 
 
 class BlastQuery(BaseModel):
-    """BlastQuery is a Pydantic model for the BLAST query request.
-    A Pydantic model for configuring and sending a request to the NCBI BLAST query API.
+    """
+    BlastQuery is a Pydantic model for the BLAST query request, used for
+    configuring and sending a request to the NCBI BLAST query API. The fields
+    are dynamically configured by the LLM based on the user's question.
     """
 
     url: Optional[str] = Field(
