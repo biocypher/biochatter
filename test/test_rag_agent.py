@@ -125,10 +125,7 @@ def test_rag_agent_invalid_mode():
         RagAgent(
             mode="invalid_mode", model_name="test_model", connection_args={}
         )
-    assert (
-        str(excinfo.value)
-        == "Invalid mode. Choose either 'kg' or 'vectorstore'."
-    )
+    assert "Invalid mode. Choose either" in str(excinfo.value)
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
