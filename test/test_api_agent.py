@@ -9,9 +9,7 @@ from biochatter.api_agent.blast import (
     BlastInterpreter,
     BlastQueryBuilder,
 )
-from biochatter.api_agent.api_agent import (  # Adjust the import as necessary
-    APIAgent,
-)
+from biochatter.api_agent.api_agent import APIAgent
 
 
 @pytest.fixture
