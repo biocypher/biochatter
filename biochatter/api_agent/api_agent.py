@@ -23,27 +23,6 @@ from .abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
 
 ## Agent class
 class APIAgent:
-    """
-    A class to interact with a tool's API for querying and fetching results.
-    The query fields have to be defined in a Pydantic model (`BaseModel`) and
-    used (i.e., parameterised by the LLM) in the query builder.
-
-    Attributes:
-        conversation_factory (Callable): A function used to create a
-            BioChatter conversation.
-
-        result_path (str): The path to save results.
-
-        query_builder (BaseQueryBuilder): An instance of a child of the
-            BaseQueryBuilder class.
-
-        result_fetcher (BaseFetcher): An instance of a child of the BaseFetcher
-            class.
-
-        result_interpreter (BaseInterpreter): An instance of a child of the
-            BaseInterpreter class.
-    """
-
     def __init__(
         self,
         conversation_factory: Callable,
@@ -51,13 +30,32 @@ class APIAgent:
         result_fetcher: "BaseFetcher",
         result_interpreter: "BaseInterpreter",
     ):
+        """
+
+        API agent class to interact with a tool's API for querying and fetching
+        results.  The query fields have to be defined in a Pydantic model
+        (`BaseModel`) and used (i.e., parameterised by the LLM) in the query
+        builder. Specific API agents are defined in submodules of this directory
+        (`api_agent`). The agent's logic is implemented in the `execute` method.
+
+        Attributes:
+            conversation_factory (Callable): A function used to create a
+                BioChatter conversation, providing LLM access.
+
+            query_builder (BaseQueryBuilder): An instance of a child of the
+                BaseQueryBuilder class.
+
+            result_fetcher (BaseFetcher): An instance of a child of the
+                BaseFetcher class.
+
+            result_interpreter (BaseInterpreter): An instance of a child of the
+                BaseInterpreter class.
+        """
         self.conversation_factory = conversation_factory
         self.result_path = ".api_results/"
         self.query_builder = query_builder
         self.result_fetcher = result_fetcher
         self.result_interpreter = result_interpreter
-        self.final_answer = None
-        self.error = None
 
         os.makedirs(self.result_path, exist_ok=True)
 
@@ -120,35 +118,37 @@ class APIAgent:
             question (str): The question to be answered.
         """
         # Generate query
-        query = self.parameterise_query(question)
-        if not query:
-            print("Failed to generate query.")
-            self.error = "Failed to generate query."
-            return
-
-        print(f"Generated query: {query}")
+        try:
+            query = self.parameterise_query(question)
+            if not query:
+                raise ValueError("Failed to generate query.")
+        except ValueError as e:
+            print(e)
 
         # Submit query and get RID
-        rid = self.submit_query(query)
-        if not rid:
-            print("Failed to submit query.")
-            self.error = "Failed to submit query."
-            return
+        try:
+            rid = self.submit_query(query)
+            if not rid:
+                raise ValueError("Failed to submit query.")
+        except ValueError as e:
+            print(e)
 
         print(f"Received RID: {rid}")
 
         # Fetch results
-        file_name = self.fetch_results(query.question_uuid, rid)
-        if not file_name:
-            print("Failed to fetch results.")
-            self.error = "Failed to fetch results."
-            return
+        try:
+            file_name = self.fetch_results(query.question_uuid, rid)
+            if not file_name:
+                raise ValueError("Failed to fetch results.")
+        except ValueError as e:
+            print(e)
 
         # Extract answer from results
-        final_answer = self.summarise_results(question, file_name)
-        if not final_answer:
-            print("Failed to extract answer from results.")
-            self.error = f"Failed to extract answer from results."
-            return None
+        try:
+            final_answer = self.summarise_results(question, file_name)
+            if not final_answer:
+                raise ValueError("Failed to extract answer from results.")
+        except ValueError as e:
+            print(e)
 
         return final_answer
