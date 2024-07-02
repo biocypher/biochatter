@@ -35,7 +35,6 @@ logger = logging.getLogger(__name__)
 OPENAI_MODELS = [
     "gpt-3.5-turbo",
     "gpt-3.5-turbo-16k",
-    "gpt-3.5-turbo-0301",  # legacy 3.5-turbo, until Sep 13, 2023
     "gpt-3.5-turbo-0613",  # updated 3.5-turbo
     "gpt-3.5-turbo-1106",  # further updated 3.5-turbo
     "gpt-4",
