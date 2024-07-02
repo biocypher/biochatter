@@ -16,16 +16,19 @@ from typing import Optional
 import json
 import logging
 
-from langchain.llms import HuggingFaceHub
-from langchain.schema import AIMessage, HumanMessage, SystemMessage
-from langchain.chat_models import ChatOpenAI, AzureChatOpenAI
+from langchain_community.chat_models import (
+    ChatOpenAI,
+    AzureChatOpenAI,
+    ChatOllama,
+)
+from langchain_community.llms.huggingface_hub import HuggingFaceHub
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 import nltk
 import openai
 import urllib.parse
 
 from ._stats import get_stats
 from .rag_agent import RagAgent
-from .vectorstore import DocumentEmbedder
 
 logger = logging.getLogger(__name__)
 
@@ -796,11 +799,7 @@ class XinferenceConversation(Conversation):
 
             token_usage (dict): The token usage statistics.
         """
-        # if self.user == "community":
-        # self.usage_stats.increment(
-        #     f"usage:[date]:[user]",
-        #     {f"{k}:{model}": v for k, v in token_usage.items()},
-        # )
+        pass
 
     def set_api_key(self):
         """
@@ -883,20 +882,22 @@ class OllamaConversation(Conversation):
             individually.
 
         """
-        from langchain.chat_models import ChatOllama
-
         super().__init__(
             model_name=model_name,
             prompts=prompts,
             correct=correct,
             split_correction=split_correction,
         )
-        self.model_name =model_name
-        self.model = ChatOllama(base_url=base_url, model=self.model_name, temperature=0.0)
+        self.model_name = model_name
+        self.model = ChatOllama(
+            base_url=base_url, model=self.model_name, temperature=0.0
+        )
 
         self.ca_model_name = "mixtral:latest"
 
-        self.ca_model = ChatOllama(base_url=base_url, model_name=self.ca_model_name, temperature=0.0)
+        self.ca_model = ChatOllama(
+            base_url=base_url, model_name=self.ca_model_name, temperature=0.0
+        )
 
     def append_system_message(self, message: str):
         """
@@ -995,17 +996,14 @@ class OllamaConversation(Conversation):
         return msg, token_usage
 
     def _create_history(self, messages):
-        from langchain_core.messages import HumanMessage as LC_HumanMessage
-        from langchain_core.messages import SystemMessage as LC_SystemMessage
-        from langchain_core.messages import AIMessage as LC_AIMessage
         history = []
         for i, m in enumerate(messages):
             if isinstance(m, AIMessage):
-                history.append(LC_AIMessage(content=m.content))
+                history.append(AIMessage(content=m.content))
             elif isinstance(m, HumanMessage):
-                history.append(LC_HumanMessage(content=m.content))
+                history.append(HumanMessage(content=m.content))
             elif isinstance(m, SystemMessage):
-                history.append(LC_SystemMessage(content=m.content))
+                history.append(SystemMessage(content=m.content))
 
         return history
 
@@ -1054,11 +1052,7 @@ class OllamaConversation(Conversation):
 
             token_usage (dict): The token usage statistics.
         """
-        # if self.user == "community":
-        # self.usage_stats.increment(
-        #     f"usage:[date]:[user]",
-        #     {f"{k}:{model}": v for k, v in token_usage.items()},
-        # )
+        pass
 
 
 class GptConversation(Conversation):
