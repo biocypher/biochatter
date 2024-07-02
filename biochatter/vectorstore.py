@@ -2,12 +2,12 @@ from typing import Optional
 
 from transformers import GPT2TokenizerFast
 from langchain.schema import Document
-from langchain.embeddings import XinferenceEmbeddings
-from langchain.vectorstores import Milvus
+from langchain_community.embeddings import XinferenceEmbeddings, OllamaEmbeddings
+from langchain_community.vectorstores import Milvus
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.document_loaders import TextLoader
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.embeddings.azure_openai import AzureOpenAIEmbeddings
+from langchain_community.document_loaders import TextLoader
+from langchain_community.embeddings.openai import OpenAIEmbeddings
+from langchain_community.embeddings.azure_openai import AzureOpenAIEmbeddings
 import fitz  # this is PyMuPDF (PyPI pymupdf package, not fitz)
 import openai
 
@@ -34,7 +34,7 @@ class DocumentEmbedder:
         azure_deployment: Optional[str] = None,
         azure_endpoint: Optional[str] = None,
         base_url: Optional[str] = None,
-        embeddings: Optional[OpenAIEmbeddings | XinferenceEmbeddings] = None,
+        embeddings: Optional[OpenAIEmbeddings | XinferenceEmbeddings | OllamaEmbeddings] = None,
         documentids_workspace: Optional[list[str]] = None,
     ) -> None:
         """
@@ -359,6 +359,94 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
             elif model["model_type"] == type:
                 names.append(name)
         return names
+
+
+class OllamaDocumentEmbedder(DocumentEmbedder):
+    def __init__(
+        self,
+        used: bool = False,
+        chunk_size: int = 1000,
+        chunk_overlap: int = 0,
+        split_by_characters: bool = True,
+        separators: Optional[list] = None,
+        n_results: int = 3,
+        model: Optional[str] = "nomic-embed-text",
+        vector_db_vendor: Optional[str] = None,
+        connection_args: Optional[dict] = None,
+        embedding_collection_name: Optional[str] = None,
+        metadata_collection_name: Optional[str] = None,
+        api_key: Optional[str] = "none",
+        base_url: Optional[str] = None,
+        documentids_workspace: Optional[list[str]] = None,
+    ):
+        """
+        Extension of the DocumentEmbedder class that uses Ollama for
+        embeddings.
+
+        Args:
+
+            used (bool, optional): whether RAG has been used (ChatGSE setting).
+
+            chunk_size (int, optional): size of chunks to split text into.
+
+            chunk_overlap (int, optional): overlap between chunks.
+
+            split_by_characters (bool, optional): whether to split by characters
+            or tokens.
+
+            separators (Optional[list], optional): list of separators to use when
+            splitting by characters.
+
+            n_results (int, optional): number of results to return from
+            similarity search.
+
+            model (Optional[str], optional): name of model to use for embeddings.
+            Can be "auto" to use the first available model.
+
+            vector_db_vendor (Optional[str], optional): name of vector database
+            to use.
+
+            connection_args (Optional[dict], optional): arguments to pass to
+            vector database connection.
+
+            embedding_collection_name (Optional[str], optional): name of
+            collection to store embeddings in.
+
+            metadata_collection_name (Optional[str], optional): name of
+            collection to store metadata in.
+
+            api_key (Optional[str], optional): Xinference API key.
+
+            base_url (Optional[str], optional): base url of Xinference API.
+
+            documentids_workspace (Optional[List[str]], optional): a list of document IDs
+            that defines the scope within which rag operations (remove, similarity search,
+            and get all) occur. Defaults to None, which means the operations will be
+            performed across all documents in the database.
+
+        """
+        from langchain_community.embeddings import OllamaEmbeddings
+
+        self.model_name = model
+
+        super().__init__(
+            used=used,
+            online=True,
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap,
+            split_by_characters=split_by_characters,
+            separators=separators,
+            n_results=n_results,
+            model=model,
+            vector_db_vendor=vector_db_vendor,
+            connection_args=connection_args,
+            embedding_collection_name=embedding_collection_name,
+            metadata_collection_name=metadata_collection_name,
+            api_key=api_key,
+            base_url=base_url,
+            embeddings=OllamaEmbeddings(base_url=base_url, model=self.model_name),
+            documentids_workspace=documentids_workspace,
+        )
 
 
 class DocumentReader:
