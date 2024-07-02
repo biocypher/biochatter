@@ -171,7 +171,7 @@ def test_xinference_init():
     Test generic LLM connectivity via the Xinference client. Currently depends
     on a test server.
     """
-    base_url = os.getenv("XINFERENCE_BASE_URL", "http://llm.biocypher.org")
+    base_url = os.getenv("XINFERENCE_BASE_URL", "http://localhost:9997")
     with patch("biochatter.llm_connect.Client") as mock_client:
         mock_client.return_value.list_models.return_value = xinference_models
         convo = XinferenceConversation(
@@ -182,8 +182,8 @@ def test_xinference_init():
         assert convo.set_api_key()
 
 
-def test_generic_chatting():
-    base_url = os.getenv("XINFERENCE_BASE_URL", "http://llm.biocypher.org")
+def test_xinference_chatting():
+    base_url = os.getenv("XINFERENCE_BASE_URL", "http://localhost:9997")
     with patch("biochatter.llm_connect.Client") as mock_client:
         response = {
             "id": "1",

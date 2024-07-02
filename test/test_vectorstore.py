@@ -8,7 +8,7 @@ from biochatter.vectorstore import (
     DocumentReader,
     DocumentEmbedder,
     XinferenceDocumentEmbedder,
-    OllamaDocumentEmbedder
+    OllamaDocumentEmbedder,
 )
 
 print(os.getcwd())
@@ -100,7 +100,7 @@ def test_retrieval_augmented_generation(
 @patch("biochatter.vectorstore.XinferenceEmbeddings")
 @patch("biochatter.vectorstore.VectorDatabaseAgentMilvus")
 @patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
-def test_retrieval_augmented_generation_generic_api(
+def test_retrieval_augmented_generation_xinference_api(
     mock_textsplitter, mock_host, mock_embeddings, mock_client
 ):
     # mocking
@@ -132,8 +132,8 @@ def test_retrieval_augmented_generation_generic_api(
     doc = reader.document_from_pdf(doc_bytes)
 
     rag_agent = XinferenceDocumentEmbedder(
-        base_url=os.getenv("GENERIC_TEST_OPENAI_BASE_URL",
-             "http://llm.biocypher.org/"
+        base_url=os.getenv(
+            "GENERIC_TEST_OPENAI_BASE_URL", "http://localhost:9997"
         ),
         embedding_collection_name="ollama_embedding_test",
         metadata_collection_name="xinference_metadata_test",
@@ -163,7 +163,7 @@ def test_retrieval_augmented_generation_generic_api(
 @patch("biochatter.vectorstore.OllamaEmbeddings")
 @patch("biochatter.vectorstore.VectorDatabaseAgentMilvus")
 @patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
-def test_retrieval_augmented_generation_generic_api(
+def test_retrieval_augmented_generation_ollama_api(
     mock_textsplitter, mock_host, mock_embeddings, mock_client
 ):
     # mocking
@@ -195,9 +195,7 @@ def test_retrieval_augmented_generation_generic_api(
     doc = reader.document_from_pdf(doc_bytes)
 
     rag_agent = OllamaDocumentEmbedder(
-        base_url=os.getenv(
-            "OLLAMA_BASE_URL", "http://llm.biocypher.org/"
-        ),
+        base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
         embedding_collection_name="xinference_embedding_test",
         metadata_collection_name="xinference_metadata_test",
         connection_args={"host": _HOST, "port": _PORT},

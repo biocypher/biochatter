@@ -37,7 +37,7 @@ the API endpoint of your deployed model via the `base_url` parameter of the
 from biochatter.llm_connect import XinferenceConversation
 
 conversation = XinferenceConversation(
-    base_url="http://llm.biocypher.org",
+    base_url="http://localhost:9997",
     prompts={},
     correct=False,
 )
@@ -98,13 +98,16 @@ model.chat(
 
 ## Ollama
 
-[Ollama](https://ollama.com/) is arguably the biggest open-source project for local LLM hosting right now. In comparison
-to Xinference it lacks the complete freedom of running any HuggingFace model more or less easily but with the benefit of
-stability and the list of [supported models](https://ollama.com/library) is updated diligently by the Ollama community.
-BioChatter support was added by implementing
-the [LangChain ChatOllama](https://python.langchain.com/v0.2/docs/integrations/chat/ollama/)
-and [LangChain OllamaEmbeddings](https://python.langchain.com/v0.2/docs/integrations/text_embedding/ollama/) classes,
-connecting to Ollama APIs.
+[Ollama](https://ollama.com/) is arguably the biggest open-source project for
+local LLM hosting right now. In comparison to Xinference it lacks the complete
+freedom of running any HuggingFace model more or less easily but with the
+benefit of stability and the list of [supported
+models](https://ollama.com/library) is updated diligently by the Ollama
+community.  BioChatter support was added by implementing the [LangChain
+ChatOllama](https://python.langchain.com/v0.2/docs/integrations/chat/ollama/)
+and [LangChain
+OllamaEmbeddings](https://python.langchain.com/v0.2/docs/integrations/text_embedding/ollama/)
+classes, connecting to Ollama APIs.
 
 ### Usage
 
@@ -114,15 +117,17 @@ possible in the exact same way as with the [standard class](chat.md).
 
 ### Connecting to the model from BioChatter
 
-One Ollama was set up, you can directly use BioChatter to connect to the API endpoint and start
-any [available](https://ollama.com/library) model. It will be downloaded and launched on-demand. You can now configure
-the `OllamaConversation` instance setting the `base_url` and `model_name` parameters. For example:
+Once Ollama has been set up (see below), you can directly use BioChatter to
+connect to the API endpoint and start any
+[available](https://ollama.com/library) model. It will be downloaded and
+launched on-demand. You can now configure the `OllamaConversation` instance
+setting the `base_url` and `model_name` parameters. For example:
 
 ```python
 from biochatter.llm_connect import OllamaConversation
 
 conversation = OllamaConversation(
-    base_url="http://llm.biocypher.org",
+    base_url="http://localhost:11434",
     prompts={},
     model_name='llama3',
     correct=False,
@@ -132,12 +137,19 @@ response, token_usage, correction = conversation.query("Hello world!")
 
 ### Deploying locally via Docker
 
-To deploy Ollama with Docker is extremely easy and well documented. You can follow the
-official [Ollama Docker blog post](https://ollama.com/blog/ollama-is-now-available-as-an-official-docker-image) for that
-or check the [Ollama DockerHub page](https://hub.docker.com/r/ollama/ollama) that will also help you with the
-installation of the required `nvidia-container-toolkit` library if you want to use GPUs from Docker containers.
+To deploy Ollama with Docker is extremely easy and well documented. You can
+follow the official [Ollama Docker blog
+post](https://ollama.com/blog/ollama-is-now-available-as-an-official-docker-image)
+for that or check the [Ollama DockerHub
+page](https://hub.docker.com/r/ollama/ollama) that will also help you with the
+installation of the required `nvidia-container-toolkit` library if you want to
+use GPUs from Docker containers.
 
 ### Deploying locally without Docker
 
 #### Installation
-You can download and run Ollama also directly on your computer. For this you can just visit the [official website](https://ollama.com/download) that provides you with an installer for any OS. More info on the setup and startup process can be found in the [GitHub README](https://github.com/ollama/ollama/blob/main/README.md).
+You can download and run Ollama also directly on your computer. For this you can
+just visit the [official website](https://ollama.com/download) that provides you
+with an installer for any OS. More info on the setup and startup process can be
+found in the [GitHub
+README](https://github.com/ollama/ollama/blob/main/README.md).
