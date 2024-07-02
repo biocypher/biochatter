@@ -23,6 +23,7 @@ from langchain_community.chat_models import (
 )
 from langchain_community.llms.huggingface_hub import HuggingFaceHub
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from xinference.client import Client
 import nltk
 import openai
 import urllib.parse
@@ -518,7 +519,6 @@ class XinferenceConversation(Conversation):
             individually.
 
         """
-        from xinference.client import Client
 
         super().__init__(
             model_name=model_name,
@@ -966,7 +966,7 @@ class OllamaConversation(Conversation):
             response = self.model.invoke(
                 messages
                 # ,generate_config={"max_tokens": 2048, "temperature": 0},
-            ).dict()
+            )
         except (
             openai._exceptions.APIError,
             openai._exceptions.OpenAIError,
@@ -984,8 +984,9 @@ class OllamaConversation(Conversation):
             openai._exceptions.APIResponseValidationError,
         ) as e:
             return str(e), None
-        msg = response["content"]
-        token_usage = response["response_metadata"]["eval_count"]
+        response_dict = response.dict()
+        msg = response_dict["content"]
+        token_usage = response_dict["response_metadata"]["eval_count"]
 
         self._update_usage_stats(self.model_name, token_usage)
 

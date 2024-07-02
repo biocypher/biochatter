@@ -2,7 +2,6 @@ import base64
 from unittest.mock import Mock, patch
 import os
 
-from xinference.client import Client
 from openai._exceptions import NotFoundError
 import openai
 import pytest
@@ -173,7 +172,7 @@ def test_xinference_init():
     on a test server.
     """
     base_url = os.getenv("XINFERENCE_BASE_URL", "http://llm.biocypher.org")
-    with patch("xinference.client.Client") as mock_client:
+    with patch("biochatter.llm_connect.Client") as mock_client:
         mock_client.return_value.list_models.return_value = xinference_models
         convo = XinferenceConversation(
             base_url=base_url,
@@ -185,7 +184,7 @@ def test_xinference_init():
 
 def test_generic_chatting():
     base_url = os.getenv("XINFERENCE_BASE_URL", "http://llm.biocypher.org")
-    with patch("xinference.client.Client") as mock_client:
+    with patch("biochatter.llm_connect.Client") as mock_client:
         response = {
             "id": "1",
             "object": "chat.completion",
@@ -221,12 +220,12 @@ def test_generic_chatting():
 
 
 def test_ollama_chatting():
-    base_url = os.getenv("OLLAMA_BASE_URL", "http://llm.biocypher.org")
-    with patch("langchain_community.chat_models.ChatOllama") as mock_model:
-        response = {
-            "content": "Hello there! It's great to meet you!",
-            "additional_kwargs": {},
-            "response_metadata": {
+    base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:1143")
+    with patch("biochatter.llm_connect.ChatOllama") as mock_model:
+        response = AIMessage(
+            content="Hello there! It's great to meet you!",
+            additional_kwargs={},
+            response_metadata={
                 "model": "llama3",
                 "created_at": "2024-06-20T17:19:45.376245476Z",
                 "message": {"role": "assistant", "content": ""},
@@ -238,16 +237,16 @@ def test_ollama_chatting():
                 "eval_count": 11,
                 "eval_duration": 107658000,
             },
-            "type": "ai",
-            "name": None,
-            "id": "run-698c8654-13e6-4bbb-8d59-67e520f78eb3-0",
-            "example": False,
-            "tool_calls": [],
-            "invalid_tool_calls": [],
-            "usage_metadata": None,
-        }
+            type="ai",
+            name=None,
+            id="run-698c8654-13e6-4bbb-8d59-67e520f78eb3-0",
+            example=False,
+            tool_calls=[],
+            invalid_tool_calls=[],
+            usage_metadata=None,
+        )
 
-        mock_model.return_value.invoke.return_value.dict.return_value = response
+        mock_model.return_value.invoke.return_value = response
 
         convo = OllamaConversation(
             base_url=base_url,
@@ -293,14 +292,14 @@ def test_wasm_conversation():
 
 @pytest.fixture
 def xinference_conversation():
-    with patch("xinference.client.Client") as mock_client:
+    with patch("biochatter.llm_connect.Client") as mock_client:
         mock_client.return_value.list_models.return_value = xinference_models
         mock_client.return_value.get_model.return_value.chat.return_value = (
             {"choices": [{"message": {"content": "Human message"}}]},
             {"completion_tokens": 0},
         )
         conversation = XinferenceConversation(
-            base_url="http://llm.biocypher.org",
+            base_url="http://localhost:9997",
             prompts={},
             correct=False,
         )
