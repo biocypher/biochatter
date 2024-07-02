@@ -1,25 +1,24 @@
 # Open-source and Local LLMs
 
-There are two self-hosted/local LLM solutions that BioChatter currently supports out-of-the-box.
+There are two self-hosted/local LLM solutions that BioChatter currently supports
+out-of-the-box.
 
 - [Xorbits Inference](https://github.com/xorbitsai/inference)
 - [Ollama](https://ollama.com/)
 
-In the following installation guides to both solutions are provided.
+Below, we provide installation and usage instructions for both of them.
 
 ## Xorbits Inference (Xinference)
 
 [Xorbits Inference](https://github.com/xorbitsai/inference) is an open-source
 toolkit for running open-source models, particularly language models. To support
 BioChatter applications in local and protected contexts, we provide API access
-through the [LangChain OpenAI
-Xinference](https://python.langchain.com/docs/integrations/llms/xinference)
-module. Briefly, this module allows to connect to any open-source model
-supported by Xinference via the state-of-the-art and easy-to-use OpenAI API.
-This allows local and remote access to essentially all relevant open-source
-models, including [these builtin
-models](https://github.com/xorbitsai/inference#builtin-models), at very little
-setup cost.
+via BioChatter classes in a unified way. Briefly, this module allows to connect
+to any open-source model supported by Xinference via the state-of-the-art and
+easy-to-use OpenAI API. This allows local and remote access to essentially all
+relevant open-source models, including [these builtin
+models](https://inference.readthedocs.io/en/latest/models/builtin/index.html),
+at very little setup cost.
 
 ### Usage
 
@@ -78,7 +77,8 @@ large selection of predefined models to choose from, as well as the possibility
 to add your own favourite models to the framework. You will see your running
 models in the `Running Models` tab, once they have started.
 
-Alternatively, you can deploy (and query) your model via the Xinference Python client:
+Alternatively, you can deploy (and query) your model via the Xinference Python
+client:
 
 ```python
 from xinference.client import Client
@@ -100,10 +100,10 @@ model.chat(
 
 [Ollama](https://ollama.com/) is arguably the biggest open-source project for
 local LLM hosting right now. In comparison to Xinference it lacks the complete
-freedom of running any HuggingFace model more or less easily but with the
-benefit of stability and the list of [supported
+freedom of running any HuggingFace model in a simple fashion, but has the
+benefit of higher stability for the supported models. The list of [supported
 models](https://ollama.com/library) is updated diligently by the Ollama
-community.  BioChatter support was added by implementing the [LangChain
+community. BioChatter support was added by implementing the [LangChain
 ChatOllama](https://python.langchain.com/v0.2/docs/integrations/chat/ollama/)
 and [LangChain
 OllamaEmbeddings](https://python.langchain.com/v0.2/docs/integrations/text_embedding/ollama/)
