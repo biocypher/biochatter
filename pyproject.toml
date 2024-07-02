@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "biochatter"
-version = "0.4.12"
+version = "0.4.13"
 description = "Backend library for conversational AI in biomedicine"
 authors = [
     "Sebastian Lobentanzer <sebastian.lobentanzer@gmail.com>",
@@ -12,7 +12,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
-langchain = "^0.0.347"
+langchain = "^0.2.5"
 openai = "^1.1.0"
 pymupdf = "^1.22.3"
 pymilvus = "2.2.8"
@@ -31,6 +31,7 @@ neo4j-utils = "^0.0.7"
 seaborn = "^0.13.2"
 rouge_score = "0.1.2"
 evaluate = "^0.4.1"
+langchain-community = "^0.2.5"
 
 [tool.poetry.extras]
 streamlit = ["streamlit"]

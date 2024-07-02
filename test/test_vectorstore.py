@@ -8,6 +8,7 @@ from biochatter.vectorstore import (
     DocumentReader,
     DocumentEmbedder,
     XinferenceDocumentEmbedder,
+    OllamaDocumentEmbedder,
 )
 
 print(os.getcwd())
@@ -99,7 +100,7 @@ def test_retrieval_augmented_generation(
 @patch("biochatter.vectorstore.XinferenceEmbeddings")
 @patch("biochatter.vectorstore.VectorDatabaseAgentMilvus")
 @patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
-def test_retrieval_augmented_generation_generic_api(
+def test_retrieval_augmented_generation_xinference_api(
     mock_textsplitter, mock_host, mock_embeddings, mock_client
 ):
     # mocking
@@ -132,8 +133,69 @@ def test_retrieval_augmented_generation_generic_api(
 
     rag_agent = XinferenceDocumentEmbedder(
         base_url=os.getenv(
-            "GENERIC_TEST_OPENAI_BASE_URL", "http://llm.biocypher.org/"
+            "GENERIC_TEST_OPENAI_BASE_URL", "http://localhost:9997"
         ),
+        embedding_collection_name="ollama_embedding_test",
+        metadata_collection_name="xinference_metadata_test",
+        connection_args={"host": _HOST, "port": _PORT},
+    )
+    rag_agent.connect()
+
+    doc_id = rag_agent.save_document(doc)
+    assert isinstance(doc_id, str)
+    assert len(doc_id) > 0
+
+    mock_host.return_value.get_all_documents.return_value = [
+        {"id": "1"},
+        {"id": "2"},
+    ]
+    docs = rag_agent.get_all_documents()
+    cnt = len(docs)
+    assert cnt > 0
+    rag_agent.remove_document(doc_id)
+    mock_host.return_value.get_all_documents.return_value = [{"id": "2"}]
+    docs = rag_agent.get_all_documents()
+    assert (cnt - 1) == len(docs)
+    mock_host.return_value.remove_document.assert_called_once()
+
+
+@patch("langchain_community.embeddings.OllamaEmbeddings")
+@patch("biochatter.vectorstore.OllamaEmbeddings")
+@patch("biochatter.vectorstore.VectorDatabaseAgentMilvus")
+@patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
+def test_retrieval_augmented_generation_ollama_api(
+    mock_textsplitter, mock_host, mock_embeddings, mock_client
+):
+    # mocking
+    mock_textsplitter.from_huggingface_tokenizer.return_value = (
+        mock_textsplitter()
+    )
+    mock_textsplitter.from_tiktoken_encoder.return_value = mock_textsplitter()
+    mock_textsplitter.return_value.split_documents.return_value = splitted_docs
+    mock_host.return_value.store_embeddings.return_value = "1"
+    mock_client.return_value.list_models.return_value = {
+        "48c76b62-904c-11ee-a3d2-0242acac0302": {
+            "model_type": "embedding",
+            "address": "",
+            "accelerators": ["0"],
+            "model_name": "gte-large",
+            "dimensions": 1024,
+            "max_tokens": 512,
+            "language": ["en"],
+            "model_revision": "",
+        }
+    }
+
+    pdf_path = "test/bc_summary.pdf"
+    with open(pdf_path, "rb") as f:
+        doc_bytes = f.read()
+    assert isinstance(doc_bytes, bytes)
+
+    reader = DocumentReader()
+    doc = reader.document_from_pdf(doc_bytes)
+
+    rag_agent = OllamaDocumentEmbedder(
+        base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
         embedding_collection_name="xinference_embedding_test",
         metadata_collection_name="xinference_metadata_test",
         connection_args={"host": _HOST, "port": _PORT},

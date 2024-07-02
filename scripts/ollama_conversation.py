@@ -3,10 +3,10 @@ Short helper script to quickly run a conversation with a self-hosted LLM via the
 XinferenceConversation class.
 """
 
-from biochatter.llm_connect import XinferenceConversation
+from biochatter.llm_connect import OllamaConversation
 
-convo = XinferenceConversation(
-    base_url="http://localhost:9997",
+convo = OllamaConversation(
+    base_url="http://localhost:11434",
     prompts={},
     correct=False,
     split_correction=False,
