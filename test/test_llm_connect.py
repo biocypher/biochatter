@@ -220,7 +220,7 @@ def test_generic_chatting():
 
 
 def test_ollama_chatting():
-    base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:1143")
+    base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
     with patch("biochatter.llm_connect.ChatOllama") as mock_model:
         response = AIMessage(
             content="Hello there! It's great to meet you!",
