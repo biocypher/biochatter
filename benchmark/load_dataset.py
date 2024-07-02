@@ -60,7 +60,7 @@ def _load_test_data_from_this_repository():
     test_data = {}
     for file_path in files_in_directory:
         if file_path.endswith(".yaml"):
-            with open(file_path, "r") as stream:
+            with open(file_path, "r", encoding="utf-8") as stream:
                 try:
                     yaml_data = yaml.safe_load(stream)
 

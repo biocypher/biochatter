@@ -50,12 +50,12 @@ def test_sourcedata_info_extraction(
 
         return (rouge_score, 1)
 
-    mean_score, max, n_iterations = multiple_testing(run_test)
+    scores, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         model_name,
         yaml_data["case"],
-        f"{mean_score}/{max}",
+        f"{scores}/{max}",
         f"{n_iterations}",
         yaml_data["hash"],
         get_result_file_path(task),

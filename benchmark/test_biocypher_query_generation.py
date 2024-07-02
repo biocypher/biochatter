@@ -55,12 +55,12 @@ def test_naive_query_generation_using_schema(
                 )
         return calculate_bool_vector_score(score)
 
-    mean_score, max, n_iterations = multiple_testing(run_test)
+    scores, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         model_name,
         yaml_data["case"],
-        f"{mean_score}/{max}",
+        f"{scores}/{max}",
         f"{n_iterations}",
         yaml_data["hash"],
         get_result_file_path(task),
@@ -113,12 +113,12 @@ def test_entity_selection(
             score.append(expected_entity in prompt_engine.selected_entities)
         return calculate_bool_vector_score(score)
 
-    mean_score, max, n_iterations = multiple_testing(run_test)
+    scores, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         yaml_data["case"],
-        f"{mean_score}/{max}",
+        f"{scores}/{max}",
         f"{n_iterations}",
         yaml_data["hash"],
         get_result_file_path(task),
@@ -177,12 +177,12 @@ def test_relationship_selection(
                     score.append(False)
         return calculate_bool_vector_score(score)
 
-    mean_score, max, n_iterations = multiple_testing(run_test)
+    scores, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         yaml_data["case"],
-        f"{mean_score}/{max}",
+        f"{scores}/{max}",
         f"{n_iterations}",
         yaml_data["hash"],
         get_result_file_path(task),
@@ -251,12 +251,12 @@ def test_property_selection(
 
         return calculate_bool_vector_score(score)
 
-    mean_score, max, n_iterations = multiple_testing(run_test)
+    scores, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         yaml_data["case"],
-        f"{mean_score}/{max}",
+        f"{scores}/{max}",
         f"{n_iterations}",
         yaml_data["hash"],
         get_result_file_path(task),
@@ -304,12 +304,12 @@ def test_query_generation(
                 )
         return calculate_bool_vector_score(score)
 
-    mean_score, max, n_iterations = multiple_testing(run_test)
+    scores, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         yaml_data["case"],
-        f"{mean_score}/{max}",
+        f"{scores}/{max}",
         f"{n_iterations}",
         yaml_data["hash"],
         get_result_file_path(task),
@@ -358,12 +358,12 @@ def test_end_to_end_query_generation(
 
         return calculate_bool_vector_score(score)
 
-    mean_score, max, n_iterations = multiple_testing(run_test)
+    scores, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         yaml_data["case"],
-        f"{mean_score}/{max}",
+        f"{scores}/{max}",
         f"{n_iterations}",
         yaml_data["hash"],
         get_result_file_path(task),
@@ -517,12 +517,12 @@ def test_property_exists(
         score += [False] * (len(yaml_data["expected"]["entities"]) - len(score))
         return calculate_bool_vector_score(score)
 
-    mean_score, max, n_iterations = multiple_testing(run_test)
+    scores, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         prompt_engine.model_name,
         yaml_data["case"],
-        f"{mean_score}/{max}",
+        f"{scores}/{max}",
         f"{n_iterations}",
         yaml_data["hash"],
         get_result_file_path(task),
