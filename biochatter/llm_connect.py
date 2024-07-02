@@ -11,6 +11,7 @@ except ImportError:
     st = None
 
 from abc import ABC, abstractmethod
+import base64
 from typing import Optional
 import json
 import logging
@@ -20,6 +21,7 @@ from langchain.schema import AIMessage, HumanMessage, SystemMessage
 from langchain.chat_models import ChatOpenAI, AzureChatOpenAI
 import nltk
 import openai
+import urllib.parse
 
 from ._stats import get_stats
 from .rag_agent import RagAgent
@@ -54,6 +56,12 @@ TOKEN_LIMITS = {
     "bigscience/bloom": 1000,
     "custom-endpoint": 1,  # Reasonable value?
 }
+
+
+# Function to encode the image
+def encode_image(image_path):
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode("utf-8")
 
 
 class Conversation(ABC):
@@ -121,31 +129,85 @@ class Conversation(ABC):
     def set_prompts(self, prompts: dict):
         self.prompts = prompts
 
-    def append_ai_message(self, message: str):
+    def append_ai_message(self, message: str) -> None:
+        """
+        Add a message from the AI to the conversation.
+
+        Args:
+            message (str): The message from the AI.
+        """
         self.messages.append(
             AIMessage(
                 content=message,
             ),
         )
 
-    def append_system_message(self, message: str):
+    def append_system_message(self, message: str) -> None:
+        """
+        Add a system message to the conversation.
+
+        Args:
+            message (str): The system message.
+        """
         self.messages.append(
             SystemMessage(
                 content=message,
             ),
         )
 
-    def append_ca_message(self, message: str):
+    def append_ca_message(self, message: str) -> None:
+        """
+        Add a message to the correcting agent conversation.
+
+        Args:
+            message (str): The message to the correcting agent.
+        """
         self.ca_messages.append(
             SystemMessage(
                 content=message,
             ),
         )
 
-    def append_user_message(self, message: str):
+    def append_user_message(self, message: str) -> None:
+        """
+        Add a message from the user to the conversation.
+
+        Args:
+            message (str): The message from the user.
+        """
         self.messages.append(
             HumanMessage(
                 content=message,
+            ),
+        )
+
+    def append_image_message(
+        self, message: str, image_url: str, local: bool = False
+    ) -> None:
+        """
+        Add a user message with an image to the conversation. Also checks, in
+        addition to the `local` flag, if the image URL is a local file path.
+        If it is local, the image will be encoded as a base64 string to be
+        passed to the LLM.
+
+        Args:
+            message (str): The message from the user.
+
+            image_url (str): The URL of the image.
+
+            local (bool): Whether the image is local or not. If local, it will
+                be encoded as a base64 string to be passed to the LLM.
+        """
+        parsed_url = urllib.parse.urlparse(image_url)
+        if local or not parsed_url.netloc:
+            image_url = f"data:image/jpeg;base64,{encode_image(image_url)}"
+
+        self.messages.append(
+            HumanMessage(
+                content=[
+                    {"type": "text", "text": message},
+                    {"type": "image_url", "image_url": {"url": image_url}},
+                ],
             ),
         )
 
@@ -178,8 +240,27 @@ class Conversation(ABC):
                 msg = self.prompts["tool_prompts"][tool_name].format(df=df)
                 self.append_system_message(msg)
 
-    def query(self, text: str):
-        self.append_user_message(text)
+    def query(self, text: str, image_url: str = None) -> tuple[str, dict, str]:
+        """
+        The main workflow for querying the LLM API. Appends the most recent
+        query to the conversation, optionally injects context from the RAG
+        agent, and runs the primary query method of the child class.
+
+        Args:
+            text (str): The user query.
+
+            image_url (str): The URL of an image to include in the conversation.
+                Optional and only supported for models with vision capabilities.
+
+        Returns:
+            tuple: A tuple containing the response from the API, the token usage
+                information, and the correction if necessary/desired.
+        """
+
+        if not image_url:
+            self.append_user_message(text)
+        else:
+            self.append_image_message(text, image_url)
 
         self._inject_context(text)
 
@@ -587,6 +668,19 @@ class XinferenceConversation(Conversation):
 
     def _create_history(self):
         history = []
+        # extract text components from message contents
+        msg_texts = [
+            m.content[0]["text"] if isinstance(m.content, list) else m.content
+            for m in self.messages
+        ]
+
+        # check if last message is an image message
+        is_image_message = False
+        if isinstance(self.messages[-1].content, list):
+            is_image_message = (
+                self.messages[-1].content[1]["type"] == "image_url"
+            )
+
         # find location of last AI message (if any)
         last_ai_message = None
         for i, m in enumerate(self.messages):
@@ -599,7 +693,7 @@ class XinferenceConversation(Conversation):
                 {
                     "role": "user",
                     "content": "\n".join(
-                        [m.content for m in self.messages[:last_ai_message]]
+                        [m for m in msg_texts[:last_ai_message]]
                     ),
                 }
             )
@@ -607,7 +701,7 @@ class XinferenceConversation(Conversation):
             history.append(
                 {
                     "role": "assistant",
-                    "content": self.messages[last_ai_message].content,
+                    "content": msg_texts[last_ai_message],
                 }
             )
 
@@ -617,10 +711,7 @@ class XinferenceConversation(Conversation):
                 {
                     "role": "user",
                     "content": "\n".join(
-                        [
-                            m.content
-                            for m in self.messages[last_ai_message + 1 :]
-                        ]
+                        [m for m in msg_texts[last_ai_message + 1 :]]
                     ),
                 }
             )
@@ -631,10 +722,21 @@ class XinferenceConversation(Conversation):
             history.append(
                 {
                     "role": "user",
-                    "content": "\n".join([m.content for m in self.messages]),
+                    "content": "\n".join([m for m in msg_texts[:]]),
                 }
             )
 
+        # if the last message is an image message, add the image to the history
+        if is_image_message:
+            history[-1]["content"] = [
+                {"type": "text", "text": history[-1]["content"]},
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": self.messages[-1].content[1]["image_url"]["url"]
+                    },
+                },
+            ]
         return history
 
     def _correct_response(self, msg: str):
@@ -929,6 +1031,8 @@ class AzureGptConversation(GptConversation):
                 from the deployment name.
 
             prompts (dict): A dictionary of prompts to use for the conversation.
+
+            correct (bool): Whether to correct the model output.
 
             split_correction (bool): Whether to correct the model output by
                 splitting the output into sentences and correcting each
