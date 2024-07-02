@@ -1,6 +1,6 @@
-import base64
 from unittest.mock import Mock, patch
 import os
+import base64
 
 from openai._exceptions import NotFoundError
 import openai

@@ -70,13 +70,13 @@ image URL directly to the `query` method:
 ```python
 # Either: Append image message
 conversation.append_image_message(
-    message="Here is an attached image", 
+    message="Here is an attached image",
     image_url="https://example.com/image.jpg"
 )
 
 # Or: Query with image included
 msg, token_usage, correction = conversation.query(
-    "What's in this image?", 
+    "What's in this image?",
     image_url="https://example.com/image.jpg"
 )
 ```
@@ -89,7 +89,7 @@ the `append_image_message` method:
 
 ```python
 conversation.append_image_message(
-    message="Here is an attached image", 
+    message="Here is an attached image",
     image_url="my/local/image.jpg",
     local=True
 )
@@ -101,7 +101,7 @@ local and read it as a base64-encoded string:
 
 ```python
 msg, token_usage, correction = conversation.query(
-    "What's in this image?", 
+    "What's in this image?",
     image_url="my/local/image.jpg"
 )
 ```

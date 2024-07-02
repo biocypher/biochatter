@@ -125,7 +125,33 @@ def test_rag_agent_invalid_mode():
         RagAgent(
             mode="invalid_mode", model_name="test_model", connection_args={}
         )
-    assert (
-        str(excinfo.value)
-        == "Invalid mode. Choose either 'kg' or 'vectorstore'."
+    assert "Invalid mode. Choose either" in str(excinfo.value)
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_rag_agent_api_mode():
+    """
+    Test the API agent with a specific DNA sequence question.
+    """
+    # Define the test question
+    question = "Which organism does the DNA sequence come from: TTCATCGGTCTGAGCAGAGGATGAAGTTGCAAATGATGCAAGCAAAACAGCTCAAAGATGAAGAGGAAAAGGCTATACACAACAGGAGCAATGTAGATACAGAAGGT"
+
+    # Create an instance of RagAgent in 'api' mode
+    api_agent = RagAgent(
+        mode="api",
+        model_name="gpt-4",
+        connection_args={},  # Add necessary connection arguments if needed
+        use_prompt=True,  # Ensure prompts are used to get responses
     )
+    assert api_agent.mode == "api", "Agent mode should be 'api'"
+
+    # Generate responses using the test question
+    responses = api_agent.generate_responses(question)
+    assert responses, "No responses generated"
+    assert isinstance(responses, list), "Responses should be a list"
+    assert all(
+        isinstance(response, tuple) for response in responses
+    ), "Each response should be a tuple"
+
+    if responses:
+        print("Test response:", responses[0][1])

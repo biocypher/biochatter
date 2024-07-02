@@ -1,4 +1,5 @@
 from typing import Optional
+from collections.abc import Callable
 import os
 import json
 
@@ -14,7 +15,7 @@ class BioCypherPromptEngine:
         schema_config_or_info_path: Optional[str] = None,
         schema_config_or_info_dict: Optional[dict] = None,
         model_name: str = "gpt-3.5-turbo",
-        conversation_factory: Optional[callable] = None,
+        conversation_factory: Optional[Callable] = None,
     ) -> None:
         """
 

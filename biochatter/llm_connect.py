@@ -11,10 +11,11 @@ except ImportError:
     st = None
 
 from abc import ABC, abstractmethod
-import base64
 from typing import Optional
 import json
+import base64
 import logging
+import urllib.parse
 
 from langchain_community.chat_models import (
     ChatOpenAI,
@@ -26,7 +27,6 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from xinference.client import Client
 import nltk
 import openai
-import urllib.parse
 
 from ._stats import get_stats
 from .rag_agent import RagAgent
