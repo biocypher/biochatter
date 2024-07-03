@@ -2,7 +2,10 @@ from typing import Optional
 
 from transformers import GPT2TokenizerFast
 from langchain.schema import Document
-from langchain_community.embeddings import XinferenceEmbeddings, OllamaEmbeddings
+from langchain_community.embeddings import (
+    XinferenceEmbeddings,
+    OllamaEmbeddings,
+)
 from langchain_community.vectorstores import Milvus
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import TextLoader
@@ -34,7 +37,9 @@ class DocumentEmbedder:
         azure_deployment: Optional[str] = None,
         azure_endpoint: Optional[str] = None,
         base_url: Optional[str] = None,
-        embeddings: Optional[OpenAIEmbeddings | XinferenceEmbeddings | OllamaEmbeddings] = None,
+        embeddings: Optional[
+            OpenAIEmbeddings | XinferenceEmbeddings | OllamaEmbeddings
+        ] = None,
         documentids_workspace: Optional[list[str]] = None,
     ) -> None:
         """
@@ -45,10 +50,10 @@ class DocumentEmbedder:
 
         Args:
 
-            used (bool, optional): whether RAG has been used (ChatGSE setting).
+            used (bool, optional): whether RAG has been used (BioChatter Light setting).
                 Defaults to False.
 
-            online (bool, optional): whether we are running ChatGSE online.
+            online (bool, optional): whether we are running BioChatter Light online.
                 Defaults to False.
 
             chunk_size (int, optional): size of chunks to split text into.
@@ -257,7 +262,7 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
 
         Args:
 
-            used (bool, optional): whether RAG has been used (ChatGSE setting).
+            used (bool, optional): whether RAG has been used (BioChatter Light setting).
 
             chunk_size (int, optional): size of chunks to split text into.
 
@@ -385,7 +390,7 @@ class OllamaDocumentEmbedder(DocumentEmbedder):
 
         Args:
 
-            used (bool, optional): whether RAG has been used (ChatGSE setting).
+            used (bool, optional): whether RAG has been used (BioChatter Light setting).
 
             chunk_size (int, optional): size of chunks to split text into.
 
@@ -444,7 +449,9 @@ class OllamaDocumentEmbedder(DocumentEmbedder):
             metadata_collection_name=metadata_collection_name,
             api_key=api_key,
             base_url=base_url,
-            embeddings=OllamaEmbeddings(base_url=base_url, model=self.model_name),
+            embeddings=OllamaEmbeddings(
+                base_url=base_url, model=self.model_name
+            ),
             documentids_workspace=documentids_workspace,
         )
 

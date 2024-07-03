@@ -1,8 +1,8 @@
 # Benchmark Results - Overview
 
 Here we collect the results of the living BioChatter benchmark. For an
-explanation, see the [benchmarking documentation](benchmarking.md) and the
-[developer docs](benchmark-developer.md) for further reading.
+explanation, see the [benchmarking documentation](../features/benchmarking.md) and the
+[developer docs](developer.md) for further reading.
 
 ## Scores per model
 
@@ -11,8 +11,8 @@ Click the column names to reorder.
 
 {{ read_csv('benchmark/results/processed/overview-model.csv', colalign=("left","right")) }}
 
-![Scatter Quantisation Name](images/scatter-per-quantisation-name.png)
-![Boxplot Model](images/stripplot-per-model.png)
+![Scatter Quantisation Name](../images/scatter-per-quantisation-name.png)
+![Boxplot Model](../images/stripplot-per-model.png)
 
 ## Scores per quantisation
 
@@ -21,7 +21,7 @@ Click the column names to reorder.
 
 {{ read_csv('benchmark/results/processed/overview-quantisation.csv', colalign=("left","right")) }}
 
-![Boxplot Quantisation](images/boxplot-per-quantisation.png)
+![Boxplot Quantisation](../images/boxplot-per-quantisation.png)
 
 ## Scores of all tasks
 

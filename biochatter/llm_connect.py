@@ -1,4 +1,4 @@
-# ChatGSE LLM connectivity
+# BioChatter LLM connectivity
 # connect to API
 # keep track of message history
 # query API

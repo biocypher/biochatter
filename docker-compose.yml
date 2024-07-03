@@ -51,7 +51,7 @@ services:
       - "minio"
 
   app:
-    image: biocypher/chatgse:0.2.35
+    image: biocypher/biochatter-light:0.4.7
     container_name: app
     ports:
       - "8501:8501"

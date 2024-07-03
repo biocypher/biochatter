@@ -49,26 +49,29 @@ site_url: https://biochatter.org/
 nav:
   - Home: index.md
   - Features:
-      - Basic Usage - Chat: chat.md
-      - Connecting Knowledge Graphs: kgs.md
-      - Retrieval-Augmented Generation: rag.md
-      - Open-source and Local LLMs: open-llm.md
-      - LLM in your Browser - WebAssembly: wasm.md
-      - Benchmarking: benchmarking.md
-      - Podcast my Paper: podcast.md
+      - Basic Usage - Chat: features/chat.md
+      - Connecting Knowledge Graphs: features/kgs.md
+      - Retrieval-Augmented Generation: features/rag.md
+      - Open-source and Local LLMs: features/open-llm.md
+      - LLM in your Browser - WebAssembly: features/wasm.md
+      - Benchmarking: features/benchmarking.md
+      - Podcast my Paper: features/podcast.md
+  - Tutorials:
+      - Custom BioChatter Next: tutorial/custom-bc-next.md
+      - Custom BioChatter Light: tutorial/custom-bc-light.md
   - Benchmark:
-      - Overview: benchmark.md
-      - All Results: benchmark-results.md
-      - Developer Guide: benchmark-developer.md
+      - Overview: benchmark/overview.md
+      - All Results: benchmark/results.md
+      - Developer Guide: benchmark/developer.md
   - Vignettes:
-      - Knowledge Graph RAG: vignette-kg.md
-      - Retrieval-Augmented Generation (RAG): vignette-rag.md
+      - Knowledge Graph RAG: vignettes/kg.md
+      - Retrieval-Augmented Generation (RAG): vignettes/rag.md
   - API Reference:
-      - LLM Connectivity: llm_connect-reference.md
-      - Vectorstore: vectorstore-reference.md
-      - Vectorstore Agent: vectorstore_agent-reference.md
-      - Prompt Engine: prompts-reference.md
-      - Podcast: podcast-reference.md
+      - LLM Connectivity: api/llm_connect.md
+      - Vectorstore: api/vectorstore.md
+      - Vectorstore Agent: api/vectorstore_agent.md
+      - Prompt Engine: api/prompts.md
+      - Podcast: api/podcast.md
 
 repo_url: https://github.com/biocypher/biochatter
 repo_name: biocypher/biochatter
