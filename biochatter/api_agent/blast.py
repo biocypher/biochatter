@@ -31,7 +31,16 @@ Example Question 2: What do you find about protein sequence: MEEPQSDPSV
 Use BLASTp for such a question -> https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Put&PROGRAM=blastp&DATABASE=nr&FORMAT_TYPE=XML&QUERY=MEEPQSDPSV&HITLIST_SIZE=10"
 """
 
-
+BLAST_SUMMARY_PROMPT = """
+        You have to answer this question in a clear and concise manner: {question} Be factual!\n\
+        If you are asked what organism a specific sequence belongs to, check the 'Hit_def' fields. If you find a synthetic construct or predicted entry, move to the next one and look for an organism name.\n\
+        Try to use the hits with the best identity score to answer the question. If it is not possible, move to the next one.\n\
+        Be clear, and if organism names are present in ANY of the results, please include them in the answer. Do not make up information and mention how relevant the found information is based on the identity scores.\n\
+        Use the same reasoning for any potential BLAST results. If you find information that is manually curated, please use it and state it. You may also state other results, but always include the context.\n\
+        Based on the information given here:\n\
+        {context}
+        """
+        
 class BlastQueryParameters(BaseModel):
     """
 
@@ -304,19 +313,11 @@ class BlastInterpreter(BaseInterpreter):
         )
 
         context = self.read_first_n_lines(file_path, n_lines)
-        BLAST_SUMMARY_PROMPT = f"""
-                You have to answer this question in a clear and concise manner: {question} Be factual!\n\
-                If you are asked what organism a specific sequence belongs to, check the 'Hit_def' fields. If you find a synthetic construct or predicted entry, move to the next one and look for an organism name.\n\
-                Try to use the hits with the best identity score to answer the question. If it is not possible, move to the next one.\n\
-                Be clear, and if organism names are present in ANY of the results, please include them in the answer. Do not make up information and mention how relevant the found information is based on the identity scores.\n\
-                Use the same reasoning for any potential BLAST results. If you find information that is manually curated, please use it and state it. You may also state other results, but always include the context.\n\
-                Based on the information given here:\n\
-                {context}
-                """
+        summary_prompt = BLAST_SUMMARY_PROMPT.format(question=question, context=context)
         output_parser = StrOutputParser()
         conversation = conversation_factory()
         chain = prompt | conversation.chat | output_parser
-        answer = chain.invoke({"input": {BLAST_SUMMARY_PROMPT}})
+        answer = chain.invoke({"input": {summary_prompt}})
         return answer
 
     def read_first_n_lines(self, file_path: str, n_lines: int):
