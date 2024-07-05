@@ -1,28 +1,42 @@
-from typing import Optional, Dict, Any
-from pydantic import BaseModel, Field
-from typing import Callable
-from pydantic import BaseModel
-from langchain_core.prompts import ChatPromptTemplate
-from langchain.chains.openai_functions import create_structured_output_runnable
+from typing import Optional
+from urllib.parse import urlencode
+from collections.abc import Callable
+import re
+import time
 import uuid
+
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.pydantic_v1 import Field, BaseModel
+from langchain_core.output_parsers import StrOutputParser
+from langchain.chains.openai_functions import create_structured_output_runnable
 import requests
 
-
 from biochatter.llm_connect import Conversation
-from .abc import BaseQueryBuilder, BaseFetcher
+from .abc import BaseQueryBuilder, BaseFetcher, BaseInterpreter
 
 ONCOKB_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats. Your task is to use OncoKB Web APIs to answer genomic questions.
 
 For questions about genomic alterations, you can use the OncoKB API by providing the appropriate parameters based on the type of query.
 
+You have to extract the appropriate information out of the 
 Examples:
 1. To annotate mutations by protein change, use the endpoint /annotate/mutations/byProteinChange with parameters like hugoSymbol, alteration, tumorType, etc.
 2. To annotate copy number alterations, use the endpoint /annotate/copyNumberAlterations with parameters like hugoSymbol, copyNameAlterationType, tumorType, etc.
 
 Use these formats to generate queries based on the question provided.
 """
-from pydantic import BaseModel, Field
+
+
+ONCOKB_SUMMARY_PROMPT = """
+        You have to answer this question in a clear and concise manner: {question} Be factual!\n\
+        If you are asked what organism a specific sequence belongs to, check the 'Hit_def' fields. If you find a synthetic construct or predicted entry, move to the next one and look for an organism name.\n\
+        Try to use the hits with the best identity score to answer the question. If it is not possible, move to the next one.\n\
+        Be clear, and if organism names are present in ANY of the results, please include them in the answer. Do not make up information and mention how relevant the found information is based on the identity scores.\n\
+        Use the same reasoning for any potential BLAST results. If you find information that is manually curated, please use it and state it. You may also state other results, but always include the context.\n\
+        Based on the information given here:\n\
+        {context}
+        """
 
 class OncoKBQueryParameters(BaseModel):
     base_url: str = Field(
@@ -82,6 +96,10 @@ class OncoKBQueryParameters(BaseModel):
     )
     hgvsg: Optional[str] = Field(
         None, description="HGVS genomic format. Example: 7:g.140453136A>T."
+    )
+    question_uuid: Optional[str] = Field(
+        default_factory=lambda: str(uuid.uuid4()),
+        description="Unique identifier for the question.",
     )
     
 class OncoKBQueryBuilder(BaseQueryBuilder):
@@ -149,7 +167,7 @@ class OncoKBFetcher(BaseFetcher):
     OncoKBQuery.
     """
 
-    def __init__(self, api_token: str):
+    def __init__(self, api_token= 'demo'):
         self.headers = {
             "Authorization": f"Bearer {api_token}",
             "Accept": "application/json"
@@ -168,11 +186,12 @@ class OncoKBFetcher(BaseFetcher):
         """
         params = request_data.dict(exclude_unset=True)
         endpoint = params.pop('endpoint')
+        params.pop('question_uuid')
         full_url = f"{self.base_url}/{endpoint}"
-        
+        print(full_url)
         response = requests.get(full_url, headers=self.headers, params=params)
         response.raise_for_status()
-        
+        print(response.url)
         return response.url
 
     def fetch_and_save_results(
@@ -198,3 +217,75 @@ class OncoKBFetcher(BaseFetcher):
         
         print(f"Results saved in {file_name}")
         return file_name
+    
+
+class OncoKBInterpreter(BaseInterpreter):
+    def summarise_results(
+        self,
+        question: str,
+        conversation_factory: Callable,
+        file_path: str,
+        n_lines: int,
+    ) -> str:
+        """
+        Function to extract the answer from the BLAST results.
+
+        Args:
+            question (str): The question to be answered.
+            conversation_factory: A BioChatter conversation object.
+            file_path (str): The path to the BLAST results file.
+            n_lines (int): The number of lines to read from the file.
+
+        Returns:
+            str: The extracted answer from the BLAST results.
+
+        """
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                (
+                    "system",
+                    "You are a world class molecular biologist who knows everything about NCBI and BLAST results.",
+                ),
+                ("user", "{input}"),
+            ]
+        )
+
+        context = self.read_first_n_lines(file_path, n_lines)
+        summary_prompt = ONCOKB_SUMMARY_PROMPT.format(question=question, context=context)
+        output_parser = StrOutputParser()
+        conversation = conversation_factory()
+        chain = prompt | conversation.chat | output_parser
+        answer = chain.invoke({"input": {summary_prompt}})
+        return answer
+
+    def read_first_n_lines(self, file_path: str, n_lines: int):
+        """
+        Reads the first n lines from a file and returns them as a string.
+
+        Args:
+            file_path (str): The path to the file.
+            n_lines (int): The number of lines to read.
+
+        Returns:
+            str: The first n lines from the file as a string.
+
+        Raises:
+            FileNotFoundError: If the file is not found.
+            Exception: If any other error occurs during file reading.
+
+        """
+        try:
+            with open(file_path, "r") as file:
+                lines = []
+                for i in range(n_lines):
+                    line = file.readline()
+                    if not line:
+                        break
+                    lines.append(line.strip())
+                # to test:
+                # more efficient with \n or without?
+                return "\n".join(lines)
+        except FileNotFoundError:
+            return "The file was not found."
+        except Exception as e:
+            return f"An error occurred: {e}"
