@@ -17,3 +17,4 @@ benchmark/data/*
 !benchmark/data/benchmark_data.json
 serve.sh
 .blast/*
+.api_results/*
