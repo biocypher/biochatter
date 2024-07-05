@@ -119,6 +119,7 @@ class BaseInterpreter(ABC):
     def summarise_results(
         self,
         question: str,
+        summary_prompt: str,
         conversation_factory: Callable,
         file_path: str,
         n_lines: int,
@@ -128,6 +129,7 @@ class BaseInterpreter(ABC):
 
         Args:
             question (str): The question that was asked.
+            summary_prompt (str): The prompt to be used for summarizing the results.
 
             conversation_factory (Callable): A function that creates a
                 BioChatter conversation.
