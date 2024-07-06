@@ -101,7 +101,7 @@ class APIAgent:
         try:
             file_path = os.path.join(self.result_path, file_name)
             return self.result_interpreter.summarise_results(
-                question, file_path, 100
+                question, self.conversation_factory, file_path, 100
             )
         except Exception as e:
             print(f"Error extracting answer: {e}")
