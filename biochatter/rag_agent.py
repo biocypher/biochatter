@@ -5,7 +5,8 @@ from collections.abc import Callable
 class RagAgentModeEnum:
     VectorStore = "vectorstore"
     KG = "kg"
-    API = "api"
+    API_BLAST = "api_BLAST"
+    API_oncokb = "api_oncokb"
 
 
 class RagAgent:
@@ -101,7 +102,7 @@ class RagAgent:
 
             self.query_func = self.agent.similarity_search
 
-        elif self.mode == RagAgentModeEnum.API:
+        elif self.mode == RagAgentModeEnum.API_BLAST:
             from .api_agent.blast import (
                 BlastFetcher,
                 BlastInterpreter,
@@ -115,9 +116,23 @@ class RagAgent:
                 result_fetcher=BlastFetcher(),
                 result_interpreter=BlastInterpreter(),
             )
+        elif self.mode == RagAgentModeEnum.API_oncokb:
+            from .api_agent.oncokb import (
+                OncoKBFetcher,
+                OncoKBInterpreter,
+                OncoKBQueryBuilder,
+            )
+            from .api_agent.api_agent import APIAgent
+
+            self.query_func = APIAgent(
+                conversation_factory=conversation_factory,
+                query_builder=OncoKBQueryBuilder(),
+                result_fetcher=OncoKBFetcher(),
+                result_interpreter=OncoKBInterpreter(),
+            )
         else:
             raise ValueError(
-                "Invalid mode. Choose either 'kg', 'vectorstore', or 'api'."
+                "Invalid mode. Choose either 'kg', 'vectorstore', 'api_BLAST', or 'api_oncokb'."
             )
 
     def generate_responses(self, user_question: str) -> list[tuple]:
@@ -160,8 +175,16 @@ class RagAgent:
                 )
                 for result in results
             ]
-        elif self.mode == RagAgentModeEnum.API:
+        elif self.mode == RagAgentModeEnum.API_BLAST:
             self.query_func.execute(user_question)
+            if self.query_func.final_answer is not None:
+                response = [("response", self.query_func.final_answer)]
+            else:
+                response = [("error", self.query_func.final_answer)]
+        elif self.mode == RagAgentModeEnum.API_oncokb:
+            print('executing')
+            self.query_func.execute(user_question)
+            print('done')
             if self.query_func.final_answer is not None:
                 response = [("response", self.query_func.final_answer)]
             else:
