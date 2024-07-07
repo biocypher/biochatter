@@ -24,19 +24,89 @@ Examples:
 1. To annotate mutations by protein change, use the endpoint /annotate/mutations/byProteinChange with parameters like hugoSymbol, alteration, tumorType, etc.
 2. To annotate copy number alterations, use the endpoint /annotate/copyNumberAlterations with parameters like hugoSymbol, copyNameAlterationType, tumorType, etc.
 
-Use these formats to generate queries based on the question provided.
-"""
+Use these formats to generate queries based on the question provided. Below is more information about the OncoKB API:
+OncoKB API Documentation (Summary)
+
+Base URL
+
+https://demo.oncokb.org/api/v1
+
+Endpoints and Parameters
+
+1. Annotate Copy Number Alterations
+
+	•	GET/POST /annotate/copyNumberAlterations
+	•	Parameters:
+	•	hugoSymbol: The gene symbol. Example: BRAF.
+	•	entrezGeneId: The entrez gene ID. Example: 673.
+	•	copyNameAlterationType: Copy number alteration type. Example: AMPLIFICATION.
+	•	referenceGenome: Reference genome. Default: GRCh37.
+	•	tumorType: Tumor type. Example: Melanoma.
+
+2. Annotate Mutations by Genomic Change
+
+	•	GET/POST /annotate/mutations/byGenomicChange
+	•	Parameters:
+	•	genomicLocation: Genomic location. Example: 7,140453136,140453136,A,T.
+	•	referenceGenome: Reference genome. Default: GRCh37.
+	•	tumorType: Tumor type. Example: Melanoma.
+
+3. Annotate Mutations by HGVSg
+
+	•	GET/POST /annotate/mutations/byHGVSg
+	•	Parameters:
+	•	hgvsg: HGVS genomic format. Example: 7:g.140453136A>T.
+	•	referenceGenome: Reference genome. Default: GRCh37.
+	•	tumorType: Tumor type. Example: Melanoma.
+
+4. Annotate Mutations by Protein Change
+
+	•	GET/POST /annotate/mutations/byProteinChange
+	•	Parameters:
+	•	hugoSymbol: The gene symbol. Example: BRAF.
+	•	entrezGeneId: The entrez gene ID. Example: 673.
+	•	alteration: Protein Change. Example: V600E.
+	•	consequence: Consequence. Example: missense_variant.
+	•	proteinStart: Protein Start. Example: 600.
+	•	proteinEnd: Protein End. Example: 600.
+	•	referenceGenome: Reference genome. Default: GRCh37.
+	•	tumorType: Tumor type. Example: Melanoma.
+
+5. Annotate Structural Variants
+
+	•	GET/POST /annotate/structuralVariants
+	•	Parameters:
+	•	hugoSymbolA: Gene symbol A. Example: ABL1.
+	•	entrezGeneIdA: Entrez gene ID A. Example: 25.
+	•	hugoSymbolB: Gene symbol B. Example: BCR.
+•	entrezGeneIdB: Entrez gene ID B. Example: 613.
+	•	structuralVariantType: Structural variant type. Example: FUSION.
+	•	isFunctionalFusion: Whether it is a functional fusion. Default: false.
+	•	referenceGenome: Reference genome. Default: GRCh37.
+	•	tumorType: Tumor type. Example: Melanoma.
+
+6. Get Curated Genes
+
+	•	GET /utils/allCuratedGenes
+	•	Parameters:
+	•	version: Data version.
+	•	includeEvidence: Include gene summary and background.
+
+7. Get Cancer Gene List
+
+	•	GET /utils/cancerGeneList
+	•	Parameters:
+	•	version: Data version.
+ """
 
 
 ONCOKB_SUMMARY_PROMPT = """
-        You have to answer this question in a clear and concise manner: {question} Be factual!\n\
-        If you are asked what organism a specific sequence belongs to, check the 'Hit_def' fields. If you find a synthetic construct or predicted entry, move to the next one and look for an organism name.\n\
-        Try to use the hits with the best identity score to answer the question. If it is not possible, move to the next one.\n\
-        Be clear, and if organism names are present in ANY of the results, please include them in the answer. Do not make up information and mention how relevant the found information is based on the identity scores.\n\
-        Use the same reasoning for any potential BLAST results. If you find information that is manually curated, please use it and state it. You may also state other results, but always include the context.\n\
-        Based on the information given here:\n\
-        {context}
-        """
+You have to answer this question in a clear and concise manner: {question} Be factual!\n\
+You are a world leading oncologist and molecular biologist who knows everything about OncoKB results.\n\
+Do not make up information, only use the provided information and mention how relevant the found information is based on your knowledge about OncKB\n\
+Here is the information relevant to the question found on OncoKB:\n\
+{context}
+"""
 
 class OncoKBQueryParameters(BaseModel):
     base_url: str = Field(
@@ -44,58 +114,76 @@ class OncoKBQueryParameters(BaseModel):
         description="Base URL for the OncoKB API. Default is the demo instance."
     )
     endpoint: str = Field(
-        ..., description="Specific API endpoint to hit. Example: 'annotate/mutations/byProteinChange'."
+        ...,
+        description="Specific API endpoint to hit. Example: 'annotate/mutations/byProteinChange'."
     )
     referenceGenome: Optional[str] = Field(
-        default="GRCh37", description="Reference genome, either GRCh37 or GRCh38. The default is GRCh37."
+        default="GRCh37",
+        description="Reference genome, either GRCh37 or GRCh38. The default is GRCh37."
     )
     hugoSymbol: Optional[str] = Field(
-        None, description="The gene symbol used in Human Genome Organisation. Example: BRAF."
+        None,
+        description="The gene symbol used in Human Genome Organisation. Example: BRAF."
     )
     entrezGeneId: Optional[int] = Field(
-        None, description="The entrez gene ID. Higher priority than hugoSymbol. Example: 673."
+        None,
+        description="The entrez gene ID. Higher priority than hugoSymbol. Example: 673."
     )
     tumorType: Optional[str] = Field(
-        None, description="OncoTree(http://oncotree.info) tumor type name. The field supports OncoTree Code, OncoTree Name and OncoTree Main type. Example: Melanoma."
+        None,
+        description="OncoTree(http://oncotree.info) tumor type name. The field supports OncoTree Code, OncoTree Name and OncoTree Main type. Example: Melanoma."
     )
     alteration: Optional[str] = Field(
-        None, description="Protein Change. Example: V600E."
+        None,
+        description="Protein Change. Example: V600E."
     )
     consequence: Optional[str] = Field(
-        None, description="Consequence. Example: missense_variant."
+        None,
+        description="Consequence. Example: missense_variant."
     )
     proteinStart: Optional[int] = Field(
-        None, description="Protein Start. Example: 600."
+        None,
+        description="Protein Start. Example: 600."
     )
     proteinEnd: Optional[int] = Field(
-        None, description="Protein End. Example: 600."
+        None,
+        description="Protein End. Example: 600."
     )
     copyNameAlterationType: Optional[str] = Field(
-        None, description="Copy number alteration type. Available types: AMPLIFICATION, DELETION, GAIN, LOSS."
+        None,
+        description="Copy number alteration type. Available types: AMPLIFICATION, DELETION, GAIN, LOSS."
     )
     structuralVariantType: Optional[str] = Field(
-        None, description="Structural variant type. Available values: DELETION, TRANSLOCATION, DUPLICATION, INSERTION, INVERSION, FUSION, UNKNOWN."
+        None,
+        description="Structural variant type. Available values: DELETION, TRANSLOCATION, DUPLICATION, INSERTION, INVERSION, FUSION, UNKNOWN."
     )
     isFunctionalFusion: Optional[bool] = Field(
-        default=False, description="Whether it is a functional fusion. Default value: false."
+        default=False,
+        description="Whether it is a functional fusion. Default value: false."
     )
     hugoSymbolA: Optional[str] = Field(
-        None, description="The gene symbol A used in Human Genome Organisation. Example: ABL1."
+        None,
+        description="The gene symbol A used in Human Genome Organisation. Example: ABL1."
     )
     entrezGeneIdA: Optional[int] = Field(
-        None, description="The entrez gene ID A. Higher priority than hugoSymbolA. Example: 25."
+        None,
+        description="The entrez gene ID A. Higher priority than hugoSymbolA. Example: 25."
     )
     hugoSymbolB: Optional[str] = Field(
-        None, description="The gene symbol B used in Human Genome Organisation. Example: BCR."
+        None,
+        description="The gene symbol B used in Human Genome Organisation. Example: BCR."
     )
     entrezGeneIdB: Optional[int] = Field(
-        None, description="The entrez gene ID B. Higher priority than hugoSymbolB. Example: 613."
+        None,
+        description="The entrez gene ID B. Higher priority than hugoSymbolB. Example: 613."
     )
     genomicLocation: Optional[str] = Field(
-        None, description="Genomic location. Example: 7,140453136,140453136,A,T."
+        None,
+        description="Genomic location. Example: 7,140453136,140453136,A,T."
     )
     hgvsg: Optional[str] = Field(
-        None, description="HGVS genomic format. Example: 7:g.140453136A>T."
+        None,
+        description="HGVS genomic format. Example: 7:g.140453136A>T."
     )
     question_uuid: Optional[str] = Field(
         default_factory=lambda: str(uuid.uuid4()),
