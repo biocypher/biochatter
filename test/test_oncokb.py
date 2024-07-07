@@ -30,8 +30,7 @@ def oncokb_api_agent():
         result_interpreter=OncoKBInterpreter(),
     )
 
-agent = oncokb_api_agent()
-# @pytest.mark.skip(reason="Live test for development purposes")
+@pytest.mark.skip(reason="Live test for development purposes")
 def test_fetch_oncokb_results(oncokb_api_agent):
     question = "What can you tell me about BRAF in cancer?"
     # Run the method to test
@@ -40,7 +39,7 @@ def test_fetch_oncokb_results(oncokb_api_agent):
     # assert "rattus norwegicus" in answer.lower()
 
 
-# @pytest.mark.skip(reason="Live test for development purposes")
+@pytest.mark.skip(reason="Live test for development purposes")
 class TestOncokbQueryBuilder(unittest.TestCase):
     def setUp(self):
         self.builder = OncoKBQueryBuilder()
