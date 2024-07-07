@@ -246,6 +246,7 @@ class BlastFetcher(BaseFetcher):
             elif "Status=FAILED" in status_text:
                 with open(f"{save_path}{file_name}", "w") as file:
                     file.write("BLAST query FAILED.")
+                break
             elif "Status=UNKNOWN" in status_text:
                 with open(f"{save_path}{file_name}", "w") as file:
                     file.write("BLAST query expired or does not exist.")
