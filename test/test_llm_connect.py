@@ -1,7 +1,7 @@
+import base64
 from unittest.mock import Mock, patch
 import os
 
-from xinference.client import Client
 from openai._exceptions import NotFoundError
 import openai
 import pytest
@@ -14,6 +14,7 @@ from biochatter.llm_connect import (
     WasmConversation,
     AzureGptConversation,
     XinferenceConversation,
+    OllamaConversation,
 )
 
 
@@ -170,8 +171,8 @@ def test_xinference_init():
     Test generic LLM connectivity via the Xinference client. Currently depends
     on a test server.
     """
-    base_url = os.getenv("XINFERENCE_BASE_URL", "http://llm.biocypher.org")
-    with patch("xinference.client.Client") as mock_client:
+    base_url = os.getenv("XINFERENCE_BASE_URL", "http://localhost:9997")
+    with patch("biochatter.llm_connect.Client") as mock_client:
         mock_client.return_value.list_models.return_value = xinference_models
         convo = XinferenceConversation(
             base_url=base_url,
@@ -181,9 +182,9 @@ def test_xinference_init():
         assert convo.set_api_key()
 
 
-def test_generic_chatting():
-    base_url = os.getenv("XINFERENCE_BASE_URL", "http://llm.biocypher.org")
-    with patch("xinference.client.Client") as mock_client:
+def test_xinference_chatting():
+    base_url = os.getenv("XINFERENCE_BASE_URL", "http://localhost:9997")
+    with patch("biochatter.llm_connect.Client") as mock_client:
         response = {
             "id": "1",
             "object": "chat.completion",
@@ -216,6 +217,45 @@ def test_generic_chatting():
         )
         (msg, token_usage, correction) = convo.query("Hello, world!")
         assert token_usage["completion_tokens"] > 0
+
+
+def test_ollama_chatting():
+    base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    with patch("biochatter.llm_connect.ChatOllama") as mock_model:
+        response = AIMessage(
+            content="Hello there! It's great to meet you!",
+            additional_kwargs={},
+            response_metadata={
+                "model": "llama3",
+                "created_at": "2024-06-20T17:19:45.376245476Z",
+                "message": {"role": "assistant", "content": ""},
+                "done_reason": "stop",
+                "done": True,
+                "total_duration": 256049685,
+                "load_duration": 3096978,
+                "prompt_eval_duration": 15784000,
+                "eval_count": 11,
+                "eval_duration": 107658000,
+            },
+            type="ai",
+            name=None,
+            id="run-698c8654-13e6-4bbb-8d59-67e520f78eb3-0",
+            example=False,
+            tool_calls=[],
+            invalid_tool_calls=[],
+            usage_metadata=None,
+        )
+
+        mock_model.return_value.invoke.return_value = response
+
+        convo = OllamaConversation(
+            base_url=base_url,
+            model_name="llama3",
+            prompts={},
+            correct=False,
+        )
+        (msg, token_usage, correction) = convo.query("Hello, world!")
+        assert token_usage > 0
 
 
 def test_wasm_conversation():
@@ -252,14 +292,14 @@ def test_wasm_conversation():
 
 @pytest.fixture
 def xinference_conversation():
-    with patch("xinference.client.Client") as mock_client:
+    with patch("biochatter.llm_connect.Client") as mock_client:
         mock_client.return_value.list_models.return_value = xinference_models
         mock_client.return_value.get_model.return_value.chat.return_value = (
             {"choices": [{"message": {"content": "Human message"}}]},
             {"completion_tokens": 0},
         )
         conversation = XinferenceConversation(
-            base_url="http://llm.biocypher.org",
+            base_url="http://localhost:9997",
             prompts={},
             correct=False,
         )
@@ -324,3 +364,104 @@ def test_multiple_cycles_of_ai_and_human(xinference_conversation):
         "role": "user",
         "content": "System message\nHuman message",
     }
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_append_local_image_gpt():
+    convo = GptConversation(
+        model_name="gpt-4o",
+        prompts={},
+        correct=False,
+        split_correction=False,
+    )
+    convo.set_api_key(api_key=os.getenv("OPENAI_API_KEY"), user="test_user")
+
+    convo.append_system_message(
+        "You are an editorial assistant to a journal in biomedical science."
+    )
+
+    convo.append_image_message(
+        message=(
+            "This text describes the attached image: "
+            "Live confocal imaging of liver stage P. berghei expressing UIS4-mCherry and cytoplasmic GFP reveals different morphologies of the LS-TVN: elongated membrane clusters (left), vesicles in the host cell cytoplasm (center), and a thin tubule protruding from the PVM (right). Live imaging was performed 20?h after infection of hepatoma cells. Features are marked with white arrowheads."
+        ),
+        image_url="test/figure_panel.jpg",
+        local=True,
+    )
+
+    result, _, _ = convo.query("Is the description accurate?")
+    assert "yes" in result.lower()
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_local_image_query_gpt():
+    convo = GptConversation(
+        model_name="gpt-4o",
+        prompts={},
+        correct=False,
+        split_correction=False,
+    )
+    convo.set_api_key(api_key=os.getenv("OPENAI_API_KEY"), user="test_user")
+
+    convo.append_system_message(
+        "You are an editorial assistant to a journal in biomedical science."
+    )
+
+    result, _, _ = convo.query(
+        "Does this text describe the attached image: Live confocal imaging of liver stage P. berghei expressing UIS4-mCherry and cytoplasmic GFP reveals different morphologies of the LS-TVN: elongated membrane clusters (left), vesicles in the host cell cytoplasm (center), and a thin tubule protruding from the PVM (right). Live imaging was performed 20?h after infection of hepatoma cells. Features are marked with white arrowheads.",
+        image_url="test/figure_panel.jpg",
+    )
+    assert "yes" in result.lower()
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_append_online_image_gpt():
+    convo = GptConversation(
+        model_name="gpt-4o",
+        prompts={},
+        correct=False,
+        split_correction=False,
+    )
+    convo.set_api_key(api_key=os.getenv("OPENAI_API_KEY"), user="test_user")
+
+    convo.append_image_message(
+        "This is a picture from the internet.",
+        image_url="https://upload.wikimedia.org/wikipedia/commons/8/8f/The-Transformer-model-architecture.png",
+    )
+
+    result, _, _ = convo.query("What does this picture show?")
+    assert "transformer" in result.lower()
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_online_image_query_gpt():
+    convo = GptConversation(
+        model_name="gpt-4o",
+        prompts={},
+        correct=False,
+        split_correction=False,
+    )
+    convo.set_api_key(api_key=os.getenv("OPENAI_API_KEY"), user="test_user")
+
+    result, _, _ = convo.query(
+        "What does this picture show?",
+        image_url="https://upload.wikimedia.org/wikipedia/commons/8/8f/The-Transformer-model-architecture.png",
+    )
+    assert "transformer" in result.lower()
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_local_image_query_xinference():
+    url = "http://localhost:9997"
+    convo = XinferenceConversation(
+        base_url=url,
+        prompts={},
+        correct=False,
+    )
+    assert convo.set_api_key()
+
+    result, _, _ = convo.query(
+        "Does this text describe the attached image: Live confocal imaging of liver stage P. berghei expressing UIS4-mCherry and cytoplasmic GFP reveals different morphologies of the LS-TVN: elongated membrane clusters (left), vesicles in the host cell cytoplasm (center), and a thin tubule protruding from the PVM (right). Live imaging was performed 20?h after infection of hepatoma cells. Features are marked with white arrowheads.",
+        image_url="test/figure_panel.jpg",
+    )
+    assert isinstance(result, str)
