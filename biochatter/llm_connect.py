@@ -23,7 +23,6 @@ from langchain_community.chat_models import (
 )
 from langchain_community.llms.huggingface_hub import HuggingFaceHub
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
-from xinference.client import Client
 import nltk
 import openai
 import urllib.parse
@@ -519,7 +518,10 @@ class XinferenceConversation(Conversation):
             individually.
 
         """
-
+        # Shaohong: Please keep this xinference importing code here, so that, 
+        # we don't need to depend on xinference if we dont need it (xinference 
+        # is expensive to install)
+        from xinference.client import Client
         super().__init__(
             model_name=model_name,
             prompts=prompts,
