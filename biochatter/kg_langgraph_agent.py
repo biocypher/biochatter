@@ -28,7 +28,7 @@ from biochatter.langgraph_agent_base import (
 logger = logging.getLogger(__name__)
 
 SEARCH_QUERIES = "search_queries"
-SEARCH_QUERIES_DESCRIPTION = "query for genomicKB graph database"
+SEARCH_QUERIES_DESCRIPTION = "query for graph database"
 REVISED_QUERY = "revised_query"
 REVISED_QUERY_DESCRIPTION = "Revised query"
 
@@ -61,7 +61,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
                 "system",
                 (
                     "As a senior biomedical researcher and graph database expert, "
-                    f"your task is to generate '{query_lang}' queries to extract data from our genomicKB graph database based on the user's question. "
+                    f"your task is to generate '{query_lang}' queries to extract data from our graph database based on the user's question. "
                     """Current time {time}. {instruction}"""
                 ),
             ), 
