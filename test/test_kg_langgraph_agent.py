@@ -91,7 +91,7 @@ class KGQueryReflexionAgentMock(KGQueryReflexionAgent):
                 {'c.name': None, 'labels(c)': ['ontology', 'cell_line_or_tissue']},
             ]]
         
-    def _extract_result_from_step(self, step: Dict[str, List[BaseMessage]] | BaseMessage):
+    def _extract_result_from_final_step(self, step: Dict[str, List[BaseMessage]] | BaseMessage):
         if END in step:
             return step[END][-1]
         if "revise" in step:

@@ -53,9 +53,9 @@ class KGQueryReflexionAgent(ReflexionAgent):
         conversation_factory: Callable,
         connection_args: Dict[str, str],
         query_lang: Optional[str] = "Cypher",
-        recursion_limit: Optional[int] = 20,
+        max_steps: Optional[int] = 20,
     ):
-        super().__init__(conversation_factory, recursion_limit)
+        super().__init__(conversation_factory, max_steps)
         self.actor_prompt_template = ChatPromptTemplate.from_messages(
             [(
                 "system",

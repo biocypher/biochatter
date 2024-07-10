@@ -60,7 +60,7 @@ class DatabaseAgent:
             self.connection_args,
         )
         query_prompt = self.prompt_engine.generate_query_prompts(query)
-        cypher_query = agent.execute_agent(query, query_prompt)
+        cypher_query = agent.execute(query, query_prompt)
         return cypher_query
 
 
