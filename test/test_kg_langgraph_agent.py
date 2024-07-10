@@ -109,8 +109,8 @@ def kgQueryAgent():
         conversation_factory=lambda: ChatOpenAIMock()
     )
 
-def test_execute_agent(kgQueryAgent):
+def test_execute(kgQueryAgent):
     question="What genes does EOMES primarily regulate?"
-    query = kgQueryAgent.execute_agent(question=question)
+    query = kgQueryAgent.execute(question=question)
     assert query == "MATCH (g:gene {name: 'EOMES'})-->(c:gene) RETURN DISTINCT c.name LIMIT 5;"
 
