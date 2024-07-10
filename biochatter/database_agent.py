@@ -4,7 +4,7 @@ from langchain.schema import Document
 import neo4j_utils as nu
 
 from .prompts import BioCypherPromptEngine
-
+from .kg_langgraph_agent import KGQueryReflexionAgent
 
 class DatabaseAgent:
     def __init__(
@@ -26,6 +26,7 @@ class DatabaseAgent:
             conversation_factory (callable): A function to create a conversation
                 for creating the KG query.
         """
+        self.conversation_factory = conversation_factory
         self.prompt_engine = BioCypherPromptEngine(
             model_name=model_name,
             schema_config_or_info_dict=schema_config_or_info_dict,
@@ -52,6 +53,16 @@ class DatabaseAgent:
 
     def is_connected(self) -> bool:
         return not self.driver is None
+    
+    def _generate_query(self, query: str):
+        agent = KGQueryReflexionAgent(
+            self.conversation_factory, 
+            self.connection_args,
+        )
+        query_prompt = self.prompt_engine.generate_query_prompts(query)
+        cypher_query = agent.execute(query, query_prompt)
+        return cypher_query
+
 
     def get_query_results(self, query: str, k: int = 3) -> list[Document]:
         """
@@ -70,7 +81,7 @@ class DatabaseAgent:
                 values are the cypher query used to generate the results, for
                 now.
         """
-        cypher_query = self.prompt_engine.generate_query(query)
+        cypher_query = self._generate_query(query) # self.prompt_engine.generate_query(query)
         # TODO some logic if it fails?
         results = self.driver.query(query=cypher_query)
 
