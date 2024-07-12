@@ -65,6 +65,7 @@ TOKEN_LIMITS = {
 }
 
 # Functions for image encoding
+# Functions for image encoding
 def convert_and_resize_image(image: Image, max_size: int = 1024) -> Image:
     """
     Convert the image to RGB format if needed and resize it to have a maximum dimension of max_size.
@@ -183,7 +184,13 @@ def encode_image_from_url(url: str) -> str:
     from urllib.request import urlopen
     import tempfile
 
-    with urlopen(url) as response, tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+    # Get the file extension from the content type
+    with urlopen(url) as response:
+        content_type = response.info().get_content_type()
+        extension = content_type.split('/')[-1]
+        extension = 'jpg' if extension == 'jpeg' else extension  # normalize extension
+
+    with urlopen(url) as response, tempfile.NamedTemporaryFile(suffix=f'.{extension}', delete=False) as tmp_file:
         tmp_file.write(response.read())
         tmp_file_path = tmp_file.name
 
