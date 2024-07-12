@@ -239,7 +239,6 @@ class ReflexionAgent(ABC):
             [HumanMessage(content=question)], {
                 "recursion_limit": self.recursion_limit,
             },
-            debug=True
         )
         for i, step in enumerate(events):
             node, output = next(iter(step.items()))
