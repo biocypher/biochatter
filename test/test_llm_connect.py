@@ -401,6 +401,9 @@ def test_encode_image_from_url():
         mock_response = MagicMock()
         mock_response.read.return_value = b"image_data"
         mock_urlopen.return_value.__enter__.return_value = mock_response
+        mock_urlopen.return_value.info.return_value.get_content_type.return_value = (
+            "image/jpeg"
+        )
 
         with patch(
             "biochatter.llm_connect.tempfile.NamedTemporaryFile",
