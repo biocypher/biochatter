@@ -16,9 +16,12 @@ from typing import Optional
 import json
 import logging
 
-from langchain_community.chat_models import (
+from langchain_openai import (
     ChatOpenAI,
     AzureChatOpenAI,
+)
+
+from langchain_community.chat_models import (
     ChatOllama,
 )
 from langchain_community.llms.huggingface_hub import HuggingFaceHub

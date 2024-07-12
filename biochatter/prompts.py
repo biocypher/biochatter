@@ -152,6 +152,7 @@ class BioCypherPromptEngine:
     def _select_graph_entities_from_question(
         self, question: str, conversation: Conversation
     ) -> str:
+        conversation.reset()
         success1 = self._select_entities(
             question=question, conversation=conversation
         )
@@ -160,6 +161,7 @@ class BioCypherPromptEngine:
                 "Entity selection failed. Please try again with a different "
                 "question."
             )
+        conversation.reset()
         success2 = self._select_relationships(
             conversation=conversation
         )
@@ -168,6 +170,7 @@ class BioCypherPromptEngine:
                 "Relationship selection failed. Please try again with a "
                 "different question."
             )
+        conversation.reset()
         success3 = self._select_properties(
             conversation=conversation
         )

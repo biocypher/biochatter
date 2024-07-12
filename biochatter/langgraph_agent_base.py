@@ -98,7 +98,7 @@ class ReflexionAgent(ABC):
         """
         num_steps = ReflexionAgent._get_num_iterations(state)
         if num_steps > self.max_steps:
-            return END_NODE
+            return END
         return EXECUTE_TOOL_NODE
 
     @abstractmethod
@@ -162,7 +162,7 @@ class ReflexionAgent(ABC):
         """
         Save logs message
         """
-        logger_func = logger.info if level == "info" else (logger.error if level == "error" else logger.warn)
+        logger_func = logger.info if level == "info" else (logger.error if level == "error" else logger.warning)
         logger_func(msg)
         self._logs = self._logs + f"[{level}]" + f"{datetime.now().isoformat()} - {msg}\n"
 
@@ -217,9 +217,8 @@ class ReflexionAgent(ABC):
     def _extract_result_from_final_step(self, step: Dict[str, List[BaseMessage]] | BaseMessage):
         """ 
         extract result from last step
-        This function is used to facilitate test.
         """
-        return step[END][-1]
+        return step[END][-1] if END in step else step[REVISE_NODE]
 
     def _execute_graph(self, graph: Optional[CompiledGraph]=None, question: Optional[str]="") -> str | None:
         """
@@ -238,17 +237,17 @@ class ReflexionAgent(ABC):
         
         events = graph.stream(
             [HumanMessage(content=question)], {
-                "recursion_limit": self.recursion_limit
-            }
+                "recursion_limit": self.recursion_limit,
+            },
+            debug=True
         )
-
         for i, step in enumerate(events):
             node, output = next(iter(step.items()))
             self._log_step_message(i+1, node, output)
 
-        final_result = self._extract_result_from_final_step(step)
-        self._log_final_result(final_result)
-        return self._parse_final_result(final_result)
+        last_output = self._extract_result_from_final_step(step)
+        self._log_final_result(last_output)
+        return self._parse_final_result(last_output)
         
     def execute(self, question: str, prompt: Optional[str]=None) -> (str | None):
         """

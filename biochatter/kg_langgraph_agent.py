@@ -17,6 +17,7 @@ from langchain.output_parsers.openai_tools import (
 )
 from langchain_openai import ChatOpenAI
 import neo4j_utils as nu
+from langgraph.graph import END
 
 from biochatter.langgraph_agent_base import (
     ReflexionAgent,
@@ -27,6 +28,7 @@ from biochatter.langgraph_agent_base import (
 
 logger = logging.getLogger(__name__)
 
+ANSWER = "answer"
 SEARCH_QUERIES = "search_queries"
 SEARCH_QUERIES_DESCRIPTION = "query for graph database"
 REVISED_QUERY = "revised_query"
@@ -34,7 +36,7 @@ REVISED_QUERY_DESCRIPTION = "Revised query"
 
 class GenerateQuery(BaseModel):
     """Generate the query."""
-    answer: str = Field(description="Cypher query according to user's question.")
+    answer: str = Field(description="Cypher query for graph database according to user's question.")
     reflection: str = Field(description="Your reflection on the initial answer, critique of what to improve")
     search_queries: List[str] = Field(
         description=SEARCH_QUERIES_DESCRIPTION
@@ -113,6 +115,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
 Revise you previous query using the query result and follow the guidelines:
 1. if you consistently obtain empty result, please consider removing constraints, like relationship constraint to try to obtain some results.
 2. you should use previous critique to improve your query.
+3. Only generate query without any other text.
 """
         llm: ChatOpenAI = self.conversation.chat
         revision_chain = self.actor_prompt_template.partial(
@@ -149,11 +152,12 @@ Revise you previous query using the query result and follow the guidelines:
                 queries = (parsed_args[SEARCH_QUERIES] 
                            if SEARCH_QUERIES in parsed_args
                            else parsed_args[SEARCH_QUERIES_DESCRIPTION])
+                queries = queries if len(queries) > 0 else [parsed_args[ANSWER]]
                 for query in queries:
                     result = self._query_graph_database(query)
                     results.append({
                         "query": query,
-                        "result": result[0]
+                        "result": result[0] if len(result) > 0 else []
                     })
             except Exception as e:
                 logger.error(f"Error occurred: {str(e)}")
@@ -180,7 +184,9 @@ Revise you previous query using the query result and follow the guidelines:
                 continue
             message: ToolMessage = m
             logger.info(f"query result: {message.content}")
-            results = json.loads(message.content)
+            results = (json.loads(message.content) 
+                       if message.content is not None and len(message.content) > 0
+                       else {"result": []})
             empty = True
             if len(results["result"]) > 0:
                 # check if it is really not empty, remove the case: {"result": [{"c.name": None}]}
@@ -200,10 +206,10 @@ Revise you previous query using the query result and follow the guidelines:
 
     def _should_continue(self, state: List[BaseMessage]):
         res = super()._should_continue(state)
-        if res == END_NODE:
+        if res == END:
             return res
         query_results_num = KGQueryReflexionAgent._get_last_tool_results_num(state)
-        return (END_NODE if query_results_num > 0 
+        return (END if query_results_num > 0 
                 else EXECUTE_TOOL_NODE)
     
     def _log_step_message(self, step: int, node: str, output: BaseMessage):
