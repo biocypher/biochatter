@@ -11,24 +11,24 @@ except ImportError:
     st = None
 
 from abc import ABC, abstractmethod
-import base64
 from typing import Optional
-import json
-import logging
-import os
+from urllib.request import urlopen
 import io
+import os
+import json
+import base64
+import logging
+import tempfile
 import subprocess
+import urllib.parse
 
+from PIL import Image
 from langchain.llms import HuggingFaceHub
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 from langchain.chat_models import ChatOpenAI, AzureChatOpenAI
 import nltk
 import openai
-from PIL import Image
 import pdf2image
-import tempfile
-import urllib.parse
-from urllib.request import urlopen
 
 from ._stats import get_stats
 from .rag_agent import RagAgent
@@ -64,6 +64,7 @@ TOKEN_LIMITS = {
     "custom-endpoint": 1,  # Reasonable value?
 }
 
+
 # Functions for image encoding
 # Functions for image encoding
 def convert_and_resize_image(image: Image, max_size: int = 1024) -> Image:
@@ -77,10 +78,11 @@ def convert_and_resize_image(image: Image, max_size: int = 1024) -> Image:
     Returns:
         PIL.Image: The converted and resized PIL image.
     """
-    if image.mode != 'RGB':
-        image = image.convert('RGB')
+    if image.mode != "RGB":
+        image = image.convert("RGB")
     image.thumbnail((max_size, max_size), Image.LANCZOS)
     return image
+
 
 def convert_to_png(image: Image) -> bytes:
     """
@@ -95,6 +97,7 @@ def convert_to_png(image: Image) -> bytes:
     with io.BytesIO() as output:
         image.save(output, format="PNG")
         return output.getvalue()
+
 
 def convert_to_pil_image(file_path: str, dpi: int = 300) -> Image:
     """
@@ -113,29 +116,30 @@ def convert_to_pil_image(file_path: str, dpi: int = 300) -> Image:
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"File not found: {file_path}")
 
-    if file_ext in ['.jpg', '.jpeg', '.png', '.tif', '.tiff']:
+    if file_ext in [".jpg", ".jpeg", ".png", ".tif", ".tiff"]:
         image = Image.open(file_path)
         return convert_and_resize_image(image)
-    elif file_ext == '.pdf':
+    elif file_ext == ".pdf":
         pages = pdf2image.convert_from_path(file_path, dpi=dpi)
         if pages:
             return convert_and_resize_image(pages[0])
-    elif file_ext == '.eps':
-        output_path = file_path.replace('.eps', '.png')
+    elif file_ext == ".eps":
+        output_path = file_path.replace(".eps", ".png")
         command = [
-            'gs',
-            '-dNOPAUSE',
-            '-dBATCH',
-            '-sDEVICE=pngalpha',
-            f'-r{dpi}',
-            f'-sOutputFile={output_path}',
-            file_path
+            "gs",
+            "-dNOPAUSE",
+            "-dBATCH",
+            "-sDEVICE=pngalpha",
+            f"-r{dpi}",
+            f"-sOutputFile={output_path}",
+            file_path,
         ]
         subprocess.run(command, check=True)
         image = Image.open(output_path)
         return convert_and_resize_image(image)
     else:
         raise ValueError(f"Unsupported file format: {file_ext}")
+
 
 def process_image(path: str, max_size: int) -> str:
     """
@@ -150,7 +154,8 @@ def process_image(path: str, max_size: int) -> str:
     """
     image = convert_to_pil_image(path)
     png_image = convert_to_png(image)
-    return base64.b64encode(png_image).decode('utf-8')
+    return base64.b64encode(png_image).decode("utf-8")
+
 
 def encode_image(image_path):
     """
@@ -162,7 +167,7 @@ def encode_image(image_path):
     Returns:
         str: The base64 encoded image data.
     """
-    supported_formats = ('.webp', '.jpg', '.jpeg', '.gif', '.png')
+    supported_formats = (".webp", ".jpg", ".jpeg", ".gif", ".png")
     file_ext = os.path.splitext(image_path)[1].lower()
 
     if file_ext in supported_formats:
@@ -170,6 +175,7 @@ def encode_image(image_path):
             return base64.b64encode(image_file.read()).decode("utf-8")
     else:
         return process_image(image_path, max_size=1024)
+
 
 def encode_image_from_url(url: str) -> str:
     """
@@ -187,10 +193,14 @@ def encode_image_from_url(url: str) -> str:
     # Get the file extension from the content type
     with urlopen(url) as response:
         content_type = response.info().get_content_type()
-        extension = content_type.split('/')[-1]
-        extension = 'jpg' if extension == 'jpeg' else extension  # normalize extension
+        extension = content_type.split("/")[-1]
+        extension = (
+            "jpg" if extension == "jpeg" else extension
+        )  # normalize extension
 
-    with urlopen(url) as response, tempfile.NamedTemporaryFile(suffix=f'.{extension}', delete=False) as tmp_file:
+    with urlopen(url) as response, tempfile.NamedTemporaryFile(
+        suffix=f".{extension}", delete=False
+    ) as tmp_file:
         tmp_file.write(response.read())
         tmp_file_path = tmp_file.name
 
@@ -198,6 +208,7 @@ def encode_image_from_url(url: str) -> str:
     os.remove(tmp_file_path)
 
     return base64_string
+
 
 class Conversation(ABC):
     """
@@ -335,7 +346,9 @@ class Conversation(ABC):
         if local or not parsed_url.netloc:
             image_url = f"data:image/jpeg;base64,{encode_image(image_url)}"
         else:
-            image_url = f"data:image/jpeg;base64,{encode_image_from_url(image_url)}"
+            image_url = (
+                f"data:image/jpeg;base64,{encode_image_from_url(image_url)}"
+            )
 
         self.messages.append(
             HumanMessage(
