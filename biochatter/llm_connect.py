@@ -15,13 +15,20 @@ import base64
 from typing import Optional
 import json
 import logging
+import os
+import io
+import subprocess
 
 from langchain.llms import HuggingFaceHub
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
 from langchain.chat_models import ChatOpenAI, AzureChatOpenAI
 import nltk
 import openai
+from PIL import Image
+import pdf2image
+import tempfile
 import urllib.parse
+from urllib.request import urlopen
 
 from ._stats import get_stats
 from .rag_agent import RagAgent
@@ -57,12 +64,133 @@ TOKEN_LIMITS = {
     "custom-endpoint": 1,  # Reasonable value?
 }
 
+# Functions for image encoding
+def convert_and_resize_image(image: Image, max_size: int = 1024) -> Image:
+    """
+    Convert the image to RGB format if needed and resize it to have a maximum dimension of max_size.
 
-# Function to encode the image
+    Parameters:
+        image (PIL.Image): The input image.
+        max_size (int): The maximum size for the image's width or height.
+
+    Returns:
+        PIL.Image: The converted and resized PIL image.
+    """
+    if image.mode != 'RGB':
+        image = image.convert('RGB')
+    image.thumbnail((max_size, max_size), Image.LANCZOS)
+    return image
+
+def convert_to_png(image: Image) -> bytes:
+    """
+    Convert a PIL image to PNG format.
+
+    Parameters:
+        image (PIL.Image): The input image.
+
+    Returns:
+        bytes: The PNG image data.
+    """
+    with io.BytesIO() as output:
+        image.save(output, format="PNG")
+        return output.getvalue()
+
+def convert_to_pil_image(file_path: str, dpi: int = 300) -> Image:
+    """
+    Convert various image formats (PDF, EPS, TIFF, JPG, PNG) to a PIL image.
+
+    Parameters:
+        file_path (str): The path to the image file.
+        dpi (int): Dots per inch for high-resolution EPS conversion.
+
+    Returns:
+        PIL.Image: The converted PIL image.
+    """
+    file_path = os.path.abspath(file_path)
+    file_ext = os.path.splitext(file_path)[1].lower()
+
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"File not found: {file_path}")
+
+    if file_ext in ['.jpg', '.jpeg', '.png', '.tif', '.tiff']:
+        image = Image.open(file_path)
+        return convert_and_resize_image(image)
+    elif file_ext == '.pdf':
+        pages = pdf2image.convert_from_path(file_path, dpi=dpi)
+        if pages:
+            return convert_and_resize_image(pages[0])
+    elif file_ext == '.eps':
+        output_path = file_path.replace('.eps', '.png')
+        command = [
+            'gs',
+            '-dNOPAUSE',
+            '-dBATCH',
+            '-sDEVICE=pngalpha',
+            f'-r{dpi}',
+            f'-sOutputFile={output_path}',
+            file_path
+        ]
+        subprocess.run(command, check=True)
+        image = Image.open(output_path)
+        return convert_and_resize_image(image)
+    else:
+        raise ValueError(f"Unsupported file format: {file_ext}")
+
+def process_image(path: str, max_size: int) -> str:
+    """
+    Process an image, converting it to PNG and resizing if necessary, then encode to base64.
+
+    Parameters:
+        path (str): The path to the image file.
+        max_size (int): The maximum size for the image's width or height.
+
+    Returns:
+        str: The base64 encoded image data.
+    """
+    image = convert_to_pil_image(path)
+    png_image = convert_to_png(image)
+    return base64.b64encode(png_image).decode('utf-8')
+
 def encode_image(image_path):
-    with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode("utf-8")
+    """
+    Encode an image file to a base64 string, converting formats if necessary.
 
+    Parameters:
+        image_path (str): The path to the image file.
+
+    Returns:
+        str: The base64 encoded image data.
+    """
+    supported_formats = ('.webp', '.jpg', '.jpeg', '.gif', '.png')
+    file_ext = os.path.splitext(image_path)[1].lower()
+
+    if file_ext in supported_formats:
+        with open(image_path, "rb") as image_file:
+            return base64.b64encode(image_file.read()).decode("utf-8")
+    else:
+        return process_image(image_path, max_size=1024)
+
+def encode_image_from_url(url: str) -> str:
+    """
+    Download an image from a URL, convert to base64, and return the base64 string.
+
+    Parameters:
+        url (str): The URL of the image.
+
+    Returns:
+        str: The base64 encoded image data.
+    """
+    from urllib.request import urlopen
+    import tempfile
+
+    with urlopen(url) as response, tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+        tmp_file.write(response.read())
+        tmp_file_path = tmp_file.name
+
+    base64_string = encode_image(tmp_file_path)
+    os.remove(tmp_file_path)
+
+    return base64_string
 
 class Conversation(ABC):
     """
@@ -192,15 +320,15 @@ class Conversation(ABC):
 
         Args:
             message (str): The message from the user.
-
             image_url (str): The URL of the image.
-
             local (bool): Whether the image is local or not. If local, it will
                 be encoded as a base64 string to be passed to the LLM.
         """
         parsed_url = urllib.parse.urlparse(image_url)
         if local or not parsed_url.netloc:
             image_url = f"data:image/jpeg;base64,{encode_image(image_url)}"
+        else:
+            image_url = f"data:image/jpeg;base64,{encode_image_from_url(image_url)}"
 
         self.messages.append(
             HumanMessage(
@@ -847,6 +975,214 @@ class XinferenceConversation(Conversation):
             elif model["model_type"] == type:
                 names.append(name)
         return names
+
+
+class OllamaConversation(Conversation):
+    def set_api_key(self, api_key: str, user: Optional[str] = None):
+        pass
+
+    def __init__(
+        self,
+        base_url: str,
+        prompts: dict,
+        model_name: str = "llama3",
+        correct: bool = True,
+        split_correction: bool = False,
+    ):
+        """
+
+        Connect to an Ollama LLM via the Ollama/Langchain library and set
+        up a conversation with the user. Also initialise a second
+        conversational agent to provide corrections to the model output, if
+        necessary.
+
+        Args:
+
+            base_url (str): The base URL of the Ollama instance.
+
+            prompts (dict): A dictionary of prompts to use for the conversation.
+
+            model_name (str): The name of the model to use. Can be any model name available in your Ollama instance.
+
+            correct (bool): Whether to correct the model output.
+
+            split_correction (bool): Whether to correct the model output by
+            splitting the output into sentences and correcting each sentence
+            individually.
+
+        """
+        super().__init__(
+            model_name=model_name,
+            prompts=prompts,
+            correct=correct,
+            split_correction=split_correction,
+        )
+        self.model_name = model_name
+        self.model = ChatOllama(
+            base_url=base_url, model=self.model_name, temperature=0.0
+        )
+
+        self.ca_model_name = "mixtral:latest"
+
+        self.ca_model = ChatOllama(
+            base_url=base_url, model_name=self.ca_model_name, temperature=0.0
+        )
+
+    def append_system_message(self, message: str):
+        """
+        We override the system message addition because Ollama does not
+        accept multiple system messages. We concatenate them if there are
+        multiple.
+
+        Args:
+            message (str): The message to append.
+        """
+        # if there is not already a system message in self.messages
+        if not any(isinstance(m, SystemMessage) for m in self.messages):
+            self.messages.append(
+                SystemMessage(
+                    content=message,
+                ),
+            )
+        else:
+            # if there is a system message, append to the last one
+            for i, msg in enumerate(self.messages):
+                if isinstance(msg, SystemMessage):
+                    self.messages[i].content += f"\n{message}"
+                    break
+
+    def append_ca_message(self, message: str):
+        """
+
+        We also override the system message addition for the correcting agent,
+        likewise because Ollama does not accept multiple system messages. We
+        concatenate them if there are multiple.
+
+        TODO this currently assumes that the correcting agent is the same model
+        as the primary one.
+
+        Args:
+            message (str): The message to append.
+        """
+        # if there is not already a system message in self.messages
+        if not any(isinstance(m, SystemMessage) for m in self.ca_messages):
+            self.ca_messages.append(
+                SystemMessage(
+                    content=message,
+                ),
+            )
+        else:
+            # if there is a system message, append to the last one
+            for i, msg in enumerate(self.ca_messages):
+                if isinstance(msg, SystemMessage):
+                    self.ca_messages[i].content += f"\n{message}"
+                    break
+
+    def _primary_query(self):
+        """
+
+        Query the Ollama client API with the user's message and return the
+        response using the message history (flattery system messages, prior
+        conversation) as context. Correct the response if necessary.
+
+        Returns:
+
+            tuple: A tuple containing the response from the Ollama API
+            (formatted similarly to responses from the OpenAI API) and the token
+            usage.
+
+        """
+        try:
+            messages = self._create_history(self.messages)
+            response = self.model.invoke(
+                messages
+                # ,generate_config={"max_tokens": 2048, "temperature": 0},
+            )
+        except (
+            openai._exceptions.APIError,
+            openai._exceptions.OpenAIError,
+            openai._exceptions.ConflictError,
+            openai._exceptions.NotFoundError,
+            openai._exceptions.APIStatusError,
+            openai._exceptions.RateLimitError,
+            openai._exceptions.APITimeoutError,
+            openai._exceptions.BadRequestError,
+            openai._exceptions.APIConnectionError,
+            openai._exceptions.AuthenticationError,
+            openai._exceptions.InternalServerError,
+            openai._exceptions.PermissionDeniedError,
+            openai._exceptions.UnprocessableEntityError,
+            openai._exceptions.APIResponseValidationError,
+        ) as e:
+            return str(e), None
+        response_dict = response.dict()
+        msg = response_dict["content"]
+        token_usage = response_dict["response_metadata"]["eval_count"]
+
+        self._update_usage_stats(self.model_name, token_usage)
+
+        self.append_ai_message(msg)
+
+        return msg, token_usage
+
+    def _create_history(self, messages):
+        history = []
+        for i, m in enumerate(messages):
+            if isinstance(m, AIMessage):
+                history.append(AIMessage(content=m.content))
+            elif isinstance(m, HumanMessage):
+                history.append(HumanMessage(content=m.content))
+            elif isinstance(m, SystemMessage):
+                history.append(SystemMessage(content=m.content))
+
+        return history
+
+    def _correct_response(self, msg: str):
+        """
+
+        Correct the response from the Ollama API by sending it to a
+        secondary language model. Optionally split the response into single
+        sentences and correct each sentence individually. Update usage stats.
+
+        Args:
+            msg (str): The response from the model.
+
+        Returns:
+            str: The corrected response (or OK if no correction necessary).
+        """
+        ca_messages = self.ca_messages.copy()
+        ca_messages.append(
+            HumanMessage(
+                content=msg,
+            ),
+        )
+        ca_messages.append(
+            SystemMessage(
+                content="If there is nothing to correct, please respond "
+                "with just 'OK', and nothing else!",
+            ),
+        )
+        response = self.ca_model.invoke(
+            chat_history=self._create_history(self.messages)
+        ).dict()
+        correction = response["content"]
+        token_usage = response["eval_count"]
+
+        self._update_usage_stats(self.ca_model_name, token_usage)
+
+        return correction
+
+    def _update_usage_stats(self, model: str, token_usage: dict):
+        """
+        Update redis database with token usage statistics using the usage_stats
+        object with the increment method.
+
+        Args:
+            model (str): The model name.
+
+            token_usage (dict): The token usage statistics.
+        """
+        pass
 
 
 class GptConversation(Conversation):

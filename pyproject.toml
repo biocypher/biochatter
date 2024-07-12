@@ -31,6 +31,8 @@ neo4j-utils = "^0.0.7"
 seaborn = "^0.13.2"
 rouge_score = "0.1.2"
 evaluate = "^0.4.1"
+pillow = ">=10.2,<11.0"
+pdf2image = "^1.16.0"
 
 [tool.poetry.extras]
 streamlit = ["streamlit"]
