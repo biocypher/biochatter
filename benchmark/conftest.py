@@ -1,6 +1,5 @@
 import os
 
-from dotenv import load_dotenv
 from xinference.client import Client
 import pytest
 import requests
@@ -386,9 +385,6 @@ def evaluation_conversation():
         prompts={},
         correct=False,
     )
-    # delete first dots if venv is in project env
-    cus_path = os.getcwd() + "../../venv/bin/.env"
-    load_dotenv(cus_path)
     conversation.set_api_key(os.getenv("OPENAI_API_KEY"), user="benchmark_user")
     return conversation
 
