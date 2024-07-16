@@ -1,1 +1,5 @@
 model_name,subtask,score,iterations,md5_hash,datetime,biochatter_version
+gpt-3.5-turbo-0125,oncokb:braf,4.0/4,1,9092d4decad0bc7a5847733a871f9986,2024-07-16 17:34:24,0.4.13
+gpt-4-0125-preview,oncokb:braf,4.0/4,1,9092d4decad0bc7a5847733a871f9986,2024-07-16 17:34:36,0.4.13
+gpt-4-0613,oncokb:braf,3.0/4,1,9092d4decad0bc7a5847733a871f9986,2024-07-16 17:34:48,0.4.13
+gpt-4o-2024-05-13,oncokb:braf,4.0/4,1,9092d4decad0bc7a5847733a871f9986,2024-07-16 17:34:51,0.4.13
