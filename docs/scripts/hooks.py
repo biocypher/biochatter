@@ -17,6 +17,7 @@ def on_pre_build(config, **kwargs) -> None:
 
     result_files_path = "benchmark/results/"
 
+    
     result_file_names = [
         f
         for f in os.listdir(result_files_path)
@@ -52,23 +53,23 @@ def preprocess_results_for_frontend(
         path (str): The path to the result files.
         file_name (str): The file name of the result file.
     """
-    raw_results["score_possible"] = raw_results["score"].apply(
-        lambda x: float(x.split("/")[1])
+    raw_results["score_possible"] = raw_results.apply(
+        lambda x: float(x["score"].split("/")[1]) * x["iterations"], axis=1
     )
     raw_results["scores"] = raw_results["score"].apply(
         lambda x: x.split("/")[0]
     )
     raw_results["score_achieved"] = raw_results["scores"].apply(
-        lambda x: np.mean(float(x.split(";")[0])) if ";" in x else float(x)
+        lambda x: np.sum([float(score) for score in x.split(";")]) if ";" in x else float(x)
     )
     raw_results["score_sd"] = raw_results["scores"].apply(
-        lambda x: np.std(float(x.split(";")[0])) if ";" in x else 0
+         lambda x: np.std([float(score) for score in x.split(";")], ddof=1) if ";" in x else 0
     )
     aggregated_scores = raw_results.groupby(["model_name"]).agg(
         {
             "score_possible": "sum",
             "score_achieved": "sum",
-            "score_sd": "first",
+            "score_sd": "sum",
             "iterations": "first",
         }
     )
@@ -116,23 +117,23 @@ def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
     raw_results["subtask"] = raw_results["subtask"].apply(
         lambda x: x.split(":")[1]
     )
-    raw_results["score_possible"] = raw_results["score"].apply(
-        lambda x: float(x.split("/")[1])
+    raw_results["score_possible"] = raw_results.apply(
+        lambda x: float(x["score"].split("/")[1]) * x["iterations"], axis=1
     )
     raw_results["scores"] = raw_results["score"].apply(
         lambda x: x.split("/")[0]
     )
     raw_results["score_achieved"] = raw_results["scores"].apply(
-        lambda x: np.mean(float(x.split(";")[0])) if ";" in x else float(x)
+        lambda x: np.sum([float(score) for score in x.split(";")]) if ";" in x else float(x)
     )
     raw_results["score_sd"] = raw_results["scores"].apply(
-        lambda x: np.std(float(x.split(";")[0])) if ";" in x else 0
+         lambda x: np.std([float(score) for score in x.split(";")], ddof=1) if ";" in x else 0
     )
     aggregated_scores = raw_results.groupby(["model_name", "subtask"]).agg(
         {
             "score_possible": "sum",
             "score_achieved": "sum",
-            "score_sd": "first",
+            "score_sd": "mean",
             "iterations": "first",
         }
     )
@@ -662,6 +663,26 @@ def plot_extraction_tasks():
     sourcedata_info_extraction["score_sd"] = sourcedata_info_extraction[
         "scores"
     ].apply(lambda x: np.std(float(x.split(";")[0])) if ";" in x else 0)
+    raw_results["score_possible"] = raw_results.apply(
+        lambda x: float(x["score"].split("/")[1]) * x["iterations"], axis=1
+    )
+    raw_results["scores"] = raw_results["score"].apply(
+        lambda x: x.split("/")[0]
+    )
+    raw_results["score_achieved"] = raw_results["scores"].apply(
+        lambda x: np.sum([float(score) for score in x.split(";")]) if ";" in x else float(x)
+    )
+    raw_results["score_sd"] = raw_results["scores"].apply(
+         lambda x: np.std([float(score) for score in x.split(";")], ddof=1) if ";" in x else 0
+    )
+    aggregated_scores = raw_results.groupby(["model_name"]).agg(
+        {
+            "score_possible": "sum",
+            "score_achieved": "sum",
+            "score_sd": "mean",
+            "iterations": "first",
+        }
+    )
     aggregated_scores = sourcedata_info_extraction.groupby(
         ["model_name", "subtask"]
     ).agg(
