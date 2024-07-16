@@ -5,8 +5,8 @@ from collections.abc import Callable
 class RagAgentModeEnum:
     VectorStore = "vectorstore"
     KG = "kg"
-    API_BLAST = "api_BLAST"
-    API_oncokb = "api_oncokb"
+    API_BLAST = "api_blast"
+    API_ONCOKB = "api_oncokb"
 
 
 class RagAgent:
@@ -116,7 +116,7 @@ class RagAgent:
                 result_fetcher=BlastFetcher(),
                 result_interpreter=BlastInterpreter(),
             )
-        elif self.mode == RagAgentModeEnum.API_oncokb:
+        elif self.mode == RagAgentModeEnum.API_ONCOKB:
             from .api_agent.oncokb import (
                 OncoKBFetcher,
                 OncoKBInterpreter,
@@ -132,7 +132,7 @@ class RagAgent:
             )
         else:
             raise ValueError(
-                "Invalid mode. Choose either 'kg', 'vectorstore', 'api_BLAST', or 'api_oncokb'."
+                "Invalid mode. Choose either 'kg', 'vectorstore', 'api_blast', or 'api_oncokb'."
             )
 
     def generate_responses(self, user_question: str) -> list[tuple]:
@@ -181,10 +181,10 @@ class RagAgent:
                 response = [("response", self.query_func.final_answer)]
             else:
                 response = [("error", self.query_func.final_answer)]
-        elif self.mode == RagAgentModeEnum.API_oncokb:
-            print('executing')
+        elif self.mode == RagAgentModeEnum.API_ONCOKB:
+            print("executing")
             self.query_func.execute(user_question)
-            print('done')
+            print("done")
             if self.query_func.final_answer is not None:
                 response = [("response", self.query_func.final_answer)]
             else:
@@ -192,7 +192,8 @@ class RagAgent:
 
         else:
             raise ValueError(
-                "Invalid mode. Choose either 'kg', 'vectorstore' or 'api'."
+                "Invalid mode. Choose either 'kg', 'vectorstore', 'api_blast', "
+                "or 'api_oncokb'."
             )
         self.last_response = response
         return response

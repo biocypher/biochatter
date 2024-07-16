@@ -1,10 +1,22 @@
 from unittest.mock import MagicMock, patch
 import json
-
+import os
 import pytest
 
 from biochatter.rag_agent import RagAgent, RagAgentModeEnum
 from biochatter.vectorstore_agent import Document
+from biochatter.llm_connect import GptConversation
+
+
+def conversation_factory():
+    conversation = GptConversation(
+        model_name="gpt-4o",
+        prompts={},
+        correct=False,
+    )
+    conversation.set_api_key(os.getenv("OPENAI_API_KEY"), user="test")
+
+    return conversation
 
 
 def test_rag_agent_kg_mode():
@@ -138,12 +150,13 @@ def test_rag_agent_api_mode():
 
     # Create an instance of RagAgent in 'api' mode
     api_agent = RagAgent(
-        mode="api",
-        model_name="gpt-4",
+        mode="api_blast",
+        model_name="gpt-4o",
         connection_args={},  # Add necessary connection arguments if needed
         use_prompt=True,  # Ensure prompts are used to get responses
+        conversation_factory=conversation_factory,
     )
-    assert api_agent.mode == "api", "Agent mode should be 'api'"
+    assert api_agent.mode == "api_blast", "Agent mode should be 'api_blast'"
 
     # Generate responses using the test question
     responses = api_agent.generate_responses(question)
