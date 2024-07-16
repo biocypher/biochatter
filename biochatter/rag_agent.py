@@ -175,16 +175,11 @@ class RagAgent:
                 )
                 for result in results
             ]
-        elif self.mode == RagAgentModeEnum.API_BLAST:
+        elif self.mode in [
+            RagAgentModeEnum.API_BLAST,
+            RagAgentModeEnum.API_ONCOKB,
+        ]:
             self.query_func.execute(user_question)
-            if self.query_func.final_answer is not None:
-                response = [("response", self.query_func.final_answer)]
-            else:
-                response = [("error", self.query_func.final_answer)]
-        elif self.mode == RagAgentModeEnum.API_ONCOKB:
-            print("executing")
-            self.query_func.execute(user_question)
-            print("done")
             if self.query_func.final_answer is not None:
                 response = [("response", self.query_func.final_answer)]
             else:
