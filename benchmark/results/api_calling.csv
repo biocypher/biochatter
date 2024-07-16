@@ -1,5 +1,21 @@
 model_name,subtask,score,iterations,md5_hash,datetime,biochatter_version
-gpt-3.5-turbo-0125,oncokb:braf,4.0/4,1,9092d4decad0bc7a5847733a871f9986,2024-07-16 17:34:24,0.4.13
-gpt-4-0125-preview,oncokb:braf,4.0/4,1,9092d4decad0bc7a5847733a871f9986,2024-07-16 17:34:36,0.4.13
-gpt-4-0613,oncokb:braf,3.0/4,1,9092d4decad0bc7a5847733a871f9986,2024-07-16 17:34:48,0.4.13
-gpt-4o-2024-05-13,oncokb:braf,4.0/4,1,9092d4decad0bc7a5847733a871f9986,2024-07-16 17:34:51,0.4.13
+gpt-3.5-turbo-0125,oncokb:braf:histiocytosis:descriptive_spelling,3.0/4,1,a52dc4ba2dd21ff2aa53654c3f26b2c5,2024-07-16 17:56:15,0.4.13
+gpt-3.5-turbo-0125,oncokb:braf:histiocytosis:exact_spelling,4.0/4,1,f7e5a41f8fb5eb520571bc46c8e4916c,2024-07-16 17:56:13,0.4.13
+gpt-3.5-turbo-0125,oncokb:braf:melanoma:exact_spelling,4.0/4,1,b52eb44672033de81ec2213895507706,2024-07-16 17:56:07,0.4.13
+gpt-3.5-turbo-0125,oncokb:ros1:lung_adenocarcinoma:exact_spelling,3.0/6,1,a453756cc6dd549acb390cdf6108eddf,2024-07-16 17:56:17,0.4.13
+gpt-3.5-turbo-0125,oncokb:tp53:colon_adenocarcinoma:exact_spelling,1.0/3,1,72f23eb51d35737c7a446180582488ab,2024-07-16 17:56:09,0.4.13
+gpt-4-0125-preview,oncokb:braf:histiocytosis:descriptive_spelling,4.0/4,1,a52dc4ba2dd21ff2aa53654c3f26b2c5,2024-07-16 17:56:33,0.4.13
+gpt-4-0125-preview,oncokb:braf:histiocytosis:exact_spelling,4.0/4,1,f7e5a41f8fb5eb520571bc46c8e4916c,2024-07-16 18:06:36,0.4.13
+gpt-4-0125-preview,oncokb:braf:melanoma:exact_spelling,4.0/4,1,b52eb44672033de81ec2213895507706,2024-07-16 17:56:21,0.4.13
+gpt-4-0125-preview,oncokb:ros1:lung_adenocarcinoma:exact_spelling,3.0/6,1,a453756cc6dd549acb390cdf6108eddf,2024-07-16 17:56:38,0.4.13
+gpt-4-0125-preview,oncokb:tp53:colon_adenocarcinoma:exact_spelling,1.0/3,1,72f23eb51d35737c7a446180582488ab,2024-07-16 17:56:25,0.4.13
+gpt-4-0613,oncokb:braf:histiocytosis:descriptive_spelling,3.0/4,1,a52dc4ba2dd21ff2aa53654c3f26b2c5,2024-07-16 17:57:30,0.4.13
+gpt-4-0613,oncokb:braf:histiocytosis:exact_spelling,3.0/4,1,f7e5a41f8fb5eb520571bc46c8e4916c,2024-07-16 17:57:16,0.4.13
+gpt-4-0613,oncokb:braf:melanoma:exact_spelling,3.0/4,1,b52eb44672033de81ec2213895507706,2024-07-16 17:56:50,0.4.13
+gpt-4-0613,oncokb:ros1:lung_adenocarcinoma:exact_spelling,2.0/6,1,a453756cc6dd549acb390cdf6108eddf,2024-07-16 17:57:43,0.4.13
+gpt-4-0613,oncokb:tp53:colon_adenocarcinoma:exact_spelling,1.0/3,1,72f23eb51d35737c7a446180582488ab,2024-07-16 17:57:02,0.4.13
+gpt-4o-2024-05-13,oncokb:braf:histiocytosis:descriptive_spelling,4.0/4,1,a52dc4ba2dd21ff2aa53654c3f26b2c5,2024-07-16 18:06:44,0.4.13
+gpt-4o-2024-05-13,oncokb:braf:histiocytosis:exact_spelling,4.0/4,1,f7e5a41f8fb5eb520571bc46c8e4916c,2024-07-16 17:57:50,0.4.13
+gpt-4o-2024-05-13,oncokb:braf:melanoma:exact_spelling,4.0/4,1,b52eb44672033de81ec2213895507706,2024-07-16 17:57:45,0.4.13
+gpt-4o-2024-05-13,oncokb:ros1:lung_adenocarcinoma:exact_spelling,3.0/6,1,a453756cc6dd549acb390cdf6108eddf,2024-07-16 17:57:56,0.4.13
+gpt-4o-2024-05-13,oncokb:tp53:colon_adenocarcinoma:exact_spelling,2.0/3,1,72f23eb51d35737c7a446180582488ab,2024-07-16 17:57:47,0.4.13

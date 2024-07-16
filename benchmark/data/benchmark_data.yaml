@@ -433,9 +433,10 @@ text_extraction:
           chemical: "None"
 
 api_calling:
-  - case: oncokb:braf
+  - case: oncokb:braf:melanoma
     input:
-      prompt: "What is the consequence of the V600E BRAF variant in Melanoma?"
+      prompt:
+        exact_spelling: "What is the consequence of the V600E BRAF variant in Melanoma?"
     expected:
       parts_of_query:
         [
@@ -443,6 +444,44 @@ api_calling:
           "hugoSymbol=BRAF",
           "alteration=V600E",
           "tumorType=Melanoma",
+        ]
+  - case: oncokb:tp53:colon_adenocarcinoma
+    input:
+      prompt:
+        exact_spelling: "What is the consequence of the R273C TP53 variant in Colon Adenocarcinoma?"
+    expected:
+      parts_of_query:
+        [
+          "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange?hugoSymbol=TP53",
+          "alteration=R273C",
+          "tumorType=Colon%20Adenocarcinoma",
+        ]
+  - case: oncokb:braf:histiocytosis
+    input:
+      prompt:
+        exact_spelling: "What is the consequence of the N486_P490del BRAF variant in Histiocytosis?"
+        descriptive_spelling: "What is the consequence of an N486_P490 deletion in BRAF in Histiocytosis?"
+    expected:
+      parts_of_query:
+        [
+          "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange?",
+          "hugoSymbol=BRAF",
+          "alteration=N486_P490del",
+          "tumorType=Histiocytosis",
+        ]
+  - case: oncokb:ros1:lung_adenocarcinoma
+    input:
+      prompt:
+        exact_spelling: "What is the consequence of the functional fusion of CD47 and ROS1 in Lung Adenocarcinoma?"
+    expected:
+      parts_of_query:
+        [
+          "https://demo.oncokb.org/api/v1/annotate/structuralVariants?",
+          "hugoSymbolA=CD74",
+          "hugoSymbolB=ROS1",
+          "structuralVariantType=FUSION",
+          "isFunctionalFusion=true",
+          "tumorType=Lung%20Adenocarcinoma",
         ]
 
 kg_schemas:
