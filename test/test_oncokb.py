@@ -8,7 +8,7 @@ from biochatter.api_agent.oncokb import (
     OncoKBQueryParameters,
     OncoKBQueryBuilder,
     OncoKBFetcher,
-    OncoKBInterpreter
+    OncoKBInterpreter,
 )
 from biochatter.api_agent.api_agent import APIAgent
 
@@ -23,12 +23,14 @@ def oncokb_api_agent():
         )
         conversation.set_api_key(os.getenv("OPENAI_API_KEY"), user="test")
         return conversation
+
     return APIAgent(
         conversation_factory=conversation_factory,
         query_builder=OncoKBQueryBuilder(),
         result_fetcher=OncoKBFetcher(),
         result_interpreter=OncoKBInterpreter(),
     )
+
 
 @pytest.mark.skip(reason="Live test for development purposes")
 def test_fetch_oncokb_results(oncokb_api_agent):

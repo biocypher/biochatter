@@ -108,88 +108,85 @@ Here is the information relevant to the question found on OncoKB:\n\
 {context}
 """
 
+
 class OncoKBQueryParameters(BaseModel):
     base_url: str = Field(
         default="https://demo.oncokb.org/api/v1",
-        description="Base URL for the OncoKB API. Default is the demo instance."
+        description="Base URL for the OncoKB API. Default is the demo instance.",
     )
     endpoint: str = Field(
         ...,
-        description="Specific API endpoint to hit. Example: 'annotate/mutations/byProteinChange'."
+        description="Specific API endpoint to hit. Example: 'annotate/mutations/byProteinChange'.",
     )
     referenceGenome: Optional[str] = Field(
         default="GRCh37",
-        description="Reference genome, either GRCh37 or GRCh38. The default is GRCh37."
+        description="Reference genome, either GRCh37 or GRCh38. The default is GRCh37.",
     )
     hugoSymbol: Optional[str] = Field(
         None,
-        description="The gene symbol used in Human Genome Organisation. Example: BRAF."
+        description="The gene symbol used in Human Genome Organisation. Example: BRAF.",
     )
     entrezGeneId: Optional[int] = Field(
         None,
-        description="The entrez gene ID. Higher priority than hugoSymbol. Example: 673."
+        description="The entrez gene ID. Higher priority than hugoSymbol. Example: 673.",
     )
     tumorType: Optional[str] = Field(
         None,
-        description="OncoTree(http://oncotree.info) tumor type name. The field supports OncoTree Code, OncoTree Name and OncoTree Main type. Example: Melanoma."
+        description="OncoTree(http://oncotree.info) tumor type name. The field supports OncoTree Code, OncoTree Name and OncoTree Main type. Example: Melanoma.",
     )
     alteration: Optional[str] = Field(
-        None,
-        description="Protein Change. Example: V600E."
+        None, description="Protein Change. Example: V600E."
     )
     consequence: Optional[str] = Field(
-        None,
-        description="Consequence. Example: missense_variant."
+        None, description="Consequence. Example: missense_variant."
     )
     proteinStart: Optional[int] = Field(
-        None,
-        description="Protein Start. Example: 600."
+        None, description="Protein Start. Example: 600."
     )
     proteinEnd: Optional[int] = Field(
-        None,
-        description="Protein End. Example: 600."
+        None, description="Protein End. Example: 600."
     )
     copyNameAlterationType: Optional[str] = Field(
         None,
-        description="Copy number alteration type. Available types: AMPLIFICATION, DELETION, GAIN, LOSS."
+        description="Copy number alteration type. Available types: AMPLIFICATION, DELETION, GAIN, LOSS.",
     )
     structuralVariantType: Optional[str] = Field(
         None,
-        description="Structural variant type. Available values: DELETION, TRANSLOCATION, DUPLICATION, INSERTION, INVERSION, FUSION, UNKNOWN."
+        description="Structural variant type. Available values: DELETION, TRANSLOCATION, DUPLICATION, INSERTION, INVERSION, FUSION, UNKNOWN.",
     )
     isFunctionalFusion: Optional[bool] = Field(
         default=False,
-        description="Whether it is a functional fusion. Default value: false."
+        description="Whether it is a functional fusion. Default value: false.",
     )
     hugoSymbolA: Optional[str] = Field(
         None,
-        description="The gene symbol A used in Human Genome Organisation. Example: ABL1."
+        description="The gene symbol A used in Human Genome Organisation. Example: ABL1.",
     )
     entrezGeneIdA: Optional[int] = Field(
         None,
-        description="The entrez gene ID A. Higher priority than hugoSymbolA. Example: 25."
+        description="The entrez gene ID A. Higher priority than hugoSymbolA. Example: 25.",
     )
     hugoSymbolB: Optional[str] = Field(
         None,
-        description="The gene symbol B used in Human Genome Organisation. Example: BCR."
+        description="The gene symbol B used in Human Genome Organisation. Example: BCR.",
     )
     entrezGeneIdB: Optional[int] = Field(
         None,
-        description="The entrez gene ID B. Higher priority than hugoSymbolB. Example: 613."
+        description="The entrez gene ID B. Higher priority than hugoSymbolB. Example: 613.",
     )
     genomicLocation: Optional[str] = Field(
         None,
-        description="Genomic location. Example: 7,140453136,140453136,A,T."
+        description="Genomic location. Example: 7,140453136,140453136,A,T.",
     )
     hgvsg: Optional[str] = Field(
-        None,
-        description="HGVS genomic format. Example: 7:g.140453136A>T."
+        None, description="HGVS genomic format. Example: 7:g.140453136A>T."
     )
     question_uuid: Optional[str] = Field(
         default_factory=lambda: str(uuid.uuid4()),
         description="Unique identifier for the question.",
     )
-    
+
+
 class OncoKBQueryBuilder(BaseQueryBuilder):
     """A class for building an OncoKBQuery object."""
 
@@ -246,8 +243,7 @@ class OncoKBQueryBuilder(BaseQueryBuilder):
         )
         oncokb_call_obj.question_uuid = str(uuid.uuid4())
         return oncokb_call_obj
-    
-    
+
 
 class OncoKBFetcher(BaseFetcher):
     """
@@ -255,10 +251,10 @@ class OncoKBFetcher(BaseFetcher):
     OncoKBQuery.
     """
 
-    def __init__(self, api_token= 'demo'):
+    def __init__(self, api_token="demo"):
         self.headers = {
             "Authorization": f"Bearer {api_token}",
-            "Accept": "application/json"
+            "Accept": "application/json",
         }
         self.base_url = "https://demo.oncokb.org/api/v1"
 
@@ -273,8 +269,8 @@ class OncoKBFetcher(BaseFetcher):
             str: The full URL for the submitted OncoKB query.
         """
         params = request_data.dict(exclude_unset=True)
-        endpoint = params.pop('endpoint')
-        params.pop('question_uuid')
+        endpoint = params.pop("endpoint")
+        params.pop("question_uuid")
         full_url = f"{self.base_url}/{endpoint}"
         print(full_url)
         response = requests.get(full_url, headers=self.headers, params=params)
@@ -293,19 +289,19 @@ class OncoKBFetcher(BaseFetcher):
         to a .oncokb file.
         """
         file_name = f"OncoKB_results_{question_uuid}.oncokb"
-        
+
         if not save_path.endswith("/"):
             save_path += "/"
-        
+
         response = requests.get(query_return, headers=self.headers)
         response.raise_for_status()
-        
+
         with open(f"{save_path}{file_name}", "w") as file:
             file.write(response.text)
-        
+
         print(f"Results saved in {file_name}")
         return file_name
-    
+
 
 class OncoKBInterpreter(BaseInterpreter):
     def summarise_results(
@@ -332,14 +328,19 @@ class OncoKBInterpreter(BaseInterpreter):
             [
                 (
                     "system",
-                    "You are a world class molecular biologist who knows everything about NCBI and BLAST results.",
+                    "You are a world class molecular biologist who knows "
+                    "everything about OncoKB and cancer genomics. Your task is "
+                    "to interpret results from OncoKB API calls and summarise "
+                    "them for the user.",
                 ),
                 ("user", "{input}"),
             ]
         )
 
         context = self.read_first_n_lines(file_path, n_lines)
-        summary_prompt = ONCOKB_SUMMARY_PROMPT.format(question=question, context=context)
+        summary_prompt = ONCOKB_SUMMARY_PROMPT.format(
+            question=question, context=context
+        )
         output_parser = StrOutputParser()
         conversation = conversation_factory()
         chain = prompt | conversation.chat | output_parser
