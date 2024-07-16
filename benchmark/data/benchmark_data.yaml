@@ -432,6 +432,19 @@ text_extraction:
           significance: "None"
           chemical: "None"
 
+api_calling:
+  - case: oncokb:braf
+    input:
+      prompt: "What is the consequence of the V600E BRAF variant in Melanoma?"
+    expected:
+      parts_of_query:
+        [
+          "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange?",
+          "hugoSymbol=BRAF",
+          "alteration=V600E",
+          "tumorType=Melanoma",
+        ]
+
 kg_schemas:
   gene_kg:
     cell type:

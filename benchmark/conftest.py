@@ -198,7 +198,7 @@ XINFERENCE_MODEL_NAMES = [
     for quantization in XINFERENCE_MODELS[model_name]["quantization"]
 ]
 
-BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
+BENCHMARKED_MODELS = OPENAI_MODEL_NAMES  # + XINFERENCE_MODEL_NAMES
 BENCHMARKED_MODELS.sort()
 
 # Xinference IP and port
@@ -208,13 +208,9 @@ BENCHMARK_URL = "http://localhost:9997"
 @pytest.fixture(scope="session")
 def client():
     try:
-        client = Client(base_url=BENCHMARK_URL)
+        return Client(base_url=BENCHMARK_URL)
     except requests.exceptions.ConnectionError:
-        raise ConnectionError(
-            f"Could not connect to Xinference server at {BENCHMARK_URL}. "
-            "Please make sure that the server is running."
-        )
-    return client
+        return None  # ignore if server is not running
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -223,6 +219,9 @@ def register_model(client):
     Register custom (non-builtin) models with the Xinference server. Should only
     happen once per session.
     """
+
+    if client is None:
+        return  # ignore if server is not running
 
     registrations = client.list_model_registrations(model_type="LLM")
     registered_models = [
@@ -478,6 +477,11 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize(
             "test_data_text_extraction",
             data_file["text_extraction"],
+        )
+    if "test_data_api_calling" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "test_data_api_calling",
+            data_file["api_calling"],
         )
 
 
