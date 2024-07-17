@@ -8,9 +8,12 @@ import requests
 
 from biochatter.llm_connect import GptConversation
 from biochatter.api_agent.blast import (
+    BLAST_SUMMARY_PROMPT,
     BlastFetcher,
     BlastQueryBuilder,
     BlastQueryParameters,
+    BlastInterpreter,
+    BLAST_QUERY_PROMPT,
 )
 from biochatter.api_agent.api_agent import APIAgent
 
@@ -25,8 +28,227 @@ def conversation_factory():
     return conversation
 
 
-@pytest.mark.skip(reason="Needs refactor (no online access should be needed)")
-class TestBlastQueryBuilder(unittest.TestCase):
+class TestBlastQueryBuilder:
+    @patch("biochatter.api_agent.blast.BlastQueryBuilder.create_runnable")
+    def test_create_runnable(self, mock_create_runnable):
+        # Arrange
+        mock_runnable = MagicMock()
+        mock_create_runnable.return_value = mock_runnable
+
+        query_parameters = BlastQueryParameters()
+        builder = BlastQueryBuilder()
+
+        # Act
+        result = builder.create_runnable(
+            query_parameters=query_parameters, llm=None
+        )
+
+        # Assert
+        mock_create_runnable.assert_called_once_with(
+            query_parameters=query_parameters,
+            llm=None,
+        )
+        assert result == mock_runnable
+
+    @patch("biochatter.api_agent.blast.BlastQueryBuilder.create_runnable")
+    @patch("biochatter.llm_connect.GptConversation")
+    def test_parameterise_query(self, mock_conversation, mock_create_runnable):
+        # Arrange
+        mock_runnable = MagicMock()
+        mock_create_runnable.return_value = mock_runnable
+
+        mock_blast_query_parameters = MagicMock()
+        mock_runnable.invoke.return_value = mock_blast_query_parameters
+
+        question = "What is the sequence of the gene?"
+        mock_conversation_instance = mock_conversation.return_value
+
+        builder = BlastQueryBuilder()
+
+        # Act
+        result = builder.parameterise_query(
+            question, mock_conversation_instance
+        )
+
+        # Assert
+        mock_create_runnable.assert_called_once_with(
+            query_parameters=BlastQueryParameters,
+            conversation=mock_conversation_instance,
+        )
+        mock_runnable.invoke.assert_called_once_with(
+            {"input": f"Answer:\n{question} based on:\n {BLAST_QUERY_PROMPT}"}
+        )
+        assert result == mock_blast_query_parameters
+        assert hasattr(result, "question_uuid")
+
+
+class TestBlastFetcher:
+    @patch("biochatter.api_agent.blast.BlastFetcher.submit_query")
+    def test_submit_query(self, mock_submit_query):
+        # Arrange
+        mock_response = MagicMock()
+        mock_submit_query.return_value = mock_response
+
+        query_parameters = BlastQueryParameters()
+        fetcher = BlastFetcher()
+
+        # Act
+        result = fetcher.submit_query(query_parameters)
+
+        # Assert
+        mock_submit_query.assert_called_once_with(query_parameters)
+        assert result == mock_response
+
+    @patch("biochatter.api_agent.blast.BlastFetcher.fetch_and_save_results")
+    def test_fetch_and_save_results(self, mock_fetch_and_save_results):
+        # Arrange
+        mock_response = MagicMock()
+        mock_fetch_and_save_results.return_value = mock_response
+
+        query_id = "test_query_id"
+        fetcher = BlastFetcher()
+
+        # Act
+        result = fetcher.fetch_and_save_results(query_id)
+
+        # Assert
+        mock_fetch_and_save_results.assert_called_once_with(query_id)
+        assert result == mock_response
+
+    @patch("requests.post")
+    def test_submit_query_value_error(self, mock_post):
+        # Arrange
+        mock_response = MagicMock()
+        mock_response.text = "No RID found in this response"
+        mock_response.raise_for_status = MagicMock()
+        mock_post.return_value = mock_response
+
+        query_parameters = BlastQueryParameters(
+            cmd="some_cmd",
+            program="some_program",
+            database="some_database",
+            query="some_query",
+            format_type="some_format",
+            megablast="some_megablast",
+            max_hits=10,
+            url="http://example.com/blast",
+        )
+        fetcher = BlastFetcher()
+
+        # Act & Assert
+        with pytest.raises(
+            ValueError, match="RID not found in BLAST submission response."
+        ):
+            fetcher.submit_query(query_parameters)
+
+
+@pytest.fixture
+def mock_conversation():
+    with patch("biochatter.llm_connect.GptConversation") as mock:
+        yield mock
+
+
+@pytest.fixture
+def mock_output_parser():
+    with patch("biochatter.api_agent.blast.StrOutputParser") as mock:
+        mock_parser = MagicMock()
+        mock.return_value = mock_parser
+        yield mock_parser
+
+
+@pytest.fixture
+def mock_chain(mock_conversation, mock_output_parser):
+    with patch(
+        "biochatter.api_agent.blast.ChatPromptTemplate.from_messages"
+    ) as mock_prompt:
+        mock_prompt_instance = MagicMock()
+        mock_prompt.return_value = mock_prompt_instance
+        mock_chain = (
+            mock_prompt_instance | mock_conversation.chat | mock_output_parser
+        )
+        yield mock_chain
+
+
+class TestBlastInterpreter:
+    @patch("builtins.open", new_callable=MagicMock)
+    def test_read_first_n_lines_file_not_found(self, mock_open):
+        # Arrange
+        mock_open.side_effect = FileNotFoundError
+        interpreter = BlastInterpreter()
+
+        # Act
+        result = interpreter.read_first_n_lines("non_existent_file.txt", 5)
+
+        # Assert
+        assert result == "The file was not found."
+
+    @patch("builtins.open", new_callable=MagicMock)
+    def test_read_first_n_lines_general_exception(self, mock_open):
+        # Arrange
+        mock_open.side_effect = Exception("Some error")
+        interpreter = BlastInterpreter()
+
+        # Act
+        result = interpreter.read_first_n_lines("some_file.txt", 5)
+
+        # Assert
+        assert result == "An error occurred: Some error"
+
+    @patch("builtins.open", new_callable=MagicMock)
+    def test_read_first_n_lines_success(self, mock_open):
+        # Arrange
+        mock_file = MagicMock()
+        mock_file.readline.side_effect = [
+            "line1\n",
+            "line2\n",
+            "line3\n",
+            "",
+            "",
+        ]
+        mock_open.return_value.__enter__.return_value = mock_file
+        interpreter = BlastInterpreter()
+
+        # Act
+        result = interpreter.read_first_n_lines("some_file.txt", 5)
+
+        # Assert
+        assert result == "line1\nline2\nline3"
+
+    def test_summarise_results(mock_prompt, mock_conversation, mock_chain):
+        # Arrange
+        interpreter = BlastInterpreter()
+        question = "What is the best hit?"
+        file_path = "test_blast_results.txt"
+        n_lines = 10
+        expected_context = "Mocked context from file"
+        expected_summary_prompt = BLAST_SUMMARY_PROMPT.format(
+            question=question, context=expected_context
+        )
+        expected_answer = "Mocked answer"
+
+        # Mock the methods and functions
+        interpreter.read_first_n_lines = MagicMock(
+            return_value=expected_context
+        )
+        mock_chain.invoke = MagicMock(return_value=expected_answer)
+
+        # Act
+        result = interpreter.summarise_results(
+            question, mock_conversation, file_path, n_lines
+        )
+
+        # Assert
+        assert result == expected_answer
+        interpreter.read_first_n_lines.assert_called_once_with(
+            file_path, n_lines
+        )
+        mock_chain.invoke.assert_called_once_with(
+            {"input": {expected_summary_prompt}}
+        )
+
+
+@pytest.mark.skip(reason="Non-mocked development test")
+class TestBlastQueryBuilderNoMock(unittest.TestCase):
     def setUp(self):
         self.builder = BlastQueryBuilder()
         conversation = conversation_factory()
@@ -76,7 +298,7 @@ class TestBlastQueryBuilder(unittest.TestCase):
 
 
 @pytest.mark.skip(reason="Needs refactor (no online access should be needed)")
-class TestBlastFetcher(unittest.TestCase):
+class TestBlastFetcherNoMock(unittest.TestCase):
     @patch("requests.get")
     @patch("builtins.open", new_callable=unittest.mock.mock_open)
     def test_fetch_and_save_blast_results(self, mock_open, mock_get):
@@ -214,6 +436,7 @@ from biochatter.api_agent.oncokb import (
     OncoKBQueryParameters,
 )
 
+
 def conversation_factory():
     conversation = GptConversation(
         model_name="gpt-4o",
@@ -239,14 +462,14 @@ class TestOncoKBQueryBuilder(unittest.TestCase):
 
     @patch("biochatter.api_agent.create_structured_output_runnable")
     def test_generate_oncokb_query(self, mock_create_runnable):
-        question = "What is the annotation for the mutation BRAF V600E in Melanoma?"
+        question = (
+            "What is the annotation for the mutation BRAF V600E in Melanoma?"
+        )
         mock_runnable = Mock()
         mock_create_runnable.return_value = mock_runnable
         mock_oncokb_call_obj = Mock()
         mock_runnable.invoke.return_value = mock_oncokb_call_obj
-        oncokb_query = self.builder.parameterise_query(
-            question, self.llm
-        )
+        oncokb_query = self.builder.parameterise_query(question, self.llm)
         print(oncokb_query.question_uuid)
 
     @patch("requests.get")
@@ -275,7 +498,9 @@ class TestOncoKBFetcher(unittest.TestCase):
     def test_fetch_and_save_oncokb_results(self, mock_open, mock_get):
         fetcher = OncoKBFetcher()
         question_uuid = str(uuid.uuid4())
-        oncokb_result_path = "docs/api_agent/oncokb_tool/oncokb_response/results"
+        oncokb_result_path = (
+            "docs/api_agent/oncokb_tool/oncokb_response/results"
+        )
         oncokb_query_return = "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange?hugoSymbol=BRAF&alteration=V600E&tumorType=Melanoma"
 
         mock_response = Mock()
@@ -333,7 +558,9 @@ class TestAPIAgent(unittest.TestCase):
     ):
         api_agent = APIAgent(conversation_factory=conversation_factory)
 
-        question = "What is the annotation for the mutation BRAF V600E in Melanoma?"
+        question = (
+            "What is the annotation for the mutation BRAF V600E in Melanoma?"
+        )
         mock_oncokb_query = Mock(spec=OncoKBQueryParameters)
         mock_oncokb_query_builder_instance = (
             mock_oncokb_query_builder.return_value
@@ -384,3 +611,4 @@ class TestAPIAgent(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+    pytest.main()
