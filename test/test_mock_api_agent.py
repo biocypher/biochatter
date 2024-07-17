@@ -297,7 +297,7 @@ class TestBlastQueryBuilderNoMock(unittest.TestCase):
         print(rid)
 
 
-@pytest.mark.skip(reason="Needs refactor (no online access should be needed)")
+@pytest.mark.skip(reason="Non-mocked development test")
 class TestBlastFetcherNoMock(unittest.TestCase):
     @patch("requests.get")
     @patch("builtins.open", new_callable=unittest.mock.mock_open)
@@ -363,7 +363,7 @@ class TestBlastFetcherNoMock(unittest.TestCase):
             mock_parser_instance.invoke.assert_called_once()
 
 
-@pytest.mark.skip(reason="Needs refactor (no online access should be needed)")
+@pytest.mark.skip(reason="Non-mocked development test")
 class TestAPIAgent(unittest.TestCase):
     """TO DO: add test for errors in the APIAgent class."""
 
@@ -447,7 +447,7 @@ def conversation_factory():
     return conversation
 
 
-@pytest.mark.skip(reason="Needs refactor (no online access should be needed)")
+@pytest.mark.skip(reason="Non-mocked development test")
 class TestOncoKBQueryBuilder(unittest.TestCase):
     def setUp(self):
         self.builder = OncoKBQueryBuilder()
@@ -491,7 +491,7 @@ class TestOncoKBQueryBuilder(unittest.TestCase):
         print(url)
 
 
-@pytest.mark.skip(reason="Needs refactor (no online access should be needed)")
+@pytest.mark.skip(reason="Non-mocked development test")
 class TestOncoKBFetcher(unittest.TestCase):
     @patch("requests.get")
     @patch("builtins.open", new_callable=unittest.mock.mock_open)
@@ -547,7 +547,7 @@ class TestOncoKBFetcher(unittest.TestCase):
             mock_parser_instance.invoke.assert_called_once()
 
 
-@pytest.mark.skip(reason="Needs refactor (no online access should be needed)")
+@pytest.mark.skip(reason="Non-mocked development test")
 class TestAPIAgent(unittest.TestCase):
     @patch("biochatter.api_agent.OncoKBQueryBuilder")
     @patch("biochatter.api_agent.OncoKBFetcher")
