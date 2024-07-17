@@ -17,6 +17,13 @@ from biochatter.api_agent.blast import (
 )
 from biochatter.api_agent.api_agent import APIAgent
 
+from biochatter.llm_connect import GptConversation
+from biochatter.api_agent.oncokb import (
+    OncoKBFetcher,
+    OncoKBQueryBuilder,
+    OncoKBQueryParameters,
+)
+
 
 def conversation_factory():
     conversation = GptConversation(
@@ -427,24 +434,6 @@ class TestAPIAgent(unittest.TestCase):
         mock_blast_fetcher_instance.answer_extraction.assert_called_once_with(
             question, ".blast/mock_file.txt", 100
         )
-
-
-from biochatter.llm_connect import GptConversation
-from biochatter.api_agent.oncokb import (
-    OncoKBFetcher,
-    OncoKBQueryBuilder,
-    OncoKBQueryParameters,
-)
-
-
-def conversation_factory():
-    conversation = GptConversation(
-        model_name="gpt-4o",
-        correct=False,
-        prompts={},
-    )
-    conversation.set_api_key(os.getenv("OPENAI_API_KEY"), user="test")
-    return conversation
 
 
 @pytest.mark.skip(reason="Non-mocked development test")
