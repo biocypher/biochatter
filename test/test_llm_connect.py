@@ -12,9 +12,9 @@ from biochatter.llm_connect import (
     SystemMessage,
     GptConversation,
     WasmConversation,
+    OllamaConversation,
     AzureGptConversation,
     XinferenceConversation,
-    OllamaConversation,
 )
 
 

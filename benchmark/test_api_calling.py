@@ -3,10 +3,7 @@ import inspect
 import pytest
 
 from biochatter._misc import ensure_iterable
-from biochatter.api_agent.oncokb import (
-    OncoKBQueryBuilder,
-    OncoKBFetcher,
-)
+from biochatter.api_agent.oncokb import OncoKBFetcher, OncoKBQueryBuilder
 from .conftest import calculate_bool_vector_score
 from .benchmark_utils import (
     skip_if_already_run,

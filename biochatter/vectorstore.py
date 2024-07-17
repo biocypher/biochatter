@@ -2,9 +2,12 @@ from typing import Optional
 
 from transformers import GPT2TokenizerFast
 from langchain.schema import Document
-from langchain_community.embeddings import XinferenceEmbeddings, OllamaEmbeddings
-from langchain_community.vectorstores import Milvus
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.embeddings import (
+    OllamaEmbeddings,
+    XinferenceEmbeddings,
+)
+from langchain_community.vectorstores import Milvus
 from langchain_community.document_loaders import TextLoader
 from langchain_community.embeddings.openai import OpenAIEmbeddings
 from langchain_community.embeddings.azure_openai import AzureOpenAIEmbeddings
@@ -34,7 +37,9 @@ class DocumentEmbedder:
         azure_deployment: Optional[str] = None,
         azure_endpoint: Optional[str] = None,
         base_url: Optional[str] = None,
-        embeddings: Optional[OpenAIEmbeddings | XinferenceEmbeddings | OllamaEmbeddings] = None,
+        embeddings: Optional[
+            OpenAIEmbeddings | XinferenceEmbeddings | OllamaEmbeddings
+        ] = None,
         documentids_workspace: Optional[list[str]] = None,
     ) -> None:
         """
@@ -444,7 +449,9 @@ class OllamaDocumentEmbedder(DocumentEmbedder):
             metadata_collection_name=metadata_collection_name,
             api_key=api_key,
             base_url=base_url,
-            embeddings=OllamaEmbeddings(base_url=base_url, model=self.model_name),
+            embeddings=OllamaEmbeddings(
+                base_url=base_url, model=self.model_name
+            ),
             documentids_workspace=documentids_workspace,
         )
 

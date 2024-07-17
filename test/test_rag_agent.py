@@ -1,11 +1,12 @@
 from unittest.mock import MagicMock, patch
-import json
 import os
+import json
+
 import pytest
 
 from biochatter.rag_agent import RagAgent, RagAgentModeEnum
-from biochatter.vectorstore_agent import Document
 from biochatter.llm_connect import GptConversation
+from biochatter.vectorstore_agent import Document
 
 
 def conversation_factory():

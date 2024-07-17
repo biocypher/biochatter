@@ -17,14 +17,14 @@ import base64
 import logging
 import urllib.parse
 
+from xinference.client import Client
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_community.chat_models import (
+    ChatOllama,
     ChatOpenAI,
     AzureChatOpenAI,
-    ChatOllama,
 )
 from langchain_community.llms.huggingface_hub import HuggingFaceHub
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
-from xinference.client import Client
 import nltk
 import openai
 

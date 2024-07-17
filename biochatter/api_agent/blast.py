@@ -40,7 +40,8 @@ BLAST_SUMMARY_PROMPT = """
         Based on the information given here:\n\
         {context}
         """
-        
+
+
 class BlastQueryParameters(BaseModel):
     """
 
@@ -314,7 +315,9 @@ class BlastInterpreter(BaseInterpreter):
         )
 
         context = self.read_first_n_lines(file_path, n_lines)
-        summary_prompt = BLAST_SUMMARY_PROMPT.format(question=question, context=context)
+        summary_prompt = BLAST_SUMMARY_PROMPT.format(
+            question=question, context=context
+        )
         output_parser = StrOutputParser()
         conversation = conversation_factory()
         chain = prompt | conversation.chat | output_parser

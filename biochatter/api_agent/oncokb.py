@@ -12,14 +12,14 @@ from langchain.chains.openai_functions import create_structured_output_runnable
 import requests
 
 from biochatter.llm_connect import Conversation
-from .abc import BaseQueryBuilder, BaseFetcher, BaseInterpreter
+from .abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
 
 ONCOKB_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats. Your task is to use OncoKB Web APIs to answer genomic questions.
 
 For questions about genomic alterations, you can use the OncoKB API by providing the appropriate parameters based on the type of query.
 
-You have to extract the appropriate information out of the 
+You have to extract the appropriate information out of the
 Examples:
 1. To annotate mutations by protein change, use the endpoint /annotate/mutations/byProteinChange with parameters like hugoSymbol, alteration, tumorType, etc.
 2. To annotate copy number alterations, use the endpoint /annotate/copyNumberAlterations with parameters like hugoSymbol, copyNameAlterationType, tumorType, etc.

@@ -5,10 +5,10 @@ import pytest
 
 from biochatter.llm_connect import GptConversation
 from biochatter.api_agent.oncokb import (
-    OncoKBQueryParameters,
-    OncoKBQueryBuilder,
     OncoKBFetcher,
     OncoKBInterpreter,
+    OncoKBQueryBuilder,
+    OncoKBQueryParameters,
 )
 from biochatter.api_agent.api_agent import APIAgent
 
