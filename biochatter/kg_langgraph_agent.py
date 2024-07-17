@@ -33,6 +33,9 @@ SEARCH_QUERIES = "search_queries"
 SEARCH_QUERIES_DESCRIPTION = "query for graph database"
 REVISED_QUERY = "revised_query"
 REVISED_QUERY_DESCRIPTION = "Revised query"
+SCORE_DESCRIPTION = ("the score for the query based on its query result" 
+                     " and relevance to the user's question,"
+                     " with 0 representing the lowest score and 10 representing the highest score.")
 
 class GenerateQuery(BaseModel):
     """Generate the query."""
@@ -46,6 +49,9 @@ class ReviseQuery(GenerateQuery):
     """Revise your previous query according to your question."""
     revised_query: str = Field(
         description=REVISED_QUERY_DESCRIPTION
+    )
+    score: str = Field(
+        description=SCORE_DESCRIPTION
     )
 
 class KGQueryReflexionAgent(ReflexionAgent):
@@ -203,11 +209,27 @@ Revise you previous query using the query result and follow the guidelines:
             return len(results["result"]) if not empty else 0
         
         return 0
+    
+    def _get_last_score(self, state: List[BaseMessage]) -> int | None:
+        for m in state[::-1]:
+            if not isinstance(m, AIMessage):
+                continue
+            message: AIMessage = m
+            parsed_msg = self.parser.invoke(message)
+            try:
+                score = parsed_msg[0]['args']['score']
+                return int(score)
+            except Exception:
+                return None
+        return None
 
     def _should_continue(self, state: List[BaseMessage]):
         res = super()._should_continue(state)
         if res == END:
             return res
+        score = self._get_last_score(state)
+        if not score is None and score >= 7:
+            return END
         query_results_num = KGQueryReflexionAgent._get_last_tool_results_num(state)
         return (END if query_results_num > 0 
                 else EXECUTE_TOOL_NODE)
