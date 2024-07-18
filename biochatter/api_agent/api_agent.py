@@ -1,6 +1,5 @@
 from typing import Optional
 from collections.abc import Callable
-import os
 
 from pydantic import BaseModel
 
@@ -85,14 +84,14 @@ class APIAgent:
         retry logic to fetch results.
         """
         try:
-            return self.result_fetcher.fetch_and_return_result(
-                question_uuid, rid, 100
-            )
+            return self.result_fetcher.fetch_results(question_uuid, rid, 100)
         except Exception as e:
             print(f"Error fetching results: {e}")
             return None
 
-    def summarise_results(self, question: str, response_text: str) -> Optional[str]:
+    def summarise_results(
+        self, question: str, response_text: str
+    ) -> Optional[str]:
         """
         Summarise the retrieved results to extract the answer to the question.
         """
@@ -147,6 +146,6 @@ class APIAgent:
                 raise ValueError("Failed to extract answer from results.")
         except ValueError as e:
             print(e)
-        
+
         self.final_answer = final_answer
         return final_answer

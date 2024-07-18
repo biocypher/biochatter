@@ -1,10 +1,7 @@
 from unittest.mock import Mock, MagicMock, patch
 import os
-import uuid
-import unittest
 
 import pytest
-import requests
 
 from biochatter.llm_connect import GptConversation
 from biochatter.api_agent.blast import (
@@ -36,6 +33,33 @@ def conversation_factory():
     )
     conversation.set_api_key(os.getenv("OPENAI_API_KEY"), user="test")
     return conversation
+
+
+class TestAPIAgent:
+    @patch("biochatter.api_agent.api_agent.query_builder.parameterise_query")
+    def test_parameterise_query(self, mock_parameterise):
+        pass
+
+    @patch("biochatter.api_agent.api_agent.result_fetcher.submit_query")
+    def submit_query(self, mock_submit):
+        pass
+
+    @patch("biochatter.api_agent.api_agent.result_fetcher.fetch_results")
+    def fetch_results(self, mock_fetch):
+        pass
+
+    @patch("biochatter.api_agent.api_agent.interpreter.summarise_results")
+    def summarise_results(self, mock_summarise):
+        pass
+
+    @patch("biochatter.api_agent.api_agent.query_builder.parameterise_query")
+    @patch("biochatter.api_agent.api_agent.result_fetcher.submit_query")
+    @patch("biochatter.api_agent.api_agent.result_fetcher.fetch_results")
+    @patch("biochatter.api_agent.api_agent.interpreter.summarise_results")
+    def execute(
+        self, mock_parameterise, mock_submit, mock_fetch, mock_summarise
+    ):
+        pass
 
 
 class TestBlastQueryBuilder:
@@ -119,7 +143,7 @@ class TestBlastFetcher:
         fetcher = BlastFetcher()
 
         # Act
-        result = fetcher.fetch_and_return_result(query_id)
+        result = fetcher.fetch_results(query_id)
 
         # Assert
         mock_fetch_and_return_result.assert_called_once_with(query_id)
@@ -180,7 +204,7 @@ def mock_chain(mock_conversation, mock_output_parser):
 
 
 class TestBlastInterpreter:
-    ###FIX THIS TEST 
+    ###FIX THIS TEST
     def test_summarise_results(mock_prompt, mock_conversation, mock_chain):
         # Arrange
         interpreter = BlastInterpreter()
@@ -192,7 +216,7 @@ class TestBlastInterpreter:
         expected_answer = "Mocked answer"
         # Mock the methods and functions
         mock_chain.invoke = MagicMock(return_value=expected_answer)
-        
+
         # Act
         result = interpreter.summarise_results(
             question, mock_conversation, expected_context
@@ -203,6 +227,7 @@ class TestBlastInterpreter:
         mock_chain.invoke.assert_called_once_with(
             {"input": {expected_summary_prompt}}
         )
+
 
 class TestOncoKBQueryBuilder:
     @patch("biochatter.api_agent.oncokb.OncoKBQueryBuilder.create_runnable")
@@ -291,7 +316,7 @@ class TestOncoKBFetcher:
         fetcher = OncoKBFetcher()
 
         # Act
-        result = fetcher.fetch_and_return_result(query_id)
+        result = fetcher.fetch_results(query_id)
 
         # Assert
         mock_fetch_and_return_result.assert_called_once_with(query_id)

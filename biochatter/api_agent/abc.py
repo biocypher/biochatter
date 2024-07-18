@@ -95,7 +95,7 @@ class BaseFetcher(ABC):
         pass
 
     @abstractmethod
-    def fetch_and_return_result(
+    def fetch_results(
         self,
         question_uuid,
         query_return,

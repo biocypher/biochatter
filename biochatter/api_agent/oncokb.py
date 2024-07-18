@@ -278,7 +278,7 @@ class OncoKBFetcher(BaseFetcher):
         print(response.url)
         return response.url
 
-    def fetch_and_return_result(
+    def fetch_results(
         self,
         question_uuid: uuid,
         query_return: str,

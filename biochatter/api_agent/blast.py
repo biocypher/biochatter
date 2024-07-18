@@ -208,7 +208,7 @@ class BlastFetcher(BaseFetcher):
         else:
             raise ValueError("RID not found in BLAST submission response.")
 
-    def fetch_and_return_result(
+    def fetch_results(
         self,
         question_uuid: uuid,
         query_return: str,
