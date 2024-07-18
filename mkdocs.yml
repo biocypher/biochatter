@@ -52,6 +52,7 @@ nav:
       - Basic Usage - Chat: chat.md
       - Connecting Knowledge Graphs: kgs.md
       - Retrieval-Augmented Generation: rag.md
+      - API Calling: api.md
       - Open-source and Local LLMs: open-llm.md
       - LLM in your Browser - WebAssembly: wasm.md
       - Benchmarking: benchmarking.md
