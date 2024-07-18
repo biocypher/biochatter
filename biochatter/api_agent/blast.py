@@ -245,13 +245,9 @@ class BlastFetcher(BaseFetcher):
                 print(f"{question_uuid} results not ready, waiting...")
                 time.sleep(15)
             elif "Status=FAILED" in status_text:
-                with open(f"{save_path}{file_name}", "w") as file:
-                    file.write("BLAST query FAILED.")
-                break
+                raise RuntimeError("BLAST query FAILED.")
             elif "Status=UNKNOWN" in status_text:
-                with open(f"{save_path}{file_name}", "w") as file:
-                    file.write("BLAST query expired or does not exist.")
-                raise
+                raise RuntimeError("BLAST query expired or does not exist.")
             elif "Status=READY" in status_text:
                 if "ThereAreHits=yes" in status_text:
                     print(
