@@ -121,7 +121,8 @@ class TestAPIAgent:
         assert result == "mock_summary"
 
     def test_execute(self, test_agent):
-        pass
+        result = test_agent.execute("mock_question")
+        assert result == "mock_summary"
 
 
 class TestBlastQueryBuilder:

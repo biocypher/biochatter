@@ -278,6 +278,8 @@ class OncoKBFetcher(BaseFetcher):
         print(response.url)
         return response.url
 
+    # TODO refactor into one step
+
     def fetch_results(
         self,
         question_uuid: uuid,

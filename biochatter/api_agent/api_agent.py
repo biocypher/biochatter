@@ -68,25 +68,16 @@ class APIAgent:
             print(f"Error generating query: {e}")
             return None
 
-    def submit_query(self, api_fields: BaseModel) -> Optional[str]:
+    def fetch_results(self, query_model: str) -> Optional[str]:
         """
-        Submit the generated query to the API and return the RID.
-        """
-        try:
-            return self.fetcher.submit_query(api_fields)
-        except Exception as e:
-            print(f"Error submitting query: {e}")
-            return None
+        Fetch the results of the query using the individual API's implementation
+        (either single-step or submit-retrieve).
 
-    def fetch_results(
-        self, question_uuid: str, query_return: str
-    ) -> Optional[str]:
-        """
-        Fetch the results of the query using the RID and save them. Implements
-        retry logic to fetch results.
+        Args:
+            query_model: the parameterised query Pydantic model
         """
         try:
-            return self.fetcher.fetch_results(question_uuid, query_return, 100)
+            return self.fetcher.fetch_results(query_model, 100)
         except Exception as e:
             print(f"Error fetching results: {e}")
             return None
@@ -119,25 +110,17 @@ class APIAgent:
         """
         # Generate query
         try:
-            query = self.parameterise_query(question)
-            if not query:
+            query_model = self.parameterise_query(question)
+            if not query_model:
                 raise ValueError("Failed to generate query.")
         except ValueError as e:
             print(e)
 
-        # Submit query and get RID
-        try:
-            rid = self.submit_query(query)
-            if not rid:
-                raise ValueError("Failed to submit query.")
-        except ValueError as e:
-            print(e)
-
-        print(f"Received RID: {rid}")
-
         # Fetch results
         try:
-            response_text = self.fetch_results(query.question_uuid, rid)
+            response_text = self.fetch_results(
+                query_model=query_model,
+            )
             if not response_text:
                 raise ValueError("Failed to fetch results.")
         except ValueError as e:

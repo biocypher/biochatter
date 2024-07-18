@@ -169,7 +169,7 @@ class BlastFetcher(BaseFetcher):
     TODO add a limit of characters to be returned from the response.text?
     """
 
-    def submit_query(self, request_data: BlastQueryParameters) -> str:
+    def _submit_query(self, request_data: BlastQueryParameters) -> str:
         """Function to POST the BLAST query and retrieve RID.
         It submits the structured BlastQuery obj and return the RID.
 
@@ -208,11 +208,11 @@ class BlastFetcher(BaseFetcher):
         else:
             raise ValueError("RID not found in BLAST submission response.")
 
-    def fetch_results(
+    def _fetch_results(
         self,
-        question_uuid: uuid,
-        query_return: str,
-        max_attempts: int = 10000,
+        rid: str,
+        question_uuid: str,
+        retries: int = 10000,
     ):
         """SECOND function to be called for a BLAST query.
         Will look for the RID to fetch the data
@@ -225,16 +225,16 @@ class BlastFetcher(BaseFetcher):
         check_status_params = {
             "CMD": "Get",
             "FORMAT_OBJECT": "SearchInfo",
-            "RID": query_return,
+            "RID": rid,
         }
         get_results_params = {
             "CMD": "Get",
             "FORMAT_TYPE": "XML",
-            "RID": query_return,
+            "RID": rid,
         }
 
         # Check the status of the BLAST job
-        for attempt in range(max_attempts):
+        for attempt in range(retries):
             status_response = requests.get(base_url, params=check_status_params)
             status_response.raise_for_status()
             status_text = status_response.text
@@ -248,9 +248,7 @@ class BlastFetcher(BaseFetcher):
                 raise RuntimeError("BLAST query expired or does not exist.")
             elif "Status=READY" in status_text:
                 if "ThereAreHits=yes" in status_text:
-                    print(
-                        f"{question_uuid} results are ready, retrieving and saving..."
-                    )
+                    print(f"{question_uuid} results are ready, retrieving.")
                     results_response = requests.get(
                         base_url, params=get_results_params
                     )
@@ -259,10 +257,32 @@ class BlastFetcher(BaseFetcher):
                     return results_response.text
                 else:
                     return "No hits found"
-        if attempt == max_attempts - 1:
+        if attempt == retries - 1:
             raise TimeoutError(
                 "Maximum attempts reached. Results may not be ready."
             )
+
+    def fetch_results(
+        self, query_model: BlastQueryParameters, retries: int = 10000
+    ) -> str:
+        """
+        Submit request and fetch results from BLAST API. Wraps individual
+        submission and retrieval of results.
+
+        Args:
+            query_model: the Pydantic model of the query
+
+            retries: the number of maximum retries
+
+        Returns:
+            str: the result from the BLAST API
+        """
+        rid = self._submit_query(request_data=query_model)
+        return self._fetch_results(
+            rid=rid,
+            question_uuid=query_model.question_uuid,
+            retries=retries,
+        )
 
 
 class BlastInterpreter(BaseInterpreter):

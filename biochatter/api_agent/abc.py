@@ -84,25 +84,24 @@ class BaseFetcher(ABC):
     """
     Abstract base class for fetchers. A fetcher is responsible for submitting
     queries (in systems where submission and fetching are separate) and fetching
-    and saving results of queries.
+    and saving results of queries. It has to implement a `fetch_results()`
+    method, which can wrap a multi-step procedure to submit and retrieve. Should
+    implement retry method to account for connectivity issues or processing
+    times.
     """
-
-    @abstractmethod
-    def submit_query(self, request_data):
-        """
-        Submits a query and retrieves an identifier.
-        """
-        pass
 
     @abstractmethod
     def fetch_results(
         self,
-        question_uuid,
-        query_return,
-        max_attempts=10000,
+        query_model,
     ):
         """
-        Fetches and saves the results of a query.
+        Fetches results by submitting a query. Can implement a multi-step
+        procedure if submitting and fetching are distinct processes (e.g., in
+        the case of long processing times as in the case of BLAST).
+
+        Args:
+            query_model: the Pydantic model describing the parameterised query
         """
         pass
 
