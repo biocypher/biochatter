@@ -78,13 +78,17 @@ class APIAgent:
             print(f"Error submitting query: {e}")
             return None
 
-    def fetch_results(self, question_uuid: str, rid: str) -> Optional[str]:
+    def fetch_results(
+        self, question_uuid: str, query_return: str
+    ) -> Optional[str]:
         """
         Fetch the results of the query using the RID and save them. Implements
         retry logic to fetch results.
         """
         try:
-            return self.result_fetcher.fetch_results(question_uuid, rid, 100)
+            return self.result_fetcher.fetch_results(
+                question_uuid, query_return, 100
+            )
         except Exception as e:
             print(f"Error fetching results: {e}")
             return None
