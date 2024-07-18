@@ -2,10 +2,9 @@ import inspect
 from urllib.parse import urlencode
 
 import pytest
-from unittest.mock import Mock, patch
 
 from biochatter._misc import ensure_iterable
-from biochatter.api_agent.oncokb import OncoKBFetcher, OncoKBQueryBuilder
+from biochatter.api_agent.oncokb import OncoKBQueryBuilder
 from .conftest import calculate_bool_vector_score
 from .benchmark_utils import (
     skip_if_already_run,
