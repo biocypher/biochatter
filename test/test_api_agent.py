@@ -114,7 +114,8 @@ class TestAPIAgent:
         assert result == "mock_url"
 
     def test_fetch_results(self, test_agent):
-        pass
+        result = test_agent.fetch_results("mock_uid", "mock_query_result")
+        assert result == "mock_results"
 
     def test_summarise_results(self, test_agent):
         pass
