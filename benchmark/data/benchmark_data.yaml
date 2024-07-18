@@ -216,6 +216,2780 @@ rag_interpretation:
     expected:
       behaviour: "answer"
 
+###########################################################################################################
+# PDSM Test Cases
+###########################################################################################################
+
+medical_exam:
+  ###########################################################################################################
+  # Test case: Student preparing for the Physikum for medical studies
+  # Language: English
+  ###########################################################################################################
+
+  # Math relevant questions
+
+  - case: single_answer:math:en
+    input:
+      prompt: A hollow organ of a patient contains 0.5 kg of liquid whose (mass) density is approximately the same as that of water. What is the approximate volume of this hollow organ? (A) 500 mm3 (B) 500 cm3 (C) 0,05 m3 (D) 0,5 m3 (E) 50 m3
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it concisely by answering only the correct letter of the question in lower case. Remember to use only one lower-case letter and not the whole right answer",
+        ]
+    expected:
+      answer: "b"
+
+  - case: single_answer:math:en
+    input:
+      prompt: In a car accident, an occupant weighing 75 kg is restrained by the tight-fitting seat belt, whereby a belt force limiter limits the force acting on the occupant to a maximum of 5,000 N. The acceleration acting on the occupant is thus limited (in terms of amount) to approx. (A) 0.067 m/s2 (B) 15 m/s2 (C) 33 m/s2 (D) 67 m/s2 (E) 375 m/s2
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it concisely by answering only the correct letter of the question in lower case. Remember to use only one lower-case letter and not the whole right answer",
+        ]
+    expected:
+      answer: "d"
+
+  - case: single_answer:math:en
+    input:
+      prompt: Medical oxygen is supplied in pressurised gas cylinders with an internal pressure of usually 200 bar. Manufacturers state that these cylinders should not be heated to over 50 °C and must be stored in a protected environment. By approximately what percentage does this internal pressure increase when such a pressurised gas cylinder is heated from 30 °C to 90 °C? (A) 3 % (B) 20 % (C) 40 % (D) 60 % (E) 300 %
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it concisely by answering only the correct letter of the question in lower case. Remember to use only one lower-case letter and not the whole right answer",
+        ]
+    expected:
+      answer: "b"
+
+  # Biochemistry
+
+  - case: single_choice:biochemistry:en
+    input:
+      prompt: A 14-year-old boy from the Mediterranean region has suddenly developed a life-threatening haemolytic crisis (massive breakdown/degradation of red blood cells). When talking to the parents, it turns out that the boy has received high doses of a painkiller, which also has an oxidising effect. The boy is found to have a genetic deficiency of a certain enzyme. A deficiency in which of the following enzymes best fits this description? (A) Fructokinase (B) Glucokinase (C)  Glucose-6-phosphate dehydrogenase (D) pyruvate carboxylase (E) Pyruvate dehydrogenase
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it concisely by answering only the correct letter of the question in lower case. Remember to use only one lower-case letter and not the whole right answer",
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice:biochemistry:en
+    input:
+      prompt: Hepatocytes near the central vein in the hepatic acinus efficiently prevent the escape of ammonium ions from the liver. Which enzyme in these cells is primarily responsible for removing the remaining ammonium ions from the blood that have escaped the other hepatocytes of the hepatic acinus? (A) arginase (B) Carbamoyl phosphate synthetase 1 (C) Carbamoyl phosphate synthetase 2 (D) Glutaminase (E) Glutamine synthetase
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it concisely by answering only the correct letter of the question in lower case. Remember to use only one lower-case letter and not the whole right answer",
+        ]
+    expected:
+      answer: "e"
+
+  - case: single_choice:biochemistry:en
+    input:
+      prompt: Proteins can be modified post-translationally by ubiquitin. Ubiquitin is a (A) diterpene (B) monosaccharide (C) Oligonucleotide (D) polypeptide (E) triacylglycerol
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it concisely by answering only the correct letter of the question in lower case. Remember to use only one lower-case letter and not the whole right answer",
+        ]
+    expected:
+      answer: "d"
+
+  - case: dichotomous:biochemistry:en
+    input:
+      prompt: Is this true? The tendency to thrombosis (thrombophilia) is in many cases genetically determined. Missense mutations in the gene for factor V can be the cause of familial thrombophilia. Due to such mutations, the activated factor V (Va) is less efficiently inactivated by an activated protein C and is therefore particularly stable.
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'",
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous:biochemistry:en
+    input:
+      prompt: Is this true? The tendency to thrombosis (thrombophilia) is in many cases genetically determined. Missense mutations in the gene for factor V can be the cause of familial thrombophilia. Due to such mutations, the activated factor V (Va) is less efficiently inactivated by an activated thrombomobilin and is therefore particularly stable.
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'",
+        ]
+    expected:
+      answer: "no"
+
+  # physiology
+
+  - case: single_choice:physiology:en
+    input:
+      prompt: Which of these cells is most likely to release interleukin-2 after activation? B lymphocyte eosinophil granulocyte (C) mast cell (D) neutrophil granulocyte (E) T helper cell type 1 (TH1 cell)
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it concisely by answering only the correct letter of the question in lower case. Remember to use only one lower-case letter and not the whole right answer",
+        ]
+    expected:
+      answer: "e"
+
+  - case: single_choice:physiology:en
+    input:
+      prompt: Immunoglobulins (Ig) are categorised into different classes. Which statement about the structure or occurrence of the Ig classes is generally correct? (A) The affiliation to the Ig class depends mainly on the structure of the light chain of an Ig. (B) The secreted Ig of all Ig classes are monomeric molecules.(C) IgG is the predominant Ig in oral saliva. (D) IgM is the predominant Ig in blood serum. (E) Mature, naive B lymphocytes have membrane-bound IgM and IgD.
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it concisely by answering only the correct letter of the question in lower case. Remember to use only one lower-case letter and not the whole right answer",
+        ]
+    expected:
+      answer: "e"
+
+  - case: dichotomous:physiology:en
+    input:
+      prompt: Is the apparent viscosity of the blood with a normal haematocrit (and under otherwise identical conditions) typically lower with a vessel diameter of around 8 μm than with a vessel diameter of 4 μm?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'",
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous:physiology:en
+    input:
+      prompt: Is the apparent (apparente) viscosity of the blood with normal haematocrit (and under otherwise identical conditions) always lower in large vessels than in small vessels?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'",
+        ]
+    expected:
+      answer: "no"
+
+  - case: one_word:physiology:en
+    input:
+      prompt: Which temporal assignment of the ECG section to the states of the heart valves is generally correct when the AV valves are open and the pocket valves are closed? Is it the p-wave or the tp-intervall?
+      system_messages: ["Answer the following question with just one word"]
+    expected:
+      answer: "p-wave"
+
+  # anatomy
+
+  - case: single_choice:anatomy:en
+    input:
+      prompt: Which of these muscles is primarily involved in the internal rotation of the humerus in the shoulder joint? (A) M. infraspinatus (B) M. pectoralis minor (C) M. subscapularis (D) M. supraspinatus (E) M. teres minor
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it concisely by answering only the correct letter of the question in lower case. Remember to use only one lower-case letter and not the whole right answer",
+        ]
+    expected:
+      answer: "c"
+
+  ###########################################################################################################
+  # Test case: Student preparing for the Physikum for medical studies
+  # Language: German
+  ###########################################################################################################
+
+  # Math relevant questions
+
+  - case: single_choice:math:de
+    input:
+      prompt: Ein Hohlorgan eines Patienten enthält 0,5 kg einer Flüssigkeit, deren (Massen-)Dichte ungefähr der von Wasser entspricht. Wie groß ist das ungefähre Volumen dieses Hohlorgans? (A) 500 mm3 (B) 500 cm3 (C) 0,05 m3 (D) 0,5 m3 (E) 50 m3
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.",
+        ]
+    expected:
+      answer: "b"
+
+  - case: single_choice:math:de
+    input:
+      prompt: Bei einem Autounfall wird ein 75 kg schwerer Insasse durch den eng anliegenden Sicherheitsgurt zurückgehalten, wobei ein Gurtkraftbegrenzer die auf den Insassen wirkende Kraft auf maximal 5.000 N begrenzt. Die auf den Insassen wirkende Beschleunigung ist damit (betragsmäßig) auf ca. (A) 0,067 m/s2 (B) 15 m/s2 (C) 33 m/s2 (D) 67 m/s2 (E) 375 m/s2 begrenzt.
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.",
+        ]
+    expected:
+      answer: "d"
+
+  - case: single_choice:math:en
+    input:
+      prompt: Medizinischer Sauerstoff wird in Druckgasflaschen mit einem Innendruck von normalerweise 200 bar geliefert. Die Hersteller geben an, dass diese Flaschen nicht auf über 50 °C erhitzt werden dürfen und in einer geschützten Umgebung gelagert werden müssen. Um wie viel Prozent erhöht sich dieser Innendruck ungefähr, wenn eine solche Druckgasflasche von 30 °C auf 90 °C erhitzt wird? (A) 3 % (B) 20 % (C) 40 % (D) 60 % (E) 300 %
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.",
+        ]
+    expected:
+      answer: "b"
+
+  # Biochemistry
+
+  - case: single_choice:biochemistry:de
+    input:
+      prompt: Ein 14-jähriger Junge aus dem Mittelmeerraum hat plötzlich eine lebensbedrohliche hämolytische Krise (massiver Abbau von roten Blutkörperchen) entwickelt. Im Gespräch mit den Eltern stellt sich heraus, dass der Junge hohe Dosen eines Schmerzmittels erhalten hat, das auch eine oxidierende Wirkung hat. Es wird festgestellt, dass der Junge einen genetischen Mangel an einem bestimmten Enzym hat. Welcher Mangel an welchem der folgenden Enzyme passt am besten zu dieser Beschreibung? (A) Fructokinase (B) Glucokinase (C) Glucose-6-phosphat-Dehydrogenase (D) Pyruvat-Carboxylase (E) Pyruvat-Dehydrogenase
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.",
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice:biochemistry:de
+    input:
+      prompt: Hepatozyten in der Nähe der Zentralvene im Leberazinus verhindern wirksam das Entweichen von Ammoniumionen aus der Leber. Welches Enzym in diesen Zellen ist in erster Linie für die Entfernung der verbleibenden Ammoniumionen aus dem Blut verantwortlich, die den anderen Hepatozyten des hepatischen Acinus entkommen sind? (A) Arginase (B) Carbamoylphosphat-Synthetase 1 (C) Carbamoylphosphat-Synthetase 2 (D) Glutaminase (E) Glutamin-Synthetase
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.",
+        ]
+    expected:
+      answer: "e"
+
+  - case: single_choice:biochemistry:de
+    input:
+      prompt: Proteine können posttranslational durch Ubiquitin modifiziert werden. Ubiquitin ist ein (A) Diterpen (B) Monosaccharid (C) Oligonukleotid (D) Polypeptid (E) Triacylglycerin
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.",
+        ]
+    expected:
+      answer: "d"
+
+  - case: dichotomous:biochemistry:de
+    input:
+      prompt: Stimmt das? Die Neigung zu Thrombosen (Thrombophilie) ist in vielen Fällen genetisch bedingt. Missensemutationen im Gen für Faktor V können die Ursache einer familiären Thrombophilie sein. Durch solche Mutationen wird der aktivierte Faktor V (Va) weniger effizient durch ein aktiviertes Protein C inaktiviert und ist daher besonders stabil.
+      system_messages:
+        [
+          "Sie erhalten eine Frage, die Sie nur mit „ja“ oder „nein“ beantworten sollten.",
+        ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous:biochemistry:de
+    input:
+      prompt: Stimmt das? Die Neigung zu Thrombosen (Thrombophilie) ist in vielen Fällen genetisch bedingt. Missensemutationen im Gen für Faktor V können die Ursache einer familiären Thrombophilie sein. Durch solche Mutationen wird der aktivierte Faktor V (Va) weniger effizient durch ein aktiviertes Thrombomobilin inaktiviert und ist daher besonders stabil.
+      system_messages:
+        [
+          "Sie erhalten eine Frage, die Sie nur mit „ja“ oder „nein“ beantworten sollten.",
+        ]
+    expected:
+      answer: "nein"
+
+  # physiology
+
+  - case: single_choice:physiology:de
+    input:
+      prompt: Welche dieser Zellen wird nach der Aktivierung am ehesten Interleukin-2 freisetzen? B-Lymphozyt eosinophiler Granulozyt (C) Mastzelle (D) neutrophiler Granulozyt (E) T-Helferzelle Typ 1 (TH1-Zelle)
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.",
+        ]
+    expected:
+      answer: "e"
+
+  - case: single_choice:physiology:de
+    input:
+      prompt: Die Immunglobuline (Ig) werden in verschiedene Klassen eingeteilt. Welche Aussage über den Aufbau bzw. das Vorkommen der Ig-Klassen ist generell richtig? (A) Die Zugehörigkeit zu einer Ig-Klasse hängt hauptsächlich von der Struktur der leichten Kette eines Ig ab. (B) Die sezernierten Ig aller Ig-Klassen sind monomere Moleküle. (C) IgG ist das vorherrschende Ig im oralen Speichel. (D) IgM ist das vorherrschende Ig im Blutserum. (E) Reife, naive B-Lymphozyten haben membrangebundenes IgM und IgD.
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.",
+        ]
+    expected:
+      answer: "e"
+
+  - case: dichotomous:physiology:de
+    input:
+      prompt: Ist die scheinbare Viskosität des Blutes bei normalem Hämatokrit (und unter sonst gleichen Bedingungen) bei einem Gefäßdurchmesser von etwa 8 μm typischerweise niedriger als bei einem Gefäßdurchmesser von 4 μm?
+      system_messages:
+        [
+          "Sie erhalten eine Frage, die Sie nur mit „ja“ oder „nein“ beantworten sollten.",
+        ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous:physiology:de
+    input:
+      prompt: Ist die scheinbare (apparente) Viskosität des Blutes bei normalem Hämatokrit (und unter sonst gleichen Bedingungen) in großen Gefäßen immer niedriger als in kleinen Gefäßen?
+      system_messages:
+        [
+          "Sie erhalten eine Frage, die Sie nur mit „ja“ oder „nein“ beantworten sollten.",
+        ]
+    expected:
+      answer: "nein"
+
+  - case: one_word:physiology:de
+    input:
+      prompt: Welche zeitliche Zuordnung des EKG-Abschnittes zu den Zuständen der Herzklappen ist generell richtig, wenn die AV-Klappen geöffnet und die Taschenklappen geschlossen sind? Ist es die p-Welle oder der tp-Intervall?
+      system_messages: ["Beantworte die folgende Frage mit nur einem Wort"]
+    expected:
+      answer: "p-welle"
+
+  # anatomy
+
+  - case: single_choice:anatomy:de
+    input:
+      prompt: Welcher dieser Muskeln ist hauptsächlich an der Innenrotation des Oberarmknochens im Schultergelenk beteiligt? (A) M. infraspinatus (B) M. pectoralis minor (C) M. subscapularis (D) M. supraspinatus (E) M. teres minor
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.",
+        ]
+    expected:
+      answer: "c"
+
+  ###########################################################################################################
+  # Test case: Working on a datascience project with eeg data
+  # Language: English
+  ###########################################################################################################
+
+  # regex
+
+  - case: regex:eeg_data:en
+    input:
+      prompt: Name all channels represented in a 10/20 EEG
+      system_messages: ["Answer the question short and precisely"]
+    expected:
+      words_in_response:
+        - "Fp1"
+        - "Fp2"
+        - "F7"
+        - "F3"
+        - "Fz"
+        - "F4"
+        - "F8"
+        - "T3"
+        - "C3"
+        - "Cz"
+        - "C4"
+        - "T4"
+        - "T5"
+        - "P3"
+        - "Pz"
+        - "P4"
+        - "T6"
+        - "O1"
+        - "O2"
+
+  - case: regex:eeg_data:en
+    input:
+      prompt: What is the name for the smooth curve outlining the extremes of a signal (eg EEG) and thus generalizes the concept of a constant amplitude into an instantaneous amplitude.
+      system_messages: ["Answer the question short and precisely"]
+    expected:
+      words_in_response:
+        - "envelope"
+
+  # multiple choice
+
+  - case: single_choice:eeg_data:en
+    input:
+      prompt: To which EEG frequency band does the following frequency belong 40hz? A Alpha B Gamma C Theta D Delta E Beta
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it concisely by answering only the correct letter of the question in lower case. Remember to use only one lower-case letter and not the whole right answer",
+        ]
+    expected:
+      answer: "b"
+
+  #dichotomous
+
+  - case: dichotomous:eeg_data:en
+    input:
+      prompt: Are so-called delta waves observed in EEG signals, especially during deep sleep?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'",
+        ]
+    expected:
+      answer: "yes"
+
+  ###########################################################################################################
+  # Test case: Working on a datascience project with eeg data
+  # Language: German
+  ###########################################################################################################
+
+  #regex
+
+  - case: regex:eeg_data:de
+    input:
+      prompt: Nenne mir die drei gängigsten Berechnungen für die Asymmetrie zwischen Elektrodenpaaren in EEG-Signalen
+      system_messages: ["Beantworte die Frage so präzise und kurz wie möglich"]
+    expected:
+      words_in_response:
+        - - "Absolute Asymmetry"
+          - "Absolute Differenz"
+        - - "Relative Asymmetry"
+          - "Relative Differenz"
+        - - "Coherence"
+          - "Logarithmierte Differenz"
+
+  - case: regex:eeg_data:de
+    input:
+      prompt: Nenne alle Channel die in einem 10/20 EEG vertreten sind
+      system_messages: ["Beantworte die Frage so präzise und kurz wie möglich"]
+    expected:
+      words_in_response:
+        - "Fp1"
+        - "Fp2"
+        - "F7"
+        - "F3"
+        - "Fz"
+        - "F4"
+        - "F8"
+        - "T3"
+        - "C3"
+        - "Cz"
+        - "C4"
+        - "T4"
+        - "T5"
+        - "P3"
+        - "Pz"
+        - "P4"
+        - "T6"
+        - "O1"
+        - "O2"
+
+  - case: regex:eeg_data:de
+    input:
+      prompt: Wie nennt man die glatte Kurve, die die Extremwerte eines Signals (z. B. EEG) umreißt und somit das Konzept einer konstanten Amplitude in eine momentane Amplitude verallgemeinert.
+      system_messages: ["Beantworte die Frage so präzise und kurz wie möglich"]
+    expected:
+      words_in_response:
+        - "envelope"
+
+  # multiple choice
+
+  - case: single_choice:eeg_data:de
+    input:
+      prompt: Zu welchem EEG-Frequenzband gehört folgende Frequenz 40hz? A Alpha B Gamma C Theta D Delta E Beta
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.",
+        ]
+    expected:
+      answer: "b"
+
+  # dichotomous
+
+  - case: dichotomous:eeg_data:de
+    input:
+      prompt: Bei EEG Signalen sind sogenannte Delta Wellen vor allem im Tiefschlaf zu beobachten
+      system_messages:
+        ["Du erhältst eine Frage, beantworte sie nur mit 'Ja' oder 'Nein'."]
+    expected:
+      answer: "ja"
+
+  ##########################################################################################################
+  # Test case: Oncology and radiation therapy
+  # Language: English
+  ###########################################################################################################
+
+  # Level 1: Yes or no questions
+  - case: dichotomous:oncology:en
+    input:
+      prompt: Is chemotherapy the only possible treatment for cancer?
+      system_messages:
+        [
+          "You receive a question and should only answer it with the words 'yes'  or 'no'.",
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous:oncology:en
+    input:
+      prompt: "Are the BRCA 1 and BRCA 2 genes responsible for hereditary breast cancer ?"
+      system_messages:
+        [
+          "You receive a question and should only answer it with the words 'yes'  or 'no'.",
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous:oncology:en
+    input:
+      prompt: Radiotherapy is a common treatment method for glioblastoma patients?
+      system_messages:
+        [
+          "You will receive a question and should only answer with the words 'yes'  or 'no'.",
+        ]
+    expected:
+      answer: "yes"
+
+  # Level 2: Multiple Choice
+
+  - case: single_choice:oncology:en
+    input:
+      prompt: Which type of cancer is frequently monitored with the tumor marker CA-125? (a) Lung cancer (b) Ovarian cancer (c) Pancreatic cancer (d) Colorectal cancer"
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it briefly and concisely by entering only the correct letter of the question in lower case. Remember to use only one lowercase letter and not the whole correct answer.",
+        ]
+    expected:
+      answer: "b"
+
+  - case: single_choice:oncology:en
+    input:
+      prompt: Which drug is often used as an antiemetic to prevent nausea and vomiting in chemotherapy patients? (a) Ondansetron (b) Paracetamol (c) Ibuprofen (d) Loratadin
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it briefly and concisely by entering only the correct letter of the question as a lowercase letter. Remember to use only one lowercase letter and not the whole correct answer.",
+        ]
+    expected:
+      answer: "a"
+
+  - case: single_choice:oncology:en
+    input:
+      prompt: Which radiation technique is considered the standard for radiation therapy? (a) Percutaneous radiation therapy (b) Fractionated radiation (c)Brachytherapy (d) X-ray therapy
+      system_messages:
+        [
+          "You will receive a multiple choice question.Answer it briefly and concisely by entering only the correct letter of the question in lower case.Remember to use only one lowercase letter and not the whole correct answer.",
+        ]
+    expected:
+      answer: "a"
+
+  # Level 3: Free text
+
+  - case: one_word:oncology:en
+    input:
+      prompt: What are the three tumor volumes, abbreviated and sorted from smallest to biggest, in radiotherapy?
+      system_messages:
+        [
+          "Answer the question as precisely and briefly as possible, in a few words",
+        ]
+    expected:
+      answer: "GTV,CTV,PTV"
+
+  - case: regex:oncology:en
+    input:
+      prompt: What are some typical symptoms for malignant tumors?
+      system_messages:
+        ["Answer the question as precisely and briefly as possible"]
+    expected:
+      words_in_response:
+        - "weight loss"
+        - "lump"
+        - "fatigue"
+        - "cough"
+
+  - case: one_word:oncology:en
+    input:
+      prompt: What is the most common type of cancer in women?
+      system_messages:
+        ["Answer the question as precisely and briefly as possible"]
+    expected:
+      answer: "Breast cancer"
+
+  ###########################################################################################################
+  # Test case: Oncology and radiation therapy
+  # Language: German
+  ###########################################################################################################
+  # Level 1: Yes or no questions
+
+  - case: dichotomous:oncology:de
+    input:
+      prompt: Ist Chemotherapie die einzige mögliche Therapie bei Krebs?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten.",
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous:oncology:de
+    input:
+      prompt: Sind die BRCA 1 und BRCA 2 Gene für erblich bedingten Brustkrebs verantwortlich ?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten.",
+        ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous:oncology:de
+    input:
+      prompt: Die Strahlentherapie ist eine häufige Behandlungsmethode bei Glioblastom-Patienten?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten.",
+        ]
+    expected:
+      answer: "ja"
+
+  # Level 2: Multiple Choice
+
+  - case: single_choice:oncology:de
+    input:
+      prompt: Welche Art von Krebs wird häufig mit dem Tumormarker CA-125 überwacht?  (a) Lungenkrebs (b) Ovarialkarzinom (c) Bauchspeicheldrüsenkrebs (d) Kolorektalkarzinom
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.",
+        ]
+    expected:
+      answer: "b"
+  - case: single_choice:oncology:de
+    input:
+      prompt: Welches Medikament wird häufig als Antiemetikum zur Vorbeugung von Übelkeit und Erbrechen bei Chemotherapie-Patienten verwendet?  (a) Ondansetron (b) Paracetamol (c) Ibuprofen (d) Loratadin
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.",
+        ]
+    expected:
+      answer: "a"
+
+  - case: single_choice:oncology:de
+    input:
+      prompt: Welche Bestrahlungstechnik gilt als Standart der Strahlentherapie! a) perkutane Strahlentherapie b) fraktionierte Bestrahlung c)Brachytherapie d) Röntgentherapie
+      system_messages:
+        [
+          "Du erhältst eine Multiple-Choice-Frage. Beantworte sie kurz und bündig, indem du nur den richtigen Buchstaben der Frage als Kleinbuchstabe angibst. Denke daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.",
+        ]
+    expected:
+      answer: "a"
+
+  # Level 3: Free text
+  - case: one_word:oncology:de
+    input:
+      prompt: Wie heißen die drei Tumorvolumina, abgekürzt und vom kleinsten zum größten Volumen, bei der Strahlentherapie?
+      system_messages:
+        [
+          "Beantworte die Frage so präzise und kurz wie möglich, mit wenigen Worten",
+        ]
+    expected:
+      answer: "GTV,CTV,PTV"
+
+  - case: regex:oncology:de
+    input:
+      prompt: Was sind einige typische Symptome für maligne Tumore?
+      system_messages: ["Beantworte die Frage so präzise und kurz wie möglich"]
+    expected:
+      words_in_response:
+        - "Gewichtsverlust"
+        - "Knoten"
+        - "Müdigkeit"
+        - "Husten"
+
+  - case: one_word:oncology:de
+    input:
+      prompt: Was ist die häufigste Krebsart bei Frauen?
+      system_messages: ["Beantworte die Frage so präzise und kurz wie möglich"]
+    expected:
+      answer: "Brustkrebs"
+
+  ###########################################################################################################
+  # Test case: Medication
+  # Language: English
+  ###########################################################################################################
+  # Level 1: Yes or no questions
+
+  - case: dichotomous:medication:en
+    input:
+      prompt: Can ibuprofen be safely taken together with antihypertensives?
+      system_messages:
+        [
+          "You receive a question and should only answer it with the words 'yes' or 'no'.",
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous:medication:en
+    input:
+      prompt: Is there a potential interaction between antibiotics and oral contraceptives?
+      system_messages:
+        [
+          "You will receive a question and should only answer with the words 'yes' or 'no'.",
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous:medication:en
+    input:
+      prompt: Are there advantages to combining different RAS inhibitors?
+      system_messages:
+        [
+          "You will receive a question and should only answer it with the words 'yes' or 'no'.",
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous:medication:en
+    input:
+      prompt: Should NO donors and PDE5 inhibitors be administered at the same time?
+      system_messages:
+        [
+          "You will receive a question that you should only answer with 'yes' or 'no'",
+        ]
+    expected:
+      answer: "no"
+
+  # Level 2: Multiple Choice
+
+  - case: single_choice:medication:en
+    input:
+      prompt: Which drug class has the highest risk of interaction with statins? (a) anticoagulants, (b) antacids, (c) antifungals, (d) antidepressants
+      system_messages:
+        [
+          "You will receive a multiple-choice question. Answer it briefly and concisely by giving only the correct letter of the question in lower case. Remember to use only one lowercase letter and not the entire correct answer.",
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice:medication:en
+    input:
+      prompt: Which medication pairing should be avoided in patients taking MAO inhibitors?  (a) serotonin reuptake inhibitors, (b) ACE inhibitors, (c) beta-blockers, (d) calcium channel blockers
+      system_messages:
+        [
+          "You will receive a multiple choice question. Answer it briefly and concisely, using only the correct letter of the question in lower case. Remember to use only one lowercase letter and not the entire correct answer.",
+        ]
+    expected:
+      answer: "a"
+
+  - case: single_choice:medication:en
+    input:
+      prompt: What can occur if acetylsalicylic acid and coumarins are taken together? (a) higher blood pressure, (b) co-complex formation, (c) increased blood clotting inhibition, (d) cardiac arrhythmia
+      system_messages:
+        [
+          "You will receive a multiple-choice question.Answer it briefly and concisely by indicating only the correct letter of the question in lower case.Remember to use only one lowercase letter and not the entire correct answer.",
+        ]
+    expected:
+      answer: "c"
+
+  #Level 3: Free text
+
+  - case: one_word:medication:en
+    input:
+      prompt: With which fruit should statins not be taken?
+      system_messages: ["Answer the following question with just one word"]
+    expected:
+      answer: "Grapefruit"
+
+  - case: regex:medication:en
+    input:
+      prompt: Can you give examples of medications that should not be taken with NSAIDs (non-steroidal anti-inflammatory drugs) such as ibuprofen or naproxen to minimize the risk of stomach ulcers?
+      system_messages:
+        ["Answer the question as precisely and briefly as possible"]
+    expected:
+      words_in_response:
+        - "oral steroids"
+        - - "selective serotonin reuptake inhibitors"
+          - "SSRIS"
+        - "anticoagulants"
+
+  - case: one_word:medication:en
+    input:
+      prompt: What are the two basic forms of drug interaction?
+      system_messages:
+        [
+          "Answer the question as precisely and briefly as possible, in a few words",
+        ]
+    expected:
+      answer: "Pharmacodynamic and pharmacokinetic"
+
+  - case: regex:medication:en
+    input:
+      prompt: With which active substances should ibuprofen not be taken?
+      system_messages:
+        [
+          "Answer the question as precisely and briefly as possible. Multiple answers are allowed",
+        ]
+    expected:
+      words_in_response:
+        - "cortisone preparations"
+        - - "Acetylsalicylic acid"
+          - "ASS"
+        - "Clopidogrel"
+        - "NSAID"
+        - "NSAID"
+
+  ###########################################################################################################
+  # Test case: Medication
+  # Language: German
+  ###########################################################################################################
+  # Level 1: Yes or no questions
+
+  - case: dichotomous:medication:de
+    input:
+      prompt: Kann Ibuprofen sicher zusammen mit Antihypertensiva eingenommen werden?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten.",
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous:medication:de
+    input:
+      prompt: Besteht eine potenzielle Wechselwirkung zwischen Antibiotika und oralen Kontrazeptiva?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten.",
+        ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous:medication:de
+    input:
+      prompt: Hat es Vorteile verschiedene RAS-Hemmer zu kombinieren?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten.",
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous:medication:de
+    input:
+      prompt: Sollten NO-Donatoren und PDE5-Hemmern gleichzeitig verabreicht werden?
+      system_messages:
+        [
+          "Sie erhalten eine Frage, die Sie nur mit ‚ja‘ oder ‚nein‘ beantworten sollten",
+        ]
+    expected:
+      answer: "nein"
+
+  # Level 2: Multiple Choice
+
+  - case: single_choice:medication:de
+    input:
+      prompt: Welche Medikamentenklasse hat das höchste Risiko für Wechselwirkungen mit Statinen? (a) Antikoagulanzien, (b) Antazida, (c) Antimykotika, (d) Antidepressiva
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie sie kurz und bündig, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben angeben. Denken Sie daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.",
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice:medication:de
+    input:
+      prompt: Welche Medikamentenpaarung sollte bei Patienten vermieden werden, die MAO-Hemmer einnehmen?  (a) Serotonin-Wiederaufnahmehemmer, (b) ACE-Hemmer, (c) Beta-Blocker, (d) Kalziumkanalblocker
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie sie kurz und bündig, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben angeben. Denken Sie daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.",
+        ]
+    expected:
+      answer: "a"
+
+  - case: single_choice:medication:de
+    input:
+      prompt: Was kann auftreten, wenn Acetylsalicylsäure und Cumarine zusammen eingenommen wird?  (a) höherer Blutdruck, (b) Koomplexbildung, (c) Verstärkte Blutgerinnungshemmung, (d) Herzrhythmusstörung
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie sie kurz und bündig, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben angeben. Denken Sie daran, nur einen Kleinbuchstaben zu verwenden und nicht die ganze richtige Antwort.",
+        ]
+    expected:
+      answer: "c"
+
+  #Level 3: Free text
+  - case: one_word:medication:de
+    input:
+      prompt: Mit welcher Frucht sollten Statine nicht eingenommen werden?
+      system_messages: ["Beantworten Sie die folgende Frage mit nur einem Wort"]
+    expected:
+      answer: "Grapefruit"
+
+  - case: regex:medication:de
+    input:
+      prompt: Können Sie Beispiele für Medikamente nennen, die nicht mit NSAR (nichtsteroidalen Antirheumatika) wie Ibuprofen oder Naproxen eingenommen werden sollten, um das Risiko von Magengeschwüren zu minimieren?
+      system_messages: ["Beantworte die Frage so präzise und kurz wie möglich"]
+    expected:
+      words_in_response:
+        - "orale Steroide"
+        - - "selektive Serotonin-Wiederaufnahmehemmer"
+          - "SSRI"
+        - "Antikoagulanzien"
+
+  - case: one_word:medication:de
+    input:
+      prompt: Welche zwei Formen der Arzneimittelwechselwirkung unterscheidet man grundsätzlich?
+      system_messages:
+        [
+          "Beantworte die Frage so präzise und kurz wie möglich, mit wenigen Worten",
+        ]
+    expected:
+      answer: "Pharmakodynamisch und pharmakokinetisch"
+
+  - case: regex:medication:de
+    input:
+      prompt: Mit welchen Wirkstoffen sollte Ibuprofen nicht eingenommen werden?
+      system_messages:
+        [
+          "Beantworte die Frage so präzise und kurz wie möglich. Mehrere Antworten sind erlaubt",
+        ]
+    expected:
+      words_in_response:
+        - "Kortison-Präparate"
+        - - "Acetylsalicylsäure"
+          - "ASS"
+        - "Clopidogrel"
+        - "NSAR"
+        - "NSAID"
+
+  ###########################################################################################################
+  # Test case: Questions about “emergency medicine” for prospective emergency physicians
+  # Language: German
+  ###########################################################################################################
+
+  # Level 1: Yes or no questions
+  - case: dichotomous:emergency:de
+    input:
+      prompt: Wird bei einem Herzinfarkt typischerweise Aspirin eingesetzt?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten.",
+        ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous:emergency:de
+    input:
+      prompt: Ist RHUB ist die Abkürzung für einen Rettungshubschrauber?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten.",
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous:emergency:de
+    input:
+      prompt: Sollte man bei einem epileptischen Anfall immer versuchen die Person festzuhalten?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten.",
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous:emergency:de
+    input:
+      prompt: Sind bei CPR die Kompressionen wichtiger als die Luftzufuhr?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten.",
+        ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous:emergency:de
+    input:
+      prompt: Kann man einen automatisierten externen Defibrillator (AED) auch bei Epilepsie verwenden?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten.",
+        ]
+    expected:
+      answer: "nein"
+
+    # Level 2: Single or Multiple choice questions
+
+  - case: single_choice:emergency:de
+    input:
+      prompt: Welches „Stresshormon“ steigert Blutdruck und Herzfrequenz?? (a) Insulin (b) Adrenalin (c) Melatonin (d) Leptin
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden",
+        ]
+    expected:
+      answer: "b"
+
+  - case: single_choice:emergency:de
+    input:
+      prompt: Welcher Wirkstoff wird bei einem aktuten Asthmaanfall indiziert? (a) Verapamil (b) Fenoterol (c) Haloperidol (d) 4-Dimethylaminophenol
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden",
+        ]
+    expected:
+      answer: "b"
+
+  - case: single_choice:emergency:de
+    input:
+      prompt: Was bezeichnet der systolische Blutdruckwert? (a) Den unteren Wert, also den Druck in der Entspannungsphase des Herzens  (b) Den über eine Minute gemittelten Druck (c) Den höchsten Druck direkt nach Ventrikelkontraktion (d) Das Gleiche, wie der diastolische Wert
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden",
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice:emergency:de
+    input:
+      prompt: Bei welchem Blutzuckerwert besteht die Gefahr eines diabetischen Komas? (a) < 20 mg/dl (b) < 50 mg/dl (c) < 90 mg/dl (d) > 110 mg/dl (e) > 300 mg/dl
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden",
+        ]
+    expected:
+      answer: "e"
+
+  - case: single_choice:emergency:de
+    input:
+      prompt: Bei welcher Diagnose ist die Hochlagerung der Beine kontraindiziert? (a) Hypovolämischer Schock (b) Anaphylaktischer Schock (c) Hypoglykämischer Schock (d) Kardiogener Schock (e) Septisch-Toxischer Schock
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden",
+        ]
+    expected:
+      answer: "d"
+
+    # Level 3: Word questions
+
+  - case: one_word:emergency:de
+    input:
+      prompt: Was ist der erste Schritt bei der Erste-Hilfe-Leistung nach dem ABCDE Schema?
+      system_messages: ["Beantworten Sie die folgende Frage mit nur einem Wort"]
+    expected:
+      answer: "Atemwege"
+
+  - case: one_word:emergency:de
+    input:
+      prompt: Welche Art von Blut führt die Lungenvene?
+      system_messages: ["Beantworten Sie die folgende Frage mit nur einem Wort"]
+    expected:
+      answer: "Sauerstoffreiches"
+
+  - case: one_word:emergency:de
+    input:
+      prompt: Welche Blutgruppe gibt bei unbekannten Notfällen?
+      system_messages:
+        [
+          "Beantworten Sie die folgende Frage mit nur einem Wort. Bei der Antwort Null, verwenden Sie bitte die Zahl 0.",
+        ]
+    expected:
+      answer: "0"
+
+  - case: short_words:emergency:de
+    input:
+      prompt: Was erfordert der Einsatz eines Guedeltubus?
+      system_messages:
+        ["Beantworten Sie die folgende Frage so kurz wie möglich"]
+    expected:
+      answer: "Tiefe Bewusstlosigkeit"
+
+  - case: short_words:emergency:de
+    input:
+      prompt: Wofür stehen die Buchstaben der RICE-Methode?
+      system_messages:
+        [
+          "Beantworten Sie die folgende Frage so kurz wie möglich und verwenden sie die original Begriffe auf Englisch.",
+        ]
+    expected:
+      answer: "Rest, Ice, Compression, Elevation"
+
+  ###########################################################################################################
+  # Test case: Questions about “emergency medicine” for prospective emergency physicians
+  # Language: English
+  ###########################################################################################################
+
+  # Level 1: Yes or no questions
+  - case: dichotomous:emergency:en
+    input:
+      prompt: Is Aspirin is typically used for a heart attack?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'",
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous:emergency:en
+    input:
+      prompt: Should you always try to hold the person during an epileptic seizure?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'",
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous:emergency:en
+    input:
+      prompt: Are the compressions more important than the air supply during CPR?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'",
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous:emergency:en
+    input:
+      prompt: Can an automated external defibrillator (AED) also be used for epilepsy?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'",
+        ]
+    expected:
+      answer: "yes"
+
+    # Level 2: Single or Multiple choice questions
+
+  - case: single_choice:emergency:en
+    input:
+      prompt: Which "stress hormone" increases blood pressure and heart rate? (a) Insulin (b) Adrenaline (c) Melatonin (D) Leptin
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "b"
+
+  - case: single_choice:emergency:en
+    input:
+      prompt: Which drug is indicated for an acute asthma attack? (a) Verapamil (b) Fenoterol (c) Haloperidol (d) 4-Dimethylaminophenol
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "b"
+
+  - case: single_choice:emergency:en
+    input:
+      prompt: What is the systolic blood pressure value? (a) The lower value, i.e. the pressure in the relaxation phase of the heart (b) The pressure averaged over one minute (c) The highest pressure directly after ventricular contraction (d) The same as the diastolic value
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice:emergency:en
+    input:
+      prompt: At which blood glucose level is there a risk of diabetic coma?  (a) < 20 mg/dl (b) < 50 mg/dl (c) < 90 mg/dl (d) > 110 mg/dl (E) > 300 mg/dl
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "e"
+
+  - case: single_choice:emergency:en
+    input:
+      prompt: For which diagnosis is elevation of the legs contraindicated? (a) Hypovolemic shock (b) Anaphylactic shock (c) Hypoglycemic shock (d) Cardiogenic shock (E) Septic-toxic shock
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "d"
+
+    # Level 3: Word questions
+
+  - case: one_word:emergency:en
+    input:
+      prompt: What is the first step in providing first aid according to the ABCDE scheme?
+      system_messages: ["Answer the following question with just one word"]
+    expected:
+      answer: "Airways"
+
+  - case: one_word:emergency:en
+    input:
+      prompt: What type of blood does the pulmonary vein carry?
+      system_messages: ["Answer the following question with just one word"]
+    expected:
+      answer: "Oxygen-rich"
+
+  - case: one_word:emergency:en
+    input:
+      prompt: Which blood group is used for unknown emergencies?
+      system_messages:
+        [
+          "Answer the following question with just one word. If the answer is zero, please use the number 0.",
+        ]
+    expected:
+      answer: "0"
+
+  - case: short_words:emergency:en
+    input:
+      prompt: What does the use of a Guedel tube require?
+      system_messages: ["Answer the following question with maximal two words."]
+    expected:
+      answer: "Deep unconsciousness"
+
+  - case: short_words:emergency:en
+    input:
+      prompt: What do the letters of the RICE method stand for?
+      system_messages:
+        ["Answer the following question with just one word per letter"]
+    expected:
+      answer: "Rest, Ice, Compression, Elevation"
+
+  - case: regex:medication:de
+    input:
+      prompt: "Können Sie Beispiele für Medikamente nennen, die nicht mit NSAR (nichtsteroidalen Antirheumatika) wie Ibuprofen oder Naproxen eingenommen werden sollten, um das Risiko von Magengeschwüren zu minimieren?"
+      system_messages: ["Beantworte die Frage so präzise und kurz wie möglich"]
+    expected:
+      words_in_response:
+        - - "orale Steroide"
+          - "selektive Serotonin-Wiederaufnahmehemmer"
+        - - "SSRI"
+          - "Antikoagulanzien"
+
+  ###########################################################################################################
+  # Test case: Questions about mental disorders for psychotherapists, psychology students or psychiatrists in training
+  # Language: German
+  ###########################################################################################################
+
+  # Level 1: Yes or no questions
+  - case: dichotomous:mental_disorders:de
+    input:
+      prompt: Ist das Asperger-Syndrom eine Form der Autismus-Spektrum-Störungen?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten.",
+        ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous:mental_disorders:de
+    input:
+      prompt: Die Gestalttherapie wird häufig bei der Therapie von Anorexie angewendet und konzentriert sich auf die Identifizierung und Veränderung dysfunktionaler Gedanken- und Verhaltensmuster.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. ",
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous:mental_disorders:de
+    input:
+      prompt: In der Psychotherapie der generalisierten Angststörung ist das Erlernen von Vermeidungsstrategien, um die Sorgen loszuwerden, eine gängige Technik.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. ",
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous:mental_disorders:de
+    input:
+      prompt: Menschen mit generalisierter Angststörung halten ihre Sorgen meist für sinnlos und wollen sie am liebsten vollständig loswerden.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. ",
+        ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous:mental_disorders:de
+    input:
+      prompt: Wird eine Manie mit Medikamenten behandelt, steigt die Gefahr, dass psychotische Symptome auftreten.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. ",
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous:mental_disorders:de
+    input:
+      prompt: Verlustangst und Bindungsangst sind zwei gegenteilige Phänomene.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. ",
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous:mental_disorders:de
+    input:
+      prompt: Bei einer bipolaren Störung hält eine depressive Episode mindestens 14 Tage an.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. ",
+        ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous:mental_disorders:de
+    input:
+      prompt: Die Anfälligkeit dafür, eine Depression zu entwickeln, kann vererbt werden.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. ",
+        ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous:mental_disorders:de
+    input:
+      prompt: Die Erkrankung Multiple Persönlichkeit kann aufgrund ihrer Schwere oft kaum behandelt werden.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. ",
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous:mental_disorders:de
+    input:
+      prompt: Im Gegensatz zur Magersucht ist die Binge-Eating-Störung nicht tödlich.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück. ",
+        ]
+    expected:
+      answer: "nein"
+
+  # Level 2: Multiple choice questions
+
+  - case: multiple_choice:mental_disorders:de
+    input:
+      prompt: Welche der folgenden sind übliche Therapieansätze bei Autismus? A Hypnotherapie, B Tanztherapie, C Psychoanalyse, D Kognitive Verhaltenstherapie, E Applied Behavior Analysis, F Entwicklungsbasierte Interventionen, G tiefenpsychologisch fundierte Psychotherapie, H Homöopathie, I Akupunktur, J Aromatherapie
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Wähle aus den Antwortmöglichkeiten alle passenden Antworten aus und gebe die zugehörigen Buchstaben zurück. Gebe dabei ausschließlich die Buchstaben zurück und nicht die kompletten Antworten. Verknüpfe diese dann mit ','.",
+        ]
+    expected:
+      answer: "d,e,f"
+
+  - case: single_choice:mental_disorders:de
+    input:
+      prompt: Welche Art von Medikamenten wird bei Anorexie-Patienten häufig verwendet, um Begleiterkrankungen wie Depressionen oder Angststörungen zu behandeln? A Antihistaminika, B Antibiotika, C Antidepressiva, D Betablocker
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gebe dabei nur den Buchstaben zurück und nicht die ganze Antwort.",
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice:mental_disorders:de
+    input:
+      prompt: Was ist ein Hauptziel der Ernährungstherapie bei der Behandlung von Anorexie? A Förderung einer veganen Ernährungsweise, B Eliminierung bestimmter Lebensmittelgruppen aus der Ernährung, C Wiederherstellung des Körpergewichts und Etablierung eines gesunden Essverhaltens, D Konzentration auf Sport und Fitness zur Gewichtsreduktion
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gebe dabei nur den Buchstaben zurück und nicht die ganze Antwort.",
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice:mental_disorders:de
+    input:
+      prompt: Was trifft auf den GAD-7 zu? Der GAD-7 ist … A … ein schnell durchführbarer Test für generalisierte Angststörung, B … sehr zeitaufwändig, aber aussagekräftig, C … nicht wissenschaftlich untermauert, D … für die Diagnose einer generalisierten Angststörung völlig ausreichend
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gebe dabei nur den Buchstaben zurück und nicht die ganze Antwort.",
+        ]
+    expected:
+      answer: "a"
+
+  - case: single_choice:mental_disorders:de
+    input:
+      prompt: Welches ist kein Frühwarnzeichen der Manie? A Unruhe, B euphorische Stimmung, C erhöhte Reizbarkeit, D vermehrter Schlaf
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gebe dabei nur den Buchstaben zurück und nicht die ganze Antwort.",
+        ]
+    expected:
+      answer: "d"
+
+  - case: single_choice:mental_disorders:de
+    input:
+      prompt: Zu welcher Art von psychischen Störungen gehört die Manie? A affektive Störungen, B euphorische Störungen, C Zwangsstörungen, D Aktivitätsstörungen
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gebe dabei nur den Buchstaben zurück und nicht die ganze Antwort.",
+        ]
+    expected:
+      answer: "a"
+
+  - case: multiple_choice:mental_disorders:de
+    input:
+      prompt: Was können Ursachen einer sozialen Phobie sein? A genetische Veranlagung, B Persönlichkeitsmerkmale, C bestimmte Denkstile, D unangenehme Erfahrungen mit anderen Menschen, E Interessenskonflikte, F Mangelernährung
+      system_messages:
+        [
+          "Wähle aus den Antwortmöglichkeiten alle passenden Antworten aus und gebe die zugehörigen Buchstaben zurück. Gib dabei ausschließlich die Buchstaben zurück und nicht die kompletten Antworten. Verknüpfe diese dann mit ','. In der Antwort sollen keine Leerzeichen auftauchen.",
+        ]
+    expected:
+      answer: "a,b,c,d"
+
+  - case: multiple_choice:mental_disorders:de
+    input:
+      prompt: Welche psychosozialen Faktoren können zur Entwicklung einer Depression beitragen? A Verlust eines Elternteils in der Kindheit, B enge Eltern-Kind-Bindung, C zu hohes Selbstwertgefühl, D Traumata wie das Erleben von Gewalt, E mangelndes Selbstwertgefühl, F Persönlichkeitstyp Typus melancholicus
+      system_messages:
+        [
+          "Wähle aus den Antwortmöglichkeiten alle passenden Antworten aus und gebe die zugehörigen Buchstaben zurück. Gib dabei ausschließlich die Buchstaben zurück und nicht die kompletten Antworten. Verknüpfe diese dann mit ','. In der Antwort sollen keine Leerzeichen auftauchen.",
+        ]
+    expected:
+      answer: "a,d,e,f"
+
+  - case: single_choice:mental_disorders:de
+    input:
+      prompt: Von allen psychischen Erkrankungen besitzt die Magersucht … A … die geringste Anzahl an Erkrankten, B … die höchste Heilungsquote, C … den harmlosesten Verlauf, D … die höchste Sterberate
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gebe dabei nur den Buchstaben zurück und nicht die ganze Antwort.",
+        ]
+    expected:
+      answer: "d"
+
+  - case: multiple_choice:mental_disorders:de
+    input:
+      prompt: Was sind typische Kennzeichen der Anorexie? A ständige Übelkeit, B anhaltendes Untergewicht, C Angst vor dem Zunehmen oder Zudicksein, D starke Gewichtsschwankungen, E Appetitlosigkeit
+      system_messages:
+        [
+          "Wähle aus den Antwortmöglichkeiten alle passenden Antworten aus und gebe die zugehörigen Buchstaben zurück. Gib dabei ausschließlich die Buchstaben zurück und nicht die kompletten Antworten. Verknüpfe diese dann mit ','. In der Antwort sollen keine Leerzeichen auftauchen.",
+        ]
+    expected:
+      answer: "b,c,e"
+
+  # Level 3: Word questions
+  - case: regex:mental_disorders:de
+    input:
+      prompt: Nenne alle üblichen Ziele der Autismustherapie.
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - - "kommunikation"
+          - "interaktion"
+        - "verhalten"
+        - "selbstständigkeit"
+
+  - case: regex:mental_disorders:de
+    input:
+      prompt: Wodurch zeichnet sich restriktive Anorexie aus?
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - - "weniger"
+          - "nahrung"
+        - - "mehr"
+          - "sport"
+          - "bewegung"
+          - "gewichtsverlust"
+          - "untergewicht"
+
+  - case: regex:mental_disorders:de
+    input:
+      prompt: Kopfschmerzen und Zittern sind bei der generalisierten Angststörung häufig Symptome einer dauerhaft erhöhten ...
+      system_messages:
+        [
+          "Vervollständige den Satz mit 2 Wörtern. Gebe dabei nur beiden gesuchten Wörter aus.",
+        ]
+    expected:
+      words_in_response:
+        - - "anstrengung"
+          - "anspannung"
+
+  - case: regex:mental_disorders:de
+    input:
+      prompt: Welche Therapiephase findet direkt nach der akuten Manie-Phase statt?
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - "erhaltung"
+        - - "therapie"
+          - "phase"
+
+  - case: regex:mental_disorders:de
+    input:
+      prompt: Bei den Ursachen der Manie geht man heute von einem Zusammenspiel zwischen ... und ... Faktoren sowie Störungen der ... aus.
+      system_messages:
+        [
+          "Vervollständige den Satz so kurz wie möglich. Gebe dabei nur die Wörter aus, die die Lücken füllen sollen.",
+        ]
+    expected:
+      words_in_response:
+        - "genetischen"
+        - "psychosozialen"
+        - "neurotransmitter"
+
+  - case: regex:mental_disorders:de
+    input:
+      prompt: Welche beiden Behandlungsmethoden werden am häufigsten bei einer sozialen Phobie angewandt?
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - - "kognitive Verhaltenstherapie"
+          - "Verhaltenstherapie"
+        - - "Medikamente"
+          - "Medikamentöse Therapie"
+
+  - case: regex:mental_disorders:de
+    input:
+      prompt: Nenne die beiden Therapiearten, deren Kombination bei der Behandlung von Depressionen in der Regel am besten wirkt.
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - "Psychotherapie"
+        - - "Medikamente"
+          - "Medikamentöse Therapie"
+
+  - case: regex:mental_disorders:de
+    input:
+      prompt: Zwischen welchen Formen von Anorexie wird unterschieden?
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - "restriktiv"
+        - "binge"
+
+  - case: regex:mental_disorders:de
+    input:
+      prompt: Unter welchen Störungen ist die dissoziative Identitätsstörung im ICD-11?
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - - "konversionsstörungen"
+          - "konversion"
+
+  - case: regex:mental_disorders:de
+    input:
+      prompt: Wozu dient die Abspaltung von der eigenen Persönlichkeit in den meisten Fällen bei Personen mit einer Multiplen Persönlichkeit?
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - - "schutz"
+          - "bewältigung"
+        - - "Trauma"
+          - "traumatische erinnerungen"
+          - "traumatische erfahrungen"
+
+  ###########################################################################################################
+  # Test case: Questions about mental disorders for psychotherapists, psychology students or psychiatrists in training
+  # Language: English
+  ###########################################################################################################
+
+  # Level 1: Yes or no questions
+  - case: dichotomous:mental_disorders:en
+    input:
+      prompt: Is Asperger syndrome a form of autism spectrum disorder?
+      system_messages:
+        [
+          "You receive a question and should only answer it with the words 'yes' or 'no'.",
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous:mental_disorders:en
+    input:
+      prompt: Gestalt therapy is often used in the treatment of anorexia and focuses on identifying and changing dysfunctional thought and behaviour patterns.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous:mental_disorders:en
+    input:
+      prompt: In psychotherapy for generalised anxiety disorder, learning avoidance strategies to get rid of worries is a common technique.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous:mental_disorders:en
+    input:
+      prompt: People with generalised anxiety disorder usually consider their worries to be pointless and would prefer to get rid of them completely.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous:mental_disorders:en
+    input:
+      prompt: If mania is treated with medication, the risk of psychotic symptoms increases.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous:mental_disorders:en
+    input:
+      prompt: Fear of loss and fear of commitment are two opposing phenomena.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous:mental_disorders:en
+    input:
+      prompt: In bipolar disorder, a depressive episode lasts at least 14 days.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous:mental_disorders:en
+    input:
+      prompt: The susceptibility to developing depression can be inherited.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous:mental_disorders:en
+    input:
+      prompt: Due to its severity, multiple personality disorder is often almost impossible to treat.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous:mental_disorders:en
+    input:
+      prompt: In contrast to anorexia, binge eating disorder is not fatal.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "no"
+
+  # Level 2: Multiple choice questions
+
+  - case: multiple_choice:mental_disorders:en
+    input:
+      prompt: Which of the following are common therapeutic approaches for autism? A Hypnotherapy, B Dance therapy, C Psychoanalysis, D Cognitive behavioural therapy, E Applied behaviour analysis, F Development-based interventions, G Depth psychology-based psychotherapy, H Homeopathy, I Acupuncture, J Aromatherapy
+      system_messages:
+        [
+          "You will receive a multiple choice question. Select all suitable answers from the possible answers and return the corresponding letters. Only return the letters and not the complete answers. Then link these with ','. Do not include whitespaces in your answer.",
+        ]
+    expected:
+      answer: "d,e,f"
+
+  - case: single_choice:mental_disorders:en
+    input:
+      prompt: Which type of medication is often used in anorexia patients to treat concomitant illnesses such as depression or anxiety disorders? A Antihistamines, B Antibiotics, C Antidepressants, D Beta-blockers
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice:mental_disorders:en
+    input:
+      prompt: What is one of the main aims of nutritional therapy in the treatment of anorexia? A Promoting a vegan diet, B Eliminating certain food groups from the diet, C Restoring body weight and establishing healthy eating behaviour, D Focusing on sport and fitness to reduce weight
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice:mental_disorders:en
+    input:
+      prompt: What is true of the GAD-7? The GAD-7 is ... A ... a quick test for generalised anxiety disorder, B ... very time-consuming, but meaningful, C ... not scientifically substantiated, D ... completely sufficient for the diagnosis of generalised anxiety disorder
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "a"
+
+  - case: single_choice:mental_disorders:en
+    input:
+      prompt: Which of the following is not an early warning sign of mania? A restlessness, B euphoric mood, C increased irritability, D increased sleep
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "d"
+
+  - case: single_choice:mental_disorders:en
+    input:
+      prompt: To which type of mental disorder does mania belong? A affective disorders, B euphoric disorders, C obsessive-compulsive disorders, D activity disorders
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "a"
+
+  - case: multiple_choice:mental_disorders:en
+    input:
+      prompt: What can be the causes of a social phobia? A genetic predisposition, B personality traits, C certain thinking styles, D unpleasant experiences with other people, E conflicts of interest, F malnutrition
+      system_messages:
+        [
+          "You will receive a multiple choice question. Select all suitable answers from the possible answers and return the corresponding letters. Only return the letters and not the complete answers. Then link these with ','. Do not include whitespaces in your answer.",
+        ]
+    expected:
+      answer: "a,b,c,d"
+
+  - case: multiple_choice:mental_disorders:en
+    input:
+      prompt: Which psychosocial factors can contribute to the development of depression? A Loss of a parent in childhood, B Close parent-child bond, C Too high self-esteem, D Traumas such as experiencing violence, E Lack of self-esteem, F Melancholic personality type
+      system_messages:
+        [
+          "You will receive a multiple choice question. Select all suitable answers from the possible answers and return the corresponding letters. Only return the letters and not the complete answers. Then link these with ','. Do not include whitespaces in your answer.",
+        ]
+    expected:
+      answer: "a,d,e,f"
+
+  - case: single_choice:mental_disorders:en
+    input:
+      prompt: Of all mental illnesses, anorexia has ... A ... the lowest number of sufferers, B ... the highest recovery rate, C ... the most harmless course, D ... the highest mortality rate
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "d"
+
+  - case: multiple_choice:mental_disorders:en
+    input:
+      prompt: What are the typical characteristics of anorexia? A constant nausea, B persistent underweight, C fear of gaining weight or being overweight, D severe weight fluctuations, E loss of appetite
+      system_messages:
+        [
+          "You will receive a multiple choice question. Select all suitable answers from the possible answers and return the corresponding letters. Only return the letters and not the complete answers. Then link these with ','. Do not include whitespaces in your answer.",
+        ]
+    expected:
+      answer: "b,c,e"
+
+  # Level 3: Word questions
+  - case: regex:mental_disorders:en
+    input:
+      prompt: List all the common goals of autism therapy.
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - "communication"
+        - "interaction"
+        - "behaviour"
+        - "independence"
+
+  - case: regex:mental_disorders:en
+    input:
+      prompt: What characterises restrictive anorexia?
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - - "less"
+          - "nutrition"
+          - "food"
+        - - "low"
+          - "lose"
+          - "reduce"
+          - "weight"
+          - "loss"
+
+  - case: regex:mental_disorders:en
+    input:
+      prompt: In generalised anxiety disorder, headaches and tremors are often symptoms of a permanently increased ...
+      system_messages:
+        [
+          "Complete the sentence with 2 words. Only fill in the two words you are looking for.",
+        ]
+    expected:
+      words_in_response:
+        - "physical exertion"
+
+  - case: regex:mental_disorders:en
+    input:
+      prompt: Which therapy phase takes place directly after the acute mania phase?
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - - "conservation"
+          - "maintenance"
+        - - "therapy"
+          - "phase"
+
+  - case: regex:mental_disorders:en
+    input:
+      prompt: The causes of mania are now thought to be an interplay between ... and ... factors as well as ... disorders.
+      system_messages:
+        [
+          "Complete the sentence as briefly as possible. Only fill in the words that should fill the gaps.",
+        ]
+    expected:
+      words_in_response:
+        - "genetic"
+        - "psychosocial"
+        - "neurotransmitter"
+
+  - case: regex:mental_disorders:en
+    input:
+      prompt: Which two treatment methods are most commonly used for social phobia?
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - - "cognitive behavioural therapy"
+          - "behavioural therapy"
+        - - "medication"
+          - "drug"
+          - "drug therapy"
+
+  - case: regex:mental_disorders:en
+    input:
+      prompt: Name the two types of therapy whose combination usually works best in the treatment of depression.
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - "psychotherapy"
+        - - "medication"
+          - "drug"
+          - "drug therapy"
+
+  - case: regex:mental_disorders:en
+    input:
+      prompt: What are the different types of anorexia?
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - "restrictive"
+        - "binge"
+
+  - case: regex:mental_disorders:en
+    input:
+      prompt: Which disorders does dissociative identity disorder fall under in ICD-11?
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - - "conversion disorders"
+          - "conversion"
+
+  - case: regex:mental_disorders:en
+    input:
+      prompt: What is the purpose of splitting off from one's own personality in most cases in people with a multiple personality?
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - "protection"
+        - - "trauma"
+          - "traumatic memories"
+          - "traumatic experiences"
+
+  ###########################################################################################################
+  # Test case: Questions about “emergency medicine” for prospective emergency physicians
+  # Language: German
+  ###########################################################################################################
+
+  # Level 1: Yes or no questions
+  - case: dichotomous:cardiology:de
+    input:
+      prompt: Bei einer arrhythmogene rechtsventrikuläre Kardiomyopathie (ARVC) muss eine dominierenden RV-Dilatation und eine Dysfunktion bei histologischer Beteiligung vorhanden sein?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten.",
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous:cardiology:de
+    input:
+      prompt: Muss eine bei einer routinemäßigen Nachuntersuchung stabilen Patienten mit einer Kardiomyopathie immer ein EKG und ein Echokardiographie durchgeführt werden ?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten.",
+        ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous:cardiology:de
+    input:
+      prompt: Wird bei Patienten mit Ruhe- oder provozierbarer LVOTO, Digoxin und arterielle und venöse Dilatatoren empfohlen?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten.",
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous:cardiology:de
+    input:
+      prompt: Welches Geschlecht ist von Morbus Fabry häufiger betroffen?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „Mann“ oder „Frau“ beantworten.",
+        ]
+    expected:
+      answer: "Mann"
+
+  - case: dichotomous:cardiology:de
+    input:
+      prompt: Haben medikamentöse Therapien Einfluss auf den natürlichen Verlauf von Aortenklappenstenose?
+      system_messages:
+        [
+          "Sie erhalten eine Frage und sollten diese nur mit den Worten „ja“ oder „nein“ beantworten.",
+        ]
+    expected:
+      answer: "nein"
+
+    # Level 2: Single or Multiple choice questions
+
+  - case: single_choice:cardiology:de
+    input:
+      prompt: Welches dieser Merkmale deutet nicht eindeutig auf eine Ätiologie oder morphologische Diagnose? (A) Grundrhythmus und Herzfrequenz (B) Atrioventrikuläre Block (AV-Block) (C) Ventrikuläres Präexzitationsmuster (D) Verteilung der Repolarisationsanomalien
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden",
+        ]
+    expected:
+      answer: "a"
+
+  - case: single_choice:cardiology:de
+    input:
+      prompt: Welches Merkmale wird nicht mit der Hilfe von Echokardiographie und CMR beurteilt? (A) Ventrikelfunktion (B) Hypertrophie (C) Myokardiale Ischämie (D) Dilatation
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden",
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice:cardiology:de
+    input:
+      prompt: Welcher dieser Genotypen ist kein Hochrisiko Indikator für den plötzlichen Herztod bei Patienten mit DCM und NDLVC? (A) PLN  (B) TMEM43  (C) APOE  (D) DSP
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden",
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice:cardiology:de
+    input:
+      prompt: Welche dieser Erkankungen ist keine Endomyokardiale Störungen? (A) Morbus Fabry (B) Hypereosinophilie (C) Karzinoide (D) Endokardiale Fibroelastose
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden",
+        ]
+    expected:
+      answer: "a"
+
+  - case: single_choice:cardiology:de
+    input:
+      prompt: Ab welcher Breite der Vena contracta (in mm) kann eine hochgradigen Aortenklappeninsuffizienz diagnostiziert werden? (A) >50 (B) >6 (C) >12 (D) >23
+      system_messages:
+        [
+          "Sie erhalten eine Multiple-Choice-Frage. Beantworten Sie die Frage prägnant, indem Sie nur den richtigen Buchstaben der Frage in Kleinbuchstaben beantworten. Denken Sie daran, nur einen Kleinbuchstaben und nicht die ganze richtige Antwort zu verwenden",
+        ]
+    expected:
+      answer: "b"
+
+    # Level 3: Word questions
+
+  - case: one_word:cardiology:de
+    input:
+      prompt: Welches bildgebende Verfahren wird beim Verdacht auf Amyloidose verwendet?
+      system_messages: ["Beantworten Sie die folgende Frage mit nur einem Wort"]
+    expected:
+      answer: "Knochenszintigraphie"
+
+  - case: one_word:cardiology:de
+    input:
+      prompt: Was ist das empfohlen Maximum an Zeitspanne zwischen Nachunterschung bei klinisch stabilen Patienten mit einer Kardiomyopathie?
+      system_messages:
+        [
+          "Beantworten Sie die folgende Frage mit nur einer Angabe in Jahren. Nur die Zahl ohne weitere Beschreibung",
+        ]
+    expected:
+      answer: "2"
+
+  - case: one_word:cardiology:de
+    input:
+      prompt: Welche Methode wird zum Abschätzung des 5-Jahres-Risikos für einen plötzlichen Tod bei Patienten im Alter von ≥ 16 Jahren verwendet ?
+      system_messages:
+        ["Beantworten Sie die folgende Frage mit nur einem Wort."]
+    expected:
+      answer: "HCM-SCD-Risikorechner"
+
+  - case: one_word:cardiology:de
+    input:
+      prompt: Wie viele Wochen nach einer Intervation bei einer periphere arterielle Verschlusskrankheit muss ein Patienten mindestens warten bis er wieder einen Bus fahren kann?
+      system_messages:
+        [
+          "Beantworten Sie die folgende Frage mit nur einer Angabe in Wochen. Nur die Zahl ohne weitere Beschreibung",
+        ]
+    expected:
+      answer: "1"
+
+  - case: one_word:cardiology:de
+    input:
+      prompt: Welches standardisierte Medikament sollte in Erwägung gezogen werden, wenn die Herzfrequenz eines Patienten trotz Betablockertherapie hoch bleibt?
+      system_messages:
+        ["Beantworten Sie die folgende Frage mit nur einem Wort."]
+    expected:
+      answer: "Digoxin"
+
+  ###########################################################################################################
+  # Test case: Questions about “emergency medicine” for prospective emergency physicians
+  # Language: English
+  ###########################################################################################################
+
+  # Level 1: Yes or no questions
+  - case: dichotomous:cardiology:en
+    input:
+      prompt: Do drug therapies influence the natural progression of aortic valve stenosis?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'",
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous:cardiology:en
+    input:
+      prompt: Which gender is more frequently affected by Fabry disease?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'Men' or 'Woman'",
+        ]
+    expected:
+      answer: "Men"
+
+  - case: dichotomous:cardiology:en
+    input:
+      prompt: Does a routine follow-up examination of stable patients with cardiomyopathy always include an ECG and an echocardiogram?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'",
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous:cardiology:en
+    input:
+      prompt: Arrhythmogenic right ventricular cardiomyopathy (ARVC) must have dominant RV dilatation and dysfunction with histologic involvement?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'",
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous:cardiology:en
+    input:
+      prompt: Is digoxin and arterial and venous dilators recommended in patients with resting or provocable LVOTO?
+      system_messages:
+        [
+          "You will receive a question and you should answer it with only using the word 'yes' or 'no'",
+        ]
+    expected:
+      answer: "no"
+
+    # Level 2: Single or Multiple choice questions
+
+  - case: single_choice:cardiology:en
+    input:
+      prompt: From which width of the vena contracta (in mm) can a high-grade aortic valve insufficiency be diagnosed? (A) >50 (B) >6 (C) >12 (D) >23
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "a"
+
+  - case: single_choice:cardiology:en
+    input:
+      prompt: Which of these genotypes is not a high-risk indicator for sudden cardiac death in patients with DCM and NDLVC? (A) PLN (B) TMEM43 (C) APOE (D) DSP
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice:cardiology:en
+    input:
+      prompt: Which features are not assessed using echocardiography and CMR? (A) Ventricular function (B) Hypertrophy (C) Myocardial ischemia (D) Dilatation
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice:cardiology:en
+    input:
+      prompt: Which of these features does not clearly indicate an etiologic or morphologic diagnosis? (A) Baseline rhythm and heart rate (B) Atrioventricular block (AV block) (C) Ventricular preexcitation pattern (D) Distribution of repolarization abnormalities
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "a"
+
+  - case: single_choice:cardiology:en
+    input:
+      prompt: Which of these diseases is not an endomyocardial disorder? (A) Fabry disease (B) Hypereosinophilia (C) Carcinoids (D) Endocardial fibroelastosis
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "a"
+
+    # Level 3: Word questions
+
+  - case: one_word:cardiology:en
+    input:
+      prompt: Which imaging procedure is used for suspected amyloidosis?
+      system_messages: ["Answer the following question with just two words"]
+    expected:
+      answer: "Bone scintigraphy"
+
+  - case: one_word:cardiology:en
+    input:
+      prompt: What is the recommended maximum time between follow-up examinations in clinically stable patients with cardiomyopathy?
+      system_messages:
+        [
+          "Answer the following question in years only. Just the number without further description.",
+        ]
+    expected:
+      answer: "2"
+
+  - case: one_word:cardiology:en
+    input:
+      prompt: Which method is used to estimate the 5-year risk of sudden death in patients aged ≥ 16 years ?
+      system_messages:
+        ["Answer the following question with just with the name of the method"]
+    expected:
+      answer: "HCM Risk-SCD Calculator"
+
+  - case: one_word:cardiology:en
+    input:
+      prompt: How many weeks after an intervention for peripheral arterial occlusive disease does a patient have to wait at least until he can drive a bus again?
+      system_messages:
+        [
+          "Answer the following question in weeks only. Just the number without further description.",
+        ]
+    expected:
+      answer: "1"
+
+  - case: one_word:cardiology:en
+    input:
+      prompt: Which standardized medication should be considered if a patient's heart rate remains high despite beta-blocker therapy?
+      system_messages: ["Answer the following question with just one words"]
+    expected:
+      answer: "Digoxin"
+
+  ###########################################################################################################
+  # Test case: Questions about “dermatology” for dermatology physicians
+  # Language: German
+  ###########################################################################################################
+
+  # Level 1: Yes or no questions
+  - case: dichotomous:dermatology:de
+    input:
+      prompt: Die Erkrankung Rosazea kann sich durch Koffein, Alkohol, Nikotin, UV-Strahlen und Stress verschlechtern.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück.",
+        ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous:dermatology:de
+    input:
+      prompt: Bestimmte Nahrungsmittel können die Ursache für eine chronische Nesselsucht bei Erwachsenen darstellen.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück.",
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous:dermatology:de
+    input:
+      prompt: Bei einem mittelgradigem differenzierten Plattenepithelkarzinom am Fingerrücken mit einer Tumordicke von 6mm ist die einzige Behandlungsoption die Fingeramputation.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück.",
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous:dermatology:de
+    input:
+      prompt: Die Immunsuppression ist ein Risikofaktor für NMSC (Weißer Hautkrebs).
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück.",
+        ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous:dermatology:de
+    input:
+      prompt: Bei der BRAF-Mutation wird Vemurafenib als wirksames Medikament verwendet.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück.",
+        ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous:dermatology:de
+    input:
+      prompt: Ursache für ein Angioödem kann eine Typ 4 Reaktion nach Coombs sein.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück.",
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous:dermatology:de
+    input:
+      prompt: Das Nikolski-Zeichen kann bei Verbrühungen und Verätzungen auftreten.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück.",
+        ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous:dermatology:de
+    input:
+      prompt: Nicht-melanozytäre Hauttumore können an lichtexponierter Haut entstehen.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück.",
+        ]
+    expected:
+      answer: "ja"
+
+  - case: dichotomous:dermatology:de
+    input:
+      prompt: Die Melanominzidenz hat in den letzten Jahrzehnten deutlich abgenommen.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück.",
+        ]
+    expected:
+      answer: "nein"
+
+  - case: dichotomous:dermatology:de
+    input:
+      prompt: Bei Mundsoor treten typischerweise Koplik-Flecken auf der Zunge auf.
+      system_messages:
+        [
+          "Prüfe den Satz und gebe ‚ja‘ zurück, wenn der Satz korrekt ist. Ist der Satz falsch, gebe ‚nein‘ zurück.",
+        ]
+    expected:
+      answer: "nein"
+
+  # Level 2: Single or Multiple choice questions
+
+  - case: multiple_choice:dermatology:de
+    input:
+      prompt: Für welche Erkrankungen sind rötlich-livide, ulzerierte Knoten verdächtig? A Merkelzellkarzinom, B Talgdrüsenkarzinom, C Plattenepithelkarzinom, D Ameloplastisches malignes Melanom, E Basalzellkarzinom
+      system_messages:
+        [
+          "Wähle aus den Antwortmöglichkeiten alle passenden Antworten aus und gebe die zugehörigen Buchstaben zurück. Gib dabei ausschließlich die Buchstaben zurück und nicht die kompletten Antworten. Verknüpfe diese dann mit ','. In der Antwort sollen keine Leerzeichen auftauchen.",
+        ]
+    expected:
+      answer: "a,b,c,d,e"
+
+  - case: single_choice:dermatology:de
+    input:
+      prompt: Durch was unterscheiden sich Akne vulgaris und Rosazea klinisch? A Granulome, B Pusteln, C Erytheme, D Papeln, E Comedone
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gib dabei nur den Buchstaben zurück und nicht die ganze Antwort.",
+        ]
+    expected:
+      answer: "c"
+
+  - case: multiple_choice:dermatology:de
+    input:
+      prompt: Welche Erkrankungen haben ein erhöhtes Risiko für Kontaktallergien? A Lichen Planus, B Acne vulgaris, C Psoriasis vulgaris, D Ulcus cruris, E Atopisches Ekzem
+      system_messages:
+        [
+          "Wähle aus den Antwortmöglichkeiten alle passenden Antworten aus und gebe die zugehörigen Buchstaben zurück. Gib dabei ausschließlich die Buchstaben zurück und nicht die kompletten Antworten. Verknüpfe diese dann mit ','. In der Antwort sollen keine Leerzeichen auftauchen.",
+        ]
+    expected:
+      answer: "d,e"
+
+  - case: multiple_choice:dermatology:de
+    input:
+      prompt: Patienten mit einem Befall welcher Hautfalten zeigen ein höheres Risiko für Psoriasis-Arthritis? A Kniekehle, B Kopfhaut, C Halsbeugen, D Nagel, E Pofalte
+      system_messages:
+        [
+          "Wähle aus den Antwortmöglichkeiten alle passenden Antworten aus und gebe die zugehörigen Buchstaben zurück. Gib dabei ausschließlich die Buchstaben zurück und nicht die kompletten Antworten. Verknüpfe diese dann mit ','. In der Antwort sollen keine Leerzeichen auftauchen.",
+        ]
+    expected:
+      answer: "b,d,e"
+
+  - case: single_choice:dermatology:de
+    input:
+      prompt: Welche Erkrankung liegt vor, wenn nach einem Zeckenstich eine ringförmige Rötung entsteht? A Erythema elevatum, B Erythema anulare centrifugum, C Erythema chronicum migrans, D Erythema circinatum, E Erythema Granulate
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gib dabei nur den Buchstaben zurück und nicht die ganze Antwort.",
+        ]
+    expected:
+      answer: "c"
+
+  - case: multiple_choice:dermatology:de
+    input:
+      prompt: Welche Anzeichen sich typsich für AGEP (akute generalisierte exanthematische Pustulose)? A Virale Pusteln, B Sterile Pusteln, C Follikulär gebundene Pusteln, D Bakterielle Pusteln, E Nicht follikulär gebundene Pusteln
+      system_messages:
+        [
+          "Wähle aus den Antwortmöglichkeiten alle passenden Antworten aus und gebe die zugehörigen Buchstaben zurück. Gib dabei ausschließlich die Buchstaben zurück und nicht die kompletten Antworten. Verknüpfe diese dann mit ','. In der Antwort sollen keine Leerzeichen auftauchen.",
+        ]
+    expected:
+      answer: "b,e"
+
+  - case: single_choice:dermatology:de
+    input:
+      prompt: Bei welcher Erkrankung sind Papeln vorzufinden? A Psoriasis, B Herpes zoster, C Lichen planus
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gib dabei nur den Buchstaben zurück und nicht die ganze Antwort.",
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice:dermatology:de
+    input:
+      prompt: Welche der folgenden Optionen stimmt bei Furunkeln nicht? A Furunkel an der Oberlippe können Ursache einer Sinus cavernosus Infektion sein, B häufigster Erreger sind Streptokokken, C häufige Rezidive können Hinweis auf eine Immuninsuffizienz sein, D wird mit penicillinrsistentem AB behandelt, E es handelt  sich um eine massive Perifollikulitis mit Nekrose
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gib dabei nur den Buchstaben zurück und nicht die ganze Antwort.",
+        ]
+    expected:
+      answer: "b"
+
+  - case: single_choice:dermatology:de
+    input:
+      prompt: Welches Medikament gehört nicht zum Therapiespektrum der Akne vulgaris? A Isotretionin (oral), B Itraconazol, C Benzylperoxid (topisch), D Antiandrogen (bei Frauen), E Minocyclin
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gib dabei nur den Buchstaben zurück und nicht die ganze Antwort.",
+        ]
+    expected:
+      answer: "b"
+
+  - case: single_choice:dermatology:de
+    input:
+      prompt: Welche Eigenschaft weisen die Nägel Bei Psoriasis auf? A Ölflecken, B Bruchnägel, C Längsstreifung, D Glanznägel
+      system_messages:
+        [
+          "Beantworte die Frage, indem du eine der gegebenen Antwortmöglichkeiten auswählst. Gib dabei nur den Buchstaben zurück und nicht die ganze Antwort.",
+        ]
+    expected:
+      answer: "a"
+
+  # Level 3: Word questions
+
+  - case: regex:dermatology:de
+    input:
+      prompt: Welche begleitende, medikamentöse Therapie von Akne ist bei der Gabe von Isotretionin nötig?
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - - "kontrazeption"
+          - "verhütung"
+
+  - case: regex:dermatology:de
+    input:
+      prompt: Was ist die häufigste Ursache für Erythema nodosum?
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - "streptokokken"
+
+  - case: regex:dermatology:de
+    input:
+      prompt: Bei welchen Erkrankungen tritt das Köbner-Phänomen besonders häufig auf?
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - - "lichen ruber planus"
+          - "lichen planus"
+        - "psoriasis"
+
+  - case: regex:dermatology:de
+    input:
+      prompt: Welche HPV-Typen sind onkogene Hochrisikoviren?
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - "16"
+        - "18"
+
+  - case: regex:dermatology:de
+    input:
+      prompt: Welche klinische Formen des Basalzellkarzinoms gibt es?
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - "nodulär"
+        - "superfiziell"
+        - "sklerodermiform"
+        - "pigmentiert"
+        - - "ulzeriert"
+          - "ulzerierend"
+        - - "destruiert"
+          - "destruierend"
+
+  - case: regex:dermatology:de
+    input:
+      prompt: Mit welchem Wirkstoff wird Erysipel medikamentös behandelt?
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - "penicillin"
+
+  - case: regex:dermatology:de
+    input:
+      prompt: Welche Wirkstoffe sollten in einem Notfallkoffer für Allergiker sein?
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - "kortison"
+        - "antihistaminika"
+        - "adrenalin"
+
+  - case: regex:dermatology:de
+    input:
+      prompt: Welcher Botenstoff wird von Mastzellen bei der allergischen Reaktion ausgeschüttet?
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - "histamin"
+
+  - case: regex:dermatology:de
+    input:
+      prompt: Welche Personen sind oft von Mundsoor betroffen?
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - - "kleinkinder"
+          - "Kinder"
+          - "Babies"
+          - "Säuglinge"
+        - - "immunsupprimierte"
+          - "schwaches immunsystem"
+          - "geschwächtes immunsystem"
+        - - "alte"
+          - "ältere"
+
+  - case: regex:dermatology:de
+    input:
+      prompt: Welche Erkrankung zeigt polygonale, juckende und violett erscheinende Papeln?
+      system_messages: ["Antworte so kurz und präzise wie möglich."]
+    expected:
+      words_in_response:
+        - - "lichen ruber planus"
+          - "lichen planus"
+
+  ###########################################################################################################
+  # Test case: Questions about “dermatology” for dermatology physicians
+  # Language: English
+  ###########################################################################################################
+
+  # Level 1: Yes or no questions
+  - case: dichotomous:dermatology:en
+    input:
+      prompt: Rosacea can be worsened by caffeine, alcohol, nicotine, UV rays and stress.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous:dermatology:en
+    input:
+      prompt: Certain foods can be the cause of chronic hives in adults.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous:dermatology:en
+    input:
+      prompt: In the case of a moderately differentiated squamous cell carcinoma on the back of the finger with a tumour thickness of 6 mm, the only treatment option is finger amputation.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous:dermatology:en
+    input:
+      prompt: Immunosuppression is a risk factor for NMSC (white skin cancer).
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous:dermatology:en
+    input:
+      prompt: Vemurafenib is used as an effective drug for BRAF mutations.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous:dermatology:en
+    input:
+      prompt: Angioedema can be caused by a type 4 reaction according to Coombs.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous:dermatology:en
+    input:
+      prompt: The Nikolski sign can occur with scalds and burns.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous:dermatology:en
+    input:
+      prompt: Non-melanocytic skin tumours can develop on skin exposed to light.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "yes"
+
+  - case: dichotomous:dermatology:en
+    input:
+      prompt: The incidence of melanoma has decreased significantly in recent decades.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "no"
+
+  - case: dichotomous:dermatology:en
+    input:
+      prompt: Oral thrush is typically characterised by Koplik's spots on the tongue.
+      system_messages:
+        [
+          "Check the sentence and return 'yes' if the sentence is correct. If the sentence is incorrect, return 'no'.",
+        ]
+    expected:
+      answer: "no"
+
+  # Level 2: Single or Multiple choice questions
+
+  - case: multiple_choice:dermatology:en
+    input:
+      prompt: For which diseases are reddish-livid, ulcerated nodules suspicious? A Merkel cell carcinoma, B Sebaceous gland carcinoma, C Squamous cell carcinoma, D Ameloplastic malignant melanoma, E Basal cell carcinoma
+      system_messages:
+        [
+          "You will receive a multiple choice question. Select all suitable answers from the possible answers and return the corresponding letters. Only return the letters and not the complete answers. Then link these with ','. Do not include whitespaces in your answer.",
+        ]
+    expected:
+      answer: "a,b,c,d,e"
+
+  - case: single_choice:dermatology:en
+    input:
+      prompt: What is the clinical difference between acne vulgaris and rosacea? A granulomas, B pustules, C erythema, D papules, E comedones
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "c"
+
+  - case: multiple_choice:dermatology:en
+    input:
+      prompt: Which diseases have an increased risk of contact allergies? A Lichen planus, B Acne vulgaris, C Psoriasis vulgaris, D Ulcus cruris, E Atopic eczema
+      system_messages:
+        [
+          "You will receive a multiple choice question. Select all suitable answers from the possible answers and return the corresponding letters. Only return the letters and not the complete answers. Then link these with ','. Do not include whitespaces in your answer.",
+        ]
+    expected:
+      answer: "d,e"
+
+  - case: multiple_choice:dermatology:en
+    input:
+      prompt: Patients with an infestation of which skin folds show a higher risk of psoriatic arthritis? A hollow of the knee, B scalp, C bend of the neck, D nail, E buttock crease
+      system_messages:
+        [
+          "You will receive a multiple choice question. Select all suitable answers from the possible answers and return the corresponding letters. Only return the letters and not the complete answers. Then link these with ','. Do not include whitespaces in your answer.",
+        ]
+    expected:
+      answer: "b,d,e"
+
+  - case: single_choice:dermatology:en
+    input:
+      prompt: Which disease is present when a ring-shaped reddening develops after a tick bite? A Erythema elevatum, B Erythema anulare centrifugum, C Erythema chronicum migrans, D Erythema circinatum, E Erythema granulate
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "c"
+
+  - case: multiple_choice:dermatology:en
+    input:
+      prompt: Which signs are typical of AGEP (acute generalised exanthematous pustulosis)? A Viral pustules, B Sterile pustules, C Follicularly bound pustules, D Bacterial pustules, E Non-follicularly bound pustules
+      system_messages:
+        [
+          "You will receive a multiple choice question. Select all suitable answers from the possible answers and return the corresponding letters. Only return the letters and not the complete answers. Then link these with ','. Do not include whitespaces in your answer.",
+        ]
+    expected:
+      answer: "b,e"
+
+  - case: single_choice:dermatology:en
+    input:
+      prompt: In which disease are papules found? A Psoriasis, B Herpes zoster, C Lichen planus
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "c"
+
+  - case: single_choice:dermatology:en
+    input:
+      prompt: Which of the following options is not correct for boils? A boils on the upper lip can be the cause of a cavernous sinus infection, B the most common pathogen is streptococci, C frequent recurrences can be an indication of immune insufficiency, D is treated with penicillin-resistant AB, E it is a massive perifolliculitis with necrosis
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "b"
+
+  - case: single_choice:dermatology:en
+    input:
+      prompt: Which medication is not part of the treatment spectrum for acne vulgaris? A Isotretionin (oral), B Itraconazole, C Benzyl peroxide (topical), D Antiandrogen (for women), E Minocycline
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "b"
+
+  - case: single_choice:dermatology:en
+    input:
+      prompt: Which characteristic do the nails have in psoriasis? A oil stains, B broken nails, C longitudinal striation, D shiny nails
+      system_messages:
+        [
+          "Answer the question by selecting one of the given answer options. Only return the letter and not the whole answer.",
+        ]
+    expected:
+      answer: "a"
+
+  # Level 3: Word questions
+
+  - case: regex:dermatology:en
+    input:
+      prompt: What concomitant drug therapy for acne is necessary when administering Isotretionin?
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - - "contraception"
+          - "prevention"
+          - "contraceptive"
+          - "contraceptiva"
+
+  - case: regex:dermatology:en
+    input:
+      prompt: What is the most common cause of erythema nodosum?
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - - "streptococci"
+          - "streptococcus"
+          - "streptococcal"
+
+  - case: regex:dermatology:en
+    input:
+      prompt: In which diseases does the Köbner phenomenon occur particularly frequently?
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - - "lichen ruber planus"
+          - "lichen planus"
+        - "psoriasis"
+
+  - case: regex:dermatology:en
+    input:
+      prompt: Which HPV types are high-risk oncogenic viruses?
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - "16"
+        - "18"
+
+  - case: regex:dermatology:en
+    input:
+      prompt: What clinical forms of basal cell carcinoma are there?
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - "nodular"
+        - "superficial"
+        - "sclerodermiform"
+        - - "pigmented"
+          - "pigmentised"
+        - - "ulcerated"
+          - "ulcerised"
+          - "ulcerating"
+          - "ulcerative"
+        - - "destroyed"
+          - "destructed"
+          - "destroying"
+          - "destructive"
+
+  - case: regex:dermatology:en
+    input:
+      prompt: Which active substance is used to treat erysipelas with medication?
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - "penicillin"
+
+  - case: regex:dermatology:en
+    input:
+      prompt: Which substances should be in an emergency kit for allergy sufferers?
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - "cortisone"
+        - - "antihistamine"
+          - "antihistaminics"
+        - "adrenalin"
+
+  - case: regex:dermatology:en
+    input:
+      prompt: Which messenger substance is released by mast cells during an allergic reaction?
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - "histamine"
+
+  - case: regex:dermatology:en
+    input:
+      prompt: Which people are often affected by oral thrush?
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - - "toddlers"
+          - "kids"
+          - "children"
+          - "babies"
+        - - "immunocompromised"
+          - "immunosuppressed"
+          - "weak immune system"
+          - "weakened immune system"
+        - - "old"
+          - "elder"
+
+  - case: regex:dermatology:en
+    input:
+      prompt: Which disease is characterised by polygonal, itchy and purple papules?
+      system_messages: ["Answer as briefly and concisely as possible."]
+    expected:
+      words_in_response:
+        - - "lichen ruber planus"
+          - "lichen planus"
+
 text_extraction:
   - case: source_data_extraction
     input:
