@@ -165,8 +165,8 @@ class BlastFetcher(BaseFetcher):
     """
     A class for retrieving API results from BLAST given a parameterised
     BlastQuery.
-    
-    TODO add a limit of characters to be retruned from the response.text?
+
+    TODO add a limit of characters to be returned from the response.text?
     """
 
     def submit_query(self, request_data: BlastQueryParameters) -> str:
@@ -263,6 +263,7 @@ class BlastFetcher(BaseFetcher):
             raise TimeoutError(
                 "Maximum attempts reached. Results may not be ready."
             )
+
 
 class BlastInterpreter(BaseInterpreter):
     def summarise_results(
