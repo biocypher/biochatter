@@ -134,8 +134,6 @@ class BaseInterpreter(ABC):
 
             response_text (str): The response.text returned from the request.
 
-            n_lines (int): The number of lines to include from the result file.
-
         Returns:
             A summary of the answer.
 
