@@ -1,9 +1,18 @@
+from collections.abc import Callable
+from typing import Any
 from unittest.mock import Mock, MagicMock, patch
 import os
 
+from pydantic import BaseModel
 import pytest
 
-from biochatter.llm_connect import GptConversation
+from biochatter.api_agent.abc import (
+    BaseQueryBuilder,
+    BaseFetcher,
+    BaseInterpreter,
+)
+
+from biochatter.llm_connect import Conversation, GptConversation
 from biochatter.api_agent.blast import (
     BLAST_QUERY_PROMPT,
     BLAST_SUMMARY_PROMPT,
@@ -35,30 +44,82 @@ def conversation_factory():
     return conversation
 
 
+class TestQueryBuilder(BaseQueryBuilder):
+    def create_runnable(
+        self, query_parameters: BaseModel, conversation: Conversation
+    ) -> Callable[..., Any]:
+        return "mock_runnable"
+
+    def parameterise_query(
+        self, question: str, conversation: Conversation
+    ) -> BaseModel:
+        return "mock_result"
+
+
+class TestFetcher(BaseFetcher):
+    def submit_query(self, request_data):
+        return "mock_url"
+
+    def fetch_results(self, question_uuid, query_return, max_attempts=10000):
+        return "mock_results"
+
+
+class TestInterpreter(BaseInterpreter):
+    def summarise_results(
+        self,
+        question: str,
+        summary_prompt: str,
+        conversation_factory: Callable[..., Any],
+        response_text: str,
+    ) -> str:
+        return "mock_summary"
+
+
+class MockModel(BaseModel):
+    field: str
+
+
+@pytest.fixture
+def query_builder():
+    return TestQueryBuilder()
+
+
+@pytest.fixture
+def result_fetcher():
+    return TestFetcher()
+
+
+@pytest.fixture
+def result_interpreter():
+    return TestInterpreter()
+
+
+@pytest.fixture
+def test_agent(query_builder, result_fetcher, result_interpreter):
+    return APIAgent(
+        conversation_factory=MagicMock(),
+        query_builder=query_builder,
+        result_fetcher=result_fetcher,
+        result_interpreter=result_interpreter,
+    )
+
+
 class TestAPIAgent:
-    @patch("biochatter.api_agent.api_agent.query_builder.parameterise_query")
-    def test_parameterise_query(self, mock_parameterise):
+    def test_parameterise_query(self, test_agent):
+        result = test_agent.parameterise_query("Mock question")
+        assert result == "mock_result"
+
+    def test_submit_query(self, test_agent):
+        result = test_agent.submit_query(MockModel(field="Mock field"))
+        assert result == "mock_url"
+
+    def test_fetch_results(self, test_agent):
         pass
 
-    @patch("biochatter.api_agent.api_agent.result_fetcher.submit_query")
-    def submit_query(self, mock_submit):
+    def test_summarise_results(self, test_agent):
         pass
 
-    @patch("biochatter.api_agent.api_agent.result_fetcher.fetch_results")
-    def fetch_results(self, mock_fetch):
-        pass
-
-    @patch("biochatter.api_agent.api_agent.interpreter.summarise_results")
-    def summarise_results(self, mock_summarise):
-        pass
-
-    @patch("biochatter.api_agent.api_agent.query_builder.parameterise_query")
-    @patch("biochatter.api_agent.api_agent.result_fetcher.submit_query")
-    @patch("biochatter.api_agent.api_agent.result_fetcher.fetch_results")
-    @patch("biochatter.api_agent.api_agent.interpreter.summarise_results")
-    def execute(
-        self, mock_parameterise, mock_submit, mock_fetch, mock_summarise
-    ):
+    def test_execute(self, test_agent):
         pass
 
 
