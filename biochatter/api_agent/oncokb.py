@@ -278,29 +278,18 @@ class OncoKBFetcher(BaseFetcher):
         print(response.url)
         return response.url
 
-    def fetch_and_save_results(
+    def fetch_and_return_result(
         self,
         question_uuid: uuid,
         query_return: str,
-        save_path: str,
         max_attempts: int = 10000,
     ):
         """Function to fetch the results of the OncoKB query and save them
         to a .oncokb file.
         """
-        file_name = f"OncoKB_results_{question_uuid}.oncokb"
-
-        if not save_path.endswith("/"):
-            save_path += "/"
-
         response = requests.get(query_return, headers=self.headers)
         response.raise_for_status()
-
-        with open(f"{save_path}{file_name}", "w") as file:
-            file.write(response.text)
-
-        print(f"Results saved in {file_name}")
-        return file_name
+        return response.text
 
 
 class OncoKBInterpreter(BaseInterpreter):
@@ -308,8 +297,7 @@ class OncoKBInterpreter(BaseInterpreter):
         self,
         question: str,
         conversation_factory: Callable,
-        file_path: str,
-        n_lines: int,
+        response_text: str,
     ) -> str:
         """
         Function to extract the answer from the BLAST results.
@@ -317,7 +305,7 @@ class OncoKBInterpreter(BaseInterpreter):
         Args:
             question (str): The question to be answered.
             conversation_factory: A BioChatter conversation object.
-            file_path (str): The path to the BLAST results file.
+            response_text (str): The response.text returned by OncoKB.
             n_lines (int): The number of lines to read from the file.
 
         Returns:
@@ -336,45 +324,11 @@ class OncoKBInterpreter(BaseInterpreter):
                 ("user", "{input}"),
             ]
         )
-
-        context = self.read_first_n_lines(file_path, n_lines)
         summary_prompt = ONCOKB_SUMMARY_PROMPT.format(
-            question=question, context=context
+            question=question, context=response_text
         )
         output_parser = StrOutputParser()
         conversation = conversation_factory()
         chain = prompt | conversation.chat | output_parser
         answer = chain.invoke({"input": {summary_prompt}})
         return answer
-
-    def read_first_n_lines(self, file_path: str, n_lines: int):
-        """
-        Reads the first n lines from a file and returns them as a string.
-
-        Args:
-            file_path (str): The path to the file.
-            n_lines (int): The number of lines to read.
-
-        Returns:
-            str: The first n lines from the file as a string.
-
-        Raises:
-            FileNotFoundError: If the file is not found.
-            Exception: If any other error occurs during file reading.
-
-        """
-        try:
-            with open(file_path, "r") as file:
-                lines = []
-                for i in range(n_lines):
-                    line = file.readline()
-                    if not line:
-                        break
-                    lines.append(line.strip())
-                # to test:
-                # more efficient with \n or without?
-                return "\n".join(lines)
-        except FileNotFoundError:
-            return "The file was not found."
-        except Exception as e:
-            return f"An error occurred: {e}"

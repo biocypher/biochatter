@@ -109,20 +109,20 @@ class TestBlastFetcher:
         mock_submit_query.assert_called_once_with(query_parameters)
         assert result == mock_response
 
-    @patch("biochatter.api_agent.blast.BlastFetcher.fetch_and_save_results")
-    def test_fetch_and_save_results(self, mock_fetch_and_save_results):
+    @patch("biochatter.api_agent.blast.BlastFetcher.fetch_and_return_result")
+    def test_fetch_and_return_result(self, mock_fetch_and_return_result):
         # Arrange
         mock_response = MagicMock()
-        mock_fetch_and_save_results.return_value = mock_response
+        mock_fetch_and_return_result.return_value = mock_response
 
         query_id = "test_query_id"
         fetcher = BlastFetcher()
 
         # Act
-        result = fetcher.fetch_and_save_results(query_id)
+        result = fetcher.fetch_and_return_result(query_id)
 
         # Assert
-        mock_fetch_and_save_results.assert_called_once_with(query_id)
+        mock_fetch_and_return_result.assert_called_once_with(query_id)
         assert result == mock_response
 
     @patch("requests.post")
@@ -180,82 +180,29 @@ def mock_chain(mock_conversation, mock_output_parser):
 
 
 class TestBlastInterpreter:
-    @patch("builtins.open", new_callable=MagicMock)
-    def test_read_first_n_lines_file_not_found(self, mock_open):
-        # Arrange
-        mock_open.side_effect = FileNotFoundError
-        interpreter = BlastInterpreter()
-
-        # Act
-        result = interpreter.read_first_n_lines("non_existent_file.txt", 5)
-
-        # Assert
-        assert result == "The file was not found."
-
-    @patch("builtins.open", new_callable=MagicMock)
-    def test_read_first_n_lines_general_exception(self, mock_open):
-        # Arrange
-        mock_open.side_effect = Exception("Some error")
-        interpreter = BlastInterpreter()
-
-        # Act
-        result = interpreter.read_first_n_lines("some_file.txt", 5)
-
-        # Assert
-        assert result == "An error occurred: Some error"
-
-    @patch("builtins.open", new_callable=MagicMock)
-    def test_read_first_n_lines_success(self, mock_open):
-        # Arrange
-        mock_file = MagicMock()
-        mock_file.readline.side_effect = [
-            "line1\n",
-            "line2\n",
-            "line3\n",
-            "",
-            "",
-        ]
-        mock_open.return_value.__enter__.return_value = mock_file
-        interpreter = BlastInterpreter()
-
-        # Act
-        result = interpreter.read_first_n_lines("some_file.txt", 5)
-
-        # Assert
-        assert result == "line1\nline2\nline3"
-
+    ###FIX THIS TEST 
     def test_summarise_results(mock_prompt, mock_conversation, mock_chain):
         # Arrange
         interpreter = BlastInterpreter()
         question = "What is the best hit?"
-        file_path = "test_blast_results.txt"
-        n_lines = 10
         expected_context = "Mocked context from file"
         expected_summary_prompt = BLAST_SUMMARY_PROMPT.format(
             question=question, context=expected_context
         )
         expected_answer = "Mocked answer"
-
         # Mock the methods and functions
-        interpreter.read_first_n_lines = MagicMock(
-            return_value=expected_context
-        )
         mock_chain.invoke = MagicMock(return_value=expected_answer)
-
+        
         # Act
         result = interpreter.summarise_results(
-            question, mock_conversation, file_path, n_lines
+            question, mock_conversation, expected_context
         )
 
         # Assert
         assert result == expected_answer
-        interpreter.read_first_n_lines.assert_called_once_with(
-            file_path, n_lines
-        )
         mock_chain.invoke.assert_called_once_with(
             {"input": {expected_summary_prompt}}
         )
-
 
 class TestOncoKBQueryBuilder:
     @patch("biochatter.api_agent.oncokb.OncoKBQueryBuilder.create_runnable")
@@ -334,20 +281,20 @@ class TestOncoKBFetcher:
         mock_submit_query.assert_called_once_with(query_parameters)
         assert result == mock_response
 
-    @patch("biochatter.api_agent.oncokb.OncoKBFetcher.fetch_and_save_results")
-    def test_fetch_and_save_results(self, mock_fetch_and_save_results):
+    @patch("biochatter.api_agent.oncokb.OncoKBFetcher.fetch_and_return_result")
+    def test_fetch_and_return_result(self, mock_fetch_and_return_result):
         # Arrange
         mock_response = MagicMock()
-        mock_fetch_and_save_results.return_value = mock_response
+        mock_fetch_and_return_result.return_value = mock_response
 
         query_id = "test_query_id"
         fetcher = OncoKBFetcher()
 
         # Act
-        result = fetcher.fetch_and_save_results(query_id)
+        result = fetcher.fetch_and_return_result(query_id)
 
         # Assert
-        mock_fetch_and_save_results.assert_called_once_with(query_id)
+        mock_fetch_and_return_result.assert_called_once_with(query_id)
         assert result == mock_response
 
 
@@ -379,56 +326,10 @@ def mock_chain(mock_conversation, mock_output_parser):
 
 
 class TestOncoKBInterpreter:
-    @patch("builtins.open", new_callable=MagicMock)
-    def test_read_first_n_lines_file_not_found(self, mock_open):
-        # Arrange
-        mock_open.side_effect = FileNotFoundError
-        interpreter = OncoKBInterpreter()
-
-        # Act
-        result = interpreter.read_first_n_lines("non_existent_file.txt", 5)
-
-        # Assert
-        assert result == "The file was not found."
-
-    @patch("builtins.open", new_callable=MagicMock)
-    def test_read_first_n_lines_general_exception(self, mock_open):
-        # Arrange
-        mock_open.side_effect = Exception("Some error")
-        interpreter = OncoKBInterpreter()
-
-        # Act
-        result = interpreter.read_first_n_lines("some_file.txt", 5)
-
-        # Assert
-        assert result == "An error occurred: Some error"
-
-    @patch("builtins.open", new_callable=MagicMock)
-    def test_read_first_n_lines_success(self, mock_open):
-        # Arrange
-        mock_file = MagicMock()
-        mock_file.readline.side_effect = [
-            "line1\n",
-            "line2\n",
-            "line3\n",
-            "",
-            "",
-        ]
-        mock_open.return_value.__enter__.return_value = mock_file
-        interpreter = OncoKBInterpreter()
-
-        # Act
-        result = interpreter.read_first_n_lines("some_file.txt", 5)
-
-        # Assert
-        assert result == "line1\nline2\nline3"
-
     def test_summarise_results(mock_prompt, mock_conversation, mock_chain):
         # Arrange
         interpreter = OncoKBInterpreter()
         question = "What is the best hit?"
-        file_path = "test_oncokb_results.txt"
-        n_lines = 10
         expected_context = "Mocked context from file"
         expected_summary_prompt = ONCOKB_SUMMARY_PROMPT.format(
             question=question, context=expected_context
@@ -436,21 +337,15 @@ class TestOncoKBInterpreter:
         expected_answer = "Mocked answer"
 
         # Mock the methods and functions
-        interpreter.read_first_n_lines = MagicMock(
-            return_value=expected_context
-        )
         mock_chain.invoke = MagicMock(return_value=expected_answer)
 
         # Act
         result = interpreter.summarise_results(
-            question, mock_conversation, file_path, n_lines
+            question, mock_conversation, expected_context
         )
 
         # Assert
         assert result == expected_answer
-        interpreter.read_first_n_lines.assert_called_once_with(
-            file_path, n_lines
-        )
         mock_chain.invoke.assert_called_once_with(
             {"input": {expected_summary_prompt}}
         )

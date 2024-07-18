@@ -95,11 +95,10 @@ class BaseFetcher(ABC):
         pass
 
     @abstractmethod
-    def fetch_and_save_results(
+    def fetch_and_return_result(
         self,
         question_uuid,
         query_return,
-        save_path,
         max_attempts=10000,
     ):
         """
@@ -121,8 +120,7 @@ class BaseInterpreter(ABC):
         question: str,
         summary_prompt: str,
         conversation_factory: Callable,
-        file_path: str,
-        n_lines: int,
+        response_text: str,
     ) -> str:
         """
         Summarises an answer based on the given parameters.
@@ -134,7 +132,7 @@ class BaseInterpreter(ABC):
             conversation_factory (Callable): A function that creates a
                 BioChatter conversation.
 
-            file_path (str): The path to the file containing the query results.
+            response_text (str): The response.text returned from the request.
 
             n_lines (int): The number of lines to include from the result file.
 

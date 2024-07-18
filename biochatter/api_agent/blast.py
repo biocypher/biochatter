@@ -165,6 +165,8 @@ class BlastFetcher(BaseFetcher):
     """
     A class for retrieving API results from BLAST given a parameterised
     BlastQuery.
+    
+    TODO add a limit of characters to be retruned from the response.text?
     """
 
     def submit_query(self, request_data: BlastQueryParameters) -> str:
@@ -206,21 +208,19 @@ class BlastFetcher(BaseFetcher):
         else:
             raise ValueError("RID not found in BLAST submission response.")
 
-    def fetch_and_save_results(
+    def fetch_and_return_result(
         self,
         question_uuid: uuid,
         query_return: str,
-        save_path: str,
         max_attempts: int = 10000,
     ):
         """SECOND function to be called for a BLAST query.
         Will look for the RID to fetch the data
         """
-        file_name = f"BLAST_results_{question_uuid}.txt"
         ###
         ###    TO DO: Implement logging for all BLAST queries
         ###
-        # log_question_uuid_json(request_data.question_uuid,question, file_name, save_path, log_file_path,request_data.full_url)
+        # log_question_uuid_json(request_data.question_uuid,question, file_name, log_file_path,request_data.full_url)
         base_url = "https://blast.ncbi.nlm.nih.gov/Blast.cgi"
         check_status_params = {
             "CMD": "Get",
@@ -232,9 +232,7 @@ class BlastFetcher(BaseFetcher):
             "FORMAT_TYPE": "XML",
             "RID": query_return,
         }
-        # checking path: should end with '/'
-        if not save_path.endswith("/"):
-            save_path += "/"
+
         # Check the status of the BLAST job
         for attempt in range(max_attempts):
             status_response = requests.get(base_url, params=check_status_params)
@@ -258,34 +256,20 @@ class BlastFetcher(BaseFetcher):
                     )
                     results_response.raise_for_status()
                     # Save the results to a file
-                    print(f"{save_path}{file_name}")
-                    with open(f"{save_path}{file_name}", "w") as file:
-                        file.write(results_response.text)
-                    print(f"Results saved in BLAST_results_{question_uuid}.txt")
-                    break
+                    return results_response.text
                 else:
-                    with open(f"{save_path}{file_name}", "w") as file:
-                        file.write("No hits found")
-                    break
-            else:
-                print("Unknown status")
-                with open(f"{save_path}{file_name}", "w") as file:
-                    file.write("Unknown status")
-                break
+                    return "No hits found"
         if attempt == max_attempts - 1:
             raise TimeoutError(
                 "Maximum attempts reached. Results may not be ready."
             )
-        return file_name
-
 
 class BlastInterpreter(BaseInterpreter):
     def summarise_results(
         self,
         question: str,
         conversation_factory: Callable,
-        file_path: str,
-        n_lines: int,
+        response_text: str,
     ) -> str:
         """
         Function to extract the answer from the BLAST results.
@@ -293,7 +277,7 @@ class BlastInterpreter(BaseInterpreter):
         Args:
             question (str): The question to be answered.
             conversation_factory: A BioChatter conversation object.
-            file_path (str): The path to the BLAST results file.
+            response_text (str): The response.text returned by NCBI.
             n_lines (int): The number of lines to read from the file.
 
         Returns:
@@ -309,45 +293,11 @@ class BlastInterpreter(BaseInterpreter):
                 ("user", "{input}"),
             ]
         )
-
-        context = self.read_first_n_lines(file_path, n_lines)
         summary_prompt = BLAST_SUMMARY_PROMPT.format(
-            question=question, context=context
+            question=question, context=response_text
         )
         output_parser = StrOutputParser()
         conversation = conversation_factory()
         chain = prompt | conversation.chat | output_parser
         answer = chain.invoke({"input": {summary_prompt}})
         return answer
-
-    def read_first_n_lines(self, file_path: str, n_lines: int):
-        """
-        Reads the first n lines from a file and returns them as a string.
-
-        Args:
-            file_path (str): The path to the file.
-            n_lines (int): The number of lines to read.
-
-        Returns:
-            str: The first n lines from the file as a string.
-
-        Raises:
-            FileNotFoundError: If the file is not found.
-            Exception: If any other error occurs during file reading.
-
-        """
-        try:
-            with open(file_path, "r") as file:
-                lines = []
-                for i in range(n_lines):
-                    line = file.readline()
-                    if not line:
-                        break
-                    lines.append(line.strip())
-                # to test:
-                # more efficient with \n or without?
-                return "\n".join(lines)
-        except FileNotFoundError:
-            return "The file was not found."
-        except Exception as e:
-            return f"An error occurred: {e}"

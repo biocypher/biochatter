@@ -52,12 +52,10 @@ class APIAgent:
                 BaseInterpreter class.
         """
         self.conversation_factory = conversation_factory
-        self.result_path = ".api_results/"
         self.query_builder = query_builder
         self.result_fetcher = result_fetcher
         self.result_interpreter = result_interpreter
-
-        os.makedirs(self.result_path, exist_ok=True)
+        self.final_answer = None
 
     def parameterise_query(self, question: str) -> Optional[BaseModel]:
         """
@@ -87,21 +85,20 @@ class APIAgent:
         retry logic to fetch results.
         """
         try:
-            return self.result_fetcher.fetch_and_save_results(
-                question_uuid, rid, self.result_path, 100
+            return self.result_fetcher.fetch_and_return_result(
+                question_uuid, rid, 100
             )
         except Exception as e:
             print(f"Error fetching results: {e}")
             return None
 
-    def summarise_results(self, question: str, file_name: str) -> Optional[str]:
+    def summarise_results(self, question: str, response_text: str) -> Optional[str]:
         """
         Summarise the retrieved results to extract the answer to the question.
         """
         try:
-            file_path = os.path.join(self.result_path, file_name)
             return self.result_interpreter.summarise_results(
-                question, self.conversation_factory, file_path, 100
+                question, self.conversation_factory, response_text
             )
         except Exception as e:
             print(f"Error extracting answer: {e}")
@@ -137,18 +134,19 @@ class APIAgent:
 
         # Fetch results
         try:
-            file_name = self.fetch_results(query.question_uuid, rid)
-            if not file_name:
+            response_text = self.fetch_results(query.question_uuid, rid)
+            if not response_text:
                 raise ValueError("Failed to fetch results.")
         except ValueError as e:
             print(e)
 
         # Extract answer from results
         try:
-            final_answer = self.summarise_results(question, file_name)
+            final_answer = self.summarise_results(question, response_text)
             if not final_answer:
                 raise ValueError("Failed to extract answer from results.")
         except ValueError as e:
             print(e)
-
+        
+        self.final_answer = final_answer
         return final_answer
