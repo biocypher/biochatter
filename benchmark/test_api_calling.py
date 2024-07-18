@@ -1,6 +1,8 @@
 import inspect
+from urllib.parse import urlencode
 
 import pytest
+from unittest.mock import Mock, patch
 
 from biochatter._misc import ensure_iterable
 from biochatter.api_agent.oncokb import OncoKBFetcher, OncoKBQueryBuilder
@@ -23,9 +25,9 @@ def test_api_calling(
     skip_if_already_run(
         model_name=model_name, task=task, md5_hash=yaml_data["hash"]
     )
-    if False:
+    if "gpt-" not in model_name:
         pytest.skip(
-            f"test case {yaml_data['case']} not supported for {task} benchmark"
+            f"model {model_name} does not support API calling for {task} benchmark"
         )
 
     def run_test():
@@ -36,8 +38,12 @@ def test_api_calling(
             conversation=conversation,
         )
 
-        fetcher = OncoKBFetcher()
-        api_query = fetcher.submit_query(parameters)
+        params = parameters.dict(exclude_unset=True)
+        endpoint = params.pop("endpoint")
+        base_url = params.pop("base_url")
+        params.pop("question_uuid")
+        full_url = f"{base_url}/{endpoint}"
+        api_query = f"{full_url}?{urlencode(params)}"
 
         score = []
         for expected_part in ensure_iterable(
