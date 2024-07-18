@@ -113,8 +113,8 @@ class RagAgent:
             self.query_func = APIAgent(
                 conversation_factory=conversation_factory,
                 query_builder=BlastQueryBuilder(),
-                result_fetcher=BlastFetcher(),
-                result_interpreter=BlastInterpreter(),
+                fetcher=BlastFetcher(),
+                interpreter=BlastInterpreter(),
             )
         elif self.mode == RagAgentModeEnum.API_ONCOKB:
             from .api_agent.oncokb import (
@@ -127,8 +127,8 @@ class RagAgent:
             self.query_func = APIAgent(
                 conversation_factory=conversation_factory,
                 query_builder=OncoKBQueryBuilder(),
-                result_fetcher=OncoKBFetcher(),
-                result_interpreter=OncoKBInterpreter(),
+                fetcher=OncoKBFetcher(),
+                interpreter=OncoKBInterpreter(),
             )
         else:
             raise ValueError(

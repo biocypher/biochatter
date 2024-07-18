@@ -68,7 +68,6 @@ class TestInterpreter(BaseInterpreter):
     def summarise_results(
         self,
         question: str,
-        summary_prompt: str,
         conversation_factory: Callable[..., Any],
         response_text: str,
     ) -> str:
@@ -85,22 +84,22 @@ def query_builder():
 
 
 @pytest.fixture
-def result_fetcher():
+def fetcher():
     return TestFetcher()
 
 
 @pytest.fixture
-def result_interpreter():
+def interpreter():
     return TestInterpreter()
 
 
 @pytest.fixture
-def test_agent(query_builder, result_fetcher, result_interpreter):
+def test_agent(query_builder, fetcher, interpreter):
     return APIAgent(
         conversation_factory=MagicMock(),
         query_builder=query_builder,
-        result_fetcher=result_fetcher,
-        result_interpreter=result_interpreter,
+        fetcher=fetcher,
+        interpreter=interpreter,
     )
 
 
@@ -118,7 +117,8 @@ class TestAPIAgent:
         assert result == "mock_results"
 
     def test_summarise_results(self, test_agent):
-        pass
+        result = test_agent.summarise_results("mock_question", "mock_results")
+        assert result == "mock_summary"
 
     def test_execute(self, test_agent):
         pass

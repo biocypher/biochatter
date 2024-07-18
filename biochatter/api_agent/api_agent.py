@@ -26,8 +26,8 @@ class APIAgent:
         self,
         conversation_factory: Callable,
         query_builder: "BaseQueryBuilder",
-        result_fetcher: "BaseFetcher",
-        result_interpreter: "BaseInterpreter",
+        fetcher: "BaseFetcher",
+        interpreter: "BaseInterpreter",
     ):
         """
 
@@ -52,8 +52,8 @@ class APIAgent:
         """
         self.conversation_factory = conversation_factory
         self.query_builder = query_builder
-        self.result_fetcher = result_fetcher
-        self.result_interpreter = result_interpreter
+        self.fetcher = fetcher
+        self.interpreter = interpreter
         self.final_answer = None
 
     def parameterise_query(self, question: str) -> Optional[BaseModel]:
@@ -73,7 +73,7 @@ class APIAgent:
         Submit the generated query to the API and return the RID.
         """
         try:
-            return self.result_fetcher.submit_query(api_fields)
+            return self.fetcher.submit_query(api_fields)
         except Exception as e:
             print(f"Error submitting query: {e}")
             return None
@@ -86,9 +86,7 @@ class APIAgent:
         retry logic to fetch results.
         """
         try:
-            return self.result_fetcher.fetch_results(
-                question_uuid, query_return, 100
-            )
+            return self.fetcher.fetch_results(question_uuid, query_return, 100)
         except Exception as e:
             print(f"Error fetching results: {e}")
             return None
@@ -100,8 +98,10 @@ class APIAgent:
         Summarise the retrieved results to extract the answer to the question.
         """
         try:
-            return self.result_interpreter.summarise_results(
-                question, self.conversation_factory, response_text
+            return self.interpreter.summarise_results(
+                question=question,
+                conversation_factory=self.conversation_factory,
+                response_text=response_text,
             )
         except Exception as e:
             print(f"Error extracting answer: {e}")
