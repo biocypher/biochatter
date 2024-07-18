@@ -21,21 +21,21 @@ BENCHMARK_DATASET = get_benchmark_dataset()
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
     "gpt-3.5-turbo-0125",
-    # "gpt-4-0613",
-    # "gpt-4-0125-preview",
-    # "gpt-4o-2024-05-13",
+    "gpt-4-0613",
+    "gpt-4-0125-preview",
+    "gpt-4o-2024-05-13",
 ]
 
 XINFERENCE_MODELS = {
-    # "chatglm3": {
-    #     "model_size_in_billions": [
-    #         6,
-    #     ],
-    #     "model_format": "ggmlv3",
-    #     "quantization": [
-    #         "q4_0",
-    #     ],
-    # },
+    "chatglm3": {
+        "model_size_in_billions": [
+            6,
+        ],
+        "model_format": "ggmlv3",
+        "quantization": [
+            "q4_0",
+        ],
+    },
     # "llama-2-chat": {
     #     "model_size_in_billions": [
     #         7,
@@ -197,7 +197,7 @@ XINFERENCE_MODEL_NAMES = [
     for quantization in XINFERENCE_MODELS[model_name]["quantization"]
 ]
 
-BENCHMARKED_MODELS = OPENAI_MODEL_NAMES  # + XINFERENCE_MODEL_NAMES
+BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
 BENCHMARKED_MODELS.sort()
 
 # Xinference IP and port
