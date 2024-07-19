@@ -6,11 +6,13 @@ import io
 import os
 import pdf2image
 from PIL import Image
+import tempfile  # needed for test
 
 
 def convert_and_resize_image(image: Image, max_size: int = 1024) -> Image:
     """
-    Convert the image to RGB format if needed and resize it to have a maximum dimension of max_size.
+    Convert the image to RGB format if needed and resize it to have a maximum
+    dimension of max_size.
 
     Parameters:
         image (PIL.Image): The input image.
@@ -84,7 +86,8 @@ def convert_to_pil_image(file_path: str, dpi: int = 300) -> Image:
 
 def process_image(path: str, max_size: int) -> str:
     """
-    Process an image, converting it to PNG and resizing if necessary, then encode to base64.
+    Process an image, converting it to PNG and resizing if necessary, then
+    encode to base64.
 
     Parameters:
         path (str): The path to the image file.
@@ -120,7 +123,8 @@ def encode_image(image_path):
 
 def encode_image_from_url(url: str) -> str:
     """
-    Download an image from a URL, convert to base64, and return the base64 string.
+    Download an image from a URL, convert to base64, and return the base64
+    string.
 
     Parameters:
         url (str): The URL of the image.

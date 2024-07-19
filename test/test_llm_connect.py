@@ -1,9 +1,5 @@
 from unittest.mock import Mock, MagicMock, patch, mock_open
-import io
 import os
-import base64
-import subprocess
-import urllib.request
 
 from PIL import Image
 from openai._exceptions import NotFoundError
@@ -402,37 +398,37 @@ def test_convert_to_png():
         assert png_data.startswith(b"\x89PNG")
 
 
-@patch("biochatter.llm_connect.pdf2image.convert_from_path")
+@patch("biochatter._image.pdf2image.convert_from_path")
 def test_convert_to_pil_image_pdf(mock_convert_from_path):
     mock_convert_from_path.return_value = [Image.new("RGB", (1000, 1000))]
-    with patch("biochatter.llm_connect.os.path.exists", return_value=True):
+    with patch("biochatter._image.os.path.exists", return_value=True):
         with patch(
-            "biochatter.llm_connect.os.path.abspath", side_effect=lambda x: x
+            "biochatter._image.os.path.abspath", side_effect=lambda x: x
         ):
             img = convert_to_pil_image("test.pdf")
             assert isinstance(img, Image.Image)
 
 
-@patch("biochatter.llm_connect.subprocess.run")
-@patch("biochatter.llm_connect.os.path.exists", return_value=True)
-@patch("biochatter.llm_connect.os.path.abspath", side_effect=lambda x: x)
+@patch("biochatter._image.subprocess.run")
+@patch("biochatter._image.os.path.exists", return_value=True)
+@patch("biochatter._image.os.path.abspath", side_effect=lambda x: x)
 def test_convert_to_pil_image_eps(mock_abspath, mock_exists, mock_run):
     with Image.new("RGB", (1000, 1000)) as img:
-        with patch("biochatter.llm_connect.Image.open", return_value=img):
+        with patch("biochatter._image.Image.open", return_value=img):
             converted_img = convert_to_pil_image("test.eps")
             assert isinstance(converted_img, Image.Image)
 
 
-@patch("biochatter.llm_connect.Image.open")
-@patch("biochatter.llm_connect.os.path.exists", return_value=True)
-@patch("biochatter.llm_connect.os.path.abspath", side_effect=lambda x: x)
+@patch("biochatter._image.Image.open")
+@patch("biochatter._image.os.path.exists", return_value=True)
+@patch("biochatter._image.os.path.abspath", side_effect=lambda x: x)
 def test_convert_to_pil_image_unsupported(mock_abspath, mock_exists, mock_open):
     with pytest.raises(ValueError):
         convert_to_pil_image("test.txt")
 
 
 def test_process_image():
-    with patch("biochatter.llm_connect.convert_to_pil_image") as mock_convert:
+    with patch("biochatter._image.convert_to_pil_image") as mock_convert:
         with Image.new("RGB", (100, 100)) as img:
             mock_convert.return_value = img
             encoded_image = process_image("test.jpg", max_size=1000)
@@ -458,7 +454,7 @@ def test_encode_image_from_url():
         )
 
         with patch(
-            "biochatter.llm_connect.tempfile.NamedTemporaryFile",
+            "biochatter._image.tempfile.NamedTemporaryFile",
             new_callable=MagicMock,
         ) as mock_tempfile:
             mock_tempfile_instance = (
@@ -470,10 +466,10 @@ def test_encode_image_from_url():
             write_mock = Mock()
             mock_tempfile_instance.write = write_mock
 
-            with patch("biochatter.llm_connect.encode_image") as mock_encode:
+            with patch("biochatter._image.encode_image") as mock_encode:
                 mock_encode.return_value = "base64string"
 
-                with patch("biochatter.llm_connect.os.remove") as mock_remove:
+                with patch("biochatter._image.os.remove") as mock_remove:
                     encoded_str = encode_image_from_url(
                         "http://example.com/image.jpg"
                     )
