@@ -13,8 +13,8 @@ from pymilvus import (
     connections,
 )
 from langchain.schema import Document
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import Milvus
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores import Milvus
 
 logger = logging.getLogger(__name__)
 

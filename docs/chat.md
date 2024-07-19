@@ -105,3 +105,10 @@ msg, token_usage, correction = conversation.query(
     image_url="my/local/image.jpg"
 )
 ```
+
+### Open-source multimodal models
+
+While OpenAI models work seamlessly, open-source multimodal models can be buggy
+or incompatible with certain hardware. We have experienced mixed success with
+open models and, while they are technically supported by BioChatter, their
+outputs currently may be unreliable.

@@ -16,9 +16,14 @@ import json
 import logging
 import urllib.parse
 
-from langchain.llms import HuggingFaceHub
-from langchain.schema import AIMessage, HumanMessage, SystemMessage
-from langchain.chat_models import ChatOpenAI, AzureChatOpenAI, ChatOllama
+from langchain_community.chat_models import (
+    ChatOpenAI,
+    AzureChatOpenAI,
+    ChatOllama,
+)
+from langchain_community.llms.huggingface_hub import HuggingFaceHub
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from xinference.client import Client
 import nltk
 import openai
 
@@ -31,7 +36,6 @@ logger = logging.getLogger(__name__)
 OPENAI_MODELS = [
     "gpt-3.5-turbo",
     "gpt-3.5-turbo-16k",
-    "gpt-3.5-turbo-0301",  # legacy 3.5-turbo, until Sep 13, 2023
     "gpt-3.5-turbo-0613",  # updated 3.5-turbo
     "gpt-3.5-turbo-1106",  # further updated 3.5-turbo
     "gpt-4",
@@ -46,7 +50,6 @@ XINFERENCE_MODELS = ["custom-endpoint"]
 TOKEN_LIMITS = {
     "gpt-3.5-turbo": 4000,
     "gpt-3.5-turbo-16k": 16000,
-    "gpt-3.5-turbo-0301": 4000,
     "gpt-3.5-turbo-0613": 4000,
     "gpt-3.5-turbo-1106": 16000,
     "gpt-4": 8000,
@@ -512,7 +515,6 @@ class XinferenceConversation(Conversation):
             individually.
 
         """
-        from xinference.client import Client
 
         super().__init__(
             model_name=model_name,
@@ -791,11 +793,7 @@ class XinferenceConversation(Conversation):
 
             token_usage (dict): The token usage statistics.
         """
-        # if self.user == "community":
-        # self.usage_stats.increment(
-        #     f"usage:[date]:[user]",
-        #     {f"{k}:{model}": v for k, v in token_usage.items()},
-        # )
+        pass
 
     def set_api_key(self):
         """
