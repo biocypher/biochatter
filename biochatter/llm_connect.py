@@ -11,10 +11,11 @@ except ImportError:
     st = None
 
 from abc import ABC, abstractmethod
-import base64
 from typing import Optional
 import json
+import base64
 import logging
+import urllib.parse
 
 from langchain_openai import (
     ChatOpenAI,
@@ -28,7 +29,6 @@ from langchain_community.llms.huggingface_hub import HuggingFaceHub
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 import nltk
 import openai
-import urllib.parse
 
 from ._stats import get_stats
 from .rag_agent import RagAgent
@@ -38,7 +38,6 @@ logger = logging.getLogger(__name__)
 OPENAI_MODELS = [
     "gpt-3.5-turbo",
     "gpt-3.5-turbo-16k",
-    "gpt-3.5-turbo-0613",  # updated 3.5-turbo
     "gpt-3.5-turbo-1106",  # further updated 3.5-turbo
     "gpt-4",
     "gpt-4-32k",
@@ -52,7 +51,6 @@ XINFERENCE_MODELS = ["custom-endpoint"]
 TOKEN_LIMITS = {
     "gpt-3.5-turbo": 4000,
     "gpt-3.5-turbo-16k": 16000,
-    "gpt-3.5-turbo-0613": 4000,
     "gpt-3.5-turbo-1106": 16000,
     "gpt-4": 8000,
     "gpt-4-32k": 32000,
@@ -521,10 +519,11 @@ class XinferenceConversation(Conversation):
             individually.
 
         """
-        # Shaohong: Please keep this xinference importing code here, so that, 
-        # we don't need to depend on xinference if we dont need it (xinference 
+        # Shaohong: Please keep this xinference importing code here, so that,
+        # we don't need to depend on xinference if we dont need it (xinference
         # is expensive to install)
         from xinference.client import Client
+
         super().__init__(
             model_name=model_name,
             prompts=prompts,

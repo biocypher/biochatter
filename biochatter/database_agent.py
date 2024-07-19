@@ -1,3 +1,4 @@
+from collections.abc import Callable
 import json
 
 from langchain.schema import Document
@@ -12,7 +13,7 @@ class DatabaseAgent:
         model_name: str,
         connection_args: dict,
         schema_config_or_info_dict: dict,
-        conversation_factory: callable,
+        conversation_factory: Callable,
     ) -> None:
         """
         Create a DatabaseAgent analogous to the VectorDatabaseAgentMilvus class,
@@ -23,7 +24,7 @@ class DatabaseAgent:
             connection_args (dict): A dictionary of arguments to connect to the
                 database. Contains database name, URI, user, and password.
 
-            conversation_factory (callable): A function to create a conversation
+            conversation_factory (Callable): A function to create a conversation
                 for creating the KG query.
         """
         self.conversation_factory = conversation_factory
