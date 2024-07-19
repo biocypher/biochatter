@@ -258,40 +258,31 @@ class OncoKBFetcher(BaseFetcher):
         }
         self.base_url = "https://demo.oncokb.org/api/v1"
 
-    def submit_query(self, request_data: OncoKBQueryParameters) -> str:
-        """Function to submit the OncoKB query and retrieve the URL.
-        It submits the structured OncoKBQuery obj and returns the full URL.
+    def fetch_results(self, request_data: OncoKBQueryParameters) -> str:
+        """Function to submit the OncoKB query and fetch the results directly.
+        No multi-step procedure, thus no wrapping of submission and retrieval in
+        this case.
 
         Args:
-            request_data: OncoKBQuery object containing the OncoKB query
-                parameters.
+            request_data: OncoKBQuery object (Pydantic model) containing the
+                OncoKB query parameters.
+
         Returns:
-            str: The full URL for the submitted OncoKB query.
+            str: The results of the OncoKB query.
         """
+        # Submit the query and get the URL
         params = request_data.dict(exclude_unset=True)
         endpoint = params.pop("endpoint")
         params.pop("question_uuid")
         full_url = f"{self.base_url}/{endpoint}"
-        print(full_url)
         response = requests.get(full_url, headers=self.headers, params=params)
         response.raise_for_status()
-        print(response.url)
-        return response.url
 
-    # TODO refactor into one step
+        # Fetch the results from the URL
+        results_response = requests.get(response.url, headers=self.headers)
+        results_response.raise_for_status()
 
-    def fetch_results(
-        self,
-        question_uuid: uuid,
-        query_return: str,
-        max_attempts: int = 10000,
-    ):
-        """Function to fetch the results of the OncoKB query and save them
-        to a .oncokb file.
-        """
-        response = requests.get(query_return, headers=self.headers)
-        response.raise_for_status()
-        return response.text
+        return results_response.text
 
 
 class OncoKBInterpreter(BaseInterpreter):

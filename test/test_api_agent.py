@@ -108,12 +108,8 @@ class TestAPIAgent:
         result = test_agent.parameterise_query("Mock question")
         assert result == "mock_result"
 
-    def test_submit_query(self, test_agent):
-        result = test_agent.submit_query(MockModel(field="Mock field"))
-        assert result == "mock_url"
-
     def test_fetch_results(self, test_agent):
-        result = test_agent.fetch_results("mock_uid", "mock_query_result")
+        result = test_agent.fetch_results("mock_query_model")
         assert result == "mock_results"
 
     def test_summarise_results(self, test_agent):
@@ -180,7 +176,7 @@ class TestBlastQueryBuilder:
 
 
 class TestBlastFetcher:
-    @patch("biochatter.api_agent.blast.BlastFetcher.submit_query")
+    @patch("biochatter.api_agent.blast.BlastFetcher._submit_query")
     def test_submit_query(self, mock_submit_query):
         # Arrange
         mock_response = MagicMock()
@@ -190,26 +186,26 @@ class TestBlastFetcher:
         fetcher = BlastFetcher()
 
         # Act
-        result = fetcher.submit_query(query_parameters)
+        result = fetcher._submit_query(query_parameters)
 
         # Assert
         mock_submit_query.assert_called_once_with(query_parameters)
         assert result == mock_response
 
-    @patch("biochatter.api_agent.blast.BlastFetcher.fetch_and_return_result")
-    def test_fetch_and_return_result(self, mock_fetch_and_return_result):
+    @patch("biochatter.api_agent.blast.BlastFetcher._fetch_results")
+    def test_fetch_results(self, mock_fetch_results):
         # Arrange
         mock_response = MagicMock()
-        mock_fetch_and_return_result.return_value = mock_response
+        mock_fetch_results.return_value = mock_response
 
         query_id = "test_query_id"
         fetcher = BlastFetcher()
 
         # Act
-        result = fetcher.fetch_results(query_id)
+        result = fetcher._fetch_results(query_id)
 
         # Assert
-        mock_fetch_and_return_result.assert_called_once_with(query_id)
+        mock_fetch_results.assert_called_once_with(query_id)
         assert result == mock_response
 
     @patch("requests.post")
@@ -236,7 +232,7 @@ class TestBlastFetcher:
         with pytest.raises(
             ValueError, match="RID not found in BLAST submission response."
         ):
-            fetcher.submit_query(query_parameters)
+            fetcher._submit_query(query_parameters)
 
 
 @pytest.fixture
@@ -350,30 +346,11 @@ class TestOncoKBQueryBuilder:
 
 
 class TestOncoKBFetcher:
-    @patch("biochatter.api_agent.oncokb.OncoKBFetcher.submit_query")
-    def test_submit_query(self, mock_submit_query):
+    @patch("biochatter.api_agent.oncokb.OncoKBFetcher.fetch_results")
+    def test_fetch_results(self, mock_fetch_results):
         # Arrange
         mock_response = MagicMock()
-        mock_submit_query.return_value = mock_response
-
-        query_parameters = OncoKBQueryParameters(
-            endpoint="specific/endPoint/toHit",
-            base_url="https://demo.oncokb.org/api/v1",
-        )
-        fetcher = OncoKBFetcher()
-
-        # Act
-        result = fetcher.submit_query(query_parameters)
-
-        # Assert
-        mock_submit_query.assert_called_once_with(query_parameters)
-        assert result == mock_response
-
-    @patch("biochatter.api_agent.oncokb.OncoKBFetcher.fetch_and_return_result")
-    def test_fetch_and_return_result(self, mock_fetch_and_return_result):
-        # Arrange
-        mock_response = MagicMock()
-        mock_fetch_and_return_result.return_value = mock_response
+        mock_fetch_results.return_value = mock_response
 
         query_id = "test_query_id"
         fetcher = OncoKBFetcher()
@@ -382,7 +359,7 @@ class TestOncoKBFetcher:
         result = fetcher.fetch_results(query_id)
 
         # Assert
-        mock_fetch_and_return_result.assert_called_once_with(query_id)
+        mock_fetch_results.assert_called_once_with(query_id)
         assert result == mock_response
 
 
