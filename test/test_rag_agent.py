@@ -141,8 +141,55 @@ def test_rag_agent_invalid_mode():
     assert "Invalid mode. Choose either" in str(excinfo.value)
 
 
-# @pytest.mark.skip(reason="Live test for development purposes")
-def test_rag_agent_api_mode():
+def conversation_factory():
+    # Mock conversation factory
+    return MagicMock()
+
+
+@patch("biochatter.api_agent.oncokb.OncoKBQueryBuilder")
+@patch("biochatter.api_agent.oncokb.OncoKBFetcher")
+@patch("biochatter.api_agent.oncokb.OncoKBInterpreter")
+def test_rag_agent_api_oncokb_mode(
+    mock_query_builder,
+    mock_fetcher,
+    mock_interpreter,
+):
+    """
+    Test the API agent in 'api_oncokb' mode.
+    """
+    # Create an instance of RagAgent in 'api_oncokb' mode
+    rag_agent = RagAgent(
+        mode=RagAgentModeEnum.API_ONCOKB,
+        model_name="gpt-4o",
+        connection_args={},  # Add necessary connection arguments if needed
+        use_prompt=True,  # Ensure prompts are used to get responses
+        conversation_factory=conversation_factory,
+    )
+    assert (
+        rag_agent.mode == RagAgentModeEnum.API_ONCOKB
+    ), "Agent mode should be 'api_oncokb'"
+
+    # Define the test question
+    question = "What is the oncogenic potential of BRAF mutation?"
+
+    # Generate responses using the test question
+    responses = rag_agent.generate_responses(question)
+    assert responses, "No responses generated"
+    assert isinstance(responses, list), "Responses should be a list"
+    assert all(
+        isinstance(response, tuple) for response in responses
+    ), "Each response should be a tuple"
+
+    if responses:
+        print("Test response:", responses[0][1])
+
+    mock_query_builder.assert_called_once()
+    mock_fetcher.assert_called_once()
+    mock_interpreter.assert_called_once()
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_rag_agent_api_mode_no_mock():
     """
     Test the API agent with a specific DNA sequence question.
     """
