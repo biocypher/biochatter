@@ -19,6 +19,9 @@ from biochatter.llm_connect import (
     OllamaConversation,
     AzureGptConversation,
     XinferenceConversation,
+)
+
+from biochatter._image import (
     encode_image,
     process_image,
     convert_to_png,
