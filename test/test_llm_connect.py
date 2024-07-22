@@ -1,7 +1,8 @@
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, MagicMock, patch, mock_open
 import os
 import base64
 
+from PIL import Image
 from openai._exceptions import NotFoundError
 import openai
 import pytest
@@ -17,6 +18,24 @@ from biochatter.llm_connect import (
     OllamaConversation,
     AzureGptConversation,
     XinferenceConversation,
+)
+
+from biochatter._image import (
+    encode_image,
+    process_image,
+    convert_to_png,
+    convert_to_pil_image,
+    encode_image_from_url,
+    convert_and_resize_image,
+)
+
+from biochatter._image import (
+    encode_image,
+    process_image,
+    convert_to_png,
+    convert_to_pil_image,
+    encode_image_from_url,
+    convert_and_resize_image,
 )
 
 
@@ -366,6 +385,102 @@ def test_multiple_cycles_of_ai_and_human(xinference_conversation):
         "role": "user",
         "content": "System message\nHuman message",
     }
+
+
+def test_convert_and_resize_image():
+    with Image.new("RGB", (2000, 2000)) as img:
+        resized_img = convert_and_resize_image(img, max_size=1000)
+        assert resized_img.size == (1000, 1000)
+
+
+def test_convert_to_png():
+    with Image.new("RGB", (100, 100)) as img:
+        png_data = convert_to_png(img)
+        assert isinstance(png_data, bytes)
+        assert png_data.startswith(b"\x89PNG")
+
+
+@patch("biochatter._image.pdf2image.convert_from_path")
+def test_convert_to_pil_image_pdf(mock_convert_from_path):
+    mock_convert_from_path.return_value = [Image.new("RGB", (1000, 1000))]
+    with patch("biochatter._image.os.path.exists", return_value=True):
+        with patch(
+            "biochatter._image.os.path.abspath", side_effect=lambda x: x
+        ):
+            img = convert_to_pil_image("test.pdf")
+            assert isinstance(img, Image.Image)
+
+
+@patch("biochatter._image.subprocess.run")
+@patch("biochatter._image.os.path.exists", return_value=True)
+@patch("biochatter._image.os.path.abspath", side_effect=lambda x: x)
+def test_convert_to_pil_image_eps(mock_abspath, mock_exists, mock_run):
+    with Image.new("RGB", (1000, 1000)) as img:
+        with patch("biochatter._image.Image.open", return_value=img):
+            converted_img = convert_to_pil_image("test.eps")
+            assert isinstance(converted_img, Image.Image)
+
+
+@patch("biochatter._image.Image.open")
+@patch("biochatter._image.os.path.exists", return_value=True)
+@patch("biochatter._image.os.path.abspath", side_effect=lambda x: x)
+def test_convert_to_pil_image_unsupported(mock_abspath, mock_exists, mock_open):
+    with pytest.raises(ValueError):
+        convert_to_pil_image("test.txt")
+
+
+def test_process_image():
+    with patch("biochatter._image.convert_to_pil_image") as mock_convert:
+        with Image.new("RGB", (100, 100)) as img:
+            mock_convert.return_value = img
+            encoded_image = process_image("test.jpg", max_size=1000)
+            assert isinstance(encoded_image, str)
+            assert encoded_image.startswith("iVBORw0KGgo")  # PNG base64 start
+
+
+def test_encode_image():
+    with Image.new("RGB", (100, 100)) as img:
+        m = mock_open(read_data=img.tobytes())
+        with patch("builtins.open", m):
+            encoded_str = encode_image("test.jpg")
+            assert isinstance(encoded_str, str)
+
+
+def test_encode_image_from_url():
+    with patch("biochatter.llm_connect.urllib.request.urlopen") as mock_urlopen:
+        mock_response = MagicMock()
+        mock_response.read.return_value = b"image_data"
+        mock_urlopen.return_value.__enter__.return_value = mock_response
+        mock_urlopen.return_value.info.return_value.get_content_type.return_value = (
+            "image/jpeg"
+        )
+
+        with patch(
+            "biochatter._image.tempfile.NamedTemporaryFile",
+            new_callable=MagicMock,
+        ) as mock_tempfile:
+            mock_tempfile_instance = (
+                mock_tempfile.return_value.__enter__.return_value
+            )
+            mock_tempfile_instance.name = "test_temp_file"
+
+            # Using a simple Mock for the write method to avoid issues with MagicMock
+            write_mock = Mock()
+            mock_tempfile_instance.write = write_mock
+
+            with patch("biochatter._image.encode_image") as mock_encode:
+                mock_encode.return_value = "base64string"
+
+                with patch("biochatter._image.os.remove") as mock_remove:
+                    encoded_str = encode_image_from_url(
+                        "http://example.com/image.jpg"
+                    )
+
+            # Ensure the temporary file write method was called with the correct data
+            write_mock.assert_called_once_with(b"image_data")
+            mock_remove.assert_called_once_with("test_temp_file")
+            assert isinstance(encoded_str, str)
+            assert encoded_str == "base64string"
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
