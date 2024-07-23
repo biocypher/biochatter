@@ -70,6 +70,7 @@ Revise your previous query using the query result and follow the guidelines:
 2. You should use previous critique to improve your query.
 3. Only generate a query without returning any other text.
 """
+```
 revise answer schema:
 ```
 class ReviseQuery(GenerateQuery):
