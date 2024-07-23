@@ -87,3 +87,8 @@ parse step message and generate logs
 parse final result and generate logs
 6. _parse_final_result(self, output: BaseMessage):
 parse final result
+7. _should_continue(self, state: List[BaseMessage]):
+assess output and determine if we can exit loop based on the following rules:
+  1). if loop steps are greateer than limit (30 or user defined), exit
+  2). if score in previous revise node is greater than 7, exit
+  3). if query result in execute_tool node is not empty, exit
