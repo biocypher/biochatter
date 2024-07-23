@@ -100,11 +100,13 @@ class ReflexionAgent(ABC):
         return EXECUTE_TOOL_NODE
 
     @abstractmethod
-    def _tool_function(self, state: List[BaseMessage]):
+    def _tool_function(self, state: List[BaseMessage])->ToolMessage:
         """
         tool function, execute tool based on initial draft or revised answer
         Args:
           state List[BaseMessage]: message history
+        Returns:
+          ToolMessage
         """
         pass
 
