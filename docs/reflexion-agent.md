@@ -28,7 +28,44 @@ AIMessage(...))
 
 ## Usage
 
-TODO: describe how to use the `KGQueryReflexionAgent` (implementation described below)
+class `KGQueryReflexionAgent` provide the ability to generate Cypher query based on user's question.
+
+To use `KGQueryReflexionAgent`,
+1. We need to pass in connection arguments that enables to connect to the target graph database and a conversation factory, which can create an instance of GptConversation.
+```
+from biochatter.llm_connect import GptConversation
+from biochatter.kg_langgraph_agent import KGQueryReflexionAgent
+def create_conversation():
+    conversation = GptConversation(model_name="gpt-3.5-turbo", prompts={})
+    conversation.set_api_key("sk-xxx")
+    return conversation
+
+connection_args = {
+    "host": "127.0.0.1",
+    "port": "7687",
+}
+
+agent = KGQueryReflexionAgent(
+    connection_args=connection_args,
+    conversation_factory=create_conversation,
+)
+```
+2. Generate Knowledge Graph prompts based on user's question with BioCypherPromptEngine, which provides nodes info, edges info and their properties based on user's question.
+```
+from biochatter.prompts import BioCypherPromptEngine
+prompt_engine = BioCypherPromptEngine(
+    model_name="gpt-3.5-turbo",
+    schema_config_or_info_dict=schema_dict, # kg schema info inquired from graph database
+    conversation_factory=create_conversation,
+)
+# generate kg prompts based on user's question
+kg_prompts = prompt_engine.generate_query_prompts(question)
+
+```
+3. generate cypher query
+```
+cypher_query = agent.execute(question, kg_prompt)
+```
 
 ## Implementation
 
