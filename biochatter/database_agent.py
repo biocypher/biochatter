@@ -64,7 +64,6 @@ class DatabaseAgent:
         cypher_query = agent.execute(query, query_prompt)
         return cypher_query
 
-
     def get_query_results(self, query: str, k: int = 3) -> list[Document]:
         """
         Generate a query using the prompt engine and return the results.
@@ -105,3 +104,12 @@ class DatabaseAgent:
                 break
 
         return documents
+
+    def get_description(self):
+        nodes_query = "MATCH (n) RETURN DISTINCT labels(n) LIMIT 300"
+        node_results = self.driver.query(query=nodes_query)
+        edges_query = "MATCH (n) RETURN DISTINCT type(n) LIMIT 300"
+        edge_results = self.driver.query(query=edges_query)
+        return (f"The graph database contains the following nodes and edges: \n"
+                f"nodes: \n{node_results}"
+                f"edges: \n{edge_results}")
