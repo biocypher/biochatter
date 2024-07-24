@@ -28,16 +28,24 @@ AIMessage(...))
 
 ## Usage
 
-class `KGQueryReflexionAgent` provide the ability to generate Cypher query based on user's question.
+The `ReflexionAgent` class can be used to implement a reflexion workflow. Here,
+we demonstrate the ability to generate Cypher queries based on user's question
+using the `KGQueryReflexionAgent` class, which is derived from the abstract
+`ReflexionAgent` base class.
 
-To use `KGQueryReflexionAgent`,
-1. We need to pass in connection arguments that enables to connect to the target graph database and a conversation factory, which can create an instance of GptConversation.
+To use the `KGQueryReflexionAgent`:
+
+1. We pass in connection arguments that enable connection to the target graph
+database and a conversation factory, which can create an instance of
+GptConversation (see [Basic Usage: Chat](chat.md)).
+
 ```
+import os
 from biochatter.llm_connect import GptConversation
 from biochatter.kg_langgraph_agent import KGQueryReflexionAgent
 def create_conversation():
     conversation = GptConversation(model_name="gpt-3.5-turbo", prompts={})
-    conversation.set_api_key("sk-xxx")
+    conversation.set_api_key(os.getenv("OPENAI_API_KEY"))
     return conversation
 
 connection_args = {
@@ -50,19 +58,24 @@ agent = KGQueryReflexionAgent(
     conversation_factory=create_conversation,
 )
 ```
-2. Generate Knowledge Graph prompts based on user's question with BioCypherPromptEngine, which provides nodes info, edges info and their properties based on user's question.
+
+2. We generate the basic Knowledge Graph prompt for the LLM based on a user's
+question with the `BioCypherPromptEngine`, which provides node info, edge info,
+and node and edge properties based on the user's question.
+
 ```
 from biochatter.prompts import BioCypherPromptEngine
 prompt_engine = BioCypherPromptEngine(
     model_name="gpt-3.5-turbo",
-    schema_config_or_info_dict=schema_dict, # kg schema info inquired from graph database
+    schema_config_or_info_dict=schema_dict,  # the schema definition of our graph
     conversation_factory=create_conversation,
 )
-# generate kg prompts based on user's question
-kg_prompts = prompt_engine.generate_query_prompts(question)
-
+kg_prompt = prompt_engine.generate_query_prompt(question)
 ```
-3. generate cypher query
+
+3. We can now use the agent to generate and reflect on the Cypher query and
+optimise it.
+
 ```
 cypher_query = agent.execute(question, kg_prompt)
 ```
