@@ -95,13 +95,13 @@ class BioCypherPromptEngine:
                         value["represented_as"] == "node"
                         and name_indicates_relationship
                     ):
-                        self.relationships[
-                            sentencecase_to_pascalcase(key)
-                        ] = value
+                        self.relationships[sentencecase_to_pascalcase(key)] = (
+                            value
+                        )
                     elif value["represented_as"] == "edge":
-                        self.relationships[
-                            sentencecase_to_pascalcase(key)
-                        ] = value
+                        self.relationships[sentencecase_to_pascalcase(key)] = (
+                            value
+                        )
         else:
             for key, value in schema_config.items():
                 if not isinstance(value, dict):
@@ -150,6 +150,106 @@ class BioCypherPromptEngine:
                 ]
         return relationship
 
+    def _select_graph_entities_from_question(
+        self, question: str, conversation: Conversation
+    ) -> str:
+        conversation.reset()
+        success1 = self._select_entities(
+            question=question, conversation=conversation
+        )
+        if not success1:
+            raise ValueError(
+                "Entity selection failed. Please try again with a different "
+                "question."
+            )
+        conversation.reset()
+        success2 = self._select_relationships(conversation=conversation)
+        if not success2:
+            raise ValueError(
+                "Relationship selection failed. Please try again with a "
+                "different question."
+            )
+        conversation.reset()
+        success3 = self._select_properties(conversation=conversation)
+        if not success3:
+            raise ValueError(
+                "Property selection failed. Please try again with a different "
+                "question."
+            )
+
+    def _generate_query_prompt(
+        self,
+        entities: list,
+        relationships: dict,
+        properties: dict,
+        query_language: Optional[str] = "Cypher",
+    ) -> str:
+        """
+        Generate a prompt for a large language model to generate a database
+        query based on the selected entities, relationships, and properties.
+
+        Args:
+            entities: A list of entities that are relevant to the question.
+
+            relationships: A list of relationships that are relevant to the
+                question.
+
+            properties: A dictionary of properties that are relevant to the
+                question.
+
+            query_language: The language of the query to generate.
+
+        Returns:
+            A prompt for a large language model to generate a database query.
+        """
+        msg = (
+            f"Generate a database query in {query_language} that answers "
+            f"the user's question. "
+            f"You can use the following entities: {entities}, "
+            f"relationships: {list(relationships.keys())}, and "
+            f"properties: {properties}. "
+        )
+
+        for relationship, values in relationships.items():
+            self._expand_pairs(relationship, values)
+
+        if self.rel_directions:
+            msg += "Given the following valid combinations of source, relationship, and target: "
+            for key, value in self.rel_directions.items():
+                for pair in value:
+                    msg += f"'(:{pair[0]})-(:{key})->(:{pair[1]})', "
+            msg += f"generate a {query_language} query using one of these combinations. "
+
+        msg += "Only return the query, without any additional text."
+        return msg
+
+    def generate_query_prompt(
+        self, question: str, query_language: Optional[str] = "Cypher"
+    ) -> str:
+        """
+        Generate a prompt for a large language model to generate a database
+        query based on the user's question and class attributes informing about
+        the schema.
+
+        Args:
+            question: A user's question.
+
+            query_language: The language of the query to generate.
+
+        Returns:
+            A prompt for a large language model to generate a database query.
+        """
+        self._select_graph_entities_from_question(
+            question, self.conversation_factory()
+        )
+        msg = self._generate_query_prompt(
+            self.selected_entities,
+            self.selected_relationship_labels,
+            self.selected_properties,
+            query_language,
+        )
+        return msg
+
     def generate_query(
         self, question: str, query_language: Optional[str] = "Cypher"
     ) -> str:
@@ -166,30 +266,9 @@ class BioCypherPromptEngine:
             A database query that could answer the user's question.
         """
 
-        success1 = self._select_entities(
-            question=question, conversation=self.conversation_factory()
+        self._select_graph_entities_from_question(
+            question, self.conversation_factory()
         )
-        if not success1:
-            raise ValueError(
-                "Entity selection failed. Please try again with a different "
-                "question."
-            )
-        success2 = self._select_relationships(
-            conversation=self.conversation_factory()
-        )
-        if not success2:
-            raise ValueError(
-                "Relationship selection failed. Please try again with a "
-                "different question."
-            )
-        success3 = self._select_properties(
-            conversation=self.conversation_factory()
-        )
-        if not success3:
-            raise ValueError(
-                "Property selection failed. Please try again with a different "
-                "question."
-            )
 
         return self._generate_query(
             question=question,
@@ -520,25 +599,12 @@ class BioCypherPromptEngine:
         Returns:
             A database query that could answer the user's question.
         """
-        msg = (
-            f"Generate a database query in {query_language} that answers "
-            f"the user's question. "
-            f"You can use the following entities: {entities}, "
-            f"relationships: {list(relationships.keys())}, and "
-            f"properties: {properties}. "
+        msg = self._generate_query_prompt(
+            entities,
+            relationships,
+            properties,
+            query_language,
         )
-
-        for relationship, values in relationships.items():
-            self._expand_pairs(relationship, values)
-
-        if self.rel_directions:
-            msg += "Given the following valid combinations of source, relationship, and target: "
-            for key, value in self.rel_directions.items():
-                for pair in value:
-                    msg += f"'(:{pair[0]})-(:{key})->(:{pair[1]})', "
-            msg += f"generate a {query_language} query using one of these combinations. "
-
-        msg += "Only return the query, without any additional text."
 
         conversation.append_system_message(msg)
 

@@ -17,19 +17,22 @@ import base64
 import logging
 import urllib.parse
 
-from xinference.client import Client
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
-from langchain_community.chat_models import (
-    ChatOllama,
+from langchain_openai import (
     ChatOpenAI,
     AzureChatOpenAI,
 )
+
+from langchain_community.chat_models import (
+    ChatOllama,
+)
 from langchain_community.llms.huggingface_hub import HuggingFaceHub
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 import nltk
 import openai
 
 from ._stats import get_stats
 from .rag_agent import RagAgent
+from ._image import encode_image, encode_image_from_url
 
 logger = logging.getLogger(__name__)
 
@@ -56,12 +59,6 @@ TOKEN_LIMITS = {
     "bigscience/bloom": 1000,
     "custom-endpoint": 1,  # Reasonable value?
 }
-
-
-# Function to encode the image
-def encode_image(image_path):
-    with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode("utf-8")
 
 
 class Conversation(ABC):
@@ -192,15 +189,17 @@ class Conversation(ABC):
 
         Args:
             message (str): The message from the user.
-
             image_url (str): The URL of the image.
-
             local (bool): Whether the image is local or not. If local, it will
                 be encoded as a base64 string to be passed to the LLM.
         """
         parsed_url = urllib.parse.urlparse(image_url)
         if local or not parsed_url.netloc:
             image_url = f"data:image/jpeg;base64,{encode_image(image_url)}"
+        else:
+            image_url = (
+                f"data:image/jpeg;base64,{encode_image_from_url(image_url)}"
+            )
 
         self.messages.append(
             HumanMessage(
@@ -517,6 +516,10 @@ class XinferenceConversation(Conversation):
             individually.
 
         """
+        # Shaohong: Please keep this xinference importing code here, so that,
+        # we don't need to depend on xinference if we dont need it (xinference
+        # is expensive to install)
+        from xinference.client import Client
 
         super().__init__(
             model_name=model_name,
