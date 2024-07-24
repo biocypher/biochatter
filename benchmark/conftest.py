@@ -8,19 +8,18 @@ import numpy as np
 import pandas as pd
 
 from biochatter.prompts import BioCypherPromptEngine
-from benchmark.load_dataset import get_benchmark_dataset
 from biochatter.llm_connect import GptConversation, XinferenceConversation
+from .load_dataset import get_benchmark_dataset
 from .benchmark_utils import benchmark_already_executed
 
 # how often should each benchmark be run?
-N_ITERATIONS = 1
+N_ITERATIONS = 3
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
 
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
-    "gpt-3.5-turbo-0613",
     "gpt-3.5-turbo-0125",
     "gpt-4-0613",
     "gpt-4-0125-preview",
@@ -28,86 +27,6 @@ OPENAI_MODEL_NAMES = [
 ]
 
 XINFERENCE_MODELS = {
-    "llama-2-chat": {
-        "model_size_in_billions": [
-            7,
-            13,
-            70,
-        ],
-        "model_format": "ggufv2",
-        "quantization": [
-            "Q2_K",
-            # "Q3_K_S",
-            "Q3_K_M",
-            # "Q3_K_L",
-            # "Q4_0",
-            # "Q4_K_S",
-            "Q4_K_M",
-            # "Q5_0",
-            # "Q5_K_S",
-            "Q5_K_M",
-            # "Q6_K",
-            # "Q8_0",
-        ],
-    },
-    "code-llama-instruct": {
-        "model_size_in_billions": [
-            7,
-            # 13,
-            # 34,
-        ],
-        "model_format": "ggufv2",
-        "quantization": [
-            # "Q2_K",
-            # "Q3_K_L",
-            # "Q3_K_M",
-            # "Q3_K_S",
-            # "Q4_0",
-            "Q4_K_M",
-            # "Q4_K_S",
-            # "Q5_0",
-            # "Q5_K_M",
-            # "Q5_K_S",
-            # "Q6_K",
-            # "Q8_0",
-        ],
-    },
-    "mixtral-instruct-v0.1": {
-        "model_size_in_billions": [
-            "46_7",
-        ],
-        "model_format": "ggufv2",
-        "quantization": [
-            "Q2_K",
-            "Q3_K_M",
-            # "Q4_0",
-            "Q4_K_M",
-            # "Q5_0",
-            "Q5_K_M",
-            "Q6_K",
-            "Q8_0",
-        ],
-    },
-    "openhermes-2.5": {
-        "model_size_in_billions": [
-            7,
-        ],
-        "model_format": "ggufv2",
-        "quantization": [
-            "Q2_K",
-            # "Q3_K_S",
-            "Q3_K_M",
-            # "Q3_K_L",
-            # "Q4_0",
-            # "Q4_K_S",
-            "Q4_K_M",
-            # "Q5_0",
-            # "Q5_K_S",
-            "Q5_K_M",
-            "Q6_K",
-            "Q8_0",
-        ],
-    },
     "chatglm3": {
         "model_size_in_billions": [
             6,
@@ -117,26 +36,125 @@ XINFERENCE_MODELS = {
             "q4_0",
         ],
     },
-    "mistral-instruct-v0.2": {
-        "model_size_in_billions": [
-            7,
-        ],
-        "model_format": "ggufv2",
-        "quantization": [
-            "Q2_K",
-            # "Q3_K_S",
-            "Q3_K_M",
-            # "Q3_K_L",
-            # "Q4_0",
-            # "Q4_K_S",
-            "Q4_K_M",
-            # "Q5_0",
-            # "Q5_K_S",
-            "Q5_K_M",
-            "Q6_K",
-            "Q8_0",
-        ],
-    },
+    # "llama-2-chat": {
+    #     "model_size_in_billions": [
+    #         7,
+    #         13,
+    #         # 70,
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         "Q2_K",
+    #         # "Q3_K_S",
+    #         "Q3_K_M",
+    #         # "Q3_K_L",
+    #         # "Q4_0",
+    #         # "Q4_K_S",
+    #         "Q4_K_M",
+    #         # "Q5_0",
+    #         # "Q5_K_S",
+    #         "Q5_K_M",
+    #         "Q6_K",
+    #         "Q8_0",
+    #     ],
+    # },
+    # "llama-3-instruct": {
+    #     "model_size_in_billions": [
+    #         8,
+    #         # 70,  # currently buggy
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         # 8B model quantisations
+    #         # "IQ3_M",  # currently buggy
+    #         "Q4_K_M",
+    #         "Q5_K_M",
+    #         "Q6_K",
+    #         "Q8_0",
+    #         # 70B model quantisations
+    #         # "IQ1_M",
+    #         # "IQ2_XS",
+    #         # "Q4_K_M",
+    #     ],
+    # },
+    # "code-llama-instruct": {
+    #     "model_size_in_billions": [
+    #         7,
+    #         13,
+    #         34,
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         "Q2_K",
+    #         # "Q3_K_L",
+    #         "Q3_K_M",
+    #         # "Q3_K_S",
+    #         # "Q4_0",
+    #         "Q4_K_M",
+    #         # "Q4_K_S",
+    #         # "Q5_0",
+    #         "Q5_K_M",
+    #         # "Q5_K_S",
+    #         "Q6_K",
+    #         "Q8_0",
+    #     ],
+    # },
+    # "mixtral-instruct-v0.1": {
+    #     "model_size_in_billions": [
+    #         "46_7",
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         "Q2_K",
+    #         # "Q3_K_M",
+    #         # "Q4_0",
+    #         "Q4_K_M",
+    #         # "Q5_0",
+    #         "Q5_K_M",
+    #         "Q6_K",
+    #         "Q8_0",
+    #     ],
+    # },
+    # "openhermes-2.5": {
+    #     "model_size_in_billions": [
+    #         7,
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         "Q2_K",
+    #         # "Q3_K_S",
+    #         "Q3_K_M",
+    #         # "Q3_K_L",
+    #         # "Q4_0",
+    #         # "Q4_K_S",
+    #         "Q4_K_M",
+    #         # "Q5_0",
+    #         # "Q5_K_S",
+    #         "Q5_K_M",
+    #         "Q6_K",
+    #         "Q8_0",
+    #     ],
+    # },
+    # "mistral-instruct-v0.2": {
+    #     "model_size_in_billions": [
+    #         7,
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         "Q2_K",
+    #         # "Q3_K_S",
+    #         "Q3_K_M",
+    #         # "Q3_K_L",
+    #         # "Q4_0",
+    #         # "Q4_K_S",
+    #         "Q4_K_M",
+    #         # "Q5_0",
+    #         # "Q5_K_S",
+    #         "Q5_K_M",
+    #         "Q6_K",
+    #         "Q8_0",
+    #     ],
+    # },
     # "gemma-it": {
     #     "model_size_in_billions": [
     #         2,
@@ -149,25 +167,6 @@ XINFERENCE_MODELS = {
     #         "8-bit",
     #     ],
     # },
-    "llama-3-instruct": {
-        "model_size_in_billions": [
-            8,
-            # 70,
-        ],
-        "model_format": "ggufv2",
-        "quantization": [
-            # 8B model quantisations
-            # "IQ3_M",
-            "Q4_K_M",
-            "Q5_K_M",
-            "Q6_K",
-            "Q8_0",
-            # 70B model quantisations
-            # "IQ1_M",
-            # "IQ2_XS",
-            # "Q4_K_M",
-        ],
-    },
     # "custom-llama-3-instruct": {
     #     "model_size_in_billions": [
     #         70,
@@ -177,15 +176,15 @@ XINFERENCE_MODELS = {
     #         "IQ1_M",
     #     ],
     # },
-    "openbiollm-llama3-8b": {
-        "model_size_in_billions": [
-            8,
-        ],
-        "model_format": "pytorch",
-        "quantization": [
-            "none",
-        ],
-    },
+    # "openbiollm-llama3-8b": {
+    #     "model_size_in_billions": [
+    #         8,
+    #     ],
+    #     "model_format": "pytorch",
+    #     "quantization": [
+    #         "none",
+    #     ],
+    # },
 }
 
 # create concrete benchmark list by concatenating all combinations of model
@@ -208,13 +207,9 @@ BENCHMARK_URL = "http://localhost:9997"
 @pytest.fixture(scope="session")
 def client():
     try:
-        client = Client(base_url=BENCHMARK_URL)
+        return Client(base_url=BENCHMARK_URL)
     except requests.exceptions.ConnectionError:
-        raise ConnectionError(
-            f"Could not connect to Xinference server at {BENCHMARK_URL}. "
-            "Please make sure that the server is running."
-        )
-    return client
+        return None  # ignore if server is not running
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -223,6 +218,9 @@ def register_model(client):
     Register custom (non-builtin) models with the Xinference server. Should only
     happen once per session.
     """
+
+    if client is None:
+        return  # ignore if server is not running
 
     registrations = client.list_model_registrations(model_type="LLM")
     registered_models = [
@@ -270,10 +268,8 @@ def multiple_testing(request):
         for _ in range(N_ITERATIONS):
             score, max = test_func(*args, **kwargs)
             scores.append(score)
-        mean_score = sum(scores) / N_ITERATIONS
-        sd_score = np.std(scores)
-        # TODO return standard deviation with score
-        return (mean_score, max, N_ITERATIONS)
+        score_string = ";".join([str(score) for score in scores])
+        return (score_string, max, N_ITERATIONS)
 
     return run_multiple_times
 
@@ -478,6 +474,16 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize(
             "test_data_text_extraction",
             data_file["text_extraction"],
+        )
+    if "test_data_api_calling" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "test_data_api_calling",
+            data_file["api_calling"],
+        )
+    if "test_data_medical_exam" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "test_data_medical_exam",
+            data_file["medical_exam"],
         )
 
 

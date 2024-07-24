@@ -18,25 +18,33 @@ def test_get_query_results():
     )
     db_agent.connect()  # Call the connect method to initialize the driver
 
-    # Mock the prompt_engine.generate_query method
-    with mock.patch.object(
-        db_agent.prompt_engine, "generate_query", return_value="test_query"
-    ):
-        # Mock the driver.query method
+    with mock.patch(
+        "biochatter.database_agent.KGQueryReflexionAgent"
+    ) as mock_KGQueryReflexionAgent:
+        mock_KGQueryReflexionAgent.return_value.execute.return_value = (
+            "test_query"
+        )
+        # Mock the prompt_engine.generate_query method
         with mock.patch.object(
-            db_agent.driver,
-            "query",
-            return_value=[
-                [
-                    {"key": "value"},
-                    {"key": "value"},
-                    {"key": "value"},
-                    {"key": "value"},
-                ],
-                {},
-            ],
+            db_agent.prompt_engine,
+            "generate_query_prompt",
+            return_value="prompts for user's question",
         ):
-            result = db_agent.get_query_results("test_query", 3)
+            # Mock the driver.query method
+            with mock.patch.object(
+                db_agent.driver,
+                "query",
+                return_value=[
+                    [
+                        {"key": "value"},
+                        {"key": "value"},
+                        {"key": "value"},
+                        {"key": "value"},
+                    ],
+                    {},
+                ],
+            ):
+                result = db_agent.get_query_results("test_query", 3)
 
     # Check if the result is as expected
     expected_result = [

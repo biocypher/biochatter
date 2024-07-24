@@ -35,8 +35,9 @@ We can now start a new conversation (using the `New Persona` button in the
 sidebar), for which we select the `Research manuscript helper (RAG)` persona,
 which includes suitable contextual prompts. Upon activating the RAG in the chat
 (to signal that we wish to perform RAG for our question), we can enter into a
-dialogue with the assistant. We use `gpt-3.5-turbo-0613` in this example, which
-is a very affordable model. The procedure is demonstrated in the GIF below.
+dialogue with the assistant. We use `gpt-3.5-turbo-0613` in this example
+(deprecated as of July 16 2024), which is a very affordable model. The procedure
+is demonstrated in the GIF below.
 
 ![RAG Demo](images/rag-demo.gif)
 

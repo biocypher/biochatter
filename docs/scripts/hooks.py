@@ -22,6 +22,7 @@ def on_pre_build(config, **kwargs) -> None:
         for f in os.listdir(result_files_path)
         if os.path.isfile(os.path.join(result_files_path, f))
         and f.endswith(".csv")
+        and not "failure_mode" in f
     ]
 
     for file_name in result_file_names:
@@ -51,16 +52,31 @@ def preprocess_results_for_frontend(
         path (str): The path to the result files.
         file_name (str): The file name of the result file.
     """
-    raw_results["score_possible"] = raw_results["score"].apply(
-        lambda x: float(x.split("/")[1])
+    raw_results["score_possible"] = raw_results.apply(
+        lambda x: float(x["score"].split("/")[1]) * x["iterations"], axis=1
     )
-    raw_results["score_achieved"] = raw_results["score"].apply(
-        lambda x: float(x.split("/")[0])
+    raw_results["scores"] = raw_results["score"].apply(
+        lambda x: x.split("/")[0]
+    )
+    raw_results["score_achieved"] = raw_results["scores"].apply(
+        lambda x: (
+            np.sum([float(score) for score in x.split(";")])
+            if ";" in x
+            else float(x)
+        )
+    )
+    raw_results["score_sd"] = raw_results["scores"].apply(
+        lambda x: (
+            np.std([float(score) for score in x.split(";")], ddof=1)
+            if ";" in x
+            else 0
+        )
     )
     aggregated_scores = raw_results.groupby(["model_name"]).agg(
         {
             "score_possible": "sum",
             "score_achieved": "sum",
+            "score_sd": "sum",
             "iterations": "first",
         }
     )
@@ -74,16 +90,18 @@ def preprocess_results_for_frontend(
         axis=1,
     )
 
-    aggregated_scores[
-        "Full model name"
-    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
     aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
     aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
+    aggregated_scores["Score SD"] = aggregated_scores["score_sd"]
     aggregated_scores["Iterations"] = aggregated_scores["iterations"]
     new_order = [
         "Full model name",
         "Score achieved",
         "Score possible",
+        "Score SD",
         "Accuracy",
         "Iterations",
     ]
@@ -106,16 +124,31 @@ def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
     raw_results["subtask"] = raw_results["subtask"].apply(
         lambda x: x.split(":")[1]
     )
-    raw_results["score_possible"] = raw_results["score"].apply(
-        lambda x: float(x.split("/")[1])
+    raw_results["score_possible"] = raw_results.apply(
+        lambda x: float(x["score"].split("/")[1]) * x["iterations"], axis=1
     )
-    raw_results["score_achieved"] = raw_results["score"].apply(
-        lambda x: float(x.split("/")[0])
+    raw_results["scores"] = raw_results["score"].apply(
+        lambda x: x.split("/")[0]
+    )
+    raw_results["score_achieved"] = raw_results["scores"].apply(
+        lambda x: (
+            np.sum([float(score) for score in x.split(";")])
+            if ";" in x
+            else float(x)
+        )
+    )
+    raw_results["score_sd"] = raw_results["scores"].apply(
+        lambda x: (
+            np.std([float(score) for score in x.split(";")], ddof=1)
+            if ";" in x
+            else 0
+        )
     )
     aggregated_scores = raw_results.groupby(["model_name", "subtask"]).agg(
         {
             "score_possible": "sum",
             "score_achieved": "sum",
+            "score_sd": "mean",
             "iterations": "first",
         }
     )
@@ -129,20 +162,22 @@ def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
         axis=1,
     )
 
-    aggregated_scores[
-        "Full model name"
-    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
         "subtask"
     )
     aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
     aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
+    aggregated_scores["Score SD"] = aggregated_scores["score_sd"]
     aggregated_scores["Iterations"] = aggregated_scores["iterations"]
     new_order = [
         "Full model name",
         "Subtask",
         "Score achieved",
         "Score possible",
+        "Score SD",
         "Accuracy",
         "Iterations",
     ]
@@ -186,9 +221,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     )
 
     overview_per_quantisation = overview
-    overview_per_quantisation[
-        "Full model name"
-    ] = overview_per_quantisation.index
+    overview_per_quantisation["Full model name"] = (
+        overview_per_quantisation.index
+    )
     overview_per_quantisation[
         ["Model name", "Size", "Version", "Quantisation"]
     ] = overview_per_quantisation["Full model name"].str.split(":", expand=True)
@@ -220,9 +255,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         ]
     ]
     # round mean and sd to 2 decimal places
-    overview_per_quantisation.loc[
-        :, "Median Accuracy"
-    ] = overview_per_quantisation["Median Accuracy"].round(2)
+    overview_per_quantisation.loc[:, "Median Accuracy"] = (
+        overview_per_quantisation["Median Accuracy"].round(2)
+    )
     overview_per_quantisation.loc[:, "SD"] = overview_per_quantisation[
         "SD"
     ].round(2)
@@ -634,15 +669,22 @@ def plot_extraction_tasks():
     sourcedata_info_extraction["score_possible"] = sourcedata_info_extraction[
         "score"
     ].apply(lambda x: float(x.split("/")[1]))
-    sourcedata_info_extraction["score_achieved"] = sourcedata_info_extraction[
+    sourcedata_info_extraction["scores"] = sourcedata_info_extraction[
         "score"
-    ].apply(lambda x: float(x.split("/")[0]))
+    ].apply(lambda x: x.split("/")[0])
+    sourcedata_info_extraction["score_achieved"] = sourcedata_info_extraction[
+        "scores"
+    ].apply(lambda x: np.mean(float(x.split(";")[0])) if ";" in x else float(x))
+    sourcedata_info_extraction["score_sd"] = sourcedata_info_extraction[
+        "scores"
+    ].apply(lambda x: np.std(float(x.split(";")[0])) if ";" in x else 0)
     aggregated_scores = sourcedata_info_extraction.groupby(
         ["model_name", "subtask"]
     ).agg(
         {
             "score_possible": "sum",
             "score_achieved": "sum",
+            "score_sd": "first",
             "iterations": "first",
         }
     )
@@ -656,20 +698,22 @@ def plot_extraction_tasks():
         axis=1,
     )
 
-    aggregated_scores[
-        "Full model name"
-    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
         "subtask"
     )
     aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
     aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
+    aggregated_scores["Score SD"] = aggregated_scores["score_sd"]
     aggregated_scores["Iterations"] = aggregated_scores["iterations"]
     new_order = [
         "Full model name",
         "Subtask",
         "Score achieved",
         "Score possible",
+        "Score SD",
         "Accuracy",
         "Iterations",
     ]

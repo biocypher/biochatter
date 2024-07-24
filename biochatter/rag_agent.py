@@ -1,9 +1,12 @@
 from typing import Optional
+from collections.abc import Callable
 
 
 class RagAgentModeEnum:
     VectorStore = "vectorstore"
     KG = "kg"
+    API_BLAST = "api_blast"
+    API_ONCOKB = "api_oncokb"
 
 
 class RagAgent:
@@ -15,10 +18,16 @@ class RagAgent:
         n_results: Optional[int] = 3,
         use_prompt: Optional[bool] = False,
         schema_config_or_info_dict: Optional[dict] = None,
-        conversation_factory: Optional[callable] = None,
+        conversation_factory: Optional[Callable] = None,
         embedding_func: Optional[object] = None,
         documentids_workspace: Optional[list[str]] = None,
     ) -> None:
+        ######
+        ##TO DO
+        ######
+        # mode: 'api' for the case where the agent is querying an API
+        # use_prompt: default TRUE for self.mode == api
+
         """
         Create a RAG agent that can return results from a database or vector
         store using a query engine.
@@ -41,7 +50,7 @@ class RagAgent:
             schema_config_or_info_dict (dict): A dictionary of schema
                 information for the database. Required if mode is "kg".
 
-            conversation_factory (callable): A function used to create a
+            conversation_factory (Callable): A function used to create a
                 conversation for creating the KG query. Required if mode is
                 "kg".
 
@@ -92,9 +101,38 @@ class RagAgent:
             self.agent.connect()
 
             self.query_func = self.agent.similarity_search
+
+        elif self.mode == RagAgentModeEnum.API_BLAST:
+            from .api_agent.blast import (
+                BlastFetcher,
+                BlastInterpreter,
+                BlastQueryBuilder,
+            )
+            from .api_agent.api_agent import APIAgent
+
+            self.query_func = APIAgent(
+                conversation_factory=conversation_factory,
+                query_builder=BlastQueryBuilder(),
+                fetcher=BlastFetcher(),
+                interpreter=BlastInterpreter(),
+            )
+        elif self.mode == RagAgentModeEnum.API_ONCOKB:
+            from .api_agent.oncokb import (
+                OncoKBFetcher,
+                OncoKBInterpreter,
+                OncoKBQueryBuilder,
+            )
+            from .api_agent.api_agent import APIAgent
+
+            self.query_func = APIAgent(
+                conversation_factory=conversation_factory,
+                query_builder=OncoKBQueryBuilder(),
+                fetcher=OncoKBFetcher(),
+                interpreter=OncoKBInterpreter(),
+            )
         else:
             raise ValueError(
-                "Invalid mode. Choose either 'kg' or 'vectorstore'."
+                "Invalid mode. Choose either 'kg', 'vectorstore', 'api_blast', or 'api_oncokb'."
             )
 
     def generate_responses(self, user_question: str) -> list[tuple]:
@@ -137,9 +175,20 @@ class RagAgent:
                 )
                 for result in results
             ]
+        elif self.mode in [
+            RagAgentModeEnum.API_BLAST,
+            RagAgentModeEnum.API_ONCOKB,
+        ]:
+            self.query_func.execute(user_question)
+            if self.query_func.final_answer is not None:
+                response = [("response", self.query_func.final_answer)]
+            else:
+                response = [("error", self.query_func.final_answer)]
+
         else:
             raise ValueError(
-                "Invalid mode. Choose either 'kg' or 'vectorstore'."
+                "Invalid mode. Choose either 'kg', 'vectorstore', 'api_blast', "
+                "or 'api_oncokb'."
             )
         self.last_response = response
         return response
