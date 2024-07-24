@@ -53,6 +53,7 @@ nav:
       - Connecting Knowledge Graphs: kgs.md
       - Retrieval-Augmented Generation: rag.md
       - API Calling: api.md
+      - Reflexion via LangGraph: reflexion-agent.md
       - Open-source and Local LLMs: open-llm.md
       - LLM in your Browser - WebAssembly: wasm.md
       - Benchmarking: benchmarking.md
