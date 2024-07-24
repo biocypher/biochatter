@@ -7,8 +7,8 @@ from biochatter.vectorstore import (
     Document,
     DocumentReader,
     DocumentEmbedder,
-    XinferenceDocumentEmbedder,
     OllamaDocumentEmbedder,
+    XinferenceDocumentEmbedder,
 )
 
 print(os.getcwd())

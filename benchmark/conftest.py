@@ -21,21 +21,21 @@ BENCHMARK_DATASET = get_benchmark_dataset()
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
     "gpt-3.5-turbo-0125",
-    # "gpt-4-0613",
-    # "gpt-4-0125-preview",
-    # "gpt-4o-2024-05-13",
+    "gpt-4-0613",
+    "gpt-4-0125-preview",
+    "gpt-4o-2024-05-13",
 ]
 
 XINFERENCE_MODELS = {
-    # "chatglm3": {
-    #     "model_size_in_billions": [
-    #         6,
-    #     ],
-    #     "model_format": "ggmlv3",
-    #     "quantization": [
-    #         "q4_0",
-    #     ],
-    # },
+    "chatglm3": {
+        "model_size_in_billions": [
+            6,
+        ],
+        "model_format": "ggmlv3",
+        "quantization": [
+            "q4_0",
+        ],
+    },
     # "llama-2-chat": {
     #     "model_size_in_billions": [
     #         7,
@@ -207,13 +207,9 @@ BENCHMARK_URL = "http://localhost:9997"
 @pytest.fixture(scope="session")
 def client():
     try:
-        client = Client(base_url=BENCHMARK_URL)
+        return Client(base_url=BENCHMARK_URL)
     except requests.exceptions.ConnectionError:
-        raise ConnectionError(
-            f"Could not connect to Xinference server at {BENCHMARK_URL}. "
-            "Please make sure that the server is running."
-        )
-    return client
+        return None  # ignore if server is not running
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -222,6 +218,9 @@ def register_model(client):
     Register custom (non-builtin) models with the Xinference server. Should only
     happen once per session.
     """
+
+    if client is None:
+        return  # ignore if server is not running
 
     registrations = client.list_model_registrations(model_type="LLM")
     registered_models = [
@@ -475,6 +474,11 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize(
             "test_data_text_extraction",
             data_file["text_extraction"],
+        )
+    if "test_data_api_calling" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "test_data_api_calling",
+            data_file["api_calling"],
         )
     if "test_data_medical_exam" in metafunc.fixturenames:
         metafunc.parametrize(

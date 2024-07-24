@@ -11,32 +11,34 @@ except ImportError:
     st = None
 
 from abc import ABC, abstractmethod
-import base64
 from typing import Optional
 import json
+import base64
 import logging
+import urllib.parse
 
-from langchain_community.chat_models import (
+from langchain_openai import (
     ChatOpenAI,
     AzureChatOpenAI,
+)
+
+from langchain_community.chat_models import (
     ChatOllama,
 )
 from langchain_community.llms.huggingface_hub import HuggingFaceHub
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
-from xinference.client import Client
 import nltk
 import openai
-import urllib.parse
 
 from ._stats import get_stats
 from .rag_agent import RagAgent
+from ._image import encode_image, encode_image_from_url
 
 logger = logging.getLogger(__name__)
 
 OPENAI_MODELS = [
     "gpt-3.5-turbo",
     "gpt-3.5-turbo-16k",
-    "gpt-3.5-turbo-0613",  # updated 3.5-turbo
     "gpt-3.5-turbo-1106",  # further updated 3.5-turbo
     "gpt-4",
     "gpt-4-32k",
@@ -50,7 +52,6 @@ XINFERENCE_MODELS = ["custom-endpoint"]
 TOKEN_LIMITS = {
     "gpt-3.5-turbo": 4000,
     "gpt-3.5-turbo-16k": 16000,
-    "gpt-3.5-turbo-0613": 4000,
     "gpt-3.5-turbo-1106": 16000,
     "gpt-4": 8000,
     "gpt-4-32k": 32000,
@@ -58,12 +59,6 @@ TOKEN_LIMITS = {
     "bigscience/bloom": 1000,
     "custom-endpoint": 1,  # Reasonable value?
 }
-
-
-# Function to encode the image
-def encode_image(image_path):
-    with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode("utf-8")
 
 
 class Conversation(ABC):
@@ -194,15 +189,17 @@ class Conversation(ABC):
 
         Args:
             message (str): The message from the user.
-
             image_url (str): The URL of the image.
-
             local (bool): Whether the image is local or not. If local, it will
                 be encoded as a base64 string to be passed to the LLM.
         """
         parsed_url = urllib.parse.urlparse(image_url)
         if local or not parsed_url.netloc:
             image_url = f"data:image/jpeg;base64,{encode_image(image_url)}"
+        else:
+            image_url = (
+                f"data:image/jpeg;base64,{encode_image_from_url(image_url)}"
+            )
 
         self.messages.append(
             HumanMessage(
@@ -519,6 +516,10 @@ class XinferenceConversation(Conversation):
             individually.
 
         """
+        # Shaohong: Please keep this xinference importing code here, so that,
+        # we don't need to depend on xinference if we dont need it (xinference
+        # is expensive to install)
+        from xinference.client import Client
 
         super().__init__(
             model_name=model_name,

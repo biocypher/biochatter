@@ -1,0 +1,51 @@
+General:
+
+The API agent for the RAG agent will:
+    -Answer questions by create API calls for specific db: integrate logic from baio into biochatter.
+
+How:
+RagAgent
+    -new mode:
+        API: api_agent
+
+api_agent.py
+    FIRST version:
+    static_dependencies:
+        Create a new dir in root 'api_agent_docs' to handle all the below except if indicated
+        otherwise with '->'
+
+        -prompts -> new class in prompts.py
+        -vectorised API documentation of specific db
+        -file system to handle responses (use baio logic)
+        -file system to track calls
+        -define clear test cases
+
+
+Documents for the api_agent
+---------------------------
+-docs
+ |
+ --api_agent
+    |
+    --BLAST_tool
+        |
+        persistent_files
+            |
+            --vectorstore
+            |   |
+            |   --BLAST_db_faiss_index # 2^nd step
+            |
+            --api_documentation
+                |
+                --ncbi
+                    |
+                    BLAST.txt -> adapted from jin et al. 2023
+        --BLAST_response
+            |
+            --response_files -> BLAST response files
+
+    --results
+        |
+        results.json -> tracks all api calls, responses and answers found
+
+For now we will only use a one shot example for BLASTn and BLASTp.
