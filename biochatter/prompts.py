@@ -95,13 +95,13 @@ class BioCypherPromptEngine:
                         value["represented_as"] == "node"
                         and name_indicates_relationship
                     ):
-                        self.relationships[
-                            sentencecase_to_pascalcase(key)
-                        ] = value
+                        self.relationships[sentencecase_to_pascalcase(key)] = (
+                            value
+                        )
                     elif value["represented_as"] == "edge":
-                        self.relationships[
-                            sentencecase_to_pascalcase(key)
-                        ] = value
+                        self.relationships[sentencecase_to_pascalcase(key)] = (
+                            value
+                        )
         else:
             for key, value in schema_config.items():
                 if not isinstance(value, dict):
@@ -149,7 +149,7 @@ class BioCypherPromptEngine:
                     for t in relationship["target"]
                 ]
         return relationship
-    
+
     def _select_graph_entities_from_question(
         self, question: str, conversation: Conversation
     ) -> str:
@@ -163,30 +163,45 @@ class BioCypherPromptEngine:
                 "question."
             )
         conversation.reset()
-        success2 = self._select_relationships(
-            conversation=conversation
-        )
+        success2 = self._select_relationships(conversation=conversation)
         if not success2:
             raise ValueError(
                 "Relationship selection failed. Please try again with a "
                 "different question."
             )
         conversation.reset()
-        success3 = self._select_properties(
-            conversation=conversation
-        )
+        success3 = self._select_properties(conversation=conversation)
         if not success3:
             raise ValueError(
                 "Property selection failed. Please try again with a different "
                 "question."
             )
-    def _generate_query_prompts(
+
+    def _generate_query_prompt(
         self,
         entities: list,
         relationships: dict,
         properties: dict,
-        query_language: Optional[str] = "Cypher"
+        query_language: Optional[str] = "Cypher",
     ) -> str:
+        """
+        Generate a prompt for a large language model to generate a database
+        query based on the selected entities, relationships, and properties.
+
+        Args:
+            entities: A list of entities that are relevant to the question.
+
+            relationships: A list of relationships that are relevant to the
+                question.
+
+            properties: A dictionary of properties that are relevant to the
+                question.
+
+            query_language: The language of the query to generate.
+
+        Returns:
+            A prompt for a large language model to generate a database query.
+        """
         msg = (
             f"Generate a database query in {query_language} that answers "
             f"the user's question. "
@@ -208,15 +223,30 @@ class BioCypherPromptEngine:
         msg += "Only return the query, without any additional text."
         return msg
 
-    def generate_query_prompts(
+    def generate_query_prompt(
         self, question: str, query_language: Optional[str] = "Cypher"
     ) -> str:
-        self._select_graph_entities_from_question(question, self.conversation_factory())
-        msg = self._generate_query_prompts(
+        """
+        Generate a prompt for a large language model to generate a database
+        query based on the user's question and class attributes informing about
+        the schema.
+
+        Args:
+            question: A user's question.
+
+            query_language: The language of the query to generate.
+
+        Returns:
+            A prompt for a large language model to generate a database query.
+        """
+        self._select_graph_entities_from_question(
+            question, self.conversation_factory()
+        )
+        msg = self._generate_query_prompt(
             self.selected_entities,
             self.selected_relationship_labels,
             self.selected_properties,
-            query_language
+            query_language,
         )
         return msg
 
@@ -236,7 +266,9 @@ class BioCypherPromptEngine:
             A database query that could answer the user's question.
         """
 
-        self._select_graph_entities_from_question(question, self.conversation_factory())
+        self._select_graph_entities_from_question(
+            question, self.conversation_factory()
+        )
 
         return self._generate_query(
             question=question,
@@ -567,7 +599,7 @@ class BioCypherPromptEngine:
         Returns:
             A database query that could answer the user's question.
         """
-        msg = self._generate_query_prompts(
+        msg = self._generate_query_prompt(
             entities,
             relationships,
             properties,

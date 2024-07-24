@@ -17,7 +17,6 @@ def on_pre_build(config, **kwargs) -> None:
 
     result_files_path = "benchmark/results/"
 
-    
     result_file_names = [
         f
         for f in os.listdir(result_files_path)
@@ -38,7 +37,7 @@ def on_pre_build(config, **kwargs) -> None:
     plot_scatter_per_quantisation(overview)
     plot_task_comparison(overview)
     plot_rag_tasks(overview)
-    plot_extraction_tasks()
+    plot_extraction_tasks(overview)
     plot_comparison_naive_biochatter(overview)
     calculate_stats(overview)
 
@@ -60,10 +59,18 @@ def preprocess_results_for_frontend(
         lambda x: x.split("/")[0]
     )
     raw_results["score_achieved"] = raw_results["scores"].apply(
-        lambda x: np.sum([float(score) for score in x.split(";")]) if ";" in x else float(x)
+        lambda x: (
+            np.sum([float(score) for score in x.split(";")])
+            if ";" in x
+            else float(x)
+        )
     )
     raw_results["score_sd"] = raw_results["scores"].apply(
-         lambda x: np.std([float(score) for score in x.split(";")], ddof=1) if ";" in x else 0
+        lambda x: (
+            np.std([float(score) for score in x.split(";")], ddof=1)
+            if ";" in x
+            else 0
+        )
     )
     aggregated_scores = raw_results.groupby(["model_name"]).agg(
         {
@@ -124,10 +131,18 @@ def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
         lambda x: x.split("/")[0]
     )
     raw_results["score_achieved"] = raw_results["scores"].apply(
-        lambda x: np.sum([float(score) for score in x.split(";")]) if ";" in x else float(x)
+        lambda x: (
+            np.sum([float(score) for score in x.split(";")])
+            if ";" in x
+            else float(x)
+        )
     )
     raw_results["score_sd"] = raw_results["scores"].apply(
-         lambda x: np.std([float(score) for score in x.split(";")], ddof=1) if ";" in x else 0
+        lambda x: (
+            np.std([float(score) for score in x.split(";")], ddof=1)
+            if ";" in x
+            else 0
+        )
     )
     aggregated_scores = raw_results.groupby(["model_name", "subtask"]).agg(
         {
@@ -638,7 +653,7 @@ def plot_rag_tasks(overview):
     plt.close()
 
 
-def plot_extraction_tasks():
+def plot_extraction_tasks(raw_results: pd.DataFrame):
     """
     Load raw result file for sourcedata_info_extraction; aggregate based on the
     subtask name and calculate mean accuracy for each model. Plot a stripplot
@@ -670,10 +685,18 @@ def plot_extraction_tasks():
         lambda x: x.split("/")[0]
     )
     raw_results["score_achieved"] = raw_results["scores"].apply(
-        lambda x: np.sum([float(score) for score in x.split(";")]) if ";" in x else float(x)
+        lambda x: (
+            np.sum([float(score) for score in x.split(";")])
+            if ";" in x
+            else float(x)
+        )
     )
     raw_results["score_sd"] = raw_results["scores"].apply(
-         lambda x: np.std([float(score) for score in x.split(";")], ddof=1) if ";" in x else 0
+        lambda x: (
+            np.std([float(score) for score in x.split(";")], ddof=1)
+            if ";" in x
+            else 0
+        )
     )
     aggregated_scores = raw_results.groupby(["model_name"]).agg(
         {
