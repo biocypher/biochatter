@@ -1,7 +1,7 @@
 Full model name,Score achieved,Score possible,Score SD,Accuracy,Iterations
-gpt-3.5-turbo-0125,27.8,150.0,0,0.18533333333333335,5
-gpt-4-0613,26.4,150.0,0,0.176,5
-gpt-3.5-turbo-0613,25.0,150.0,0,0.16666666666666666,5
+gpt-3.5-turbo-0125,139.0,150.0,0,0.9266666666666666,5
+gpt-4-0613,132.0,150.0,0,0.88,5
+gpt-3.5-turbo-0613,125.0,150.0,0,0.8333333333333334,5
 chatglm3:6:ggmlv3:q4_0,0.0,150.0,0,0.0,5
 llama-2-chat:70:ggufv2:Q5_K_M,0.0,150.0,0,0.0,5
 llama-2-chat:7:ggufv2:Q3_K_M,0.0,150.0,0,0.0,5

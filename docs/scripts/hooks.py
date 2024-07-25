@@ -65,6 +65,16 @@ def preprocess_results_for_frontend(
             else float(x)
         )
     )
+    # multiply score_achieved by iterations if no semicolon in scores
+    # TODO remove once all benchmarks are in new format
+    raw_results["score_achieved"] = raw_results.apply(
+        lambda x: (
+            x["score_achieved"] * x["iterations"]
+            if ";" not in x["scores"]
+            else x["score_achieved"]
+        ),
+        axis=1,
+    )
     raw_results["score_sd"] = raw_results["scores"].apply(
         lambda x: (
             np.std([float(score) for score in x.split(";")], ddof=1)
