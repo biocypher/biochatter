@@ -209,6 +209,17 @@ class ReflexionAgent(ABC):
                 break
             i += 1
         return i
+    
+    @staticmethod
+    def _get_user_question(state: List[BaseMessage]):
+        """
+        get user's question from messages array
+        """
+        for m in state:
+            if not isinstance(m, HumanMessage):
+                continue
+            return m.content
+        return None
 
     def _build_graph(self, prompt: Optional[str] = None):
         """
@@ -244,7 +255,10 @@ class ReflexionAgent(ABC):
         """
         extract result from last step
         """
-        return step[END][-1] if END in step else step[REVISE_NODE]
+        if isinstance(step, list):
+            return step[-1]
+        else:
+            return step[END][-1] if END in step else step[REVISE_NODE]
 
     def _execute_graph(
         self,
@@ -272,7 +286,10 @@ class ReflexionAgent(ABC):
             },
         )
         for i, step in enumerate(events):
-            node, output = next(iter(step.items()))
+            if isinstance(step, list):
+                node, output = (f"{i}", step[i])
+            else:
+                node, output = next(iter(step.items()))
             self._log_step_message(i + 1, node, output)
 
         last_output = self._extract_result_from_final_step(step)

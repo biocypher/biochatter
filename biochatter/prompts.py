@@ -501,6 +501,15 @@ class BioCypherPromptEngine:
                         self.selected_entities.append(target)
 
         return bool(result)
+    
+    @staticmethod
+    def _validate_json_str(json_str: str):
+        json_str = json_str.strip()
+        if json_str.startswith("```json"):
+            json_str = json_str[7:]
+        if json_str.endswith("```"):
+            json_str = json_str[:-3]
+        return json_str.strip()
 
     def _select_properties(self, conversation: "Conversation") -> bool:
         """
@@ -549,8 +558,8 @@ class BioCypherPromptEngine:
             f"{e_props}, Relationships: {r_props}. "
             "Your task is to select the properties that are relevant to the "
             "user's question for subsequent use in a query. Only return the "
-            "entities and relationships with their relevant properties in JSON "
-            "format, without any additional text. Return the "
+            "entities and relationships with their relevant properties in compact "
+            "JSON format, without any additional text. Return the "
             "entities/relationships as top-level dictionary keys, and their "
             "properties as dictionary values. "
             "Do not return properties that are not relevant to the question."
@@ -559,6 +568,7 @@ class BioCypherPromptEngine:
         conversation.append_system_message(msg)
 
         msg, token_usage, correction = conversation.query(self.question)
+        msg = BioCypherPromptEngine._validate_json_str(msg)
 
         try:
             self.selected_properties = json.loads(msg) if msg else {}

@@ -263,7 +263,7 @@ class BlastFetcher(BaseFetcher):
             )
 
     def fetch_results(
-        self, query_model: BlastQueryParameters, retries: int = 10000
+        self, query_model: BlastQueryParameters, retries: int = 3
     ) -> str:
         """
         Submit request and fetch results from BLAST API. Wraps individual

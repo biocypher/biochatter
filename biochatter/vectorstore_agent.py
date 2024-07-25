@@ -1,4 +1,4 @@
-from typing import Tuple, Optional
+from typing import Dict, List, Tuple, Optional
 import uuid
 import random
 import logging
@@ -625,3 +625,19 @@ class VectorDatabaseAgentMilvus:
         except MilvusException as e:
             logger.error(e)
             raise e
+        
+    def get_description(self, doc_ids: Optional[List[str]]=None):
+        def get_name(meta: Dict[str, str]):
+            name_col = ["title", "name", "subject", "source"]
+            for col in name_col:
+                if meta[col] is not None and len(meta[col]) > 0:
+                    return meta[col]
+            return ""
+
+        expr = VectorDatabaseAgentMilvus._build_meta_col_query_expr_for_all_documents(doc_ids)
+        result = self._col_metadata.query(
+            expr=expr, output_fields=METADATA_FIELDS,
+        )
+        names = list(map(get_name, result))
+        names_set = set(names)
+        return f"This vector store contains the following articles: {names_set}"

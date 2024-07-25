@@ -109,6 +109,18 @@ class DatabaseAgent:
         return documents
 
     def get_description(self):
+        try:
+            result = self.driver.query("MATCH (n:Schema_info) RETURN n LIMIT 1")
+
+            if result[0]:
+                schema_info_node = result[0][0]["n"]
+                MAX_SCHEMA_INFO_LENGTH = 1000
+                schema_dict_content = schema_info_node["schema_info"][:MAX_SCHEMA_INFO_LENGTH] # limit to 1000 characters
+                return (f"the graph database contains the following nodes and edges: \n\n"
+                        f"{schema_dict_content}")
+        except Exception:
+            pass # failed to inquire shcema info
+        
         nodes_query = "MATCH (n) RETURN DISTINCT labels(n) LIMIT 300"
         node_results = self.driver.query(query=nodes_query)
         edges_query = "MATCH (n) RETURN DISTINCT type(n) LIMIT 300"

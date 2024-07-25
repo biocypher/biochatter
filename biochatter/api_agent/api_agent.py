@@ -136,3 +136,9 @@ class APIAgent:
 
         self.final_answer = final_answer
         return final_answer
+
+    def get_description(self, tool_name: str, tool_desc: str):
+        return (
+            f"API agent is to interact with a {tool_name}'s API for querying and fetching results."
+            f"Tool {tool_name}: {tool_desc}"
+        )

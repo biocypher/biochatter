@@ -258,7 +258,7 @@ class OncoKBFetcher(BaseFetcher):
         }
         self.base_url = "https://demo.oncokb.org/api/v1"
 
-    def fetch_results(self, request_data: OncoKBQueryParameters) -> str:
+    def fetch_results(self, request_data: OncoKBQueryParameters, retries: Optional[int]=3) -> str:
         """Function to submit the OncoKB query and fetch the results directly.
         No multi-step procedure, thus no wrapping of submission and retrieval in
         this case.
