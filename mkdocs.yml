@@ -65,6 +65,7 @@ nav:
   - Vignettes:
       - Knowledge Graph RAG: vignette-kg.md
       - Retrieval-Augmented Generation (RAG): vignette-rag.md
+      - Customising BioChatter Light - Simple: vignette-custom-bclight-simple.md
   - API Reference:
       - LLM Connectivity: llm_connect-reference.md
       - Vectorstore: vectorstore-reference.md
