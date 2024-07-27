@@ -62,8 +62,8 @@ class DatabaseAgent:
             self.connection_args,
         )
         query_prompt = self.prompt_engine.generate_query_prompt(query)
-        cypher_query = agent.execute(query, query_prompt)
-        return cypher_query
+        agent_result = agent.execute(query, query_prompt)
+        return agent_result.answer, agent_result.tool_result
 
     def get_query_results(self, query: str, k: int = 3) -> list[Document]:
         """
@@ -82,11 +82,15 @@ class DatabaseAgent:
                 values are the cypher query used to generate the results, for
                 now.
         """
-        cypher_query = self._generate_query(
+        (cypher_query, tool_result) = self._generate_query(
             query
         )  # self.prompt_engine.generate_query(query)
         # TODO some logic if it fails?
-        results = self.driver.query(query=cypher_query)
+        
+        if tool_result is not None:
+            results = [tool_result]
+        else:
+            results = self.driver.query(query=cypher_query)
 
         documents = []
         # return first k results

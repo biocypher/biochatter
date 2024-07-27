@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Callable, List
+from typing import Any, Callable, Dict, List
 import json
 from langchain_core.messages import (
     BaseMessage,
@@ -24,9 +24,37 @@ from langgraph.graph import END
 from .rag_agent import RagAgent
 from .langgraph_agent_base import (
     EXECUTE_TOOL_NODE,
-    ReflexionAgent, 
+    ReflexionAgent,
+    ReflexionAgentResult, 
     ResponderWithRetries,
+    ReflexionAgentLogger,
 )
+
+class DecideAgentLogger(ReflexionAgentLogger):
+    def __init__(self) -> None:
+        super().__init__()
+    def log_step_message(self, step: int, node_name: str, output: BaseMessage):
+        try:
+            parsed_output = self.parser.invoke(output)
+            self._log_message(f"## {step}, {node_name}")
+            self._log_message(f'Answer: {parsed_output[0]["args"]["answer"]}')
+            self._log_message(
+                f'Reflection | Improving: {parsed_output[0]["args"]["reflection"]}'
+            )            
+            if "revised_answer" in parsed_output[0]["args"]:
+                self._log_message("Reflection | Revised Answer:")
+                self._log_message(parsed_output[0]["args"]["revised_answer"])
+            self._log_message(
+                "-------------------------------- Node Output --------------------------------"
+            )
+        except Exception as e:
+            self._log_message(str(output)[:100] + " ...", "error")
+    def log_final_result(self, final_result: ReflexionAgentResult) -> None:
+        self._log_message(
+            "\n\n-------------------------------- Final Generated Response --------------------------------"
+        )
+        obj = vars(final_result)
+        self._log_message(json.dumps(obj))
 
 class ChooseRagAgent(BaseModel):
     "Choose RagAgent"
@@ -59,7 +87,9 @@ class DeciderAgent(ReflexionAgent):
         rag_agents: List[RagAgent],
         conversation_factory: Callable
     ):
-        super().__init__(conversation_factory=conversation_factory)
+        super().__init__(
+            conversation_factory=conversation_factory, agent_logger=DecideAgentLogger(),
+        )
         self.rag_agents = rag_agents
         agent_desc = [f"{ix}. {rag_agents[ix].mode}: {rag_agents[ix].get_description()}" 
                       for ix in range(len(rag_agents))]
@@ -140,7 +170,7 @@ Revise your previous chosen rag agent based on the result of the rag agent and f
                     "result": []
                 })
                 continue
-            result = agent.generate_responses(user_question)
+            result = found_agent.generate_responses(user_question)
             if len(result) > 0:
                 content = json.dumps({
                     "rag_agent": found_agent.mode, 
@@ -170,31 +200,18 @@ Revise your previous chosen rag agent based on the result of the rag agent and f
         return None
 
     def _should_continue(self, state: List[BaseMessage]):
-        return END # here we use one-shot loop for sake of performance
+        return END # here we use one-pass loop for sake of performance
     
-    def _log_step_message(self, step: int, node: str, output: BaseMessage):
-        try:
-            parsed_output = self.parser.invoke(output)
-            self._log_message(f"## {step}, {node}")
-            self._log_message(f'Answer: {parsed_output[0]["args"]["answer"]}')
-            self._log_message(
-                f'Reflection | Improving: {parsed_output[0]["args"]["reflection"]}'
-            )            
-            if "revised_answer" in parsed_output[0]["args"]:
-                self._log_message("Reflection | Revised Answer:")
-                self._log_message(parsed_output[0]["args"]["revised_answer"])
-            self._log_message(
-                "-------------------------------- Node Output --------------------------------"
-            )
-        except Exception as e:
-            self._log_message(str(output)[:100] + " ...", "error")
-
-    def _parse_final_result(self, output: BaseMessage) -> str | None:
-        return self.parser.invoke(output)[0]["args"]
-
-    def _log_final_result(self, output: BaseMessage):
-        self._log_message(
-            "\n\n-------------------------------- Final Generated Response --------------------------------"
+    def _parse_final_result(self, output: BaseMessage) -> ReflexionAgentResult:
+        result = self.parser.invoke(output)[0]["args"]
+        tool_result = result["tool_result"] if "tool_result" in result else None
+        if isinstance(tool_result, str):
+            try:
+                tool_result = json.loads(tool_result)
+            except json.JSONDecodeError:
+                tool_result = None
+        return ReflexionAgentResult(
+            answer=result["answer"] if "answer" in result else None,
+            tool_result=tool_result,
         )
-        final_result = self._parse_final_result(output)
-        self._log_message(final_result)
+

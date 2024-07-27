@@ -22,11 +22,44 @@ from langgraph.graph import END
 from biochatter.langgraph_agent_base import (
     ReflexionAgent,
     ResponderWithRetries,
+    ReflexionAgentLogger,
+    ReflexionAgentResult,
     END_NODE,
     EXECUTE_TOOL_NODE,
 )
 
 logger = logging.getLogger(__name__)
+
+class KGQueryReflexionAgentLogger(ReflexionAgentLogger):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def log_step_message(self, step: int, node_name: str, output: BaseMessage):
+        try:
+            parsed_output = self.parser.invoke(output)
+            self._log_message(f"## {step}, {node_name}")
+            self._log_message(f'Answer: {parsed_output[0]["args"]["answer"]}')
+            self._log_message(
+                f'Reflection | Improving: {parsed_output[0]["args"]["reflection"]}'
+            )
+            self._log_message("Reflection | Search Queries:")
+            for i, sq in enumerate(parsed_output[0]["args"][SEARCH_QUERIES]):
+                self._log_message(f"{i+1}: {sq}")
+            if REVISED_QUERY in parsed_output[0]["args"]:
+                self._log_message("Reflection | Revised Query:")
+                self._log_message(parsed_output[0]["args"][REVISED_QUERY])
+            self._log_message(
+                "-------------------------------- Node Output --------------------------------"
+            )
+        except Exception as e:
+            self._log_message(str(output)[:100] + " ...", "error")
+    
+    def log_final_result(self, final_result: ReflexionAgentResult) -> None:
+        self._log_message(
+            "\n\n-------------------------------- Final Generated Response --------------------------------"
+        )
+        obj = vars(final_result)
+        self._log_message(json.dumps(obj))
 
 ANSWER = "answer"
 SEARCH_QUERIES = "search_queries"
@@ -57,6 +90,7 @@ class ReviseQuery(GenerateQuery):
 
     revised_query: str = Field(description=REVISED_QUERY_DESCRIPTION)
     score: str = Field(description=SCORE_DESCRIPTION)
+    tool_result: str = Field(description="the result of execute_tool node")
 
 
 class KGQueryReflexionAgent(ReflexionAgent):
@@ -90,7 +124,9 @@ class KGQueryReflexionAgent(ReflexionAgent):
             max_steps: the maximum number of steps to execute in the graph
 
         """
-        super().__init__(conversation_factory, max_steps)
+        super().__init__(
+            conversation_factory, max_steps, agent_logger=KGQueryReflexionAgentLogger()
+        )
         self.actor_prompt_template = ChatPromptTemplate.from_messages(
             [
                 (
@@ -286,32 +322,15 @@ class KGQueryReflexionAgent(ReflexionAgent):
         )
         return END if query_results_num > 0 else EXECUTE_TOOL_NODE
 
-    def _log_step_message(self, step: int, node: str, output: BaseMessage):
-        try:
-            parsed_output = self.parser.invoke(output)
-            self._log_message(f"## {step}, {node}")
-            self._log_message(f'Answer: {parsed_output[0]["args"]["answer"]}')
-            self._log_message(
-                f'Reflection | Improving: {parsed_output[0]["args"]["reflection"]}'
-            )
-            self._log_message("Reflection | Search Queries:")
-            for i, sq in enumerate(parsed_output[0]["args"][SEARCH_QUERIES]):
-                self._log_message(f"{i+1}: {sq}")
-            if REVISED_QUERY in parsed_output[0]["args"]:
-                self._log_message("Reflection | Revised Query:")
-                self._log_message(parsed_output[0]["args"][REVISED_QUERY])
-            self._log_message(
-                "-------------------------------- Node Output --------------------------------"
-            )
-        except Exception as e:
-            self._log_message(str(output)[:100] + " ...", "error")
-
-    def _parse_final_result(self, output: BaseMessage) -> str | None:
-        return self.parser.invoke(output)[0]["args"]["answer"]
-
-    def _log_final_result(self, output: BaseMessage):
-        self._log_message(
-            "\n\n-------------------------------- Final Generated Response --------------------------------"
+    def _parse_final_result(self, output: BaseMessage) -> ReflexionAgentResult:
+        result = self.parser.invoke(output)[0]["args"]
+        tool_result = result["tool_result"] if "tool_result" in result else None
+        if isinstance(tool_result, str):
+            try:
+                tool_result = json.loads(tool_result)
+            except json.JSONDecodeError:
+                tool_result = None
+        return ReflexionAgentResult(
+            answer=result["answer"] if "answer" in result else None,
+            tool_result=tool_result,
         )
-        final_result = self._parse_final_result(output)
-        self._log_message(final_result)

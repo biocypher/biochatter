@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Callable, Dict, List, Literal, Optional, Union
+from typing import Any, Callable, Dict, List, Literal, Optional, Union
 import logging
 
 from langchain_core.messages import (
@@ -15,6 +15,54 @@ from langgraph.graph import MessageGraph, END
 from langgraph.graph.graph import CompiledGraph
 
 logger = logging.getLogger(__name__)
+
+class ReflexionAgentLogger:
+    def __init__(self) -> None:
+        self._logs: str = ""
+    def log_step_message(
+        self, step: int, node_name: str, output: BaseMessage,
+    ):
+        """
+        log step message
+        Args:
+          step int: step index
+          output BaseMessage: step message
+        """
+        pass
+    def log_final_result(self, final_result: Dict[str, Any]) -> None:
+        """
+        log final result
+        Args:
+          output BaseMessage: last step message
+        """
+        pass
+    def _log_message(
+        self,
+        msg: str = "",
+        level: Optional[Literal["info", "error", "warn"]] = "info",
+    ):
+        """
+        Save log message
+
+        Args:
+            msg: the message to be logged
+
+            level: the log level to write
+        """
+        logger_func = (
+            logger.info
+            if level == "info"
+            else (logger.error if level == "error" else logger.warning)
+        )
+        logger_func(msg)
+        self._logs = (
+            self._logs
+            + f"[{level}]"
+            + f"{datetime.now().isoformat()} - {msg}\n"
+        )
+    @property
+    def logs(self):
+        return self._logs
 
 
 class ResponderWithRetries:
@@ -54,6 +102,12 @@ EXECUTE_TOOL_NODE = "execute_tool"
 REVISE_NODE = "revise"
 END_NODE = END
 
+class ReflexionAgentResult:
+    def __init__(self, answer: str | None, tool_result: List[Any] | None):
+        self.answer = answer
+        self.tool_result = tool_result
+
+
 
 class ReflexionAgent(ABC):
     """
@@ -70,6 +124,7 @@ class ReflexionAgent(ABC):
         self,
         conversation_factory: Callable,
         max_steps: Optional[int] = 20,
+        agent_logger: Optional[ReflexionAgentLogger] = ReflexionAgentLogger(),
     ):
         """
         Args:
@@ -85,8 +140,8 @@ class ReflexionAgent(ABC):
         self.revise_responder = None
         self.max_steps = max_steps
         self.recursion_limit = recursion_limit
-        self._logs: str = ""
         self.conversation = conversation_factory()
+        self.agent_logger = agent_logger
 
     def _should_continue(self, state: List[BaseMessage]):
         """
@@ -133,65 +188,19 @@ class ReflexionAgent(ABC):
         pass
 
     @abstractmethod
-    def _log_step_message(
-        self, step: int, node: str, output: BaseMessage
-    ) -> None:
-        """
-        log step message
-        Args:
-          step int: step index
-          output BaseMessage: step message
-        """
-        pass
-
-    @abstractmethod
-    def _log_final_result(self, output: BaseMessage) -> None:
-        """
-        log final result
-        Args:
-          output BaseMessage: last step message
-        """
-        pass
-
-    @abstractmethod
-    def _parse_final_result(self, output: BaseMessage) -> str | None:
+    def _parse_final_result(self, output: BaseMessage) -> ReflexionAgentResult:
         """
         parse the result of the last step
         Args:
           output BaseMessage: last step message
         Returns:
-          str | None: the parsed reuslt of the last step
+          ReflexionAgentResult: the parsed reuslt of the last step
         """
         pass
 
-    def _log_message(
-        self,
-        msg: str = "",
-        level: Optional[Literal["info", "error", "warn"]] = "info",
-    ):
-        """
-        Save log message
-
-        Args:
-            msg: the message to be logged
-
-            level: the log level to write
-        """
-        logger_func = (
-            logger.info
-            if level == "info"
-            else (logger.error if level == "error" else logger.warning)
-        )
-        logger_func(msg)
-        self._logs = (
-            self._logs
-            + f"[{level}]"
-            + f"{datetime.now().isoformat()} - {msg}\n"
-        )
-
-    @property
-    def logs(self):
-        return self._logs
+    
+    def get_logs(self):
+        return self.agent_logger.logs
 
     @staticmethod
     def _get_num_iterations(state: List[BaseMessage]):
@@ -264,7 +273,7 @@ class ReflexionAgent(ABC):
         self,
         graph: Optional[CompiledGraph] = None,
         question: Optional[str] = "",
-    ) -> str | None:
+    ) -> ReflexionAgentResult:
         """
         execute Langgraph graph
         Args:
@@ -284,21 +293,22 @@ class ReflexionAgent(ABC):
             {
                 "recursion_limit": self.recursion_limit,
             },
-        )
+        )        
         for i, step in enumerate(events):
             if isinstance(step, list):
                 node, output = (f"{i}", step[i])
             else:
                 node, output = next(iter(step.items()))
-            self._log_step_message(i + 1, node, output)
+            self.agent_logger.log_step_message(i + 1, node, output)
 
         last_output = self._extract_result_from_final_step(step)
-        self._log_final_result(last_output)
-        return self._parse_final_result(last_output)
+        final_result = self._parse_final_result(last_output)
+        self.agent_logger.log_final_result(final_result)
+        return final_result
 
     def execute(
         self, question: str, prompt: Optional[str] = None
-    ) -> str | None:
+    ) -> ReflexionAgentResult:
         """
         Execute ReflexionAgent. Wrapper for building a graph and executing it,
         returning the final answer.
@@ -315,3 +325,6 @@ class ReflexionAgent(ABC):
             return None
         graph = self._build_graph(prompt)
         return self._execute_graph(graph, question)
+        
+
+
