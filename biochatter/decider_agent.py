@@ -31,6 +31,9 @@ from .langgraph_agent_base import (
 )
 
 class DecideAgentLogger(ReflexionAgentLogger):
+    """
+    DeciderAgent logger
+    """
     def __init__(self) -> None:
         super().__init__()
     def log_step_message(self, step: int, node_name: str, output: BaseMessage):
@@ -82,6 +85,9 @@ class ReviseRagAgent(ChooseRagAgent):
 
 
 class DeciderAgent(ReflexionAgent):
+    """
+    class DeciderAgent is to prompt LLM to choose appropriate rag agent
+    """
     def __init__(
         self,
         rag_agents: List[RagAgent],
