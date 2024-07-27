@@ -216,6 +216,9 @@ is a two-stage process (e.g., submitting a query and then retrieving the
 results), you should implement the necessary logic to handle this. You can look
 at the BLAST fetcher for an example (`blast.py`).
 
+It may be useful to tune the retries parameter to handle network issues or, as
+in the case of BLAST, the computational time required to process the query.
+
 NOTE: if the response is too large for your LLM context window you may have to
 reduce its size in some way.
 
@@ -228,8 +231,10 @@ class NewAPIFetcher(BaseFetcher):
         }
         self.base_url = "https://api.new.org/api/"
 
-    def fetch_results(self, 
-    query_model: NewAPIQueryParameters
+    def fetch_results(
+        self, 
+        query_model: NewAPIQueryParameters,
+        retries: int = 3,
     ) -> str:
     #implement your logic here 
     return results_response.text
