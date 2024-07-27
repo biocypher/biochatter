@@ -37,7 +37,7 @@ def on_pre_build(config, **kwargs) -> None:
     plot_scatter_per_quantisation(overview)
     plot_task_comparison(overview)
     plot_rag_tasks(overview)
-    plot_extraction_tasks(overview)
+    plot_extraction_tasks()
     plot_comparison_naive_biochatter(overview)
     calculate_stats(overview)
 
@@ -64,6 +64,16 @@ def preprocess_results_for_frontend(
             if ";" in x
             else float(x)
         )
+    )
+    # multiply score_achieved by iterations if no semicolon in scores
+    # TODO remove once all benchmarks are in new format
+    raw_results["score_achieved"] = raw_results.apply(
+        lambda x: (
+            x["score_achieved"] * x["iterations"]
+            if ";" not in x["scores"]
+            else x["score_achieved"]
+        ),
+        axis=1,
     )
     raw_results["score_sd"] = raw_results["scores"].apply(
         lambda x: (
@@ -653,7 +663,7 @@ def plot_rag_tasks(overview):
     plt.close()
 
 
-def plot_extraction_tasks(raw_results: pd.DataFrame):
+def plot_extraction_tasks():
     """
     Load raw result file for sourcedata_info_extraction; aggregate based on the
     subtask name and calculate mean accuracy for each model. Plot a stripplot
@@ -678,34 +688,6 @@ def plot_extraction_tasks(raw_results: pd.DataFrame):
     sourcedata_info_extraction["score_sd"] = sourcedata_info_extraction[
         "scores"
     ].apply(lambda x: np.std(float(x.split(";")[0])) if ";" in x else 0)
-    raw_results["score_possible"] = raw_results.apply(
-        lambda x: float(x["score"].split("/")[1]) * x["iterations"], axis=1
-    )
-    raw_results["scores"] = raw_results["score"].apply(
-        lambda x: x.split("/")[0]
-    )
-    raw_results["score_achieved"] = raw_results["scores"].apply(
-        lambda x: (
-            np.sum([float(score) for score in x.split(";")])
-            if ";" in x
-            else float(x)
-        )
-    )
-    raw_results["score_sd"] = raw_results["scores"].apply(
-        lambda x: (
-            np.std([float(score) for score in x.split(";")], ddof=1)
-            if ";" in x
-            else 0
-        )
-    )
-    aggregated_scores = raw_results.groupby(["model_name"]).agg(
-        {
-            "score_possible": "sum",
-            "score_achieved": "sum",
-            "score_sd": "mean",
-            "iterations": "first",
-        }
-    )
     aggregated_scores = sourcedata_info_extraction.groupby(
         ["model_name", "subtask"]
     ).agg(

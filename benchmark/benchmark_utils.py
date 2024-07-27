@@ -258,7 +258,9 @@ def categorize_failure_modes(
             return "Format Error"
 
         # Check if some of the answer is partially right, but only if it's more than one letter
-        elif len(expected_answer) > 1 and (actual_answer in expected_answer or expected_answer in actual_answer):
+        elif len(expected_answer) > 1 and (
+            actual_answer in expected_answer or expected_answer in actual_answer
+        ):
             return "Partial Match"
 
         # Check if the format of the answer is wrong, but the answer otherwise is right (e.g. "a b" instead of "ab")
@@ -307,10 +309,10 @@ def categorize_failure_modes(
 
 def is_synonym(word1, word2):
     """
-    Tests, if the input arguments word1 and word2 are synonyms of each other.
-    If yes, the function returns True, False otherwise. 
+    Tests if the input arguments word1 and word2 are synonyms of each other.
+    If yes, the function returns True, False otherwise.
     """
-    if word2 is "yes" or "no" or "ja" or "nein":
+    if word2.lower() in ["yes", "no", "ja", "nein"]:
         return False
 
     synsets1 = wordnet.synsets(word1)
