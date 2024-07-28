@@ -28,7 +28,7 @@ in the `environment` section of the `app` service.
 services:
   ## ... build, import, and deploy the KG ...
   app:
-    image: biocypher/biochatter-light:0.6.7
+    image: biocypher/biochatter-light:0.6.10
     container_name: app
     ports:
       - "8501:8501"
