@@ -625,8 +625,8 @@ class VectorDatabaseAgentMilvus:
         except MilvusException as e:
             logger.error(e)
             raise e
-        
-    def get_description(self, doc_ids: Optional[List[str]]=None):
+
+    def get_description(self, doc_ids: Optional[List[str]] = None):
         def get_name(meta: Dict[str, str]):
             name_col = ["title", "name", "subject", "source"]
             for col in name_col:
@@ -634,9 +634,12 @@ class VectorDatabaseAgentMilvus:
                     return meta[col]
             return ""
 
-        expr = VectorDatabaseAgentMilvus._build_meta_col_query_expr_for_all_documents(doc_ids)
+        expr = VectorDatabaseAgentMilvus._build_meta_col_query_expr_for_all_documents(
+            doc_ids
+        )
         result = self._col_metadata.query(
-            expr=expr, output_fields=METADATA_FIELDS,
+            expr=expr,
+            output_fields=METADATA_FIELDS,
         )
         names = list(map(get_name, result))
         names_set = set(names)

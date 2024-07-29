@@ -139,6 +139,6 @@ class APIAgent:
 
     def get_description(self, tool_name: str, tool_desc: str):
         return (
-            f"API agent is to interact with a {tool_name}'s API for querying and fetching results."
-            f"Tool {tool_name}: {tool_desc}"
+            f"This API agent interacts with {tool_name}'s API for querying and "
+            f"fetching results. {tool_desc}"
         )

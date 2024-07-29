@@ -86,7 +86,7 @@ class DatabaseAgent:
             query
         )  # self.prompt_engine.generate_query(query)
         # TODO some logic if it fails?
-        
+
         if tool_result is not None:
             results = [tool_result]
         else:
@@ -119,16 +119,22 @@ class DatabaseAgent:
             if result[0]:
                 schema_info_node = result[0][0]["n"]
                 MAX_SCHEMA_INFO_LENGTH = 1000
-                schema_dict_content = schema_info_node["schema_info"][:MAX_SCHEMA_INFO_LENGTH] # limit to 1000 characters
-                return (f"the graph database contains the following nodes and edges: \n\n"
-                        f"{schema_dict_content}")
+                schema_dict_content = schema_info_node["schema_info"][
+                    :MAX_SCHEMA_INFO_LENGTH
+                ]  # limit to 1000 characters
+                return (
+                    f"the graph database contains the following nodes and edges: \n\n"
+                    f"{schema_dict_content}"
+                )
         except Exception:
-            pass # failed to inquire shcema info
-        
+            pass  # failed to retrieve schema info
+
         nodes_query = "MATCH (n) RETURN DISTINCT labels(n) LIMIT 300"
         node_results = self.driver.query(query=nodes_query)
         edges_query = "MATCH (n) RETURN DISTINCT type(n) LIMIT 300"
         edge_results = self.driver.query(query=edges_query)
-        return (f"The graph database contains the following nodes and edges: \n"
-                f"nodes: \n{node_results}"
-                f"edges: \n{edge_results}")
+        return (
+            f"The graph database contains the following nodes and edges: \n"
+            f"nodes: \n{node_results}"
+            f"edges: \n{edge_results}"
+        )

@@ -73,8 +73,10 @@ class RagAgent:
             from .database_agent import DatabaseAgent
 
             if not connection_args:
-                raise ValueError("Please provide connection args to connect to database.")
-            
+                raise ValueError(
+                    "Please provide connection args to connect to database."
+                )
+
             if not schema_config_or_info_dict:
                 raise ValueError("Please provide a schema config or info dict.")
             self.schema_config_or_info_dict = schema_config_or_info_dict
@@ -94,7 +96,9 @@ class RagAgent:
             from .vectorstore_agent import VectorDatabaseAgentMilvus
 
             if not connection_args:
-                raise ValueError("Please provide connection args to connect to vector store.")
+                raise ValueError(
+                    "Please provide connection args to connect to vector store."
+                )
 
             if not embedding_func:
                 raise ValueError("Please provide an embedding function.")
@@ -200,7 +204,7 @@ class RagAgent:
             )
         self.last_response = response
         return response
-    
+
     def get_description(self):
         if self.mode == RagAgentModeEnum.KG:
             return self.agent.get_description()
@@ -208,20 +212,24 @@ class RagAgent:
             return self.agent.get_description(self.documentids_workspace)
         elif self.mode == RagAgentModeEnum.API_BLAST:
             tool_name = "BLAST"
-            tool_desc = ("The Basic Local Alignment Search Tool (BLAST) "
-                         "finds regions of local similarity between sequences." 
-                         "BLAST compares nucleotide or protein sequences to "
-                         "sequence databases and calculates the statistical significance of matches.")
+            tool_desc = (
+                "The Basic Local Alignment Search Tool (BLAST) "
+                "finds regions of local similarity between sequences. "
+                "BLAST compares nucleotide or protein sequences to "
+                "sequence databases and calculates the statistical "
+                "significance of matches."
+            )
             return self.agent.get_description(tool_name, tool_desc)
         elif self.mode == RagAgentModeEnum.API_ONCOKB:
             tool_name = "OncoKB"
-            tool_desc = ("OncoKB is a precision oncology knowledge base "
-                         "and contains information about the effects "
-                         "and treatment implications of specific cancer gene alterations.")
+            tool_desc = (
+                "OncoKB is a precision oncology knowledge base "
+                "and contains information about the effects "
+                "and treatment implications of specific cancer gene alterations."
+            )
             return self.agent.get_description(tool_name, tool_desc)
         else:
             raise ValueError(
                 "Invalid mode. Choose either 'kg', 'vectorstore', 'api_blast', "
                 "or 'api_oncokb'."
             )
-
