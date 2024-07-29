@@ -21,6 +21,7 @@ class RagAgent:
         conversation_factory: Optional[Callable] = None,
         embedding_func: Optional[object] = None,
         documentids_workspace: Optional[list[str]] = None,
+        agent_desc: Optional[str] = None,
     ) -> None:
         ######
         ##TO DO
@@ -69,6 +70,7 @@ class RagAgent:
         self.n_results = n_results
         self.documentids_workspace = documentids_workspace
         self.last_response = []
+        self._agent_desc = agent_desc
         if self.mode == RagAgentModeEnum.KG:
             from .database_agent import DatabaseAgent
 
@@ -147,6 +149,13 @@ class RagAgent:
                 "Invalid mode. Choose either 'kg', 'vectorstore', 'api_blast', or 'api_oncokb'."
             )
 
+    @property
+    def agent_description(self):
+        return self._agent_desc
+    @agent_description.setter
+    def agent_description(self, val: Optional[str] = None):
+        self._agent_desc = val
+
     def generate_responses(self, user_question: str) -> list[tuple]:
         """
         Run the query function according to the mode and return the results in a
@@ -206,6 +215,8 @@ class RagAgent:
         return response
 
     def get_description(self):
+        if self.agent_description is not None:
+            return self.agent_description
         if self.mode == RagAgentModeEnum.KG:
             return self.agent.get_description()
         elif self.mode == RagAgentModeEnum.VectorStore:
