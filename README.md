@@ -54,11 +54,12 @@ paid OpenAI TTS can be used without this extra)
 
 ## Usage
 
-Check out the [documentation](https://biochatter.org/) for
-examples, use cases, and more information. Many common functionalities covered
-by BioChatter can be seen in use in the
-[BioChatter Light](https://github.com/biocypher/biochatter-light) code base.
-[![Built with Material for MkDocs](https://img.shields.io/badge/Material_for_MkDocs-526CFE?style=for-the-badge&logo=MaterialForMkDocs&logoColor=white)](https://squidfunk.github.io/mkdocs-material/)
+Check out the [documentation](https://biochatter.org/) for examples, use cases,
+and more information. Many common functionalities covered by BioChatter can be
+seen in use in the [BioChatter
+Light](https://github.com/biocypher/biochatter-light) code base.  [![Built with
+Material for
+MkDocs](https://img.shields.io/badge/Material_for_MkDocs-526CFE?style=for-the-badge&logo=MaterialForMkDocs&logoColor=white)](https://squidfunk.github.io/mkdocs-material/)
 
 ## 🤝 Getting involved
 

@@ -10,16 +10,16 @@ developed as a demonstration use case. The final web app is available at
 
 ## Background
 
-Managing a scientific group is challing for multiple reasons, particularly one
-which has multiple interdependent projects, each of which is pursued by a small
-team of junior and senior researchers. To enhance productivity and
+Managing a scientific group is challenging for multiple reasons, particularly
+one which has multiple interdependent projects, each of which is pursued by a
+small team of junior and senior researchers. To enhance productivity and
 communication, it could be beneficial to have a tool that takes away some of the
 burden of project management, to increase the available "thinking time" for the
-scientists (for further reading, refer to [this
+scientists (for further reading, see for example [this
 article](https://www.nature.com/articles/d41586-024-02381-x)). In the context of
 our work, there are two components we see as essential: data management (FAIR
-and transparent) and simple interfaces (driven by conversational AI). Naturally,
-we will be using BioCypher and BioChatter for these two components.
+and transparent) and simple interfaces (driven by conversational AI). We will be
+using BioCypher and BioChatter for these two components.
 
 We will use a GitHub Project board
 ([here](https://github.com/orgs/biocypher/projects/6/views/1)) as the "ground
@@ -57,12 +57,12 @@ the upcoming tasks of the group and each team member, and the "Settings" tab
 allows configuration of the queries and LLM instructions used to generate the
 content for the other tabs.
 
-The solution as a web app is not the ideal use case for the project management
-tool; rather, we envision the deployed version as an integration of common
-messengers (Zulip, Slack, etc.) that acts as a conversational assistant to the
-group and its members. The web app is a proof of concept and demonstration of
-the capabilities of BioChatter Light, simulating feedback to the group and
-individual users via the simplified interface.
+The solution as a web app is only an illustration of the project management
+tool; for example, we'd envision the deployed version rather as an integration
+of common messengers (Zulip, Slack, etc.) that acts as a conversational
+assistant to the group and its members. The web app is a proof of concept and
+demonstration of the capabilities of BioChatter Light, simulating feedback to
+the group and individual users via the simplified interface.
 
 The tabs were added to the BioChatter Light codebase in the corresponding module
 (`components/panels/project.py`), which contains all three tabs. The Streamlit
@@ -174,8 +174,10 @@ larger groups and even organisations.
 
 The capabilities of GitHub Projects and their API allow the transfer of issues
 between boards, which allows for a multi-level approach to project management.
-Higher-level master boards can collect the tasks and issues of a larger group,
-and the project management assistant can help in collating those into manageable
-chunks for smaller teams (such as the board of our synthetic project). The same
-abstraction can be used at the organisation level, where the aims and challenges
-of the organisation are broken down into projects and tasks for larger groups.
+Higher-level master boards (such as the complex [BioCypher ecosystem overview
+board](https://github.com/orgs/biocypher/projects/1/views/2)) can collect the
+tasks and issues of a larger group, and the project management assistant can
+help in collating those into manageable chunks for smaller teams (such as the
+board of our synthetic project). The same abstraction can be used at the
+organisation level, where the aims and challenges of the organisation are broken
+down into projects and tasks for larger groups.

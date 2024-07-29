@@ -1,4 +1,4 @@
-# Podcast module
+# Podcast Reference
 
 Here we handle generation of podcasts from texts.
 

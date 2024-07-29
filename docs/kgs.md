@@ -15,10 +15,8 @@ the example of a Neo4j knowledge graph connection.
 Currently, BioChatter does not handle database connectivity, but simply returns
 a query for a given language.  The application using BioChatter should establish
 connectivity and send the query to the database, as is implemented in BioChatter
-Light, for instance. For a demonstration using a simple Docker compose setup,
+Light, for instance.  For a demonstration using a simple Docker compose setup,
 see the [Pole Crime Dataset demo repository](https://github.com/biocypher/pole).
-For a more complex setup, you can refer to the [DECIDER
-genetics](https://github.com/biocypher/decider-genetics) repository.
 
 ## Querying
 

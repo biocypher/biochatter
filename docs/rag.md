@@ -3,8 +3,8 @@
 To connect to a vector database for using semantic similarity search and
 retrieval-augmented generation (RAG), we provide an implementation that connects
 to a [Milvus](https://milvus.io) instance (local or remote).  These functions
-are provided by the modules `vectorstore.py` (for performing embeddings) and `vectorstore_agent.py` (for maintaining the
-connection and search).
+are provided by the modules `vectorstore.py` (for performing embeddings) and
+`vectorstore_agent.py` (for maintaining the connection and search).
 
 This is implemented in the [BioChatter
 Light](https://github.com/biocypher/biochatter-light) Docker workflow and the

@@ -69,9 +69,10 @@ nav:
       - Customising BioChatter Light - Advanced: vignette-custom-bclight-advanced.md
   - API Reference:
       - LLM Connectivity: llm_connect-reference.md
-      - Vectorstore: vectorstore-reference.md
-      - Vectorstore Agent: vectorstore_agent-reference.md
-      - Prompt Engine: prompts-reference.md
+      - Vectorstore Agent: vectorstore-reference.md
+      - Knowledge Graph Agent: kg-reference.md
+      - API Agent: api-reference.md
+      - Reflexion Agent: reflexion-reference.md
       - Podcast: podcast-reference.md
 
 repo_url: https://github.com/biocypher/biochatter

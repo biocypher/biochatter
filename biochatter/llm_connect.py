@@ -1,4 +1,4 @@
-# BioChatter LLM connectivity
+# LLM connectivity
 # connect to API
 # keep track of message history
 # query API
