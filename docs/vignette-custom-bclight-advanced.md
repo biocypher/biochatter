@@ -160,3 +160,22 @@ encryption, or you can set up a secure connection with a password. Both options
 are implemented in the `docker-compose.yml` and `docker-compose-password.yml`
 files of the `project-planning` repository. You can find more info
 [here](https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-neo4j-on-ubuntu-20-04).
+
+## Conclusion
+
+This vignette showcases the creation of a custom BioChatter Light web app for a
+dedicated purpose, in this case, project management. The app is a demonstration
+of the flexibility and ease of use of the BioChatter Light framework, which
+allows for the rapid development of conversational AI interfaces for various
+applications. The project management tool is a proof of concept and will be
+further developed into a conversational assistant that can not only summarise,
+but interact with the group members, and provide administrative support for
+larger groups and even organisations.
+
+The capabilities of GitHub Projects and their API allow the transfer of issues
+between boards, which allows for a multi-level approach to project management.
+Higher-level master boards can collect the tasks and issues of a larger group,
+and the project management assistant can help in collating those into manageable
+chunks for smaller teams (such as the board of our synthetic project). The same
+abstraction can be used at the organisation level, where the aims and challenges
+of the organisation are broken down into projects and tasks for larger groups.
