@@ -63,10 +63,10 @@ cd pole
 docker-compose up -d
 ```
 
-We are constantly expanding our repertoire of BioChatter Light tabs, so check
-back for more options in the future. Creating your own tabs is also accessible
-via our modular architecture and the simple [Streamlit](https://streamlit.io)
-framework for UI design. Check the codebase of [BioChatter
+We are constantly expanding our [repertoire of BioChatter Light
+tabs](https://github.com/biocypher/biochatter-light?tab=readme-ov-file#tab-selection),
+so check back for more options in the future. Creating your own tabs is also
+accessible via our modular architecture and the simple
+[Streamlit](https://streamlit.io) framework for UI design. Check the [advanced
+vignette](vignette-custom-bclight-advanced.md) and the codebase of [BioChatter
 Light](https://github.com/biocypher/biochatter-light) for more information.
-
-<!-- TODO create docs for the tabs and their env names -->
