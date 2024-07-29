@@ -58,18 +58,6 @@ def find_schema_info_node(connection_args: dict):
         return None
 
 
-def create_conversation():
-    chatter = AzureGptConversation(
-        deployment_name=os.environ["OPENAI_DEPLOYMENT_NAME"],
-        model_name=os.environ["OPENAI_MODEL"],
-        prompts={"rag_agent_prompts": ""},
-        version=os.environ["OPENAI_API_VERSION"],
-        base_url=os.environ["AZURE_OPENAI_ENDPOINT"],
-    )
-    chatter.set_api_key(os.environ["OPENAI_API_KEY"])
-    return chatter
-
-
 class ChatOpenAIMock:
     def __init__(self) -> None:
         self.chat = None
@@ -237,7 +225,7 @@ def create_agent_selector(expected_rag_agent: str):
     )
     return AgentSelectorMock(
         rag_agents=[dbAgent, vectorstoreAgent, blastAgent, oncokbAgent],
-        conversation_factory=create_conversation,
+        conversation_factory=lambda: ChatOpenAIMock(),
         expected=expected_rag_agent,
     )
 
