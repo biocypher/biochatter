@@ -10,10 +10,12 @@ import pytest
 import inspect
 import hashlib
 import numpy as np
-from benchmark.conftest import calculate_bool_vector_score, multiple_testing
+from benchmark.conftest import calculate_bool_vector_score
 from .benchmark_utils import (
+    get_confidence_file_path,
     skip_if_already_run,
     get_result_file_path,
+    write_confidence_to_file,
     write_results_to_file,
 )
 
@@ -30,7 +32,9 @@ def data_list():
 
 
 # Run benchmark
-def test_multimodal_answer(data_list, model_name, conversation):
+def test_multimodal_answer(
+    data_list, model_name, conversation, multiple_testing
+):
     """
     Select randomly from the list of folders in data_list:
     - n examples with true positives (figure and caption match)
@@ -47,7 +51,7 @@ def test_multimodal_answer(data_list, model_name, conversation):
     skip_if_already_run(model_name=model_name, task=task, md5_hash=md5_hash)
 
     # Set number of examples
-    n = 3
+    n = 2
 
     # True positives: list of tuples containing the same file name twice
     true_positives = [
@@ -89,7 +93,7 @@ def test_multimodal_answer(data_list, model_name, conversation):
             # Extract the answer and the confidence score
             answer = response.split(",")[0].strip().lower()
             try:
-                confidence = int(response.split(",")[1].strip())
+                confidence = response.split(",")[1].strip()
             except IndexError:
                 confidence = None
 
@@ -114,10 +118,26 @@ def test_multimodal_answer(data_list, model_name, conversation):
                 score.append(result["answer"] == "no")
 
             # collect confidence scores for correct and incorrect answers
+            if not result["confidence"]:
+                continue
             if score[-1]:
                 correct_confidence.append(result["confidence"])
             else:
                 incorrect_confidence.append(result["confidence"])
+
+        # Record confidence scores
+        if not correct_confidence:
+            correct_confidence = ["None"]
+        if not incorrect_confidence:
+            incorrect_confidence = ["None"]
+        write_confidence_to_file(
+            model_name,
+            "multimodal_answer",
+            ";".join(correct_confidence),
+            ";".join(incorrect_confidence),
+            md5_hash,
+            get_confidence_file_path(task),
+        )
 
         return calculate_bool_vector_score(score)
 
