@@ -10,8 +10,7 @@ import pytest
 import inspect
 import hashlib
 import numpy as np
-from benchmark.conftest import calculate_bool_vector_score
-from biochatter.llm_connect import GptConversation
+from benchmark.conftest import calculate_bool_vector_score, multiple_testing
 from .benchmark_utils import (
     skip_if_already_run,
     get_result_file_path,
@@ -34,8 +33,8 @@ def data_list():
 def test_multimodal_answer(data_list, model_name, conversation):
     """
     Select randomly from the list of folders in data_list:
-    - 10 examples with true positives (figure and caption match)
-    - 10 examples with true negatives (figure and caption do not match)
+    - n examples with true positives (figure and caption match)
+    - n examples with true negatives (figure and caption do not match)
 
     For each example, ask the model to determine whether the figure caption
     belongs to the figure panel. Also ask the model to give an estimate of its
@@ -47,9 +46,12 @@ def test_multimodal_answer(data_list, model_name, conversation):
     md5_hash = hashlib.md5(str(data_list).encode()).hexdigest()
     skip_if_already_run(model_name=model_name, task=task, md5_hash=md5_hash)
 
+    # Set number of examples
+    n = 3
+
     # True positives: list of tuples containing the same file name twice
     true_positives = [
-        (f, f) for f in np.random.choice(data_list, 10, replace=False)
+        (f, f) for f in np.random.choice(data_list, n, replace=False)
     ]
     # True negatives: list of tuples containing different file names
     # Check that the randomly selected names are different
@@ -57,61 +59,75 @@ def test_multimodal_answer(data_list, model_name, conversation):
         (f1, f2)
         for f1, f2 in [
             (np.random.choice(data_list), np.random.choice(data_list))
-            for _ in range(10)
+            for _ in range(n)
         ]
         if f1 != f2
     ]
-    assert len(true_positives) == 10
-    assert len(true_negatives) == 10
+    assert len(true_positives) == n
+    assert len(true_negatives) == n
 
-    # Run the tests
-    results = []
-    for f1, f2 in true_positives + true_negatives:
-        conversation.reset()
-        # Load the image and the caption
-        with open(os.path.join(f1, f1.split("/")[-1] + ".txt"), "r") as f:
-            caption = f.read()
-        image_path = os.path.join(f2, f2.split("/")[-1] + ".jpg")
+    def run_test():
+        results = []
+        for f1, f2 in true_positives + true_negatives:
+            conversation.reset()
+            # Load the image and the caption
+            with open(os.path.join(f1, f1.split("/")[-1] + ".txt"), "r") as f:
+                caption = f.read()
+            image_path = os.path.join(f2, f2.split("/")[-1] + ".jpg")
 
-        # Ask the model to determine whether the caption belongs to the figure
-        response, _, _ = conversation.query(
-            f"Does this caption describe the figure in the image? {caption}"
-            "Answer with 'yes' or 'no' and give a confidence score between 0 and 10. "
-            "Answer in the format 'yes, 8' or 'no, 2'.",
-            image_url=image_path,
-        )
+            # Ask the model to determine whether the caption belongs to the figure
+            response, _, _ = conversation.query(
+                f"Does this caption describe the figure in the image? {caption}"
+                "Answer with 'yes' or 'no' and give a confidence score between 0 and 10. "
+                "Answer in the format 'yes, 8' or 'no, 2'.",
+                image_url=image_path,
+            )
 
-        # Extract the answer and the confidence score
-        answer = response.split(",")[0].strip().lower()
-        confidence = (
-            int(response.split(",")[1].strip()) if "," in response else None
-        )
+            # Remove full stop from response
+            response = response.replace(".", "")
 
-        # Record the answer and the confidence
-        results.append(
-            {
-                "file": f1.split("/")[-1],
-                "answer": answer,
-                "confidence": confidence,
-            }
-        )
+            # Extract the answer and the confidence score
+            answer = response.split(",")[0].strip().lower()
+            try:
+                confidence = int(response.split(",")[1].strip())
+            except IndexError:
+                confidence = None
 
-    # Consume results and write to file
-    score = []
-    # We expect the model to answer 'yes' for the first 10 examples and 'no' for the last 10
-    for i, result in enumerate(results):
-        if i < 10:
-            score.append(result["answer"] == "yes")
-        else:
-            score.append(result["answer"] == "no")
+            # Record the answer and the confidence
+            results.append(
+                {
+                    "file": f1.split("/")[-1],
+                    "answer": answer,
+                    "confidence": confidence,
+                }
+            )
 
-    bvs = calculate_bool_vector_score(score)
+        # Consume results and write to file
+        score = []
+        correct_confidence = []
+        incorrect_confidence = []
+        # We expect the model to answer 'yes' for the first n examples and 'no' for the last n
+        for i, result in enumerate(results):
+            if i < n:
+                score.append(result["answer"] == "yes")
+            else:
+                score.append(result["answer"] == "no")
+
+            # collect confidence scores for correct and incorrect answers
+            if score[-1]:
+                correct_confidence.append(result["confidence"])
+            else:
+                incorrect_confidence.append(result["confidence"])
+
+        return calculate_bool_vector_score(score)
+
+    scores, max, n_iterations = multiple_testing(run_test)
 
     write_results_to_file(
         model_name,
         "multimodal_answer",
-        f"{bvs[0]}/{bvs[1]}",
-        f"{len(results)}",
+        f"{scores}/{max}",
+        f"{n_iterations}",
         md5_hash,
         get_result_file_path(task),
     )
