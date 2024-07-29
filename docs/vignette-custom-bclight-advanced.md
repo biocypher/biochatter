@@ -14,10 +14,12 @@ Managing a scientific group is challing for multiple reasons, particularly one
 which has multiple interdependent projects, each of which is pursued by a small
 team of junior and senior researchers. To enhance productivity and
 communication, it could be beneficial to have a tool that takes away some of the
-burden of project management. In the context of our work, there are two
-components we see as essential: data management (FAIR and transparent) and
-simple interfaces (driven by conversational AI). Naturally, we will be using
-BioCypher and BioChatter for these two components.
+burden of project management, to increase the available "thinking time" for the
+scientists (for further reading, refer to [this
+article](https://www.nature.com/articles/d41586-024-02381-x)). In the context of
+our work, there are two components we see as essential: data management (FAIR
+and transparent) and simple interfaces (driven by conversational AI). Naturally,
+we will be using BioCypher and BioChatter for these two components.
 
 We will use a GitHub Project board
 ([here](https://github.com/orgs/biocypher/projects/6/views/1)) as the "ground
