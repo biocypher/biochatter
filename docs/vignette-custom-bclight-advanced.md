@@ -174,8 +174,10 @@ larger groups and even organisations.
 
 The capabilities of GitHub Projects and their API allow the transfer of issues
 between boards, which allows for a multi-level approach to project management.
-Higher-level master boards can collect the tasks and issues of a larger group,
-and the project management assistant can help in collating those into manageable
-chunks for smaller teams (such as the board of our synthetic project). The same
-abstraction can be used at the organisation level, where the aims and challenges
-of the organisation are broken down into projects and tasks for larger groups.
+Higher-level master boards (such as the complex [BioCypher ecosystem overview
+board](https://github.com/orgs/biocypher/projects/1/views/2)) can collect the
+tasks and issues of a larger group, and the project management assistant can
+help in collating those into manageable chunks for smaller teams (such as the
+board of our synthetic project). The same abstraction can be used at the
+organisation level, where the aims and challenges of the organisation are broken
+down into projects and tasks for larger groups.
