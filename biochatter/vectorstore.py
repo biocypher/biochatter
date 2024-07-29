@@ -50,10 +50,10 @@ class DocumentEmbedder:
 
         Args:
 
-            used (bool, optional): whether RAG has been used (ChatGSE setting).
+            used (bool, optional): whether RAG has been used (frontend setting).
                 Defaults to False.
 
-            online (bool, optional): whether we are running ChatGSE online.
+            online (bool, optional): whether we are running the frontend online.
                 Defaults to False.
 
             chunk_size (int, optional): size of chunks to split text into.
@@ -262,7 +262,7 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
 
         Args:
 
-            used (bool, optional): whether RAG has been used (ChatGSE setting).
+            used (bool, optional): whether RAG has been used (frontend setting).
 
             chunk_size (int, optional): size of chunks to split text into.
 
@@ -390,7 +390,7 @@ class OllamaDocumentEmbedder(DocumentEmbedder):
 
         Args:
 
-            used (bool, optional): whether RAG has been used (ChatGSE setting).
+            used (bool, optional): whether RAG has been used (frontend setting).
 
             chunk_size (int, optional): size of chunks to split text into.
 
