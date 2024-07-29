@@ -61,24 +61,24 @@ def test_multimodal_answer(
     # Set number of examples
     n = 2
 
-    # True positives: list of tuples containing the same file name twice
-    true_positives = [
-        (f, f) for f in np.random.choice(data_list, n, replace=False)
-    ]
-    # True negatives: list of tuples containing different file names
-    # Check that the randomly selected names are different
-    true_negatives = [
-        (f1, f2)
-        for f1, f2 in [
-            (np.random.choice(data_list), np.random.choice(data_list))
-            for _ in range(n)
-        ]
-        if f1 != f2
-    ]
-    assert len(true_positives) == n
-    assert len(true_negatives) == n
-
     def run_test():
+        # True positives: list of tuples containing the same file name twice
+        true_positives = [
+            (f, f) for f in np.random.choice(data_list, n, replace=False)
+        ]
+        # True negatives: list of tuples containing different file names
+        # Check that the randomly selected names are different
+        true_negatives = [
+            (f1, f2)
+            for f1, f2 in [
+                (np.random.choice(data_list), np.random.choice(data_list))
+                for _ in range(n)
+            ]
+            if f1 != f2
+        ]
+        assert len(true_positives) == n
+        assert len(true_negatives) == n
+
         results = []
         for f1, f2 in true_positives + true_negatives:
             conversation.reset()
@@ -135,9 +135,9 @@ def test_multimodal_answer(
 
         # Record confidence scores
         if not correct_confidence:
-            correct_confidence = ["None"]
+            correct_confidence = ""
         if not incorrect_confidence:
-            incorrect_confidence = ["None"]
+            incorrect_confidence = ""
         write_confidence_to_file(
             model_name,
             "multimodal_answer",
