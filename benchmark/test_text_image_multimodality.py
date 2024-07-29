@@ -50,6 +50,14 @@ def test_multimodal_answer(
     md5_hash = hashlib.md5(str(data_list).encode()).hexdigest()
     skip_if_already_run(model_name=model_name, task=task, md5_hash=md5_hash)
 
+    # Skip if model has no multimodal capabilities
+    if model_name not in [
+        "gpt-4-turbo-2024-04-09",
+        "gpt-4o-2024-05-13",
+        "gpt-4o-mini-2024-07-18",
+    ]:
+        pytest.skip("Model does not support multimodal input")
+
     # Set number of examples
     n = 2
 
