@@ -86,8 +86,9 @@ class DatabaseAgent:
             query
         )  # self.prompt_engine.generate_query(query)
         # TODO some logic if it fails?
-
         if tool_result is not None:
+            # If _generate_query() already returned tool_result, we won't connect
+            # to grapht database to query result any more
             results = [tool_result]
         else:
             results = self.driver.query(query=cypher_query)

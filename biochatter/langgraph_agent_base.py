@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
+import json
 from typing import Any, Callable, Dict, List, Literal, Optional, Union
 import logging
 
@@ -188,7 +189,7 @@ class ReflexionAgent(ABC):
         pass
 
     @abstractmethod
-    def _parse_final_result(self, output: BaseMessage) -> ReflexionAgentResult:
+    def _parse_final_result(self, messages: List[BaseMessage]) -> ReflexionAgentResult:
         """
         parse the result of the last step
         Args:
@@ -229,6 +230,18 @@ class ReflexionAgent(ABC):
                 continue
             return m.content
         return None
+    
+    @staticmethod
+    def _get_last_tool_result(messages: List[BaseMessage]):
+        """
+        get result of the last tool node
+        """
+        for m in messages[::-1]:
+            if not isinstance(m, ToolMessage):
+                continue
+            content = json.loads(m.content)
+            return content["result"]
+        return None
 
     def _build_graph(self, prompt: Optional[str] = None):
         """
@@ -258,17 +271,6 @@ class ReflexionAgent(ABC):
             logger.error(e)
             return None
 
-    def _extract_result_from_final_step(
-        self, step: Dict[str, List[BaseMessage]] | BaseMessage
-    ):
-        """
-        extract result from last step
-        """
-        if isinstance(step, list):
-            return step[-1]
-        else:
-            return step[END][-1] if END in step else step[REVISE_NODE]
-
     def _execute_graph(
         self,
         graph: Optional[CompiledGraph] = None,
@@ -293,16 +295,17 @@ class ReflexionAgent(ABC):
             {
                 "recursion_limit": self.recursion_limit,
             },
-        )        
+        )
+        messages = [HumanMessage(content=question)]
         for i, step in enumerate(events):
             if isinstance(step, list):
                 node, output = (f"{i}", step[i])
             else:
                 node, output = next(iter(step.items()))
             self.agent_logger.log_step_message(i + 1, node, output)
+            messages.append(output)
 
-        last_output = self._extract_result_from_final_step(step)
-        final_result = self._parse_final_result(last_output)
+        final_result = self._parse_final_result(messages)
         self.agent_logger.log_final_result(final_result)
         return final_result
 

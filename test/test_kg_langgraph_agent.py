@@ -104,6 +104,6 @@ def kgQueryAgent():
 
 def test_execute(kgQueryAgent):
     question="What genes does EOMES primarily regulate?"
-    query = kgQueryAgent.execute(question=question)
-    assert query == "MATCH (g:gene {name: 'EOMES'})-->(c:gene) RETURN DISTINCT c.name LIMIT 5;"
+    agent_result = kgQueryAgent.execute(question=question)
+    assert agent_result.answer == "MATCH (g:gene {name: 'EOMES'})-->(c:gene) RETURN DISTINCT c.name LIMIT 5;"
 

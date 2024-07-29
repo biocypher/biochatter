@@ -90,7 +90,6 @@ class ReviseQuery(GenerateQuery):
 
     revised_query: str = Field(description=REVISED_QUERY_DESCRIPTION)
     score: str = Field(description=SCORE_DESCRIPTION)
-    tool_result: str = Field(description="the result of execute_tool node")
 
 
 class KGQueryReflexionAgent(ReflexionAgent):
@@ -322,14 +321,10 @@ class KGQueryReflexionAgent(ReflexionAgent):
         )
         return END if query_results_num > 0 else EXECUTE_TOOL_NODE
 
-    def _parse_final_result(self, output: BaseMessage) -> ReflexionAgentResult:
+    def _parse_final_result(self, messages: List[BaseMessage]) -> ReflexionAgentResult:
+        output = messages[-1]
         result = self.parser.invoke(output)[0]["args"]
-        tool_result = result["tool_result"] if "tool_result" in result else None
-        if isinstance(tool_result, str):
-            try:
-                tool_result = json.loads(tool_result)
-            except json.JSONDecodeError:
-                tool_result = None
+        tool_result = ReflexionAgent._get_last_tool_result(messages)        
         return ReflexionAgentResult(
             answer=result["answer"] if "answer" in result else None,
             tool_result=tool_result,

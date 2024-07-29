@@ -85,8 +85,6 @@ class RagAgentRevisionModel(RagAgentChoiceModel):
             " with 0 representing the lowest score and 10 representing the highest score."
         )
     )
-    tool_result: str = Field(description="the result of execute_tool node")
-
 
 class RagAgentSelector(ReflexionAgent):
 
@@ -139,7 +137,7 @@ class RagAgentSelector(ReflexionAgent):
         initial_chain = self.actor_prompt_template.partial(
             instruction="",
         ) | llm.bind_tools(
-            tools=[RagAgentChoiceModel], tool_choice="ChooseRagAgent"
+            tools=[RagAgentChoiceModel], tool_choice="RagAgentChoiceModel"
         )
         validator = PydanticToolsParser(tools=[RagAgentChoiceModel])
         return ResponderWithRetries(runnable=initial_chain, validator=validator)
@@ -157,7 +155,7 @@ Revise your previous chosen rag agent based on the result of the rag agent and f
             instruction=revision_instruction
         ) | llm.bind_tools(
             tools=[RagAgentRevisionModel],
-            tool_choice="ReviseRagAgent",
+            tool_choice="RagAgentRevisionModel",
         )
         validator = PydanticToolsParser(tools=[RagAgentRevisionModel])
         return ResponderWithRetries(
@@ -206,30 +204,13 @@ Revise your previous chosen rag agent based on the result of the rag agent and f
         )
         return ToolMessage(content=content, tool_call_id=parsed_msg["id"])
 
-    def _get_last_score(self, state: List[BaseMessage]) -> int | None:
-        for m in state[::-1]:
-            if not isinstance(m, AIMessage):
-                continue
-            message: AIMessage = m
-            parsed_msg = self.parser.invoke(message)
-            try:
-                score = parsed_msg[0]["args"]["score"]
-                return int(score)
-            except Exception:
-                return None
-        return None
-
     def _should_continue(self, state: List[BaseMessage]):
         return END  # here we use one-pass loop for sake of performance
 
-    def _parse_final_result(self, output: BaseMessage) -> ReflexionAgentResult:
+    def _parse_final_result(self, messages: List[BaseMessage]) -> ReflexionAgentResult:
+        output = messages[-1]
         result = self.parser.invoke(output)[0]["args"]
-        tool_result = result["tool_result"] if "tool_result" in result else None
-        if isinstance(tool_result, str):
-            try:
-                tool_result = json.loads(tool_result)
-            except json.JSONDecodeError:
-                tool_result = None
+        tool_result = ReflexionAgent._get_last_tool_result(messages)
         return ReflexionAgentResult(
             answer=result["answer"] if "answer" in result else None,
             tool_result=tool_result,

@@ -90,7 +90,7 @@ class InitialResponder:
                         "arguments": '{"answer":"'
                         + f"{self.rag_agent}"
                         + '","reflection":"balahbalah"}',
-                        "name": "ChooseRagAgent",
+                        "name": "RagAgentChoiceModel",
                     },
                     "type": "function",
                 }
@@ -99,7 +99,7 @@ class InitialResponder:
         msg.id = id
         msg.tool_calls = [
             {
-                "name": "ChooseRagAgent",
+                "name": "RagAgentChoiceModel",
                 "args": {
                     "answer": f"{self.rag_agent}",
                     "reflection": "balahbalah",
@@ -127,7 +127,7 @@ class ReviseResponder:
                             + '","reflection":"balahbalah.","revised_answer":"'
                             + f"{self.rag_agent}"
                             + '","score":"10","tool_result":"balahbalah"}',
-                            "name": "ReviseRagAgent",
+                            "name": "RagAgentRevisionModel",
                         },
                         "type": "function",
                     }
@@ -162,7 +162,7 @@ class ReviseResponder:
             id="run-ad95b309-4f99-4886-b70f-bcb8b59f537f-0",
             tool_calls=[
                 {
-                    "name": "ReviseRagAgent",
+                    "name": "RagAgentRevisionModel",
                     "args": {
                         "answer": f"{self.rag_agent}",
                         "reflection": "balahbalah",
