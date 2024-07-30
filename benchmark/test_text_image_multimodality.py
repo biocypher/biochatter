@@ -59,7 +59,7 @@ def test_multimodal_answer(
         pytest.skip("Model does not support multimodal input")
 
     # Set number of examples
-    n = 2
+    n = 10
 
     def run_test():
         # True positives: list of tuples containing the same file name twice
@@ -68,16 +68,13 @@ def test_multimodal_answer(
         ]
         # True negatives: list of tuples containing different file names
         # Check that the randomly selected names are different
-        true_negatives = [
-            (f1, f2)
-            for f1, f2 in [
-                (np.random.choice(data_list), np.random.choice(data_list))
-                for _ in range(n)
-            ]
-            if f1 != f2
-        ]
-        assert len(true_positives) == n
-        assert len(true_negatives) == n
+        true_negatives = []
+        while len(true_negatives) < n:
+            f1, f2 = np.random.choice(data_list, 2, replace=False)
+            if f1 != f2:
+                true_negatives.append((f1, f2))
+
+        assert len(true_positives) == len(true_negatives) == n
 
         results = []
         for f1, f2 in true_positives + true_negatives:
@@ -101,8 +98,8 @@ def test_multimodal_answer(
             # Extract the answer and the confidence score
             answer = response.split(",")[0].strip().lower()
             try:
-                confidence = response.split(",")[1].strip()
-            except IndexError:
+                confidence = str(int(response.split(",")[1].strip()))
+            except (IndexError, ValueError):
                 confidence = None
 
             # Record the answer and the confidence

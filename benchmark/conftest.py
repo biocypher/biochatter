@@ -13,7 +13,7 @@ from .load_dataset import get_benchmark_dataset
 from .benchmark_utils import benchmark_already_executed
 
 # how often should each benchmark be run?
-N_ITERATIONS = 3
+N_ITERATIONS = 5
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
