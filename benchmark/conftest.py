@@ -29,15 +29,15 @@ OPENAI_MODEL_NAMES = [
 ]
 
 XINFERENCE_MODELS = {
-    "chatglm3": {
-        "model_size_in_billions": [
-            6,
-        ],
-        "model_format": "ggmlv3",
-        "quantization": [
-            "q4_0",
-        ],
-    },
+    # "chatglm3": {
+    #     "model_size_in_billions": [
+    #         6,
+    #     ],
+    #     "model_format": "ggmlv3",
+    #     "quantization": [
+    #         "q4_0",
+    #     ],
+    # },
     # "llama-2-chat": {
     #     "model_size_in_billions": [
     #         7,

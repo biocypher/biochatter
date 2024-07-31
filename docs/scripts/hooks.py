@@ -23,6 +23,7 @@ def on_pre_build(config, **kwargs) -> None:
         if os.path.isfile(os.path.join(result_files_path, f))
         and f.endswith(".csv")
         and not "failure_mode" in f
+        and not "confidence" in f
     ]
 
     for file_name in result_file_names:
@@ -510,7 +511,9 @@ def plot_scatter_per_quantisation(overview):
         "gpt-3.5-turbo-0125": palette[1],
         "gpt-4-0613": palette[2],
         "gpt-4-0125-preview": palette[3],
+        "gpt-4-turbo-2024-04-09": palette[3],
         "gpt-4o-2024-05-13": palette[4],
+        "gpt-4o-mini-2024-07-18": palette[4],
         "openhermes-2.5": palette[5],
         "llama-2-chat": palette[6],
         "llama-3-instruct": palette[7],

@@ -1,9 +1,11 @@
 Model name,Size,Median Accuracy,SD
+gpt-4-turbo-2024-04-09,Unknown,0.99,0.0
+gpt-4o-mini-2024-07-18,Unknown,0.98,0.0
 gpt-3.5-turbo-0125,175,0.87,0.21
 gpt-4-0613,Unknown,0.78,0.18
+gpt-4o-2024-05-13,Unknown,0.73,0.35
 gpt-3.5-turbo-0613,175,0.73,0.24
 gpt-4-0125-preview,Unknown,0.73,0.3
-gpt-4o-2024-05-13,Unknown,0.7,0.35
 openhermes-2.5,7,0.7,0.32
 llama-3-instruct,8,0.64,0.36
 chatglm3,6,0.44,0.26
