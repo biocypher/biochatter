@@ -2,6 +2,7 @@ import os
 import re
 
 import seaborn as sns
+import colorcet as cc
 import matplotlib
 
 import numpy as np
@@ -23,6 +24,7 @@ def on_pre_build(config, **kwargs) -> None:
         if os.path.isfile(os.path.join(result_files_path, f))
         and f.endswith(".csv")
         and not "failure_mode" in f
+        and not "confidence" in f
     ]
 
     for file_name in result_file_names:
@@ -502,7 +504,7 @@ def plot_scatter_per_quantisation(overview):
     )
 
     # Create a ColorBrewer palette
-    palette = sns.color_palette("Paired", n_colors=13)
+    palette = sns.color_palette(cc.glasbey, n_colors=14)
 
     # Define a dictionary mapping model names to colors
     color_dict = {
@@ -510,14 +512,16 @@ def plot_scatter_per_quantisation(overview):
         "gpt-3.5-turbo-0125": palette[1],
         "gpt-4-0613": palette[2],
         "gpt-4-0125-preview": palette[3],
-        "gpt-4o-2024-05-13": palette[4],
-        "openhermes-2.5": palette[5],
-        "llama-2-chat": palette[6],
-        "llama-3-instruct": palette[7],
-        "mixtral-instruct-v0.1": palette[8],
-        "mistral-instruct-v0.2": palette[9],
-        "chatglm3": palette[11],
-        "code-llama-instruct": palette[12],
+        "gpt-4-turbo-2024-04-09": palette[4],
+        "gpt-4o-2024-05-13": palette[5],
+        "gpt-4o-mini-2024-07-18": palette[6],
+        "openhermes-2.5": palette[7],
+        "llama-2-chat": palette[8],
+        "llama-3-instruct": palette[9],
+        "mixtral-instruct-v0.1": palette[10],
+        "mistral-instruct-v0.2": palette[11],
+        "chatglm3": palette[12],
+        "code-llama-instruct": palette[13],
     }
 
     # Use the dictionary as the palette argument in sns.scatterplot
@@ -536,10 +540,12 @@ def plot_scatter_per_quantisation(overview):
         "Model name",
         "gpt-3.5-turbo-0125",
         "gpt-3.5-turbo-0613",
-        "openhermes-2.5",
-        "gpt-4-0125-preview",
         "gpt-4-0613",
+        "gpt-4-0125-preview",
+        "gpt-4-turbo-2024-04-09",
         "gpt-4o-2024-05-13",
+        "gpt-4o-mini-2024-07-18",
+        "openhermes-2.5",
         "llama-2-chat",
         "llama-3-instruct",
         "code-llama-instruct",

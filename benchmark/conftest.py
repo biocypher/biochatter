@@ -13,7 +13,7 @@ from .load_dataset import get_benchmark_dataset
 from .benchmark_utils import benchmark_already_executed
 
 # how often should each benchmark be run?
-N_ITERATIONS = 3
+N_ITERATIONS = 5
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
@@ -23,19 +23,21 @@ OPENAI_MODEL_NAMES = [
     "gpt-3.5-turbo-0125",
     "gpt-4-0613",
     "gpt-4-0125-preview",
+    "gpt-4-turbo-2024-04-09",
     "gpt-4o-2024-05-13",
+    "gpt-4o-mini-2024-07-18",
 ]
 
 XINFERENCE_MODELS = {
-    "chatglm3": {
-        "model_size_in_billions": [
-            6,
-        ],
-        "model_format": "ggmlv3",
-        "quantization": [
-            "q4_0",
-        ],
-    },
+    # "chatglm3": {
+    #     "model_size_in_billions": [
+    #         6,
+    #     ],
+    #     "model_format": "ggmlv3",
+    #     "quantization": [
+    #         "q4_0",
+    #     ],
+    # },
     # "llama-2-chat": {
     #     "model_size_in_billions": [
     #         7,

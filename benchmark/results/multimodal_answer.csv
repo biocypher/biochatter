@@ -1,0 +1,4 @@
+model_name,subtask,score,iterations,md5_hash,datetime,biochatter_version
+gpt-4-turbo-2024-04-09,multimodal_answer,20;20;19;20;20/20,5,f86f51adeba17d0097bc9bf2110e1a7d,2024-07-30 22:08:04,0.5.1
+gpt-4o-2024-05-13,multimodal_answer,20;20;19;19;18/20,5,f86f51adeba17d0097bc9bf2110e1a7d,2024-07-30 22:11:51,0.5.1
+gpt-4o-mini-2024-07-18,multimodal_answer,20;19;19;20;20/20,5,f86f51adeba17d0097bc9bf2110e1a7d,2024-07-30 22:15:35,0.5.1
