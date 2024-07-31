@@ -22,15 +22,18 @@ def test_get_query_results():
     with mock.patch(
         "biochatter.database_agent.KGQueryReflexionAgent"
     ) as mock_KGQueryReflexionAgent:
-        mock_KGQueryReflexionAgent.return_value.execute.return_value = ReflexionAgentResult(
-            answer="test_query", tool_result=[
-                {"key": "value"},
-                {"key": "value"},
-                {"key": "value"},
-                {"key": "value"},
-            ]
+        mock_KGQueryReflexionAgent.return_value.execute.return_value = (
+            ReflexionAgentResult(
+                answer="test_query",
+                tool_result=[
+                    {"key": "value"},
+                    {"key": "value"},
+                    {"key": "value"},
+                    {"key": "value"},
+                ],
+            )
         )
-        
+
         # Mock the prompt_engine.generate_query method
         with mock.patch.object(
             db_agent.prompt_engine,
