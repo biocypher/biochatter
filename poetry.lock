@@ -729,6 +729,25 @@ files = [
 ]
 
 [[package]]
+name = "colorcet"
+version = "3.1.0"
+description = "Collection of perceptually uniform colormaps"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "colorcet-3.1.0-py3-none-any.whl", hash = "sha256:2a7d59cc8d0f7938eeedd08aad3152b5319b4ba3bcb7a612398cc17a384cb296"},
+    {file = "colorcet-3.1.0.tar.gz", hash = "sha256:2921b3cd81a2288aaf2d63dbc0ce3c26dcd882e8c389cc505d6886bf7aa9a4eb"},
+]
+
+[package.extras]
+all = ["colorcet[doc]", "colorcet[examples]", "colorcet[tests-extra]", "colorcet[tests]"]
+doc = ["colorcet[examples]", "nbsite (>=0.8.4)", "sphinx-copybutton"]
+examples = ["bokeh", "holoviews", "matplotlib", "numpy"]
+tests = ["packaging", "pre-commit", "pytest (>=2.8.5)", "pytest-cov"]
+tests-examples = ["colorcet[examples]", "nbval"]
+tests-extra = ["colorcet[tests]", "pytest-mpl"]
+
+[[package]]
 name = "colorlog"
 version = "6.8.2"
 description = "Add colours to the output of Python's logging module."
@@ -6272,4 +6291,4 @@ xinference = ["xinference"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "abc84eca28a4d2d1cacc8da4c0d8551838643b427bd1d6493d301f519817135c"
+content-hash = "c369783f4b70f179bbfa663daf79c6536cc533a94993d2f6735ee6a664ac26d7"

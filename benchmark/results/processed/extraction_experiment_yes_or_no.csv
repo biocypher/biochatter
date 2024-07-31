@@ -1,17 +1,19 @@
 Full model name,Subtask,Score achieved,Score possible,Score SD,Accuracy,Iterations
-openhermes-2.5:7:ggufv2:Q2_K,experiment_yes_or_no,9.0,45.0,0.0,0.2,5
+gpt-4-turbo-2024-04-09,experiment_yes_or_no,45.0,45.0,0.0,1.0,5
+gpt-4o-mini-2024-07-18,experiment_yes_or_no,40.0,45.0,0.0,0.8888888888888888,5
 gpt-4-0125-preview,experiment_yes_or_no,9.0,45.0,0.0,0.2,5
 llama-2-chat:70:ggufv2:Q4_K_M,experiment_yes_or_no,9.0,45.0,0.0,0.2,5
+openhermes-2.5:7:ggufv2:Q2_K,experiment_yes_or_no,9.0,45.0,0.0,0.2,5
 chatglm3:6:ggmlv3:q4_0,experiment_yes_or_no,8.6,45.0,0.0,0.1911111111111111,5
-openhermes-2.5:7:ggufv2:Q6_K,experiment_yes_or_no,8.333333333333334,45.0,0.0,0.1851851851851852,5
 openhermes-2.5:7:ggufv2:Q5_K_M,experiment_yes_or_no,8.333333333333334,45.0,0.0,0.1851851851851852,5
+openhermes-2.5:7:ggufv2:Q6_K,experiment_yes_or_no,8.333333333333334,45.0,0.0,0.1851851851851852,5
 openhermes-2.5:7:ggufv2:Q4_K_M,experiment_yes_or_no,8.333333333333332,45.0,0.0,0.18518518518518515,5
 llama-2-chat:70:ggufv2:Q5_K_M,experiment_yes_or_no,8.025,45.0,0.0,0.17833333333333334,5
-gpt-3.5-turbo-0613,experiment_yes_or_no,8.0,45.0,0.0,0.17777777777777778,5
-gpt-4o-2024-05-13,experiment_yes_or_no,8.0,45.0,0.0,0.17777777777777778,5
-openhermes-2.5:7:ggufv2:Q3_K_M,experiment_yes_or_no,8.0,45.0,0.0,0.17777777777777778,5
-gpt-4-0613,experiment_yes_or_no,8.0,45.0,0.0,0.17777777777777778,5
 openhermes-2.5:7:ggufv2:Q8_0,experiment_yes_or_no,8.0,45.0,0.0,0.17777777777777778,5
+openhermes-2.5:7:ggufv2:Q3_K_M,experiment_yes_or_no,8.0,45.0,0.0,0.17777777777777778,5
+gpt-3.5-turbo-0613,experiment_yes_or_no,8.0,45.0,0.0,0.17777777777777778,5
+gpt-4-0613,experiment_yes_or_no,8.0,45.0,0.0,0.17777777777777778,5
+gpt-4o-2024-05-13,experiment_yes_or_no,8.0,45.0,0.0,0.17777777777777778,5
 llama-2-chat:7:ggufv2:Q8_0,experiment_yes_or_no,4.675346623439332,27.0,0.0,0.1731609860533086,3
 llama-2-chat:70:ggufv2:Q2_K,experiment_yes_or_no,7.05060668836934,45.0,0.0,0.15668014863042978,5
 llama-2-chat:70:ggufv2:Q3_K_M,experiment_yes_or_no,6.073357731321335,45.0,0.0,0.13496350514047412,5
