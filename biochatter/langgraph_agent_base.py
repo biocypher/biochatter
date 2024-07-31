@@ -17,11 +17,16 @@ from langgraph.graph.graph import CompiledGraph
 
 logger = logging.getLogger(__name__)
 
+
 class ReflexionAgentLogger:
     def __init__(self) -> None:
         self._logs: str = ""
+
     def log_step_message(
-        self, step: int, node_name: str, output: BaseMessage,
+        self,
+        step: int,
+        node_name: str,
+        output: BaseMessage,
     ):
         """
         log step message
@@ -30,6 +35,7 @@ class ReflexionAgentLogger:
           output BaseMessage: step message
         """
         pass
+
     def log_final_result(self, final_result: Dict[str, Any]) -> None:
         """
         log final result
@@ -37,6 +43,7 @@ class ReflexionAgentLogger:
           output BaseMessage: last step message
         """
         pass
+
     def _log_message(
         self,
         msg: str = "",
@@ -61,6 +68,7 @@ class ReflexionAgentLogger:
             + f"[{level}]"
             + f"{datetime.now().isoformat()} - {msg}\n"
         )
+
     @property
     def logs(self):
         return self._logs
@@ -103,11 +111,11 @@ EXECUTE_TOOL_NODE = "execute_tool"
 REVISE_NODE = "revise"
 END_NODE = END
 
+
 class ReflexionAgentResult:
     def __init__(self, answer: str | None, tool_result: List[Any] | None):
         self.answer = answer
         self.tool_result = tool_result
-
 
 
 class ReflexionAgent(ABC):
@@ -156,7 +164,7 @@ class ReflexionAgent(ABC):
         return EXECUTE_TOOL_NODE
 
     @abstractmethod
-    def _tool_function(self, state: List[BaseMessage])->ToolMessage:
+    def _tool_function(self, state: List[BaseMessage]) -> ToolMessage:
         """
         tool function, execute tool based on initial draft or revised answer
         Args:
@@ -189,7 +197,9 @@ class ReflexionAgent(ABC):
         pass
 
     @abstractmethod
-    def _parse_final_result(self, messages: List[BaseMessage]) -> ReflexionAgentResult:
+    def _parse_final_result(
+        self, messages: List[BaseMessage]
+    ) -> ReflexionAgentResult:
         """
         parse the result of the last step
         Args:
@@ -199,7 +209,6 @@ class ReflexionAgent(ABC):
         """
         pass
 
-    
     def get_logs(self):
         return self.agent_logger.logs
 
@@ -219,7 +228,7 @@ class ReflexionAgent(ABC):
                 break
             i += 1
         return i
-    
+
     @staticmethod
     def _get_user_question(state: List[BaseMessage]):
         """
@@ -230,7 +239,7 @@ class ReflexionAgent(ABC):
                 continue
             return m.content
         return None
-    
+
     @staticmethod
     def _get_last_tool_result(messages: List[BaseMessage]):
         """
@@ -328,6 +337,3 @@ class ReflexionAgent(ABC):
             return None
         graph = self._build_graph(prompt)
         return self._execute_graph(graph, question)
-        
-
-

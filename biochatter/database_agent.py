@@ -89,7 +89,7 @@ class DatabaseAgent:
         # TODO some logic if it fails?
         if tool_result is not None:
             # If _generate_query() already returned tool_result, we won't connect
-            # to grapht database to query result any more
+            # to graph database to query result any more
             results = [tool_result]
         else:
             results = self.driver.query(query=cypher_query)
@@ -114,7 +114,7 @@ class DatabaseAgent:
 
         return documents
 
-    def get_description(self):        
+    def get_description(self):
         result = self.driver.query("MATCH (n:Schema_info) RETURN n LIMIT 1")
 
         if result[0]:

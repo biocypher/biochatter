@@ -86,6 +86,7 @@ class RagAgentRevisionModel(RagAgentChoiceModel):
         )
     )
 
+
 class RagAgentSelector(ReflexionAgent):
 
     def __init__(
@@ -207,7 +208,9 @@ Revise your previous chosen rag agent based on the result of the rag agent and f
     def _should_continue(self, state: List[BaseMessage]):
         return END  # here we use one-pass loop for sake of performance
 
-    def _parse_final_result(self, messages: List[BaseMessage]) -> ReflexionAgentResult:
+    def _parse_final_result(
+        self, messages: List[BaseMessage]
+    ) -> ReflexionAgentResult:
         output = messages[-1]
         result = self.parser.invoke(output)[0]["args"]
         tool_result = ReflexionAgent._get_last_tool_result(messages)

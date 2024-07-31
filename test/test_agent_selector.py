@@ -77,7 +77,7 @@ class InitialResponder:
                     "function": {
                         "arguments": '{"answer":"'
                         + f"{self.rag_agent}"
-                        + '","reflection":"balahbalah"}',
+                        + '","reflection":"mock reflection"}',
                         "name": "RagAgentChoiceModel",
                     },
                     "type": "function",
@@ -90,7 +90,7 @@ class InitialResponder:
                 "name": "RagAgentChoiceModel",
                 "args": {
                     "answer": f"{self.rag_agent}",
-                    "reflection": "balahbalah",
+                    "reflection": "mock reflection",
                 },
                 "id": id,
             }
@@ -112,9 +112,9 @@ class ReviseResponder:
                         "function": {
                             "arguments": '{"answer":"'
                             + f"{self.rag_agent}"
-                            + '","reflection":"balahbalah.","revised_answer":"'
+                            + '","reflection":"mock reflection.","revised_answer":"'
                             + f"{self.rag_agent}"
-                            + '","score":"10","tool_result":"balahbalah"}',
+                            + '","score":"10","tool_result":"mock result"}',
                             "name": "RagAgentRevisionModel",
                         },
                         "type": "function",
@@ -153,10 +153,10 @@ class ReviseResponder:
                     "name": "RagAgentRevisionModel",
                     "args": {
                         "answer": f"{self.rag_agent}",
-                        "reflection": "balahbalah",
+                        "reflection": "mock reflection",
                         "revised_answer": f"{self.rag_agent}",
                         "score": "10",
-                        "tool_result": "balahbalah",
+                        "tool_result": "mock result",
                     },
                     "id": "call_wTO40b9",
                 }
@@ -193,8 +193,8 @@ def create_agent_selector(expected_rag_agent: str):
     dbAgent.get_description = MagicMock(return_value="mock database agent")
     dbAgent.generate_responses = MagicMock(
         return_value=[
-            ('{"bp.name": "balahbalah"}', {"cypher_query": "balahbalah"}),
-            ('{"bp.name": "balahbalah"}', {"cypher_query": "balahbalah"}),
+            ('{"bp.name": "mock"}', {"cypher_query": "mock query"}),
+            ('{"bp.name": "mock"}', {"cypher_query": "balahbalah"}),
         ]
     )
     vectorstoreAgent = MagicMock()
@@ -241,22 +241,20 @@ def test_agent_selector_oncokb():
 def test_agent_selector_blast():
     agent_selector = create_agent_selector(str(RagAgentModeEnum.API_BLAST))
     result = agent_selector.execute(
-        "What is the oncogenic potential of BRAF V600E mutation?"
+        "Which organism does this sequence belong to? GATACGCGGCCACAGTACGACAATCTTCAG"
     )
     assert result.answer == "api_blast"
 
 
 def test_agent_selector_kg():
     agent_selector = create_agent_selector(str(RagAgentModeEnum.KG))
-    result = agent_selector.execute(
-        "What is the oncogenic potential of BRAF V600E mutation?"
-    )
+    result = agent_selector.execute("How many nodes do we have in our graph?")
     assert result.answer == "kg"
 
 
 def test_agent_selector_vectorstore():
     agent_selector = create_agent_selector(str(RagAgentModeEnum.VectorStore))
     result = agent_selector.execute(
-        "What is the oncogenic potential of BRAF V600E mutation?"
+        "What is reported in the literature about the BRAF V600E mutation?"
     )
     assert result.answer == "vectorstore"

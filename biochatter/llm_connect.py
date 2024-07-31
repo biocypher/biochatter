@@ -101,6 +101,7 @@ class Conversation(ABC):
     @property
     def use_ragagent_selector(self):
         return self._use_ragagent_selector
+
     @use_ragagent_selector.setter
     def use_ragagent_selector(self, val: bool):
         self._use_ragagent_selector = val
@@ -335,19 +336,21 @@ class Conversation(ABC):
         Args:
             text (str): The user query to be used for choosing rag agent
         """
-        rag_agents: list[RagAgent] = [agent for agent in  self.rag_agents if agent.use_prompt]
-        decider_agent = RagAgentSelector(
-            rag_agents=rag_agents
-        )
+        rag_agents: list[RagAgent] = [
+            agent for agent in self.rag_agents if agent.use_prompt
+        ]
+        decider_agent = RagAgentSelector(rag_agents=rag_agents)
         result = decider_agent.execute(text)
         if result.tool_result is not None and len(result.tool_result) > 0:
             return result.tool_result
         # find rag agent selected
-        rag_agent = next([agent for agent in rag_agents if agent.mode == result.answer], None)
+        rag_agent = next(
+            [agent for agent in rag_agents if agent.mode == result.answer], None
+        )
         if rag_agent is None:
             return None
         return rag_agent.generate_responses(text)
-        
+
     def _inject_context(self, text: str):
         """
 

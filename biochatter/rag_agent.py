@@ -152,6 +152,7 @@ class RagAgent:
     @property
     def agent_description(self):
         return self._agent_desc
+
     @agent_description.setter
     def agent_description(self, val: Optional[str] = None):
         self._agent_desc = val

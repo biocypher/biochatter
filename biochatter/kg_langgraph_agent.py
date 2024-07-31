@@ -30,6 +30,7 @@ from biochatter.langgraph_agent_base import (
 
 logger = logging.getLogger(__name__)
 
+
 class KGQueryReflexionAgentLogger(ReflexionAgentLogger):
     def __init__(self) -> None:
         super().__init__()
@@ -53,13 +54,14 @@ class KGQueryReflexionAgentLogger(ReflexionAgentLogger):
             )
         except Exception as e:
             self._log_message(str(output)[:100] + " ...", "error")
-    
+
     def log_final_result(self, final_result: ReflexionAgentResult) -> None:
         self._log_message(
             "\n\n-------------------------------- Final Generated Response --------------------------------"
         )
         obj = vars(final_result)
         self._log_message(json.dumps(obj))
+
 
 ANSWER = "answer"
 SEARCH_QUERIES = "search_queries"
@@ -124,7 +126,9 @@ class KGQueryReflexionAgent(ReflexionAgent):
 
         """
         super().__init__(
-            conversation_factory, max_steps, agent_logger=KGQueryReflexionAgentLogger()
+            conversation_factory,
+            max_steps,
+            agent_logger=KGQueryReflexionAgentLogger(),
         )
         self.actor_prompt_template = ChatPromptTemplate.from_messages(
             [
@@ -321,10 +325,12 @@ class KGQueryReflexionAgent(ReflexionAgent):
         )
         return END if query_results_num > 0 else EXECUTE_TOOL_NODE
 
-    def _parse_final_result(self, messages: List[BaseMessage]) -> ReflexionAgentResult:
+    def _parse_final_result(
+        self, messages: List[BaseMessage]
+    ) -> ReflexionAgentResult:
         output = messages[-1]
         result = self.parser.invoke(output)[0]["args"]
-        tool_result = ReflexionAgent._get_last_tool_result(messages)        
+        tool_result = ReflexionAgent._get_last_tool_result(messages)
         return ReflexionAgentResult(
             answer=result["answer"] if "answer" in result else None,
             tool_result=tool_result,
