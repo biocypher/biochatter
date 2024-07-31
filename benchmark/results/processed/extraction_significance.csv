@@ -1,4 +1,6 @@
 Full model name,Subtask,Score achieved,Score possible,Score SD,Accuracy,Iterations
+gpt-4o-mini-2024-07-18,significance,36.0,45.0,0.0,0.8,5
+gpt-4-turbo-2024-04-09,significance,22.614141414141415,45.0,0.047281168009086466,0.5025364758698092,5
 gpt-4-0613,significance,5.6,45.0,0.0,0.12444444444444444,5
 gpt-4-0125-preview,significance,5.183838383838384,45.0,0.0,0.11519640852974186,5
 gpt-4o-2024-05-13,significance,4.224242424242425,45.0,0.0,0.09387205387205388,5

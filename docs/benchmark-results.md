@@ -100,4 +100,8 @@ In this set of tasks, we test LLM abilities to extract text from a given documen
 
     {{ read_csv('benchmark/results/processed/extraction_stats.csv', colalign=("center","center","center","center","center")) }}
 
+=== "Image caption yes/no"
+
+    {{ read_csv('benchmark/results/processed/multimodal_answer.csv', colalign=("center","center","center","center","center")) }}
+
 ![Stripplot Extraction Subtask](images/stripplot-extraction-tasks.png)

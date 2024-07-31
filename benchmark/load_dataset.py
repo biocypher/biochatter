@@ -114,6 +114,8 @@ def _delete_outdated_benchmark_results(data_dict: dict) -> None:
 
     # delete outdated results
     for file in result_files:
+        if "multimodal_answer" in file:
+            continue
         result_file = pd.read_csv(file, header=0)
         result_hashes = result_file["md5_hash"].to_list()
         for hash in result_hashes:
