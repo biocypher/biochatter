@@ -1,5 +1,5 @@
-import inspect
 from urllib.parse import urlencode
+import inspect
 
 import pytest
 

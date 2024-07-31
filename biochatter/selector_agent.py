@@ -1,33 +1,25 @@
+from typing import Any, Dict
 from datetime import datetime
-from typing import Any, Callable, Dict, List
+from collections.abc import Callable
 import json
-from langchain_core.messages import (
-    BaseMessage,
-    AIMessage,
-    ToolMessage,
-)
-from langchain_core.prompts import (
-    ChatPromptTemplate,
-    MessagesPlaceholder,
-)
-from langchain_core.pydantic_v1 import (
-    BaseModel,
-    Field,
-)
+
+from langgraph.graph import END
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.messages import AIMessage, BaseMessage, ToolMessage
+from langchain_core.pydantic_v1 import Field, BaseModel
 from langchain.output_parsers.openai_tools import (
     PydanticToolsParser,
     JsonOutputToolsParser,
 )
-from langchain_openai import ChatOpenAI
-from langgraph.graph import END
 
 from .rag_agent import RagAgent
 from .langgraph_agent_base import (
     EXECUTE_TOOL_NODE,
     ReflexionAgent,
+    ReflexionAgentLogger,
     ReflexionAgentResult,
     ResponderWithRetries,
-    ReflexionAgentLogger,
 )
 
 
@@ -88,9 +80,8 @@ class RagAgentRevisionModel(RagAgentChoiceModel):
 
 
 class RagAgentSelector(ReflexionAgent):
-
     def __init__(
-        self, rag_agents: List[RagAgent], conversation_factory: Callable
+        self, rag_agents: list[RagAgent], conversation_factory: Callable
     ):
         """
         The class RagAgentSelector uses an LLM to choose the appropriate rag agent
@@ -164,7 +155,7 @@ Revise your previous chosen rag agent based on the result of the rag agent and f
             validator=validator,
         )
 
-    def _tool_function(self, state: List[BaseMessage]) -> ToolMessage:
+    def _tool_function(self, state: list[BaseMessage]) -> ToolMessage:
         user_question = ReflexionAgent._get_user_question(state)
         assert user_question is not None
         tool_message: AIMessage = state[-1]
@@ -205,11 +196,11 @@ Revise your previous chosen rag agent based on the result of the rag agent and f
         )
         return ToolMessage(content=content, tool_call_id=parsed_msg["id"])
 
-    def _should_continue(self, state: List[BaseMessage]):
+    def _should_continue(self, state: list[BaseMessage]):
         return END  # here we use one-pass loop for sake of performance
 
     def _parse_final_result(
-        self, messages: List[BaseMessage]
+        self, messages: list[BaseMessage]
     ) -> ReflexionAgentResult:
         output = messages[-1]
         result = self.parser.invoke(output)[0]["args"]

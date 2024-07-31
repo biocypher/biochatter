@@ -1,19 +1,20 @@
 from abc import ABC, abstractmethod
+from typing import Any, Union, Literal, Optional
 from datetime import datetime
+from collections.abc import Callable
 import json
-from typing import Any, Callable, Dict, List, Literal, Optional, Union
 import logging
 
+from langsmith import traceable
+from langgraph.graph import END, MessageGraph
+from langgraph.graph.graph import CompiledGraph
 from langchain_core.messages import (
-    BaseMessage,
-    HumanMessage,
-    ToolMessage,
     AIMessage,
+    BaseMessage,
+    ToolMessage,
+    HumanMessage,
 )
 from langchain_core.pydantic_v1 import ValidationError
-from langsmith import traceable
-from langgraph.graph import MessageGraph, END
-from langgraph.graph.graph import CompiledGraph
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +37,7 @@ class ReflexionAgentLogger:
         """
         pass
 
-    def log_final_result(self, final_result: Dict[str, Any]) -> None:
+    def log_final_result(self, final_result: dict[str, Any]) -> None:
         """
         log final result
         Args:
@@ -89,7 +90,7 @@ class ResponderWithRetries:
         self.validator = validator
 
     @traceable
-    def respond(self, state: List[BaseMessage]):
+    def respond(self, state: list[BaseMessage]):
         """
         Invoke LLM agent, this function will be called by LangGraph
         Args:
@@ -152,7 +153,7 @@ class ReflexionAgent(ABC):
         self.conversation = conversation_factory()
         self.agent_logger = agent_logger
 
-    def _should_continue(self, state: List[BaseMessage]):
+    def _should_continue(self, state: list[BaseMessage]):
         """
         Determine if we need to continue reflexion
         Args:
@@ -164,7 +165,7 @@ class ReflexionAgent(ABC):
         return EXECUTE_TOOL_NODE
 
     @abstractmethod
-    def _tool_function(self, state: List[BaseMessage]) -> ToolMessage:
+    def _tool_function(self, state: list[BaseMessage]) -> ToolMessage:
         """
         tool function, execute tool based on initial draft or revised answer
         Args:
@@ -198,7 +199,7 @@ class ReflexionAgent(ABC):
 
     @abstractmethod
     def _parse_final_result(
-        self, messages: List[BaseMessage]
+        self, messages: list[BaseMessage]
     ) -> ReflexionAgentResult:
         """
         parse the result of the last step
@@ -213,7 +214,7 @@ class ReflexionAgent(ABC):
         return self.agent_logger.logs
 
     @staticmethod
-    def _get_num_iterations(state: List[BaseMessage]):
+    def _get_num_iterations(state: list[BaseMessage]):
         """
         Calculate iteration number
         Args:
@@ -230,7 +231,7 @@ class ReflexionAgent(ABC):
         return i
 
     @staticmethod
-    def _get_user_question(state: List[BaseMessage]):
+    def _get_user_question(state: list[BaseMessage]):
         """
         get user's question from messages array
         """
@@ -241,7 +242,7 @@ class ReflexionAgent(ABC):
         return None
 
     @staticmethod
-    def _get_last_tool_result(messages: List[BaseMessage]):
+    def _get_last_tool_result(messages: list[BaseMessage]):
         """
         get result of the last tool node
         """

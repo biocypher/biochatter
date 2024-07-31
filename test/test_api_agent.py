@@ -1,18 +1,17 @@
-from collections.abc import Callable
 from typing import Any
 from unittest.mock import Mock, MagicMock, patch
+from collections.abc import Callable
 import os
 
 from pydantic import BaseModel
 import pytest
 
+from biochatter.llm_connect import Conversation, GptConversation
 from biochatter.api_agent.abc import (
-    BaseQueryBuilder,
     BaseFetcher,
     BaseInterpreter,
+    BaseQueryBuilder,
 )
-
-from biochatter.llm_connect import Conversation, GptConversation
 from biochatter.api_agent.blast import (
     BLAST_QUERY_PROMPT,
     BLAST_SUMMARY_PROMPT,
@@ -21,9 +20,6 @@ from biochatter.api_agent.blast import (
     BlastQueryBuilder,
     BlastQueryParameters,
 )
-from biochatter.api_agent.api_agent import APIAgent
-
-from biochatter.llm_connect import GptConversation
 from biochatter.api_agent.oncokb import (
     ONCOKB_QUERY_PROMPT,
     ONCOKB_SUMMARY_PROMPT,
@@ -32,6 +28,7 @@ from biochatter.api_agent.oncokb import (
     OncoKBQueryBuilder,
     OncoKBQueryParameters,
 )
+from biochatter.api_agent.api_agent import APIAgent
 
 
 def conversation_factory():

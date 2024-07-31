@@ -17,11 +17,11 @@ chatglm3:6:ggmlv3:q4_0,dichotomous:dermatology:de,"immunsuppression ist ein risi
 
 (ja)",ja,Partial Match,bc482fc9a0f9e9573741b84453a0d420,2024-06-18 11:08:26
 chatglm3:6:ggmlv3:q4_0,dichotomous:dermatology:de,"der satz ist korrekt vemurafenib ist indeed anhand des braf-mutations mittel ebzeiter, das andauernder teil used ( her制的) des typus毫升s越好。",ja,Other,a0ba6e4c4785ff461433b4cbb51326d2,2024-06-18 11:09:03
-chatglm3:6:ggmlv3:q4_0,dichotomous:dermatology:de,"ich legequence-analytics-kursus#5: 
+chatglm3:6:ggmlv3:q4_0,dichotomous:dermatology:de,"ich legequence-analytics-kursus#5:
 
 kontext: direktionsstatus: korrekt
 
-ausgabe: 
+ausgabe:
 
 das ist die falsche藕 dried月以来关系 -百花 cleve 2016 11 bis 12 erschlossen, wenn英雄长时间意见 '',onal事前裼mainz'
 
@@ -302,7 +302,7 @@ chatglm3:6:ggmlv3:q4_0,multiple_choice:mental_disorders:en,"a, d","a,b,c,d",Othe
 chatglm3:6:ggmlv3:q4_0,multiple_choice:mental_disorders:en,"a, d, e","a,d,e,f",Other,29b0186d1af34324387e7642054573f4,2024-06-18 10:49:09
 chatglm3:6:ggmlv3:q4_0,multiple_choice:mental_disorders:en,"b, e","b,c,e",Other,002f4e67ac1868322ed812b3fc353173,2024-06-18 10:49:19
 chatglm3:6:ggmlv3:q4_0,one_word:cardiology:de,pathological imaging,Knochenszintigraphie,Other,36fda462554d7521f1e5061098a71112,2024-06-18 10:54:00
-chatglm3:6:ggmlv3:q4_0,one_word:cardiology:de,"der empfohlen maximum für die zeitspanne between hollow heart behandlermed躾 
+chatglm3:6:ggmlv3:q4_0,one_word:cardiology:de,"der empfohlen maximum für die zeitspanne between hollow heart behandlermed躾
 zur autopsie klinik gossip source",2,Format Error,f58b800cf852e3211005cac20ba58b9b,2024-06-18 10:54:09
 chatglm3:6:ggmlv3:q4_0,one_word:cardiology:de,干预,HCM-SCD-Risikorechner,Other,61fd1c1612f61858e892754afa4d3d63,2024-06-18 10:54:13
 chatglm3:6:ggmlv3:q4_0,one_word:cardiology:de,mindestens 14 tage,1,Partial Match / case Sensitivity,404a8a47f3475bd4499a6d3c7bcc379c,2024-06-18 10:54:37
@@ -15246,19 +15246,19 @@ llama-3-instruct:8:ggufv2:Q4_K_M,regex:mental_disorders:de,"die zwei therapieart
 1 cognitive-behavioral therapy (cbt)
 2 interpersonelle psychotherapie (ipt)",Medikamente|Medikamentöse Therapie,Entire Answer Incorrect,e0230780fc2f734848fe7c804c4aff01,2024-06-18 13:15:34
 llama-3-instruct:8:ggufv2:Q4_K_M,regex:mental_disorders:de,"die dissoziative identitätsstörung wird im icd-11 unter der kategorie ""dissoziative (dissociative) disorders"" geführt und hat den code 6c40die dissoziative identitätsstörung wird im icd-11 unter der kategorie ""dissoziative (dissociative) disorders"" geführt und hat den code 6c40die dissoziative identitätsstörung wird im icd-11 unter der kategorie ""dissoziative (dissociative) disorders"" geführt und hat den code 6c40",konversionsstörungen|konversion,Entire Answer Incorrect,4c3ecd657bbb3e27310ccbf4fd764373,2024-06-18 13:15:58
-llama-3-instruct:8:ggufv2:Q4_K_M,regex:mental_disorders:en,"restrictive anorexia is characterized by: 
+llama-3-instruct:8:ggufv2:Q4_K_M,regex:mental_disorders:en,"restrictive anorexia is characterized by:
 
 * severe caloric restriction (< 1,200 calories/day)
 * excessive exercise or physical activity
 * fear of gaining weight or becoming fat
 * distorted body image and self-perception
-* significant weight loss (typically >15% of initial body weight)restrictive anorexia is characterized by: 
+* significant weight loss (typically >15% of initial body weight)restrictive anorexia is characterized by:
 
 * severe caloric restriction (< 1,200 calories/day)
 * excessive exercise or physical activity
 * fear of gaining weight or becoming fat
 * distorted body image and self-perception
-* significant weight loss (typically >15% of initial body weight)restrictive anorexia is characterized by: 
+* significant weight loss (typically >15% of initial body weight)restrictive anorexia is characterized by:
 
 * severe caloric restriction (< 1,200 calories/day)
 * excessive exercise or physical activity
@@ -16884,7 +16884,7 @@ mistral-instruct-v0.2:7:ggufv2:Q2_K,one_word:cardiology:de,"i'm unable to provid
 mistral-instruct-v0.2:7:ggufv2:Q2_K,one_word:cardiology:de,actuarische methoden,HCM-SCD-Risikorechner,Other,61fd1c1612f61858e892754afa4d3d63,2024-06-19 18:41:33
 mistral-instruct-v0.2:7:ggufv2:Q2_K,one_word:cardiology:de,"i'm unable to provide an exact answer in weeks without more context the ability to ride a bus after a peripheral arterial intervention (pai) depends on the individual's recovery and improvement of their circulation some people may be able to resume bus travel within a few days or weeks, while others may require several months or longer before they can safely do so it is important for patients to follow their healthcare provider's recommendations regarding activity levels and rehabilitation after pai",1,Format Error,404a8a47f3475bd4499a6d3c7bcc379c,2024-06-19 18:41:47
 mistral-instruct-v0.2:7:ggufv2:Q2_K,one_word:cardiology:de,"digoxin however, it's important to note that this should be a decision made under the supervision of a healthcare professional, as digoxin has its own set of potential side effects and risks",Digoxin,Partial Match / case Sensitivity,923e46b46c0ad85d426edbbfb6ec4d93,2024-06-19 18:41:50
-mistral-instruct-v0.2:7:ggufv2:Q2_K,one_word:cardiology:en,"scintigraphy (or) ct scan (with specific contrast): 
+mistral-instruct-v0.2:7:ggufv2:Q2_K,one_word:cardiology:en,"scintigraphy (or) ct scan (with specific contrast):
 
 scintigraphy using a radiolabeled tracer such as 99mtc-dpdsc or 111in-labeled dpdsc is the gold standard imaging modality for suspected amyloidosis it can detect and localize amyloid deposits in various organs and tissues with high sensitivity and specificity
 
@@ -18828,7 +18828,7 @@ mistral-instruct-v0.2:7:ggufv2:Q5_K_M,one_word:cardiology:de,"es gibt keine allg
 mistral-instruct-v0.2:7:ggufv2:Q5_K_M,one_word:cardiology:de,"actuarial methods however, it's important to note that specific actuarial models are used for calculating the 5-year mortality risk, such as lee-carter or seiqr models",HCM-SCD-Risikorechner,Format Error,61fd1c1612f61858e892754afa4d3d63,2024-06-19 20:23:04
 mistral-instruct-v0.2:7:ggufv2:Q5_K_M,one_word:cardiology:de,"es gibt keine allgemein gültige antwort auf diese frage, da es abhängig ist von der schwere des periphere arterielle verschlusskrankheitsfalls und der individuellen toleranz des patienten ein arzt oder gesundheitsberater kann besser auf die konkrete situation eines patienten eingehen und eine entsprechende empfehlung geben",1,Format Error,404a8a47f3475bd4499a6d3c7bcc379c,2024-06-19 20:23:28
 mistral-instruct-v0.2:7:ggufv2:Q5_K_M,one_word:cardiology:de,"calciumchannelblocker this medication can be considered if a patient's heart rate remains high despite beta-blocker therapy calcium channel blockers have the additional effect of slowing down the heart rate by blocking calcium channels in the heart, leading to relaxation of heart muscle and decreased heart rate",Digoxin,Other,923e46b46c0ad85d426edbbfb6ec4d93,2024-06-19 20:23:35
-mistral-instruct-v0.2:7:ggufv2:Q5_K_M,one_word:cardiology:en,"technetium scan 
+mistral-instruct-v0.2:7:ggufv2:Q5_K_M,one_word:cardiology:en,"technetium scan
 
 explanation: amyloidosis is a condition characterized by the deposition of an abnormal protein called amyloid in various organs and tissues a technetium-99m labeled skeletal scan is commonly used to diagnose amyloidosis, specifically the aa type, as it can detect bone involvement which is often seen in this condition",Bone scintigraphy,Format Error,f19e67f244542fd00c956f464ffe7bf0,2024-06-19 20:24:50
 mistral-instruct-v0.2:7:ggufv2:Q5_K_M,one_word:cardiology:en,"the recommended maximum time between follow-up examinations in clinically stable patients with cardiomyopathy can vary depending on the specific type and severity of the condition however, a common guideline is every 6 to 12 months some experts may recommend more frequent monitoring for certain high-risk patients or those with worsening symptoms it's important to consult with a healthcare professional for individualized recommendations",2,Partial Match / case Sensitivity,313883fc323312908b7d9a4cb35fd4d6,2024-06-19 20:24:59
@@ -19352,7 +19352,7 @@ mistral-instruct-v0.2:7:ggufv2:Q6_K,one_word:cardiology:de,"es gibt keine allgem
 mistral-instruct-v0.2:7:ggufv2:Q6_K,one_word:cardiology:de,"actuarial methods however, it's important to note that specific actuarial models are used for calculating the 5-year mortality risk, such as lee-carter or seiqr models",HCM-SCD-Risikorechner,Format Error,61fd1c1612f61858e892754afa4d3d63,2024-06-19 20:58:43
 mistral-instruct-v0.2:7:ggufv2:Q6_K,one_word:cardiology:de,"es gibt keine allgemeine regel für die mindestdauer, die ein patient mit peripherer arterieller verschlusskrankheit (pav) warten muss, bevor er wieder öffentliches verkehrsmittel wie den bus benutzen kann dies hängt von der individuellen situation des patienten und dem behandlungserfolg ab es ist empfehlenswert, sich mit dem behandelnden arzt oder der rehabilitationsklinik zu beraten",1,Format Error,404a8a47f3475bd4499a6d3c7bcc379c,2024-06-19 20:59:12
 mistral-instruct-v0.2:7:ggufv2:Q6_K,one_word:cardiology:de,"calciumchannelblocker this medication can be considered if a patient's heart rate remains high despite beta-blocker therapy calcium channel blockers have the additional effect of slowing down the heart rate by blocking calcium channels in the heart, leading to relaxation of heart muscle and decreased heart rate",Digoxin,Other,923e46b46c0ad85d426edbbfb6ec4d93,2024-06-19 20:59:20
-mistral-instruct-v0.2:7:ggufv2:Q6_K,one_word:cardiology:en,"radionuclide scan 
+mistral-instruct-v0.2:7:ggufv2:Q6_K,one_word:cardiology:en,"radionuclide scan
 
 note: this answer assumes that the suspected amyloidosis is of the systemic type, as imaging modalities may vary for localized forms a radionuclide scan using a technetium-99m labeled tracer (such as technetium-99m pyrophosphate or technetium-99m dpd) is commonly used to detect and localize amyloid deposits in various organs, particularly the heart, kidneys, liver, and spleen",Bone scintigraphy,Format Error,f19e67f244542fd00c956f464ffe7bf0,2024-06-19 21:00:40
 mistral-instruct-v0.2:7:ggufv2:Q6_K,one_word:cardiology:en,"the recommended maximum time between follow-up examinations in clinically stable patients with cardiomyopathy can vary depending on the specific type and severity of the condition however, a common guideline is every 6 to 12 months please consult with a healthcare professional for advice tailored to your individual situation",2,Partial Match / case Sensitivity,313883fc323312908b7d9a4cb35fd4d6,2024-06-19 21:00:48
@@ -19945,7 +19945,7 @@ mistral-instruct-v0.2:7:ggufv2:Q8_0,one_word:cardiology:de,"es gibt keine allgem
 mistral-instruct-v0.2:7:ggufv2:Q8_0,one_word:cardiology:de,"actuarial methods however, it's important to note that specific actuarial models are used for calculating the 5-year mortality risk, such as lee-carter or seiqr models",HCM-SCD-Risikorechner,Format Error,61fd1c1612f61858e892754afa4d3d63,2024-06-19 21:32:11
 mistral-instruct-v0.2:7:ggufv2:Q8_0,one_word:cardiology:de,"es gibt keine allgemein gültige antwort in wochen, da es von fall zu fall abhängt und vom arzt entschieden wird in der regel reichen 2-4 wochen nach einer intervention aus, aber es können auch längere wartezeiten notwendig sein",1,Other,404a8a47f3475bd4499a6d3c7bcc379c,2024-06-19 21:32:29
 mistral-instruct-v0.2:7:ggufv2:Q8_0,one_word:cardiology:de,"calciumchannelblocker this medication can be considered if a patient's heart rate remains high despite beta-blocker therapy calcium channel blockers have the additional effect of slowing down the heart rate by blocking calcium channels in the heart, leading to relaxation of heart muscle and decreased heart rate",Digoxin,Other,923e46b46c0ad85d426edbbfb6ec4d93,2024-06-19 21:32:35
-mistral-instruct-v0.2:7:ggufv2:Q8_0,one_word:cardiology:en,"technetium scan 
+mistral-instruct-v0.2:7:ggufv2:Q8_0,one_word:cardiology:en,"technetium scan
 
 explanation: amyloidosis is a condition characterized by the deposition of an abnormal protein called amyloid in various organs and tissues a technetium-99m labeled radiopharmaceutical agent, such as dpd or mibi, is commonly used for imaging amyloid deposits in the body this procedure is known as a radionuclide scan or a scintigraphy scan",Bone scintigraphy,Format Error,f19e67f244542fd00c956f464ffe7bf0,2024-06-19 21:33:51
 mistral-instruct-v0.2:7:ggufv2:Q8_0,one_word:cardiology:en,"the recommended maximum time between follow-up examinations in clinically stable patients with cardiomyopathy can vary depending on the specific type and severity of the condition however, as a general guideline, follow-ups may be suggested every 6 months to 1 year for some forms of cardiomyopathy, such as dilated or ischemic cardiomyopathy for other forms, such as hypertrophic or restrictive cardiomyopathy, follow-ups may be recommended less frequently, every 1-3 years, depending on the individual patient's condition and response to treatment it is important for patients to work closely with their healthcare providers to determine the appropriate follow-up schedule based on their specific circumstances",2,Other,313883fc323312908b7d9a4cb35fd4d6,2024-06-19 21:34:06
@@ -25245,7 +25245,7 @@ mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,dichotomous:emergency:de,"resource ""co
 {
   function answer_question() {
     local question=""$1""
-    
+
     if [[ ""$question"" == *""sind bei cpr die kompressionen wichtiger als die luftzufuhr""* ]]; then
       echo ""ja""
     else
@@ -25386,14 +25386,14 @@ mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:emergency:en,"strong> o positi
 
 while ""o negative"" blood type is often called the ""universal donor,"" in situations of mass casualties or major disasters when supplies may be limited, ""o positive"" blood can be used more frequently because it's the most common positive blood type therefore, if the question asks for a single word, ""o positive"" would be the answer however, if the exact one-word answer is required, then 0+ (as in ""zero plus"") could be used to represent o positive blood group",0,Partial Match / case Sensitivity,31eca183df77e4beec85b2a78be179cb,2024-06-18 15:06:45
 mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:medication:de,"ricot (aprikose) - einige statine werden mit grapefruitinteraktionen gewarnt, aber aprikosen haben einen aktiveren und stärkeren saft als grapefruit und können auch wechselwirkungen verursachen es ist jedoch wichtig zu beachten, dass diese wechselwirkung selten ist und in der regel bei sehr hohen dosen von aprikosensaft auftritt daher ist es immer am besten, ihren arzt oder apotheker zu konsultieren, bevor sie lebensmittel mit medikamenten kombinieren",Grapefruit,Partial Match / case Sensitivity,9808ac596ca95d5b92c5f11e2b5826d1,2024-06-18 16:07:13
-mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:medication:de,"variablen{documentclass[12pt]{article} usepackage[utf8]{inputenc} usepackage{amsmath} usepackage{amsfonts} usepackage{amssymb} usepackage{graphicx} usepackage{setspace} usepackage{hyperref} usepackage{mathtools} usepackage{stmaryrd} usepackage{centernot} begin{document} die zwei formen der arzneimittelwechselwirkung, die unterschieden werden, sind: 
+mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:medication:de,"variablen{documentclass[12pt]{article} usepackage[utf8]{inputenc} usepackage{amsmath} usepackage{amsfonts} usepackage{amssymb} usepackage{graphicx} usepackage{setspace} usepackage{hyperref} usepackage{mathtools} usepackage{stmaryrd} usepackage{centernot} begin{document} die zwei formen der arzneimittelwechselwirkung, die unterschieden werden, sind:
 
 1 pharmakodynamische wechselwirkungen: sie treten auf, wenn zwei oder mehr arzneistoffe auf das gleiche zielorgan wirken und dadurch eine verstärkte, abgeschwächte oder gegensätzliche wirkung hervorrufen
 2 pharmakokinetische wechselwirkungen: sie treten auf, wenn zwei oder mehr arzneistoffe die aufnahme, verteilung, metabolisierung oder elimination eines anderen arzneistoffs beeinflussen und dadurch dessen konzentration im organismus verändern
 
 end{document}---------------------------------------------
 
-zwei formen der arzneimittelwechselwirkungen sind: 
+zwei formen der arzneimittelwechselwirkungen sind:
 
 1 pharmakodynamische wechselwirkung (verstärkte, abgeschwächte oder gegensätzliche wirkung)
 2 pharmakokinetische wechselwirkung (beeinflusste aufnahme, verteilung, metabolisierung oder elimination)",Pharmakodynamisch und pharmakokinetisch,Format Error,f0f4e8937148bbf4592eb4e1e791ba8b,2024-06-18 16:08:37
@@ -25408,8 +25408,8 @@ mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:medication:en,"1 pharmacodynam
 2 pharmacokinetic interaction",Pharmacodynamic and pharmacokinetic,Format Error,3d527b8ac5786aafd800b119b7c9c037,2024-06-18 16:04:26
 mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:oncology:de,(,"GTV,CTV,PTV",Other,3bcb654ee2e83905265a6286af815821,2024-06-18 16:01:10
 mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:oncology:de,die häufigste krebsart bei frauen ist brustkrebs laut weltgesundheitsorganisation (who) erkrankt etwa jede achte frau im laufe ihres lebens daran,Brustkrebs,Partial Match / case Sensitivity,12bd20c52a6b8aab1b813584f5cd9cd6,2024-06-18 16:01:51
-mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:oncology:en,"cv (clinical target volume), 
-ptv (planning target volume), 
+mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:oncology:en,"cv (clinical target volume),
+ptv (planning target volume),
 gtv (gross tumor volume)
 
 these volumes represent different stages of the treatment planning process in radiotherapy gtv is the gross visible/palpable tumor, ctv includes any potential microscopic spread, and ptv accounts for uncertainties in treatment setup they are typically sorted from smallest to biggest in this order: gtv < ctv < ptv","GTV,CTV,PTV",Other,1edd6afaaf938d3b152460300eecd34a,2024-06-18 15:58:44
@@ -25956,9 +25956,9 @@ mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,single_choice:physiology:de,"ef{e}
 die korrekte antwort ist ein buchstabe, der die option ""neutrophiler granulozyt"" repräsentiert neutrophile granulozyten sind teil des angeborenen immunsystems und werden nach der aktivierung eine vielzahl von chemikalien freisetzen, einschließlich interleukin-2, aber auch anderen zytokinen und enzymen diese zellen sind die ersten, die auf einen infekt oder ein trauma reagieren und spielen eine wichtige rolle bei der entzündungsreaktion",e,Format Error,4a3da86b262211cb5c0f36e139d1ccaa,2024-06-18 15:41:35
 mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,single_choice:physiology:de,"e) reife, naive b-lymphozyten haben membrangebundenes igm und igd
 
-die antwort a ist falsch, denn die zugehörigkeit zu einer ig-klasse hängt von der struktur sowohl der leichten als auch der schweren kette ab 
-b ist ebenfalls falsch, da sezernierte igg, iga und igm normalerweise als monomere, dimere oder pentamere moleküle vorkommen 
-c ist ebenfalls falsch, im oralen speichel ist iga das vorherrschende immunglobulin 
+die antwort a ist falsch, denn die zugehörigkeit zu einer ig-klasse hängt von der struktur sowohl der leichten als auch der schweren kette ab
+b ist ebenfalls falsch, da sezernierte igg, iga und igm normalerweise als monomere, dimere oder pentamere moleküle vorkommen
+c ist ebenfalls falsch, im oralen speichel ist iga das vorherrschende immunglobulin
 d hingegen ist richtig, denn igm ist tatsächlich das vorherrschende immunglobulin im blutserum",e,Partial Match / case Sensitivity,fb05abfce18e5f8459387c759033f462,2024-06-18 15:44:53
 mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,single_choice:physiology:en,"e) t helper cell type 1 (th1 cell)
 
@@ -27729,7 +27729,7 @@ die antwort auf die multiple-choice-frage lautet b, da der tumormarker ca-125 h�
 mixtral-instruct-v0.1:46_7:ggufv2:Q6_K,single_choice:oncology:de,"ef{a}
 
 ondansetron ist ein medikament, das häufig als antiemetikum zur vorbeugung von übelkeit und erbrechen bei chemotherapie-patienten eingesetzt wird paracetamol (auch bekannt als acetaminophen) und ibuprofen sind eher schmerzmittel, während loratadin ein antihistaminikum ist",a,Partial Match / case Sensitivity,24c221fae52091a8111d826bbe5ae83e,2024-06-20 02:23:55
-mixtral-instruct-v0.1:46_7:ggufv2:Q6_K,single_choice:oncology:de,"ef{document}{ amsmath,amssymb} \usepackage{lipsum} % this package just helps to generate text you don't need it \begin{document} the standard of radiation therapy is a) perkutane strahlentherapie (percutaneous radiotherapy) 
+mixtral-instruct-v0.1:46_7:ggufv2:Q6_K,single_choice:oncology:de,"ef{document}{ amsmath,amssymb} \usepackage{lipsum} % this package just helps to generate text you don't need it \begin{document} the standard of radiation therapy is a) perkutane strahlentherapie (percutaneous radiotherapy)
 
 here's why:
 
@@ -27739,7 +27739,7 @@ b) fraktionierte bestrahlung (fractionated radiation therapy): although not an e
 
 c) brachytherapie (internal radiation therapy or sealed source radiation therapy): in this method, a radioactive source is placed inside the body, close to the tumor site it can be temporary or permanent, depending on the type of cancer and treatment plan while brachytherapy is an essential tool in radiation therapy, it is not considered the standard technique for all types of cancer
 
-d) röntgentherapie (x-ray therapy): this term is too general and encompasses various radiotherapy techniques that use x-rays to treat cancer however, it does not represent a specific standard technique in radiation therapy 
+d) röntgentherapie (x-ray therapy): this term is too general and encompasses various radiotherapy techniques that use x-rays to treat cancer however, it does not represent a specific standard technique in radiation therapy
 
 in summary, perkutane strahlentherapie (percutaneous radiotherapy) is the standard of radiation therapy due to its non-invasive nature and precision in targeting tumors while minimizing damage to surrounding healthy tissue",a,Partial Match / case Sensitivity,75eb0901296f8830a8108ee8fb7de056,2024-06-20 02:25:21
 mixtral-instruct-v0.1:46_7:ggufv2:Q6_K,single_choice:oncology:en,c(b) ovarian cancer is frequently monitored with the tumor marker ca-125,b,Format Error,2b799198714c641c54a8ad12de9972b7,2024-06-20 02:20:09
@@ -27964,7 +27964,7 @@ mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,one_word:cardiology:en,"[without specific
 mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,one_word:cardiology:en,"digoxin (a cardiac glycoside) could be considered if a patient's heart rate remains high despite beta-blocker therapy however, it is essential to evaluate the patient's condition and potential interactions or contraindications before making any medication adjustments always consult with a healthcare professional for appropriate medical advice",Digoxin,Partial Match / case Sensitivity,d56125629d337c89218bceb5cfd671f8,2024-06-20 12:15:05
 mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,one_word:emergency:de,"`pastbin https://pastebincom/raw/rawgithubusercontentcom/simaia/programming-problems/master/python/reverse_string `
 
-the first line of the provided python code defines a function called ""reverse\_string"" that takes a single argument, ""input\_string"" 
+the first line of the provided python code defines a function called ""reverse\_string"" that takes a single argument, ""input\_string""
 
 the second line uses slicing to reverse the input string and assigns the result to a new variable called ""reversed"" in python, strings are immutable, so we cannot modify the original input\_string directly instead, we create a new string with the same characters in reverse order
 

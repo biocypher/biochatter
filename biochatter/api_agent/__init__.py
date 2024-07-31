@@ -1,9 +1,9 @@
-from .abc import BaseQueryBuilder, BaseFetcher, BaseInterpreter
-from .api_agent import APIAgent
+from .abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
 from .blast import (
-    BlastQueryParameters,
-    BlastQueryBuilder,
     BlastFetcher,
     BlastInterpreter,
+    BlastQueryBuilder,
+    BlastQueryParameters,
 )
-from .oncokb import OncoKBQueryBuilder, OncoKBFetcher, OncoKBInterpreter
+from .oncokb import OncoKBFetcher, OncoKBInterpreter, OncoKBQueryBuilder
+from .api_agent import APIAgent

@@ -1,28 +1,23 @@
-import json
-from typing import Dict, List
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 import os
-from dotenv import load_dotenv
-import neo4j_utils as nu
+import json
 import logging
-from langchain_core.messages import (
-    BaseMessage,
-    AIMessage,
-)
-from langchain.output_parsers.openai_tools import (
-    PydanticToolsParser,
-)
-import shortuuid
 
+from dotenv import load_dotenv
+from langchain_core.messages import AIMessage, BaseMessage
+from langchain.output_parsers.openai_tools import PydanticToolsParser
+import pytest
+import shortuuid
+import neo4j_utils as nu
+
+from biochatter.rag_agent import RagAgent, RagAgentModeEnum
+from biochatter.llm_connect import AzureGptConversation
 from biochatter.selector_agent import (
-    RagAgentChoiceModel,
     RagAgentSelector,
+    RagAgentChoiceModel,
     RagAgentRevisionModel,
 )
 from biochatter.langgraph_agent_base import ResponderWithRetries
-from biochatter.llm_connect import AzureGptConversation
-from biochatter.rag_agent import RagAgent, RagAgentModeEnum
 
 load_dotenv()
 
@@ -67,7 +62,7 @@ class InitialResponder:
     def __init__(self, rag_agent: str):
         self.rag_agent = rag_agent
 
-    def invoke(self, msg_obj: Dict[str, List[BaseMessage]]) -> BaseMessage:
+    def invoke(self, msg_obj: dict[str, list[BaseMessage]]) -> BaseMessage:
         msg = AIMessage(content="initial test")
         id = "call_" + shortuuid.uuid()
         msg.additional_kwargs = {
@@ -102,7 +97,7 @@ class ReviseResponder:
     def __init__(self, rag_agent: str):
         self.rag_agent = rag_agent
 
-    def invoke(self, msg_obj: Dict[str, List[BaseMessage]]) -> BaseMessage:
+    def invoke(self, msg_obj: dict[str, list[BaseMessage]]) -> BaseMessage:
         return AIMessage(
             content="",
             additional_kwargs={

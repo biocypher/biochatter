@@ -41,7 +41,7 @@ This example demonstrates how to set up and use the OncoKB API agent to query
 genomic information. The execute method handles the entire process of query
 generation, API interaction, and result interpretation.
 
-## Core components 
+## Core components
 
 ### API Agent
 
@@ -138,7 +138,7 @@ class NewAPIQueryParameters(BaseModel):
     param2: int = Field(default=0, description="Description of param2")
     # Add more parameters as needed
 ```
-### 2. Prompt design 
+### 2. Prompt design
 
 #### QUERY_PROMPT: instructions for structured output to write NewAPI call.
 
@@ -147,7 +147,7 @@ Fields in the NewAPIQueryParameters class. Always keep the first two sentences.
 Secondly, provide instructions on how to interpret questions. Finally, for LLMs
 with large context windows the entire API documentation can be copy pasted
 inside of the prompt. Examples of API calls to retrieve the relevant information
-to a question should also be provided. 
+to a question should also be provided.
 
 ```python
 NewAPI_QUERY_PROMPT = """
@@ -177,8 +177,8 @@ Create a class that inherits from BaseQueryBuilder:
 from biochatter.api_agent.abc import BaseQueryBuilder
 
 class NewAPIQueryBuilder(BaseQueryBuilder):
-    def create_runnable(self, 
-        query_parameters: NewAPIQueryParameters, 
+    def create_runnable(self,
+        query_parameters: NewAPIQueryParameters,
         conversation: Conversation
         ) -> Callable:
         # Implement method to create a runnable query object
@@ -187,8 +187,8 @@ class NewAPIQueryBuilder(BaseQueryBuilder):
             llm=conversation.chat,
             prompt=self.structured_output_prompt,
         )
-    def parameterise_query(self, 
-        question: str, 
+    def parameterise_query(self,
+        question: str,
         conversation: Conversation
         ) -> NewAPIQueryParameters:
         # Implement method to generate API parameters from a question
@@ -204,7 +204,7 @@ class NewAPIQueryBuilder(BaseQueryBuilder):
 
 ```
 
-### 4. Implement Fetcher 
+### 4. Implement Fetcher
 
 Create a class that inherits from BaseFetcher. Adapt request header in
 initiation if specific API tokens are required, and implement a logic to build
@@ -232,11 +232,11 @@ class NewAPIFetcher(BaseFetcher):
         self.base_url = "https://api.new.org/api/"
 
     def fetch_results(
-        self, 
+        self,
         query_model: NewAPIQueryParameters,
         retries: int = 3,
     ) -> str:
-    #implement your logic here 
+    #implement your logic here
     return results_response.text
 
 ```
@@ -250,8 +250,8 @@ from biochatter.api_agent.abc import BaseInterpreter
 
 class NewAPIInterpreter(BaseInterpreter):
     def summarise_results(self,
-        question: str, 
-        conversation_factory: Callable, 
+        question: str,
+        conversation_factory: Callable,
         response_text: str) -> str:
 
         prompt = ChatPromptTemplate.from_messages(
@@ -292,4 +292,4 @@ result = new_api_agent.execute("Your question here")
 
 ### 7. Integrate with RagAgent
 
-TO DO 
+TO DO

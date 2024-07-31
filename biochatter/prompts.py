@@ -95,13 +95,13 @@ class BioCypherPromptEngine:
                         value["represented_as"] == "node"
                         and name_indicates_relationship
                     ):
-                        self.relationships[sentencecase_to_pascalcase(key)] = (
-                            value
-                        )
+                        self.relationships[
+                            sentencecase_to_pascalcase(key)
+                        ] = value
                     elif value["represented_as"] == "edge":
-                        self.relationships[sentencecase_to_pascalcase(key)] = (
-                            value
-                        )
+                        self.relationships[
+                            sentencecase_to_pascalcase(key)
+                        ] = value
         else:
             for key, value in schema_config.items():
                 if not isinstance(value, dict):
@@ -501,7 +501,7 @@ class BioCypherPromptEngine:
                         self.selected_entities.append(target)
 
         return bool(result)
-    
+
     @staticmethod
     def _validate_json_str(json_str: str):
         json_str = json_str.strip()

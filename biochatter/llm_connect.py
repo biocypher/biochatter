@@ -17,24 +17,17 @@ import base64
 import logging
 import urllib.parse
 
-from langchain_openai import (
-    ChatOpenAI,
-    AzureChatOpenAI,
-)
-
-from langchain_community.chat_models import (
-    ChatOllama,
-)
-from langchain_community.llms.huggingface_hub import HuggingFaceHub
+from langchain_openai import ChatOpenAI, AzureChatOpenAI
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from langchain_community.chat_models import ChatOllama
+from langchain_community.llms.huggingface_hub import HuggingFaceHub
 import nltk
 import openai
 
-from .selector_agent import RagAgentSelector
-
+from ._image import encode_image, encode_image_from_url
 from ._stats import get_stats
 from .rag_agent import RagAgent
-from ._image import encode_image, encode_image_from_url
+from .selector_agent import RagAgentSelector
 
 logger = logging.getLogger(__name__)
 

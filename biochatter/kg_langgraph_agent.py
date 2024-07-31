@@ -1,31 +1,27 @@
+from typing import Any, Optional
 from datetime import datetime
-from typing import Callable, Dict, Optional, Any, List
-import logging
+from collections.abc import Callable
 import json
-from langchain_core.messages import BaseMessage, AIMessage, ToolMessage
-from langchain_core.prompts import (
-    ChatPromptTemplate,
-    MessagesPlaceholder,
-)
-from langchain_core.pydantic_v1 import (
-    BaseModel,
-    Field,
-)
+import logging
+
+from langgraph.graph import END
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.messages import AIMessage, BaseMessage, ToolMessage
+from langchain_core.pydantic_v1 import Field, BaseModel
 from langchain.output_parsers.openai_tools import (
     PydanticToolsParser,
     JsonOutputToolsParser,
 )
-from langchain_openai import ChatOpenAI
 import neo4j_utils as nu
-from langgraph.graph import END
 
 from biochatter.langgraph_agent_base import (
-    ReflexionAgent,
-    ResponderWithRetries,
-    ReflexionAgentLogger,
-    ReflexionAgentResult,
     END_NODE,
     EXECUTE_TOOL_NODE,
+    ReflexionAgent,
+    ReflexionAgentLogger,
+    ReflexionAgentResult,
+    ResponderWithRetries,
 )
 
 logger = logging.getLogger(__name__)
@@ -84,7 +80,7 @@ class GenerateQuery(BaseModel):
     reflection: str = Field(
         description="Your reflection on the initial answer, critique of what to improve"
     )
-    search_queries: List[str] = Field(description=SEARCH_QUERIES_DESCRIPTION)
+    search_queries: list[str] = Field(description=SEARCH_QUERIES_DESCRIPTION)
 
 
 class ReviseQuery(GenerateQuery):
@@ -95,11 +91,10 @@ class ReviseQuery(GenerateQuery):
 
 
 class KGQueryReflexionAgent(ReflexionAgent):
-
     def __init__(
         self,
         conversation_factory: Callable,
-        connection_args: Dict[str, str],
+        connection_args: dict[str, str],
         query_lang: Optional[str] = "Cypher",
         max_steps: Optional[int] = 20,
     ):
@@ -217,7 +212,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
             runnable=revision_chain, validator=validator
         )
 
-    def _tool_function(self, state: List[BaseMessage]):
+    def _tool_function(self, state: list[BaseMessage]):
         tool_message: AIMessage = state[-1]
         parsed_tool_messages = self.parser.invoke(tool_message)
         results = []
@@ -269,7 +264,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
         )
 
     @staticmethod
-    def _get_last_tool_results_num(state: List[BaseMessage]):
+    def _get_last_tool_results_num(state: list[BaseMessage]):
         i = 0
         for m in state[::-1]:
             if not isinstance(m, ToolMessage):
@@ -300,7 +295,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
 
         return 0
 
-    def _get_last_score(self, state: List[BaseMessage]) -> int | None:
+    def _get_last_score(self, state: list[BaseMessage]) -> int | None:
         for m in state[::-1]:
             if not isinstance(m, AIMessage):
                 continue
@@ -313,7 +308,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
                 return None
         return None
 
-    def _should_continue(self, state: List[BaseMessage]):
+    def _should_continue(self, state: list[BaseMessage]):
         res = super()._should_continue(state)
         if res == END:
             return res
@@ -326,7 +321,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
         return END if query_results_num > 0 else EXECUTE_TOOL_NODE
 
     def _parse_final_result(
-        self, messages: List[BaseMessage]
+        self, messages: list[BaseMessage]
     ) -> ReflexionAgentResult:
         output = messages[-1]
         result = self.parser.invoke(output)[0]["args"]

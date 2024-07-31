@@ -3,12 +3,19 @@ import os
 import base64
 
 from PIL import Image
+from xinference.client import Client
 from openai._exceptions import NotFoundError
 import openai
 import pytest
 
-from xinference.client import Client
-
+from biochatter._image import (
+    encode_image,
+    process_image,
+    convert_to_png,
+    convert_to_pil_image,
+    encode_image_from_url,
+    convert_and_resize_image,
+)
 from biochatter.llm_connect import (
     AIMessage,
     HumanMessage,
@@ -18,24 +25,6 @@ from biochatter.llm_connect import (
     OllamaConversation,
     AzureGptConversation,
     XinferenceConversation,
-)
-
-from biochatter._image import (
-    encode_image,
-    process_image,
-    convert_to_png,
-    convert_to_pil_image,
-    encode_image_from_url,
-    convert_and_resize_image,
-)
-
-from biochatter._image import (
-    encode_image,
-    process_image,
-    convert_to_png,
-    convert_to_pil_image,
-    encode_image_from_url,
-    convert_and_resize_image,
 )
 
 
