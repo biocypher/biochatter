@@ -71,7 +71,7 @@ def test_rag_agent_kg_mode():
             use_prompt=True,
             mode=RagAgentModeEnum.KG,
             model_name="test_model",
-            connection_args={},
+            connection_args={"host": "xxx", "port": "xxx"},
             schema_config_or_info_dict={
                 "schema_config_or_info_dict": "test_schema_config_or_info_dict"
             },
@@ -118,7 +118,7 @@ def test_rag_agent_vectorstore_mode():
             use_prompt=True,
             mode=RagAgentModeEnum.VectorStore,
             model_name="test_model",
-            connection_args={},
+            connection_args={"host": "xxx", "port": "xxx"},
             embedding_func=MagicMock(),
         )
         assert agent.mode == RagAgentModeEnum.VectorStore
@@ -161,7 +161,6 @@ def test_rag_agent_api_oncokb_mode(
     rag_agent = RagAgent(
         mode=RagAgentModeEnum.API_ONCOKB,
         model_name="gpt-4o",
-        connection_args={},  # Add necessary connection arguments if needed
         use_prompt=True,  # Ensure prompts are used to get responses
         conversation_factory=conversation_factory,
     )
@@ -200,7 +199,6 @@ def test_rag_agent_api_mode_no_mock():
     api_agent = RagAgent(
         mode="api_blast",
         model_name="gpt-4o",
-        connection_args={},  # Add necessary connection arguments if needed
         use_prompt=True,  # Ensure prompts are used to get responses
         conversation_factory=conversation_factory,
     )

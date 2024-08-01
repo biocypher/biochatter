@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Optional
 from collections.abc import Callable
 
 from pydantic import BaseModel
@@ -94,6 +94,7 @@ class BaseFetcher(ABC):
     def fetch_results(
         self,
         query_model,
+        retries: Optional[int] = 3,
     ):
         """
         Fetches results by submitting a query. Can implement a multi-step

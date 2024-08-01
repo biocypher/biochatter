@@ -6,17 +6,20 @@
 
 # Load the data
 import os
-import pytest
-import inspect
 import hashlib
+import inspect
+
+import pytest
+
 import numpy as np
+
 from benchmark.conftest import calculate_bool_vector_score
 from .benchmark_utils import (
-    get_confidence_file_path,
     skip_if_already_run,
     get_result_file_path,
-    write_confidence_to_file,
     write_results_to_file,
+    get_confidence_file_path,
+    write_confidence_to_file,
 )
 
 

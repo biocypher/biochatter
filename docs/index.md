@@ -78,6 +78,6 @@ paid OpenAI TTS can be used without this extra)
 ## Documentation and Tutorials
 
 For a description of the features of the framework, see the `Features` option in
-the main menu. For examples of usage and customisation, check out the 
+the main menu. For examples of usage and customisation, check out the
 `Vignettes` section. For a more detailed reference of functions and classes, see
-the `API Reference`. 
+the `API Reference`.
