@@ -154,7 +154,6 @@ class DocumentEmbedder:
                 connection_args=self.connection_args,
                 embedding_collection_name=self.embedding_collection_name,
                 metadata_collection_name=self.metadata_collection_name,
-                documentids_workspace=self.documentids_workspace,
             )
         else:
             raise NotImplementedError(self.vector_db_vendor)
@@ -229,10 +228,14 @@ class DocumentEmbedder:
         self.database_host.connect()
 
     def get_all_documents(self) -> list[dict]:
-        return self.database_host.get_all_documents()
+        return self.database_host.get_all_documents(
+            doc_ids=self.documentids_workspace
+        )
 
     def remove_document(self, doc_id: str) -> None:
-        return self.database_host.remove_document(doc_id)
+        return self.database_host.remove_document(
+            doc_id, self.documentids_workspace
+        )
 
 
 class XinferenceDocumentEmbedder(DocumentEmbedder):
