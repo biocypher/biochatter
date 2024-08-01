@@ -1,5 +1,5 @@
 from ctypes import Union
-from typing import Any, Optional, List
+from typing import Any, Optional, List, Dict
 from unittest.mock import Mock, MagicMock
 import uuid
 
@@ -29,10 +29,10 @@ class Milvus(object):
         self,
         embedding_function: Optional[OpenAIEmbeddings] = None,
         collection_name: Optional[str] = "default",
-        connection_args: Optional[dict[str, Any]] = None,
+        connection_args: Optional[Dict[str, Any]] = None,
         documents: Optional[List[Document]] = None,
     ) -> None:
-        self.documents: dict[List[Document]] = (
+        self.documents: Dict[List[Document]] = (
             {} if documents is None else {uuid.uuid4().hex: documents}
         )
         self.col = Mock()

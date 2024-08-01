@@ -1,4 +1,4 @@
-from typing import Any, Union, Optional, List
+from typing import Any, Union, Optional, List, Dict
 import uuid
 
 from pymilvus import DataType, FieldSchema
@@ -26,7 +26,7 @@ class Collection(object):
         using: str = "default",
         **kwargs,
     ):
-        self.data: dict[str, list] = {}
+        self.data: Dict[str, list] = {}
 
     def query(self, expr: str, **kwargs):
         return [{"id": id} for id in self.data.keys()]
@@ -55,7 +55,7 @@ class Collection(object):
         return []
 
     def create_index(
-        self, field_name: str, index_params: dict[str, Any], using: str
+        self, field_name: str, index_params: Dict[str, Any], using: str
     ):
         pass
 

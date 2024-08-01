@@ -1,4 +1,4 @@
-from typing import Tuple, Optional, List
+from typing import Tuple, Optional, List, Dict
 import uuid
 import random
 import logging
@@ -629,7 +629,7 @@ class VectorDatabaseAgentMilvus:
             raise e
 
     def get_description(self, doc_ids: Optional[List[str]] = None):
-        def get_name(meta: dict[str, str]):
+        def get_name(meta: Dict[str, str]):
             name_col = ["title", "name", "subject", "source"]
             for col in name_col:
                 if meta[col] is not None and len(meta[col]) > 0:
