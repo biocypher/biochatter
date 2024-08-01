@@ -11,7 +11,7 @@ except ImportError:
     st = None
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, List
 import json
 import base64
 import logging
@@ -84,7 +84,7 @@ class Conversation(ABC):
         self.prompts = prompts
         self.correct = correct
         self.split_correction = split_correction
-        self.rag_agents: list[RagAgent] = []
+        self.rag_agents: List[RagAgent] = []
         self.history = []
         self.messages = []
         self.ca_messages = []
@@ -329,7 +329,7 @@ class Conversation(ABC):
         Args:
             text (str): The user query to be used for choosing rag agent
         """
-        rag_agents: list[RagAgent] = [
+        rag_agents: List[RagAgent] = [
             agent for agent in self.rag_agents if agent.use_prompt
         ]
         decider_agent = RagAgentSelector(rag_agents=rag_agents)
@@ -397,7 +397,7 @@ class Conversation(ABC):
                 else:
                     self.append_system_message(prompt)
 
-    def get_last_injected_context(self) -> list[dict]:
+    def get_last_injected_context(self) -> List[dict]:
         """
         Get a formatted list of the last context injected into the
         conversation. Contains one dictionary for each RAG mode.

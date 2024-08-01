@@ -1,4 +1,4 @@
-from typing import Any, Union, Optional
+from typing import Any, Union, Optional, List
 import uuid
 
 from pymilvus import DataType, FieldSchema
@@ -9,7 +9,7 @@ def has_collection(name, using: Optional[str] = None):
 
 
 class CollectionSchema(object):
-    def __init__(self, fields: list[FieldSchema]):
+    def __init__(self, fields: List[FieldSchema]):
         pass
 
 

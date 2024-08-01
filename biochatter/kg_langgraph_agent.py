@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Optional, List
 from datetime import datetime
 from collections.abc import Callable
 import json
@@ -80,7 +80,7 @@ class GenerateQuery(BaseModel):
     reflection: str = Field(
         description="Your reflection on the initial answer, critique of what to improve"
     )
-    search_queries: list[str] = Field(description=SEARCH_QUERIES_DESCRIPTION)
+    search_queries: List[str] = Field(description=SEARCH_QUERIES_DESCRIPTION)
 
 
 class ReviseQuery(GenerateQuery):
@@ -212,7 +212,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
             runnable=revision_chain, validator=validator
         )
 
-    def _tool_function(self, state: list[BaseMessage]):
+    def _tool_function(self, state: List[BaseMessage]):
         tool_message: AIMessage = state[-1]
         parsed_tool_messages = self.parser.invoke(tool_message)
         results = []
@@ -264,7 +264,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
         )
 
     @staticmethod
-    def _get_last_tool_results_num(state: list[BaseMessage]):
+    def _get_last_tool_results_num(state: List[BaseMessage]):
         i = 0
         for m in state[::-1]:
             if not isinstance(m, ToolMessage):
@@ -295,7 +295,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
 
         return 0
 
-    def _get_last_score(self, state: list[BaseMessage]) -> int | None:
+    def _get_last_score(self, state: List[BaseMessage]) -> int | None:
         for m in state[::-1]:
             if not isinstance(m, AIMessage):
                 continue
@@ -308,7 +308,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
                 return None
         return None
 
-    def _should_continue(self, state: list[BaseMessage]):
+    def _should_continue(self, state: List[BaseMessage]):
         res = super()._should_continue(state)
         if res == END:
             return res
@@ -321,7 +321,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
         return END if query_results_num > 0 else EXECUTE_TOOL_NODE
 
     def _parse_final_result(
-        self, messages: list[BaseMessage]
+        self, messages: List[BaseMessage]
     ) -> ReflexionAgentResult:
         output = messages[-1]
         result = self.parser.invoke(output)[0]["args"]

@@ -1,4 +1,5 @@
 import os
+from typing import List, Tuple
 
 from xinference.client import Client
 import pytest
@@ -276,7 +277,7 @@ def multiple_testing(request):
     return run_multiple_times
 
 
-def calculate_bool_vector_score(vector: list[bool]) -> tuple[int, int]:
+def calculate_bool_vector_score(vector: List[bool]) -> Tuple[int, int]:
     score = sum(vector)
     max = len(vector)
     return (score, max)

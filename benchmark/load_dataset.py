@@ -5,6 +5,7 @@ import copy
 import json
 import hashlib
 import itertools
+from typing import List
 
 from cryptography.fernet import Fernet
 import rsa
@@ -273,14 +274,14 @@ def _decrypt(payload: dict[str, str], private_key: rsa.PrivateKey) -> str:
     return data
 
 
-def _apply_literal_eval(df: pd.DataFrame, columns: list[str]):
+def _apply_literal_eval(df: pd.DataFrame, columns: List[str]):
     """Apply literal_eval to columns in a dataframe
     In the csv file lists and dicts are stored as strings.
     By calling literal_eval they are transformed to lists and dicts again.
 
     Args:
         df (pd.DataFrame): Dataframe.
-        columns (list[str]): Columns to apply literal_eval to.
+        columns (List[str]): Columns to apply literal_eval to.
     """
     for col_name in columns:
         if col_name in df.columns:
@@ -289,14 +290,14 @@ def _apply_literal_eval(df: pd.DataFrame, columns: list[str]):
             )
 
 
-def _get_all_files(directory: str) -> list[str]:
+def _get_all_files(directory: str) -> List[str]:
     """Get all files in a directory.
 
     Args:
         directory (str): Path to directory.
 
     Returns:
-        list[str]: List of file paths.
+        List[str]: List of file paths.
     """
     all_files = []
     for root, dirs, files in os.walk(directory):

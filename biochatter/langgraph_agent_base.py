@@ -90,7 +90,7 @@ class ResponderWithRetries:
         self.validator = validator
 
     @traceable
-    def respond(self, state: list[BaseMessage]):
+    def respond(self, state: List[BaseMessage]):
         """
         Invoke LLM agent, this function will be called by LangGraph
         Args:
@@ -153,7 +153,7 @@ class ReflexionAgent(ABC):
         self.conversation = conversation_factory()
         self.agent_logger = agent_logger
 
-    def _should_continue(self, state: list[BaseMessage]):
+    def _should_continue(self, state: List[BaseMessage]):
         """
         Determine if we need to continue reflexion
         Args:
@@ -165,7 +165,7 @@ class ReflexionAgent(ABC):
         return EXECUTE_TOOL_NODE
 
     @abstractmethod
-    def _tool_function(self, state: list[BaseMessage]) -> ToolMessage:
+    def _tool_function(self, state: List[BaseMessage]) -> ToolMessage:
         """
         tool function, execute tool based on initial draft or revised answer
         Args:
@@ -199,7 +199,7 @@ class ReflexionAgent(ABC):
 
     @abstractmethod
     def _parse_final_result(
-        self, messages: list[BaseMessage]
+        self, messages: List[BaseMessage]
     ) -> ReflexionAgentResult:
         """
         parse the result of the last step
@@ -214,7 +214,7 @@ class ReflexionAgent(ABC):
         return self.agent_logger.logs
 
     @staticmethod
-    def _get_num_iterations(state: list[BaseMessage]):
+    def _get_num_iterations(state: List[BaseMessage]):
         """
         Calculate iteration number
         Args:
@@ -231,7 +231,7 @@ class ReflexionAgent(ABC):
         return i
 
     @staticmethod
-    def _get_user_question(state: list[BaseMessage]):
+    def _get_user_question(state: List[BaseMessage]):
         """
         get user's question from messages array
         """
@@ -242,7 +242,7 @@ class ReflexionAgent(ABC):
         return None
 
     @staticmethod
-    def _get_last_tool_result(messages: list[BaseMessage]):
+    def _get_last_tool_result(messages: List[BaseMessage]):
         """
         get result of the last tool node
         """

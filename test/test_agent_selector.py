@@ -2,6 +2,7 @@ from unittest.mock import MagicMock, patch
 import os
 import json
 import logging
+from typing import List
 
 from dotenv import load_dotenv
 from langchain_core.messages import AIMessage, BaseMessage
@@ -62,7 +63,7 @@ class InitialResponder:
     def __init__(self, rag_agent: str):
         self.rag_agent = rag_agent
 
-    def invoke(self, msg_obj: dict[str, list[BaseMessage]]) -> BaseMessage:
+    def invoke(self, msg_obj: dict[str, List[BaseMessage]]) -> BaseMessage:
         msg = AIMessage(content="initial test")
         id = "call_" + shortuuid.uuid()
         msg.additional_kwargs = {
@@ -97,7 +98,7 @@ class ReviseResponder:
     def __init__(self, rag_agent: str):
         self.rag_agent = rag_agent
 
-    def invoke(self, msg_obj: dict[str, list[BaseMessage]]) -> BaseMessage:
+    def invoke(self, msg_obj: dict[str, List[BaseMessage]]) -> BaseMessage:
         return AIMessage(
             content="",
             additional_kwargs={

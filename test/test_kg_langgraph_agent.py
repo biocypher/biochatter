@@ -1,5 +1,5 @@
 from types import UnionType
-from typing import Any
+from typing import Any, List
 from collections.abc import Callable
 
 from langgraph.graph import END
@@ -17,7 +17,7 @@ from biochatter.langgraph_agent_base import ResponderWithRetries
 
 
 class InitialResponder:
-    def invoke(self, msg_obj: dict[str, list[BaseMessage]]) -> BaseMessage:
+    def invoke(self, msg_obj: dict[str, List[BaseMessage]]) -> BaseMessage:
         msg = AIMessage(content="initial test")
         id = "call_" + shortuuid.uuid()
         msg.additional_kwargs = {
@@ -54,7 +54,7 @@ class InitialResponder:
 class ReviseResponder:
     _enter_count = 0
 
-    def invoke(self, msg_obj: dict[str, list[BaseMessage]]) -> BaseMessage:
+    def invoke(self, msg_obj: dict[str, List[BaseMessage]]) -> BaseMessage:
         ReviseResponder._enter_count += 1
         if ReviseResponder._enter_count == 1:
             return AIMessage(
