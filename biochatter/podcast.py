@@ -1,6 +1,5 @@
 from collections import deque
 import os
-from typing import List
 
 from gtts import gTTS
 from openai import OpenAI
@@ -91,7 +90,7 @@ class Podcaster:
 
         # summarise the summaries
 
-    def _split_text(self, text: str) -> List[str]:
+    def _split_text(self, text: str) -> list[str]:
         """
         Splits consecutive text into sentences.
         """

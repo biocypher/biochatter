@@ -1,6 +1,5 @@
 import os
 import re
-from typing import List
 
 import seaborn as sns
 import colorcet as cc
@@ -103,9 +102,9 @@ def preprocess_results_for_frontend(
         axis=1,
     )
 
-    aggregated_scores["Full model name"] = (
-        aggregated_scores.index.get_level_values("model_name")
-    )
+    aggregated_scores[
+        "Full model name"
+    ] = aggregated_scores.index.get_level_values("model_name")
     aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
     aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
     aggregated_scores["Score SD"] = aggregated_scores["score_sd"]
@@ -175,9 +174,9 @@ def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
         axis=1,
     )
 
-    aggregated_scores["Full model name"] = (
-        aggregated_scores.index.get_level_values("model_name")
-    )
+    aggregated_scores[
+        "Full model name"
+    ] = aggregated_scores.index.get_level_values("model_name")
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
         "subtask"
     )
@@ -204,7 +203,7 @@ def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
         )
 
 
-def create_overview_table(result_files_path: str, result_file_names: List[str]):
+def create_overview_table(result_files_path: str, result_file_names: list[str]):
     """
 
     Creates an overview table for the frontend with y-axis = models and x-axis =
@@ -234,9 +233,9 @@ def create_overview_table(result_files_path: str, result_file_names: List[str]):
     )
 
     overview_per_quantisation = overview
-    overview_per_quantisation["Full model name"] = (
-        overview_per_quantisation.index
-    )
+    overview_per_quantisation[
+        "Full model name"
+    ] = overview_per_quantisation.index
     overview_per_quantisation[
         ["Model name", "Size", "Version", "Quantisation"]
     ] = overview_per_quantisation["Full model name"].str.split(":", expand=True)
@@ -268,9 +267,9 @@ def create_overview_table(result_files_path: str, result_file_names: List[str]):
         ]
     ]
     # round mean and sd to 2 decimal places
-    overview_per_quantisation.loc[:, "Median Accuracy"] = (
-        overview_per_quantisation["Median Accuracy"].round(2)
-    )
+    overview_per_quantisation.loc[
+        :, "Median Accuracy"
+    ] = overview_per_quantisation["Median Accuracy"].round(2)
     overview_per_quantisation.loc[:, "SD"] = overview_per_quantisation[
         "SD"
     ].round(2)
@@ -715,9 +714,9 @@ def plot_extraction_tasks():
         axis=1,
     )
 
-    aggregated_scores["Full model name"] = (
-        aggregated_scores.index.get_level_values("model_name")
-    )
+    aggregated_scores[
+        "Full model name"
+    ] = aggregated_scores.index.get_level_values("model_name")
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
         "subtask"
     )

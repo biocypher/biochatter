@@ -3,7 +3,6 @@ import json
 
 from langchain.schema import Document
 import neo4j_utils as nu
-from typing import List
 
 from .prompts import BioCypherPromptEngine
 from .constants import MAX_AGENT_DESC_LENGTH
@@ -67,7 +66,7 @@ class DatabaseAgent:
         agent_result = agent.execute(query, query_prompt)
         return agent_result.answer, agent_result.tool_result
 
-    def get_query_results(self, query: str, k: int = 3) -> List[Document]:
+    def get_query_results(self, query: str, k: int = 3) -> list[Document]:
         """
         Generate a query using the prompt engine and return the results.
         Replicates vector database similarity search API. Results are returned

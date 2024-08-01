@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional
 from collections.abc import Callable
 
 
@@ -20,7 +20,7 @@ class RagAgent:
         schema_config_or_info_dict: Optional[dict] = None,
         conversation_factory: Optional[Callable] = None,
         embedding_func: Optional[object] = None,
-        documentids_workspace: Optional[List[str]] = None,
+        documentids_workspace: Optional[list[str]] = None,
         agent_desc: Optional[str] = None,
     ) -> None:
         ######
@@ -157,7 +157,7 @@ class RagAgent:
     def agent_description(self, val: Optional[str] = None):
         self._agent_desc = val
 
-    def generate_responses(self, user_question: str) -> List[tuple]:
+    def generate_responses(self, user_question: str) -> list[tuple]:
         """
         Run the query function according to the mode and return the results in a
         uniform format (list of tuples, where the first element is the text for

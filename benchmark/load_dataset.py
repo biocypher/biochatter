@@ -5,7 +5,6 @@ import copy
 import json
 import hashlib
 import itertools
-from typing import List, Dict
 
 from cryptography.fernet import Fernet
 import rsa
@@ -14,7 +13,7 @@ import yaml
 import pandas as pd
 
 
-def get_benchmark_dataset() -> Dict[str, pd.DataFrame | Dict[str, str]]:
+def get_benchmark_dataset() -> dict[str, pd.DataFrame | Dict[str, str]]:
     """
 
     Get benchmark dataset:
@@ -35,7 +34,7 @@ def get_benchmark_dataset() -> Dict[str, pd.DataFrame | Dict[str, str]]:
     return test_data
 
 
-def _load_hold_out_test_dataset() -> Dict[str, pd.DataFrame | Dict[str, str]]:
+def _load_hold_out_test_dataset() -> dict[str, pd.DataFrame | Dict[str, str]]:
     """Load hold out test dataset.
 
     Returns:
@@ -209,7 +208,7 @@ def _get_private_key_from_env_variable() -> rsa.PrivateKey:
     return private_key
 
 
-def _get_encrypted_test_data() -> Dict[str, Dict[str, str]]:
+def _get_encrypted_test_data() -> dict[str, dict[str, str]]:
     """Get encrypted test data.
     currently from manually copied file benchmark/encrypted_llm_test_data.json
     TODO: automatically load test dataset (from github releases)?
@@ -256,7 +255,7 @@ def _decrypt_data(
     return decrypted_test_data
 
 
-def _decrypt(payload: Dict[str, str], private_key: rsa.PrivateKey) -> str:
+def _decrypt(payload: dict[str, str], private_key: rsa.PrivateKey) -> str:
     """Decrypt a payload.
 
     Args:
@@ -274,7 +273,7 @@ def _decrypt(payload: Dict[str, str], private_key: rsa.PrivateKey) -> str:
     return data
 
 
-def _apply_literal_eval(df: pd.DataFrame, columns: List[str]):
+def _apply_literal_eval(df: pd.DataFrame, columns: list[str]):
     """Apply literal_eval to columns in a dataframe
     In the csv file lists and dicts are stored as strings.
     By calling literal_eval they are transformed to lists and dicts again.
@@ -290,7 +289,7 @@ def _apply_literal_eval(df: pd.DataFrame, columns: List[str]):
             )
 
 
-def _get_all_files(directory: str) -> List[str]:
+def _get_all_files(directory: str) -> list[str]:
     """Get all files in a directory.
 
     Args:

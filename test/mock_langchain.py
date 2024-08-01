@@ -1,5 +1,5 @@
 from ctypes import Union
-from typing import Any, Optional, List, Dict
+from typing import Any, Optional
 from unittest.mock import Mock, MagicMock
 import uuid
 
@@ -29,10 +29,10 @@ class Milvus(object):
         self,
         embedding_function: Optional[OpenAIEmbeddings] = None,
         collection_name: Optional[str] = "default",
-        connection_args: Optional[Dict[str, Any]] = None,
-        documents: Optional[List[Document]] = None,
+        connection_args: Optional[dict[str, Any]] = None,
+        documents: Optional[list[Document]] = None,
     ) -> None:
-        self.documents: Dict[List[Document]] = (
+        self.documents: dict[list[Document]] = (
             {} if documents is None else {uuid.uuid4().hex: documents}
         )
         self.col = Mock()
@@ -42,12 +42,12 @@ class Milvus(object):
     def connect(self):
         pass
 
-    def store_embeddings(self, docs: List[Document]) -> str:
+    def store_embeddings(self, docs: list[Document]) -> str:
         id = uuid.uuid4().hex
         self.documents[id] = docs
         return id
 
-    def get_all_documents(self) -> List[List[Document]]:
+    def get_all_documents(self) -> list[list[Document]]:
         return [self.documents[id] for id in self.documents.keys()]
 
     def remove_document(self, id: str):
@@ -56,10 +56,10 @@ class Milvus(object):
 
     def similarity_search(
         self, query: str, k: int, expr: Optional[str] = None
-    ) -> List[Document]:
+    ) -> list[Document]:
         from random import randint
 
-        total_docs: List[Document] = [
+        total_docs: list[Document] = [
             doc for id in self.documents.keys() for doc in self.documents[id]
         ]
         if len(total_docs) < k:
@@ -73,7 +73,7 @@ class Milvus(object):
     @classmethod
     def from_documents(
         cls,
-        documents: List[Document],
+        documents: list[Document],
         embedding: Any,
         **kwargs: Any,
     ):
