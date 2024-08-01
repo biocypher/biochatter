@@ -16,6 +16,8 @@ from langchain.schema import Document
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import Milvus
 
+from .constants import MAX_AGENT_DESC_LENGTH
+
 logger = logging.getLogger(__name__)
 
 DOCUMENT_METADATA_COLLECTION_NAME = "DocumentMetadata"
@@ -625,3 +627,23 @@ class VectorDatabaseAgentMilvus:
         except MilvusException as e:
             logger.error(e)
             raise e
+
+    def get_description(self, doc_ids: Optional[list[str]] = None):
+        def get_name(meta: dict[str, str]):
+            name_col = ["title", "name", "subject", "source"]
+            for col in name_col:
+                if meta[col] is not None and len(meta[col]) > 0:
+                    return meta[col]
+            return ""
+
+        expr = VectorDatabaseAgentMilvus._build_meta_col_query_expr_for_all_documents(
+            doc_ids
+        )
+        result = self._col_metadata.query(
+            expr=expr,
+            output_fields=METADATA_FIELDS,
+        )
+        names = list(map(get_name, result))
+        names_set = set(names)
+        desc = f"This vector store contains the following articles: {names_set}"
+        return desc[:MAX_AGENT_DESC_LENGTH]
