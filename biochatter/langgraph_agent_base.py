@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Union, Literal, Optional, List
+from typing import Any, Union, Literal, Optional, List, Dict
 from datetime import datetime
 from collections.abc import Callable
 import json
@@ -37,7 +37,7 @@ class ReflexionAgentLogger:
         """
         pass
 
-    def log_final_result(self, final_result: dict[str, Any]) -> None:
+    def log_final_result(self, final_result: Dict[str, Any]) -> None:
         """
         log final result
         Args:
