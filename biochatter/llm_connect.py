@@ -11,7 +11,7 @@ except ImportError:
     st = None
 
 from abc import ABC, abstractmethod
-from typing import Optional, List
+from typing import Optional, List, Tuple
 import json
 import base64
 import logging
@@ -115,7 +115,7 @@ class Conversation(ABC):
             # update
             self.rag_agents[i] = agent
 
-    def _find_rag_agent(self, mode: str) -> tuple[int, RagAgent]:
+    def _find_rag_agent(self, mode: str) -> Tuple[int, RagAgent]:
         for i, val in enumerate(self.rag_agents):
             if val.mode == mode:
                 return i, val
@@ -244,7 +244,7 @@ class Conversation(ABC):
                 msg = self.prompts["tool_prompts"][tool_name].format(df=df)
                 self.append_system_message(msg)
 
-    def query(self, text: str, image_url: str = None) -> tuple[str, dict, str]:
+    def query(self, text: str, image_url: str = None) -> Tuple[str, dict, str]:
         """
         The main workflow for querying the LLM API. Appends the most recent
         query to the conversation, optionally injects context from the RAG
