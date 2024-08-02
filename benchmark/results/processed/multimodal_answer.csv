@@ -1,0 +1,4 @@
+Full model name,Score achieved,Score possible,Score SD,Accuracy,Iterations
+gpt-4-turbo-2024-04-09,99.0,100.0,0.4472135954999579,0.99,5
+gpt-4o-mini-2024-07-18,98.0,100.0,0.5477225575051661,0.98,5
+gpt-4o-2024-05-13,96.0,100.0,0.8366600265340756,0.96,5

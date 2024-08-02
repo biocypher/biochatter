@@ -1,12 +1,11 @@
-# Functions for image encoding
-
-import subprocess
-import base64
 import io
 import os
-import pdf2image
-from PIL import Image
+import base64
 import tempfile  # needed for test
+import subprocess
+
+from PIL import Image
+import pdf2image
 
 
 def convert_and_resize_image(image: Image, max_size: int = 1024) -> Image:

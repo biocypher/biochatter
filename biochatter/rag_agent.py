@@ -13,14 +13,15 @@ class RagAgent:
     def __init__(
         self,
         mode: str,
-        model_name: str,
-        connection_args: dict,
+        model_name: Optional[str] = "gpt-3.5-turbo",
+        connection_args: Optional[dict] = None,
         n_results: Optional[int] = 3,
         use_prompt: Optional[bool] = False,
         schema_config_or_info_dict: Optional[dict] = None,
         conversation_factory: Optional[Callable] = None,
         embedding_func: Optional[object] = None,
         documentids_workspace: Optional[list[str]] = None,
+        agent_desc: Optional[str] = None,
     ) -> None:
         ######
         ##TO DO
@@ -69,8 +70,14 @@ class RagAgent:
         self.n_results = n_results
         self.documentids_workspace = documentids_workspace
         self.last_response = []
+        self._agent_desc = agent_desc
         if self.mode == RagAgentModeEnum.KG:
             from .database_agent import DatabaseAgent
+
+            if not connection_args:
+                raise ValueError(
+                    "Please provide connection args to connect to database."
+                )
 
             if not schema_config_or_info_dict:
                 raise ValueError("Please provide a schema config or info dict.")
@@ -89,6 +96,11 @@ class RagAgent:
 
         elif self.mode == RagAgentModeEnum.VectorStore:
             from .vectorstore_agent import VectorDatabaseAgentMilvus
+
+            if not connection_args:
+                raise ValueError(
+                    "Please provide connection args to connect to vector store."
+                )
 
             if not embedding_func:
                 raise ValueError("Please provide an embedding function.")
@@ -110,12 +122,13 @@ class RagAgent:
             )
             from .api_agent.api_agent import APIAgent
 
-            self.query_func = APIAgent(
+            self.agent = APIAgent(
                 conversation_factory=conversation_factory,
                 query_builder=BlastQueryBuilder(),
                 fetcher=BlastFetcher(),
                 interpreter=BlastInterpreter(),
             )
+            self.query_func = self.agent.execute
         elif self.mode == RagAgentModeEnum.API_ONCOKB:
             from .api_agent.oncokb import (
                 OncoKBFetcher,
@@ -124,16 +137,25 @@ class RagAgent:
             )
             from .api_agent.api_agent import APIAgent
 
-            self.query_func = APIAgent(
+            self.agent = APIAgent(
                 conversation_factory=conversation_factory,
                 query_builder=OncoKBQueryBuilder(),
                 fetcher=OncoKBFetcher(),
                 interpreter=OncoKBInterpreter(),
             )
+            self.query_func = self.agent.execute
         else:
             raise ValueError(
                 "Invalid mode. Choose either 'kg', 'vectorstore', 'api_blast', or 'api_oncokb'."
             )
+
+    @property
+    def agent_description(self):
+        return self._agent_desc
+
+    @agent_description.setter
+    def agent_description(self, val: Optional[str] = None):
+        self._agent_desc = val
 
     def generate_responses(self, user_question: str) -> list[tuple]:
         """
@@ -145,7 +167,7 @@ class RagAgent:
             user_question (str): The user question.
 
         Returns:
-            results (list[tuple]): A list of tuples containing the results.
+            results (List[tuple]): A list of tuples containing the results.
 
         Todo:
             Which metadata are returned?
@@ -179,11 +201,11 @@ class RagAgent:
             RagAgentModeEnum.API_BLAST,
             RagAgentModeEnum.API_ONCOKB,
         ]:
-            self.query_func.execute(user_question)
-            if self.query_func.final_answer is not None:
-                response = [("response", self.query_func.final_answer)]
+            final_answer = self.query_func(user_question)
+            if final_answer is not None:
+                response = [("response", final_answer)]
             else:
-                response = [("error", self.query_func.final_answer)]
+                response = [("error", final_answer)]
 
         else:
             raise ValueError(
@@ -192,3 +214,34 @@ class RagAgent:
             )
         self.last_response = response
         return response
+
+    def get_description(self):
+        if self.agent_description is not None:
+            return self.agent_description
+        if self.mode == RagAgentModeEnum.KG:
+            return self.agent.get_description()
+        elif self.mode == RagAgentModeEnum.VectorStore:
+            return self.agent.get_description(self.documentids_workspace)
+        elif self.mode == RagAgentModeEnum.API_BLAST:
+            tool_name = "BLAST"
+            tool_desc = (
+                "The Basic Local Alignment Search Tool (BLAST) "
+                "finds regions of local similarity between sequences. "
+                "BLAST compares nucleotide or protein sequences to "
+                "sequence databases and calculates the statistical "
+                "significance of matches."
+            )
+            return self.agent.get_description(tool_name, tool_desc)
+        elif self.mode == RagAgentModeEnum.API_ONCOKB:
+            tool_name = "OncoKB"
+            tool_desc = (
+                "OncoKB is a precision oncology knowledge base "
+                "and contains information about the effects "
+                "and treatment implications of specific cancer gene alterations."
+            )
+            return self.agent.get_description(tool_name, tool_desc)
+        else:
+            raise ValueError(
+                "Invalid mode. Choose either 'kg', 'vectorstore', 'api_blast', "
+                "or 'api_oncokb'."
+            )

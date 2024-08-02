@@ -5,6 +5,7 @@ from langchain.schema import Document
 import neo4j_utils as nu
 
 from .prompts import BioCypherPromptEngine
+from .constants import MAX_AGENT_DESC_LENGTH
 from .kg_langgraph_agent import KGQueryReflexionAgent
 
 
@@ -62,8 +63,8 @@ class DatabaseAgent:
             self.connection_args,
         )
         query_prompt = self.prompt_engine.generate_query_prompt(query)
-        cypher_query = agent.execute(query, query_prompt)
-        return cypher_query
+        agent_result = agent.execute(query, query_prompt)
+        return agent_result.answer, agent_result.tool_result
 
     def get_query_results(self, query: str, k: int = 3) -> list[Document]:
         """
@@ -77,16 +78,21 @@ class DatabaseAgent:
             k (int): The number of results to return.
 
         Returns:
-            list[Document]: A list of Document objects. The page content values
+            List[Document]: A list of Document objects. The page content values
                 are the literal dictionaries returned by the query, the metadata
                 values are the cypher query used to generate the results, for
                 now.
         """
-        cypher_query = self._generate_query(
+        (cypher_query, tool_result) = self._generate_query(
             query
         )  # self.prompt_engine.generate_query(query)
         # TODO some logic if it fails?
-        results = self.driver.query(query=cypher_query)
+        if tool_result is not None:
+            # If _generate_query() already returned tool_result, we won't connect
+            # to graph database to query result any more
+            results = [tool_result]
+        else:
+            results = self.driver.query(query=cypher_query)
 
         documents = []
         # return first k results
@@ -107,3 +113,28 @@ class DatabaseAgent:
                 break
 
         return documents
+
+    def get_description(self):
+        result = self.driver.query("MATCH (n:Schema_info) RETURN n LIMIT 1")
+
+        if result[0]:
+            schema_info_node = result[0][0]["n"]
+            schema_dict_content = schema_info_node["schema_info"][
+                :MAX_AGENT_DESC_LENGTH
+            ]  # limit to 1000 characters
+            return (
+                f"the graph database contains the following nodes and edges: \n\n"
+                f"{schema_dict_content}"
+            )
+
+        # schema_info is not found in database
+        nodes_query = "MATCH (n) RETURN DISTINCT labels(n) LIMIT 300"
+        node_results = self.driver.query(query=nodes_query)
+        edges_query = "MATCH (n) RETURN DISTINCT type(n) LIMIT 300"
+        edge_results = self.driver.query(query=edges_query)
+        desc = (
+            f"The graph database contains the following nodes and edges: \n"
+            f"nodes: \n{node_results}"
+            f"edges: \n{edge_results}"
+        )
+        return desc[:MAX_AGENT_DESC_LENGTH]

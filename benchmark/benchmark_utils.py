@@ -1,5 +1,6 @@
 from datetime import datetime
 import re
+
 from nltk.corpus import wordnet
 import pytest
 import importlib_metadata
@@ -35,6 +36,9 @@ def benchmark_already_executed(
 
     # check if failure group csv already exists
     return_or_create_failure_mode_file(task)
+
+    # check if confidence group csv already exists
+    return_or_create_confidence_file(task)
 
     if task_results.empty:
         return False
@@ -133,6 +137,49 @@ def return_or_create_failure_mode_file(task: str):
     return results
 
 
+def return_or_create_confidence_file(task: str):
+    """
+    Returns the confidence file for the task or creates it if it does not
+    exist.
+
+    Args:
+        task (str): The benchmark task, e.g. "biocypher_query_generation"
+
+    Returns:
+        pd.DataFrame: The confidence recording file for the task
+    """
+    file_path = get_confidence_file_path(task)
+    try:
+        results = pd.read_csv(file_path, header=0)
+    except (pd.errors.EmptyDataError, FileNotFoundError):
+        results = pd.DataFrame(
+            columns=[
+                "model_name",
+                "subtask",
+                "correct_confidence",
+                "incorrect_confidence",
+                "md5_hash",
+                "datetime",
+            ]
+        )
+        results.to_csv(file_path, index=False)
+    return results
+
+
+def get_confidence_file_path(task: str) -> str:
+    """
+
+    Returns the path to the confidence recording file.
+
+    Args:
+        task (str): The benchmark task, e.g. "biocypher_query_generation"
+
+    Returns:
+        str: The path to the confidence file
+    """
+    return f"benchmark/results/{task}_confidence.csv"
+
+
 def get_failure_mode_file_path(task: str) -> str:
     """
 
@@ -170,6 +217,53 @@ def write_results_to_file(
     bc_version = importlib_metadata.version("biochatter")
     new_row = pd.DataFrame(
         [[model_name, subtask, score, iterations, md5_hash, now, bc_version]],
+        columns=results.columns,
+    )
+    results = pd.concat([results, new_row], ignore_index=True).sort_values(
+        by=["model_name", "subtask"]
+    )
+    results.to_csv(file_path, index=False)
+
+
+def write_confidence_to_file(
+    model_name: str,
+    subtask: str,
+    correct_confidence: str,
+    incorrect_confidence: str,
+    md5_hash: str,
+    file_path: str,
+):
+    """
+
+    Writes the confidence scores for a given response to a subtask to the given
+    file path.
+
+    Args:
+        model_name (str): The model name, e.g. "gpt-3.5-turbo"
+
+        subtask (str): The benchmark subtask test case, e.g. "multimodal_answer"
+
+        correct_confidence (str): The confidence scores for correct answers
+
+        incorrect_confidence (str): The confidence scores for incorrect answers
+
+        md5_hash (str): The md5 hash of the test case
+
+        file_path (str): The path to the result file
+    """
+    results = pd.read_csv(file_path, header=0)
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    new_row = pd.DataFrame(
+        [
+            [
+                model_name,
+                subtask,
+                correct_confidence,
+                incorrect_confidence,
+                md5_hash,
+                now,
+            ]
+        ],
         columns=results.columns,
     )
     results = pd.concat([results, new_row], ignore_index=True).sort_values(
@@ -258,7 +352,9 @@ def categorize_failure_modes(
             return "Format Error"
 
         # Check if some of the answer is partially right, but only if it's more than one letter
-        elif len(expected_answer) > 1 and (actual_answer in expected_answer or expected_answer in actual_answer):
+        elif len(expected_answer) > 1 and (
+            actual_answer in expected_answer or expected_answer in actual_answer
+        ):
             return "Partial Match"
 
         # Check if the format of the answer is wrong, but the answer otherwise is right (e.g. "a b" instead of "ab")
@@ -307,10 +403,10 @@ def categorize_failure_modes(
 
 def is_synonym(word1, word2):
     """
-    Tests, if the input arguments word1 and word2 are synonyms of each other.
-    If yes, the function returns True, False otherwise. 
+    Tests if the input arguments word1 and word2 are synonyms of each other.
+    If yes, the function returns True, False otherwise.
     """
-    if word2 is "yes" or "no" or "ja" or "nein":
+    if word2.lower() in ["yes", "no", "ja", "nein"]:
         return False
 
     synsets1 = wordnet.synsets(word1)

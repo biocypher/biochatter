@@ -5,6 +5,7 @@ import copy
 import json
 import hashlib
 import itertools
+from typing import Dict
 
 from cryptography.fernet import Fernet
 import rsa
@@ -13,7 +14,7 @@ import yaml
 import pandas as pd
 
 
-def get_benchmark_dataset() -> dict[str, pd.DataFrame | dict[str, str]]:
+def get_benchmark_dataset() -> Dict[str, pd.DataFrame | Dict[str, str]]:
     """
 
     Get benchmark dataset:
@@ -34,7 +35,7 @@ def get_benchmark_dataset() -> dict[str, pd.DataFrame | dict[str, str]]:
     return test_data
 
 
-def _load_hold_out_test_dataset() -> dict[str, pd.DataFrame | dict[str, str]]:
+def _load_hold_out_test_dataset() -> Dict[str, pd.DataFrame | Dict[str, str]]:
     """Load hold out test dataset.
 
     Returns:
@@ -114,6 +115,8 @@ def _delete_outdated_benchmark_results(data_dict: dict) -> None:
 
     # delete outdated results
     for file in result_files:
+        if "multimodal_answer" in file:
+            continue
         result_file = pd.read_csv(file, header=0)
         result_hashes = result_file["md5_hash"].to_list()
         for hash in result_hashes:
@@ -206,7 +209,7 @@ def _get_private_key_from_env_variable() -> rsa.PrivateKey:
     return private_key
 
 
-def _get_encrypted_test_data() -> dict[str, dict[str, str]]:
+def _get_encrypted_test_data() -> Dict[str, Dict[str, str]]:
     """Get encrypted test data.
     currently from manually copied file benchmark/encrypted_llm_test_data.json
     TODO: automatically load test dataset (from github releases)?
@@ -253,11 +256,11 @@ def _decrypt_data(
     return decrypted_test_data
 
 
-def _decrypt(payload: dict[str, str], private_key: rsa.PrivateKey) -> str:
+def _decrypt(payload: Dict[str, str], private_key: rsa.PrivateKey) -> str:
     """Decrypt a payload.
 
     Args:
-        payload (dict[str, str]): Payload with key and data to decrypt.
+        payload (Dict[str, str]): Payload with key and data to decrypt.
         private_key (rsa.PrivateKey): Private key to decrypt the payload.
 
     Returns:
@@ -278,7 +281,7 @@ def _apply_literal_eval(df: pd.DataFrame, columns: list[str]):
 
     Args:
         df (pd.DataFrame): Dataframe.
-        columns (list[str]): Columns to apply literal_eval to.
+        columns (List[str]): Columns to apply literal_eval to.
     """
     for col_name in columns:
         if col_name in df.columns:
@@ -294,7 +297,7 @@ def _get_all_files(directory: str) -> list[str]:
         directory (str): Path to directory.
 
     Returns:
-        list[str]: List of file paths.
+        List[str]: List of file paths.
     """
     all_files = []
     for root, dirs, files in os.walk(directory):

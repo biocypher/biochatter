@@ -4,7 +4,7 @@
 | --- | --- | --- | --- |
 | __License__ | [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) | __Python__ | [![Python](https://img.shields.io/pypi/pyversions/biochatter)](https://www.python.org) |
 | __Package__ | [![PyPI version](https://img.shields.io/pypi/v/biochatter)](https://pypi.org/project/biochatter/) [![Downloads](https://static.pepy.tech/badge/biochatter)](https://pepy.tech/project/biochatter) [![DOI](https://zenodo.org/badge/650181006.svg)](https://zenodo.org/doi/10.5281/zenodo.10777945) | __Build status__ | [![CI](https://github.com/biocypher/biochatter/actions/workflows/ci.yaml/badge.svg)](https://github.com/biocypher/biochatter/actions/workflows/ci.yaml) [![Docs](https://github.com/biocypher/biochatter/actions/workflows/docs.yaml/badge.svg)](https://github.com/biocypher/biochatter/actions/workflows/docs.yaml) |
-| __Tests__ | Coverage coming soon. | __Docker__ | [![Latest image](https://img.shields.io/docker/v/biocypher/chatgse)](https://hub.docker.com/repository/docker/biocypher/chatgse/general) [![Image size](https://img.shields.io/docker/image-size/biocypher/chatgse/latest)](https://hub.docker.com/repository/docker/biocypher/chatgse/general) |
+| __Tests__ | [![Coverage](https://raw.githubusercontent.com/biocypher/biochatter/coverage/coverage.svg)](https://github.com/biocypher/biochatter/actions/workflows/ci.yaml) | __Docker__ | [![Latest image](https://img.shields.io/docker/v/biocypher/chatgse)](https://hub.docker.com/repository/docker/biocypher/chatgse/general) [![Image size](https://img.shields.io/docker/image-size/biocypher/chatgse/latest)](https://hub.docker.com/repository/docker/biocypher/chatgse/general) |
 | __Development__ | [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![Code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://black.readthedocs.io/en/stable/) | __Contributions__ | [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com) [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CONTRIBUTING.md) |
 
 ## Description
@@ -50,15 +50,16 @@ following extras (e.g. `pip install biochatter[xinference]`):
 - `podcast`: support for podcast text-to-speech (for the free Google TTS; the
 paid OpenAI TTS can be used without this extra)
 
-- `streamlit`: support for streamlit UI functions (used in ChatGSE)
+- `streamlit`: support for streamlit UI functions (used in BioChatter Light)
 
 ## Usage
 
-Check out the [documentation](https://biochatter.org/) for
-examples, use cases, and more information. Many common functionalities covered
-by BioChatter can be seen in use in the
-[ChatGSE](https://github.com/biocypher/ChatGSE) code base.
-[![Built with Material for MkDocs](https://img.shields.io/badge/Material_for_MkDocs-526CFE?style=for-the-badge&logo=MaterialForMkDocs&logoColor=white)](https://squidfunk.github.io/mkdocs-material/)
+Check out the [documentation](https://biochatter.org/) for examples, use cases,
+and more information. Many common functionalities covered by BioChatter can be
+seen in use in the [BioChatter
+Light](https://github.com/biocypher/biochatter-light) code base.  [![Built with
+Material for
+MkDocs](https://img.shields.io/badge/Material_for_MkDocs-526CFE?style=for-the-badge&logo=MaterialForMkDocs&logoColor=white)](https://squidfunk.github.io/mkdocs-material/)
 
 ## 🤝 Getting involved
 

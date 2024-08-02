@@ -53,6 +53,7 @@ nav:
       - Connecting Knowledge Graphs: kgs.md
       - Retrieval-Augmented Generation: rag.md
       - API Calling: api.md
+      - Reflexion via LangGraph: reflexion-agent.md
       - Open-source and Local LLMs: open-llm.md
       - LLM in your Browser - WebAssembly: wasm.md
       - Benchmarking: benchmarking.md
@@ -64,11 +65,14 @@ nav:
   - Vignettes:
       - Knowledge Graph RAG: vignette-kg.md
       - Retrieval-Augmented Generation (RAG): vignette-rag.md
+      - Customising BioChatter Light - Simple: vignette-custom-bclight-simple.md
+      - Customising BioChatter Light - Advanced: vignette-custom-bclight-advanced.md
   - API Reference:
       - LLM Connectivity: llm_connect-reference.md
-      - Vectorstore: vectorstore-reference.md
-      - Vectorstore Agent: vectorstore_agent-reference.md
-      - Prompt Engine: prompts-reference.md
+      - Vectorstore Agent: vectorstore-reference.md
+      - Knowledge Graph Agent: kg-reference.md
+      - API Agent: api-reference.md
+      - Reflexion Agent: reflexion-reference.md
       - Podcast: podcast-reference.md
 
 repo_url: https://github.com/biocypher/biochatter

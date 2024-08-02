@@ -17,11 +17,11 @@ chatglm3:6:ggmlv3:q4_0,dichotomous:dermatology:de,"immunsuppression ist ein risi
 
 (ja)",ja,Partial Match,bc482fc9a0f9e9573741b84453a0d420,2024-06-18 11:08:26
 chatglm3:6:ggmlv3:q4_0,dichotomous:dermatology:de,"der satz ist korrekt vemurafenib ist indeed anhand des braf-mutations mittel ebzeiter, das andauernder teil used ( her制的) des typus毫升s越好。",ja,Other,a0ba6e4c4785ff461433b4cbb51326d2,2024-06-18 11:09:03
-chatglm3:6:ggmlv3:q4_0,dichotomous:dermatology:de,"ich legequence-analytics-kursus#5: 
+chatglm3:6:ggmlv3:q4_0,dichotomous:dermatology:de,"ich legequence-analytics-kursus#5:
 
 kontext: direktionsstatus: korrekt
 
-ausgabe: 
+ausgabe:
 
 das ist die falsche藕 dried月以来关系 -百花 cleve 2016 11 bis 12 erschlossen, wenn英雄长时间意见 '',onal事前裼mainz'
 
@@ -302,7 +302,7 @@ chatglm3:6:ggmlv3:q4_0,multiple_choice:mental_disorders:en,"a, d","a,b,c,d",Othe
 chatglm3:6:ggmlv3:q4_0,multiple_choice:mental_disorders:en,"a, d, e","a,d,e,f",Other,29b0186d1af34324387e7642054573f4,2024-06-18 10:49:09
 chatglm3:6:ggmlv3:q4_0,multiple_choice:mental_disorders:en,"b, e","b,c,e",Other,002f4e67ac1868322ed812b3fc353173,2024-06-18 10:49:19
 chatglm3:6:ggmlv3:q4_0,one_word:cardiology:de,pathological imaging,Knochenszintigraphie,Other,36fda462554d7521f1e5061098a71112,2024-06-18 10:54:00
-chatglm3:6:ggmlv3:q4_0,one_word:cardiology:de,"der empfohlen maximum für die zeitspanne between hollow heart behandlermed躾 
+chatglm3:6:ggmlv3:q4_0,one_word:cardiology:de,"der empfohlen maximum für die zeitspanne between hollow heart behandlermed躾
 zur autopsie klinik gossip source",2,Format Error,f58b800cf852e3211005cac20ba58b9b,2024-06-18 10:54:09
 chatglm3:6:ggmlv3:q4_0,one_word:cardiology:de,干预,HCM-SCD-Risikorechner,Other,61fd1c1612f61858e892754afa4d3d63,2024-06-18 10:54:13
 chatglm3:6:ggmlv3:q4_0,one_word:cardiology:de,mindestens 14 tage,1,Partial Match / case Sensitivity,404a8a47f3475bd4499a6d3c7bcc379c,2024-06-18 10:54:37
@@ -1527,6 +1527,285 @@ gpt-4-0613,single_choice:emergency:en,(c),c,Partial Match / case Sensitivity,1a3
 gpt-4-0613,single_choice:math:de,c,d,Other,bb370b3741955fcc0e14291a4e28dae1,2024-06-18 17:55:22
 gpt-4-0613,single_choice:math:en,c,b,Other,74d5f89b1340bdfd51c6915c484fae53,2024-06-18 17:56:27
 gpt-4-0613,single_choice:oncology:en,b,a,Other,635cbb8bb672865d7da35df2772c56da,2024-06-18 18:07:50
+gpt-4-turbo-2024-04-09,dichotomous:biochemistry:de,ja,nein,Other,a077c65c160ec20d3f631b44e709d753,2024-07-30 23:37:56
+gpt-4-turbo-2024-04-09,dichotomous:biochemistry:en,yes,no,Other,710c11b68f99087ee79c398c65ca9215,2024-07-30 23:50:18
+gpt-4-turbo-2024-04-09,dichotomous:cardiology:de,ja,nein,Other,c271320748d103b55ce9ac1cae4f08c4,2024-07-30 23:35:26
+gpt-4-turbo-2024-04-09,dichotomous:cardiology:de,mann,Mann,Case Sensitivity,e825d5741f4dbc5c6586a50bdafe17a5,2024-07-30 23:35:43
+gpt-4-turbo-2024-04-09,dichotomous:cardiology:de,ja,nein,Other,0a18949c7f2aa9448c810e595ff37185,2024-07-30 23:35:48
+gpt-4-turbo-2024-04-09,dichotomous:cardiology:en,yes,no,Other,c789018deb872db127cb8d5fea63c755,2024-07-30 23:36:24
+gpt-4-turbo-2024-04-09,dichotomous:cardiology:en,men,Men,Case Sensitivity,1a9f9fea0c4cb9aa2476fb76317ff471,2024-07-30 23:36:28
+gpt-4-turbo-2024-04-09,dichotomous:cardiology:en,no,yes,Other,b710df83a48c05873b0dbac03a3bef90,2024-07-30 23:36:31
+gpt-4-turbo-2024-04-09,dichotomous:cardiology:en,yes,no,Other,8c8c14070ebeaf1a90e6e376f3efa49c,2024-07-30 23:36:35
+gpt-4-turbo-2024-04-09,dichotomous:dermatology:de,ja,nein,Other,32cf33685a9e00909d6d16a9b7bde20f,2024-07-30 23:37:11
+gpt-4-turbo-2024-04-09,dichotomous:dermatology:de,nein,ja,Other,4232ac0da6fca3616b9571eece9664ee,2024-07-30 23:37:38
+gpt-4-turbo-2024-04-09,dichotomous:dermatology:en,yes,no,Other,3f185e0a1089b6484420e1c6fdffc1a4,2024-07-30 23:40:24
+gpt-4-turbo-2024-04-09,dichotomous:dermatology:en,no,yes,Other,09a38be270c3c3d7251ed9685106aef8,2024-07-30 23:40:44
+gpt-4-turbo-2024-04-09,dichotomous:emergency:en,no,yes,Other,17e0f19ccbbcf0bfba6f30d8ce573421,2024-07-30 23:53:07
+gpt-4-turbo-2024-04-09,dichotomous:medication:en,yes,no,Other,004a6d5c21e84d978ac7b807e5a265a9,2024-07-30 23:48:16
+gpt-4-turbo-2024-04-09,dichotomous:medication:en,yes,no,Other,43fe3c10aca393d174422996a21f8d88,2024-07-30 23:48:23
+gpt-4-turbo-2024-04-09,dichotomous:mental_disorders:de,nein,ja,Other,9b09af2495f1738adb533048db0951e0,2024-07-30 23:29:23
+gpt-4-turbo-2024-04-09,dichotomous:mental_disorders:en,yes,no,Other,b2ab8ea86e24e799101e3d4bc8864fed,2024-07-30 23:32:35
+gpt-4-turbo-2024-04-09,dichotomous:mental_disorders:en,no,yes,Other,54a4309bad8924868e0bcef97f329c33,2024-07-30 23:32:46
+gpt-4-turbo-2024-04-09,dichotomous:mental_disorders:en,yes,no,Other,87eef24cb37bc2b5a1f895615087f06c,2024-07-30 23:32:53
+gpt-4-turbo-2024-04-09,dichotomous:mental_disorders:en,no,yes,Other,42d5b9049be0a02afef7eff9430134ce,2024-07-30 23:32:56
+gpt-4-turbo-2024-04-09,dichotomous:physiology:de,ja,nein,Other,518ac2973fba63e0f949bfc9ba180075,2024-07-30 23:41:58
+gpt-4-turbo-2024-04-09,dichotomous:physiology:en,yes,no,Other,d85e27cf5f44aa37ed756a1dc8c307bf,2024-07-30 23:29:19
+gpt-4-turbo-2024-04-09,multiple_choice:mental_disorders:en,"b,d,e,f","d,e,f",Partial Match,b41872fbde7612fb59786be02644181c,2024-07-30 23:33:10
+gpt-4-turbo-2024-04-09,one_word:cardiology:de,szintigraphie,Knochenszintigraphie,Partial Match,36fda462554d7521f1e5061098a71112,2024-07-30 23:36:10
+gpt-4-turbo-2024-04-09,one_word:cardiology:de,digoxin,Digoxin,Case Sensitivity,923e46b46c0ad85d426edbbfb6ec4d93,2024-07-30 23:36:21
+gpt-4-turbo-2024-04-09,one_word:cardiology:en,digoxin,Digoxin,Case Sensitivity,d56125629d337c89218bceb5cfd671f8,2024-07-30 23:37:04
+gpt-4-turbo-2024-04-09,one_word:emergency:de,sauerstoffreiches,Sauerstoffreiches,Case Sensitivity,8ff560765b068093a632aee039c96175,2024-07-30 23:52:41
+gpt-4-turbo-2024-04-09,one_word:medication:de,grapefruit,Grapefruit,Case Sensitivity,9808ac596ca95d5b92c5f11e2b5826d1,2024-07-30 23:50:35
+gpt-4-turbo-2024-04-09,one_word:medication:en,grapefruit,Grapefruit,Case Sensitivity,9fff21dadf380e58fff7cfeb8a43086d,2024-07-30 23:48:44
+gpt-4-turbo-2024-04-09,one_word:medication:en,pharmacodynamic and pharmacokinetic,Pharmacodynamic and pharmacokinetic,Case Sensitivity,3d527b8ac5786aafd800b119b7c9c037,2024-07-30 23:49:09
+gpt-4-turbo-2024-04-09,one_word:oncology:de,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,3bcb654ee2e83905265a6286af815821,2024-07-30 23:47:52
+gpt-4-turbo-2024-04-09,one_word:oncology:en,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,1edd6afaaf938d3b152460300eecd34a,2024-07-30 23:46:12
+gpt-4-turbo-2024-04-09,regex:dermatology:de,"bei der behandlung von akne mit isotretinoin ist normalerweise keine begleitende medikamentöse therapie erforderlich es ist jedoch wichtig, auf eine ausreichende hautpflege zu achten und sonnenschutz zu verwenden, da isotretinoin die haut empfindlicher gegenüber uv-strahlung machen kannbei der behandlung von akne mit isotretinoin ist normalerweise keine begleitende medikamentöse therapie erforderlich es ist jedoch wichtig, auf eine ausreichende hautpflege zu achten und sonnenschutz zu verwenden, da isotretinoin die haut empfindlicher gegenüber uv-strahlung machen kannbei der behandlung von akne mit isotretinoin ist in der regel keine begleitende medikamentöse therapie erforderlich es ist jedoch wichtig, auf eine ausreichende hautpflege zu achten und sonnenschutz zu verwenden, da isotretinoin die haut empfindlicher gegenüber uv-strahlung machen kannbei der behandlung von akne mit isotretinoin ist normalerweise keine begleitende medikamentöse therapie erforderlich es ist jedoch wichtig, auf eine ausreichende hautpflege zu achten und sonnenschutz zu verwenden, da isotretinoin die haut empfindlicher gegenüber uv-strahlung machen kannbei der behandlung von akne mit isotretinoin ist in der regel keine begleitende medikamentöse therapie erforderlich es ist jedoch wichtig, auf eine ausreichende hautpflege zu achten und sonnenschutz zu verwenden, da isotretinoin die haut empfindlicher gegenüber uv-strahlung machen kann",kontrazeption|verhütung,Entire Answer Incorrect,1fc05019f7d29bc830bdc1fcc60d7305,2024-07-30 23:38:35
+gpt-4-turbo-2024-04-09,regex:dermatology:de,"die klinischen formen des basalzellkarzinoms umfassen:
+
+1 noduläres basalzellkarzinom
+2 superfizielles basalzellkarzinom
+3 pigmentiertes basalzellkarzinom
+4 sklerodermiformes basalzellkarzinom
+5 ulzeriertes basalzellkarzinom
+6 zystisches basalzellkarzinomdie klinischen formen des basalzellkarzinoms umfassen:
+
+1 noduläres basalzellkarzinom
+2 superfizielles basalzellkarzinom
+3 pigmentiertes basalzellkarzinom
+4 sklerodermiformes basalzellkarzinom
+5 ulzeriertes basalzellkarzinomdie klinischen formen des basalzellkarzinoms umfassen:
+
+1 noduläres basalzellkarzinom
+2 superfizielles basalzellkarzinom
+3 pigmentiertes basalzellkarzinom
+4 sklerodermiformes basalzellkarzinom
+5 ulzeriertes basalzellkarzinomdie klinischen formen des basalzellkarzinoms umfassen:
+
+1 noduläres basalzellkarzinom
+2 superfizielles basalzellkarzinom
+3 pigmentiertes basalzellkarzinom
+4 sklerodermiformes basalzellkarzinom
+5 ulzeriertes basalzellkarzinomdie klinischen formen des basalzellkarzinoms umfassen:
+
+1 noduläres basalzellkarzinom
+2 superfizielles basalzellkarzinom
+3 pigmentiertes basalzellkarzinom
+4 sklerodermiformes basalzellkarzinom
+5 ulzeriertes basalzellkarzinom",destruiert|destruierend,Entire Answer Incorrect,791d91c0e022e9c69df04de343437cc3,2024-07-30 23:39:39
+gpt-4-turbo-2024-04-09,regex:dermatology:de,"säuglinge, ältere menschen, personen mit geschwächtem immunsystem, menschen, die antibiotika oder kortikosteroide nehmen, und personen mit bestimmten medizinischen zuständen wie diabetes oder hiv/aidsmundsoor tritt häufig bei säuglingen, älteren menschen, personen mit geschwächtem immunsystem, diabetikern und menschen, die antibiotika oder kortikosteroide einnehmen, aufmundsoor tritt häufig bei säuglingen, älteren menschen, personen mit geschwächtem immunsystem, diabetikern und menschen, die antibiotika oder kortikosteroide einnehmen, aufmundsoor tritt häufig bei säuglingen, älteren menschen, personen mit geschwächtem immunsystem, diabetikern und menschen, die antibiotika oder kortikosteroide einnehmen, aufmundsoor tritt häufig bei säuglingen, älteren menschen, personen mit geschwächtem immunsystem, diabetikern und menschen, die antibiotika oder kortikosteroide einnehmen, auf",alte|ältere,Entire Answer Incorrect,aa20eb5b95b2e78e13538beb85263191,2024-07-30 23:40:13
+gpt-4-turbo-2024-04-09,regex:dermatology:en,"when administering isotretinoin for acne, concomitant drug therapy is generally not necessary however, it is important to avoid vitamin a supplements due to the risk of vitamin a toxicity additionally, the use of tetracycline antibiotics should be avoided as they can increase the risk of intracranial hypertensionwhen administering isotretinoin for acne, concomitant drug therapy often includes topical treatments such as benzoyl peroxide or clindamycin to manage potential bacterial overgrowth and inflammation additionally, corticosteroids may be used for severe flares it's important to avoid vitamin a supplements and tetracycline antibiotics due to increased risk of toxicity and intracranial hypertension, respectively always consult with a healthcare provider for personalized treatment planswhen administering isotretinoin for acne, concomitant drug therapy often includes topical treatments such as benzoyl peroxide or clindamycin to manage acne flares, especially during the initial phase of isotretinoin treatment additionally, corticosteroids may be used for severe flares it's important to avoid vitamin a supplements and tetracycline antibiotics due to the risk of increased side effects always consult with a healthcare provider for personalized recommendationswhen administering isotretinoin for acne, concomitant drug therapy typically includes topical treatments such as benzoyl peroxide or clindamycin to manage potential bacterial overgrowth and reduce the risk of antibiotic resistance additionally, moisturizers and sunscreens are recommended to manage the dry skin and photosensitivity caused by isotretinoinwhen administering isotretinoin for acne, concomitant drug therapy often includes topical treatments such as benzoyl peroxide or clindamycin to manage acne flares additionally, corticosteroids may be used for severe flares it's important to avoid vitamin a supplements and tetracycline antibiotics due to increased risk of toxicity and intracranial hypertension, respectively",contraception|prevention|contraceptive|contraceptiva,Entire Answer Incorrect,403b64ec6c32b29e709afc4cdcfa37e8,2024-07-30 23:41:38
+gpt-4-turbo-2024-04-09,regex:dermatology:en,"the clinical forms of basal cell carcinoma include nodular, superficial, morpheaform (sclerosing), pigmented, and ulcerative typesthe clinical forms of basal cell carcinoma include:
+
+1 nodular basal cell carcinoma
+2 superficial basal cell carcinoma
+3 morpheaform (sclerosing) basal cell carcinoma
+4 pigmented basal cell carcinoma
+5 ulcerative basal cell carcinomathe clinical forms of basal cell carcinoma include nodular, superficial, morpheaform (sclerosing), pigmented, and ulcerative typesthe clinical forms of basal cell carcinoma include nodular, superficial, morpheaform (sclerosing), pigmented, and ulcerative typesthe clinical forms of basal cell carcinoma include:
+
+1 nodular basal cell carcinoma
+2 superficial basal cell carcinoma
+3 morpheaform (sclerosing) basal cell carcinoma
+4 pigmented basal cell carcinoma
+5 ulcerative basal cell carcinoma",destroyed|destructed|destroying|destructive,Entire Answer Incorrect,a15e01513ce0aa1c860c80047ad4d1f7,2024-07-30 23:42:19
+gpt-4-turbo-2024-04-09,regex:dermatology:en,"oral thrush commonly affects infants, elderly people, individuals with weakened immune systems, people with diabetes, those taking antibiotics or corticosteroids, and individuals who wear denturesoral thrush commonly affects infants, elderly people, individuals with weakened immune systems, and those using steroids or antibioticsoral thrush commonly affects infants, elderly people, individuals with weakened immune systems, people with diabetes, those taking antibiotics or corticosteroids, and individuals who wear denturesoral thrush commonly affects infants, elderly people, individuals with weakened immune systems, people with diabetes, those taking antibiotics or corticosteroid medications, and individuals who wear denturesoral thrush commonly affects infants, elderly people, individuals with weakened immune systems, people with diabetes, those taking antibiotics or corticosteroid medications, and those who wear dentures",old|elder,Entire Answer Incorrect,5fd37e8df64240a554b231185a6c2769,2024-07-30 23:42:49
+gpt-4-turbo-2024-04-09,regex:eeg_data:de,"die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 differenz der amplituden
+2 differenz der phasen
+3 kohärenzunterschiededie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 differenz der amplituden
+2 differenz der phasen
+3 kohärenzunterschiededie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 differenz der amplituden
+2 differenz der phasen
+3 kohärenzunterschiededie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **differenz der amplituden**: berechnung der differenz der mittleren oder spitzenamplituden zwischen korrespondierenden elektroden auf gegenüberliegenden seiten des kopfes
+2 **asymmetrie-index (ai)**: berechnung eines indexes, der das verhältnis der aktivität zwischen zwei symmetrischen elektroden angibt, oft formuliert als (l - r) / (l + r), wobei l und r die amplituden oder leistungen der linken bzw rechten elektrode sind
+3 **kohärenz- oder phasendifferenz**: analyse der zeitlichen oder phasenbezogenen beziehung zwischen den signalen von elektrodenpaaren auf gegenüberliegenden seiten des kopfes, um unterschiede in der neuronalen synchronisation zu erfassendie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **differenz der amplituden**: berechnung der differenz der mittleren oder spitzenamplituden zwischen korrespondierenden elektroden auf gegenüberliegenden seiten des kopfes
+2 **asymmetrie-index (ai)**: berechnung eines indexes, der das verhältnis der aktivität zwischen zwei symmetrischen elektroden angibt, oft formuliert als (l - r) / (l + r), wobei l und r die amplituden oder leistungen der linken bzw rechten elektrode sind
+3 **kohärenz- oder phasendifferenz**: analyse der zeitlichen oder phasenbezogenen beziehung zwischen den signalen von elektrodenpaaren auf gegenüberliegenden seiten des kopfes, um unterschiede in der neuronalen synchronisation zu erfassendie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **differenz der amplituden**: berechnung der differenz der mittleren oder spitzenamplituden zwischen korrespondierenden elektroden auf gegenüberliegenden seiten des kopfes
+2 **asymmetrie-index (ai)**: berechnung eines indexes, der das verhältnis der aktivität zwischen zwei symmetrischen elektroden angibt, oft formuliert als (l - r) / (l + r), wobei l und r die amplituden oder leistungen der linken bzw rechten elektrode sind
+3 **kohärenz- oder phasendifferenz**: analyse der zeitlichen oder phasenbezogenen beziehung zwischen den signalen von elektrodenpaaren auf gegenüberliegenden seiten des kopfes, um unterschiede in der neuronalen synchronisation zu erfassendie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 differenz der amplituden
+2 differenz der phasen
+3 kohärenz (maß für die synchronisation zwischen den signalen zweier elektroden)die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 differenz der amplituden
+2 differenz der phasen
+3 kohärenz (maß für die synchronisation zwischen den signalen zweier elektroden)die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 differenz der amplituden
+2 differenz der phasen
+3 kohärenz (maß für die synchronisation zwischen den signalen zweier elektroden)die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 differenz der amplituden
+2 differenz der phasen
+3 kohärenz (maß für die synchronisation zwischen den signalen zweier elektroden)die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 differenz der amplituden
+2 differenz der phasen
+3 kohärenz (maß für die synchronisation zwischen den signalen zweier elektroden)die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 differenz der amplituden
+2 differenz der phasen
+3 kohärenz (maß für die synchronisation zwischen den signalen zweier elektroden)die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 differenz der amplituden
+2 differenz der leistungsspektren
+3 kohärenz oder phasenunterschiededie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 differenz der amplituden
+2 differenz der leistungsspektren
+3 kohärenz oder phasenunterschiededie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 differenz der amplituden
+2 differenz der leistungsspektren
+3 kohärenz oder phasenunterschiede",Coherence|Logarithmierte Differenz,Entire Answer Incorrect,65270f78b5a362b25c2eba10bf29fcd2,2024-07-30 23:44:19
+gpt-4-turbo-2024-04-09,regex:medication:de,"ja, die gleichzeitige einnahme von nsar mit kortikosteroiden oder antikoagulantien wie warfarin kann das risiko von magengeschwüren erhöhenja, die gleichzeitige einnahme von nsar mit kortikosteroiden oder antikoagulantien wie warfarin kann das risiko von magengeschwüren erhöhenja, die gleichzeitige einnahme von nsar mit kortikosteroiden (zb prednison) oder antikoagulantien (zb warfarin) kann das risiko von magengeschwüren erhöhenja, die gleichzeitige einnahme von nsar mit kortikosteroiden (zb prednison) oder antikoagulantien (zb warfarin) kann das risiko von magengeschwüren erhöhenja, die gleichzeitige einnahme von nsar mit kortikosteroiden (zb prednison) oder antikoagulantien (zb warfarin) kann das risiko von magengeschwüren erhöhenja, die gleichzeitige einnahme von nsar mit kortikosteroiden (zb prednison) oder antikoagulantien (zb warfarin) kann das risiko von magengeschwüren erhöhenja, die gleichzeitige einnahme von nsar mit kortikosteroiden oder antikoagulanzien wie warfarin kann das risiko von magengeschwüren erhöhen",SSRI|Antikoagulanzien,Entire Answer Incorrect,955aa256fa5e3c5d64c3da32e0e1a3e8,2024-07-30 23:29:06
+gpt-4-turbo-2024-04-09,regex:medication:de,"ja, die gleichzeitige einnahme von nsar mit kortikosteroiden oder antikoagulantien wie warfarin kann das risiko von magengeschwüren erhöhen es wird empfohlen, diese kombinationen zu vermeiden oder unter ärztlicher überwachung zu verwendenja, die gleichzeitige einnahme von nsar mit kortikosteroiden (zb prednison) oder antikoagulantien (zb warfarin) kann das risiko von magengeschwüren erhöhenja, die gleichzeitige einnahme von nsar mit kortikosteroiden (zb prednison) oder antikoagulantien (zb warfarin) kann das risiko von magengeschwüren erhöhen",A|n|t|i|k|o|a|g|u|l|a|n|z|i|e|n,Entire Answer Incorrect,9968b545d277c4a7d33d284b34848485,2024-07-30 23:50:50
+gpt-4-turbo-2024-04-09,regex:medication:de,"ibuprofen sollte nicht zusammen mit folgenden wirkstoffen eingenommen werden:
+
+1 **andere nsar (nichtsteroidale antirheumatika)** wie aspirin oder naproxen, da dies das risiko für magen-darm-probleme und nierenprobleme erhöhen kann
+2 **blutverdünner (antikoagulanzien)** wie warfarin, da dies das blutungsrisiko erhöhen kann
+3 **kortikosteroide** wie prednison, da dies das risiko für magen-darm-blutungen erhöhen kann
+4 **selektive serotonin-wiederaufnahmehemmer (ssris)** wie fluoxetin oder sertralin, da dies das risiko für magen-darm-blutungen erhöhen kann
+5 **ace-hemmer** wie lisinopril oder ramipril, da dies die nierenfunktion beeinträchtigen und die wirkung der blutdrucksenker verringern kann
+6 **diuretika** wie furosemid, da dies die nierenfunktion beeinträchtigen kann
+7 **lithium**, da ibuprofen die lithiumkonzentration im blut erhöhen und zu toxischen effekten führen kann
+
+es ist wichtig, vor der einnahme von ibuprofen mit einem arzt oder apotheker zu sprechen, besonders wenn andere medikamente regelmäßig verwendet werden",N|S|A|I|D,Entire Answer Incorrect,0a364b9e0c366c343122ee0d4d3c8b36,2024-07-30 23:51:50
+gpt-4-turbo-2024-04-09,regex:medication:en,"ibuprofen should not be taken with the following active substances:
+
+1 **other nsaids (nonsteroidal anti-inflammatory drugs)** - such as aspirin, naproxen, to avoid increased risk of gastrointestinal bleeding and other side effects
+
+2 **corticosteroids** - such as prednisone, which can increase the risk of gastrointestinal ulcers or bleeding
+
+3 **selective serotonin reuptake inhibitors (ssris)** - such as fluoxetine, sertraline, which can also increase the risk of gastrointestinal bleeding
+
+4 **anticoagulants** - such as warfarin, heparin, increasing the risk of bleeding
+
+5 **antiplatelet agents** - such as clopidogrel, which increase the risk of bleeding
+
+6 **ace inhibitors** - such as lisinopril, enalapril, which can reduce their effectiveness and increase the risk of kidney problems
+
+7 **angiotensin ii receptor blockers (arbs)** - such as losartan, valsartan, which can also reduce their effectiveness and increase the risk of kidney problems
+
+8 **diuretics** - such as furosemide, which can lead to kidney problems and alter the effectiveness of the diuretic
+
+9 **lithium** - as ibuprofen can increase lithium levels in the blood, leading to toxicity
+
+10 **methotrexate** - as ibuprofen can increase methotrexate levels and toxicity
+
+always consult a healthcare provider for personalized advice and to manage potential drug interactionsibuprofen should not be taken with the following active substances:
+
+1 **other nsaids (nonsteroidal anti-inflammatory drugs)** - such as aspirin, naproxen, to avoid increased risk of gastrointestinal bleeding and other side effects
+
+2 **corticosteroids** - such as prednisone, which can increase the risk of gastrointestinal ulcers or bleeding
+
+3 **selective serotonin reuptake inhibitors (ssris)** - such as fluoxetine, sertraline, which can also increase the risk of gastrointestinal bleeding
+
+4 **anticoagulants** - such as warfarin, heparin, increasing the risk of bleeding
+
+5 **antiplatelet agents** - such as clopidogrel, which increase the risk of bleeding
+
+6 **ace inhibitors** - such as lisinopril, enalapril, which can reduce their effectiveness and increase the risk of kidney problems
+
+7 **angiotensin ii receptor blockers (arbs)** - such as losartan, valsartan, which can also reduce their effectiveness and increase the risk of kidney problems
+
+8 **diuretics** - can reduce the effectiveness of diuretics and increase the risk of kidney failure
+
+9 **lithium** - can increase lithium levels, leading to increased side effects
+
+10 **methotrexate** - can increase methotrexate levels, leading to toxicity
+
+always consult a healthcare provider for advice tailored to your specific circumstancesibuprofen should not be taken with the following active substances:
+
+1 **other nsaids (nonsteroidal anti-inflammatory drugs)** - such as aspirin, naproxen, to avoid increased risk of gastrointestinal bleeding and other side effects
+
+2 **corticosteroids** - such as prednisone, which can increase the risk of gastrointestinal ulcers or bleeding
+
+3 **selective serotonin reuptake inhibitors (ssris)** - such as fluoxetine, sertraline, which can also increase the risk of gastrointestinal bleeding
+
+4 **anticoagulants** - such as warfarin, heparin, increasing the risk of bleeding
+
+5 **antiplatelet agents** - such as clopidogrel, which increase the risk of bleeding
+
+6 **ace inhibitors** - such as lisinopril, enalapril, which can reduce their effectiveness and increase the risk of kidney problems
+
+7 **diuretics** - such as furosemide, which can lead to reduced effectiveness of the diuretic and increased risk of kidney issues
+
+8 **lithium** - ibuprofen can increase lithium levels in the blood, leading to lithium toxicity
+
+9 **methotrexate** - ibuprofen can increase methotrexate levels, potentially leading to toxicity
+
+always consult with a healthcare provider for personalized advice and to manage potential drug interactionsibuprofen should not be taken with the following active substances:
+
+1 **other nsaids (nonsteroidal anti-inflammatory drugs)** - such as aspirin, naproxen, because it increases the risk of gastrointestinal bleeding
+
+2 **corticosteroids** - such as prednisone, which can also increase the risk of gastrointestinal ulcers or bleeding
+
+3 **anticoagulants** - such as warfarin, heparin, as ibuprofen can enhance their effects and increase bleeding risk
+
+4 **antiplatelet agents** - such as clopidogrel, which can increase the risk of bleeding
+
+5 **selective serotonin reuptake inhibitors (ssris)** - such as fluoxetine, sertraline, which can increase the risk of gastrointestinal bleeding
+
+6 **ace inhibitors** - such as lisinopril, enalapril, which can reduce their effectiveness and worsen kidney function
+
+7 **diuretics** - such as furosemide, hydrochlorothiazide, can reduce their effectiveness and increase the risk of kidney problems
+
+8 **lithium** - ibuprofen can increase lithium levels in the blood, potentially leading to toxicity
+
+9 **methotrexate** - ibuprofen can increase methotrexate levels, potentially leading to toxicity
+
+10 **cyclosporine** - increases the risk of nephrotoxicity
+
+it's important to consult with a healthcare provider before combining ibuprofen with these or other medicationsibuprofen should not be taken with the following active substances:
+
+1 **other nsaids (nonsteroidal anti-inflammatory drugs)** - such as aspirin, naproxen, to avoid increased risk of gastrointestinal bleeding and other side effects
+
+2 **corticosteroids** - such as prednisone, which can increase the risk of gastrointestinal ulcers or bleeding
+
+3 **selective serotonin reuptake inhibitors (ssris)** - such as fluoxetine, sertraline, which can also increase the risk of gastrointestinal bleeding
+
+4 **anticoagulants** - such as warfarin, heparin, increasing the risk of bleeding
+
+5 **antiplatelet agents** - such as clopidogrel, which increase the risk of bleeding
+
+6 **ace inhibitors** - such as lisinopril, enalapril, which can reduce their effectiveness and increase the risk of kidney problems
+
+7 **angiotensin ii receptor blockers (arbs)** - such as losartan, valsartan, which can also reduce their effectiveness and increase the risk of kidney problems
+
+8 **diuretics** - such as furosemide, which can lead to reduced effectiveness of diuretics and increased risk of kidney issues
+
+9 **lithium** - can increase lithium levels, leading to toxicity
+
+10 **methotrexate** - can increase methotrexate levels, leading to toxicity
+
+11 **cyclosporine** - increases the risk of nephrotoxicity
+
+12 **tacrolimus** - increases the risk of nephrotoxicity
+
+13 **digoxin** - can increase digoxin levels, leading to toxicity
+
+it's important to consult with a healthcare provider before combining ibuprofen with these or other medications",N|S|A|I|D,Entire Answer Incorrect,662d96ab02c1d2010d7a6361246babe4,2024-07-30 23:49:59
+gpt-4-turbo-2024-04-09,regex:mental_disorders:de,"restriktive anorexie zeichnet sich durch eine starke einschränkung der nahrungsaufnahme und ein intensives kontrollverhalten bezüglich der art und menge der verzehrten lebensmittel aus, um gewicht zu verlieren oder eine gewichtszunahme zu vermeiden",mehr|sport|bewegung|gewichtsverlust|untergewicht,Entire Answer Incorrect,6902bf072a74fade65945a330eeb6663,2024-07-30 23:30:58
+gpt-4-turbo-2024-04-09,regex:mental_disorders:de,stressbelastungstressbelastungstressbelastungstressbelastungstressbelastung,anstrengung|anspannung,Entire Answer Incorrect,1aa124a216281e7e6de1743acee1e9c3,2024-07-30 23:31:05
+gpt-4-turbo-2024-04-09,regex:mental_disorders:de,psychotherapie und medikamentöse behandlung (antidepressiva)psychotherapie und medikamentöse behandlung (antidepressiva)psychotherapie und medikamentöse behandlungpsychotherapie und medikamentöse behandlung (antidepressiva)psychotherapie und medikamentöse behandlung (antidepressiva),Medikamente|Medikamentöse Therapie,Entire Answer Incorrect,e0230780fc2f734848fe7c804c4aff01,2024-07-30 23:31:41
+gpt-4-turbo-2024-04-09,regex:mental_disorders:de,die dissoziative identitätsstörung ist im icd-11 unter den dissoziativen störungen klassifiziertdie dissoziative identitätsstörung ist im icd-11 unter den dissoziativen störungen klassifiziertdie dissoziative identitätsstörung ist im icd-11 unter den dissoziativen störungen klassifiziertdie dissoziative identitätsstörung ist im icd-11 unter den dissoziativen störungen klassifiziertdie dissoziative identitätsstörung ist im icd-11 unter den dissoziativen störungen klassifiziert,konversionsstörungen|konversion,Entire Answer Incorrect,4c3ecd657bbb3e27310ccbf4fd764373,2024-07-30 23:32:10
+gpt-4-turbo-2024-04-09,regex:mental_disorders:en,the continuation phase follows the acute mania phase in therapythe continuation phase follows the acute mania phase in therapythe continuation phase follows the acute mania phase in therapythe continuation phase follows the acute mania phase in therapythe continuation phase follows the acute mania phase in therapy,therapy|phase,Entire Answer Incorrect,1c2f31edc1a455696900d2c2dcc5eae1,2024-07-30 23:34:25
+gpt-4-turbo-2024-04-09,regex:mental_disorders:en,"the two most commonly used treatment methods for social phobia are cognitive-behavioral therapy (cbt) and medication, typically selective serotonin reuptake inhibitors (ssris)the two most commonly used treatment methods for social phobia are cognitive-behavioral therapy (cbt) and medication, particularly selective serotonin reuptake inhibitors (ssris)the two most commonly used treatment methods for social phobia are cognitive-behavioral therapy (cbt) and medication, typically selective serotonin reuptake inhibitors (ssris)the two most commonly used treatment methods for social phobia are cognitive-behavioral therapy (cbt) and medication, particularly selective serotonin reuptake inhibitors (ssris)the two most commonly used treatment methods for social phobia are cognitive-behavioral therapy (cbt) and medication, particularly selective serotonin reuptake inhibitors (ssris)",medication|drug|drug therapy,Entire Answer Incorrect,b50c5cdcdbffe0f67717f142569087fb,2024-07-30 23:34:39
+gpt-4-turbo-2024-04-09,regex:mental_disorders:en,"in icd-11, dissociative identity disorder falls under the category of ""dissociative disorders""in icd-11, dissociative identity disorder falls under ""dissociative disorders""in icd-11, dissociative identity disorder falls under the category of ""dissociative disorders""in icd-11, dissociative identity disorder falls under ""dissociative disorders""in icd-11, dissociative identity disorder falls under ""dissociative disorders""",conversion disorders|conversion,Entire Answer Incorrect,d2107d493a89fb18b06ed6743f6b1b14,2024-07-30 23:35:09
+gpt-4-turbo-2024-04-09,short_words:emergency:en,"rest, ice, compression, elevation","Rest, Ice, Compression, Elevation",Case Sensitivity,124d00c899a1266d33e0572a5eaf579a,2024-07-30 23:28:50
 gpt-4o-2024-05-13,dichotomous:biochemistry:en,yes,no,Other,710c11b68f99087ee79c398c65ca9215,2024-06-18 18:26:26
 gpt-4o-2024-05-13,dichotomous:cardiology:de,ja,nein,Other,c271320748d103b55ce9ac1cae4f08c4,2024-06-18 18:19:01
 gpt-4o-2024-05-13,dichotomous:cardiology:de,nein,ja,Other,5fc10a4ce23c7080ddfc05ea71cb1c54,2024-06-18 18:19:04
@@ -1733,6 +2012,369 @@ gpt-4o-2024-05-13,single_choice:emergency:en,(c),c,Partial Match / case Sensitiv
 gpt-4o-2024-05-13,single_choice:math:de,c,d,Other,bb370b3741955fcc0e14291a4e28dae1,2024-06-18 18:17:57
 gpt-4o-2024-05-13,single_choice:math:en,d,b,Other,74d5f89b1340bdfd51c6915c484fae53,2024-06-18 18:18:31
 gpt-4o-2024-05-13,single_choice:oncology:en,b,a,Other,635cbb8bb672865d7da35df2772c56da,2024-06-18 18:24:59
+gpt-4o-mini-2024-07-18,dichotomous:biochemistry:de,ja,nein,Other,a077c65c160ec20d3f631b44e709d753,2024-07-31 00:25:44
+gpt-4o-mini-2024-07-18,dichotomous:biochemistry:en,yes,no,Other,710c11b68f99087ee79c398c65ca9215,2024-07-31 01:43:19
+gpt-4o-mini-2024-07-18,dichotomous:cardiology:de,ja,nein,Other,c271320748d103b55ce9ac1cae4f08c4,2024-07-31 00:23:35
+gpt-4o-mini-2024-07-18,dichotomous:cardiology:de,nein,ja,Other,5fc10a4ce23c7080ddfc05ea71cb1c54,2024-07-31 00:23:39
+gpt-4o-mini-2024-07-18,dichotomous:cardiology:de,ja,nein,Other,8be042746e07e632b5cb62b2d6627023,2024-07-31 00:23:42
+gpt-4o-mini-2024-07-18,dichotomous:cardiology:de,mann,Mann,Case Sensitivity,e825d5741f4dbc5c6586a50bdafe17a5,2024-07-31 00:23:48
+gpt-4o-mini-2024-07-18,dichotomous:cardiology:en,men,Men,Case Sensitivity,1a9f9fea0c4cb9aa2476fb76317ff471,2024-07-31 00:24:18
+gpt-4o-mini-2024-07-18,dichotomous:cardiology:en,no,yes,Other,b710df83a48c05873b0dbac03a3bef90,2024-07-31 00:24:21
+gpt-4o-mini-2024-07-18,dichotomous:dermatology:de,ja,nein,Other,32cf33685a9e00909d6d16a9b7bde20f,2024-07-31 00:25:00
+gpt-4o-mini-2024-07-18,dichotomous:dermatology:en,yes,no,Other,3f185e0a1089b6484420e1c6fdffc1a4,2024-07-31 00:27:12
+gpt-4o-mini-2024-07-18,dichotomous:emergency:de,ja,nein,Other,d743e53ea6e4dc3c5d2bf75f9f303f98,2024-07-31 01:51:19
+gpt-4o-mini-2024-07-18,dichotomous:emergency:en,no,yes,Other,17e0f19ccbbcf0bfba6f30d8ce573421,2024-07-31 01:52:12
+gpt-4o-mini-2024-07-18,dichotomous:medication:de,ja,nein,Other,dfb3c7a3687c1d2c57d158bdc5a3cffd,2024-07-31 01:43:13
+gpt-4o-mini-2024-07-18,dichotomous:medication:en,yes,no,Other,004a6d5c21e84d978ac7b807e5a265a9,2024-07-31 01:42:20
+gpt-4o-mini-2024-07-18,dichotomous:medication:en,yes,no,Other,43fe3c10aca393d174422996a21f8d88,2024-07-31 01:42:26
+gpt-4o-mini-2024-07-18,dichotomous:mental_disorders:de,ja,nein,Other,ae14302fc8e54ce6a36cb4561a19744d,2024-07-31 00:19:07
+gpt-4o-mini-2024-07-18,dichotomous:mental_disorders:de,ja,nein,Other,986bface7636d49099e787fa45bf8d5c,2024-07-31 00:19:21
+gpt-4o-mini-2024-07-18,dichotomous:mental_disorders:de,nein,ja,Other,ef65b863f8110a2d1134da59d96f9099,2024-07-31 00:19:28
+gpt-4o-mini-2024-07-18,dichotomous:mental_disorders:en,yes,no,Other,b2ab8ea86e24e799101e3d4bc8864fed,2024-07-31 00:21:32
+gpt-4o-mini-2024-07-18,dichotomous:mental_disorders:en,yes,no,Other,7aea18e5c48cc5fc40e0af3016c2c36f,2024-07-31 00:21:46
+gpt-4o-mini-2024-07-18,dichotomous:mental_disorders:en,yes,no,Other,87eef24cb37bc2b5a1f895615087f06c,2024-07-31 00:21:48
+gpt-4o-mini-2024-07-18,dichotomous:mental_disorders:en,no,yes,Other,42d5b9049be0a02afef7eff9430134ce,2024-07-31 00:21:52
+gpt-4o-mini-2024-07-18,dichotomous:mental_disorders:en,yes,no,Other,80d089e429b5da675799376b8ab45730,2024-07-31 00:22:02
+gpt-4o-mini-2024-07-18,dichotomous:physiology:de,ja,nein,Other,518ac2973fba63e0f949bfc9ba180075,2024-07-31 00:28:25
+gpt-4o-mini-2024-07-18,dichotomous:physiology:en,yes,no,Other,d85e27cf5f44aa37ed756a1dc8c307bf,2024-07-31 00:19:15
+gpt-4o-mini-2024-07-18,multiple_choice:dermatology:de,"a,b,c,d","a,b,c,d,e",Partial Match,b7aa7b8d4cddd70090bdfe60832ac9de,2024-07-31 00:25:36
+gpt-4o-mini-2024-07-18,multiple_choice:mental_disorders:de,"d, e, f","d,e,f",Format Error,da34c39cd52df137b216ebf9539f454d,2024-07-31 00:19:49
+gpt-4o-mini-2024-07-18,one_word:emergency:de,atemwege,Atemwege,Case Sensitivity,96700b2075099ccecf9fdea9c50df894,2024-07-31 01:51:50
+gpt-4o-mini-2024-07-18,one_word:emergency:de,sauerstoffreiches,Sauerstoffreiches,Case Sensitivity,8ff560765b068093a632aee039c96175,2024-07-31 01:51:53
+gpt-4o-mini-2024-07-18,one_word:medication:de,grapefruit,Grapefruit,Case Sensitivity,9808ac596ca95d5b92c5f11e2b5826d1,2024-07-31 01:43:31
+gpt-4o-mini-2024-07-18,one_word:medication:en,grapefruit,Grapefruit,Case Sensitivity,9fff21dadf380e58fff7cfeb8a43086d,2024-07-31 01:42:46
+gpt-4o-mini-2024-07-18,one_word:oncology:de,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,3bcb654ee2e83905265a6286af815821,2024-07-31 01:42:08
+gpt-4o-mini-2024-07-18,one_word:oncology:en,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,1edd6afaaf938d3b152460300eecd34a,2024-07-31 01:41:34
+gpt-4o-mini-2024-07-18,regex:dermatology:de,"bei der gabe von isotretinoin ist in der regel eine begleitende therapie mit einem oralen kontrazeptivum für frauen erforderlich, um das risiko von schwangerschaften zu vermeiden, da isotretinoin teratogen ist zudem können in einigen fällen antibiotika zur behandlung von entzündlicher akne eingesetzt werden, jedoch sollte die kombination mit isotretinoin sorgfältig abgewogen werdenbei der gabe von isotretinoin ist eine begleitende therapie mit einem oralen kontrazeptivum für frauen empfohlen, um das risiko von schwangerschaften zu vermeiden zudem können bei bedarf topische antibiotika oder andere unterstützende maßnahmen eingesetzt werdenbei der gabe von isotretinoin ist in der regel eine begleitende therapie mit einem oralen kontrazeptivum für frauen erforderlich, um das risiko von schwangerschaften zu vermeiden zudem können bei bedarf topische antibiotika oder andere unterstützende maßnahmen eingesetzt werdenbei der gabe von isotretinoin ist in der regel eine begleitende therapie mit einem oralen kontrazeptivum bei frauen erforderlich, um eine schwangerschaft zu verhindern, da isotretinoin teratogen ist zudem können in einigen fällen auch antibiotika zur behandlung von entzündlicher akne eingesetzt werden, jedoch sollte dies individuell entschieden werdenbei der gabe von isotretinoin ist eine begleitende therapie mit einem oralen kontrazeptivum für frauen empfohlen, um das risiko von schwangerschaften zu vermeiden zudem können bei bedarf topische antibiotika oder entzündungshemmende mittel eingesetzt werden",kontrazeption|verhütung,Entire Answer Incorrect,1fc05019f7d29bc830bdc1fcc60d7305,2024-07-31 00:26:10
+gpt-4o-mini-2024-07-18,regex:dermatology:de,"die klinischen formen des basalzellkarzinoms sind:
+
+1 noduläres basalzellkarzinom
+2 oberflächliches basalzellkarzinom
+3 morpheaformes (sklerodermiformes) basalzellkarzinom
+4 pigmentiertes basalzellkarzinom
+5 zystisches basalzellkarzinom
+6 basalzellkarzinom mit peripherer palisadierter zellschicht
+
+diese formen unterscheiden sich in ihrem erscheinungsbild und verhaltendie klinischen formen des basalzellkarzinoms sind:
+
+1 noduläres basalzellkarzinom
+2 oberflächliches basalzellkarzinom
+3 morpheaformes (sklerodermiformes) basalzellkarzinom
+4 pigmentiertes basalzellkarzinom
+5 zystisches basalzellkarzinom
+6 basalzellkarzinom mit peripherer palisadierter zellschicht
+
+diese formen unterscheiden sich in ihrem erscheinungsbild und verhaltendie klinischen formen des basalzellkarzinoms sind:
+
+1 noduläres basalzellkarzinom
+2 oberflächliches basalzellkarzinom
+3 morpheaformes (sklerodermiformes) basalzellkarzinom
+4 pigmentiertes basalzellkarzinom
+5 zystisches basalzellkarzinom
+6 basalzellkarzinom mit peripherer palisadierter zellschicht
+
+diese formen unterscheiden sich in ihrem erscheinungsbild und verhaltendie klinischen formen des basalzellkarzinoms sind:
+
+1 noduläres basalzellkarzinom
+2 oberflächliches basalzellkarzinom
+3 morpheaformes (sklerodermiformes) basalzellkarzinom
+4 pigmentiertes basalzellkarzinom
+5 zystisches basalzellkarzinom
+6 basalzellkarzinom mit peripherer palisadierter zellschicht
+
+diese formen unterscheiden sich in ihrem erscheinungsbild und verhaltendie klinischen formen des basalzellkarzinoms sind:
+
+1 noduläres basalzellkarzinom
+2 oberflächliches basalzellkarzinom
+3 sklerodermiformes basalzellkarzinom
+4 pigmentiertes basalzellkarzinom
+5 morpheaformes basalzellkarzinom
+6 basalzellkarzinom mit peripherer ulzeration
+
+diese formen unterscheiden sich in ihrem erscheinungsbild und verhaltendie klinischen formen des basalzellkarzinoms sind:
+
+1 noduläres basalzellkarzinom
+2 oberflächliches basalzellkarzinom
+3 sklerodermiformes basalzellkarzinom
+4 pigmentiertes basalzellkarzinom
+5 morpheaformes basalzellkarzinom
+6 basalzellkarzinom mit peripherer ulzeration
+
+diese formen unterscheiden sich in ihrem erscheinungsbild und verhaltendie klinischen formen des basalzellkarzinoms sind:
+
+1 noduläres basalzellkarzinom
+2 oberflächliches basalzellkarzinom
+3 sklerodermiformes basalzellkarzinom
+4 pigmentiertes basalzellkarzinom
+5 morpheaformes basalzellkarzinom
+6 basalzellkarzinom mit peripherer ulzeration
+
+diese formen unterscheiden sich in ihrem erscheinungsbild und verhaltendie klinischen formen des basalzellkarzinoms sind:
+
+1 noduläres basalzellkarzinom
+2 oberflächliches basalzellkarzinom
+3 sklerodermiformes basalzellkarzinom
+4 pigmentiertes basalzellkarzinom
+5 morpheaformes basalzellkarzinom
+6 basalzellkarzinom mit peripherer ulzeration
+
+diese formen unterscheiden sich in ihrem erscheinungsbild und verhaltendie klinischen formen des basalzellkarzinoms sind:
+
+1 noduläres basalzellkarzinom
+2 oberflächliches basalzellkarzinom
+3 morpheaformes (sklerodermiformes) basalzellkarzinom
+4 pigmentiertes basalzellkarzinom
+5 zystisches basalzellkarzinom
+6 basalzellkarzinom mit peripherer palisadierter zellschicht
+
+diese formen unterscheiden sich in ihrem erscheinungsbild und verhaltendie klinischen formen des basalzellkarzinoms sind:
+
+1 noduläres basalzellkarzinom
+2 oberflächliches basalzellkarzinom
+3 morpheaformes (sklerodermiformes) basalzellkarzinom
+4 pigmentiertes basalzellkarzinom
+5 zystisches basalzellkarzinom
+6 basalzellkarzinom mit peripherer palisadierter zellschicht
+
+diese formen unterscheiden sich in ihrem erscheinungsbild und verhalten",destruiert|destruierend,Entire Answer Incorrect,791d91c0e022e9c69df04de343437cc3,2024-07-31 00:26:39
+gpt-4o-mini-2024-07-18,regex:dermatology:de,"mundsoor betrifft häufig säuglinge, ältere menschen, personen mit geschwächtem immunsystem und solche, die antibiotika oder kortikosteroide einnehmenmundsoor betrifft häufig säuglinge, ältere menschen, personen mit geschwächtem immunsystem und menschen, die antibiotika oder kortikosteroide einnehmenmundsoor betrifft häufig säuglinge, ältere menschen, personen mit geschwächtem immunsystem und solche, die antibiotika oder kortikosteroide einnehmenmundsoor betrifft häufig säuglinge, ältere menschen, personen mit geschwächtem immunsystem und menschen, die antibiotika oder kortikosteroide einnehmenmundsoor betrifft häufig säuglinge, ältere menschen, personen mit geschwächtem immunsystem und solche, die antibiotika oder kortikosteroide einnehmen",alte|ältere,Entire Answer Incorrect,aa20eb5b95b2e78e13538beb85263191,2024-07-31 00:27:03
+gpt-4o-mini-2024-07-18,regex:dermatology:en,"concomitant drug therapy for acne when administering isotretinoin typically includes a topical antibiotic, such as clindamycin or erythromycin, to reduce the risk of bacterial resistance and manage inflammation however, it's essential to consult a healthcare provider for personalized recommendationsconcomitant drug therapy for acne when administering isotretinoin typically includes a topical antibiotic, such as clindamycin or erythromycin, to reduce the risk of bacterial resistance and manage inflammation however, it's essential to consult a healthcare provider for personalized recommendationsconcomitant drug therapy for acne when administering isotretinoin typically includes a topical antibiotic, such as clindamycin or erythromycin, to reduce the risk of bacterial resistance and manage inflammation however, it's essential to consult a healthcare provider for personalized recommendations",contraception|prevention|contraceptive|contraceptiva,Entire Answer Incorrect,403b64ec6c32b29e709afc4cdcfa37e8,2024-07-31 00:28:14
+gpt-4o-mini-2024-07-18,regex:dermatology:en,"the clinical forms of basal cell carcinoma (bcc) include:
+
+1 nodular bcc
+2 superficial bcc
+3 morpheaform (sclerosing) bcc
+4 pigmented bcc
+5 basosquamous carcinoma
+6 fibroepithelial bcc
+
+each type has distinct characteristics and appearancesthe clinical forms of basal cell carcinoma (bcc) include:
+
+1 nodular bcc
+2 superficial bcc
+3 morpheaform (sclerosing) bcc
+4 pigmented bcc
+5 basosquamous carcinoma
+6 fibroepithelial bcc
+
+each type has distinct characteristics and appearancesthe clinical forms of basal cell carcinoma (bcc) include:
+
+1 nodular bcc
+2 superficial bcc
+3 morpheaform (sclerosing) bcc
+4 pigmented bcc
+5 basosquamous carcinoma
+
+each type has distinct characteristics and appearancesthe clinical forms of basal cell carcinoma (bcc) include:
+
+1 nodular bcc
+2 superficial bcc
+3 morpheaform (sclerosing) bcc
+4 pigmented bcc
+5 basosquamous carcinoma
+
+each type has distinct characteristics and appearancesthe clinical forms of basal cell carcinoma (bcc) include:
+
+1 nodular bcc
+2 superficial bcc
+3 morpheaform (sclerosing) bcc
+4 pigmented bcc
+5 basosquamous carcinoma
+6 fibroepithelial bcc
+
+each type has distinct characteristics and appearancesthe clinical forms of basal cell carcinoma (bcc) include:
+
+1 nodular bcc
+2 superficial bcc
+3 morpheaform (sclerosing) bcc
+4 pigmented bcc
+5 basosquamous carcinoma
+6 fibroepithelial bcc
+
+each type has distinct characteristics and appearancesthe clinical forms of basal cell carcinoma (bcc) include:
+
+1 nodular bcc
+2 superficial bcc
+3 morpheaform (sclerosing) bcc
+4 pigmented bcc
+5 basosquamous carcinoma
+6 fibroepithelial bcc
+
+each type has distinct characteristics and appearancesthe clinical forms of basal cell carcinoma (bcc) include:
+
+1 nodular bcc
+2 superficial bcc
+3 morpheaform (sclerosing) bcc
+4 pigmented bcc
+5 basosquamous carcinoma
+6 fibroepithelial bcc
+
+each type has distinct characteristics and appearancesthe clinical forms of basal cell carcinoma (bcc) include:
+
+1 nodular bcc
+2 superficial bcc
+3 morpheaform (sclerosing) bcc
+4 pigmented bcc
+5 basosquamous carcinoma
+
+each type has distinct characteristics and appearancesthe clinical forms of basal cell carcinoma (bcc) include:
+
+1 nodular bcc
+2 superficial bcc
+3 morpheaform (sclerosing) bcc
+4 pigmented bcc
+5 basosquamous carcinoma
+
+each type has distinct characteristics and appearances",destroyed|destructed|destroying|destructive,Entire Answer Incorrect,a15e01513ce0aa1c860c80047ad4d1f7,2024-07-31 00:28:39
+gpt-4o-mini-2024-07-18,regex:dermatology:en,"oral thrush often affects infants, older adults, individuals with weakened immune systems, and those using certain medications like antibiotics or corticosteroidsoral thrush often affects infants, older adults, individuals with weakened immune systems, and those using certain medications like antibiotics or corticosteroidsoral thrush often affects infants, older adults, individuals with weakened immune systems, and those using certain medications like antibiotics or corticosteroidsoral thrush often affects infants, older adults, individuals with weakened immune systems, and those using certain medications like antibiotics or corticosteroidsoral thrush often affects infants, older adults, individuals with weakened immune systems, and those using certain medications like antibiotics or corticosteroids",old|elder,Entire Answer Incorrect,5fd37e8df64240a554b231185a6c2769,2024-07-31 00:28:59
+gpt-4o-mini-2024-07-18,regex:eeg_data:de,"die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **differenzmethode**: berechnung der differenz zwischen den spannungen der elektrodenpaare
+2 **asymmetrieindex**: verhältnis oder quotient der spannungen der elektrodenpaare
+3 **z-transformation**: standardisierung der differenzen zur berechnung der asymmetrie in bezug auf die standardabweichungdie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **differenzmethode**: berechnung der differenz zwischen den spannungen der elektrodenpaare
+2 **asymmetrieindex**: verhältnis oder quotient der spannungen der elektrodenpaare
+3 **z-transformation**: standardisierung der differenzen zur berechnung der asymmetrie in bezug auf die standardabweichungdie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **differenzmethode**: berechnung der differenz zwischen den spannungen der elektrodenpaare
+2 **asymmetrieindex**: verhältnis oder quotient der spannungen der elektrodenpaare
+3 **z-transformation**: standardisierung der differenzen zur berechnung der asymmetrie in bezug auf die standardabweichungdie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **differenzmethode**: berechnung der differenz zwischen den spannungen der elektrodenpaare
+2 **asymmetrieindex**: verhältnis oder quotient der spannungen der elektrodenpaare
+3 **z-transformation**: standardisierung der differenzen zur berechnung der asymmetrie in bezug auf die standardabweichungdie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **differenzmethode**: berechnung der differenz zwischen den spannungen der elektrodenpaare
+2 **asymmetrieindex**: verhältnis oder quotient der spannungen der elektrodenpaare
+3 **z-transformation**: standardisierung der differenzen zur berechnung der asymmetrie in bezug auf die standardabweichungdie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **differenzmethode**: berechnung der differenz zwischen den spannungen der elektrodenpaare
+2 **asymmetrieindex**: verhältnis oder quotient der spannungen der elektrodenpaare
+3 **z-transformation**: standardisierung der differenzen zur berechnung der asymmetrie in bezug auf die standardabweichungdie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **differenzmethode**: berechnung der differenz zwischen den spannungen der elektrodenpaare
+2 **asymmetrieindex**: verhältnis oder quotient der spannungen der elektrodenpaare
+3 **z-transformation**: standardisierung der differenzen zur berechnung der asymmetrie in bezug auf die standardabweichungdie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **differenzmethode**: berechnung der differenz zwischen den spannungen der elektrodenpaare
+2 **asymmetrieindex**: verhältnis oder quotient der spannungen der elektrodenpaare
+3 **z-transformation**: standardisierung der differenzen zur berechnung der asymmetrie in bezug auf die standardabweichungdie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **differenzmethode**: berechnung der differenz zwischen den spannungen der elektrodenpaare
+2 **asymmetrieindex**: verhältnis oder quotient der spannungen der elektrodenpaare
+3 **z-transformation**: standardisierung der differenzen zur berechnung der asymmetrie in bezug auf die standardabweichungdie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **differenzmethode**: berechnung der differenz zwischen den spannungen der elektrodenpaare
+2 **asymmetrieindex**: verhältnis oder differenz der aktivität zwischen linken und rechten hemisphären, oft normiert
+3 **logarithmische transformation**: verwendung des logarithmus der ratio der aktivität zwischen den elektrodenpaaren zur reduzierung von verzerrungendie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **differenzmethode**: berechnung der differenz zwischen den spannungen der elektrodenpaare
+2 **asymmetrieindex**: verhältnis oder differenz der aktivität zwischen linken und rechten hemisphären, oft normiert
+3 **logarithmische transformation**: verwendung des logarithmus der ratio der aktivität zwischen den elektrodenpaaren zur reduzierung von verzerrungendie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **differenzmethode**: berechnung der differenz zwischen den spannungen der elektrodenpaare
+2 **asymmetrieindex**: verhältnis oder differenz der aktivität zwischen linken und rechten hemisphären, oft normiert
+3 **logarithmische transformation**: verwendung des logarithmus der ratio der aktivität zwischen den elektrodenpaaren zur reduzierung von verzerrungen1 **asymmetrieindex (ai)**: berechnung der differenz der eeg-amplituden zwischen zwei elektroden, oft normiert durch die summe
+2 **relative power**: vergleich der leistung in bestimmten frequenzbändern (zb alpha, beta) zwischen den elektroden
+3 **z-scores**: standardisierung der eeg-werte, um die abweichung zwischen den elektroden zu quantifizieren1 **asymmetrieindex (ai)**: berechnung der differenz der eeg-amplituden zwischen zwei elektroden, oft normiert durch die summe
+2 **relative power**: vergleich der leistung in bestimmten frequenzbändern (zb alpha, beta) zwischen den elektroden
+3 **z-scores**: standardisierung der eeg-werte, um die abweichung zwischen den elektroden zu quantifizieren1 **asymmetrieindex (ai)**: berechnung der differenz der eeg-amplituden zwischen zwei elektroden, oft normiert durch die summe
+2 **relative power**: vergleich der leistung in bestimmten frequenzbändern (zb alpha, beta) zwischen den elektroden
+3 **z-scores**: standardisierung der eeg-werte, um die abweichung zwischen den elektroden zu quantifizieren",Coherence|Logarithmierte Differenz,Entire Answer Incorrect,65270f78b5a362b25c2eba10bf29fcd2,2024-07-31 00:31:08
+gpt-4o-mini-2024-07-18,regex:medication:de,"ibuprofen sollte nicht zusammen mit folgenden wirkstoffen eingenommen werden:
+
+1 andere nichtsteroidale antirheumatika (nsar)
+2 antikoagulanzien (zb warfarin)
+3 kortikosteroide
+4 lithium
+5 diuretika (zb furosemid)
+6 ace-hemmer und angiotensin-ii-rezeptorblocker
+
+es ist wichtig, vor der einnahme rücksprache mit einem arzt oder apotheker zu haltenibuprofen sollte nicht zusammen mit folgenden wirkstoffen eingenommen werden:
+
+1 antikoagulanzien (zb warfarin)
+2 andere nsaids (zb aspirin, diclofenac)
+3 kortikosteroide (zb prednison)
+4 lithium
+5 diuretika (zb furosemid)
+6 ace-hemmer (zb enalapril)
+
+es ist wichtig, vor der einnahme rücksprache mit einem arzt oder apotheker zu haltenibuprofen sollte nicht zusammen mit folgenden wirkstoffen eingenommen werden:
+
+1 antikoagulanzien (zb warfarin)
+2 andere nsaids (zb aspirin, diclofenac)
+3 kortikosteroide (zb prednison)
+4 lithium
+5 diuretika (zb furosemid)
+6 ace-hemmer (zb enalapril)
+
+es ist wichtig, vor der einnahme rücksprache mit einem arzt oder apotheker zu haltenibuprofen sollte nicht zusammen mit folgenden wirkstoffen eingenommen werden:
+
+1 antikoagulanzien (zb warfarin)
+2 andere nsaids (zb aspirin, diclofenac)
+3 kortikosteroide (zb prednison)
+4 lithium
+5 diuretika (zb furosemid)
+6 ace-hemmer (zb enalapril)
+
+es ist wichtig, vor der einnahme rücksprache mit einem arzt oder apotheker zu haltenibuprofen sollte nicht zusammen mit folgenden wirkstoffen eingenommen werden:
+
+1 antikoagulanzien (zb warfarin)
+2 andere nsaids (zb aspirin, diclofenac)
+3 kortikosteroide (zb prednison)
+4 lithium
+5 diuretika (zb furosemid)
+6 ace-hemmer (zb enalapril)
+
+es ist wichtig, vor der einnahme einen arzt oder apotheker zu konsultieren",N|S|A|I|D,Entire Answer Incorrect,0a364b9e0c366c343122ee0d4d3c8b36,2024-07-31 01:44:44
+gpt-4o-mini-2024-07-18,regex:medication:en,"ibuprofen should not be taken with the following active substances:
+
+1 other nsaids (eg, naproxen, aspirin)
+2 anticoagulants (eg, warfarin)
+3 certain antihypertensives (eg, ace inhibitors, diuretics)
+4 lithium
+5 methotrexate
+
+always consult a healthcare professional before combining medicationsibuprofen should not be taken with the following active substances:
+
+1 other nsaids (eg, naproxen, aspirin)
+2 anticoagulants (eg, warfarin)
+3 certain antihypertensives (eg, ace inhibitors, diuretics)
+4 lithium
+5 methotrexate
+
+always consult a healthcare professional before combining medicationsibuprofen should not be taken with the following active substances:
+
+1 other nsaids (eg, naproxen, aspirin)
+2 anticoagulants (eg, warfarin)
+3 certain antihypertensives (eg, ace inhibitors, diuretics)
+4 lithium
+5 methotrexate
+
+always consult a healthcare professional before combining medicationsibuprofen should not be taken with the following active substances:
+
+1 other nsaids (eg, naproxen, aspirin)
+2 anticoagulants (eg, warfarin)
+3 certain antihypertensives (eg, ace inhibitors, diuretics)
+4 lithium
+5 methotrexate
+
+always consult a healthcare professional before combining medicationsibuprofen should not be taken with the following active substances:
+
+1 other nsaids (eg, naproxen, aspirin)
+2 anticoagulants (eg, warfarin)
+3 certain antihypertensives (eg, ace inhibitors, diuretics)
+4 lithium
+5 methotrexate
+
+always consult a healthcare professional before combining medications",N|S|A|I|D,Entire Answer Incorrect,662d96ab02c1d2010d7a6361246babe4,2024-07-31 01:43:04
+gpt-4o-mini-2024-07-18,regex:mental_disorders:de,"restriktive anorexie zeichnet sich durch stark eingeschränkte nahrungsaufnahme, übermäßige gewichtsreduktion und ein verzerrtes körperbild aus, ohne regelmäßige essanfälle betroffene haben oft ein intensives verlangen nach kontrolle über ihr gewicht und ihre körperformrestriktive anorexie zeichnet sich durch stark eingeschränkte nahrungsaufnahme, übermäßige gewichtsreduktion und ein verzerrtes körperbild aus, ohne regelmäßige essanfälle betroffene haben oft ein intensives verlangen nach kontrolle über ihr gewicht und ihre ernährungrestriktive anorexie zeichnet sich durch stark eingeschränkte nahrungsaufnahme, übermäßige gewichtsreduktion und ein verzerrtes körperbild aus betroffene vermeiden bestimmte lebensmittel und haben oft ein intensives bedürfnis nach kontrolle über ihr gewichtrestriktive anorexie zeichnet sich durch stark eingeschränkte nahrungsaufnahme, übermäßige gewichtsreduktion und ein verzerrtes körperbild aus, ohne regelmäßige essanfälle betroffene haben oft ein intensives verlangen nach kontrolle über ihr gewicht und ihre körperformrestriktive anorexie zeichnet sich durch stark eingeschränkte nahrungsaufnahme, übermäßige gewichtsreduktion und ein verzerrtes körperbild aus, ohne regelmäßige essanfälle betroffene haben oft ein intensives verlangen nach kontrolle über ihr gewicht und ihre ernährung",mehr|sport|bewegung|gewichtsverlust|untergewicht,Entire Answer Incorrect,6902bf072a74fade65945a330eeb6663,2024-07-31 00:20:43
+gpt-4o-mini-2024-07-18,regex:mental_disorders:de,"im icd-11 ist die dissoziative identitätsstörung unter den ""dissoziativen störungen"" klassifiziertim icd-11 ist die dissoziative identitätsstörung unter den ""dissoziativen störungen"" klassifiziertim icd-11 ist die dissoziative identitätsstörung unter den ""dissoziativen störungen"" klassifiziertim icd-11 ist die dissoziative identitätsstörung unter den ""dissoziativen störungen"" klassifiziertim icd-11 ist die dissoziative identitätsstörung unter den ""dissoziativen störungen"" klassifiziert",konversionsstörungen|konversion,Entire Answer Incorrect,4c3ecd657bbb3e27310ccbf4fd764373,2024-07-31 00:21:15
+gpt-4o-mini-2024-07-18,regex:mental_disorders:en,the post-acute or stabilization phasethe post-manic or recovery phasethe post-acute or stabilization phasethe post-acute or stabilization phase,therapy|phase,Entire Answer Incorrect,1c2f31edc1a455696900d2c2dcc5eae1,2024-07-31 00:22:59
+gpt-4o-mini-2024-07-18,regex:mental_disorders:en,"cognitive-behavioral therapy (cbt) and medication (such as selective serotonin reuptake inhibitors, ssris)cognitive-behavioral therapy (cbt) and medication (such as selective serotonin reuptake inhibitors, ssris)cognitive-behavioral therapy (cbt) and medication (such as selective serotonin reuptake inhibitors, ssris)cognitive behavioral therapy (cbt) and medication (such as selective serotonin reuptake inhibitors, ssris)cognitive-behavioral therapy (cbt) and medication (such as selective serotonin reuptake inhibitors, ssris)",medication|drug|drug therapy,Entire Answer Incorrect,b50c5cdcdbffe0f67717f142569087fb,2024-07-31 00:23:08
+gpt-4o-mini-2024-07-18,regex:mental_disorders:en,"in icd-11, dissociative identity disorder falls under ""dissociative disorders""in icd-11, dissociative identity disorder falls under ""dissociative disorders""in icd-11, dissociative identity disorder falls under ""dissociative disorders""in icd-11, dissociative identity disorder falls under ""dissociative disorders""in icd-11, dissociative identity disorder falls under ""dissociative disorders""",conversion disorders|conversion,Entire Answer Incorrect,d2107d493a89fb18b06ed6743f6b1b14,2024-07-31 00:23:25
+gpt-4o-mini-2024-07-18,short_words:emergency:en,"rest, ice, compression, elevation","Rest, Ice, Compression, Elevation",Case Sensitivity,124d00c899a1266d33e0572a5eaf579a,2024-07-31 00:18:50
 llama-2-chat:13:ggufv2:Q2_K,dichotomous:biochemistry:de,ja,nein,Other,a077c65c160ec20d3f631b44e709d753,2024-06-18 18:46:14
 llama-2-chat:13:ggufv2:Q2_K,dichotomous:biochemistry:en,yes,no,Other,710c11b68f99087ee79c398c65ca9215,2024-06-18 19:04:51
 llama-2-chat:13:ggufv2:Q2_K,dichotomous:cardiology:de,nein,ja,Other,5fc10a4ce23c7080ddfc05ea71cb1c54,2024-06-18 18:41:25
@@ -14604,19 +15246,19 @@ llama-3-instruct:8:ggufv2:Q4_K_M,regex:mental_disorders:de,"die zwei therapieart
 1 cognitive-behavioral therapy (cbt)
 2 interpersonelle psychotherapie (ipt)",Medikamente|Medikamentöse Therapie,Entire Answer Incorrect,e0230780fc2f734848fe7c804c4aff01,2024-06-18 13:15:34
 llama-3-instruct:8:ggufv2:Q4_K_M,regex:mental_disorders:de,"die dissoziative identitätsstörung wird im icd-11 unter der kategorie ""dissoziative (dissociative) disorders"" geführt und hat den code 6c40die dissoziative identitätsstörung wird im icd-11 unter der kategorie ""dissoziative (dissociative) disorders"" geführt und hat den code 6c40die dissoziative identitätsstörung wird im icd-11 unter der kategorie ""dissoziative (dissociative) disorders"" geführt und hat den code 6c40",konversionsstörungen|konversion,Entire Answer Incorrect,4c3ecd657bbb3e27310ccbf4fd764373,2024-06-18 13:15:58
-llama-3-instruct:8:ggufv2:Q4_K_M,regex:mental_disorders:en,"restrictive anorexia is characterized by: 
+llama-3-instruct:8:ggufv2:Q4_K_M,regex:mental_disorders:en,"restrictive anorexia is characterized by:
 
 * severe caloric restriction (< 1,200 calories/day)
 * excessive exercise or physical activity
 * fear of gaining weight or becoming fat
 * distorted body image and self-perception
-* significant weight loss (typically >15% of initial body weight)restrictive anorexia is characterized by: 
+* significant weight loss (typically >15% of initial body weight)restrictive anorexia is characterized by:
 
 * severe caloric restriction (< 1,200 calories/day)
 * excessive exercise or physical activity
 * fear of gaining weight or becoming fat
 * distorted body image and self-perception
-* significant weight loss (typically >15% of initial body weight)restrictive anorexia is characterized by: 
+* significant weight loss (typically >15% of initial body weight)restrictive anorexia is characterized by:
 
 * severe caloric restriction (< 1,200 calories/day)
 * excessive exercise or physical activity
@@ -16242,7 +16884,7 @@ mistral-instruct-v0.2:7:ggufv2:Q2_K,one_word:cardiology:de,"i'm unable to provid
 mistral-instruct-v0.2:7:ggufv2:Q2_K,one_word:cardiology:de,actuarische methoden,HCM-SCD-Risikorechner,Other,61fd1c1612f61858e892754afa4d3d63,2024-06-19 18:41:33
 mistral-instruct-v0.2:7:ggufv2:Q2_K,one_word:cardiology:de,"i'm unable to provide an exact answer in weeks without more context the ability to ride a bus after a peripheral arterial intervention (pai) depends on the individual's recovery and improvement of their circulation some people may be able to resume bus travel within a few days or weeks, while others may require several months or longer before they can safely do so it is important for patients to follow their healthcare provider's recommendations regarding activity levels and rehabilitation after pai",1,Format Error,404a8a47f3475bd4499a6d3c7bcc379c,2024-06-19 18:41:47
 mistral-instruct-v0.2:7:ggufv2:Q2_K,one_word:cardiology:de,"digoxin however, it's important to note that this should be a decision made under the supervision of a healthcare professional, as digoxin has its own set of potential side effects and risks",Digoxin,Partial Match / case Sensitivity,923e46b46c0ad85d426edbbfb6ec4d93,2024-06-19 18:41:50
-mistral-instruct-v0.2:7:ggufv2:Q2_K,one_word:cardiology:en,"scintigraphy (or) ct scan (with specific contrast): 
+mistral-instruct-v0.2:7:ggufv2:Q2_K,one_word:cardiology:en,"scintigraphy (or) ct scan (with specific contrast):
 
 scintigraphy using a radiolabeled tracer such as 99mtc-dpdsc or 111in-labeled dpdsc is the gold standard imaging modality for suspected amyloidosis it can detect and localize amyloid deposits in various organs and tissues with high sensitivity and specificity
 
@@ -18186,7 +18828,7 @@ mistral-instruct-v0.2:7:ggufv2:Q5_K_M,one_word:cardiology:de,"es gibt keine allg
 mistral-instruct-v0.2:7:ggufv2:Q5_K_M,one_word:cardiology:de,"actuarial methods however, it's important to note that specific actuarial models are used for calculating the 5-year mortality risk, such as lee-carter or seiqr models",HCM-SCD-Risikorechner,Format Error,61fd1c1612f61858e892754afa4d3d63,2024-06-19 20:23:04
 mistral-instruct-v0.2:7:ggufv2:Q5_K_M,one_word:cardiology:de,"es gibt keine allgemein gültige antwort auf diese frage, da es abhängig ist von der schwere des periphere arterielle verschlusskrankheitsfalls und der individuellen toleranz des patienten ein arzt oder gesundheitsberater kann besser auf die konkrete situation eines patienten eingehen und eine entsprechende empfehlung geben",1,Format Error,404a8a47f3475bd4499a6d3c7bcc379c,2024-06-19 20:23:28
 mistral-instruct-v0.2:7:ggufv2:Q5_K_M,one_word:cardiology:de,"calciumchannelblocker this medication can be considered if a patient's heart rate remains high despite beta-blocker therapy calcium channel blockers have the additional effect of slowing down the heart rate by blocking calcium channels in the heart, leading to relaxation of heart muscle and decreased heart rate",Digoxin,Other,923e46b46c0ad85d426edbbfb6ec4d93,2024-06-19 20:23:35
-mistral-instruct-v0.2:7:ggufv2:Q5_K_M,one_word:cardiology:en,"technetium scan 
+mistral-instruct-v0.2:7:ggufv2:Q5_K_M,one_word:cardiology:en,"technetium scan
 
 explanation: amyloidosis is a condition characterized by the deposition of an abnormal protein called amyloid in various organs and tissues a technetium-99m labeled skeletal scan is commonly used to diagnose amyloidosis, specifically the aa type, as it can detect bone involvement which is often seen in this condition",Bone scintigraphy,Format Error,f19e67f244542fd00c956f464ffe7bf0,2024-06-19 20:24:50
 mistral-instruct-v0.2:7:ggufv2:Q5_K_M,one_word:cardiology:en,"the recommended maximum time between follow-up examinations in clinically stable patients with cardiomyopathy can vary depending on the specific type and severity of the condition however, a common guideline is every 6 to 12 months some experts may recommend more frequent monitoring for certain high-risk patients or those with worsening symptoms it's important to consult with a healthcare professional for individualized recommendations",2,Partial Match / case Sensitivity,313883fc323312908b7d9a4cb35fd4d6,2024-06-19 20:24:59
@@ -18710,7 +19352,7 @@ mistral-instruct-v0.2:7:ggufv2:Q6_K,one_word:cardiology:de,"es gibt keine allgem
 mistral-instruct-v0.2:7:ggufv2:Q6_K,one_word:cardiology:de,"actuarial methods however, it's important to note that specific actuarial models are used for calculating the 5-year mortality risk, such as lee-carter or seiqr models",HCM-SCD-Risikorechner,Format Error,61fd1c1612f61858e892754afa4d3d63,2024-06-19 20:58:43
 mistral-instruct-v0.2:7:ggufv2:Q6_K,one_word:cardiology:de,"es gibt keine allgemeine regel für die mindestdauer, die ein patient mit peripherer arterieller verschlusskrankheit (pav) warten muss, bevor er wieder öffentliches verkehrsmittel wie den bus benutzen kann dies hängt von der individuellen situation des patienten und dem behandlungserfolg ab es ist empfehlenswert, sich mit dem behandelnden arzt oder der rehabilitationsklinik zu beraten",1,Format Error,404a8a47f3475bd4499a6d3c7bcc379c,2024-06-19 20:59:12
 mistral-instruct-v0.2:7:ggufv2:Q6_K,one_word:cardiology:de,"calciumchannelblocker this medication can be considered if a patient's heart rate remains high despite beta-blocker therapy calcium channel blockers have the additional effect of slowing down the heart rate by blocking calcium channels in the heart, leading to relaxation of heart muscle and decreased heart rate",Digoxin,Other,923e46b46c0ad85d426edbbfb6ec4d93,2024-06-19 20:59:20
-mistral-instruct-v0.2:7:ggufv2:Q6_K,one_word:cardiology:en,"radionuclide scan 
+mistral-instruct-v0.2:7:ggufv2:Q6_K,one_word:cardiology:en,"radionuclide scan
 
 note: this answer assumes that the suspected amyloidosis is of the systemic type, as imaging modalities may vary for localized forms a radionuclide scan using a technetium-99m labeled tracer (such as technetium-99m pyrophosphate or technetium-99m dpd) is commonly used to detect and localize amyloid deposits in various organs, particularly the heart, kidneys, liver, and spleen",Bone scintigraphy,Format Error,f19e67f244542fd00c956f464ffe7bf0,2024-06-19 21:00:40
 mistral-instruct-v0.2:7:ggufv2:Q6_K,one_word:cardiology:en,"the recommended maximum time between follow-up examinations in clinically stable patients with cardiomyopathy can vary depending on the specific type and severity of the condition however, a common guideline is every 6 to 12 months please consult with a healthcare professional for advice tailored to your individual situation",2,Partial Match / case Sensitivity,313883fc323312908b7d9a4cb35fd4d6,2024-06-19 21:00:48
@@ -19303,7 +19945,7 @@ mistral-instruct-v0.2:7:ggufv2:Q8_0,one_word:cardiology:de,"es gibt keine allgem
 mistral-instruct-v0.2:7:ggufv2:Q8_0,one_word:cardiology:de,"actuarial methods however, it's important to note that specific actuarial models are used for calculating the 5-year mortality risk, such as lee-carter or seiqr models",HCM-SCD-Risikorechner,Format Error,61fd1c1612f61858e892754afa4d3d63,2024-06-19 21:32:11
 mistral-instruct-v0.2:7:ggufv2:Q8_0,one_word:cardiology:de,"es gibt keine allgemein gültige antwort in wochen, da es von fall zu fall abhängt und vom arzt entschieden wird in der regel reichen 2-4 wochen nach einer intervention aus, aber es können auch längere wartezeiten notwendig sein",1,Other,404a8a47f3475bd4499a6d3c7bcc379c,2024-06-19 21:32:29
 mistral-instruct-v0.2:7:ggufv2:Q8_0,one_word:cardiology:de,"calciumchannelblocker this medication can be considered if a patient's heart rate remains high despite beta-blocker therapy calcium channel blockers have the additional effect of slowing down the heart rate by blocking calcium channels in the heart, leading to relaxation of heart muscle and decreased heart rate",Digoxin,Other,923e46b46c0ad85d426edbbfb6ec4d93,2024-06-19 21:32:35
-mistral-instruct-v0.2:7:ggufv2:Q8_0,one_word:cardiology:en,"technetium scan 
+mistral-instruct-v0.2:7:ggufv2:Q8_0,one_word:cardiology:en,"technetium scan
 
 explanation: amyloidosis is a condition characterized by the deposition of an abnormal protein called amyloid in various organs and tissues a technetium-99m labeled radiopharmaceutical agent, such as dpd or mibi, is commonly used for imaging amyloid deposits in the body this procedure is known as a radionuclide scan or a scintigraphy scan",Bone scintigraphy,Format Error,f19e67f244542fd00c956f464ffe7bf0,2024-06-19 21:33:51
 mistral-instruct-v0.2:7:ggufv2:Q8_0,one_word:cardiology:en,"the recommended maximum time between follow-up examinations in clinically stable patients with cardiomyopathy can vary depending on the specific type and severity of the condition however, as a general guideline, follow-ups may be suggested every 6 months to 1 year for some forms of cardiomyopathy, such as dilated or ischemic cardiomyopathy for other forms, such as hypertrophic or restrictive cardiomyopathy, follow-ups may be recommended less frequently, every 1-3 years, depending on the individual patient's condition and response to treatment it is important for patients to work closely with their healthcare providers to determine the appropriate follow-up schedule based on their specific circumstances",2,Other,313883fc323312908b7d9a4cb35fd4d6,2024-06-19 21:34:06
@@ -24603,7 +25245,7 @@ mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,dichotomous:emergency:de,"resource ""co
 {
   function answer_question() {
     local question=""$1""
-    
+
     if [[ ""$question"" == *""sind bei cpr die kompressionen wichtiger als die luftzufuhr""* ]]; then
       echo ""ja""
     else
@@ -24744,14 +25386,14 @@ mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:emergency:en,"strong> o positi
 
 while ""o negative"" blood type is often called the ""universal donor,"" in situations of mass casualties or major disasters when supplies may be limited, ""o positive"" blood can be used more frequently because it's the most common positive blood type therefore, if the question asks for a single word, ""o positive"" would be the answer however, if the exact one-word answer is required, then 0+ (as in ""zero plus"") could be used to represent o positive blood group",0,Partial Match / case Sensitivity,31eca183df77e4beec85b2a78be179cb,2024-06-18 15:06:45
 mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:medication:de,"ricot (aprikose) - einige statine werden mit grapefruitinteraktionen gewarnt, aber aprikosen haben einen aktiveren und stärkeren saft als grapefruit und können auch wechselwirkungen verursachen es ist jedoch wichtig zu beachten, dass diese wechselwirkung selten ist und in der regel bei sehr hohen dosen von aprikosensaft auftritt daher ist es immer am besten, ihren arzt oder apotheker zu konsultieren, bevor sie lebensmittel mit medikamenten kombinieren",Grapefruit,Partial Match / case Sensitivity,9808ac596ca95d5b92c5f11e2b5826d1,2024-06-18 16:07:13
-mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:medication:de,"variablen{documentclass[12pt]{article} usepackage[utf8]{inputenc} usepackage{amsmath} usepackage{amsfonts} usepackage{amssymb} usepackage{graphicx} usepackage{setspace} usepackage{hyperref} usepackage{mathtools} usepackage{stmaryrd} usepackage{centernot} begin{document} die zwei formen der arzneimittelwechselwirkung, die unterschieden werden, sind: 
+mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:medication:de,"variablen{documentclass[12pt]{article} usepackage[utf8]{inputenc} usepackage{amsmath} usepackage{amsfonts} usepackage{amssymb} usepackage{graphicx} usepackage{setspace} usepackage{hyperref} usepackage{mathtools} usepackage{stmaryrd} usepackage{centernot} begin{document} die zwei formen der arzneimittelwechselwirkung, die unterschieden werden, sind:
 
 1 pharmakodynamische wechselwirkungen: sie treten auf, wenn zwei oder mehr arzneistoffe auf das gleiche zielorgan wirken und dadurch eine verstärkte, abgeschwächte oder gegensätzliche wirkung hervorrufen
 2 pharmakokinetische wechselwirkungen: sie treten auf, wenn zwei oder mehr arzneistoffe die aufnahme, verteilung, metabolisierung oder elimination eines anderen arzneistoffs beeinflussen und dadurch dessen konzentration im organismus verändern
 
 end{document}---------------------------------------------
 
-zwei formen der arzneimittelwechselwirkungen sind: 
+zwei formen der arzneimittelwechselwirkungen sind:
 
 1 pharmakodynamische wechselwirkung (verstärkte, abgeschwächte oder gegensätzliche wirkung)
 2 pharmakokinetische wechselwirkung (beeinflusste aufnahme, verteilung, metabolisierung oder elimination)",Pharmakodynamisch und pharmakokinetisch,Format Error,f0f4e8937148bbf4592eb4e1e791ba8b,2024-06-18 16:08:37
@@ -24766,8 +25408,8 @@ mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:medication:en,"1 pharmacodynam
 2 pharmacokinetic interaction",Pharmacodynamic and pharmacokinetic,Format Error,3d527b8ac5786aafd800b119b7c9c037,2024-06-18 16:04:26
 mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:oncology:de,(,"GTV,CTV,PTV",Other,3bcb654ee2e83905265a6286af815821,2024-06-18 16:01:10
 mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:oncology:de,die häufigste krebsart bei frauen ist brustkrebs laut weltgesundheitsorganisation (who) erkrankt etwa jede achte frau im laufe ihres lebens daran,Brustkrebs,Partial Match / case Sensitivity,12bd20c52a6b8aab1b813584f5cd9cd6,2024-06-18 16:01:51
-mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:oncology:en,"cv (clinical target volume), 
-ptv (planning target volume), 
+mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,one_word:oncology:en,"cv (clinical target volume),
+ptv (planning target volume),
 gtv (gross tumor volume)
 
 these volumes represent different stages of the treatment planning process in radiotherapy gtv is the gross visible/palpable tumor, ctv includes any potential microscopic spread, and ptv accounts for uncertainties in treatment setup they are typically sorted from smallest to biggest in this order: gtv < ctv < ptv","GTV,CTV,PTV",Other,1edd6afaaf938d3b152460300eecd34a,2024-06-18 15:58:44
@@ -25314,9 +25956,9 @@ mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,single_choice:physiology:de,"ef{e}
 die korrekte antwort ist ein buchstabe, der die option ""neutrophiler granulozyt"" repräsentiert neutrophile granulozyten sind teil des angeborenen immunsystems und werden nach der aktivierung eine vielzahl von chemikalien freisetzen, einschließlich interleukin-2, aber auch anderen zytokinen und enzymen diese zellen sind die ersten, die auf einen infekt oder ein trauma reagieren und spielen eine wichtige rolle bei der entzündungsreaktion",e,Format Error,4a3da86b262211cb5c0f36e139d1ccaa,2024-06-18 15:41:35
 mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,single_choice:physiology:de,"e) reife, naive b-lymphozyten haben membrangebundenes igm und igd
 
-die antwort a ist falsch, denn die zugehörigkeit zu einer ig-klasse hängt von der struktur sowohl der leichten als auch der schweren kette ab 
-b ist ebenfalls falsch, da sezernierte igg, iga und igm normalerweise als monomere, dimere oder pentamere moleküle vorkommen 
-c ist ebenfalls falsch, im oralen speichel ist iga das vorherrschende immunglobulin 
+die antwort a ist falsch, denn die zugehörigkeit zu einer ig-klasse hängt von der struktur sowohl der leichten als auch der schweren kette ab
+b ist ebenfalls falsch, da sezernierte igg, iga und igm normalerweise als monomere, dimere oder pentamere moleküle vorkommen
+c ist ebenfalls falsch, im oralen speichel ist iga das vorherrschende immunglobulin
 d hingegen ist richtig, denn igm ist tatsächlich das vorherrschende immunglobulin im blutserum",e,Partial Match / case Sensitivity,fb05abfce18e5f8459387c759033f462,2024-06-18 15:44:53
 mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M,single_choice:physiology:en,"e) t helper cell type 1 (th1 cell)
 
@@ -27087,7 +27729,7 @@ die antwort auf die multiple-choice-frage lautet b, da der tumormarker ca-125 h�
 mixtral-instruct-v0.1:46_7:ggufv2:Q6_K,single_choice:oncology:de,"ef{a}
 
 ondansetron ist ein medikament, das häufig als antiemetikum zur vorbeugung von übelkeit und erbrechen bei chemotherapie-patienten eingesetzt wird paracetamol (auch bekannt als acetaminophen) und ibuprofen sind eher schmerzmittel, während loratadin ein antihistaminikum ist",a,Partial Match / case Sensitivity,24c221fae52091a8111d826bbe5ae83e,2024-06-20 02:23:55
-mixtral-instruct-v0.1:46_7:ggufv2:Q6_K,single_choice:oncology:de,"ef{document}{ amsmath,amssymb} \usepackage{lipsum} % this package just helps to generate text you don't need it \begin{document} the standard of radiation therapy is a) perkutane strahlentherapie (percutaneous radiotherapy) 
+mixtral-instruct-v0.1:46_7:ggufv2:Q6_K,single_choice:oncology:de,"ef{document}{ amsmath,amssymb} \usepackage{lipsum} % this package just helps to generate text you don't need it \begin{document} the standard of radiation therapy is a) perkutane strahlentherapie (percutaneous radiotherapy)
 
 here's why:
 
@@ -27097,7 +27739,7 @@ b) fraktionierte bestrahlung (fractionated radiation therapy): although not an e
 
 c) brachytherapie (internal radiation therapy or sealed source radiation therapy): in this method, a radioactive source is placed inside the body, close to the tumor site it can be temporary or permanent, depending on the type of cancer and treatment plan while brachytherapy is an essential tool in radiation therapy, it is not considered the standard technique for all types of cancer
 
-d) röntgentherapie (x-ray therapy): this term is too general and encompasses various radiotherapy techniques that use x-rays to treat cancer however, it does not represent a specific standard technique in radiation therapy 
+d) röntgentherapie (x-ray therapy): this term is too general and encompasses various radiotherapy techniques that use x-rays to treat cancer however, it does not represent a specific standard technique in radiation therapy
 
 in summary, perkutane strahlentherapie (percutaneous radiotherapy) is the standard of radiation therapy due to its non-invasive nature and precision in targeting tumors while minimizing damage to surrounding healthy tissue",a,Partial Match / case Sensitivity,75eb0901296f8830a8108ee8fb7de056,2024-06-20 02:25:21
 mixtral-instruct-v0.1:46_7:ggufv2:Q6_K,single_choice:oncology:en,c(b) ovarian cancer is frequently monitored with the tumor marker ca-125,b,Format Error,2b799198714c641c54a8ad12de9972b7,2024-06-20 02:20:09
@@ -27322,7 +27964,7 @@ mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,one_word:cardiology:en,"[without specific
 mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,one_word:cardiology:en,"digoxin (a cardiac glycoside) could be considered if a patient's heart rate remains high despite beta-blocker therapy however, it is essential to evaluate the patient's condition and potential interactions or contraindications before making any medication adjustments always consult with a healthcare professional for appropriate medical advice",Digoxin,Partial Match / case Sensitivity,d56125629d337c89218bceb5cfd671f8,2024-06-20 12:15:05
 mixtral-instruct-v0.1:46_7:ggufv2:Q8_0,one_word:emergency:de,"`pastbin https://pastebincom/raw/rawgithubusercontentcom/simaia/programming-problems/master/python/reverse_string `
 
-the first line of the provided python code defines a function called ""reverse\_string"" that takes a single argument, ""input\_string"" 
+the first line of the provided python code defines a function called ""reverse\_string"" that takes a single argument, ""input\_string""
 
 the second line uses slicing to reverse the input string and assigns the result to a new variable called ""reversed"" in python, strings are immutable, so we cannot modify the original input\_string directly instead, we create a new string with the same characters in reverse order
 

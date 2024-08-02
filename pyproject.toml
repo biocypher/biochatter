@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "biochatter"
-version = "0.4.14"
+version = "0.6.0"
 description = "Backend library for conversational AI in biomedicine"
 authors = [
     "Sebastian Lobentanzer <sebastian.lobentanzer@gmail.com>",
@@ -38,6 +38,7 @@ langchain-openai = "^0.1.14"
 tiktoken = "0.7.0"
 grandalf = "^0.8"
 importlib-metadata = "^8.0.0"
+colorcet = "^3.1.0"
 
 [tool.poetry.extras]
 streamlit = ["streamlit"]
@@ -56,6 +57,8 @@ pre-commit = ">=2.17.0"
 mkdocs-table-reader-plugin = "^2.0.3"
 scipy = "^1.12.0"
 shortuuid = "^1.0.13"
+coverage = "^7.6.0"
+coverage-badge = "^1.1.1"
 
 [build-system]
 requires = ["poetry-core"]

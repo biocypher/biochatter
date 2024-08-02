@@ -2,6 +2,7 @@ import os
 import re
 
 import seaborn as sns
+import colorcet as cc
 import matplotlib
 
 import numpy as np
@@ -23,6 +24,7 @@ def on_pre_build(config, **kwargs) -> None:
         if os.path.isfile(os.path.join(result_files_path, f))
         and f.endswith(".csv")
         and not "failure_mode" in f
+        and not "confidence" in f
     ]
 
     for file_name in result_file_names:
@@ -65,6 +67,16 @@ def preprocess_results_for_frontend(
             else float(x)
         )
     )
+    # multiply score_achieved by iterations if no semicolon in scores
+    # TODO remove once all benchmarks are in new format
+    raw_results["score_achieved"] = raw_results.apply(
+        lambda x: (
+            x["score_achieved"] * x["iterations"]
+            if ";" not in x["scores"]
+            else x["score_achieved"]
+        ),
+        axis=1,
+    )
     raw_results["score_sd"] = raw_results["scores"].apply(
         lambda x: (
             np.std([float(score) for score in x.split(";")], ddof=1)
@@ -90,9 +102,9 @@ def preprocess_results_for_frontend(
         axis=1,
     )
 
-    aggregated_scores["Full model name"] = (
-        aggregated_scores.index.get_level_values("model_name")
-    )
+    aggregated_scores[
+        "Full model name"
+    ] = aggregated_scores.index.get_level_values("model_name")
     aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
     aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
     aggregated_scores["Score SD"] = aggregated_scores["score_sd"]
@@ -162,9 +174,9 @@ def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
         axis=1,
     )
 
-    aggregated_scores["Full model name"] = (
-        aggregated_scores.index.get_level_values("model_name")
-    )
+    aggregated_scores[
+        "Full model name"
+    ] = aggregated_scores.index.get_level_values("model_name")
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
         "subtask"
     )
@@ -199,7 +211,7 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
 
     Args:
         result_files_path (str): The path to the result files.
-        result_file_names (list[str]): The names of the result files.
+        result_file_names (List[str]): The names of the result files.
     """
     subtask_results = []
     for file in result_file_names:
@@ -221,9 +233,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     )
 
     overview_per_quantisation = overview
-    overview_per_quantisation["Full model name"] = (
-        overview_per_quantisation.index
-    )
+    overview_per_quantisation[
+        "Full model name"
+    ] = overview_per_quantisation.index
     overview_per_quantisation[
         ["Model name", "Size", "Version", "Quantisation"]
     ] = overview_per_quantisation["Full model name"].str.split(":", expand=True)
@@ -255,9 +267,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         ]
     ]
     # round mean and sd to 2 decimal places
-    overview_per_quantisation.loc[:, "Median Accuracy"] = (
-        overview_per_quantisation["Median Accuracy"].round(2)
-    )
+    overview_per_quantisation.loc[
+        :, "Median Accuracy"
+    ] = overview_per_quantisation["Median Accuracy"].round(2)
     overview_per_quantisation.loc[:, "SD"] = overview_per_quantisation[
         "SD"
     ].round(2)
@@ -492,7 +504,7 @@ def plot_scatter_per_quantisation(overview):
     )
 
     # Create a ColorBrewer palette
-    palette = sns.color_palette("Paired", n_colors=13)
+    palette = sns.color_palette(cc.glasbey, n_colors=14)
 
     # Define a dictionary mapping model names to colors
     color_dict = {
@@ -500,14 +512,16 @@ def plot_scatter_per_quantisation(overview):
         "gpt-3.5-turbo-0125": palette[1],
         "gpt-4-0613": palette[2],
         "gpt-4-0125-preview": palette[3],
-        "gpt-4o-2024-05-13": palette[4],
-        "openhermes-2.5": palette[5],
-        "llama-2-chat": palette[6],
-        "llama-3-instruct": palette[7],
-        "mixtral-instruct-v0.1": palette[8],
-        "mistral-instruct-v0.2": palette[9],
-        "chatglm3": palette[11],
-        "code-llama-instruct": palette[12],
+        "gpt-4-turbo-2024-04-09": palette[4],
+        "gpt-4o-2024-05-13": palette[5],
+        "gpt-4o-mini-2024-07-18": palette[6],
+        "openhermes-2.5": palette[7],
+        "llama-2-chat": palette[8],
+        "llama-3-instruct": palette[9],
+        "mixtral-instruct-v0.1": palette[10],
+        "mistral-instruct-v0.2": palette[11],
+        "chatglm3": palette[12],
+        "code-llama-instruct": palette[13],
     }
 
     # Use the dictionary as the palette argument in sns.scatterplot
@@ -526,10 +540,12 @@ def plot_scatter_per_quantisation(overview):
         "Model name",
         "gpt-3.5-turbo-0125",
         "gpt-3.5-turbo-0613",
-        "openhermes-2.5",
-        "gpt-4-0125-preview",
         "gpt-4-0613",
+        "gpt-4-0125-preview",
+        "gpt-4-turbo-2024-04-09",
         "gpt-4o-2024-05-13",
+        "gpt-4o-mini-2024-07-18",
+        "openhermes-2.5",
         "llama-2-chat",
         "llama-3-instruct",
         "code-llama-instruct",
@@ -698,9 +714,9 @@ def plot_extraction_tasks():
         axis=1,
     )
 
-    aggregated_scores["Full model name"] = (
-        aggregated_scores.index.get_level_values("model_name")
-    )
+    aggregated_scores[
+        "Full model name"
+    ] = aggregated_scores.index.get_level_values("model_name")
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
         "subtask"
     )

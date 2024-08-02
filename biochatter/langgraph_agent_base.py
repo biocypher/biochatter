@@ -1,141 +1,34 @@
 from abc import ABC, abstractmethod
+from typing import Any, Union, Literal, Optional, List, Dict
 from datetime import datetime
-from typing import Callable, Dict, List, Literal, Optional, Union
+from collections.abc import Callable
+import json
 import logging
 
+from langsmith import traceable
+from langgraph.graph import END, MessageGraph
+from langgraph.graph.graph import CompiledGraph
 from langchain_core.messages import (
-    BaseMessage,
-    HumanMessage,
-    ToolMessage,
     AIMessage,
+    BaseMessage,
+    ToolMessage,
+    HumanMessage,
 )
 from langchain_core.pydantic_v1 import ValidationError
-from langsmith import traceable
-from langgraph.graph import MessageGraph, END
-from langgraph.graph.graph import CompiledGraph
 
 logger = logging.getLogger(__name__)
 
 
-class ResponderWithRetries:
-    """
-    Raise request to LLM with 3 retries
-    """
-
-    def __init__(self, runnable, validator):
-        """
-        Args:
-        runnable: LLM agent
-        validator: used to validate response
-        """
-        self.runnable = runnable
-        self.validator = validator
-
-    @traceable
-    def respond(self, state: List[BaseMessage]):
-        """
-        Invoke LLM agent, this function will be called by LangGraph
-        Args:
-        state List[BaseMessage]: message history
-        """
-        response = []
-        for attempt in range(3):
-            try:
-                response = self.runnable.invoke({"messages": state})
-                self.validator.invoke(response)
-                return response
-            except ValidationError as e:
-                state = state + [HumanMessage(content=repr(e))]
-        return response
-
-
-DRAFT_NODE = "draft"
-EXECUTE_TOOL_NODE = "execute_tool"
-REVISE_NODE = "revise"
-END_NODE = END
-
-
-class ReflexionAgent(ABC):
-    """
-    LLM agent reflexion framework:
-
-    start -> draft -> execute tool -> revise -> evaluation -> end
-                        /|\                        |
-                         ---------------------------
-    """
-
-    RECURSION_LIMIT = 30
-
-    def __init__(
-        self,
-        conversation_factory: Callable,
-        max_steps: Optional[int] = 20,
-    ):
-        """
-        Args:
-          conversation_factory Callable: the callback to create Conversation
-          max_steps int: max steps for reflextion loop
-        """
-        if max_steps <= 0:
-            max_steps = ReflexionAgent.RECURSION_LIMIT
-        recursion_limit = ReflexionAgent.RECURSION_LIMIT
-        if recursion_limit < max_steps:
-            recursion_limit = max_steps
-        self.initial_responder = None
-        self.revise_responder = None
-        self.max_steps = max_steps
-        self.recursion_limit = recursion_limit
+class ReflexionAgentLogger:
+    def __init__(self) -> None:
         self._logs: str = ""
-        self.conversation = conversation_factory()
 
-    def _should_continue(self, state: List[BaseMessage]):
-        """
-        Determine if we need to continue reflexion
-        Args:
-          state List[BaseMessage]: message history
-        """
-        num_steps = ReflexionAgent._get_num_iterations(state)
-        if num_steps > self.max_steps:
-            return END
-        return EXECUTE_TOOL_NODE
-
-    @abstractmethod
-    def _tool_function(self, state: List[BaseMessage])->ToolMessage:
-        """
-        tool function, execute tool based on initial draft or revised answer
-        Args:
-          state List[BaseMessage]: message history
-        Returns:
-          ToolMessage
-        """
-        pass
-
-    @abstractmethod
-    def _create_initial_responder(
-        self, prompt: Optional[str] = None
-    ) -> ResponderWithRetries:
-        """
-        draft responder, draft initial answer
-        Args:
-          prompt str: prompt for LLM to draft initial answer
-        """
-        pass
-
-    @abstractmethod
-    def _create_revise_responder(
-        self, prompt: Optional[str] = None
-    ) -> ResponderWithRetries:
-        """
-        revise responder, revise answer according to tool function result
-        Args:
-          prompt str: prompt for LLM to draft initial answer
-        """
-        pass
-
-    @abstractmethod
-    def _log_step_message(
-        self, step: int, node: str, output: BaseMessage
-    ) -> None:
+    def log_step_message(
+        self,
+        step: int,
+        node_name: str,
+        output: BaseMessage,
+    ):
         """
         log step message
         Args:
@@ -144,23 +37,11 @@ class ReflexionAgent(ABC):
         """
         pass
 
-    @abstractmethod
-    def _log_final_result(self, output: BaseMessage) -> None:
+    def log_final_result(self, final_result: Dict[str, Any]) -> None:
         """
         log final result
         Args:
           output BaseMessage: last step message
-        """
-        pass
-
-    @abstractmethod
-    def _parse_final_result(self, output: BaseMessage) -> str | None:
-        """
-        parse the result of the last step
-        Args:
-          output BaseMessage: last step message
-        Returns:
-          str | None: the parsed reuslt of the last step
         """
         pass
 
@@ -193,8 +74,147 @@ class ReflexionAgent(ABC):
     def logs(self):
         return self._logs
 
+
+class ResponderWithRetries:
+    """
+    Raise request to LLM with 3 retries
+    """
+
+    def __init__(self, runnable, validator):
+        """
+        Args:
+        runnable: LLM agent
+        validator: used to validate response
+        """
+        self.runnable = runnable
+        self.validator = validator
+
+    @traceable
+    def respond(self, state: list[BaseMessage]):
+        """
+        Invoke LLM agent, this function will be called by LangGraph
+        Args:
+        state List[BaseMessage]: message history
+        """
+        response = []
+        for attempt in range(3):
+            try:
+                response = self.runnable.invoke({"messages": state})
+                self.validator.invoke(response)
+                return response
+            except ValidationError as e:
+                state = state + [HumanMessage(content=repr(e))]
+        return response
+
+
+DRAFT_NODE = "draft"
+EXECUTE_TOOL_NODE = "execute_tool"
+REVISE_NODE = "revise"
+END_NODE = END
+
+
+class ReflexionAgentResult:
+    def __init__(self, answer: str | None, tool_result: List[Any] | None):
+        self.answer = answer
+        self.tool_result = tool_result
+
+
+class ReflexionAgent(ABC):
+    """
+    LLM agent reflexion framework:
+
+    start -> draft -> execute tool -> revise -> evaluation -> end
+                        /|\                        |
+                         ---------------------------
+    """
+
+    RECURSION_LIMIT = 30
+
+    def __init__(
+        self,
+        conversation_factory: Callable,
+        max_steps: Optional[int] = 20,
+        agent_logger: Optional[ReflexionAgentLogger] = ReflexionAgentLogger(),
+    ):
+        """
+        Args:
+          conversation_factory Callable: the callback to create Conversation
+          max_steps int: max steps for reflextion loop
+        """
+        if max_steps <= 0:
+            max_steps = ReflexionAgent.RECURSION_LIMIT
+        recursion_limit = ReflexionAgent.RECURSION_LIMIT
+        if recursion_limit < max_steps:
+            recursion_limit = max_steps
+        self.initial_responder = None
+        self.revise_responder = None
+        self.max_steps = max_steps
+        self.recursion_limit = recursion_limit
+        self.conversation = conversation_factory()
+        self.agent_logger = agent_logger
+
+    def _should_continue(self, state: list[BaseMessage]):
+        """
+        Determine if we need to continue reflexion
+        Args:
+          state List[BaseMessage]: message history
+        """
+        num_steps = ReflexionAgent._get_num_iterations(state)
+        if num_steps > self.max_steps:
+            return END
+        return EXECUTE_TOOL_NODE
+
+    @abstractmethod
+    def _tool_function(self, state: list[BaseMessage]) -> ToolMessage:
+        """
+        tool function, execute tool based on initial draft or revised answer
+        Args:
+          state List[BaseMessage]: message history
+        Returns:
+          ToolMessage
+        """
+        pass
+
+    @abstractmethod
+    def _create_initial_responder(
+        self, prompt: Optional[str] = None
+    ) -> ResponderWithRetries:
+        """
+        draft responder, draft initial answer
+        Args:
+          prompt str: prompt for LLM to draft initial answer
+        """
+        pass
+
+    @abstractmethod
+    def _create_revise_responder(
+        self, prompt: Optional[str] = None
+    ) -> ResponderWithRetries:
+        """
+        revise responder, revise answer according to tool function result
+        Args:
+          prompt str: prompt for LLM to draft initial answer
+        """
+        pass
+
+    @abstractmethod
+    def _parse_final_result(
+        self, messages: list[BaseMessage]
+    ) -> ReflexionAgentResult:
+        """
+        parse the result of the last step
+        Args:
+          output BaseMessage: last step message
+        Returns:
+          ReflexionAgentResult: the parsed reuslt of the last step
+        """
+        pass
+
+    def get_logs(self):
+        return self.agent_logger.logs
+
     @staticmethod
-    def _get_num_iterations(state: List[BaseMessage]):
+    def _get_num_iterations(state: list[BaseMessage]):
         """
         Calculate iteration number
         Args:
@@ -209,6 +229,29 @@ class ReflexionAgent(ABC):
                 break
             i += 1
         return i
+
+    @staticmethod
+    def _get_user_question(state: list[BaseMessage]):
+        """
+        get user's question from messages array
+        """
+        for m in state:
+            if not isinstance(m, HumanMessage):
+                continue
+            return m.content
+        return None
+
+    @staticmethod
+    def _get_last_tool_result(messages: list[BaseMessage]):
+        """
+        get result of the last tool node
+        """
+        for m in messages[::-1]:
+            if not isinstance(m, ToolMessage):
+                continue
+            content = json.loads(m.content)
+            return content["result"]
+        return None
 
     def _build_graph(self, prompt: Optional[str] = None):
         """
@@ -238,19 +281,11 @@ class ReflexionAgent(ABC):
             logger.error(e)
             return None
 
-    def _extract_result_from_final_step(
-        self, step: Dict[str, List[BaseMessage]] | BaseMessage
-    ):
-        """
-        extract result from last step
-        """
-        return step[END][-1] if END in step else step[REVISE_NODE]
-
     def _execute_graph(
         self,
         graph: Optional[CompiledGraph] = None,
         question: Optional[str] = "",
-    ) -> str | None:
+    ) -> ReflexionAgentResult:
         """
         execute Langgraph graph
         Args:
@@ -271,17 +306,22 @@ class ReflexionAgent(ABC):
                 "recursion_limit": self.recursion_limit,
             },
         )
+        messages = [HumanMessage(content=question)]
         for i, step in enumerate(events):
-            node, output = next(iter(step.items()))
-            self._log_step_message(i + 1, node, output)
+            if isinstance(step, list):
+                node, output = (f"{i}", step[i])
+            else:
+                node, output = next(iter(step.items()))
+            self.agent_logger.log_step_message(i + 1, node, output)
+            messages.append(output)
 
-        last_output = self._extract_result_from_final_step(step)
-        self._log_final_result(last_output)
-        return self._parse_final_result(last_output)
+        final_result = self._parse_final_result(messages)
+        self.agent_logger.log_final_result(final_result)
+        return final_result
 
     def execute(
         self, question: str, prompt: Optional[str] = None
-    ) -> str | None:
+    ) -> ReflexionAgentResult:
         """
         Execute ReflexionAgent. Wrapper for building a graph and executing it,
         returning the final answer.
