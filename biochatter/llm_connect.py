@@ -107,7 +107,7 @@ class Conversation(ABC):
         Update or insert rag_agent: if the rag_agent with the same mode already
         exists, it will be updated. Otherwise, the new rag_agent will be inserted.
         """
-        i, _ = self._find_rag_agent(agent.mode)
+        i, _ = self.find_rag_agent(agent.mode)
         if i < 0:
             # insert
             self.rag_agents.append(agent)
@@ -115,7 +115,7 @@ class Conversation(ABC):
             # update
             self.rag_agents[i] = agent
 
-    def _find_rag_agent(self, mode: str) -> tuple[int, RagAgent]:
+    def find_rag_agent(self, mode: str) -> tuple[int, RagAgent]:
         for i, val in enumerate(self.rag_agents):
             if val.mode == mode:
                 return i, val
@@ -332,7 +332,9 @@ class Conversation(ABC):
         rag_agents: list[RagAgent] = [
             agent for agent in self.rag_agents if agent.use_prompt
         ]
-        decider_agent = RagAgentSelector(rag_agents=rag_agents)
+        decider_agent = RagAgentSelector(
+            rag_agents=rag_agents, conversation_factory=lambda: self,
+        )
         result = decider_agent.execute(text)
         if result.tool_result is not None and len(result.tool_result) > 0:
             return result.tool_result

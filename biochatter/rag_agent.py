@@ -203,9 +203,9 @@ class RagAgent:
         ]:
             final_answer = self.query_func(user_question)
             if final_answer is not None:
-                response = [("response", final_answer)]
+                response = [(final_answer, "response")]
             else:
-                response = [("error", final_answer)]
+                response = [(final_answer, "error")]
 
         else:
             raise ValueError(
