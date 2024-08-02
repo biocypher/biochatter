@@ -42,6 +42,22 @@ Project board. The pre-existing KG build and deploy scripts were used via the
 `docker-compose-password.yml`, which builds a password-protected version of the
 KG. Deployment and setup of the cloud VM took another ~2h.
 
+The schema of the knowledge graph is as follows:
+
+```mermaid
+graph LR;
+    Person -- Leads --> Project
+    Project -- PartOf --> Iteration
+    Project -- HasComment --> Comment
+```
+
+Other available fields include `Title`, `Assignees`, `Status`, `Labels`,
+`Linked pull requests`, `Milestone`, `Repository`, `Reviewers`, `Priority`,
+`Size`, `Estimate`, `Iteration`, `Start date`, and `End date`. Some of these,
+such as `Priority` and `Size`, are properties of the project item in our current
+implementation. These assignments, including the schmema of the graph, can be
+flexibly adapted by using BioCypher mechanisms.
+
 Be aware that running this script will require a GitHub token with access to the
 project board. This token should be stored in the environment variable
 `BIOCYPHER_GITHUB_PROJECT_TOKEN`.
