@@ -63,7 +63,7 @@ ANSWER = "answer"
 SEARCH_QUERIES = "search_queries"
 SEARCH_QUERIES_DESCRIPTION = "query for graph database"
 REVISED_QUERY = "revised_query"
-REVISED_QUERY_DESCRIPTION = "Revised query"
+REVISED_QUERY_DESCRIPTION = "Revised query based on the reflection."
 SCORE_DESCRIPTION = (
     "the score for the query based on its query result"
     " and relevance to the user's question,"
@@ -138,7 +138,10 @@ class KGQueryReflexionAgent(ReflexionAgent):
                 MessagesPlaceholder(variable_name="messages"),
                 (
                     "system",
-                    "Only generate query according to the user's question above.",
+                    (
+                        "Note: 1. Only generate query according to the user's question above.\n"
+                        "2. Please limit the results to a maximum of 30 items"
+                    ),
                 ),
             ]
         ).partial(time=lambda: datetime.now().isoformat())
