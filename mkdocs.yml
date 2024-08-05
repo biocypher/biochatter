@@ -33,6 +33,7 @@ theme:
     - search.highlight
     - navigation.instant
     - navigation.tabs
+    - navigation.sections
 
   icon:
     repo: fontawesome/brands/github
@@ -50,9 +51,7 @@ nav:
   - Home: index.md
   - Features:
       - Basic Usage - Chat: chat.md
-      - Connecting Knowledge Graphs: kgs.md
       - Retrieval-Augmented Generation: rag.md
-      - API Calling: api.md
       - Reflexion via LangGraph: reflexion-agent.md
       - Open-source and Local LLMs: open-llm.md
       - LLM in your Browser - WebAssembly: wasm.md
