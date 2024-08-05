@@ -1,4 +1,4 @@
-# Retrieval-Augmented Generation (RAG)
+# Retrieval-Augmented Generation
 
 ## Overview
 
@@ -98,6 +98,24 @@ knowledge graph (`schema_info.yaml`), which contains more information pertinent
 to LLM interaction with the database.  The current prototypical implementation
 of query generation through an LLM is implemented in the `prompts.py` module on
 the example of a Neo4j knowledge graph connection.
+
+```mermaid
+sequenceDiagram
+    participant User/Primary Agent
+    participant DatabaseAgent
+    participant Knowledge Graph
+
+    User/Primary Agent ->> DatabaseAgent: question
+    Knowledge Graph ->> DatabaseAgent: schema information
+    DatabaseAgent ->> DatabaseAgent: select entities
+    DatabaseAgent ->> DatabaseAgent: select relationships
+    DatabaseAgent ->> DatabaseAgent: select properties
+    DatabaseAgent ->> DatabaseAgent: generate query
+    DatabaseAgent ->> Knowledge Graph: submit query
+    Knowledge Graph ->> DatabaseAgent: return results
+    DatabaseAgent ->> DatabaseAgent: summarise (optional)
+    DatabaseAgent ->> User/Primary Agent: return results
+```
 
 ### Connecting
 
@@ -273,6 +291,23 @@ in these repositories, you can call `docker compose up -d standalone`
 (`standalone` being the Milvus endpoint, which starts two other services
 alongside it).
 
+```mermaid
+sequenceDiagram
+    participant User/Primary Agent
+    participant VectorDatabaseAgent
+    participant Vector Database
+    participant Documents
+
+    Documents ->> Vector Database: embed text fragments
+    User/Primary Agent ->> VectorDatabaseAgent: question
+    VectorDatabaseAgent ->> VectorDatabaseAgent: generate artificial answer (optional)
+    VectorDatabaseAgent ->> VectorDatabaseAgent: embed question or artificial answer
+    VectorDatabaseAgent ->> Vector Database: submit search query embedding
+    Vector Database ->> VectorDatabaseAgent: return most similar embedded fragments
+    VectorDatabaseAgent ->> VectorDatabaseAgent: summarise (optional)
+    VectorDatabaseAgent ->> User/Primary Agent: return results
+```
+
 ### Connecting
 
 To connect to a vector DB host, we can use the corresponding class:
@@ -352,6 +387,22 @@ Agent. It is designed to interact with various external APIs and provides a
 structured approach to generating queries, fetching results, and interpreting
 the responses from different API services.
 
+```mermaid
+sequenceDiagram
+    participant User/Primary Agent
+    participant APIAgent
+    participant External Software
+
+    External Software ->> APIAgent: API definition
+    User/Primary Agent ->> APIAgent: question
+    APIAgent ->> APIAgent: parameterise API
+    APIAgent ->> APIAgent: generate API query
+    APIAgent ->> External Software: submit query (optional)
+    APIAgent ->> External Software: fetch result
+    External Software ->> APIAgent: return result
+    APIAgent ->> APIAgent: summarise / interpret (optional)
+    APIAgent ->> User/Primary Agent: return results
+```
 
 ### Example: OncoKB Integration
 
