@@ -1,14 +1,34 @@
 [tool.poetry]
 name = "biochatter"
-version = "0.6.0"
+version = "0.6.1"
 description = "Backend library for conversational AI in biomedicine"
 authors = [
     "Sebastian Lobentanzer <sebastian.lobentanzer@gmail.com>",
     "Shaohong Feng <shaohong.feng.78@gmail.com>",
     "Andreas Maier <andreas.maier-1@uni-hamburg.de"
 ]
+repository = "https://github.com/biocypher/biochatter"
 license = "MIT"
 readme = "README.md"
+packages = [
+    { include = "biochatter" }
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Natural Language :: English",
+    "Topic :: Scientific/Engineering :: Bio-Informatics"
+]
+
+[project.urls]
+Homepage = "https://biochatter.org"
+Documentation = "https://biochatter.org"
+Repository = "https://github.com/biocypher/biochatter.git"
+Issues = "https://github.com/biocypher/biochatter/issues"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"

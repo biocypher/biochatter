@@ -63,6 +63,9 @@ class RagAgent:
                 search occurs. Defaults to None, which means the operations will
                 be performed across all documents in the database.
 
+            agent_desc (str): A description of the agent. If not provided, the
+                agent will generate a description based on the mode.
+
         """
         self.mode = mode
         self.model_name = model_name

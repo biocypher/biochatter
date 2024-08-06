@@ -10,21 +10,28 @@ score their output, and self-improve.
 The workflow of a Reflexion Agent is composed of individual nodes that can
 either generate or consume data as follows:
 
-![ReflexionAgent workflow](images/reflexion-agent.png)
-
-***draft***: in this node, an LLM is initially prompted to generate a specific text
-and action. (mem <- AIMessage(...)).
-
-***execute tool***: this node executes a tool function based on an action/text
-generated in the previous node. (mem <- ToolMessage(...)).
-
-***revise***: this node scores the output of the tool call and generates a
-self-reflection to provide feedback aimed at improving the results. (mem <-
-AIMessage(...))
-
-***evaluate***: this node assesses the quality of the generated outputs
-
-***memory***: a list of BaseMessage
+<table>
+  <tr>
+    <td style="width: 250px;">
+      ```mermaid
+      flowchart TD
+          START --> Draft
+          Draft --> ExecuteTool
+          ExecuteTool --> Revise
+          Revise --> ShouldContinue?
+          ShouldContinue? -->|no| END
+          ShouldContinue? -->|yes| ExecuteTool
+      ```
+    </td>
+    <td style="vertical-align: top; padding-top: 100px; padding-left: 10px; padding-right: 100px;">
+      <strong>Draft</strong>: in this node, an LLM is initially prompted to generate a specific text and action. (mem <- AIMessage(...)).<br><br>
+      <strong>Execute tool</strong>: this node executes a tool function based on an action/text generated in the previous node. (mem <- ToolMessage(...)).<br><br>
+      <strong>Revise</strong>: this node scores the output of the tool call and generates a self-reflection to provide feedback aimed at improving the results. (mem <- AIMessage(...)).<br><br>
+      <strong>Evaluate (ShouldContinue)</strong>: this node assesses the quality of the generated outputs.<br><br>
+      <strong>Memory (mem)</strong>: a list of BaseMessage.
+    </td>
+  </tr>
+</table>
 
 ## Usage
 
@@ -39,7 +46,7 @@ To use the `KGQueryReflexionAgent`:
 database and a conversation factory, which can create an instance of
 GptConversation (see [Basic Usage: Chat](chat.md)).
 
-```
+```python
 import os
 from biochatter.llm_connect import GptConversation
 from biochatter.kg_langgraph_agent import KGQueryReflexionAgent
@@ -63,7 +70,7 @@ agent = KGQueryReflexionAgent(
 question with the `BioCypherPromptEngine`, which provides node info, edge info,
 and node and edge properties based on the user's question.
 
-```
+```python
 from biochatter.prompts import BioCypherPromptEngine
 prompt_engine = BioCypherPromptEngine(
     model_name="gpt-3.5-turbo",
@@ -76,7 +83,7 @@ kg_prompt = prompt_engine.generate_query_prompt(question)
 3. We can now use the agent to generate and reflect on the Cypher query and
 optimise it.
 
-```
+```python
 cypher_query = agent.execute(question, kg_prompt)
 ```
 
@@ -116,7 +123,7 @@ connect to kg database and query KG in draft/revise node
 create initial responder, which prompts LLM to generate the query
 
 initial prompts:
-```
+```python
 (
     "system",
     (
@@ -133,7 +140,7 @@ initial prompts:
 
 Initial answer schema:
 
-```
+```python
 class GenerateQuery(BaseModel):
     """Generate the query."""
 
@@ -152,7 +159,7 @@ outputs, and revises the current query
 
 Revise prompts:
 
-```
+```python
 """
 Revise your previous query using the query result and follow the guidelines:
 1. If you consistently obtain empty results, please consider removing constraints such as relationship constraints to try to obtain a result.
@@ -163,7 +170,7 @@ Revise your previous query using the query result and follow the guidelines:
 
 Revise answer schema:
 
-```
+```python
 class ReviseQuery(GenerateQuery):
     """Revise your previous query according to your question."""
 
