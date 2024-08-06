@@ -685,7 +685,3 @@ new_api_agent = APIAgent(
 
 result = new_api_agent.execute("Your question here")
 ```
-
-#### 7. Integrate with RagAgent
-
-TO DO
