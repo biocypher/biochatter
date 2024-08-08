@@ -135,7 +135,7 @@ process. This is partly to account for the limited token input space of some
 models, and partly to better be able to test and compare the individual steps.
 The steps can also be wrapped in a single function, `generate_query`, which
 handles the entire process. In addition, we can use the [Reflexion
-Agent](../reflexion-agent) to iteratively improve a query based on its results.
+Agent](reflexion-agent.md) to iteratively improve a query based on its results.
 
 #### Setup
 

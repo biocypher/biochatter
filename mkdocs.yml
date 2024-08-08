@@ -44,6 +44,12 @@ plugins:
       default_handler: python
   - table-reader
   - social
+  - redirects:
+      redirect_maps:
+        "vignette-custom-bclight-simple.md": "vignettes/custom-bclight-simple.md"
+        "vignette-custom-bclight-advanced.md": "vignettes/custom-bclight-advanced.md"
+        "vignette-kg.md": "vignettes/kg.md"
+        "vignette-rag.md": "vignettes/rag.md"
 
 site_url: https://biochatter.org/
 
@@ -62,10 +68,11 @@ nav:
       - All Results: benchmark-results.md
       - Developer Guide: benchmark-developer.md
   - Vignettes:
-      - Knowledge Graph RAG: vignette-kg.md
-      - Retrieval-Augmented Generation (RAG): vignette-rag.md
-      - Customising BioChatter Light - Simple: vignette-custom-bclight-simple.md
-      - Customising BioChatter Light - Advanced: vignette-custom-bclight-advanced.md
+      - Home: vignettes/index.md
+      - Knowledge Graph RAG: vignettes/kg.md
+      - Retrieval-Augmented Generation (RAG): vignettes/rag.md
+      - Customising BioChatter Light - Simple: vignettes/custom-bclight-simple.md
+      - Customising BioChatter Light - Advanced: vignettes/custom-bclight-advanced.md
   - API Reference:
       - LLM Connectivity: llm_connect-reference.md
       - Vectorstore Agent: vectorstore-reference.md
