@@ -33,6 +33,7 @@ def on_pre_build(config, **kwargs) -> None:
 
     overview = create_overview_table(result_files_path, result_file_names)
 
+    plot_exam_en_vs_de()
     plot_accuracy_per_model(overview)
     plot_accuracy_per_quantisation(overview)
     plot_accuracy_per_task(overview)
@@ -102,9 +103,9 @@ def preprocess_results_for_frontend(
         axis=1,
     )
 
-    aggregated_scores[
-        "Full model name"
-    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
     aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
     aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
     aggregated_scores["Score SD"] = aggregated_scores["score_sd"]
@@ -174,9 +175,9 @@ def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
         axis=1,
     )
 
-    aggregated_scores[
-        "Full model name"
-    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
         "subtask"
     )
@@ -233,9 +234,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     )
 
     overview_per_quantisation = overview
-    overview_per_quantisation[
-        "Full model name"
-    ] = overview_per_quantisation.index
+    overview_per_quantisation["Full model name"] = (
+        overview_per_quantisation.index
+    )
     overview_per_quantisation[
         ["Model name", "Size", "Version", "Quantisation"]
     ] = overview_per_quantisation["Full model name"].str.split(":", expand=True)
@@ -267,9 +268,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         ]
     ]
     # round mean and sd to 2 decimal places
-    overview_per_quantisation.loc[
-        :, "Median Accuracy"
-    ] = overview_per_quantisation["Median Accuracy"].round(2)
+    overview_per_quantisation.loc[:, "Median Accuracy"] = (
+        overview_per_quantisation["Median Accuracy"].round(2)
+    )
     overview_per_quantisation.loc[:, "SD"] = overview_per_quantisation[
         "SD"
     ].round(2)
@@ -714,9 +715,9 @@ def plot_extraction_tasks():
         axis=1,
     )
 
-    aggregated_scores[
-        "Full model name"
-    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
         "subtask"
     )
@@ -751,6 +752,130 @@ def plot_extraction_tasks():
     plt.legend(bbox_to_anchor=(1, 1), loc="upper left")
     plt.savefig(
         "docs/images/stripplot-extraction-tasks.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+
+
+def plot_exam_en_vs_de():
+    """
+    Load raw result for medical_exam; aggregate based on the language and
+    calculate mean accuracy for each model. Plot a stripplot of the mean
+    accuracy across models, coloured by language.
+    """
+    medical_exam = pd.read_csv("benchmark/results/medical_exam.csv")
+    medical_exam["score_possible"] = medical_exam["score"].apply(
+        lambda x: float(x.split("/")[1])
+    )
+    medical_exam["scores"] = medical_exam["score"].apply(
+        lambda x: x.split("/")[0]
+    )
+    medical_exam["score_achieved"] = medical_exam["scores"].apply(
+        lambda x: (
+            np.mean([float(score) for score in x.split(";")])
+            if ";" in x
+            else float(x)
+        )
+    )
+    medical_exam["accuracy"] = (
+        medical_exam["score_achieved"] / medical_exam["score_possible"]
+    )
+    medical_exam["score_sd"] = medical_exam["scores"].apply(
+        lambda x: (
+            np.std([float(score) for score in x.split(";")], ddof=1)
+            if ";" in x
+            else 0
+        )
+    )
+    medical_exam["task"] = medical_exam["subtask"].apply(
+        lambda x: x.split(":")[0]
+    )
+    medical_exam["domain"] = medical_exam["subtask"].apply(
+        lambda x: x.split(":")[1]
+    )
+    medical_exam["language"] = medical_exam["subtask"].apply(
+        lambda x: x.split(":")[2]
+    )
+
+    # plot language comparison
+    aggregated_scores_language = medical_exam.groupby(
+        ["model_name", "language"]
+    ).agg(
+        {
+            "accuracy": "mean",
+            "score_sd": "mean",
+        }
+    )
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(6, 4))
+    sns.boxplot(
+        x="language",
+        y="accuracy",
+        data=aggregated_scores_language,
+    )
+
+    plt.savefig(
+        "docs/images/boxplot-medical-exam-language.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+
+    # plot task comparison
+    aggregated_scores_task = medical_exam.groupby(["model_name", "task"]).agg(
+        {
+            "accuracy": "mean",
+            "score_sd": "mean",
+        }
+    )
+    # calculate mean accuracy per task
+    mean_accuracy = aggregated_scores_task.groupby("task")["accuracy"].mean()
+    # sort tasks by mean accuracy
+    sorted_tasks = mean_accuracy.sort_values(ascending=False).index
+
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(6, 4))
+    plt.xticks(rotation=45, ha="right")
+    sns.boxplot(
+        x="task",
+        y="accuracy",
+        data=aggregated_scores_task,
+        order=sorted_tasks,
+    )
+
+    plt.savefig(
+        "docs/images/boxplot-medical-exam-task.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+
+    # plot domain comparison
+    aggregated_scores_domain = medical_exam.groupby(
+        ["model_name", "domain"]
+    ).agg(
+        {
+            "accuracy": "mean",
+            "score_sd": "mean",
+        }
+    )
+    # calculate mean accuracy per domain
+    mean_accuracy = aggregated_scores_domain.groupby("domain")[
+        "accuracy"
+    ].mean()
+    # sort domains by mean accuracy
+    sorted_domains = mean_accuracy.sort_values(ascending=False).index
+
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(6, 4))
+    plt.xticks(rotation=45, ha="right")
+    sns.boxplot(
+        x="domain",
+        y="accuracy",
+        data=aggregated_scores_domain,
+        order=sorted_domains,
+    )
+
+    plt.savefig(
+        "docs/images/boxplot-medical-exam-domain.png",
         bbox_inches="tight",
         dpi=300,
     )
