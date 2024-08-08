@@ -63,6 +63,9 @@ plugins:
         "api-reference.md": "api-docs/api-calling.md"
         "reflexion-reference.md": "api-docs/reflexion.md"
         "podcast-reference.md": "api-docs/podcast.md"
+        "benchmark.md": "benchmark/overview.md"
+        "benchmark-results.md": "benchmark/results.md"
+        "benchmark-developer.md": "benchmark/developer.md"
 
 site_url: https://biochatter.org/
 
@@ -78,9 +81,9 @@ nav:
       - The Living Benchmark: features/benchmark.md
       - Podcast my Paper: features/podcast.md
   - Benchmark:
-      - Overview: benchmark.md
-      - All Results: benchmark-results.md
-      - Developer Guide: benchmark-developer.md
+      - Overview: benchmark/overview.md
+      - All Results: benchmark/results.md
+      - Developer Guide: benchmark/developer.md
   - Vignettes:
       - Home: vignettes/index.md
       - Knowledge Graph RAG: vignettes/kg.md
