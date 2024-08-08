@@ -299,7 +299,6 @@ class BlastInterpreter(BaseInterpreter):
             question (str): The question to be answered.
             conversation_factory: A BioChatter conversation object.
             response_text (str): The response.text returned by NCBI.
-            n_lines (int): The number of lines to read from the file.
 
         Returns:
             str: The extracted answer from the BLAST results.

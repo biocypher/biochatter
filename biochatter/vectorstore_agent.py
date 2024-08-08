@@ -521,7 +521,7 @@ class VectorDatabaseAgentMilvus:
         return expr.replace('"', "").replace("'", "")
 
     def similarity_search(
-        self, query: str, k: int = 3, doc_ids: list[str] = None
+        self, query: str, k: int = 3, doc_ids: Optional[list[str]] = None
     ) -> list[Document]:
         """
         Perform similarity search insider the currently active database
@@ -538,8 +538,8 @@ class VectorDatabaseAgentMilvus:
 
             k (int): the number of results to return
 
-            doc_ids(List[str] optional): the list of document ids, do similarity search across the
-            specified documents
+            doc_ids (Optional[list[str]]): the list of document ids, do
+                similarity search across the specified documents
 
         Returns:
             List[Document]: search results
@@ -568,8 +568,8 @@ class VectorDatabaseAgentMilvus:
         Args:
             doc_id (str): the document to be deleted
 
-            doc_ids(List[str] optional): the list of document ids, defines documents scope
-            within which remove operation occurs.
+            doc_ids (Optional[list[str]]): the list of document ids, defines
+                documents scope within which remove operation occurs.
 
         Returns:
             bool: True if the document is deleted, False otherwise
@@ -609,8 +609,9 @@ class VectorDatabaseAgentMilvus:
         Get all non-deleted documents from the currently active database.
 
         Args:
-            doc_ids(List[str] optional): the list of document ids, defines documents scope within
-            which the operation of obaining all documents occurs
+            doc_ids (List[str] optional): the list of document ids, defines
+                documents scope within which the operation of obtaining all
+                documents occurs
 
         Returns:
             List[Dict]: the metadata of all non-deleted documents in the form

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from transformers import GPT2TokenizerFast
 from langchain.schema import Document
@@ -334,18 +334,16 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
             documentids_workspace=documentids_workspace,
         )
 
-    def load_models(self):
+    def load_models(self) -> None:
         """
-        Return all models that are currently available on the Xinference server.
-
-        Returns:
-            dict: dict of models
+        Get all models that are currently available on the Xinference server and
+        write them to `self.models`.
         """
         for id, model in self.client.list_models().items():
             model["id"] = id
             self.models[model["model_name"]] = model
 
-    def list_models_by_type(self, type: str):
+    def list_models_by_type(self, type: str) -> List[str]:
         """
         Return all models of a certain type that are currently available on the
         Xinference server.
