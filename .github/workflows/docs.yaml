@@ -36,7 +36,7 @@ jobs:
             mkdocs-material-
 
       - name: Packages
-        run: pip install mkdocs-material[imaging] mkdocstrings[python] pandas mkdocs-table-reader-plugin seaborn matplotlib scipy colorcet
+        run: pip install mkdocs-material[imaging] mkdocstrings[python] pandas mkdocs-table-reader-plugin seaborn matplotlib scipy colorcet mkdocs-redirects
 
       - name: Build
         run: mkdocs build
