@@ -1,3 +1,4 @@
+import math
 import os
 import re
 
@@ -33,7 +34,9 @@ def on_pre_build(config, **kwargs) -> None:
 
     overview = create_overview_table(result_files_path, result_file_names)
 
-    plot_exam_en_vs_de()
+    plot_text2cypher()
+    plot_image_caption_confidence()
+    plot_medical_exam()
     plot_accuracy_per_model(overview)
     plot_accuracy_per_quantisation(overview)
     plot_accuracy_per_task(overview)
@@ -43,6 +46,123 @@ def on_pre_build(config, **kwargs) -> None:
     plot_extraction_tasks()
     plot_comparison_naive_biochatter(overview)
     calculate_stats(overview)
+
+
+def plot_text2cypher():
+    """
+
+    Get entity_selection, relationship_selection, property_selection,
+    property_exists, and end_to_end_query_generation results files, combine and
+    preprocess them and plot the accuracy for each model as a boxplot.
+
+    """
+    entity_selection = pd.read_csv("benchmark/results/entity_selection.csv")
+    entity_selection["task"] = "entity_selection"
+    relationship_selection = pd.read_csv(
+        "benchmark/results/relationship_selection.csv"
+    )
+    relationship_selection["task"] = "relationship_selection"
+    property_selection = pd.read_csv("benchmark/results/property_selection.csv")
+    property_selection["task"] = "property_selection"
+    property_exists = pd.read_csv("benchmark/results/property_exists.csv")
+    property_exists["task"] = "property_exists"
+    end_to_end_query_generation = pd.read_csv(
+        "benchmark/results/end_to_end_query_generation.csv"
+    )
+    end_to_end_query_generation["task"] = "end_to_end_query_generation"
+
+    # combine all results
+    results = pd.concat(
+        [
+            entity_selection,
+            relationship_selection,
+            property_selection,
+            property_exists,
+            end_to_end_query_generation,
+        ]
+    )
+
+    # calculate accuracy
+    results["score_possible"] = results["score"].apply(
+        lambda x: float(x.split("/")[1])
+    )
+    results["scores"] = results["score"].apply(lambda x: x.split("/")[0])
+    results["score_achieved"] = results["scores"].apply(
+        lambda x: (
+            np.mean([float(score) for score in x.split(";")])
+            if ";" in x
+            else float(x)
+        )
+    )
+    results["accuracy"] = results["score_achieved"] / results["score_possible"]
+    results["score_sd"] = results["scores"].apply(
+        lambda x: (
+            np.std([float(score) for score in x.split(";")], ddof=1)
+            if ";" in x
+            else 0
+        )
+    )
+
+    # plot results per task
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(6, 4))
+    sns.boxplot(
+        x="task",
+        y="accuracy",
+        data=results,
+    )
+    plt.savefig(
+        "docs/images/boxplot-text2cypher.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+
+
+def plot_image_caption_confidence():
+    """
+    Get multimodal_answer_confidence.csv file, preprocess it and plot the
+    confidence scores for correct and incorrect answers as histograms. Correct
+    answer confidence values are in the correct_confidence column and incorrect
+    answer confidence values are in the incorrect_confidence column; both
+    columns contain individual confidence values (integers between 1 and 10)
+    separated by semicolons.
+    """
+    results = pd.read_csv("benchmark/results/multimodal_answer_confidence.csv")
+    correct_values = results["correct_confidence"].to_list()
+    incorrect_values = results["incorrect_confidence"].to_list()
+    # flatten lists of confidence values
+    correct_values = [
+        int(value) for sublist in correct_values for value in sublist.split(";")
+    ]
+    for value in list(incorrect_values):
+        if math.isnan(value):
+            incorrect_values.remove(value)
+        if isinstance(value, float):
+            continue
+        if ";" in value:
+            incorrect_values.remove(value)
+            incorrect_values.extend([int(val) for val in value.split(";")])
+
+    incorrect_values = [int(value) for value in incorrect_values]
+
+    # plot histograms of both correct and incorrect confidence values with
+    # transparency, correct green, incorrect red
+    plt.figure(figsize=(6, 4))
+    plt.hist(
+        [correct_values, incorrect_values],
+        bins=range(1, 12),
+        color=["green", "red"],
+        label=["Correct", "Incorrect"],
+    )
+    plt.xlabel("Confidence")
+    plt.ylabel("Count")
+    plt.xticks(range(1, 11))
+    plt.legend()
+    plt.savefig(
+        "docs/images/histogram-image-caption-confidence.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
 
 
 def preprocess_results_for_frontend(
@@ -757,13 +877,14 @@ def plot_extraction_tasks():
     )
 
 
-def plot_exam_en_vs_de():
+def plot_medical_exam():
     """
     Load raw result for medical_exam; aggregate based on the language and
     calculate mean accuracy for each model. Plot a stripplot of the mean
     accuracy across models, coloured by language.
     """
     medical_exam = pd.read_csv("benchmark/results/medical_exam.csv")
+
     medical_exam["score_possible"] = medical_exam["score"].apply(
         lambda x: float(x.split("/")[1])
     )
@@ -796,6 +917,9 @@ def plot_exam_en_vs_de():
     medical_exam["language"] = medical_exam["subtask"].apply(
         lambda x: x.split(":")[2]
     )
+
+    # processing: remove "short_words" task, not informative
+    medical_exam = medical_exam[medical_exam["task"] != "short_words"]
 
     # plot language comparison
     aggregated_scores_language = medical_exam.groupby(

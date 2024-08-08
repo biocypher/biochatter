@@ -228,7 +228,7 @@ medical_exam:
 
   # Math relevant questions
 
-  - case: single_answer:math:en
+  - case: single_choice:math:en
     input:
       prompt: A hollow organ of a patient contains 0.5 kg of liquid whose (mass) density is approximately the same as that of water. What is the approximate volume of this hollow organ? (A) 500 mm3 (B) 500 cm3 (C) 0,05 m3 (D) 0,5 m3 (E) 50 m3
       system_messages:
@@ -238,7 +238,7 @@ medical_exam:
     expected:
       answer: "b"
 
-  - case: single_answer:math:en
+  - case: single_choice:math:en
     input:
       prompt: In a car accident, an occupant weighing 75 kg is restrained by the tight-fitting seat belt, whereby a belt force limiter limits the force acting on the occupant to a maximum of 5,000 N. The acceleration acting on the occupant is thus limited (in terms of amount) to approx. (A) 0.067 m/s2 (B) 15 m/s2 (C) 33 m/s2 (D) 67 m/s2 (E) 375 m/s2
       system_messages:
@@ -248,7 +248,7 @@ medical_exam:
     expected:
       answer: "d"
 
-  - case: single_answer:math:en
+  - case: single_choice:math:en
     input:
       prompt: Medical oxygen is supplied in pressurised gas cylinders with an internal pressure of usually 200 bar. Manufacturers state that these cylinders should not be heated to over 50 °C and must be stored in a protected environment. By approximately what percentage does this internal pressure increase when such a pressurised gas cylinder is heated from 30 °C to 90 °C? (A) 3 % (B) 20 % (C) 40 % (D) 60 % (E) 300 %
       system_messages:
