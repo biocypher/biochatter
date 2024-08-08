@@ -273,7 +273,7 @@ class VectorDatabaseAgentMilvus:
             using=self.alias,
         )
         self._col_metadata.load()
-
+        
     def _create_metadata_collection(self) -> None:
         """
         Create metadata collection.
@@ -286,38 +286,39 @@ class VectorDatabaseAgentMilvus:
         vector "embedding". The field "isDeleted" is used to specify if the
         document is deleted.
         """
+        MAX_LENGTH = 10000
         doc_id = FieldSchema(
             name="id", dtype=DataType.INT64, is_primary=True, auto_id=True
         )
         doc_name = FieldSchema(
-            name="name", dtype=DataType.VARCHAR, max_length=255
+            name="name", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
         )
         doc_author = FieldSchema(
-            name="author", dtype=DataType.VARCHAR, max_length=255
+            name="author", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
         )
         doc_title = FieldSchema(
-            name="title", dtype=DataType.VARCHAR, max_length=1000
+            name="title", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
         )
         doc_format = FieldSchema(
             name="format", dtype=DataType.VARCHAR, max_length=255
         )
         doc_subject = FieldSchema(
-            name="subject", dtype=DataType.VARCHAR, max_length=255
+            name="subject", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
         )
         doc_creator = FieldSchema(
-            name="creator", dtype=DataType.VARCHAR, max_length=255
+            name="creator", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
         )
         doc_producer = FieldSchema(
-            name="producer", dtype=DataType.VARCHAR, max_length=255
+            name="producer", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
         )
         doc_creationDate = FieldSchema(
-            name="creationDate", dtype=DataType.VARCHAR, max_length=64
+            name="creationDate", dtype=DataType.VARCHAR, max_length=1024
         )
         doc_modDate = FieldSchema(
-            name="modDate", dtype=DataType.VARCHAR, max_length=64
+            name="modDate", dtype=DataType.VARCHAR, max_length=1024
         )
         doc_source = FieldSchema(
-            name="source", dtype=DataType.VARCHAR, max_length=1000
+            name="source", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
         )
         embedding = FieldSchema(
             name="embedding",
