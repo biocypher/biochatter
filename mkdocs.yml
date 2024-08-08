@@ -50,19 +50,27 @@ plugins:
         "vignette-custom-bclight-advanced.md": "vignettes/custom-bclight-advanced.md"
         "vignette-kg.md": "vignettes/kg.md"
         "vignette-rag.md": "vignettes/rag.md"
+        "benchmarking.md": "features/benchmark.md"
+        "chat.md": "features/chat.md"
+        "rag.md": "features/rag.md"
+        "reflexion-agent.md": "features/reflexion-agent.md"
+        "open-llm.md": "features/open-llm.md"
+        "wasm.md": "features/wasm.md"
+        "podcast.md": "features/podcast.md"
 
 site_url: https://biochatter.org/
 
 nav:
   - Home: index.md
   - Features:
-      - Basic Usage - Chat: chat.md
-      - Retrieval-Augmented Generation: rag.md
-      - Reflexion via LangGraph: reflexion-agent.md
-      - Open-source and Local LLMs: open-llm.md
-      - LLM in your Browser - WebAssembly: wasm.md
-      - Benchmarking: benchmarking.md
-      - Podcast my Paper: podcast.md
+      - Home: features/index.md
+      - Basic Usage - Chat: features/chat.md
+      - Retrieval-Augmented Generation: features/rag.md
+      - Reflexion via LangGraph: features/reflexion-agent.md
+      - Open-source and Local LLMs: features/open-llm.md
+      - LLM in your Browser - WebAssembly: features/wasm.md
+      - The Living Benchmark: features/benchmark.md
+      - Podcast my Paper: features/podcast.md
   - Benchmark:
       - Overview: benchmark.md
       - All Results: benchmark-results.md
