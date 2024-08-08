@@ -93,7 +93,7 @@ class BaseFetcher(ABC):
     @abstractmethod
     def fetch_results(
         self,
-        query_model,
+        query_model: BaseModel,
         retries: Optional[int] = 3,
     ):
         """
