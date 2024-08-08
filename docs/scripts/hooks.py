@@ -820,6 +820,41 @@ def plot_exam_en_vs_de():
         dpi=300,
     )
 
+    # plot language comparison per domain
+    aggregated_scores_language_domain = medical_exam.groupby(
+        ["model_name", "language", "domain"]
+    ).agg(
+        {
+            "accuracy": "mean",
+            "score_sd": "mean",
+        }
+    )
+    # calculate mean accuracy per language and domain
+    mean_accuracy = aggregated_scores_language_domain.groupby(
+        ["language", "domain"]
+    )["accuracy"].mean()
+    # sort domains by mean accuracy
+    sorted_domains = mean_accuracy.sort_values(
+        ascending=False
+    ).index.get_level_values("domain")
+
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(6, 4))
+    plt.xticks(rotation=45, ha="right")
+    sns.boxplot(
+        x="domain",
+        y="accuracy",
+        hue="language",
+        data=aggregated_scores_language_domain,
+        order=sorted_domains,
+    )
+
+    plt.savefig(
+        "docs/images/boxplot-medical-exam-language-domain.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+
     # plot task comparison
     aggregated_scores_task = medical_exam.groupby(["model_name", "task"]).agg(
         {
