@@ -57,6 +57,12 @@ plugins:
         "open-llm.md": "features/open-llm.md"
         "wasm.md": "features/wasm.md"
         "podcast.md": "features/podcast.md"
+        "llm_connect-reference.md": "api-docs/llm_connect.md"
+        "vectorstore-reference.md": "api-docs/vectorstore.md"
+        "kg-reference.md": "api-docs/kg.md"
+        "api-reference.md": "api-docs/api-calling.md"
+        "reflexion-reference.md": "api-docs/reflexion.md"
+        "podcast-reference.md": "api-docs/podcast.md"
 
 site_url: https://biochatter.org/
 
@@ -82,12 +88,13 @@ nav:
       - Customising BioChatter Light - Simple: vignettes/custom-bclight-simple.md
       - Customising BioChatter Light - Advanced: vignettes/custom-bclight-advanced.md
   - API Reference:
-      - LLM Connectivity: llm_connect-reference.md
-      - Vectorstore Agent: vectorstore-reference.md
-      - Knowledge Graph Agent: kg-reference.md
-      - API Agent: api-reference.md
-      - Reflexion Agent: reflexion-reference.md
-      - Podcast: podcast-reference.md
+      - Home: api-docs/index.md
+      - LLM Connectivity: api-docs/llm_connect.md
+      - Vectorstore Agent: api-docs/vectorstore.md
+      - Knowledge Graph Agent: api-docs/kg.md
+      - API Agent: api-docs/api-calling.md
+      - Reflexion Agent: api-docs/reflexion.md
+      - Podcast: api-docs/podcast.md
 
 repo_url: https://github.com/biocypher/biochatter
 repo_name: biocypher/biochatter
