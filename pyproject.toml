@@ -31,7 +31,7 @@ Repository = "https://github.com/biocypher/biochatter.git"
 Issues = "https://github.com/biocypher/biochatter/issues"
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.12"
+python = ">=3.10,<3.13"
 langchain = "^0.2.5"
 openai = "^1.1.0"
 pymupdf = "^1.22.3"
