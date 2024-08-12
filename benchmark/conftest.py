@@ -8,7 +8,11 @@ import numpy as np
 import pandas as pd
 
 from biochatter.prompts import BioCypherPromptEngine
-from biochatter.llm_connect import GptConversation, XinferenceConversation
+from biochatter.llm_connect import (
+    AnthropicConversation,
+    GptConversation,
+    XinferenceConversation,
+)
 from .load_dataset import get_benchmark_dataset
 from .benchmark_utils import benchmark_already_executed
 
@@ -65,27 +69,27 @@ XINFERENCE_MODELS = {
     #         "Q8_0",
     #     ],
     # },
-    "c4ai-command-r-v01": {
-        "model_size_in_billions": [
-            35,
-            # 104,  # this model has no quantisations
-        ],
-        "model_format": "ggufv2",
-        "quantization": [
-            "Q2_K",
-            # "Q3_K_L",
-            "Q3_K_M",
-            # "Q3_K_S",
-            # "Q4_0",
-            "Q4_K_M",
-            # "Q4_K_S",
-            # "Q5_0",
-            "Q5_K_M",
-            # "Q5_K_S",
-            "Q6_K",
-            "Q8_0",
-        ],
-    },
+    # "c4ai-command-r-v01": {
+    #     "model_size_in_billions": [
+    #         35,
+    #         # 104,  # this model has no quantisations
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         "Q2_K",
+    #         # "Q3_K_L",
+    #         "Q3_K_M",
+    #         # "Q3_K_S",
+    #         # "Q4_0",
+    #         "Q4_K_M",
+    #         # "Q4_K_S",
+    #         # "Q5_0",
+    #         "Q5_K_M",
+    #         # "Q5_K_S",
+    #         "Q6_K",
+    #         "Q8_0",
+    #     ],
+    # },
     # "custom-llama-3-instruct": {
     #     "model_size_in_billions": [
     #         70,
@@ -225,7 +229,9 @@ XINFERENCE_MODEL_NAMES = [
     for quantization in XINFERENCE_MODELS[model_name]["quantization"]
 ]
 
-BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
+BENCHMARKED_MODELS = (
+    OPENAI_MODEL_NAMES + ANTHROPIC_MODEL_NAMES + XINFERENCE_MODEL_NAMES
+)
 BENCHMARKED_MODELS.sort()
 
 # Xinference IP and port
@@ -347,6 +353,17 @@ def conversation(request, model_name, client):
         conversation.set_api_key(
             os.getenv("OPENAI_API_KEY"), user="benchmark_user"
         )
+
+    elif model_name in ANTHROPIC_MODEL_NAMES:
+        conversation = AnthropicConversation(
+            model_name=model_name,
+            prompts={},
+            correct=False,
+        )
+        conversation.set_api_key(
+            os.getenv("ANTHROPIC_API_KEY"), user="benchmark_user"
+        )
+
     elif model_name in XINFERENCE_MODEL_NAMES:
         (
             _model_name,
