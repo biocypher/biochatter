@@ -20,12 +20,12 @@ BENCHMARK_DATASET = get_benchmark_dataset()
 
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
-    "gpt-3.5-turbo-0125",
-    "gpt-4-0613",
-    "gpt-4-0125-preview",
-    "gpt-4-turbo-2024-04-09",
-    "gpt-4o-2024-05-13",
-    "gpt-4o-mini-2024-07-18",
+    # "gpt-3.5-turbo-0125",
+    # "gpt-4-0613",
+    # "gpt-4-0125-preview",
+    # "gpt-4-turbo-2024-04-09",
+    # "gpt-4o-2024-05-13",
+    # "gpt-4o-mini-2024-07-18",
 ]
 
 XINFERENCE_MODELS = {
@@ -36,6 +36,70 @@ XINFERENCE_MODELS = {
     #     "model_format": "ggmlv3",
     #     "quantization": [
     #         "q4_0",
+    #     ],
+    # },
+    # "code-llama-instruct": {
+    #     "model_size_in_billions": [
+    #         7,
+    #         13,
+    #         34,
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         "Q2_K",
+    #         # "Q3_K_L",
+    #         "Q3_K_M",
+    #         # "Q3_K_S",
+    #         # "Q4_0",
+    #         "Q4_K_M",
+    #         # "Q4_K_S",
+    #         # "Q5_0",
+    #         "Q5_K_M",
+    #         # "Q5_K_S",
+    #         "Q6_K",
+    #         "Q8_0",
+    #     ],
+    # },
+    "c4ai-command-r-v01": {
+        "model_size_in_billions": [
+            35,
+            # 104,  # this model has no quantisations
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            "Q2_K",
+            # "Q3_K_L",
+            "Q3_K_M",
+            # "Q3_K_S",
+            # "Q4_0",
+            "Q4_K_M",
+            # "Q4_K_S",
+            # "Q5_0",
+            "Q5_K_M",
+            # "Q5_K_S",
+            "Q6_K",
+            "Q8_0",
+        ],
+    },
+    # "custom-llama-3-instruct": {
+    #     "model_size_in_billions": [
+    #         70,
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         "IQ1_M",
+    #     ],
+    # },
+    # "gemma-it": {
+    #     "model_size_in_billions": [
+    #         2,
+    #         7,
+    #     ],
+    #     "model_format": "pytorch",
+    #     "quantization": [
+    #         "none",
+    #         "4-bit",
+    #         "8-bit",
     #     ],
     # },
     # "llama-2-chat": {
@@ -79,64 +143,6 @@ XINFERENCE_MODELS = {
     #         # "Q4_K_M",
     #     ],
     # },
-    # "code-llama-instruct": {
-    #     "model_size_in_billions": [
-    #         7,
-    #         13,
-    #         34,
-    #     ],
-    #     "model_format": "ggufv2",
-    #     "quantization": [
-    #         "Q2_K",
-    #         # "Q3_K_L",
-    #         "Q3_K_M",
-    #         # "Q3_K_S",
-    #         # "Q4_0",
-    #         "Q4_K_M",
-    #         # "Q4_K_S",
-    #         # "Q5_0",
-    #         "Q5_K_M",
-    #         # "Q5_K_S",
-    #         "Q6_K",
-    #         "Q8_0",
-    #     ],
-    # },
-    # "mixtral-instruct-v0.1": {
-    #     "model_size_in_billions": [
-    #         "46_7",
-    #     ],
-    #     "model_format": "ggufv2",
-    #     "quantization": [
-    #         "Q2_K",
-    #         # "Q3_K_M",
-    #         # "Q4_0",
-    #         "Q4_K_M",
-    #         # "Q5_0",
-    #         "Q5_K_M",
-    #         "Q6_K",
-    #         "Q8_0",
-    #     ],
-    # },
-    # "openhermes-2.5": {
-    #     "model_size_in_billions": [
-    #         7,
-    #     ],
-    #     "model_format": "ggufv2",
-    #     "quantization": [
-    #         "Q2_K",
-    #         # "Q3_K_S",
-    #         "Q3_K_M",
-    #         # "Q3_K_L",
-    #         # "Q4_0",
-    #         # "Q4_K_S",
-    #         "Q4_K_M",
-    #         # "Q5_0",
-    #         # "Q5_K_S",
-    #         "Q5_K_M",
-    #         "Q6_K",
-    #         "Q8_0",
-    #     ],
-    # },
     # "mistral-instruct-v0.2": {
     #     "model_size_in_billions": [
     #         7,
@@ -157,25 +163,20 @@ XINFERENCE_MODELS = {
     #         "Q8_0",
     #     ],
     # },
-    # "gemma-it": {
+    # "mixtral-instruct-v0.1": {
     #     "model_size_in_billions": [
-    #         2,
-    #         7,
-    #     ],
-    #     "model_format": "pytorch",
-    #     "quantization": [
-    #         "none",
-    #         "4-bit",
-    #         "8-bit",
-    #     ],
-    # },
-    # "custom-llama-3-instruct": {
-    #     "model_size_in_billions": [
-    #         70,
+    #         "46_7",
     #     ],
     #     "model_format": "ggufv2",
     #     "quantization": [
-    #         "IQ1_M",
+    #         "Q2_K",
+    #         # "Q3_K_M",
+    #         # "Q4_0",
+    #         "Q4_K_M",
+    #         # "Q5_0",
+    #         "Q5_K_M",
+    #         "Q6_K",
+    #         "Q8_0",
     #     ],
     # },
     # "openbiollm-llama3-8b": {
@@ -185,6 +186,26 @@ XINFERENCE_MODELS = {
     #     "model_format": "pytorch",
     #     "quantization": [
     #         "none",
+    #     ],
+    # },
+    # "openhermes-2.5": {
+    #     "model_size_in_billions": [
+    #         7,
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         "Q2_K",
+    #         # "Q3_K_S",
+    #         "Q3_K_M",
+    #         # "Q3_K_L",
+    #         # "Q4_0",
+    #         # "Q4_K_S",
+    #         "Q4_K_M",
+    #         # "Q5_0",
+    #         # "Q5_K_S",
+    #         "Q5_K_M",
+    #         "Q6_K",
+    #         "Q8_0",
     #     ],
     # },
 }
