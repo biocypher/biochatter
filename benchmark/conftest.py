@@ -28,6 +28,11 @@ OPENAI_MODEL_NAMES = [
     # "gpt-4o-mini-2024-07-18",
 ]
 
+ANTHROPIC_MODEL_NAMES = [
+    "claude-3-5-sonnet-20240620",
+    # "claude-3-opus-20240229",  # does not make a lot of sense to use, as more expensive and "less intelligent" (according to anthropic)
+]
+
 XINFERENCE_MODELS = {
     # "chatglm3": {
     #     "model_size_in_billions": [

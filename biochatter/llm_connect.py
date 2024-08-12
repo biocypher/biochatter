@@ -18,11 +18,13 @@ import logging
 import urllib.parse
 
 from langchain_openai import ChatOpenAI, AzureChatOpenAI
+from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_community.chat_models import ChatOllama
 from langchain_community.llms.huggingface_hub import HuggingFaceHub
 import nltk
 import openai
+import anthropic
 
 from ._image import encode_image, encode_image_from_url
 from ._stats import get_stats
@@ -1086,6 +1088,146 @@ class OllamaConversation(Conversation):
             token_usage (dict): The token usage statistics.
         """
         pass
+
+
+class AnthropicConversation(Conversation):
+    def __init__(
+        self,
+        model_name: str,
+        prompts: dict,
+        correct: bool = True,
+        split_correction: bool = False,
+    ):
+        """
+        Connect to Anthropic's API and set up a conversation with the user.
+        Also initialise a second conversational agent to provide corrections to
+        the model output, if necessary.
+
+        Args:
+            model_name (str): The name of the model to use.
+
+            prompts (dict): A dictionary of prompts to use for the conversation.
+
+            split_correction (bool): Whether to correct the model output by
+                splitting the output into sentences and correcting each
+                sentence individually.
+        """
+        super().__init__(
+            model_name=model_name,
+            prompts=prompts,
+            correct=correct,
+            split_correction=split_correction,
+        )
+
+        self.ca_model_name = "claude-3-5-sonnet-20240620"
+        # TODO make accessible by drop-down
+
+    def set_api_key(self, api_key: str, user: str) -> bool:
+        """
+        Set the API key for the Anthropic API. If the key is valid, initialise the
+        conversational agent. Set the user for usage statistics.
+
+        Args:
+            api_key (str): The API key for the Anthropic API.
+
+            user (str): The user for usage statistics.
+
+        Returns:
+            bool: True if the API key is valid, False otherwise.
+        """
+        client = anthropic.Anthropic(
+            api_key=api_key,
+        )
+        self.user = user
+
+        try:
+            client.count_tokens("Test connection")
+            self.chat = ChatAnthropic(
+                model_name=self.model_name,
+                temperature=0,
+                anthropic_api_key=api_key,
+            )
+            self.ca_chat = ChatAnthropic(
+                model_name=self.ca_model_name,
+                temperature=0,
+                anthropic_api_key=api_key,
+            )
+            if user == "community":
+                self.usage_stats = get_stats(user=user)
+
+            return True
+
+        except anthropic._exceptions.AuthenticationError as e:
+            return False
+
+    def _primary_query(self):
+        """
+        Query the Anthropic API with the user's message and return the response
+        using the message history (flattery system messages, prior conversation)
+        as context. Correct the response if necessary.
+
+        Returns:
+            tuple: A tuple containing the response from the Anthropic API and the
+                token usage.
+        """
+        try:
+            response = self.chat.generate([self.messages])
+        except (
+            anthropic._exceptions.APIError,
+            anthropic._exceptions.AnthropicError,
+            anthropic._exceptions.ConflictError,
+            anthropic._exceptions.NotFoundError,
+            anthropic._exceptions.APIStatusError,
+            anthropic._exceptions.RateLimitError,
+            anthropic._exceptions.APITimeoutError,
+            anthropic._exceptions.BadRequestError,
+            anthropic._exceptions.APIConnectionError,
+            anthropic._exceptions.AuthenticationError,
+            anthropic._exceptions.InternalServerError,
+            anthropic._exceptions.PermissionDeniedError,
+            anthropic._exceptions.UnprocessableEntityError,
+            anthropic._exceptions.APIResponseValidationError,
+        ) as e:
+            return str(e), None
+
+        msg = response.generations[0][0].text
+        token_usage = response.llm_output.get("token_usage")
+
+        self.append_ai_message(msg)
+
+        return msg, token_usage
+
+    def _correct_response(self, msg: str):
+        """
+        Correct the response from the Anthropic API by sending it to a secondary
+        language model. Optionally split the response into single sentences and
+        correct each sentence individually. Update usage stats.
+
+        Args:
+            msg (str): The response from the Anthropic API.
+
+        Returns:
+            str: The corrected response (or OK if no correction necessary).
+        """
+        ca_messages = self.ca_messages.copy()
+        ca_messages.append(
+            HumanMessage(
+                content=msg,
+            ),
+        )
+        ca_messages.append(
+            SystemMessage(
+                content="If there is nothing to correct, please respond "
+                "with just 'OK', and nothing else!",
+            ),
+        )
+
+        response = self.ca_chat.generate([ca_messages])
+
+        correction = response.generations[0][0].text
+        token_usage = response.llm_output.get("token_usage")
+
+        return correction
 
 
 class GptConversation(Conversation):

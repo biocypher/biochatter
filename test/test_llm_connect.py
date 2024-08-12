@@ -24,6 +24,7 @@ from biochatter.llm_connect import (
     WasmConversation,
     OllamaConversation,
     AzureGptConversation,
+    AnthropicConversation,
     XinferenceConversation,
 )
 
@@ -174,6 +175,18 @@ xinference_models = {
         "context_length": 4096,
     },
 }
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_anthropic():
+    conv = AnthropicConversation(
+        model_name="claude-3-5-sonnet-20240620",
+        prompts={},
+        split_correction=False,
+    )
+    assert conv.set_api_key(
+        api_key=os.getenv("ANTHROPIC_API_KEY"), user="test_user"
+    )
 
 
 def test_xinference_init():
