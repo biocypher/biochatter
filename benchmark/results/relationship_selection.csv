@@ -2,6 +2,9 @@ model_name,subtask,score,iterations,md5_hash,datetime,biochatter_version
 chatglm3:6:ggmlv3:q4_0,complex,4.8/6,5,452fd25898074c0ad74fedf368140c9e,2024-02-09 23:29:01,0.4.10
 chatglm3:6:ggmlv3:q4_0,multi_word,0.0/3,5,20da65f06e21899211b34a6c02f14e1b,2024-02-09 23:24:54,0.4.10
 chatglm3:6:ggmlv3:q4_0,single_word,0.0/3,5,ad1bb0a492769624275494f925c63e3c,2024-02-09 23:21:02,0.4.10
+claude-3-5-sonnet-20240620,complex,0;0;0/6,3,452fd25898074c0ad74fedf368140c9e,2024-08-13 17:39:07,0.6.3
+claude-3-5-sonnet-20240620,multi_word,0;0;0/3,3,20da65f06e21899211b34a6c02f14e1b,2024-08-13 17:38:14,0.6.3
+claude-3-5-sonnet-20240620,single_word,0;0;0/3,3,ad1bb0a492769624275494f925c63e3c,2024-08-13 17:37:19,0.6.3
 code-llama-instruct:13:ggufv2:Q2_K,complex,0.0/6,5,452fd25898074c0ad74fedf368140c9e,2024-02-09 23:58:01,0.4.10
 code-llama-instruct:13:ggufv2:Q2_K,multi_word,0.0/3,5,20da65f06e21899211b34a6c02f14e1b,2024-02-09 23:50:02,0.4.10
 code-llama-instruct:13:ggufv2:Q2_K,single_word,0.0/3,5,ad1bb0a492769624275494f925c63e3c,2024-02-09 23:43:28,0.4.10
@@ -137,6 +140,9 @@ llama-3-instruct:8:ggufv2:Q6_K,single_word,0.0/3,5,ad1bb0a492769624275494f925c63
 llama-3-instruct:8:ggufv2:Q8_0,complex,0.0/6,5,452fd25898074c0ad74fedf368140c9e,2024-04-24 12:17:48,0.4.10
 llama-3-instruct:8:ggufv2:Q8_0,multi_word,0.0/3,5,20da65f06e21899211b34a6c02f14e1b,2024-04-24 12:17:04,0.4.10
 llama-3-instruct:8:ggufv2:Q8_0,single_word,0.0/3,5,ad1bb0a492769624275494f925c63e3c,2024-04-24 12:16:29,0.4.10
+llama-3.1-instruct:8:ggufv2:Q4_K_M,complex,0;0;0/6,3,452fd25898074c0ad74fedf368140c9e,2024-08-13 19:15:24,0.6.3
+llama-3.1-instruct:8:ggufv2:Q4_K_M,multi_word,0;0;0/3,3,20da65f06e21899211b34a6c02f14e1b,2024-08-13 19:14:32,0.6.3
+llama-3.1-instruct:8:ggufv2:Q4_K_M,single_word,0;0;0/3,3,ad1bb0a492769624275494f925c63e3c,2024-08-13 19:07:19,0.6.3
 mistral-instruct-v0.2:7:ggufv2:Q2_K,complex,0.0/6,5,452fd25898074c0ad74fedf368140c9e,2024-02-11 01:31:56,0.4.10
 mistral-instruct-v0.2:7:ggufv2:Q2_K,multi_word,0.0/3,5,20da65f06e21899211b34a6c02f14e1b,2024-02-11 01:28:40,0.4.10
 mistral-instruct-v0.2:7:ggufv2:Q2_K,single_word,0.0/3,5,ad1bb0a492769624275494f925c63e3c,2024-02-11 01:25:50,0.4.10

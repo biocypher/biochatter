@@ -2,7 +2,9 @@ Model name,Size,Version,Quantisation,Median Accuracy,SD
 gpt-3.5-turbo-0125,175,,,0.87,0.21
 gpt-4-turbo-2024-04-09,Unknown,,,0.83,0.3
 gpt-4-0613,Unknown,,,0.78,0.18
+claude-3-5-sonnet-20240620,Unknown,,,0.76,0.28
 gpt-3.5-turbo-0613,175,,,0.76,0.21
+llama-3.1-instruct,8,ggufv2,Q4_K_M,0.74,0.27
 gpt-4-0125-preview,Unknown,,,0.73,0.3
 gpt-4o-2024-05-13,Unknown,,,0.73,0.35
 openhermes-2.5,7,ggufv2,Q5_K_M,0.73,0.32
@@ -11,8 +13,8 @@ openhermes-2.5,7,ggufv2,Q4_K_M,0.71,0.33
 gpt-4o-mini-2024-07-18,Unknown,,,0.7,0.27
 openhermes-2.5,7,ggufv2,Q6_K,0.7,0.33
 llama-3-instruct,8,ggufv2,Q8_0,0.65,0.35
-llama-3-instruct,8,ggufv2,Q4_K_M,0.64,0.38
-llama-3-instruct,8,ggufv2,Q6_K,0.64,0.36
+llama-3-instruct,8,ggufv2,Q4_K_M,0.65,0.38
+llama-3-instruct,8,ggufv2,Q6_K,0.65,0.36
 llama-3-instruct,8,ggufv2,Q5_K_M,0.62,0.36
 openhermes-2.5,7,ggufv2,Q3_K_M,0.59,0.32
 openhermes-2.5,7,ggufv2,Q2_K,0.51,0.3
@@ -23,8 +25,8 @@ mistral-instruct-v0.2,7,ggufv2,Q5_K_M,0.46,0.34
 mistral-instruct-v0.2,7,ggufv2,Q6_K,0.45,0.34
 code-llama-instruct,34,ggufv2,Q3_K_M,0.45,0.31
 chatglm3,6,ggmlv3,q4_0,0.44,0.26
-llama-2-chat,70,ggufv2,Q4_K_M,0.44,0.35
 llama-2-chat,70,ggufv2,Q5_K_M,0.44,0.35
+llama-2-chat,70,ggufv2,Q4_K_M,0.44,0.35
 code-llama-instruct,13,ggufv2,Q6_K,0.44,0.35
 code-llama-instruct,13,ggufv2,Q8_0,0.44,0.33
 code-llama-instruct,13,ggufv2,Q5_K_M,0.43,0.32

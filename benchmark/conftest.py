@@ -176,12 +176,12 @@ XINFERENCE_MODELS = {
         "model_format": "ggufv2",
         "quantization": [
             # 8B model quantisations
-            # "Q3_K_L",
-            # "IQ4_XS",
+            "Q3_K_L",
+            "IQ4_XS",
             "Q4_K_M",
-            # "Q5_K_M",
-            # "Q6_K",
-            # "Q8_0",
+            "Q5_K_M",
+            "Q6_K",
+            "Q8_0",
             # 70B model quantisations
             # "IQ2_M",
             # "IQ4_XS",
