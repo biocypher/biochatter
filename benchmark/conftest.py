@@ -315,21 +315,6 @@ def calculate_bool_vector_score(vector: list[bool]) -> tuple[int, int]:
 
 
 @pytest.fixture
-def prompt_engine(request, model_name):
-    """
-    Generates a constructor for the prompt engine for the current model name.
-    """
-
-    def setup_prompt_engine(kg_schema_dict):
-        return BioCypherPromptEngine(
-            schema_config_or_info_dict=kg_schema_dict,
-            model_name=model_name,
-        )
-
-    return setup_prompt_engine
-
-
-@pytest.fixture
 def conversation(request, model_name, client):
     """
     Decides whether to run the test or skip due to the test having been run
@@ -419,6 +404,25 @@ def conversation(request, model_name, client):
         )
 
     return conversation
+
+
+@pytest.fixture
+def prompt_engine(request, model_name, conversation):
+    """
+    Generates a constructor for the prompt engine for the current model name.
+    """
+
+    def conversation_factory():
+        return conversation
+
+    def setup_prompt_engine(kg_schema_dict):
+        return BioCypherPromptEngine(
+            schema_config_or_info_dict=kg_schema_dict,
+            model_name=model_name,
+            conversation_factory=conversation_factory,
+        )
+
+    return setup_prompt_engine
 
 
 @pytest.fixture
