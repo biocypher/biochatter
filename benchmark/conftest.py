@@ -38,15 +38,6 @@ ANTHROPIC_MODEL_NAMES = [
 ]
 
 XINFERENCE_MODELS = {
-    "chatglm3": {
-        "model_size_in_billions": [
-            6,
-        ],
-        "model_format": "ggmlv3",
-        "quantization": [
-            "q4_0",
-        ],
-    },
     "code-llama-instruct": {
         "model_size_in_billions": [
             7,
