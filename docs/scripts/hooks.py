@@ -606,7 +606,7 @@ def plot_scatter_per_quantisation(overview):
     overview_melted = overview_melted.drop_duplicates()
 
     sns.set_theme(style="whitegrid")
-    plt.figure(figsize=(6, 4))
+    plt.figure(figsize=(12, 8))
     # order x axis quantisation values numerically
     overview_melted["Quantisation"] = pd.Categorical(
         overview_melted["Quantisation"],
@@ -640,17 +640,20 @@ def plot_scatter_per_quantisation(overview):
     # Add jitter to x-coordinates
     x = pd.Categorical(overview_melted["Quantisation"]).codes.astype(float)
 
-    # Create a mask for 'openhermes' and 'gpt' models
+    # Create a mask for 'openhermes' and closed models
     mask_openhermes = overview_melted["Model name"] == "openhermes-2.5"
-    mask_gpt = overview_melted["Model name"].str.contains("gpt")
+    mask_closed = overview_melted["Model name"].str.contains(
+        "gpt|claude", case=False, regex=True
+    )
 
     # Do not add jitter for 'openhermes' model
     x[mask_openhermes] += 0
 
-    # Manually enter jitter values for 'gpt' models
+    # Manually enter jitter values for closed models
     jitter_values = {
         "gpt-3": -0.2,
         "gpt-4": 0.2,
+        "claude-3-5-sonnet-20240620": 0.0,
     }
 
     for model, jitter in jitter_values.items():
@@ -658,8 +661,8 @@ def plot_scatter_per_quantisation(overview):
         x[mask_model] += jitter
 
     # For other models, add the original jitter
-    x[~mask_openhermes & ~mask_gpt] += np.random.normal(
-        0, 0.1, size=len(x[~mask_openhermes & ~mask_gpt])
+    x[~mask_openhermes & ~mask_closed] += np.random.normal(
+        0, 0.1, size=len(x[~mask_openhermes & ~mask_closed])
     )
 
     # Create a ColorBrewer palette
