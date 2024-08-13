@@ -476,7 +476,7 @@ def plot_accuracy_per_model(overview) -> None:
         "Strip plot across tasks, per Model, coloured by size (billions of parameters)"
     )
     plt.ylim(-0.1, 1.1)
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=45, ha="right")
     plt.legend(bbox_to_anchor=(0, 0), loc="lower left")
     plt.savefig(
         "docs/images/stripplot-per-model.png",
