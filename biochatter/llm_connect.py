@@ -1145,12 +1145,12 @@ class AnthropicConversation(Conversation):
             self.chat = ChatAnthropic(
                 model_name=self.model_name,
                 temperature=0,
-                anthropic_api_key=api_key,
+                api_key=api_key,
             )
             self.ca_chat = ChatAnthropic(
                 model_name=self.ca_model_name,
                 temperature=0,
-                anthropic_api_key=api_key,
+                api_key=api_key,
             )
             if user == "community":
                 self.usage_stats = get_stats(user=user)
