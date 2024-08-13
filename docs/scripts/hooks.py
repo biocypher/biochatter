@@ -409,7 +409,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     )
     overview_per_quantisation["Size"] = overview_per_quantisation.apply(
         lambda row: (
-            "Unknown" if "gpt-4" in row["Model name"] else row["Size"]
+            "Unknown"
+            if "gpt-4" in row["Model name"] or "claude" in row["Model name"]
+            else row["Size"]
         ),
         axis=1,
     )
@@ -661,7 +663,7 @@ def plot_scatter_per_quantisation(overview):
     )
 
     # Create a ColorBrewer palette
-    palette = sns.color_palette(cc.glasbey, n_colors=14)
+    palette = sns.color_palette(cc.glasbey, n_colors=15)
 
     # Define a dictionary mapping model names to colors
     color_dict = {
@@ -679,6 +681,7 @@ def plot_scatter_per_quantisation(overview):
         "mistral-instruct-v0.2": palette[11],
         "chatglm3": palette[12],
         "code-llama-instruct": palette[13],
+        "claude-3-5-sonnet-20240620": palette[14],
     }
 
     # Use the dictionary as the palette argument in sns.scatterplot
@@ -695,6 +698,9 @@ def plot_scatter_per_quantisation(overview):
 
     model_names_order = [
         "Model name",
+        "chatglm3",
+        "claude-3-5-sonnet-20240620",
+        "code-llama-instruct",
         "gpt-3.5-turbo-0125",
         "gpt-3.5-turbo-0613",
         "gpt-4-0613",
@@ -702,13 +708,11 @@ def plot_scatter_per_quantisation(overview):
         "gpt-4-turbo-2024-04-09",
         "gpt-4o-2024-05-13",
         "gpt-4o-mini-2024-07-18",
-        "openhermes-2.5",
         "llama-2-chat",
         "llama-3-instruct",
-        "code-llama-instruct",
-        "mixtral-instruct-v0.1",
         "mistral-instruct-v0.2",
-        "chatglm3",
+        "mixtral-instruct-v0.1",
+        "openhermes-2.5",
         "Size",
         "Unknown",
         "175",
@@ -1240,6 +1244,7 @@ def melt_and_process(overview):
             ">= 16-bit*"
             if "gpt-3.5-turbo" in row["Model name"]
             or "gpt-4" in row["Model name"]
+            or "claude" in row["Model name"]
             else row["Quantisation"]
         ),
         axis=1,
