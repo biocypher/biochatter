@@ -37,13 +37,13 @@ def on_pre_build(config, **kwargs) -> None:
     plot_text2cypher()
     plot_image_caption_confidence()
     plot_medical_exam()
+    plot_extraction_tasks()
+    plot_scatter_per_quantisation(overview)
     plot_accuracy_per_model(overview)
     plot_accuracy_per_quantisation(overview)
     plot_accuracy_per_task(overview)
-    plot_scatter_per_quantisation(overview)
     plot_task_comparison(overview)
     plot_rag_tasks(overview)
-    plot_extraction_tasks()
     plot_comparison_naive_biochatter(overview)
     calculate_stats(overview)
 
@@ -665,47 +665,13 @@ def plot_scatter_per_quantisation(overview):
         0, 0.1, size=len(x[~mask_openhermes & ~mask_closed])
     )
 
-    # Create a ColorBrewer palette
-    palette = sns.color_palette(cc.glasbey, n_colors=15)
-
-    # Define a dictionary mapping model names to colors
-    color_dict = {
-        "gpt-3.5-turbo-0613": palette[0],
-        "gpt-3.5-turbo-0125": palette[1],
-        "gpt-4-0613": palette[2],
-        "gpt-4-0125-preview": palette[3],
-        "gpt-4-turbo-2024-04-09": palette[4],
-        "gpt-4o-2024-05-13": palette[5],
-        "gpt-4o-mini-2024-07-18": palette[6],
-        "openhermes-2.5": palette[7],
-        "llama-2-chat": palette[8],
-        "llama-3-instruct": palette[9],
-        "mixtral-instruct-v0.1": palette[10],
-        "mistral-instruct-v0.2": palette[11],
-        "chatglm3": palette[12],
-        "code-llama-instruct": palette[13],
-        "claude-3-5-sonnet-20240620": palette[14],
-    }
-
-    # Use the dictionary as the palette argument in sns.scatterplot
-    ax = sns.scatterplot(
-        x=x,
-        y="Mean Accuracy",
-        hue="Model name",
-        size="Size",
-        sizes=(10, 300),
-        data=overview_melted,
-        palette=color_dict,  # Use the color dictionary here
-        alpha=0.5,
-    )
-
+    # Define the order of model names
     model_names_order = [
-        "Model name",
         "chatglm3",
         "claude-3-5-sonnet-20240620",
         "code-llama-instruct",
-        "gpt-3.5-turbo-0125",
         "gpt-3.5-turbo-0613",
+        "gpt-3.5-turbo-0125",
         "gpt-4-0613",
         "gpt-4-0125-preview",
         "gpt-4-turbo-2024-04-09",
@@ -713,10 +679,14 @@ def plot_scatter_per_quantisation(overview):
         "gpt-4o-mini-2024-07-18",
         "llama-2-chat",
         "llama-3-instruct",
-        "mistral-instruct-v0.2",
+        "llama-3.1-instruct",
         "mixtral-instruct-v0.1",
+        "mistral-instruct-v0.2",
         "openhermes-2.5",
-        "Size",
+    ]
+
+    # Define the order of sizes
+    size_order = [
         "Unknown",
         "175",
         "70",
@@ -728,12 +698,38 @@ def plot_scatter_per_quantisation(overview):
         "6",
     ]
 
-    # Reorder the legend
+    # Create a ColorBrewer palette
+    palette = sns.color_palette(cc.glasbey, n_colors=len(model_names_order))
+
+    # Define a dictionary mapping model names to colors using the order list
+    color_dict = {
+        model: palette[i] for i, model in enumerate(model_names_order)
+    }
+
+    # Use the dictionary as the palette argument in sns.scatterplot
+    ax = sns.scatterplot(
+        x=x,
+        y="Median Accuracy",
+        hue="Model name",
+        size="Size",
+        sizes=(10, 300),
+        data=overview_melted,
+        palette=color_dict,  # Use the color dictionary here
+        alpha=0.5,
+    )
+
+    # Reorder the legend using the same order list
     handles, labels = ax.get_legend_handles_labels()
-    order = [labels.index(name) for name in model_names_order]
+    order = (
+        ["Model name"]
+        + [name for name in model_names_order if name in labels]
+        + ["Size"]
+        + [size for size in size_order if size in labels]
+    )
+    order_indices = [labels.index(name) for name in order if name in labels]
     plt.legend(
-        [handles[idx] for idx in order],
-        [labels[idx] for idx in order],
+        [handles[idx] for idx in order_indices],
+        [labels[idx] for idx in order_indices],
         bbox_to_anchor=(1.05, 1),
         loc="upper left",
     )
