@@ -1171,7 +1171,8 @@ class AnthropicConversation(Conversation):
                 token usage.
         """
         try:
-            response = self.chat.generate([self.messages])
+            history = self._create_history()
+            response = self.chat.generate([history])
         except (
             anthropic._exceptions.APIError,
             anthropic._exceptions.AnthropicError,
@@ -1196,6 +1197,87 @@ class AnthropicConversation(Conversation):
         self.append_ai_message(msg)
 
         return msg, token_usage
+
+    def _create_history(self):
+        history = []
+        # extract text components from message contents
+        msg_texts = [
+            m.content[0]["text"] if isinstance(m.content, list) else m.content
+            for m in self.messages
+        ]
+
+        # check if last message is an image message
+        is_image_message = False
+        if isinstance(self.messages[-1].content, list):
+            is_image_message = (
+                self.messages[-1].content[1]["type"] == "image_url"
+            )
+
+        # find location of last AI message (if any)
+        last_ai_message = None
+        for i, m in enumerate(self.messages):
+            if isinstance(m, AIMessage):
+                last_ai_message = i
+
+        # Aggregate system messages into one message at the beginning
+        system_messages = [
+            m.content for m in self.messages if isinstance(m, SystemMessage)
+        ]
+        if system_messages:
+            history.append(
+                SystemMessage(content="\n".join(system_messages)),
+            )
+
+        # concatenate all messages before the last AI message into one message
+        if last_ai_message is not None:
+            history.append(
+                HumanMessage(
+                    content="\n".join([m for m in msg_texts[:last_ai_message]]),
+                ),
+            )
+            # then append the last AI message
+            history.append(
+                AIMessage(
+                    content=msg_texts[last_ai_message],
+                ),
+            )
+
+            # then concatenate all messages after that
+            # into one HumanMessage
+            history.append(
+                HumanMessage(
+                    content="\n".join(
+                        [m for m in msg_texts[last_ai_message + 1 :]]
+                    ),
+                ),
+            )
+
+        # else add human message to history (without system messages)
+        else:
+            last_system_message = None
+            for i, m in enumerate(self.messages):
+                if isinstance(m, SystemMessage):
+                    last_system_message = i
+            history.append(
+                HumanMessage(
+                    content="\n".join(
+                        [m for m in msg_texts[last_system_message + 1 :]]
+                    ),
+                ),
+            )
+
+        # if the last message is an image message, add the image to the history
+        if is_image_message:
+            history[-1]["content"] = [
+                {"type": "text", "text": history[-1]["content"]},
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": self.messages[-1].content[1]["image_url"]["url"]
+                    },
+                },
+            ]
+        return history
 
     def _correct_response(self, msg: str):
         """
