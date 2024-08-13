@@ -17,7 +17,7 @@ from .load_dataset import get_benchmark_dataset
 from .benchmark_utils import benchmark_already_executed
 
 # how often should each benchmark be run?
-N_ITERATIONS = 2
+N_ITERATIONS = 3
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
@@ -38,37 +38,37 @@ ANTHROPIC_MODEL_NAMES = [
 ]
 
 XINFERENCE_MODELS = {
-    # "chatglm3": {
-    #     "model_size_in_billions": [
-    #         6,
-    #     ],
-    #     "model_format": "ggmlv3",
-    #     "quantization": [
-    #         "q4_0",
-    #     ],
-    # },
-    # "code-llama-instruct": {
-    #     "model_size_in_billions": [
-    #         7,
-    #         13,
-    #         34,
-    #     ],
-    #     "model_format": "ggufv2",
-    #     "quantization": [
-    #         "Q2_K",
-    #         # "Q3_K_L",
-    #         "Q3_K_M",
-    #         # "Q3_K_S",
-    #         # "Q4_0",
-    #         "Q4_K_M",
-    #         # "Q4_K_S",
-    #         # "Q5_0",
-    #         "Q5_K_M",
-    #         # "Q5_K_S",
-    #         "Q6_K",
-    #         "Q8_0",
-    #     ],
-    # },
+    "chatglm3": {
+        "model_size_in_billions": [
+            6,
+        ],
+        "model_format": "ggmlv3",
+        "quantization": [
+            "q4_0",
+        ],
+    },
+    "code-llama-instruct": {
+        "model_size_in_billions": [
+            7,
+            13,
+            34,
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            "Q2_K",
+            # "Q3_K_L",
+            "Q3_K_M",
+            # "Q3_K_S",
+            # "Q4_0",
+            "Q4_K_M",
+            # "Q4_K_S",
+            # "Q5_0",
+            "Q5_K_M",
+            # "Q5_K_S",
+            "Q6_K",
+            "Q8_0",
+        ],
+    },
     # "c4ai-command-r-v01": {
     #     "model_size_in_billions": [
     #         35,
@@ -111,83 +111,83 @@ XINFERENCE_MODELS = {
     #         "8-bit",
     #     ],
     # },
-    # "llama-2-chat": {
-    #     "model_size_in_billions": [
-    #         7,
-    #         13,
-    #         # 70,
-    #     ],
-    #     "model_format": "ggufv2",
-    #     "quantization": [
-    #         "Q2_K",
-    #         # "Q3_K_S",
-    #         "Q3_K_M",
-    #         # "Q3_K_L",
-    #         # "Q4_0",
-    #         # "Q4_K_S",
-    #         "Q4_K_M",
-    #         # "Q5_0",
-    #         # "Q5_K_S",
-    #         "Q5_K_M",
-    #         "Q6_K",
-    #         "Q8_0",
-    #     ],
-    # },
-    # "llama-3-instruct": {
-    #     "model_size_in_billions": [
-    #         8,
-    #         # 70,  # currently buggy
-    #     ],
-    #     "model_format": "ggufv2",
-    #     "quantization": [
-    #         # 8B model quantisations
-    #         # "IQ3_M",  # currently buggy
-    #         "Q4_K_M",
-    #         "Q5_K_M",
-    #         "Q6_K",
-    #         "Q8_0",
-    #         # 70B model quantisations
-    #         # "IQ1_M",
-    #         # "IQ2_XS",
-    #         # "Q4_K_M",
-    #     ],
-    # },
-    # "mistral-instruct-v0.2": {
-    #     "model_size_in_billions": [
-    #         7,
-    #     ],
-    #     "model_format": "ggufv2",
-    #     "quantization": [
-    #         "Q2_K",
-    #         # "Q3_K_S",
-    #         "Q3_K_M",
-    #         # "Q3_K_L",
-    #         # "Q4_0",
-    #         # "Q4_K_S",
-    #         "Q4_K_M",
-    #         # "Q5_0",
-    #         # "Q5_K_S",
-    #         "Q5_K_M",
-    #         "Q6_K",
-    #         "Q8_0",
-    #     ],
-    # },
-    # "mixtral-instruct-v0.1": {
-    #     "model_size_in_billions": [
-    #         "46_7",
-    #     ],
-    #     "model_format": "ggufv2",
-    #     "quantization": [
-    #         "Q2_K",
-    #         # "Q3_K_M",
-    #         # "Q4_0",
-    #         "Q4_K_M",
-    #         # "Q5_0",
-    #         "Q5_K_M",
-    #         "Q6_K",
-    #         "Q8_0",
-    #     ],
-    # },
+    "llama-2-chat": {
+        "model_size_in_billions": [
+            7,
+            13,
+            # 70,
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            "Q2_K",
+            # "Q3_K_S",
+            "Q3_K_M",
+            # "Q3_K_L",
+            # "Q4_0",
+            # "Q4_K_S",
+            "Q4_K_M",
+            # "Q5_0",
+            # "Q5_K_S",
+            "Q5_K_M",
+            "Q6_K",
+            "Q8_0",
+        ],
+    },
+    "llama-3-instruct": {
+        "model_size_in_billions": [
+            8,
+            # 70,  # currently buggy
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            # 8B model quantisations
+            # "IQ3_M",  # currently buggy
+            "Q4_K_M",
+            "Q5_K_M",
+            "Q6_K",
+            "Q8_0",
+            # 70B model quantisations
+            # "IQ1_M",
+            # "IQ2_XS",
+            # "Q4_K_M",
+        ],
+    },
+    "mistral-instruct-v0.2": {
+        "model_size_in_billions": [
+            7,
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            "Q2_K",
+            # "Q3_K_S",
+            "Q3_K_M",
+            # "Q3_K_L",
+            # "Q4_0",
+            # "Q4_K_S",
+            "Q4_K_M",
+            # "Q5_0",
+            # "Q5_K_S",
+            "Q5_K_M",
+            "Q6_K",
+            "Q8_0",
+        ],
+    },
+    "mixtral-instruct-v0.1": {
+        "model_size_in_billions": [
+            "46_7",
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            "Q2_K",
+            # "Q3_K_M",
+            # "Q4_0",
+            "Q4_K_M",
+            # "Q5_0",
+            "Q5_K_M",
+            "Q6_K",
+            "Q8_0",
+        ],
+    },
     # "openbiollm-llama3-8b": {
     #     "model_size_in_billions": [
     #         8,
@@ -197,26 +197,26 @@ XINFERENCE_MODELS = {
     #         "none",
     #     ],
     # },
-    # "openhermes-2.5": {
-    #     "model_size_in_billions": [
-    #         7,
-    #     ],
-    #     "model_format": "ggufv2",
-    #     "quantization": [
-    #         "Q2_K",
-    #         # "Q3_K_S",
-    #         "Q3_K_M",
-    #         # "Q3_K_L",
-    #         # "Q4_0",
-    #         # "Q4_K_S",
-    #         "Q4_K_M",
-    #         # "Q5_0",
-    #         # "Q5_K_S",
-    #         "Q5_K_M",
-    #         "Q6_K",
-    #         "Q8_0",
-    #     ],
-    # },
+    "openhermes-2.5": {
+        "model_size_in_billions": [
+            7,
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            "Q2_K",
+            # "Q3_K_S",
+            "Q3_K_M",
+            # "Q3_K_L",
+            # "Q4_0",
+            # "Q4_K_S",
+            "Q4_K_M",
+            # "Q5_0",
+            # "Q5_K_S",
+            "Q5_K_M",
+            "Q6_K",
+            "Q8_0",
+        ],
+    },
 }
 
 # create concrete benchmark list by concatenating all combinations of model
