@@ -111,6 +111,31 @@ XINFERENCE_MODELS = {
     #         "8-bit",
     #     ],
     # },
+    "glm4-chat": {
+        "model_size_in_billions": [
+            9,
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            "Q2_K",
+            "IQ3_XS",
+            "IQ3_S",
+            "IQ3_M",
+            "Q3_K_S",
+            "Q3_K_L",
+            "Q3_K",
+            "IQ4_XS",
+            "IQ4_NL",
+            "Q4_K_S",
+            "Q4_K",
+            "Q5_K_S",
+            "Q5_K",
+            "Q6_K",
+            "Q8_0",
+            "BF16",
+            "FP16",
+        ],
+    },
     "llama-2-chat": {
         "model_size_in_billions": [
             7,
@@ -150,6 +175,31 @@ XINFERENCE_MODELS = {
             # "IQ1_M",
             # "IQ2_XS",
             # "Q4_K_M",
+        ],
+    },
+    "llama-3.1-instruct": {
+        "model_size_in_billions": [
+            8,
+            70,
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            # 8B model quantisations
+            "Q3_K_L",
+            "IQ4_XS",
+            "Q4_K_M",
+            "Q5_K_M",
+            "Q6_K",
+            "Q8_0",
+            # 70B model quantisations
+            "IQ2_M",
+            "IQ4_XS",
+            "Q2_K",
+            "Q3_K_S",
+            "Q4_K_M",
+            "Q5_K_M",
+            "Q6_K",
+            "Q8_0",
         ],
     },
     "mistral-instruct-v0.2": {
