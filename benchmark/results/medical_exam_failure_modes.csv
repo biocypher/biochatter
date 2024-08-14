@@ -17377,6 +17377,535 @@ llama-3-instruct:8:ggufv2:Q8_0,single_choice:mental_disorders:de,b,a,Other,4717c
 llama-3-instruct:8:ggufv2:Q8_0,single_choice:mental_disorders:de,b,d,Other,d7e7e3be7c4cba9a30999cc513ec7479,2024-06-19 17:07:17
 llama-3-instruct:8:ggufv2:Q8_0,single_choice:oncology:de,c),a,Other,75eb0901296f8830a8108ee8fb7de056,2024-06-19 17:12:51
 llama-3-instruct:8:ggufv2:Q8_0,single_choice:oncology:en,b,a,Other,635cbb8bb672865d7da35df2772c56da,2024-06-19 17:12:38
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:biochemistry:de,ja,nein,Other,a077c65c160ec20d3f631b44e709d753,2024-08-13 20:09:11
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:biochemistry:en,yes,no,Other,710c11b68f99087ee79c398c65ca9215,2024-08-13 20:13:10
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:cardiology:de,ja,nein,Other,c271320748d103b55ce9ac1cae4f08c4,2024-08-13 20:08:44
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:cardiology:de,nein,ja,Other,5fc10a4ce23c7080ddfc05ea71cb1c54,2024-08-13 20:08:45
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:cardiology:de,mann,Mann,Case Sensitivity,e825d5741f4dbc5c6586a50bdafe17a5,2024-08-13 20:08:47
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:cardiology:en,yes,no,Other,c789018deb872db127cb8d5fea63c755,2024-08-13 20:08:54
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:cardiology:en,men,Men,Case Sensitivity,1a9f9fea0c4cb9aa2476fb76317ff471,2024-08-13 20:08:54
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:cardiology:en,no,yes,Other,b710df83a48c05873b0dbac03a3bef90,2024-08-13 20:08:55
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:cardiology:en,yes,no,Other,8c8c14070ebeaf1a90e6e376f3efa49c,2024-08-13 20:08:56
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:dermatology:de,ja,nein,Other,32cf33685a9e00909d6d16a9b7bde20f,2024-08-13 20:09:02
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:dermatology:de,nein,ja,Other,a0ba6e4c4785ff461433b4cbb51326d2,2024-08-13 20:09:05
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:dermatology:de,ja,nein,Other,8769a0f64879cab927a79ff77d52423b,2024-08-13 20:09:06
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:dermatology:de,nein,ja,Other,4232ac0da6fca3616b9571eece9664ee,2024-08-13 20:09:07
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:dermatology:en,yes,no,Other,3f185e0a1089b6484420e1c6fdffc1a4,2024-08-13 20:10:40
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:dermatology:en,"no 
+
+the sentence is incorrect because it implies that finger amputation is the only treatment option for a moderately differentiated squamous cell carcinoma with a tumour thickness of 6 mm in reality, the treatment for a moderately differentiated squamous cell carcinoma with a tumour thickness of 6 mm may include other options such as mohs surgery, wide local excision, or a combination of treatments, depending on the specific case and the patient's overall health",no,Partial Match,a2bccd05f3ed202ab060cfd604fcd598,2024-08-13 20:10:49
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:dermatology:en,"no 
+
+angioedema is typically associated with type i hypersensitivity reactions, not type iv type iv reactions are cell-mediated hypersensitivity reactions, which are not typically associated with angioedema",no,Partial Match,6a661c4f100e7fd238f836656d35c3ed,2024-08-13 20:10:56
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:dermatology:en,yes,no,Other,531580f330df86b7a55dfb2dd6d2a8d3,2024-08-13 20:10:57
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:emergency:de,nein,ja,Other,d418727f193fffd90ccb2a6015d37db7,2024-08-13 20:13:56
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:emergency:en,no,yes,Other,17e0f19ccbbcf0bfba6f30d8ce573421,2024-08-13 20:14:05
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:medication:en,yes,no,Other,004a6d5c21e84d978ac7b807e5a265a9,2024-08-13 20:12:50
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:medication:en,yes,no,Other,43fe3c10aca393d174422996a21f8d88,2024-08-13 20:12:51
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:medication:en,yes,no,Other,4768e764de88b366fe42b5f9d42832e1,2024-08-13 20:12:51
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:mental_disorders:de,ja,nein,Other,ae14302fc8e54ce6a36cb4561a19744d,2024-08-13 20:05:16
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:mental_disorders:de,nein,ja,Other,9b09af2495f1738adb533048db0951e0,2024-08-13 20:05:18
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:mental_disorders:de,nein,ja,Other,ef65b863f8110a2d1134da59d96f9099,2024-08-13 20:05:20
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:mental_disorders:de,nein,ja,Other,2dac8d051a6d77f5d3dc8db4a91482ff,2024-08-13 20:05:21
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:mental_disorders:en,yes,no,Other,b2ab8ea86e24e799101e3d4bc8864fed,2024-08-13 20:07:25
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:mental_disorders:en,no,yes,Other,54a4309bad8924868e0bcef97f329c33,2024-08-13 20:07:28
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:mental_disorders:en,yes,no,Other,7aea18e5c48cc5fc40e0af3016c2c36f,2024-08-13 20:07:29
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:mental_disorders:en,yes,no,Other,87eef24cb37bc2b5a1f895615087f06c,2024-08-13 20:07:30
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:physiology:de,nein,ja,Other,990872bf060c3f3e8aea21b610b2d2ac,2024-08-13 20:11:00
+llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:physiology:en,yes,no,Other,d85e27cf5f44aa37ed756a1dc8c307bf,2024-08-13 20:05:17
+llama-3.1-instruct:8:ggufv2:IQ4_XS,multiple_choice:dermatology:en,"a,c,d,e","d,e",Partial Match,962dba408549a2eba47962f7d1debe93,2024-08-13 20:10:59
+llama-3.1-instruct:8:ggufv2:IQ4_XS,multiple_choice:mental_disorders:de,"d, e, f","d,e,f",Format Error,da34c39cd52df137b216ebf9539f454d,2024-08-13 20:05:24
+llama-3.1-instruct:8:ggufv2:IQ4_XS,multiple_choice:mental_disorders:de,"a,b,c,e","b,c,e",Partial Match,363a2f9f466bd1615291f2445afc145b,2024-08-13 20:05:32
+llama-3.1-instruct:8:ggufv2:IQ4_XS,multiple_choice:mental_disorders:en,"a, b, c, d","a,b,c,d",Format Error,3ed38586ca6c1b249dd342572dc9e11d,2024-08-13 20:07:42
+llama-3.1-instruct:8:ggufv2:IQ4_XS,one_word:cardiology:de,digoxin,Digoxin,Case Sensitivity,923e46b46c0ad85d426edbbfb6ec4d93,2024-08-13 20:08:53
+llama-3.1-instruct:8:ggufv2:IQ4_XS,one_word:cardiology:en,digoxin,Digoxin,Case Sensitivity,d56125629d337c89218bceb5cfd671f8,2024-08-13 20:09:01
+llama-3.1-instruct:8:ggufv2:IQ4_XS,one_word:medication:en,grapefruit,Grapefruit,Case Sensitivity,9fff21dadf380e58fff7cfeb8a43086d,2024-08-13 20:12:54
+llama-3.1-instruct:8:ggufv2:IQ4_XS,one_word:oncology:en,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,1edd6afaaf938d3b152460300eecd34a,2024-08-13 20:12:32
+llama-3.1-instruct:8:ggufv2:IQ4_XS,one_word:oncology:en,breast cancer,Breast cancer,Case Sensitivity,fcc446cda12fdd1b6a9c847aca3bd1b7,2024-08-13 20:12:36
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:dermatology:de,"bei der gabe von isotretinoin ist eine begleitende, medikamentöse therapie in form von antibiotika (zb doxycyclin oder minocyclin) notwendig, um die bakterienflora im hautmilieu zu reduzieren und die akne zu kontrollierenbei der gabe von isotretinoin ist eine begleitende, medikamentöse therapie in form von antibiotika (zb doxycyclin oder minocyclin) notwendig, um die bakterienflora im hautmilieu zu reduzieren und die akne zu kontrollierenbei der gabe von isotretinoin ist eine begleitende, medikamentöse therapie in form von antibiotika (zb doxycyclin oder minocyclin) notwendig, um die bakterienflora im hautmilieu zu reduzieren und die akne zu kontrollieren",kontrazeption|verhütung,Entire Answer Incorrect,1fc05019f7d29bc830bdc1fcc60d7305,2024-08-13 20:09:24
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:dermatology:de,"das köbner-phänomen tritt besonders häufig bei psoriasis, neurodermitis und melanom aufdas köbner-phänomen tritt besonders häufig bei psoriasis, neurodermitis und melanom aufdas köbner-phänomen tritt besonders häufig bei psoriasis, neurodermitis und melanom auf",p|s|o|r|i|a|s|i|s,Entire Answer Incorrect,fcc743609f41eb99e28e96cdcbf61b39,2024-08-13 20:09:33
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:dermatology:de,"es gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut aus entwickelt
+2 **basalzellkarzinom in situ (bccis)**: ein karzinom, das sich auf der oberfläche der haut befindet und noch nicht in die tiefe der haut eingedrungen ist
+3 **morpheaformes basalzellkarzinom**: ein flächiges, infiltrierendes wachstum, das sich in die tiefe der haut ausdehnt
+4 **scleroses basalzellkarzinom**: ein wachstum, das sich in die tiefe der haut ausdehnt und eine sklerosierende (verhärtende) veränderung der haut verursacht
+5 **pilzähnliches basalzellkarzinom**: ein wachstum, das an einem oder mehreren haarfollikeln ansetzt und sich in die tiefe der haut ausdehnt
+6 **mikrometastasierendes basalzellkarzinom**: ein wachstum, das sich in die tiefe der haut ausdehnt und sich in die tieferen gewebeschichten der haut ausbreitet
+
+diese formen können je nach ausprägung und lokalisation unterschiedliche symptome und behandlungen erfordernes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut aus entwickelt
+2 **basalzellkarzinom in situ (bccis)**: ein karzinom, das sich auf der oberfläche der haut befindet und noch nicht in die tiefe der haut eingedrungen ist
+3 **morpheaformes basalzellkarzinom**: ein flächiges, infiltrierendes wachstum, das sich in die tiefe der haut ausdehnt
+4 **scleroses basalzellkarzinom**: ein wachstum, das sich in die tiefe der haut ausdehnt und eine sklerosierende (verhärtende) veränderung der haut verursacht
+5 **pilzähnliches basalzellkarzinom**: ein wachstum, das an einem oder mehreren haarfollikeln ansetzt und sich in die tiefe der haut ausdehnt
+6 **mikrometastasierendes basalzellkarzinom**: ein wachstum, das sich in die tiefe der haut ausdehnt und sich in die tieferen gewebeschichten der haut ausbreitet
+
+diese formen können je nach ausprägung und lokalisation unterschiedliche symptome und behandlungen erfordernes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut aus entwickelt
+2 **basalzellkarzinom in situ (bccis)**: ein karzinom, das sich auf der oberfläche der haut befindet und noch nicht in die tiefe der haut eingedrungen ist
+3 **morpheaformes basalzellkarzinom**: ein flächiges, infiltrierendes wachstum, das sich in die tiefe der haut ausdehnt
+4 **scleroses basalzellkarzinom**: ein wachstum, das sich in die tiefe der haut ausdehnt und eine sklerosierende (verhärtende) veränderung der haut verursacht
+5 **pilzähnliches basalzellkarzinom**: ein wachstum, das an einem oder mehreren haarfollikeln ansetzt und sich in die tiefe der haut ausdehnt
+6 **mikrometastasierendes basalzellkarzinom**: ein wachstum, das sich in die tiefe der haut ausdehnt und sich in die tieferen gewebeschichten der haut ausbreitet
+
+diese formen können je nach ausprägung und lokalisation unterschiedliche symptome und behandlungen erfordernes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut aus entwickelt
+2 **basalzellkarzinom in situ (bccis)**: ein karzinom, das sich auf der oberfläche der haut befindet und noch nicht in die tiefe der haut eingedrungen ist
+3 **morpheaformes basalzellkarzinom**: ein flächiges, infiltrierendes wachstum, das sich in die tiefe der haut ausdehnt
+4 **scleroses basalzellkarzinom**: ein wachstum, das sich in die tiefe der haut ausdehnt und eine sklerosierende (verhärtende) veränderung der haut verursacht
+5 **pilzähnliches basalzellkarzinom**: ein wachstum, das an einem oder mehreren haarfollikeln ansetzt und sich in die tiefe der haut ausdehnt
+6 **mikrometastasierendes basalzellkarzinom**: ein wachstum, das sich in die tiefe der haut ausdehnt und sich in die tieferen gewebeschichten der haut ausbreitet
+
+diese formen können je nach ausprägung und lokalisation unterschiedliche symptome und behandlungen erfordernes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut aus entwickelt
+2 **basalzellkarzinom in situ (bccis)**: ein karzinom, das sich auf der oberfläche der haut befindet und noch nicht in die tiefe der haut eingedrungen ist
+3 **morpheaformes basalzellkarzinom**: ein flächiges, infiltrierendes wachstum, das sich in die tiefe der haut ausdehnt
+4 **scleroses basalzellkarzinom**: ein wachstum, das sich in die tiefe der haut ausdehnt und eine sklerosierende (verhärtende) veränderung der haut verursacht
+5 **pilzähnliches basalzellkarzinom**: ein wachstum, das an einem oder mehreren haarfollikeln ansetzt und sich in die tiefe der haut ausdehnt
+6 **mikrometastasierendes basalzellkarzinom**: ein wachstum, das sich in die tiefe der haut ausdehnt und sich in die tieferen gewebeschichten der haut ausbreitet
+
+diese formen können je nach ausprägung und lokalisation unterschiedliche symptome und behandlungen erfordernes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut aus entwickelt
+2 **basalzellkarzinom in situ (bccis)**: ein karzinom, das sich auf der oberfläche der haut befindet und noch nicht in die tiefe der haut eingedrungen ist
+3 **morpheaformes basalzellkarzinom**: ein flächiges, infiltrierendes wachstum, das sich in die tiefe der haut ausdehnt
+4 **scleroses basalzellkarzinom**: ein wachstum, das sich in die tiefe der haut ausdehnt und eine sklerosierende (verhärtende) veränderung der haut verursacht
+5 **pilzähnliches basalzellkarzinom**: ein wachstum, das an einem oder mehreren haarfollikeln ansetzt und sich in die tiefe der haut ausdehnt
+6 **mikrometastasierendes basalzellkarzinom**: ein wachstum, das sich in die tiefe der haut ausdehnt und sich in die tieferen gewebeschichten der haut ausbreitet
+
+diese formen können je nach ausprägung und lokalisation unterschiedliche symptome und behandlungen erfordern",destruiert|destruierend,Entire Answer Incorrect,791d91c0e022e9c69df04de343437cc3,2024-08-13 20:10:15
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:dermatology:de,"frauen, kinder und ältere menschen sind oft von mundsoor betroffenfrauen, kinder und ältere menschen sind oft von mundsoor betroffenfrauen, kinder und ältere menschen sind oft von mundsoor betroffen",alte|ältere,Entire Answer Incorrect,aa20eb5b95b2e78e13538beb85263191,2024-08-13 20:10:38
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:dermatology:de,psoriasispsoriasispsoriasis,lichen ruber planus|lichen planus,Entire Answer Incorrect,d7161754d87739c96b3623ab9f3c8e3c,2024-08-13 20:10:39
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:dermatology:en,hormonal birth control (eg estrogen) and/or antibiotics (eg doxycycline) may be necessaryhormonal birth control (eg estrogen) and/or antibiotics (eg doxycycline) may be necessaryhormonal birth control (eg estrogen) and/or antibiotics (eg doxycycline) may be necessary,contraception|prevention|contraceptive|contraceptiva,Entire Answer Incorrect,403b64ec6c32b29e709afc4cdcfa37e8,2024-08-13 20:11:06
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:dermatology:en,sarcoidosissarcoidosissarcoidosis,streptococci|streptococcus|streptococcal,Entire Answer Incorrect,61461e021ce57f09ec2ebdcab9c76a98,2024-08-13 20:11:07
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:dermatology:en,"there are several clinical forms of basal cell carcinoma (bcc), including:
+
+1 nodular bcc
+2 superficial bcc
+3 morpheaform bcc
+4 micronodular bcc
+5 pigmented bcc
+6 sclerosing bcc
+7 infiltrative bccthere are several clinical forms of basal cell carcinoma (bcc), including:
+
+1 nodular bcc
+2 superficial bcc
+3 morpheaform bcc
+4 micronodular bcc
+5 pigmented bcc
+6 sclerosing bcc
+7 infiltrative bccthere are several clinical forms of basal cell carcinoma (bcc), including:
+
+1 nodular bcc
+2 superficial bcc
+3 morpheaform bcc
+4 micronodular bcc
+5 pigmented bcc
+6 sclerosing bcc
+7 infiltrative bccthere are several clinical forms of basal cell carcinoma (bcc), including:
+
+1 nodular bcc
+2 superficial bcc
+3 morpheaform bcc
+4 micronodular bcc
+5 pigmented bcc
+6 sclerosing bcc
+7 infiltrative bccthere are several clinical forms of basal cell carcinoma (bcc), including:
+
+1 nodular bcc
+2 superficial bcc
+3 morpheaform bcc
+4 micronodular bcc
+5 pigmented bcc
+6 sclerosing bcc
+7 infiltrative bccthere are several clinical forms of basal cell carcinoma (bcc), including:
+
+1 nodular bcc
+2 superficial bcc
+3 morpheaform bcc
+4 micronodular bcc
+5 pigmented bcc
+6 sclerosing bcc
+7 infiltrative bcc",destroyed|destructed|destroying|destructive,Entire Answer Incorrect,a15e01513ce0aa1c860c80047ad4d1f7,2024-08-13 20:11:18
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:dermatology:en,"people with weakened immune systems, infants, elderly, and those with diabetes, hiv/aids, or taking antibiotics are often affected by oral thrushpeople with weakened immune systems, infants, elderly, and those with diabetes, hiv/aids, or taking antibiotics are often affected by oral thrushpeople with weakened immune systems, infants, elderly, and those with diabetes, hiv/aids, or taking antibiotics are often affected by oral thrush",old|elder,Entire Answer Incorrect,5fd37e8df64240a554b231185a6c2769,2024-08-13 20:11:28
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:eeg_data:de,"die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **skewness**: (a1 - a2) / (a1 + a2) x 100
+3 **laterality-index (li)**: (a1 - a2) / (a1 + a2) x 100, wobei a1 und a2 die amplituden der eeg-signale an den beiden elektrodenpaaren sinddie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **skewness**: (a1 - a2) / (a1 + a2) x 100
+3 **laterality-index (li)**: (a1 - a2) / (a1 + a2) x 100, wobei a1 und a2 die amplituden der eeg-signale an den beiden elektrodenpaaren sinddie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **skewness**: (a1 - a2) / (a1 + a2) x 100
+3 **laterality-index (li)**: (a1 - a2) / (a1 + a2) x 100, wobei a1 und a2 die amplituden der eeg-signale an den beiden elektrodenpaaren sinddie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **skewness**: (a1 - a2) / (a1 + a2) x 100
+3 **laterality-index (li)**: (a1 - a2) / (a1 + a2) x 100, wobei a1 und a2 die amplituden der eeg-signale an den beiden elektrodenpaaren sinddie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **skewness**: (a1 - a2) / (a1 + a2) x 100
+3 **laterality-index (li)**: (a1 - a2) / (a1 + a2) x 100, wobei a1 und a2 die amplituden der eeg-signale an den beiden elektrodenpaaren sinddie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **skewness**: (a1 - a2) / (a1 + a2) x 100
+3 **laterality-index (li)**: (a1 - a2) / (a1 + a2) x 100, wobei a1 und a2 die amplituden der eeg-signale an den beiden elektrodenpaaren sinddie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **skewness**: (a1 - a2) / (a1 + a2) x 100
+3 **laterality-index (li)**: (a1 - a2) / (a1 + a2) x 100, wobei a1 und a2 die amplituden der eeg-signale an den beiden elektrodenpaaren sinddie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **skewness**: (a1 - a2) / (a1 + a2) x 100
+3 **laterality-index (li)**: (a1 - a2) / (a1 + a2) x 100, wobei a1 und a2 die amplituden der eeg-signale an den beiden elektrodenpaaren sinddie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **skewness**: (a1 - a2) / (a1 + a2) x 100
+3 **laterality-index (li)**: (a1 - a2) / (a1 + a2) x 100, wobei a1 und a2 die amplituden der eeg-signale an den beiden elektrodenpaaren sind",Coherence|Logarithmierte Differenz,Entire Answer Incorrect,65270f78b5a362b25c2eba10bf29fcd2,2024-08-13 20:12:05
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:medication:de,"beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* corticosteroide (zb prednison)
+* heparin
+* warfarin
+* antikoagulanzien (zb acetylsalicylsäure, dipyridamol)
+* thrombozyt-aggregationshemmer (zb clopidogrel)
+* antidepressiva (zb amitriptylin)
+* antihistaminika (zb diphenhydramin)
+* opioid-analgetika (zb morphin)
+* antipsychotika (zb chlorpromazin)
+
+es ist jedoch zu beachten, dass diese liste nicht vollständig ist und dass die interaktionen zwischen medikamenten und nsar von fall zu fall variieren können es ist immer ratsam, vor der einnahme von nsar mit einem arzt oder apotheker zu sprechen, um das individuelle risiko zu bewertenbeispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* corticosteroide (zb prednison)
+* heparin
+* warfarin
+* antikoagulanzien (zb acetylsalicylsäure, dipyridamol)
+* thrombozyt-aggregationshemmer (zb clopidogrel)
+* antidepressiva (zb amitriptylin)
+* antihistaminika (zb diphenhydramin)
+* opioid-analgetika (zb morphin)
+* antipsychotika (zb chlorpromazin)
+
+es ist jedoch zu beachten, dass diese liste nicht vollständig ist und dass die interaktionen zwischen medikamenten und nsar von fall zu fall variieren können es ist immer ratsam, vor der einnahme von nsar mit einem arzt oder apotheker zu sprechen, um das individuelle risiko zu bewertenbeispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* corticosteroide (zb prednison)
+* heparin
+* warfarin
+* antikoagulanzien (zb acetylsalicylsäure, dipyridamol)
+* thrombozyt-aggregationshemmer (zb clopidogrel)
+* antidepressiva (zb amitriptylin)
+* antihistaminika (zb diphenhydramin)
+* opioid-analgetika (zb morphin)
+* antipsychotika (zb chlorpromazin)
+
+es ist jedoch zu beachten, dass diese liste nicht vollständig ist und dass die interaktionen zwischen medikamenten und nsar von fall zu fall variieren können es ist immer ratsam, vor der einnahme von nsar mit einem arzt oder apotheker zu sprechen, um das individuelle risiko zu bewerten",SSRI|Antikoagulanzien,Entire Answer Incorrect,955aa256fa5e3c5d64c3da32e0e1a3e8,2024-08-13 20:05:15
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:medication:de,"beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* corticosteroide (zb prednison)
+* heparin
+* warfarin
+* antikoagulanzien (zb acetylsalicylsäure, dipyridamol)
+* thrombozyt-aggregationshemmer (zb clopidogrel)
+* antidepressiva (zb amitriptylin)
+* antihistaminika (zb diphenhydramin)
+* opioid-analgetika (zb morphin)
+* antipsychotika (zb chlorpromazin)
+
+es ist jedoch zu beachten, dass diese liste nicht vollständig ist und dass die interaktionen zwischen medikamenten und nsar von fall zu fall variieren können es ist immer ratsam, vor der einnahme von nsar mit einem arzt oder apotheker zu sprechen, um das individuelle risiko zu bewertenbeispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* corticosteroide (zb prednison)
+* heparin
+* warfarin
+* antikoagulanzien (zb acetylsalicylsäure, dipyridamol)
+* thrombozyt-aggregationshemmer (zb clopidogrel)
+* antidepressiva (zb amitriptylin)
+* antihistaminika (zb diphenhydramin)
+* opioid-analgetika (zb morphin)
+* antipsychotika (zb chlorpromazin)
+
+es ist jedoch zu beachten, dass diese liste nicht vollständig ist und dass die interaktionen zwischen medikamenten und nsar von fall zu fall variieren können es ist immer ratsam, vor der einnahme von nsar mit einem arzt oder apotheker zu sprechen, um das individuelle risiko zu bewertenbeispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* corticosteroide (zb prednison)
+* heparin
+* warfarin
+* antikoagulanzien (zb acetylsalicylsäure, dipyridamol)
+* thrombozyt-aggregationshemmer (zb clopidogrel)
+* antidepressiva (zb amitriptylin)
+* antihistaminika (zb diphenhydramin)
+* opioid-analgetika (zb morphin)
+* antipsychotika (zb chlorpromazin)
+
+es ist jedoch zu beachten, dass diese liste nicht vollständig ist und dass die interaktionen zwischen medikamenten und nsar von fall zu fall variieren können es ist immer ratsam, vor der einnahme von nsar mit einem arzt oder apotheker zu sprechen, um das individuelle risiko zu bewerten",A|n|t|i|k|o|a|g|u|l|a|n|z|i|e|n,Entire Answer Incorrect,9968b545d277c4a7d33d284b34848485,2024-08-13 20:13:36
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:medication:en,"aspirin, other nsaids (eg naproxen, diclofenac), and certain antidepressants (eg maois, ssris) should not be taken with ibuprofenaspirin, other nsaids (eg naproxen, diclofenac), and certain antidepressants (eg maois, ssris) should not be taken with ibuprofenaspirin, other nsaids (eg naproxen, diclofenac), and certain antidepressants (eg maois, ssris) should not be taken with ibuprofen",N|S|A|I|D,Entire Answer Incorrect,662d96ab02c1d2010d7a6361246babe4,2024-08-13 20:13:08
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:mental_disorders:de,"restriktive anorexie ist eine essstörung, bei der die person stark reduziert isst, um gewicht zu verlieren oder zu vermeiden, trotz oder sogar trotz hungergefühlenrestriktive anorexie ist eine essstörung, bei der die person stark reduziert isst, um gewicht zu verlieren oder zu vermeiden, trotz oder sogar trotz hungergefühlenrestriktive anorexie ist eine essstörung, bei der die person stark reduziert isst, um gewicht zu verlieren oder zu vermeiden, trotz oder sogar trotz hungergefühlenrestriktive anorexie ist eine essstörung, bei der die person stark reduziert isst, um gewicht zu verlieren oder zu vermeiden, trotz oder sogar trotz hungergefühlenrestriktive anorexie ist eine essstörung, bei der die person stark reduziert isst, um gewicht zu verlieren oder zu vermeiden, trotz oder sogar trotz hungergefühlenrestriktive anorexie ist eine essstörung, bei der die person stark reduziert isst, um gewicht zu verlieren oder zu vermeiden, trotz oder sogar trotz hungergefühlen",mehr|sport|bewegung|gewichtsverlust|untergewicht,Entire Answer Incorrect,6902bf072a74fade65945a330eeb6663,2024-08-13 20:06:01
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:mental_disorders:de,adrenalinspiegeladrenalinspiegeladrenalinspiegel,anstrengung|anspannung,Entire Answer Incorrect,1aa124a216281e7e6de1743acee1e9c3,2024-08-13 20:06:03
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:mental_disorders:de,kognitive verhaltenstherapie und exposure-therapiekognitive verhaltenstherapie und exposure-therapiekognitive verhaltenstherapie und exposure-therapie,Medikamente|Medikamentöse Therapie,Entire Answer Incorrect,93ddb1dce70d9cb4e4ca07108e0dcc29,2024-08-13 20:06:17
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:mental_disorders:de,"die dissoziative identitätsstörung ist im icd-11 unter ""dissoziative (und somatoforme) störungen"" aufgeführtdie dissoziative identitätsstörung ist im icd-11 unter ""dissoziative (und somatoforme) störungen"" aufgeführtdie dissoziative identitätsstörung ist im icd-11 unter ""dissoziative (und somatoforme) störungen"" aufgeführt",konversionsstörungen|konversion,Entire Answer Incorrect,4c3ecd657bbb3e27310ccbf4fd764373,2024-08-13 20:07:10
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:mental_disorders:en,remissionremissionremissionremissionremissionremission,therapy|phase,Entire Answer Incorrect,1c2f31edc1a455696900d2c2dcc5eae1,2024-08-13 20:08:14
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:mental_disorders:en,"cognitive-behavioral therapy (cbt) and medication (usually selective serotonin reuptake inhibitors, ssris)cognitive-behavioral therapy (cbt) and medication (usually selective serotonin reuptake inhibitors, ssris)cognitive-behavioral therapy (cbt) and medication (usually selective serotonin reuptake inhibitors, ssris)",medication|drug|drug therapy,Entire Answer Incorrect,b50c5cdcdbffe0f67717f142569087fb,2024-08-13 20:08:20
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:mental_disorders:en,cognitive behavioral therapy (cbt) and interpersonal therapy (ipt)cognitive behavioral therapy (cbt) and interpersonal therapy (ipt)cognitive behavioral therapy (cbt) and interpersonal therapy (ipt),medication|drug|drug therapy,Entire Answer Incorrect,b040bd51351987d8e30846704b7efe95,2024-08-13 20:08:23
+llama-3.1-instruct:8:ggufv2:IQ4_XS,regex:mental_disorders:en,"dissociative identity disorder is classified under ""dissociative amnesia and dissociative disorders"" in icd-11, specifically under code 6a81dissociative identity disorder is classified under ""dissociative amnesia and dissociative disorders"" in icd-11, specifically under code 6a81dissociative identity disorder is classified under ""dissociative amnesia and dissociative disorders"" in icd-11, specifically under code 6a81",conversion disorders|conversion,Entire Answer Incorrect,d2107d493a89fb18b06ed6743f6b1b14,2024-08-13 20:08:42
+llama-3.1-instruct:8:ggufv2:IQ4_XS,single_choice:emergency:de,c),c,Format Error,e16a523be64c9170bed0d42a7370b937,2024-08-13 20:13:58
+llama-3.1-instruct:8:ggufv2:IQ4_XS,single_choice:math:de,d),d,Format Error,bb370b3741955fcc0e14291a4e28dae1,2024-08-13 20:07:37
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:biochemistry:de,ja,nein,Other,a077c65c160ec20d3f631b44e709d753,2024-08-13 21:03:21
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:biochemistry:en,yes,no,Other,710c11b68f99087ee79c398c65ca9215,2024-08-13 21:07:49
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:cardiology:de,ja,nein,Other,c271320748d103b55ce9ac1cae4f08c4,2024-08-13 21:02:58
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:cardiology:de,nein,ja,Other,5fc10a4ce23c7080ddfc05ea71cb1c54,2024-08-13 21:02:59
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:cardiology:de,mann,Mann,Case Sensitivity,e825d5741f4dbc5c6586a50bdafe17a5,2024-08-13 21:03:01
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:cardiology:en,yes,no,Other,c789018deb872db127cb8d5fea63c755,2024-08-13 21:03:07
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:cardiology:en,men,Men,Case Sensitivity,1a9f9fea0c4cb9aa2476fb76317ff471,2024-08-13 21:03:07
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:cardiology:en,no,yes,Other,b710df83a48c05873b0dbac03a3bef90,2024-08-13 21:03:08
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:cardiology:en,yes,no,Other,8c8c14070ebeaf1a90e6e376f3efa49c,2024-08-13 21:03:08
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:dermatology:de,ja,nein,Other,32cf33685a9e00909d6d16a9b7bde20f,2024-08-13 21:03:14
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:dermatology:de,nein,ja,Other,a0ba6e4c4785ff461433b4cbb51326d2,2024-08-13 21:03:16
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:dermatology:de,ja,nein,Other,8769a0f64879cab927a79ff77d52423b,2024-08-13 21:03:17
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:dermatology:en,yes,no,Other,3f185e0a1089b6484420e1c6fdffc1a4,2024-08-13 21:04:42
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:dermatology:en,"no 
+
+angioedema is typically associated with type i hypersensitivity reactions, not type iv type iv reactions are typically associated with delayed hypersensitivity reactions, such as contact dermatitis or tuberculin skin test reactions",no,Partial Match,6a661c4f100e7fd238f836656d35c3ed,2024-08-13 21:04:50
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:emergency:en,no,yes,Other,17e0f19ccbbcf0bfba6f30d8ce573421,2024-08-13 21:08:55
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:medication:de,ja,nein,Other,dfb3c7a3687c1d2c57d158bdc5a3cffd,2024-08-13 21:07:47
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:medication:en,yes,no,Other,004a6d5c21e84d978ac7b807e5a265a9,2024-08-13 21:07:32
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:medication:en,yes,no,Other,43fe3c10aca393d174422996a21f8d88,2024-08-13 21:07:33
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:medication:en,yes,no,Other,4768e764de88b366fe42b5f9d42832e1,2024-08-13 21:07:34
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:mental_disorders:de,ja,nein,Other,ae14302fc8e54ce6a36cb4561a19744d,2024-08-13 20:59:54
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:mental_disorders:de,nein,ja,Other,9b09af2495f1738adb533048db0951e0,2024-08-13 20:59:56
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:mental_disorders:de,nein,ja,Other,ef65b863f8110a2d1134da59d96f9099,2024-08-13 20:59:58
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:mental_disorders:de,nein,ja,Other,2dac8d051a6d77f5d3dc8db4a91482ff,2024-08-13 20:59:58
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:mental_disorders:en,yes,no,Other,b2ab8ea86e24e799101e3d4bc8864fed,2024-08-13 21:01:42
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:mental_disorders:en,"no
+
+people with generalised anxiety disorder usually consider their worries to be overwhelming and uncontrollable, not pointless",yes,Other,54a4309bad8924868e0bcef97f329c33,2024-08-13 21:01:46
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:mental_disorders:en,yes,no,Other,7aea18e5c48cc5fc40e0af3016c2c36f,2024-08-13 21:01:47
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:mental_disorders:en,yes,no,Other,87eef24cb37bc2b5a1f895615087f06c,2024-08-13 21:01:47
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:mental_disorders:en,"no
+
+a depressive episode in bipolar disorder is typically defined as lasting at least 2 weeks, not 14 days",yes,Format Error,42d5b9049be0a02afef7eff9430134ce,2024-08-13 21:01:50
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:physiology:de,nein,ja,Other,990872bf060c3f3e8aea21b610b2d2ac,2024-08-13 21:04:53
+llama-3.1-instruct:8:ggufv2:Q3_K_L,dichotomous:physiology:en,yes,no,Other,d85e27cf5f44aa37ed756a1dc8c307bf,2024-08-13 20:59:55
+llama-3.1-instruct:8:ggufv2:Q3_K_L,multiple_choice:dermatology:de,"a,b,c,d","a,b,c,d,e",Partial Match,b7aa7b8d4cddd70090bdfe60832ac9de,2024-08-13 21:03:20
+llama-3.1-instruct:8:ggufv2:Q3_K_L,multiple_choice:mental_disorders:de,"d, e, f","d,e,f",Format Error,da34c39cd52df137b216ebf9539f454d,2024-08-13 21:00:01
+llama-3.1-instruct:8:ggufv2:Q3_K_L,multiple_choice:mental_disorders:de,"a,b,c,d,e","a,b,c,d",Partial Match,778a26a9993f551f952e4210d0297cae,2024-08-13 21:00:07
+llama-3.1-instruct:8:ggufv2:Q3_K_L,multiple_choice:mental_disorders:en,"a, b, c, d","a,b,c,d",Format Error,3ed38586ca6c1b249dd342572dc9e11d,2024-08-13 21:01:57
+llama-3.1-instruct:8:ggufv2:Q3_K_L,one_word:cardiology:de,digoxin,Digoxin,Case Sensitivity,923e46b46c0ad85d426edbbfb6ec4d93,2024-08-13 21:03:06
+llama-3.1-instruct:8:ggufv2:Q3_K_L,one_word:cardiology:en,digoxin,Digoxin,Case Sensitivity,d56125629d337c89218bceb5cfd671f8,2024-08-13 21:03:13
+llama-3.1-instruct:8:ggufv2:Q3_K_L,one_word:medication:en,grapefruit,Grapefruit,Case Sensitivity,9fff21dadf380e58fff7cfeb8a43086d,2024-08-13 21:07:37
+llama-3.1-instruct:8:ggufv2:Q3_K_L,one_word:oncology:en,breast cancer,Breast cancer,Case Sensitivity,fcc446cda12fdd1b6a9c847aca3bd1b7,2024-08-13 21:07:04
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:dermatology:de,"bei der gabe von isotretinoin ist eine begleitende medikamentöse therapie in der regel nicht notwendig isotretinoin ist ein stark wirksames medikament, das zur behandlung von akne eingesetzt wird es kann jedoch nebenwirkungen wie trockenheit der haut, kopfschmerzen und müdigkeit verursachen in einigen fällen kann eine begleitende medikamentöse therapie erforderlich sein, um diese nebenwirkungen zu mildern dazu gehören:
+
+* antihistaminika zur linderung von hautreizungen
+* schmerzmittel zur linderung von kopfschmerzen
+* antidepressiva zur linderung von müdigkeit und depressionen
+
+es ist jedoch wichtig zu beachten, dass die entscheidung über eine begleitende medikamentöse therapie von einem arzt getroffen werden solltebei der gabe von isotretinoin ist eine begleitende medikamentöse therapie in der regel nicht notwendig isotretinoin ist ein stark wirksames medikament, das zur behandlung von akne eingesetzt wird es kann jedoch nebenwirkungen wie trockenheit der haut, kopfschmerzen und müdigkeit verursachen in einigen fällen kann eine begleitende medikamentöse therapie erforderlich sein, um diese nebenwirkungen zu mildern dazu gehören:
+
+* antihistaminika zur linderung von hautreizungen
+* schmerzmittel zur linderung von kopfschmerzen
+* antidepressiva zur linderung von müdigkeit und depressionen
+
+es ist jedoch wichtig zu beachten, dass die entscheidung über eine begleitende medikamentöse therapie von einem arzt getroffen werden solltebei der gabe von isotretinoin ist eine begleitende medikamentöse therapie in der regel nicht notwendig isotretinoin ist ein stark wirksames medikament, das zur behandlung von akne eingesetzt wird es kann jedoch nebenwirkungen wie trockenheit der haut, kopfschmerzen und müdigkeit verursachen in einigen fällen kann eine begleitende medikamentöse therapie erforderlich sein, um diese nebenwirkungen zu mildern dazu gehören:
+
+* antihistaminika zur linderung von hautreizungen
+* schmerzmittel zur linderung von kopfschmerzen
+* antidepressiva zur linderung von müdigkeit und depressionen
+
+es ist jedoch wichtig zu beachten, dass die entscheidung über eine begleitende medikamentöse therapie von einem arzt getroffen werden sollte",kontrazeption|verhütung,Entire Answer Incorrect,1fc05019f7d29bc830bdc1fcc60d7305,2024-08-13 21:03:49
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:dermatology:de,das köbner-phänomen tritt besonders häufig bei psoriasis aufdas köbner-phänomen tritt besonders häufig bei psoriasis aufdas köbner-phänomen tritt besonders häufig bei psoriasis auf,p|s|o|r|i|a|s|i|s,Entire Answer Incorrect,fcc743609f41eb99e28e96cdcbf61b39,2024-08-13 21:03:55
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:dermatology:de,"es gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 plattenepithelkarzinom (squamous cell carcinoma)
+2 adenoider basalzellkarzinom (adenosquamous carcinoma)
+3 basalzelladenokarzinom (basal cell adenocarcinoma)
+4 basalzellkarzinom in situ (basal cell carcinoma in situ)
+
+jede form hat unterschiedliche merkmale und auswirkungen auf die behandlung und prognosees gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 plattenepithelkarzinom (squamous cell carcinoma)
+2 adenoider basalzellkarzinom (adenosquamous carcinoma)
+3 basalzelladenokarzinom (basal cell adenocarcinoma)
+4 basalzellkarzinom in situ (basal cell carcinoma in situ)
+
+jede form hat unterschiedliche merkmale und auswirkungen auf die behandlung und prognosees gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 plattenepithelkarzinom (squamous cell carcinoma)
+2 adenoider basalzellkarzinom (adenosquamous carcinoma)
+3 basalzelladenokarzinom (basal cell adenocarcinoma)
+4 basalzellkarzinom in situ (basal cell carcinoma in situ)
+
+jede form hat unterschiedliche merkmale und auswirkungen auf die behandlung und prognosees gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 plattenepithelkarzinom (squamous cell carcinoma)
+2 adenoider basalzellkarzinom (adenosquamous carcinoma)
+3 basalzelladenokarzinom (basal cell adenocarcinoma)
+4 basalzellkarzinom in situ (basal cell carcinoma in situ)
+
+jede form hat unterschiedliche merkmale und auswirkungen auf die behandlung und prognosees gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 plattenepithelkarzinom (squamous cell carcinoma)
+2 adenoider basalzellkarzinom (adenosquamous carcinoma)
+3 basalzelladenokarzinom (basal cell adenocarcinoma)
+4 basalzellkarzinom in situ (basal cell carcinoma in situ)
+
+jede form hat unterschiedliche merkmale und auswirkungen auf die behandlung und prognosees gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 plattenepithelkarzinom (squamous cell carcinoma)
+2 adenoider basalzellkarzinom (adenosquamous carcinoma)
+3 basalzelladenokarzinom (basal cell adenocarcinoma)
+4 basalzellkarzinom in situ (basal cell carcinoma in situ)
+
+jede form hat unterschiedliche merkmale und auswirkungen auf die behandlung und prognose",destruiert|destruierend,Entire Answer Incorrect,791d91c0e022e9c69df04de343437cc3,2024-08-13 21:04:19
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:dermatology:de,"frauen, kinder und ältere menschen sind oft von mundsoor betroffenfrauen, kinder und ältere menschen sind oft von mundsoor betroffenfrauen, kinder und ältere menschen sind oft von mundsoor betroffen",alte|ältere,Entire Answer Incorrect,aa20eb5b95b2e78e13538beb85263191,2024-08-13 21:04:40
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:dermatology:de,psoriasispsoriasispsoriasis,lichen ruber planus|lichen planus,Entire Answer Incorrect,d7161754d87739c96b3623ab9f3c8e3c,2024-08-13 21:04:41
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:dermatology:en,hormonal birth control (for females) and antibiotics (eg doxycycline) or benzoyl peroxide for acne concomitant therapyhormonal birth control (for females) and antibiotics (eg doxycycline) or benzoyl peroxide for acne concomitant therapyhormonal birth control (for females) and antibiotics (eg doxycycline) or benzoyl peroxide for acne concomitant therapy,contraception|prevention|contraceptive|contraceptiva,Entire Answer Incorrect,403b64ec6c32b29e709afc4cdcfa37e8,2024-08-13 21:05:00
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:dermatology:en,sarcoidosissarcoidosissarcoidosis,streptococci|streptococcus|streptococcal,Entire Answer Incorrect,61461e021ce57f09ec2ebdcab9c76a98,2024-08-13 21:05:01
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:dermatology:en,"there are several clinical forms of basal cell carcinoma (bcc), including:
+
+1 nodular bcc
+2 superficial bcc
+3 sclerosing bcc
+4 micronodular bcc
+5 pigmented bcc (also known as pigmented basal cell carcinoma or pigmented basal cell carcinoma in situ)
+6 morpheaform bcc (also known as sclerodermiform bcc)
+7 infiltrative bcc
+8 ulcerative bccthere are several clinical forms of basal cell carcinoma (bcc), including:
+
+1 nodular bcc
+2 superficial bcc
+3 sclerosing bcc
+4 micronodular bcc
+5 pigmented bcc (also known as pigmented basal cell carcinoma or pigmented basal cell carcinoma in situ)
+6 morpheaform bcc (also known as sclerodermiform bcc)
+7 infiltrative bcc
+8 ulcerative bccthere are several clinical forms of basal cell carcinoma (bcc), including:
+
+1 nodular bcc
+2 superficial bcc
+3 sclerosing bcc
+4 micronodular bcc
+5 pigmented bcc (also known as pigmented basal cell carcinoma or pigmented basal cell carcinoma in situ)
+6 morpheaform bcc (also known as sclerodermiform bcc)
+7 infiltrative bcc
+8 ulcerative bcc",destroyed|destructed|destroying|destructive,Entire Answer Incorrect,a15e01513ce0aa1c860c80047ad4d1f7,2024-08-13 21:05:18
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:dermatology:en,"people with weakened immune systems, elderly, and those with diabetes, hiv/aids, or taking antibiotics are often affected by oral thrushpeople with weakened immune systems, elderly, and those with diabetes, hiv/aids, or taking antibiotics are often affected by oral thrushpeople with weakened immune systems, elderly, and those with diabetes, hiv/aids, or taking antibiotics are often affected by oral thrush",old|elder,Entire Answer Incorrect,5fd37e8df64240a554b231185a6c2769,2024-08-13 21:05:28
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:eeg_data:de,"die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: der ai misst die differenz zwischen der amplitude der aktivität zwischen zwei elektrodenpaaren
+2 **skewness**: die skewness misst die asymmetrie der verteilung der aktivität zwischen zwei elektrodenpaaren
+3 **logarithmische asymmetrie (logarithmic asymmetry, la)**: die la misst die asymmetrie der aktivität zwischen zwei elektrodenpaaren über die logarithmusfunktiondie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: der ai misst die differenz zwischen der amplitude der aktivität zwischen zwei elektrodenpaaren
+2 **skewness**: die skewness misst die asymmetrie der verteilung der aktivität zwischen zwei elektrodenpaaren
+3 **logarithmische asymmetrie (logarithmic asymmetry, la)**: die la misst die asymmetrie der aktivität zwischen zwei elektrodenpaaren über die logarithmusfunktiondie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: der ai misst die differenz zwischen der amplitude der aktivität zwischen zwei elektrodenpaaren
+2 **skewness**: die skewness misst die asymmetrie der verteilung der aktivität zwischen zwei elektrodenpaaren
+3 **logarithmische asymmetrie (logarithmic asymmetry, la)**: die la misst die asymmetrie der aktivität zwischen zwei elektrodenpaaren über die logarithmusfunktiondie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: der ai misst die differenz zwischen der amplitude der aktivität zwischen zwei elektrodenpaaren
+2 **skewness**: die skewness misst die asymmetrie der verteilung der aktivität zwischen zwei elektrodenpaaren
+3 **logarithmische asymmetrie (logarithmic asymmetry, la)**: die la misst die asymmetrie der aktivität zwischen zwei elektrodenpaaren über die logarithmusfunktiondie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: der ai misst die differenz zwischen der amplitude der aktivität zwischen zwei elektrodenpaaren
+2 **skewness**: die skewness misst die asymmetrie der verteilung der aktivität zwischen zwei elektrodenpaaren
+3 **logarithmische asymmetrie (logarithmic asymmetry, la)**: die la misst die asymmetrie der aktivität zwischen zwei elektrodenpaaren über die logarithmusfunktiondie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: der ai misst die differenz zwischen der amplitude der aktivität zwischen zwei elektrodenpaaren
+2 **skewness**: die skewness misst die asymmetrie der verteilung der aktivität zwischen zwei elektrodenpaaren
+3 **logarithmische asymmetrie (logarithmic asymmetry, la)**: die la misst die asymmetrie der aktivität zwischen zwei elektrodenpaaren über die logarithmusfunktiondie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: der ai misst die differenz zwischen der amplitude der aktivität zwischen zwei elektrodenpaaren
+2 **skewness**: die skewness misst die asymmetrie der verteilung der aktivität zwischen zwei elektrodenpaaren
+3 **logarithmische asymmetrie (logarithmic asymmetry, la)**: die la misst die asymmetrie der aktivität zwischen zwei elektrodenpaaren über die logarithmusfunktiondie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: der ai misst die differenz zwischen der amplitude der aktivität zwischen zwei elektrodenpaaren
+2 **skewness**: die skewness misst die asymmetrie der verteilung der aktivität zwischen zwei elektrodenpaaren
+3 **logarithmische asymmetrie (logarithmic asymmetry, la)**: die la misst die asymmetrie der aktivität zwischen zwei elektrodenpaaren über die logarithmusfunktiondie drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: der ai misst die differenz zwischen der amplitude der aktivität zwischen zwei elektrodenpaaren
+2 **skewness**: die skewness misst die asymmetrie der verteilung der aktivität zwischen zwei elektrodenpaaren
+3 **logarithmische asymmetrie (logarithmic asymmetry, la)**: die la misst die asymmetrie der aktivität zwischen zwei elektrodenpaaren über die logarithmusfunktion",Coherence|Logarithmierte Differenz,Entire Answer Incorrect,65270f78b5a362b25c2eba10bf29fcd2,2024-08-13 21:06:14
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:medication:de,"beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* corticosteroide
+* heparin
+* warfarin
+* antikoagulantien wie acetylsalicylsäure (ass)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* corticosteroide
+* heparin
+* warfarin
+* antikoagulantien wie acetylsalicylsäure (ass)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* corticosteroide
+* heparin
+* warfarin
+* antikoagulantien wie acetylsalicylsäure (ass)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* corticosteroide
+* heparin
+* warfarin
+* antikoagulantien wie acetylsalicylsäure (ass)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* corticosteroide
+* heparin
+* warfarin
+* antikoagulantien wie acetylsalicylsäure (ass)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* corticosteroide
+* heparin
+* warfarin
+* antikoagulantien wie acetylsalicylsäure (ass)",SSRI|Antikoagulanzien,Entire Answer Incorrect,955aa256fa5e3c5d64c3da32e0e1a3e8,2024-08-13 20:59:52
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:medication:de,"beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* corticosteroide
+* heparin
+* warfarin
+* antikoagulantien wie acetylsalicylsäure (ass)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* corticosteroide
+* heparin
+* warfarin
+* antikoagulantien wie acetylsalicylsäure (ass)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* corticosteroide
+* heparin
+* warfarin
+* antikoagulantien wie acetylsalicylsäure (ass)",A|n|t|i|k|o|a|g|u|l|a|n|z|i|e|n,Entire Answer Incorrect,9968b545d277c4a7d33d284b34848485,2024-08-13 21:08:00
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:medication:en,"aspirin, other nsaids (eg, naproxen, diclofenac), and anticoagulants (eg, warfarin, heparin)aspirin, other nsaids (eg, naproxen, diclofenac), and anticoagulants (eg, warfarin, heparin)aspirin, other nsaids (eg, naproxen, diclofenac), and anticoagulants (eg, warfarin, heparin)",N|S|A|I|D,Entire Answer Incorrect,662d96ab02c1d2010d7a6361246babe4,2024-08-13 21:07:46
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:mental_disorders:de,"restriktive anorexie ist eine form der essstörung, bei der die person stark abnimmt, um idealerweise nur noch 20-30% ihres körpergewichts zu erreichen sie vermeidet nahrung und/oder hat ein stark eingeschränktes essverhaltenrestriktive anorexie ist eine form der essstörung, bei der die person stark abnimmt, um idealerweise nur noch 20-30% ihres körpergewichts zu erreichen sie vermeidet nahrung und/oder hat ein stark eingeschränktes essverhaltenrestriktive anorexie ist eine form der essstörung, bei der die person stark abnimmt, um idealerweise nur noch 20-30% ihres körpergewichts zu erreichen sie vermeidet nahrung und/oder hat ein stark eingeschränktes essverhalten",mehr|sport|bewegung|gewichtsverlust|untergewicht,Entire Answer Incorrect,6902bf072a74fade65945a330eeb6663,2024-08-13 21:00:45
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:mental_disorders:de,adrenalinspiegeladrenalinspiegeladrenalinspiegel,anstrengung|anspannung,Entire Answer Incorrect,1aa124a216281e7e6de1743acee1e9c3,2024-08-13 21:00:46
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:mental_disorders:de,kognitive verhaltenstherapie (kvt) und expositionstherapiekognitive verhaltenstherapie (kvt) und expositionstherapiekognitive verhaltenstherapie (kvt) und expositionstherapie,Medikamente|Medikamentöse Therapie,Entire Answer Incorrect,93ddb1dce70d9cb4e4ca07108e0dcc29,2024-08-13 21:00:59
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:mental_disorders:de,"die dissoziative identitätsstörung ist im icd-11 unter ""störungen der identität und der persönlichkeit"" (f448) aufgeführtdie dissoziative identitätsstörung ist im icd-11 unter ""störungen der identität und der persönlichkeit"" (f448) aufgeführtdie dissoziative identitätsstörung ist im icd-11 unter ""störungen der identität und der persönlichkeit"" (f448) aufgeführt",konversionsstörungen|konversion,Entire Answer Incorrect,4c3ecd657bbb3e27310ccbf4fd764373,2024-08-13 21:01:31
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:mental_disorders:de,"die abspaltung von der eigenen persönlichkeit bei personen mit einer multipel persönlichkeit (mpd) dient in der regel als schutzmechanismus sie ermöglicht es der betroffenen person, von belastenden erfahrungen oder emotionen abzuschotten und sich in einer anderen persönlichkeit zu versteckendie abspaltung von der eigenen persönlichkeit bei personen mit einer multipel persönlichkeit (mpd) dient in der regel als schutzmechanismus sie ermöglicht es der betroffenen person, von belastenden erfahrungen oder emotionen abzuschotten und sich in einer anderen persönlichkeit zu versteckendie abspaltung von der eigenen persönlichkeit bei personen mit einer multipel persönlichkeit (mpd) dient in der regel als schutzmechanismus sie ermöglicht es der betroffenen person, von belastenden erfahrungen oder emotionen abzuschotten und sich in einer anderen persönlichkeit zu verstecken",Trauma|traumatische erinnerungen|traumatische erfahrungen,Entire Answer Incorrect,05df998b4e9fd0c9ce60733fef85f81c,2024-08-13 21:01:41
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:mental_disorders:en,the therapy phase that takes place directly after the acute mania phase is the stabilization phasethe therapy phase that takes place directly after the acute mania phase is the stabilization phasethe therapy phase that takes place directly after the acute mania phase is the stabilization phase,therapy|phase,Entire Answer Incorrect,1c2f31edc1a455696900d2c2dcc5eae1,2024-08-13 21:02:23
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:mental_disorders:en,cognitive-behavioral therapy (cbt) and medication (usually antidepressants)cognitive-behavioral therapy (cbt) and medication (usually antidepressants)cognitive-behavioral therapy (cbt) and medication (usually antidepressants),medication|drug|drug therapy,Entire Answer Incorrect,b50c5cdcdbffe0f67717f142569087fb,2024-08-13 21:02:28
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:mental_disorders:en,cognitive-behavioral therapy (cbt) and interpersonal therapy (ipt)cognitive-behavioral therapy (cbt) and interpersonal therapy (ipt)cognitive-behavioral therapy (cbt) and interpersonal therapy (ipt),medication|drug|drug therapy,Entire Answer Incorrect,b040bd51351987d8e30846704b7efe95,2024-08-13 21:02:31
+llama-3.1-instruct:8:ggufv2:Q3_K_L,regex:mental_disorders:en,"dissociative identity disorder (did) falls under ""dissociative amnesia"" in icd-11, which is classified under ""dissociative disorders"" (6a10)dissociative identity disorder (did) falls under ""dissociative amnesia"" in icd-11, which is classified under ""dissociative disorders"" (6a10)dissociative identity disorder (did) falls under ""dissociative amnesia"" in icd-11, which is classified under ""dissociative disorders"" (6a10)",conversion disorders|conversion,Entire Answer Incorrect,d2107d493a89fb18b06ed6743f6b1b14,2024-08-13 21:02:51
+llama-3.1-instruct:8:ggufv2:Q3_K_L,single_choice:emergency:de,c),c,Format Error,e16a523be64c9170bed0d42a7370b937,2024-08-13 21:08:42
+llama-3.1-instruct:8:ggufv2:Q3_K_L,single_choice:emergency:de,d),d,Format Error,0572f63cd25d1ea9a76492371aacc2a1,2024-08-13 21:08:43
 llama-3.1-instruct:8:ggufv2:Q4_K_M,dichotomous:biochemistry:de,ja,nein,Other,a077c65c160ec20d3f631b44e709d753,2024-08-13 19:20:04
 llama-3.1-instruct:8:ggufv2:Q4_K_M,dichotomous:biochemistry:en,yes,no,Other,710c11b68f99087ee79c398c65ca9215,2024-08-13 19:24:13
 llama-3.1-instruct:8:ggufv2:Q4_K_M,dichotomous:cardiology:de,ja,nein,Other,c271320748d103b55ce9ac1cae4f08c4,2024-08-13 19:19:16
@@ -17686,6 +18215,820 @@ llama-3.1-instruct:8:ggufv2:Q4_K_M,regex:mental_disorders:en,remission phaseremi
 llama-3.1-instruct:8:ggufv2:Q4_K_M,regex:mental_disorders:en,cognitive-behavioral therapy (cbt) and medication (usually antidepressants)cognitive-behavioral therapy (cbt) and medication (usually antidepressants)cognitive-behavioral therapy (cbt) and medication (usually antidepressants),medication|drug|drug therapy,Entire Answer Incorrect,b50c5cdcdbffe0f67717f142569087fb,2024-08-13 19:18:58
 llama-3.1-instruct:8:ggufv2:Q4_K_M,regex:mental_disorders:en,cognitive-behavioral therapy (cbt) and interpersonal therapy (ipt)cognitive-behavioral therapy (cbt) and interpersonal therapy (ipt)cognitive-behavioral therapy (cbt) and interpersonal therapy (ipt),medication|drug|drug therapy,Entire Answer Incorrect,b040bd51351987d8e30846704b7efe95,2024-08-13 19:19:00
 llama-3.1-instruct:8:ggufv2:Q4_K_M,regex:mental_disorders:en,dissociative identity disorder is classified under 6a080 in icd-11dissociative identity disorder is classified under 6a080 in icd-11dissociative identity disorder is classified under 6a080 in icd-11,conversion disorders|conversion,Entire Answer Incorrect,d2107d493a89fb18b06ed6743f6b1b14,2024-08-13 19:19:13
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:biochemistry:de,ja,nein,Other,a077c65c160ec20d3f631b44e709d753,2024-08-13 22:02:37
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:biochemistry:en,yes,no,Other,710c11b68f99087ee79c398c65ca9215,2024-08-13 22:07:42
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:cardiology:de,ja,nein,Other,c271320748d103b55ce9ac1cae4f08c4,2024-08-13 22:02:12
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:cardiology:de,nein,ja,Other,5fc10a4ce23c7080ddfc05ea71cb1c54,2024-08-13 22:02:13
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:cardiology:de,mann,Mann,Case Sensitivity,e825d5741f4dbc5c6586a50bdafe17a5,2024-08-13 22:02:15
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:cardiology:en,yes,no,Other,c789018deb872db127cb8d5fea63c755,2024-08-13 22:02:21
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:cardiology:en,men,Men,Case Sensitivity,1a9f9fea0c4cb9aa2476fb76317ff471,2024-08-13 22:02:22
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:cardiology:en,no,yes,Other,b710df83a48c05873b0dbac03a3bef90,2024-08-13 22:02:22
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:cardiology:en,yes,no,Other,8c8c14070ebeaf1a90e6e376f3efa49c,2024-08-13 22:02:23
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:dermatology:de,ja,nein,Other,32cf33685a9e00909d6d16a9b7bde20f,2024-08-13 22:02:29
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:dermatology:de,nein,ja,Other,a0ba6e4c4785ff461433b4cbb51326d2,2024-08-13 22:02:32
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:dermatology:de,ja,nein,Other,8769a0f64879cab927a79ff77d52423b,2024-08-13 22:02:33
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:dermatology:en,yes,no,Other,3f185e0a1089b6484420e1c6fdffc1a4,2024-08-13 22:03:52
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:dermatology:en,"no
+
+the sentence is incorrect because it implies that finger amputation is the only treatment option for a moderately differentiated squamous cell carcinoma with a tumour thickness of 6 mm in reality, the treatment for squamous cell carcinoma depends on various factors, including the size and location of the tumor, the depth of invasion, and the patient's overall health for a tumor with a thickness of 6 mm, other treatment options such as mohs surgery, wide local excision, or a combination of surgery and radiation therapy may also be considered, depending on the specific circumstances",no,Partial Match,a2bccd05f3ed202ab060cfd604fcd598,2024-08-13 22:04:07
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:dermatology:en,"no 
+
+angioedema is typically associated with type 1 or 3 reactions according to the coombs classification, not type 4",no,Partial Match,6a661c4f100e7fd238f836656d35c3ed,2024-08-13 22:04:13
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:emergency:en,no,yes,Other,129f8c9dfddfa91be6952a03066a6fca,2024-08-13 22:08:50
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:emergency:en,no,yes,Other,17e0f19ccbbcf0bfba6f30d8ce573421,2024-08-13 22:08:51
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:medication:de,ja,nein,Other,dfb3c7a3687c1d2c57d158bdc5a3cffd,2024-08-13 22:07:41
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:medication:en,yes,no,Other,004a6d5c21e84d978ac7b807e5a265a9,2024-08-13 22:07:14
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:medication:en,yes,no,Other,43fe3c10aca393d174422996a21f8d88,2024-08-13 22:07:15
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:mental_disorders:de,ja,nein,Other,ae14302fc8e54ce6a36cb4561a19744d,2024-08-13 21:59:30
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:mental_disorders:de,nein,ja,Other,9b09af2495f1738adb533048db0951e0,2024-08-13 21:59:32
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:mental_disorders:de,nein,ja,Other,ef65b863f8110a2d1134da59d96f9099,2024-08-13 21:59:33
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:mental_disorders:de,nein,ja,Other,2dac8d051a6d77f5d3dc8db4a91482ff,2024-08-13 21:59:34
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:mental_disorders:en,yes,no,Other,b2ab8ea86e24e799101e3d4bc8864fed,2024-08-13 22:01:10
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:mental_disorders:en,"no
+
+people with generalised anxiety disorder usually consider their worries to be excessive or overwhelming, not pointless",yes,Other,54a4309bad8924868e0bcef97f329c33,2024-08-13 22:01:14
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:mental_disorders:en,yes,no,Other,7aea18e5c48cc5fc40e0af3016c2c36f,2024-08-13 22:01:15
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:mental_disorders:en,yes,no,Other,87eef24cb37bc2b5a1f895615087f06c,2024-08-13 22:01:15
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:mental_disorders:en,no,yes,Other,42d5b9049be0a02afef7eff9430134ce,2024-08-13 22:01:16
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:physiology:de,ja,nein,Other,518ac2973fba63e0f949bfc9ba180075,2024-08-13 22:04:27
+llama-3.1-instruct:8:ggufv2:Q5_K_M,dichotomous:physiology:en,yes,no,Other,d85e27cf5f44aa37ed756a1dc8c307bf,2024-08-13 21:59:31
+llama-3.1-instruct:8:ggufv2:Q5_K_M,multiple_choice:dermatology:en,"a,c,d,e","d,e",Partial Match,962dba408549a2eba47962f7d1debe93,2024-08-13 22:04:17
+llama-3.1-instruct:8:ggufv2:Q5_K_M,multiple_choice:mental_disorders:de,"d, e, f","d,e,f",Format Error,da34c39cd52df137b216ebf9539f454d,2024-08-13 21:59:36
+llama-3.1-instruct:8:ggufv2:Q5_K_M,multiple_choice:mental_disorders:de,"a,b,c,e","b,c,e",Partial Match,363a2f9f466bd1615291f2445afc145b,2024-08-13 21:59:42
+llama-3.1-instruct:8:ggufv2:Q5_K_M,multiple_choice:mental_disorders:en,"a,b,d,e,f,g","d,e,f",Partial Match,b41872fbde7612fb59786be02644181c,2024-08-13 22:01:18
+llama-3.1-instruct:8:ggufv2:Q5_K_M,multiple_choice:mental_disorders:en,"a, b, c, d","a,b,c,d",Format Error,3ed38586ca6c1b249dd342572dc9e11d,2024-08-13 22:01:23
+llama-3.1-instruct:8:ggufv2:Q5_K_M,one_word:cardiology:de,digoxin,Digoxin,Case Sensitivity,923e46b46c0ad85d426edbbfb6ec4d93,2024-08-13 22:02:21
+llama-3.1-instruct:8:ggufv2:Q5_K_M,one_word:cardiology:en,digoxin,Digoxin,Case Sensitivity,d56125629d337c89218bceb5cfd671f8,2024-08-13 22:02:28
+llama-3.1-instruct:8:ggufv2:Q5_K_M,one_word:medication:en,grapefruit,Grapefruit,Case Sensitivity,9fff21dadf380e58fff7cfeb8a43086d,2024-08-13 22:07:18
+llama-3.1-instruct:8:ggufv2:Q5_K_M,one_word:oncology:de,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,3bcb654ee2e83905265a6286af815821,2024-08-13 22:07:00
+llama-3.1-instruct:8:ggufv2:Q5_K_M,one_word:oncology:de,brustkrebs,Brustkrebs,Case Sensitivity,12bd20c52a6b8aab1b813584f5cd9cd6,2024-08-13 22:07:13
+llama-3.1-instruct:8:ggufv2:Q5_K_M,one_word:oncology:en,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,1edd6afaaf938d3b152460300eecd34a,2024-08-13 22:06:52
+llama-3.1-instruct:8:ggufv2:Q5_K_M,one_word:oncology:en,breast cancer,Breast cancer,Case Sensitivity,fcc446cda12fdd1b6a9c847aca3bd1b7,2024-08-13 22:06:55
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:dermatology:de,bei der gabe von isotretinoin ist eine begleitende medikamentöse therapie in der regel nicht erforderlichbei der gabe von isotretinoin ist eine begleitende medikamentöse therapie in der regel nicht erforderlichbei der gabe von isotretinoin ist eine begleitende medikamentöse therapie in der regel nicht erforderlich,kontrazeption|verhütung,Entire Answer Incorrect,1fc05019f7d29bc830bdc1fcc60d7305,2024-08-13 22:02:45
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:dermatology:de,"es gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gut begrenztes tumorwachstum
+2 **in-situ-karzinom (carcinoma in situ)**: ein präkanzeroses, nicht invasives wachstum
+3 **basalzellkarzinom mit differenzierter differenzierung**: ein tumor mit gut differenzierten zellen
+4 **basalzellkarzinom mit mäßiger differenzierung**: ein tumor mit mäßig differenzierten zellen
+5 **basalzellkarzinom mit schlechter differenzierung**: ein tumor mit schlecht differenzierten zellen
+
+diese formen können je nach ausprägung und lokalisation unterschiedliche behandlungsmöglichkeiten und prognosen habenes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gut begrenztes tumorwachstum
+2 **in-situ-karzinom (carcinoma in situ)**: ein präkanzeroses, nicht invasives wachstum
+3 **basalzellkarzinom mit differenzierter differenzierung**: ein tumor mit gut differenzierten zellen
+4 **basalzellkarzinom mit mäßiger differenzierung**: ein tumor mit mäßig differenzierten zellen
+5 **basalzellkarzinom mit schlechter differenzierung**: ein tumor mit schlecht differenzierten zellen
+
+diese formen können je nach ausprägung und lokalisation unterschiedliche behandlungsmöglichkeiten und prognosen habenes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gut begrenztes tumorwachstum
+2 **in-situ-karzinom (carcinoma in situ)**: ein präkanzeroses, nicht invasives wachstum
+3 **basalzellkarzinom mit differenzierter differenzierung**: ein tumor mit gut differenzierten zellen
+4 **basalzellkarzinom mit mäßiger differenzierung**: ein tumor mit mäßig differenzierten zellen
+5 **basalzellkarzinom mit schlechter differenzierung**: ein tumor mit schlecht differenzierten zellen
+
+diese formen können je nach ausprägung und lokalisation unterschiedliche behandlungsmöglichkeiten und prognosen habenes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gut begrenztes tumorwachstum
+2 **in-situ-karzinom (carcinoma in situ)**: ein präkanzeroses, nicht invasives wachstum
+3 **basalzellkarzinom mit differenzierter differenzierung**: ein tumor mit gut differenzierten zellen
+4 **basalzellkarzinom mit mäßiger differenzierung**: ein tumor mit mäßig differenzierten zellen
+5 **basalzellkarzinom mit schlechter differenzierung**: ein tumor mit schlecht differenzierten zellen
+
+diese formen können je nach ausprägung und lokalisation unterschiedliche behandlungsmöglichkeiten und prognosen habenes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gut begrenztes tumorwachstum
+2 **in-situ-karzinom (carcinoma in situ)**: ein präkanzeroses, nicht invasives wachstum
+3 **basalzellkarzinom mit differenzierter differenzierung**: ein tumor mit gut differenzierten zellen
+4 **basalzellkarzinom mit mäßiger differenzierung**: ein tumor mit mäßig differenzierten zellen
+5 **basalzellkarzinom mit schlechter differenzierung**: ein tumor mit schlecht differenzierten zellen
+
+diese formen können je nach ausprägung und lokalisation unterschiedliche behandlungsmöglichkeiten und prognosen habenes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gut begrenztes tumorwachstum
+2 **in-situ-karzinom (carcinoma in situ)**: ein präkanzeroses, nicht invasives wachstum
+3 **basalzellkarzinom mit differenzierter differenzierung**: ein tumor mit gut differenzierten zellen
+4 **basalzellkarzinom mit mäßiger differenzierung**: ein tumor mit mäßig differenzierten zellen
+5 **basalzellkarzinom mit schlechter differenzierung**: ein tumor mit schlecht differenzierten zellen
+
+diese formen können je nach ausprägung und lokalisation unterschiedliche behandlungsmöglichkeiten und prognosen haben",destruiert|destruierend,Entire Answer Incorrect,791d91c0e022e9c69df04de343437cc3,2024-08-13 22:03:28
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:dermatology:de,"frauen, kinder und ältere menschen sind oft von mundsoor betroffenfrauen, kinder und ältere menschen sind oft von mundsoor betroffenfrauen, kinder und ältere menschen sind oft von mundsoor betroffen",alte|ältere,Entire Answer Incorrect,aa20eb5b95b2e78e13538beb85263191,2024-08-13 22:03:51
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:dermatology:de,psoriasispsoriasispsoriasis,lichen ruber planus|lichen planus,Entire Answer Incorrect,d7161754d87739c96b3623ab9f3c8e3c,2024-08-13 22:03:51
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:dermatology:en,hormonal birth control and/or antibiotics (eg doxycycline) are often prescribedhormonal birth control and/or antibiotics (eg doxycycline) are often prescribedhormonal birth control and/or antibiotics (eg doxycycline) are often prescribed,contraception|prevention|contraceptive|contraceptiva,Entire Answer Incorrect,403b64ec6c32b29e709afc4cdcfa37e8,2024-08-13 22:04:23
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:dermatology:en,sarcoidosissarcoidosissarcoidosis,streptococci|streptococcus|streptococcal,Entire Answer Incorrect,61461e021ce57f09ec2ebdcab9c76a98,2024-08-13 22:04:24
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:dermatology:en,"there are several clinical forms of basal cell carcinoma (bcc), including:
+
+1 nodular bcc
+2 superficial bcc
+3 sclerosing bcc
+4 micronodular bcc
+5 pigmented bcc (rare)there are several clinical forms of basal cell carcinoma (bcc), including:
+
+1 nodular bcc
+2 superficial bcc
+3 sclerosing bcc
+4 micronodular bcc
+5 pigmented bcc (rare)there are several clinical forms of basal cell carcinoma (bcc), including:
+
+1 nodular bcc
+2 superficial bcc
+3 sclerosing bcc
+4 micronodular bcc
+5 pigmented bcc (rare)there are several clinical forms of basal cell carcinoma (bcc), including:
+
+1 nodular bcc
+2 superficial bcc
+3 sclerosing bcc
+4 micronodular bcc
+5 pigmented bcc (rare)there are several clinical forms of basal cell carcinoma (bcc), including:
+
+1 nodular bcc
+2 superficial bcc
+3 sclerosing bcc
+4 micronodular bcc
+5 pigmented bcc (rare)there are several clinical forms of basal cell carcinoma (bcc), including:
+
+1 nodular bcc
+2 superficial bcc
+3 sclerosing bcc
+4 micronodular bcc
+5 pigmented bcc (rare)",destroyed|destructed|destroying|destructive,Entire Answer Incorrect,a15e01513ce0aa1c860c80047ad4d1f7,2024-08-13 22:04:42
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:dermatology:en,"infants, elderly, and people with weakened immune systems, diabetes, or oral health issuesinfants, elderly, and people with weakened immune systems, diabetes, or oral health issuesinfants, elderly, and people with weakened immune systems, diabetes, or oral health issues",old|elder,Entire Answer Incorrect,5fd37e8df64240a554b231185a6c2769,2024-08-13 22:04:50
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:eeg_data:de,"die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2) × 100
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2 + a2) × 100die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2) × 100
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2 + a2) × 100die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2) × 100
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2 + a2) × 100die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2) × 100
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2 + a2) × 100die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2) × 100
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2 + a2) × 100die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2) × 100
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2 + a2) × 100die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2) × 100
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2 + a2) × 100die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2) × 100
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2 + a2) × 100die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2) × 100
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2 + a2) × 100",Coherence|Logarithmierte Differenz,Entire Answer Incorrect,65270f78b5a362b25c2eba10bf29fcd2,2024-08-13 22:05:43
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:medication:de,"beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* warfarin (blutverdünnungsmittel)
+* cumarine (blutverdünnungsmittel)
+* lithium (mangelsymptomtherapie)
+* methotrexat (zytostatika)
+* mifepristone (abtreibungsmittel)
+* quinolon-antibiotika (zb ciprofloxacin, norfloxacin)
+* thrombozyt-aggregations-hemmer (zb acetylsalicylsäure, clopidogrel)
+
+es ist jedoch zu beachten, dass diese liste nicht vollständig ist und dass die interaktionen zwischen medikamenten und nsar individuell variieren können es ist immer ratsam, vor der einnahme von nsar mit einem arzt zu sprechen, um das individuelle risiko zu bewertenbeispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* warfarin (blutverdünnungsmittel)
+* cumarine (blutverdünnungsmittel)
+* lithium (mangelsymptomtherapie)
+* methotrexat (zytostatika)
+* mifepristone (abtreibungsmittel)
+* quinolon-antibiotika (zb ciprofloxacin, norfloxacin)
+* thrombozyt-aggregations-hemmer (zb acetylsalicylsäure, clopidogrel)
+
+es ist jedoch zu beachten, dass diese liste nicht vollständig ist und dass die interaktionen zwischen medikamenten und nsar individuell variieren können es ist immer ratsam, vor der einnahme von nsar mit einem arzt zu sprechen, um das individuelle risiko zu bewertenbeispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* warfarin (blutverdünnungsmittel)
+* cumarine (blutverdünnungsmittel)
+* lithium (mangelsymptomtherapie)
+* methotrexat (zytostatika)
+* mifepristone (abtreibungsmittel)
+* quinolon-antibiotika (zb ciprofloxacin, norfloxacin)
+* thrombozyt-aggregations-hemmer (zb acetylsalicylsäure, clopidogrel)
+
+es ist jedoch zu beachten, dass diese liste nicht vollständig ist und dass die interaktionen zwischen medikamenten und nsar individuell variieren können es ist immer ratsam, vor der einnahme von nsar mit einem arzt zu sprechen, um das individuelle risiko zu bewertenbeispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* warfarin (blutverdünnungsmittel)
+* cumarine (blutverdünnungsmittel)
+* lithium (mangelsymptomtherapie)
+* methotrexat (zytostatika)
+* mifepristone (abtreibungsmittel)
+* quinolon-antibiotika (zb ciprofloxacin, norfloxacin)
+* thrombozyt-aggregations-hemmer (zb acetylsalicylsäure, clopidogrel)
+
+es ist jedoch zu beachten, dass diese liste nicht vollständig ist und dass die interaktionen zwischen medikamenten und nsar individuell variieren können es ist immer ratsam, vor der einnahme von nsar mit einem arzt zu sprechen, um das individuelle risiko zu bewertenbeispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* warfarin (blutverdünnungsmittel)
+* cumarine (blutverdünnungsmittel)
+* lithium (mangelsymptomtherapie)
+* methotrexat (zytostatika)
+* mifepristone (abtreibungsmittel)
+* quinolon-antibiotika (zb ciprofloxacin, norfloxacin)
+* thrombozyt-aggregations-hemmer (zb acetylsalicylsäure, clopidogrel)
+
+es ist jedoch zu beachten, dass diese liste nicht vollständig ist und dass die interaktionen zwischen medikamenten und nsar individuell variieren können es ist immer ratsam, vor der einnahme von nsar mit einem arzt zu sprechen, um das individuelle risiko zu bewertenbeispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* warfarin (blutverdünnungsmittel)
+* cumarine (blutverdünnungsmittel)
+* lithium (mangelsymptomtherapie)
+* methotrexat (zytostatika)
+* mifepristone (abtreibungsmittel)
+* quinolon-antibiotika (zb ciprofloxacin, norfloxacin)
+* thrombozyt-aggregations-hemmer (zb acetylsalicylsäure, clopidogrel)
+
+es ist jedoch zu beachten, dass diese liste nicht vollständig ist und dass die interaktionen zwischen medikamenten und nsar individuell variieren können es ist immer ratsam, vor der einnahme von nsar mit einem arzt zu sprechen, um das individuelle risiko zu bewerten",SSRI|Antikoagulanzien,Entire Answer Incorrect,955aa256fa5e3c5d64c3da32e0e1a3e8,2024-08-13 21:59:29
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:medication:de,"beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* warfarin (blutverdünnungsmittel)
+* cumarine (blutverdünnungsmittel)
+* lithium (mangelsymptomtherapie)
+* methotrexat (zytostatika)
+* mifepristone (abtreibungsmittel)
+* quinolon-antibiotika (zb ciprofloxacin, norfloxacin)
+* thrombozyt-aggregations-hemmer (zb acetylsalicylsäure, clopidogrel)
+
+es ist jedoch zu beachten, dass diese liste nicht vollständig ist und dass die interaktionen zwischen medikamenten und nsar individuell variieren können es ist immer ratsam, vor der einnahme von nsar mit einem arzt zu sprechen, um das individuelle risiko zu bewertenbeispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* warfarin (blutverdünnungsmittel)
+* cumarine (blutverdünnungsmittel)
+* lithium (mangelsymptomtherapie)
+* methotrexat (zytostatika)
+* mifepristone (abtreibungsmittel)
+* quinolon-antibiotika (zb ciprofloxacin, norfloxacin)
+* thrombozyt-aggregations-hemmer (zb acetylsalicylsäure, clopidogrel)
+
+es ist jedoch zu beachten, dass diese liste nicht vollständig ist und dass die interaktionen zwischen medikamenten und nsar individuell variieren können es ist immer ratsam, vor der einnahme von nsar mit einem arzt zu sprechen, um das individuelle risiko zu bewertenbeispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* warfarin (blutverdünnungsmittel)
+* cumarine (blutverdünnungsmittel)
+* lithium (mangelsymptomtherapie)
+* methotrexat (zytostatika)
+* mifepristone (abtreibungsmittel)
+* quinolon-antibiotika (zb ciprofloxacin, norfloxacin)
+* thrombozyt-aggregations-hemmer (zb acetylsalicylsäure, clopidogrel)
+
+es ist jedoch zu beachten, dass diese liste nicht vollständig ist und dass die interaktionen zwischen medikamenten und nsar individuell variieren können es ist immer ratsam, vor der einnahme von nsar mit einem arzt zu sprechen, um das individuelle risiko zu bewerten",A|n|t|i|k|o|a|g|u|l|a|n|z|i|e|n,Entire Answer Incorrect,9968b545d277c4a7d33d284b34848485,2024-08-13 22:08:12
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:medication:en,"aspirin, other nsaids (eg naproxen, diclofenac), blood thinners (eg warfarin, aspirin), and certain antidepressants (eg ssris, maois)aspirin, other nsaids (eg naproxen, diclofenac), blood thinners (eg warfarin, aspirin), and certain antidepressants (eg ssris, maois)aspirin, other nsaids (eg naproxen, diclofenac), blood thinners (eg warfarin, aspirin), and certain antidepressants (eg ssris, maois)",N|S|A|I|D,Entire Answer Incorrect,662d96ab02c1d2010d7a6361246babe4,2024-08-13 22:07:39
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:mental_disorders:de,"restriktive anorexie ist eine essstörung, bei der die person stark abmagernd isst, um idealerweise unter 15 kg körpergewicht zu bleibenrestriktive anorexie ist eine essstörung, bei der die person stark abmagernd isst, um idealerweise unter 15 kg körpergewicht zu bleibenrestriktive anorexie ist eine essstörung, bei der die person stark abmagernd isst, um idealerweise unter 15 kg körpergewicht zu bleibenrestriktive anorexie ist eine essstörung, bei der die person stark abmagernd isst, um idealerweise unter 15 kg körpergewicht zu bleibenrestriktive anorexie ist eine essstörung, bei der die person stark abmagernd isst, um idealerweise unter 15 kg körpergewicht zu bleibenrestriktive anorexie ist eine essstörung, bei der die person stark abmagernd isst, um idealerweise unter 15 kg körpergewicht zu bleiben",mehr|sport|bewegung|gewichtsverlust|untergewicht,Entire Answer Incorrect,6902bf072a74fade65945a330eeb6663,2024-08-13 22:00:01
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:mental_disorders:de,"adrenalinspiegel, die auch als stressreaktion bekannt sindadrenalinspiegel, die auch als stressreaktion bekannt sindadrenalinspiegel, die auch als stressreaktion bekannt sind",anstrengung|anspannung,Entire Answer Incorrect,1aa124a216281e7e6de1743acee1e9c3,2024-08-13 22:00:03
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:mental_disorders:de,kognitive verhaltenstherapie und expositionstherapiekognitive verhaltenstherapie und expositionstherapiekognitive verhaltenstherapie und expositionstherapie,Medikamente|Medikamentöse Therapie,Entire Answer Incorrect,93ddb1dce70d9cb4e4ca07108e0dcc29,2024-08-13 22:00:14
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:mental_disorders:de,"die dissoziative identitätsstörung ist im icd-11 unter ""dissoziative (dissociative) störungen"" zu finden, speziell unter dem kapitel ""dissoziative identitätsstörung (f448)""die dissoziative identitätsstörung ist im icd-11 unter ""dissoziative (dissociative) störungen"" zu finden, speziell unter dem kapitel ""dissoziative identitätsstörung (f448)""die dissoziative identitätsstörung ist im icd-11 unter ""dissoziative (dissociative) störungen"" zu finden, speziell unter dem kapitel ""dissoziative identitätsstörung (f448)""",konversionsstörungen|konversion,Entire Answer Incorrect,4c3ecd657bbb3e27310ccbf4fd764373,2024-08-13 22:01:01
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:mental_disorders:de,"die abspaltung von der eigenen persönlichkeit bei personen mit einer multiplen persönlichkeit (mpd) dient in der regel als überlebensstrategie, um mit stress, traumata oder anderen belastenden situationen umzugehendie abspaltung von der eigenen persönlichkeit bei personen mit einer multiplen persönlichkeit (mpd) dient in der regel als überlebensstrategie, um mit stress, traumata oder anderen belastenden situationen umzugehendie abspaltung von der eigenen persönlichkeit bei personen mit einer multiplen persönlichkeit (mpd) dient in der regel als überlebensstrategie, um mit stress, traumata oder anderen belastenden situationen umzugehen",Trauma|traumatische erinnerungen|traumatische erfahrungen,Entire Answer Incorrect,05df998b4e9fd0c9ce60733fef85f81c,2024-08-13 22:01:09
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:mental_disorders:en,remission phaseremission phaseremission phase,therapy|phase,Entire Answer Incorrect,1c2f31edc1a455696900d2c2dcc5eae1,2024-08-13 22:01:44
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:mental_disorders:en,cognitive-behavioral therapy (cbt) and medication (usually ssris)cognitive-behavioral therapy (cbt) and medication (usually ssris)cognitive-behavioral therapy (cbt) and medication (usually ssris),medication|drug|drug therapy,Entire Answer Incorrect,b50c5cdcdbffe0f67717f142569087fb,2024-08-13 22:01:50
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:mental_disorders:en,cognitive-behavioral therapy (cbt) and psychodynamic therapycognitive-behavioral therapy (cbt) and psychodynamic therapycognitive-behavioral therapy (cbt) and psychodynamic therapy,medication|drug|drug therapy,Entire Answer Incorrect,b040bd51351987d8e30846704b7efe95,2024-08-13 22:01:53
+llama-3.1-instruct:8:ggufv2:Q5_K_M,regex:mental_disorders:en,dissociative identity disorder is classified under f448 in icd-11dissociative identity disorder is classified under f448 in icd-11dissociative identity disorder is classified under f448 in icd-11,conversion disorders|conversion,Entire Answer Incorrect,d2107d493a89fb18b06ed6743f6b1b14,2024-08-13 22:02:09
+llama-3.1-instruct:8:ggufv2:Q5_K_M,single_choice:oncology:de,a),a,Format Error,24c221fae52091a8111d826bbe5ae83e,2024-08-13 22:06:59
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:biochemistry:de,ja,nein,Other,a077c65c160ec20d3f631b44e709d753,2024-08-13 22:57:35
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:biochemistry:en,yes,no,Other,710c11b68f99087ee79c398c65ca9215,2024-08-13 23:03:02
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:cardiology:de,ja,nein,Other,c271320748d103b55ce9ac1cae4f08c4,2024-08-13 22:56:59
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:cardiology:de,nein,ja,Other,5fc10a4ce23c7080ddfc05ea71cb1c54,2024-08-13 22:57:00
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:cardiology:de,mann,Mann,Case Sensitivity,e825d5741f4dbc5c6586a50bdafe17a5,2024-08-13 22:57:02
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:cardiology:en,yes,no,Other,c789018deb872db127cb8d5fea63c755,2024-08-13 22:57:08
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:cardiology:en,men,Men,Case Sensitivity,1a9f9fea0c4cb9aa2476fb76317ff471,2024-08-13 22:57:09
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:cardiology:en,no,yes,Other,b710df83a48c05873b0dbac03a3bef90,2024-08-13 22:57:09
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:cardiology:en,yes,no,Other,8c8c14070ebeaf1a90e6e376f3efa49c,2024-08-13 22:57:10
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:dermatology:de,ja,nein,Other,32cf33685a9e00909d6d16a9b7bde20f,2024-08-13 22:57:27
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:dermatology:de,nein,ja,Other,a0ba6e4c4785ff461433b4cbb51326d2,2024-08-13 22:57:30
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:dermatology:de,ja,nein,Other,8769a0f64879cab927a79ff77d52423b,2024-08-13 22:57:31
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:dermatology:de,nein,ja,Other,4232ac0da6fca3616b9571eece9664ee,2024-08-13 22:57:31
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:dermatology:en,yes,no,Other,3f185e0a1089b6484420e1c6fdffc1a4,2024-08-13 22:59:28
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:dermatology:en,"no 
+
+the sentence is incorrect because it implies that finger amputation is the only treatment option for a moderately differentiated squamous cell carcinoma with a tumour thickness of 6 mm in reality, the treatment for squamous cell carcinoma depends on various factors, including the size and location of the tumor, the patient's overall health, and the stage of the disease treatment options may include surgery, radiation therapy, or a combination of both, and may not necessarily involve amputation",no,Partial Match,a2bccd05f3ed202ab060cfd604fcd598,2024-08-13 22:59:42
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:dermatology:en,"no 
+
+angioedema is typically associated with type 1 or 2 reactions according to the coombs classification, not type 4 type 4 reactions are more commonly associated with delayed hypersensitivity reactions, such as contact dermatitis or tuberculin reactions",no,Partial Match,6a661c4f100e7fd238f836656d35c3ed,2024-08-13 22:59:51
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:emergency:en,no,yes,Other,129f8c9dfddfa91be6952a03066a6fca,2024-08-13 23:03:57
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:emergency:en,no,yes,Other,17e0f19ccbbcf0bfba6f30d8ce573421,2024-08-13 23:03:57
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:medication:de,ja,nein,Other,dfb3c7a3687c1d2c57d158bdc5a3cffd,2024-08-13 23:03:00
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:medication:en,yes,no,Other,004a6d5c21e84d978ac7b807e5a265a9,2024-08-13 23:02:32
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:medication:en,yes,no,Other,43fe3c10aca393d174422996a21f8d88,2024-08-13 23:02:33
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:mental_disorders:de,ja,nein,Other,ae14302fc8e54ce6a36cb4561a19744d,2024-08-13 22:54:44
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:mental_disorders:de,nein,ja,Other,9b09af2495f1738adb533048db0951e0,2024-08-13 22:54:45
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:mental_disorders:de,nein,ja,Other,ef65b863f8110a2d1134da59d96f9099,2024-08-13 22:54:47
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:mental_disorders:de,nein,ja,Other,2dac8d051a6d77f5d3dc8db4a91482ff,2024-08-13 22:54:48
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:mental_disorders:en,yes,no,Other,b2ab8ea86e24e799101e3d4bc8864fed,2024-08-13 22:55:59
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:mental_disorders:en,"no
+
+people with generalised anxiety disorder usually consider their worries to be excessive or overwhelming, not pointless",yes,Other,54a4309bad8924868e0bcef97f329c33,2024-08-13 22:56:03
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:mental_disorders:en,yes,no,Other,87eef24cb37bc2b5a1f895615087f06c,2024-08-13 22:56:04
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:mental_disorders:en,no,yes,Other,42d5b9049be0a02afef7eff9430134ce,2024-08-13 22:56:05
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:physiology:de,ja,nein,Other,518ac2973fba63e0f949bfc9ba180075,2024-08-13 23:00:07
+llama-3.1-instruct:8:ggufv2:Q6_K,dichotomous:physiology:en,yes,no,Other,d85e27cf5f44aa37ed756a1dc8c307bf,2024-08-13 22:54:45
+llama-3.1-instruct:8:ggufv2:Q6_K,multiple_choice:dermatology:de,"a,b,e","b,e",Partial Match,49a09b8f6c5116350c89a58a57d3f79b,2024-08-13 22:57:38
+llama-3.1-instruct:8:ggufv2:Q6_K,multiple_choice:dermatology:en,"a,c,d,e","d,e",Partial Match,962dba408549a2eba47962f7d1debe93,2024-08-13 22:59:55
+llama-3.1-instruct:8:ggufv2:Q6_K,multiple_choice:mental_disorders:de,"d, e, f","d,e,f",Format Error,da34c39cd52df137b216ebf9539f454d,2024-08-13 22:54:50
+llama-3.1-instruct:8:ggufv2:Q6_K,multiple_choice:mental_disorders:de,"a,b,c,e","b,c,e",Partial Match,363a2f9f466bd1615291f2445afc145b,2024-08-13 22:54:56
+llama-3.1-instruct:8:ggufv2:Q6_K,multiple_choice:mental_disorders:en,"a,b,d,e,f","d,e,f",Partial Match,b41872fbde7612fb59786be02644181c,2024-08-13 22:56:07
+llama-3.1-instruct:8:ggufv2:Q6_K,multiple_choice:mental_disorders:en,"a, b, c, d","a,b,c,d",Format Error,3ed38586ca6c1b249dd342572dc9e11d,2024-08-13 22:56:11
+llama-3.1-instruct:8:ggufv2:Q6_K,one_word:cardiology:de,digoxin,Digoxin,Case Sensitivity,923e46b46c0ad85d426edbbfb6ec4d93,2024-08-13 22:57:08
+llama-3.1-instruct:8:ggufv2:Q6_K,one_word:cardiology:en,digoxin,Digoxin,Case Sensitivity,d56125629d337c89218bceb5cfd671f8,2024-08-13 22:57:26
+llama-3.1-instruct:8:ggufv2:Q6_K,one_word:medication:en,grapefruit,Grapefruit,Case Sensitivity,9fff21dadf380e58fff7cfeb8a43086d,2024-08-13 23:02:36
+llama-3.1-instruct:8:ggufv2:Q6_K,one_word:oncology:de,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,3bcb654ee2e83905265a6286af815821,2024-08-13 23:02:17
+llama-3.1-instruct:8:ggufv2:Q6_K,one_word:oncology:de,brustkrebs,Brustkrebs,Case Sensitivity,12bd20c52a6b8aab1b813584f5cd9cd6,2024-08-13 23:02:31
+llama-3.1-instruct:8:ggufv2:Q6_K,one_word:oncology:en,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,1edd6afaaf938d3b152460300eecd34a,2024-08-13 23:02:08
+llama-3.1-instruct:8:ggufv2:Q6_K,one_word:oncology:en,breast cancer,Breast cancer,Case Sensitivity,fcc446cda12fdd1b6a9c847aca3bd1b7,2024-08-13 23:02:11
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:dermatology:de,"bei der gabe von isotretinoin ist eine begleitende medikamentöse therapie nicht immer notwendig, aber oft empfohlen, um nebenwirkungen zu minimieren und die wirksamkeit zu steigern dazu gehören:
+
+*   antihistaminika (zb loratadine) zur linderung von hautjuckreiz und hautausschlag
+*   antibiotika (zb doxycyclin) zur bekämpfung von bakterien, die zur akne beitragen
+*   retinoide (zb tretinoin) zur verbesserung der hautzellschicht und zur reduzierung von akneausbrüchen
+*   antipsychotika (zb olanzapin) zur behandlung von depressionen und angstzuständen, die durch isotretinoin ausgelöst werden könnenbei der gabe von isotretinoin ist eine begleitende medikamentöse therapie nicht immer notwendig, aber oft empfohlen, um nebenwirkungen zu minimieren und die wirksamkeit zu steigern dazu gehören:
+
+*   antihistaminika (zb loratadine) zur linderung von hautjuckreiz und hautausschlag
+*   antibiotika (zb doxycyclin) zur bekämpfung von bakterien, die zur akne beitragen
+*   retinoide (zb tretinoin) zur verbesserung der hautzellschicht und zur reduzierung von akneausbrüchen
+*   antipsychotika (zb olanzapin) zur behandlung von depressionen und angstzuständen, die durch isotretinoin ausgelöst werden könnenbei der gabe von isotretinoin ist eine begleitende medikamentöse therapie nicht immer notwendig, aber oft empfohlen, um nebenwirkungen zu minimieren und die wirksamkeit zu steigern dazu gehören:
+
+*   antihistaminika (zb loratadine) zur linderung von hautjuckreiz und hautausschlag
+*   antibiotika (zb doxycyclin) zur bekämpfung von bakterien, die zur akne beitragen
+*   retinoide (zb tretinoin) zur verbesserung der hautzellschicht und zur reduzierung von akneausbrüchen
+*   antipsychotika (zb olanzapin) zur behandlung von depressionen und angstzuständen, die durch isotretinoin ausgelöst werden können",kontrazeption|verhütung,Entire Answer Incorrect,1fc05019f7d29bc830bdc1fcc60d7305,2024-08-13 22:58:10
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:dermatology:de,"es gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut oder des mundes entwickelt
+2 **karbunkelartiges basalzellkarzinom**: ein mehrere zentimeter großes, knotenförmiges wachstum, das oft auf der haut auftritt
+3 **plattenepithelkarzinom**: ein flaches, plattenartiges wachstum, das oft auf der haut oder im mund auftritt
+4 **basalzellkarzinom in situ**: ein präkanzeroses wachstum, das sich noch nicht durch die epithelgrenze bewegt hat
+5 **basalzellkarzinom mit perineuraler invasion**: ein wachstum, das sich in die umliegenden nerven eingeschlichen hat
+
+diese formen können je nach lokalisation und ausdehnung unterschiedliche symptome und behandlungsmöglichkeiten habenes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut oder des mundes entwickelt
+2 **karbunkelartiges basalzellkarzinom**: ein mehrere zentimeter großes, knotenförmiges wachstum, das oft auf der haut auftritt
+3 **plattenepithelkarzinom**: ein flaches, plattenartiges wachstum, das oft auf der haut oder im mund auftritt
+4 **basalzellkarzinom in situ**: ein präkanzeroses wachstum, das sich noch nicht durch die epithelgrenze bewegt hat
+5 **basalzellkarzinom mit perineuraler invasion**: ein wachstum, das sich in die umliegenden nerven eingeschlichen hat
+
+diese formen können je nach lokalisation und ausdehnung unterschiedliche symptome und behandlungsmöglichkeiten habenes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut oder des mundes entwickelt
+2 **karbunkelartiges basalzellkarzinom**: ein mehrere zentimeter großes, knotenförmiges wachstum, das oft auf der haut auftritt
+3 **plattenepithelkarzinom**: ein flaches, plattenartiges wachstum, das oft auf der haut oder im mund auftritt
+4 **basalzellkarzinom in situ**: ein präkanzeroses wachstum, das sich noch nicht durch die epithelgrenze bewegt hat
+5 **basalzellkarzinom mit perineuraler invasion**: ein wachstum, das sich in die umliegenden nerven eingeschlichen hat
+
+diese formen können je nach lokalisation und ausdehnung unterschiedliche symptome und behandlungsmöglichkeiten habenes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut oder des mundes entwickelt
+2 **karbunkelartiges basalzellkarzinom**: ein mehrere zentimeter großes, knotenförmiges wachstum, das oft auf der haut auftritt
+3 **plattenepithelkarzinom**: ein flaches, plattenartiges wachstum, das oft auf der haut oder im mund auftritt
+4 **basalzellkarzinom in situ**: ein präkanzeroses wachstum, das sich noch nicht durch die epithelgrenze bewegt hat
+5 **basalzellkarzinom mit perineuraler invasion**: ein wachstum, das sich in die umliegenden nerven eingeschlichen hat
+
+diese formen können je nach lokalisation und ausdehnung unterschiedliche symptome und behandlungsmöglichkeiten habenes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut oder des mundes entwickelt
+2 **karbunkelartiges basalzellkarzinom**: ein mehrere zentimeter großes, knotenförmiges wachstum, das oft auf der haut auftritt
+3 **plattenepithelkarzinom**: ein flaches, plattenartiges wachstum, das oft auf der haut oder im mund auftritt
+4 **basalzellkarzinom in situ**: ein präkanzeroses wachstum, das sich noch nicht durch die epithelgrenze bewegt hat
+5 **basalzellkarzinom mit perineuraler invasion**: ein wachstum, das sich in die umliegenden nerven eingeschlichen hat
+
+diese formen können je nach lokalisation und ausdehnung unterschiedliche symptome und behandlungsmöglichkeiten habenes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut oder des mundes entwickelt
+2 **karbunkelartiges basalzellkarzinom**: ein mehrere zentimeter großes, knotenförmiges wachstum, das oft auf der haut auftritt
+3 **plattenepithelkarzinom**: ein flaches, plattenartiges wachstum, das oft auf der haut oder im mund auftritt
+4 **basalzellkarzinom in situ**: ein präkanzeroses wachstum, das sich noch nicht durch die epithelgrenze bewegt hat
+5 **basalzellkarzinom mit perineuraler invasion**: ein wachstum, das sich in die umliegenden nerven eingeschlichen hat
+
+diese formen können je nach lokalisation und ausdehnung unterschiedliche symptome und behandlungsmöglichkeiten haben",destruiert|destruierend,Entire Answer Incorrect,791d91c0e022e9c69df04de343437cc3,2024-08-13 22:59:02
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:dermatology:de,"frauen, kinder und ältere menschen sind oft von mundsoor betroffenfrauen, kinder und ältere menschen sind oft von mundsoor betroffenfrauen, kinder und ältere menschen sind oft von mundsoor betroffen",alte|ältere,Entire Answer Incorrect,aa20eb5b95b2e78e13538beb85263191,2024-08-13 22:59:27
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:dermatology:de,psoriasispsoriasispsoriasis,lichen ruber planus|lichen planus,Entire Answer Incorrect,d7161754d87739c96b3623ab9f3c8e3c,2024-08-13 22:59:27
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:dermatology:en,hormonal birth control (eg estrogen) and/or antibiotics (eg doxycycline) may be prescribedhormonal birth control (eg estrogen) and/or antibiotics (eg doxycycline) may be prescribedhormonal birth control (eg estrogen) and/or antibiotics (eg doxycycline) may be prescribed,contraception|prevention|contraceptive|contraceptiva,Entire Answer Incorrect,403b64ec6c32b29e709afc4cdcfa37e8,2024-08-13 23:00:03
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:dermatology:en,sarcoidosissarcoidosissarcoidosis,streptococci|streptococcus|streptococcal,Entire Answer Incorrect,61461e021ce57f09ec2ebdcab9c76a98,2024-08-13 23:00:04
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:dermatology:en,"there are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented (pigmented basal cell carcinoma)there are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented (pigmented basal cell carcinoma)there are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented (pigmented basal cell carcinoma)there are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented (pigmented basal cell carcinoma)there are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented (pigmented basal cell carcinoma)there are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented (pigmented basal cell carcinoma)",destroyed|destructed|destroying|destructive,Entire Answer Incorrect,a15e01513ce0aa1c860c80047ad4d1f7,2024-08-13 23:00:21
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:dermatology:en,"infants, elderly, and people with weakened immune systems, diabetes, or oral health issuesinfants, elderly, and people with weakened immune systems, diabetes, or oral health issuesinfants, elderly, and people with weakened immune systems, diabetes, or oral health issues",old|elder,Entire Answer Incorrect,5fd37e8df64240a554b231185a6c2769,2024-08-13 23:00:32
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:eeg_data:de,"die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2) × 100die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2) × 100die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2) × 100die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2) × 100die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2) × 100die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2) × 100die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2) × 100die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2) × 100die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: a1 / a2
+3 **asymmetrie-grad (ag)**: (a1 - a2) / (a1 + a2) × 100",Coherence|Logarithmierte Differenz,Entire Answer Incorrect,65270f78b5a362b25c2eba10bf29fcd2,2024-08-13 23:01:08
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:medication:de,"beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antihistaminika (zb dimenhydrinat)
+* anticholinergika (zb atropin)
+* teile der antidepressiva (zb amitriptylin)
+* teile der antipsychotika (zb chlorpromazin)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antihistaminika (zb dimenhydrinat)
+* anticholinergika (zb atropin)
+* teile der antidepressiva (zb amitriptylin)
+* teile der antipsychotika (zb chlorpromazin)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antihistaminika (zb dimenhydrinat)
+* anticholinergika (zb atropin)
+* teile der antidepressiva (zb amitriptylin)
+* teile der antipsychotika (zb chlorpromazin)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antihistaminika (zb dimenhydrinat)
+* anticholinergika (zb atropin)
+* teile der antidepressiva (zb amitriptylin)
+* teile der antipsychotika (zb chlorpromazin)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antihistaminika (zb dimenhydrinat)
+* anticholinergika (zb atropin)
+* teile der antidepressiva (zb amitriptylin)
+* teile der antipsychotika (zb chlorpromazin)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antihistaminika (zb dimenhydrinat)
+* anticholinergika (zb atropin)
+* teile der antidepressiva (zb amitriptylin)
+* teile der antipsychotika (zb chlorpromazin)",SSRI|Antikoagulanzien,Entire Answer Incorrect,955aa256fa5e3c5d64c3da32e0e1a3e8,2024-08-13 22:54:43
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:medication:de,"beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antihistaminika (zb dimenhydrinat)
+* anticholinergika (zb atropin)
+* teile der antidepressiva (zb amitriptylin)
+* teile der antipsychotika (zb chlorpromazin)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antihistaminika (zb dimenhydrinat)
+* anticholinergika (zb atropin)
+* teile der antidepressiva (zb amitriptylin)
+* teile der antipsychotika (zb chlorpromazin)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antihistaminika (zb dimenhydrinat)
+* anticholinergika (zb atropin)
+* teile der antidepressiva (zb amitriptylin)
+* teile der antipsychotika (zb chlorpromazin)",A|n|t|i|k|o|a|g|u|l|a|n|z|i|e|n,Entire Answer Incorrect,9968b545d277c4a7d33d284b34848485,2024-08-13 23:03:21
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:medication:en,"aspirin, other nsaids (eg naproxen, diclofenac), blood thinners (eg warfarin, heparin), and certain antidepressants (eg ssris, maois)aspirin, other nsaids (eg naproxen, diclofenac), blood thinners (eg warfarin, heparin), and certain antidepressants (eg ssris, maois)aspirin, other nsaids (eg naproxen, diclofenac), blood thinners (eg warfarin, heparin), and certain antidepressants (eg ssris, maois)",N|S|A|I|D,Entire Answer Incorrect,662d96ab02c1d2010d7a6361246babe4,2024-08-13 23:02:59
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:mental_disorders:de,"restriktive anorexie ist eine essstörung, bei der die person stark reduziert isst, aber nicht unbedingt aus angst vor gewichtszunahmerestriktive anorexie ist eine essstörung, bei der die person stark reduziert isst, aber nicht unbedingt aus angst vor gewichtszunahmerestriktive anorexie ist eine essstörung, bei der die person stark reduziert isst, aber nicht unbedingt aus angst vor gewichtszunahmerestriktive anorexie ist eine essstörung, bei der die person stark reduziert isst, aber nicht unbedingt aus angst vor gewichtszunahmerestriktive anorexie ist eine essstörung, bei der die person stark reduziert isst, aber nicht unbedingt aus angst vor gewichtszunahmerestriktive anorexie ist eine essstörung, bei der die person stark reduziert isst, aber nicht unbedingt aus angst vor gewichtszunahme",mehr|sport|bewegung|gewichtsverlust|untergewicht,Entire Answer Incorrect,6902bf072a74fade65945a330eeb6663,2024-08-13 22:55:16
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:mental_disorders:de,adrenalinspiegeladrenalinspiegeladrenalinspiegel,anstrengung|anspannung,Entire Answer Incorrect,1aa124a216281e7e6de1743acee1e9c3,2024-08-13 22:55:17
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:mental_disorders:de,kognitive verhaltenstherapie (kvt) und expositionstherapiekognitive verhaltenstherapie (kvt) und expositionstherapiekognitive verhaltenstherapie (kvt) und expositionstherapie,Medikamente|Medikamentöse Therapie,Entire Answer Incorrect,93ddb1dce70d9cb4e4ca07108e0dcc29,2024-08-13 22:55:27
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:mental_disorders:de,"die dissoziative identitätsstörung ist im icd-11 unter ""störungen der identität und der person"" (6a10) aufgeführtdie dissoziative identitätsstörung ist im icd-11 unter ""störungen der identität und der person"" (6a10) aufgeführtdie dissoziative identitätsstörung ist im icd-11 unter ""störungen der identität und der person"" (6a10) aufgeführt",konversionsstörungen|konversion,Entire Answer Incorrect,4c3ecd657bbb3e27310ccbf4fd764373,2024-08-13 22:55:52
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:mental_disorders:en,remission phaseremission phaseremission phase,therapy|phase,Entire Answer Incorrect,1c2f31edc1a455696900d2c2dcc5eae1,2024-08-13 22:56:31
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:mental_disorders:en,cognitive-behavioral therapy (cbt) and medication (ssris)cognitive-behavioral therapy (cbt) and medication (ssris)cognitive-behavioral therapy (cbt) and medication (ssris),medication|drug|drug therapy,Entire Answer Incorrect,b50c5cdcdbffe0f67717f142569087fb,2024-08-13 22:56:35
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:mental_disorders:en,cognitive-behavioral therapy (cbt) and psychodynamic therapycognitive-behavioral therapy (cbt) and psychodynamic therapycognitive-behavioral therapy (cbt) and psychodynamic therapy,medication|drug|drug therapy,Entire Answer Incorrect,b040bd51351987d8e30846704b7efe95,2024-08-13 22:56:38
+llama-3.1-instruct:8:ggufv2:Q6_K,regex:mental_disorders:en,"dissociative identity disorder is classified under ""dissociative amnesia"" in icd-11, specifically under the category ""dissociative amnesia and dissociative fugue"" (6a81)dissociative identity disorder is classified under ""dissociative amnesia"" in icd-11, specifically under the category ""dissociative amnesia and dissociative fugue"" (6a81)dissociative identity disorder is classified under ""dissociative amnesia"" in icd-11, specifically under the category ""dissociative amnesia and dissociative fugue"" (6a81)",conversion disorders|conversion,Entire Answer Incorrect,d2107d493a89fb18b06ed6743f6b1b14,2024-08-13 22:56:55
+llama-3.1-instruct:8:ggufv2:Q6_K,single_choice:emergency:de,d),d,Format Error,0572f63cd25d1ea9a76492371aacc2a1,2024-08-13 23:03:47
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:biochemistry:de,ja,nein,Other,a077c65c160ec20d3f631b44e709d753,2024-08-14 00:10:50
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:biochemistry:en,yes,no,Other,710c11b68f99087ee79c398c65ca9215,2024-08-14 00:15:25
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:cardiology:de,ja,nein,Other,c271320748d103b55ce9ac1cae4f08c4,2024-08-14 00:10:17
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:cardiology:de,nein,ja,Other,5fc10a4ce23c7080ddfc05ea71cb1c54,2024-08-14 00:10:18
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:cardiology:de,mann,Mann,Case Sensitivity,e825d5741f4dbc5c6586a50bdafe17a5,2024-08-14 00:10:20
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:cardiology:en,yes,no,Other,c789018deb872db127cb8d5fea63c755,2024-08-14 00:10:25
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:cardiology:en,men,Men,Case Sensitivity,1a9f9fea0c4cb9aa2476fb76317ff471,2024-08-14 00:10:26
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:cardiology:en,no,yes,Other,b710df83a48c05873b0dbac03a3bef90,2024-08-14 00:10:26
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:cardiology:en,yes,no,Other,8c8c14070ebeaf1a90e6e376f3efa49c,2024-08-14 00:10:27
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:dermatology:de,ja,nein,Other,32cf33685a9e00909d6d16a9b7bde20f,2024-08-14 00:10:42
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:dermatology:de,nein,ja,Other,a0ba6e4c4785ff461433b4cbb51326d2,2024-08-14 00:10:45
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:dermatology:de,ja,nein,Other,8769a0f64879cab927a79ff77d52423b,2024-08-14 00:10:45
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:dermatology:de,nein,ja,Other,4232ac0da6fca3616b9571eece9664ee,2024-08-14 00:10:46
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:dermatology:en,yes,no,Other,3f185e0a1089b6484420e1c6fdffc1a4,2024-08-14 00:12:32
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:dermatology:en,"no 
+
+the treatment options for a moderately differentiated squamous cell carcinoma on the back of the finger with a tumour thickness of 6 mm may include surgery, such as mohs surgery or wide local excision, radiation therapy, or a combination of these, depending on the specific characteristics of the tumor and the patient's overall health finger amputation is not typically the only treatment option",no,Partial Match,a2bccd05f3ed202ab060cfd604fcd598,2024-08-14 00:12:41
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:emergency:en,no,yes,Other,129f8c9dfddfa91be6952a03066a6fca,2024-08-14 00:16:11
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:emergency:en,no,yes,Other,17e0f19ccbbcf0bfba6f30d8ce573421,2024-08-14 00:16:11
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:medication:de,ja,nein,Other,dfb3c7a3687c1d2c57d158bdc5a3cffd,2024-08-14 00:15:24
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:medication:en,yes,no,Other,004a6d5c21e84d978ac7b807e5a265a9,2024-08-14 00:14:59
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:medication:en,yes,no,Other,43fe3c10aca393d174422996a21f8d88,2024-08-14 00:15:00
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:mental_disorders:de,ja,nein,Other,ae14302fc8e54ce6a36cb4561a19744d,2024-08-14 00:07:37
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:mental_disorders:de,nein,ja,Other,9b09af2495f1738adb533048db0951e0,2024-08-14 00:07:39
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:mental_disorders:de,nein,ja,Other,ef65b863f8110a2d1134da59d96f9099,2024-08-14 00:07:40
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:mental_disorders:en,yes,no,Other,b2ab8ea86e24e799101e3d4bc8864fed,2024-08-14 00:09:15
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:mental_disorders:en,"no
+
+people with generalized anxiety disorder (gad) typically experience excessive and persistent worries about everyday things, but they often don't consider their worries to be pointless in fact, they may find it difficult to control their worries and may ruminate on them excessively",yes,Other,54a4309bad8924868e0bcef97f329c33,2024-08-14 00:09:23
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:mental_disorders:en,yes,no,Other,87eef24cb37bc2b5a1f895615087f06c,2024-08-14 00:09:24
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:mental_disorders:en,no,yes,Other,42d5b9049be0a02afef7eff9430134ce,2024-08-14 00:09:24
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:physiology:de,ja,nein,Other,518ac2973fba63e0f949bfc9ba180075,2024-08-14 00:12:57
+llama-3.1-instruct:8:ggufv2:Q8_0,dichotomous:physiology:en,yes,no,Other,d85e27cf5f44aa37ed756a1dc8c307bf,2024-08-14 00:07:38
+llama-3.1-instruct:8:ggufv2:Q8_0,multiple_choice:dermatology:de,"a,b,e","b,e",Partial Match,49a09b8f6c5116350c89a58a57d3f79b,2024-08-14 00:10:52
+llama-3.1-instruct:8:ggufv2:Q8_0,multiple_choice:mental_disorders:de,"d, e, f","d,e,f",Format Error,da34c39cd52df137b216ebf9539f454d,2024-08-14 00:07:43
+llama-3.1-instruct:8:ggufv2:Q8_0,multiple_choice:mental_disorders:en,"a,b,d,e,f,g","d,e,f",Partial Match,b41872fbde7612fb59786be02644181c,2024-08-14 00:09:27
+llama-3.1-instruct:8:ggufv2:Q8_0,multiple_choice:mental_disorders:en,"a, b, c, d","a,b,c,d",Format Error,3ed38586ca6c1b249dd342572dc9e11d,2024-08-14 00:09:31
+llama-3.1-instruct:8:ggufv2:Q8_0,one_word:cardiology:de,digoxin,Digoxin,Case Sensitivity,923e46b46c0ad85d426edbbfb6ec4d93,2024-08-14 00:10:25
+llama-3.1-instruct:8:ggufv2:Q8_0,one_word:cardiology:en,digoxin,Digoxin,Case Sensitivity,d56125629d337c89218bceb5cfd671f8,2024-08-14 00:10:41
+llama-3.1-instruct:8:ggufv2:Q8_0,one_word:medication:en,grapefruit,Grapefruit,Case Sensitivity,9fff21dadf380e58fff7cfeb8a43086d,2024-08-14 00:15:03
+llama-3.1-instruct:8:ggufv2:Q8_0,one_word:oncology:de,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,3bcb654ee2e83905265a6286af815821,2024-08-14 00:14:46
+llama-3.1-instruct:8:ggufv2:Q8_0,one_word:oncology:de,brustkrebs,Brustkrebs,Case Sensitivity,12bd20c52a6b8aab1b813584f5cd9cd6,2024-08-14 00:14:59
+llama-3.1-instruct:8:ggufv2:Q8_0,one_word:oncology:en,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,1edd6afaaf938d3b152460300eecd34a,2024-08-14 00:14:39
+llama-3.1-instruct:8:ggufv2:Q8_0,one_word:oncology:en,breast cancer,Breast cancer,Case Sensitivity,fcc446cda12fdd1b6a9c847aca3bd1b7,2024-08-14 00:14:42
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:dermatology:de,"bei der gabe von isotretinoin ist eine begleitende medikamentöse therapie nicht immer notwendig, aber oft empfohlen, um nebenwirkungen zu minimieren und die wirksamkeit zu steigern dazu gehören:
+
+*   antihistaminika (zb loratadine) zur linderung von hautreizungen und juckreiz
+*   antibiotika (zb doxycyclin) zur bekämpfung von bakterien, die zur akne beitragen
+*   retinoide (zb tretinoin) zur verbesserung der hautzellschicht und zur reduzierung von akneausbrüchen
+*   antidepressiva (zb fluoxetin) zur behandlung von depressionen, die durch isotretinoin ausgelöst werden können
+*   schmerzmittel (zb paracetamol) zur linderung von kopfschmerzen und anderen schmerzenbei der gabe von isotretinoin ist eine begleitende medikamentöse therapie nicht immer notwendig, aber oft empfohlen, um nebenwirkungen zu minimieren und die wirksamkeit zu steigern dazu gehören:
+
+*   antihistaminika (zb loratadine) zur linderung von hautreizungen und juckreiz
+*   antibiotika (zb doxycyclin) zur bekämpfung von bakterien, die zur akne beitragen
+*   retinoide (zb tretinoin) zur verbesserung der hautzellschicht und zur reduzierung von akneausbrüchen
+*   antidepressiva (zb fluoxetin) zur behandlung von depressionen, die durch isotretinoin ausgelöst werden können
+*   schmerzmittel (zb paracetamol) zur linderung von kopfschmerzen und anderen schmerzenbei der gabe von isotretinoin ist eine begleitende medikamentöse therapie nicht immer notwendig, aber oft empfohlen, um nebenwirkungen zu minimieren und die wirksamkeit zu steigern dazu gehören:
+
+*   antihistaminika (zb loratadine) zur linderung von hautreizungen und juckreiz
+*   antibiotika (zb doxycyclin) zur bekämpfung von bakterien, die zur akne beitragen
+*   retinoide (zb tretinoin) zur verbesserung der hautzellschicht und zur reduzierung von akneausbrüchen
+*   antidepressiva (zb fluoxetin) zur behandlung von depressionen, die durch isotretinoin ausgelöst werden können
+*   schmerzmittel (zb paracetamol) zur linderung von kopfschmerzen und anderen schmerzen",kontrazeption|verhütung,Entire Answer Incorrect,1fc05019f7d29bc830bdc1fcc60d7305,2024-08-14 00:11:21
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:dermatology:de,"das köbner-phänomen tritt besonders häufig bei psoriasis, ekzemen, neurodermitis und anderen autoimmunerkrankungen aufdas köbner-phänomen tritt besonders häufig bei psoriasis, ekzemen, neurodermitis und anderen autoimmunerkrankungen aufdas köbner-phänomen tritt besonders häufig bei psoriasis, ekzemen, neurodermitis und anderen autoimmunerkrankungen auf",p|s|o|r|i|a|s|i|s,Entire Answer Incorrect,fcc743609f41eb99e28e96cdcbf61b39,2024-08-14 00:11:32
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:dermatology:de,"es gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut oder des mundes entwickelt
+2 **basalzellkarzinom in situ (bccis)**: ein präkanzeroses, nicht invasives wachstum, das sich auf der oberfläche der haut oder des mundes befindet
+3 **morpheaformes basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet
+4 **sclerosing basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet und eine sklerosierende reaktion auslöst
+5 **pilzartiges basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet und eine pilzartige struktur bildet
+
+diese formen können je nach lokalisation und ausdehnung unterschiedliche symptome und behandlungen erfordernes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut oder des mundes entwickelt
+2 **basalzellkarzinom in situ (bccis)**: ein präkanzeroses, nicht invasives wachstum, das sich auf der oberfläche der haut oder des mundes befindet
+3 **morpheaformes basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet
+4 **sclerosing basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet und eine sklerosierende reaktion auslöst
+5 **pilzartiges basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet und eine pilzartige struktur bildet
+
+diese formen können je nach lokalisation und ausdehnung unterschiedliche symptome und behandlungen erfordernes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut oder des mundes entwickelt
+2 **basalzellkarzinom in situ (bccis)**: ein präkanzeroses, nicht invasives wachstum, das sich auf der oberfläche der haut oder des mundes befindet
+3 **morpheaformes basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet
+4 **sclerosing basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet und eine sklerosierende reaktion auslöst
+5 **pilzartiges basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet und eine pilzartige struktur bildet
+
+diese formen können je nach lokalisation und ausdehnung unterschiedliche symptome und behandlungen erfordernes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut oder des mundes entwickelt
+2 **basalzellkarzinom in situ (bccis)**: ein präkanzeroses, nicht invasives wachstum, das sich auf der oberfläche der haut oder des mundes befindet
+3 **morpheaformes basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet
+4 **sclerosing basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet und eine sklerosierende reaktion auslöst
+5 **pilzartiges basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet und eine pilzartige struktur bildet
+
+diese formen können je nach lokalisation und ausdehnung unterschiedliche symptome und behandlungen erfordernes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut oder des mundes entwickelt
+2 **basalzellkarzinom in situ (bccis)**: ein präkanzeroses, nicht invasives wachstum, das sich auf der oberfläche der haut oder des mundes befindet
+3 **morpheaformes basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet
+4 **sclerosing basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet und eine sklerosierende reaktion auslöst
+5 **pilzartiges basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet und eine pilzartige struktur bildet
+
+diese formen können je nach lokalisation und ausdehnung unterschiedliche symptome und behandlungen erfordernes gibt verschiedene klinische formen des basalzellkarzinoms, darunter:
+
+1 **noduläres basalzellkarzinom**: ein einzelnes, gutartiges wachstum, das sich von der oberfläche der haut oder des mundes entwickelt
+2 **basalzellkarzinom in situ (bccis)**: ein präkanzeroses, nicht invasives wachstum, das sich auf der oberfläche der haut oder des mundes befindet
+3 **morpheaformes basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet
+4 **sclerosing basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet und eine sklerosierende reaktion auslöst
+5 **pilzartiges basalzellkarzinom**: ein aggressives, infiltrierendes wachstum, das sich in die tieferen hautschichten ausbreitet und eine pilzartige struktur bildet
+
+diese formen können je nach lokalisation und ausdehnung unterschiedliche symptome und behandlungen erfordern",destruiert|destruierend,Entire Answer Incorrect,791d91c0e022e9c69df04de343437cc3,2024-08-14 00:12:10
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:dermatology:de,"frauen, kinder und ältere menschen sind oft von mundsoor betroffenfrauen, kinder und ältere menschen sind oft von mundsoor betroffenfrauen, kinder und ältere menschen sind oft von mundsoor betroffen",alte|ältere,Entire Answer Incorrect,aa20eb5b95b2e78e13538beb85263191,2024-08-14 00:12:31
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:dermatology:de,psoriasispsoriasispsoriasis,lichen ruber planus|lichen planus,Entire Answer Incorrect,d7161754d87739c96b3623ab9f3c8e3c,2024-08-14 00:12:31
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:dermatology:en,hormonal birth control (for females) and/or antibiotics (eg doxycycline) are commonly used concomitant therapies with isotretinoinhormonal birth control (for females) and/or antibiotics (eg doxycycline) are commonly used concomitant therapies with isotretinoinhormonal birth control (for females) and/or antibiotics (eg doxycycline) are commonly used concomitant therapies with isotretinoin,contraception|prevention|contraceptive|contraceptiva,Entire Answer Incorrect,403b64ec6c32b29e709afc4cdcfa37e8,2024-08-14 00:12:54
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:dermatology:en,sarcoidosissarcoidosissarcoidosis,streptococci|streptococcus|streptococcal,Entire Answer Incorrect,61461e021ce57f09ec2ebdcab9c76a98,2024-08-14 00:12:55
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:dermatology:en,"there are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented (pigmented basal cell carcinoma)there are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented (pigmented basal cell carcinoma)there are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented (pigmented basal cell carcinoma)there are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented (pigmented basal cell carcinoma)there are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented (pigmented basal cell carcinoma)there are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented (pigmented basal cell carcinoma)",destroyed|destructed|destroying|destructive,Entire Answer Incorrect,a15e01513ce0aa1c860c80047ad4d1f7,2024-08-14 00:13:10
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:dermatology:en,"people with weakened immune systems, infants, elderly, and those with diabetes, hiv/aids, or taking antibiotics are often affected by oral thrushpeople with weakened immune systems, infants, elderly, and those with diabetes, hiv/aids, or taking antibiotics are often affected by oral thrushpeople with weakened immune systems, infants, elderly, and those with diabetes, hiv/aids, or taking antibiotics are often affected by oral thrush",old|elder,Entire Answer Incorrect,5fd37e8df64240a554b231185a6c2769,2024-08-14 00:13:18
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:eeg_data:de,"die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: (a1 - a2) / a1
+3 **asymmetrie-verhältnis (av)**: (a1 - a2) / (a1 + a2)die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: (a1 - a2) / a1
+3 **asymmetrie-verhältnis (av)**: (a1 - a2) / (a1 + a2)die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: (a1 - a2) / a1
+3 **asymmetrie-verhältnis (av)**: (a1 - a2) / (a1 + a2)die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: (a1 - a2) / a1
+3 **asymmetrie-verhältnis (av)**: (a1 - a2) / (a1 + a2)die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: (a1 - a2) / a1
+3 **asymmetrie-verhältnis (av)**: (a1 - a2) / (a1 + a2)die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: (a1 - a2) / a1
+3 **asymmetrie-verhältnis (av)**: (a1 - a2) / (a1 + a2)die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: (a1 - a2) / a1
+3 **asymmetrie-verhältnis (av)**: (a1 - a2) / (a1 + a2)die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: (a1 - a2) / a1
+3 **asymmetrie-verhältnis (av)**: (a1 - a2) / (a1 + a2)die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: (a1 - a2) / (a1 + a2)
+2 **asymmetrie-quotient (aq)**: (a1 - a2) / a1
+3 **asymmetrie-verhältnis (av)**: (a1 - a2) / (a1 + a2)",Coherence|Logarithmierte Differenz,Entire Answer Incorrect,65270f78b5a362b25c2eba10bf29fcd2,2024-08-14 00:13:46
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:medication:de,"beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antazida (zb ranitidin)
+* protonenpumpenhemmer (zb omeprazol)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antazida (zb ranitidin)
+* protonenpumpenhemmer (zb omeprazol)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antazida (zb ranitidin)
+* protonenpumpenhemmer (zb omeprazol)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antazida (zb ranitidin)
+* protonenpumpenhemmer (zb omeprazol)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antazida (zb ranitidin)
+* protonenpumpenhemmer (zb omeprazol)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antazida (zb ranitidin)
+* protonenpumpenhemmer (zb omeprazol)",SSRI|Antikoagulanzien,Entire Answer Incorrect,955aa256fa5e3c5d64c3da32e0e1a3e8,2024-08-14 00:07:36
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:medication:de,"beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antazida (zb ranitidin)
+* protonenpumpenhemmer (zb omeprazol)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antazida (zb ranitidin)
+* protonenpumpenhemmer (zb omeprazol)beispiele für medikamente, die nicht mit nsar eingenommen werden sollten, um das risiko von magengeschwüren zu minimieren, sind:
+
+* aspirin
+* kortikosteroide (zb prednison)
+* opioid-analgetika (zb morphin)
+* antazida (zb ranitidin)
+* protonenpumpenhemmer (zb omeprazol)",A|n|t|i|k|o|a|g|u|l|a|n|z|i|e|n,Entire Answer Incorrect,9968b545d277c4a7d33d284b34848485,2024-08-14 00:15:38
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:medication:en,"aspirin, other nsaids (eg naproxen, diclofenac), blood thinners (eg warfarin, heparin), and certain antidepressants (eg ssris, snris)aspirin, other nsaids (eg naproxen, diclofenac), blood thinners (eg warfarin, heparin), and certain antidepressants (eg ssris, snris)aspirin, other nsaids (eg naproxen, diclofenac), blood thinners (eg warfarin, heparin), and certain antidepressants (eg ssris, snris)",N|S|A|I|D,Entire Answer Incorrect,662d96ab02c1d2010d7a6361246babe4,2024-08-14 00:15:22
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:mental_disorders:de,"restriktive anorexie ist eine essstörung, bei der die person stark abmagernd isst, aber nicht durch den wunsch nach gewichtsverlust motiviert ist, sondern durch angst vor gewichtszunahmerestriktive anorexie ist eine essstörung, bei der die person stark abmagernd isst, aber nicht durch den wunsch nach gewichtsverlust motiviert ist, sondern durch angst vor gewichtszunahmerestriktive anorexie ist eine essstörung, bei der die person stark abmagernd isst, aber nicht durch den wunsch nach gewichtsverlust motiviert ist, sondern durch angst vor gewichtszunahme",mehr|sport|bewegung|gewichtsverlust|untergewicht,Entire Answer Incorrect,6902bf072a74fade65945a330eeb6663,2024-08-14 00:08:09
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:mental_disorders:de,adrenalinspiegeladrenalinspiegeladrenalinspiegel,anstrengung|anspannung,Entire Answer Incorrect,1aa124a216281e7e6de1743acee1e9c3,2024-08-14 00:08:10
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:mental_disorders:de,"die dissoziative identitätsstörung ist im icd-11 unter ""störungen der identität und der person"" (6a10) aufgeführtdie dissoziative identitätsstörung ist im icd-11 unter ""störungen der identität und der person"" (6a10) aufgeführtdie dissoziative identitätsstörung ist im icd-11 unter ""störungen der identität und der person"" (6a10) aufgeführt",konversionsstörungen|konversion,Entire Answer Incorrect,4c3ecd657bbb3e27310ccbf4fd764373,2024-08-14 00:09:08
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:mental_disorders:en,remission phaseremission phaseremission phase,therapy|phase,Entire Answer Incorrect,1c2f31edc1a455696900d2c2dcc5eae1,2024-08-14 00:09:50
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:mental_disorders:en,cognitive-behavioral therapy (cbt) and medication (usually ssris)cognitive-behavioral therapy (cbt) and medication (usually ssris)cognitive-behavioral therapy (cbt) and medication (usually ssris),medication|drug|drug therapy,Entire Answer Incorrect,b50c5cdcdbffe0f67717f142569087fb,2024-08-14 00:09:54
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:mental_disorders:en,cognitive-behavioral therapy (cbt) and psychodynamic therapycognitive-behavioral therapy (cbt) and psychodynamic therapycognitive-behavioral therapy (cbt) and psychodynamic therapy,medication|drug|drug therapy,Entire Answer Incorrect,b040bd51351987d8e30846704b7efe95,2024-08-14 00:09:56
+llama-3.1-instruct:8:ggufv2:Q8_0,regex:mental_disorders:en,"dissociative identity disorder is classified under ""dissociative amnesia"" in icd-11, under the category of ""dissociative disorders"" (6a80)dissociative identity disorder is classified under ""dissociative amnesia"" in icd-11, under the category of ""dissociative disorders"" (6a80)dissociative identity disorder is classified under ""dissociative amnesia"" in icd-11, under the category of ""dissociative disorders"" (6a80)",conversion disorders|conversion,Entire Answer Incorrect,d2107d493a89fb18b06ed6743f6b1b14,2024-08-14 00:10:13
+llama-3.1-instruct:8:ggufv2:Q8_0,single_choice:emergency:de,c),c,Format Error,e16a523be64c9170bed0d42a7370b937,2024-08-14 00:16:04
+llama-3.1-instruct:8:ggufv2:Q8_0,single_choice:emergency:de,d),d,Format Error,0572f63cd25d1ea9a76492371aacc2a1,2024-08-14 00:16:05
 mistral-instruct-v0.2:7:ggufv2:Q2_K,dichotomous:biochemistry:de,"ja, das stimmt die neigung zu thrombosen, auch bekannt als thrombophilie, kann genetisch bedingt sein, und mutationen im gen für faktor v können eine ursache für eine familiäre thrombophilie sein durch solche mutationen wird der aktivierte faktor v (va) weniger effizient durch ein aktiviertes protein c inaktiviert und ist daher besonders stabil",ja,Partial Match,83f6992f3680ef2c7a4ccf529994c746,2024-06-19 18:44:20
 mistral-instruct-v0.2:7:ggufv2:Q2_K,dichotomous:biochemistry:de,"ja, das stimmt die neigung zu thrombosen (thrombophilie) kann genetisch bedingt sein, und mutationen im gen für faktor v können eine ursache für eine familiäre thrombophilie sein durch solche mutationen wird der aktivierte faktor v (va) weniger effizient durch ein aktiviertes thrombomobilin inaktiviert und ist daher besonders stabil",nein,Other,a077c65c160ec20d3f631b44e709d753,2024-06-19 18:45:48
 mistral-instruct-v0.2:7:ggufv2:Q2_K,dichotomous:biochemistry:en,"yes
