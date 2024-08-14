@@ -5,6 +5,7 @@ gpt-4-0613,Unknown,0.78,0.18
 claude-3-5-sonnet-20240620,Unknown,0.76,0.28
 gpt-3.5-turbo-0613,175,0.76,0.21
 llama-3.1-instruct,8,0.74,0.28
+llama-3.1-instruct,70,0.74,0.29
 gpt-4o-2024-05-13,Unknown,0.73,0.35
 gpt-4-0125-preview,Unknown,0.73,0.3
 gpt-4o-mini-2024-07-18,Unknown,0.7,0.27
@@ -14,8 +15,8 @@ chatglm3,6,0.44,0.26
 llama-2-chat,70,0.42,0.34
 code-llama-instruct,7,0.4,0.35
 mistral-instruct-v0.2,7,0.4,0.33
-code-llama-instruct,34,0.38,0.35
 llama-2-chat,13,0.38,0.33
+code-llama-instruct,34,0.38,0.35
 code-llama-instruct,13,0.38,0.33
 llama-2-chat,7,0.34,0.31
 mixtral-instruct-v0.1,"46,7",0.34,0.28

@@ -170,27 +170,27 @@ XINFERENCE_MODELS = {
     # },
     "llama-3.1-instruct": {
         "model_size_in_billions": [
-            8,
-            # 70,
+            # 8,
+            70,
         ],
         "model_format": "ggufv2",
         "quantization": [
             # 8B model quantisations
-            "Q3_K_L",
-            "IQ4_XS",
-            "Q4_K_M",
-            "Q5_K_M",
-            "Q6_K",
-            "Q8_0",
-            # 70B model quantisations
-            # "IQ2_M",
+            # "Q3_K_L",
             # "IQ4_XS",
-            # "Q2_K",
-            # "Q3_K_S",
             # "Q4_K_M",
             # "Q5_K_M",
             # "Q6_K",
             # "Q8_0",
+            # 70B model quantisations
+            # "IQ2_M",
+            # "Q2_K",
+            # "Q3_K_S",
+            # "IQ4_XS",
+            "Q4_K_M",
+            # "Q5_K_M",
+            # "Q6_K",
+            "Q8_0",
         ],
     },
     # "mistral-instruct-v0.2": {

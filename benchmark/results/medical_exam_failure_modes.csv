@@ -17377,6 +17377,701 @@ llama-3-instruct:8:ggufv2:Q8_0,single_choice:mental_disorders:de,b,a,Other,4717c
 llama-3-instruct:8:ggufv2:Q8_0,single_choice:mental_disorders:de,b,d,Other,d7e7e3be7c4cba9a30999cc513ec7479,2024-06-19 17:07:17
 llama-3-instruct:8:ggufv2:Q8_0,single_choice:oncology:de,c),a,Other,75eb0901296f8830a8108ee8fb7de056,2024-06-19 17:12:51
 llama-3-instruct:8:ggufv2:Q8_0,single_choice:oncology:en,b,a,Other,635cbb8bb672865d7da35df2772c56da,2024-06-19 17:12:38
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:biochemistry:de,ja,nein,Other,a077c65c160ec20d3f631b44e709d753,2024-08-14 03:52:36
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:biochemistry:en,yes,no,Other,710c11b68f99087ee79c398c65ca9215,2024-08-14 04:12:35
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:cardiology:de,ja,nein,Other,c271320748d103b55ce9ac1cae4f08c4,2024-08-14 03:48:47
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:cardiology:de,nein,ja,Other,5fc10a4ce23c7080ddfc05ea71cb1c54,2024-08-14 03:48:50
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:cardiology:de,mann,Mann,Case Sensitivity,e825d5741f4dbc5c6586a50bdafe17a5,2024-08-14 03:49:03
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:cardiology:de,ja,nein,Other,0a18949c7f2aa9448c810e595ff37185,2024-08-14 03:49:05
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:cardiology:en,men,Men,Case Sensitivity,1a9f9fea0c4cb9aa2476fb76317ff471,2024-08-14 03:49:38
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:cardiology:en,no,yes,Other,b710df83a48c05873b0dbac03a3bef90,2024-08-14 03:49:41
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:cardiology:en,yes,no,Other,8c8c14070ebeaf1a90e6e376f3efa49c,2024-08-14 03:49:42
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:dermatology:de,ja,nein,Other,32cf33685a9e00909d6d16a9b7bde20f,2024-08-14 03:50:16
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:dermatology:de,"nein
+
+eine fingeramputation ist nicht die einzige behandlungsoption für ein mittelgradig differenziertes plattenepithelkarzinom am fingerrücken mit einer tumordicke von 6mm es gibt auch andere behandlungsmöglichkeiten wie zb die chirurgische exzision des tumors, strahlentherapie oder eine kombination aus beiden die wahl der behandlung hängt von verschiedenen faktoren ab, wie der größe und dem stadium des tumors, der gesundheit des patienten und seinen persönlichen präferenzen",nein,Partial Match,f2542ba328803ef4e8c35c68c378bc3c,2024-08-14 03:51:57
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:dermatology:de,ja,nein,Other,8769a0f64879cab927a79ff77d52423b,2024-08-14 03:52:13
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:dermatology:de,ja,nein,Other,be5f268836c9cf2fbc17cd0e00c1b63d,2024-08-14 03:52:19
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:dermatology:de,ja,nein,Other,42007ac57b8c9b6587ff097616e9c56d,2024-08-14 03:52:21
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:dermatology:en,yes,no,Other,3f185e0a1089b6484420e1c6fdffc1a4,2024-08-14 03:56:36
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:dermatology:en,"the correct sentence should be:
+
+non-melanocytic skin tumors can develop on skin exposed to light
+
+so, the answer is: no",yes,Other,56f61553da50a11e5ac1a3025d84aa92,2024-08-14 03:57:12
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:emergency:en,no,yes,Other,9065bc6d62a8fc31884e2e753f5bbd36,2024-08-14 04:15:18
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:emergency:en,no,yes,Other,129f8c9dfddfa91be6952a03066a6fca,2024-08-14 04:15:22
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:emergency:en,no,yes,Other,17e0f19ccbbcf0bfba6f30d8ce573421,2024-08-14 04:15:24
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:medication:de,ja,nein,Other,dfb3c7a3687c1d2c57d158bdc5a3cffd,2024-08-14 04:12:28
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:medication:en,yes,no,Other,43fe3c10aca393d174422996a21f8d88,2024-08-14 04:09:33
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:mental_disorders:de,ja,nein,Other,ae14302fc8e54ce6a36cb4561a19744d,2024-08-14 03:15:52
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:mental_disorders:de,ja,nein,Other,986bface7636d49099e787fa45bf8d5c,2024-08-14 03:16:08
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:mental_disorders:de,ja,nein,Other,26e8e2a0036b84be9ebf8be32fbd8b26,2024-08-14 03:16:10
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:mental_disorders:de,ja,nein,Other,84743f96585a1b75d906a8bcfe08930d,2024-08-14 03:16:18
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:mental_disorders:en,"the sentence should be ""gestalt"" -> ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually ""gestalt"" is actually """,no,Other,b2ab8ea86e24e799101e3d4bc8864fed,2024-08-14 03:43:13
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:mental_disorders:en,no,yes,Other,54a4309bad8924868e0bcef97f329c33,2024-08-14 03:43:21
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:mental_disorders:en,yes,no,Other,87eef24cb37bc2b5a1f895615087f06c,2024-08-14 03:43:25
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:mental_disorders:en,"according to the diagnostic and statistical manual of mental disorders (dsm-5), a depressive episode in bipolar disorder must last at least 7 days, not 14 days
+
+so, the answer is: no",yes,Format Error,42d5b9049be0a02afef7eff9430134ce,2024-08-14 03:43:53
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:mental_disorders:en,"the correct sentence is: ""due to its severity, multiple personality disorder is often almost impossible to treat""
+
+however, i should note that the term ""multiple personality disorder"" is not the preferred term in the medical community the correct term is ""dissociative identity disorder"" (did)
+
+so, i'll return: yes",no,Partial Match,8754a973c95a5722f7e35fde19043ac9,2024-08-14 03:44:38
+llama-3.1-instruct:70:ggufv2:IQ2_M,dichotomous:physiology:de,ja,nein,Other,518ac2973fba63e0f949bfc9ba180075,2024-08-14 03:58:56
+llama-3.1-instruct:70:ggufv2:IQ2_M,multiple_choice:mental_disorders:de,"a,d,e","a,d,e,f",Partial Match,e0e36bb3abc1959f5ef596541240b280,2024-08-14 03:17:03
+llama-3.1-instruct:70:ggufv2:IQ2_M,multiple_choice:mental_disorders:de,"b,c","b,c,e",Partial Match,363a2f9f466bd1615291f2445afc145b,2024-08-14 03:17:13
+llama-3.1-instruct:70:ggufv2:IQ2_M,multiple_choice:mental_disorders:en,"a,d,e","a,d,e,f",Partial Match,29b0186d1af34324387e7642054573f4,2024-08-14 03:45:11
+llama-3.1-instruct:70:ggufv2:IQ2_M,one_word:cardiology:de,digoxin,Digoxin,Case Sensitivity,923e46b46c0ad85d426edbbfb6ec4d93,2024-08-14 03:49:34
+llama-3.1-instruct:70:ggufv2:IQ2_M,one_word:cardiology:en,digoxin,Digoxin,Case Sensitivity,d56125629d337c89218bceb5cfd671f8,2024-08-14 03:50:11
+llama-3.1-instruct:70:ggufv2:IQ2_M,one_word:emergency:de,sauerstoffreiches,Sauerstoffreiches,Case Sensitivity,8ff560765b068093a632aee039c96175,2024-08-14 04:15:01
+llama-3.1-instruct:70:ggufv2:IQ2_M,one_word:medication:de,grapefruit,Grapefruit,Case Sensitivity,9808ac596ca95d5b92c5f11e2b5826d1,2024-08-14 04:12:48
+llama-3.1-instruct:70:ggufv2:IQ2_M,one_word:medication:en,grapefruit,Grapefruit,Case Sensitivity,9fff21dadf380e58fff7cfeb8a43086d,2024-08-14 04:09:52
+llama-3.1-instruct:70:ggufv2:IQ2_M,one_word:medication:en,pharmacodynamic and pharmacokinetic,Pharmacodynamic and pharmacokinetic,Case Sensitivity,3d527b8ac5786aafd800b119b7c9c037,2024-08-14 04:11:25
+llama-3.1-instruct:70:ggufv2:IQ2_M,one_word:oncology:de,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,3bcb654ee2e83905265a6286af815821,2024-08-14 04:08:10
+llama-3.1-instruct:70:ggufv2:IQ2_M,one_word:oncology:de,brustkrebs,Brustkrebs,Case Sensitivity,12bd20c52a6b8aab1b813584f5cd9cd6,2024-08-14 04:09:26
+llama-3.1-instruct:70:ggufv2:IQ2_M,one_word:oncology:en,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,1edd6afaaf938d3b152460300eecd34a,2024-08-14 04:06:41
+llama-3.1-instruct:70:ggufv2:IQ2_M,one_word:oncology:en,breast cancer,Breast cancer,Case Sensitivity,fcc446cda12fdd1b6a9c847aca3bd1b7,2024-08-14 04:07:41
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:dermatology:de,benzoylperoxyd bei der topischen anwendungbenzoylperoxyd bei der topischen anwendungbenzoylperoxyd bei der topischen anwendung,kontrazeption|verhütung,Entire Answer Incorrect,1fc05019f7d29bc830bdc1fcc60d7305,2024-08-14 03:53:11
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:dermatology:de,"psoriasis, vitiligo und morpheapsoriasis, vitiligo und morpheapsoriasis, vitiligo und morphea",p|s|o|r|i|a|s|i|s,Entire Answer Incorrect,fcc743609f41eb99e28e96cdcbf61b39,2024-08-14 03:53:46
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:dermatology:de,"es gibt mehrere klinische formen des basalzellkarzinoms, darunter:
+
+1 noduläres basalzellkarzinom
+2 ulzerierendes basalzellkarzinom
+3 pigmentiertes basalzellkarzinom
+4 morpheiformes basalzellkarzinom (auch bekannt als ""schnurkellige"" oder ""infiltrierende"" form)
+5 superfizielle multiplikative basalzellkarzinomees gibt mehrere klinische formen des basalzellkarzinoms, darunter:
+
+1 noduläres basalzellkarzinom
+2 ulzerierendes basalzellkarzinom
+3 pigmentiertes basalzellkarzinom
+4 morpheiformes basalzellkarzinom (auch bekannt als ""schnurkellige"" oder ""infiltrierende"" form)
+5 superfizielle multiplikative basalzellkarzinomees gibt mehrere klinische formen des basalzellkarzinoms, darunter:
+
+1 noduläres basalzellkarzinom
+2 ulzerierendes basalzellkarzinom
+3 pigmentiertes basalzellkarzinom
+4 morpheiformes basalzellkarzinom (auch bekannt als ""schnurkellige"" oder ""infiltrierende"" form)
+5 superfizielle multiplikative basalzellkarzinome",destruiert|destruierend,Entire Answer Incorrect,791d91c0e022e9c69df04de343437cc3,2024-08-14 03:55:41
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:dermatology:de,"kleinkinder, ältere menschen und menschen mit geschwächtem immunsystemkleinkinder, ältere menschen und menschen mit geschwächtem immunsystemkleinkinder, ältere menschen und menschen mit geschwächtem immunsystem",alte|ältere,Entire Answer Incorrect,aa20eb5b95b2e78e13538beb85263191,2024-08-14 03:56:26
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:dermatology:en,concomitant use of isotretinoin with tetracycline or other photosensitizing medications may increase the risk of photosensitivity concomitant use of isotretinoin with vitamin a or other retinoids may increase the risk of adverse effectsconcomitant use of isotretinoin with tetracycline or other photosensitizing medications may increase the risk of photosensitivity concomitant use of isotretinoin with vitamin a or other retinoids may increase the risk of adverse effectsconcomitant use of isotretinoin with tetracycline or other photosensitizing medications may increase the risk of photosensitivity concomitant use of isotretinoin with vitamin a or other retinoids may increase the risk of adverse effects,contraception|prevention|contraceptive|contraceptiva,Entire Answer Incorrect,403b64ec6c32b29e709afc4cdcfa37e8,2024-08-14 03:58:20
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:dermatology:en,"there are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular (most common)
+2 pigmented
+3 morpheaform (sclerosing)
+4 superficialthere are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular (most common)
+2 pigmented
+3 morpheaform (sclerosing)
+4 superficialthere are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular (most common)
+2 pigmented
+3 morpheaform (sclerosing)
+4 superficialthere are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular (most common)
+2 pigmented
+3 morpheaform (sclerosing)
+4 superficialthere are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular (most common)
+2 pigmented
+3 morpheaform (sclerosing)
+4 superficialthere are 4 main clinical forms of basal cell carcinoma:
+
+1 nodular (most common)
+2 pigmented
+3 morpheaform (sclerosing)
+4 superficial",destroyed|destructed|destroying|destructive,Entire Answer Incorrect,a15e01513ce0aa1c860c80047ad4d1f7,2024-08-14 04:00:08
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:eeg_data:de,"eine kurze antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der linken und rechten hemisphären
+2 **frontal-okzipital-asymmetrie**: berechnung der differenz zwischen den signalen der frontalen (vorderen) und okzipitalen (hinteren) regionen
+3 **inter-hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der beiden hemisphären bei verschiedenen frequenzbändern (zb alpha, beta, theta)eine kurze antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der linken und rechten hemisphären
+2 **frontal-okzipital-asymmetrie**: berechnung der differenz zwischen den signalen der frontalen (vorderen) und okzipitalen (hinteren) regionen
+3 **inter-hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der beiden hemisphären bei verschiedenen frequenzbändern (zb alpha, beta, theta)eine kurze antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der linken und rechten hemisphären
+2 **frontal-okzipital-asymmetrie**: berechnung der differenz zwischen den signalen der frontalen (vorderen) und okzipitalen (hinteren) regionen
+3 **inter-hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der beiden hemisphären bei verschiedenen frequenzbändern (zb alpha, beta, theta)eine kurze antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der linken und rechten hemisphären
+2 **frontal-okzipital-asymmetrie**: berechnung der differenz zwischen den signalen der frontalen (vorderen) und okzipitalen (hinteren) regionen
+3 **inter-hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der beiden hemisphären bei verschiedenen frequenzbändern (zb alpha, beta, theta)eine kurze antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der linken und rechten hemisphären
+2 **frontal-okzipital-asymmetrie**: berechnung der differenz zwischen den signalen der frontalen (vorderen) und okzipitalen (hinteren) regionen
+3 **inter-hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der beiden hemisphären bei verschiedenen frequenzbändern (zb alpha, beta, theta)eine kurze antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der linken und rechten hemisphären
+2 **frontal-okzipital-asymmetrie**: berechnung der differenz zwischen den signalen der frontalen (vorderen) und okzipitalen (hinteren) regionen
+3 **inter-hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der beiden hemisphären bei verschiedenen frequenzbändern (zb alpha, beta, theta)eine kurze antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der linken und rechten hemisphären
+2 **frontal-okzipital-asymmetrie**: berechnung der differenz zwischen den signalen der frontalen (vorderen) und okzipitalen (hinteren) regionen
+3 **inter-hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der beiden hemisphären bei verschiedenen frequenzbändern (zb alpha, beta, theta)eine kurze antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der linken und rechten hemisphären
+2 **frontal-okzipital-asymmetrie**: berechnung der differenz zwischen den signalen der frontalen (vorderen) und okzipitalen (hinteren) regionen
+3 **inter-hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der beiden hemisphären bei verschiedenen frequenzbändern (zb alpha, beta, theta)eine kurze antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der linken und rechten hemisphären
+2 **frontal-okzipital-asymmetrie**: berechnung der differenz zwischen den signalen der frontalen (vorderen) und okzipitalen (hinteren) regionen
+3 **inter-hemisphärische asymmetrie**: berechnung der differenz zwischen den signalen der beiden hemisphären bei verschiedenen frequenzbändern (zb alpha, beta, theta)",Coherence|Logarithmierte Differenz,Entire Answer Incorrect,65270f78b5a362b25c2eba10bf29fcd2,2024-08-14 04:03:49
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:medication:de,"ja, zb acetylsalicylsäure (ass)ja, zb acetylsalicylsäure (ass)ja, zb acetylsalicylsäure (ass)ja, zb acetylsalicylsäure (ass)ja, zb acetylsalicylsäure (ass)ja, zb acetylsalicylsäure (ass)",SSRI|Antikoagulanzien,Entire Answer Incorrect,955aa256fa5e3c5d64c3da32e0e1a3e8,2024-08-14 03:15:44
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:medication:de,"ja, zb acetylsalicylsäure (ass)ja, zb acetylsalicylsäure (ass)ja, zb acetylsalicylsäure (ass)",A|n|t|i|k|o|a|g|u|l|a|n|z|i|e|n,Entire Answer Incorrect,9968b545d277c4a7d33d284b34848485,2024-08-14 04:13:00
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:medication:en,"medications that should not be taken with nsaids to minimize the risk of stomach ulcers include:
+
+* blood thinners (eg, warfarin, aspirin)
+* steroids (eg, prednisone)
+* antacids (eg, ranitidine, famotidine)
+* certain antibiotics (eg, ciprofloxacin, amoxicillin)
+* bisphosphonates (eg, alendronate)
+* corticosteroids (eg, prednisone)
+
+however, it is best to consult a doctor or pharmacist for personalized advicemedications that should not be taken with nsaids to minimize the risk of stomach ulcers include:
+
+* blood thinners (eg, warfarin, aspirin)
+* steroids (eg, prednisone)
+* antacids (eg, ranitidine, famotidine)
+* certain antibiotics (eg, ciprofloxacin, amoxicillin)
+* bisphosphonates (eg, alendronate)
+* corticosteroids (eg, prednisone)
+
+however, it is best to consult a doctor or pharmacist for personalized advicemedications that should not be taken with nsaids to minimize the risk of stomach ulcers include:
+
+* blood thinners (eg, warfarin, aspirin)
+* steroids (eg, prednisone)
+* antacids (eg, ranitidine, famotidine)
+* certain antibiotics (eg, ciprofloxacin, amoxicillin)
+* bisphosphonates (eg, alendronate)
+* corticosteroids (eg, prednisone)
+
+however, it is best to consult a doctor or pharmacist for personalized advice",a|n|t|i|c|o|a|g|u|l|a|n|t|s,Entire Answer Incorrect,f38d4a3f8ea6249d58ef8741cffab0c5,2024-08-14 04:11:18
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:medication:en,"ibuprofen should not be taken with:
+
+* other nsaids (eg aspirin, diclofenac)
+* blood thinners (eg warfarin, acenocoumarol)
+* certain antidepressants (eg ssris, snris)
+* certain blood pressure medications (eg ace inhibitors, beta blockers)
+* lithium
+* methotrexateibuprofen should not be taken with:
+
+* other nsaids (eg aspirin, diclofenac)
+* blood thinners (eg warfarin, acenocoumarol)
+* certain antidepressants (eg ssris, snris)
+* certain blood pressure medications (eg ace inhibitors, beta blockers)
+* lithium
+* methotrexateibuprofen should not be taken with:
+
+* other nsaids (eg aspirin, diclofenac)
+* blood thinners (eg warfarin, acenocoumarol)
+* certain antidepressants (eg ssris, snris)
+* certain blood pressure medications (eg ace inhibitors, beta blockers)
+* lithium
+* methotrexate",N|S|A|I|D,Entire Answer Incorrect,662d96ab02c1d2010d7a6361246babe4,2024-08-14 04:12:21
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:mental_disorders:de,restriktive anorexie zeichnet sich durch eine starke einschränkung des nahrungskonsums und eine angst vor gewichtszunahmerestriktive anorexie zeichnet sich durch eine starke einschränkung des nahrungskonsums und eine angst vor gewichtszunahmerestriktive anorexie zeichnet sich durch eine starke einschränkung des nahrungskonsums und eine angst vor gewichtszunahme,mehr|sport|bewegung|gewichtsverlust|untergewicht,Entire Answer Incorrect,6902bf072a74fade65945a330eeb6663,2024-08-14 03:19:02
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:mental_disorders:de,kognitive verhaltenstherapie (kvt) und expositionstherapiekognitive verhaltenstherapie (kvt) und expositionstherapiekognitive verhaltenstherapie (kvt) und expositionstherapie,Medikamente|Medikamentöse Therapie,Entire Answer Incorrect,93ddb1dce70d9cb4e4ca07108e0dcc29,2024-08-14 03:19:41
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:mental_disorders:de,"die dissoziative identitätsstörung ist im icd-11 unter ""dissoziative störungen"" (f44) klassifiziertdie dissoziative identitätsstörung ist im icd-11 unter ""dissoziative störungen"" (f44) klassifiziertdie dissoziative identitätsstörung ist im icd-11 unter ""dissoziative störungen"" (f44) klassifiziert",konversionsstörungen|konversion,Entire Answer Incorrect,4c3ecd657bbb3e27310ccbf4fd764373,2024-08-14 03:20:45
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:mental_disorders:en,"restrictive eating, significant weight loss, and fear of gaining weightrestrictive eating, significant weight loss, and fear of gaining weightrestrictive eating, significant weight loss, and fear of gaining weight",low|lose|reduce|weight|loss,Entire Answer Incorrect,ca80de48842f83e93192c1801f5d3899,2024-08-14 03:46:07
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:mental_disorders:en,stabilization phasestabilization phasestabilization phase,therapy|phase,Entire Answer Incorrect,1c2f31edc1a455696900d2c2dcc5eae1,2024-08-14 03:46:20
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:mental_disorders:en,cognitive behavioral therapy (cbt) and exposure therapycognitive behavioral therapy (cbt) and exposure therapycognitive behavioral therapy (cbt) and exposure therapycognitive behavioral therapy (cbt) and exposure therapycognitive behavioral therapy (cbt) and exposure therapycognitive behavioral therapy (cbt) and exposure therapy,medication|drug|drug therapy,Entire Answer Incorrect,b50c5cdcdbffe0f67717f142569087fb,2024-08-14 03:46:47
+llama-3.1-instruct:70:ggufv2:IQ2_M,regex:mental_disorders:en,"dissociative identity disorder falls under ""dissociative and trauma-related disorders"" in icd-11dissociative identity disorder falls under ""dissociative and trauma-related disorders"" in icd-11dissociative identity disorder falls under ""dissociative and trauma-related disorders"" in icd-11",conversion disorders|conversion,Entire Answer Incorrect,d2107d493a89fb18b06ed6743f6b1b14,2024-08-14 03:48:39
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:biochemistry:de,ja,nein,Other,a077c65c160ec20d3f631b44e709d753,2024-08-14 15:14:53
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:biochemistry:en,yes,no,Other,710c11b68f99087ee79c398c65ca9215,2024-08-14 15:38:00
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:cardiology:de,ja,nein,Other,c271320748d103b55ce9ac1cae4f08c4,2024-08-14 15:09:00
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:cardiology:de,nein,ja,Other,5fc10a4ce23c7080ddfc05ea71cb1c54,2024-08-14 15:09:04
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:cardiology:de,mann,Mann,Case Sensitivity,e825d5741f4dbc5c6586a50bdafe17a5,2024-08-14 15:09:18
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:cardiology:en,men,Men,Case Sensitivity,1a9f9fea0c4cb9aa2476fb76317ff471,2024-08-14 15:10:00
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:cardiology:en,yes,no,Other,8c8c14070ebeaf1a90e6e376f3efa49c,2024-08-14 15:10:06
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:dermatology:de,ja,nein,Other,32cf33685a9e00909d6d16a9b7bde20f,2024-08-14 15:10:46
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:dermatology:de,"nein
+
+die behandlung eines mittelgradig differenzierten plattenepithelkarzinoms am fingerrücken mit einer tumordicke von 6mm hängt von verschiedenen faktoren ab, einschließlich der genauen lokalisation, des patientenstatus und der präferenzen des patienten während eine fingeramputation in einigen fällen eine behandlungsoption sein kann, ist sie bei weitem nicht die einzige andere behandlungsmöglichkeiten könnten chirurgische exzision mit oder ohne rekonstruktion, strahlentherapie, laserbehandlung oder eine kombination dieser optionen umfassen eine genaue diagnose und beratung durch einen onkologen oder einen plastischen chirurgen sind erforderlich, um die beste behandlungsmethode zu bestimmen",nein,Partial Match,f2542ba328803ef4e8c35c68c378bc3c,2024-08-14 15:14:08
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:dermatology:en,yes,no,Other,3f185e0a1089b6484420e1c6fdffc1a4,2024-08-14 15:19:42
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:dermatology:en,"no
+
+koplik's spots are typically associated with measles, not oral thrush oral thrush is typically characterized by white patches on the tongue and other parts of the mouth",no,Partial Match,4e601339372d36dee12e275191869b20,2024-08-14 15:20:37
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:emergency:en,no,yes,Other,129f8c9dfddfa91be6952a03066a6fca,2024-08-14 15:41:08
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:emergency:en,no,yes,Other,17e0f19ccbbcf0bfba6f30d8ce573421,2024-08-14 15:41:11
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:medication:de,ja,nein,Other,dfb3c7a3687c1d2c57d158bdc5a3cffd,2024-08-14 15:37:50
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:medication:en,yes,no,Other,43fe3c10aca393d174422996a21f8d88,2024-08-14 15:34:53
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:mental_disorders:de,ja,nein,Other,ae14302fc8e54ce6a36cb4561a19744d,2024-08-14 14:57:09
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:mental_disorders:de,ja,nein,Other,26e8e2a0036b84be9ebf8be32fbd8b26,2024-08-14 14:57:30
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:mental_disorders:en,yes,no,Other,b2ab8ea86e24e799101e3d4bc8864fed,2024-08-14 15:02:54
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:mental_disorders:en,"no 
+
+the correct sentence should be: 
+
+in psychotherapy for generalized anxiety disorder, learning avoidance strategies to get rid of worries is not a common technique
+
+a more common technique would be to learn coping strategies or exposure techniques to manage worries, rather than avoidance strategies",no,Partial Match,25db6983321e301a46af5ef5ab4f0977,2024-08-14 15:03:49
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:mental_disorders:en,yes,no,Other,87eef24cb37bc2b5a1f895615087f06c,2024-08-14 15:04:03
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:mental_disorders:en,no,yes,Other,42d5b9049be0a02afef7eff9430134ce,2024-08-14 15:04:06
+llama-3.1-instruct:70:ggufv2:IQ4_XS,dichotomous:mental_disorders:en,yes,no,Other,8754a973c95a5722f7e35fde19043ac9,2024-08-14 15:04:11
+llama-3.1-instruct:70:ggufv2:IQ4_XS,multiple_choice:mental_disorders:de,"b,c","b,c,e",Partial Match,363a2f9f466bd1615291f2445afc145b,2024-08-14 14:58:42
+llama-3.1-instruct:70:ggufv2:IQ4_XS,multiple_choice:mental_disorders:en,"b,c","b,c,e",Partial Match,002f4e67ac1868322ed812b3fc353173,2024-08-14 15:05:07
+llama-3.1-instruct:70:ggufv2:IQ4_XS,one_word:cardiology:de,digoxin,Digoxin,Case Sensitivity,923e46b46c0ad85d426edbbfb6ec4d93,2024-08-14 15:09:55
+llama-3.1-instruct:70:ggufv2:IQ4_XS,one_word:cardiology:en,digoxin,Digoxin,Case Sensitivity,d56125629d337c89218bceb5cfd671f8,2024-08-14 15:10:40
+llama-3.1-instruct:70:ggufv2:IQ4_XS,one_word:emergency:de,sauerstoffreiches,Sauerstoffreiches,Case Sensitivity,8ff560765b068093a632aee039c96175,2024-08-14 15:40:38
+llama-3.1-instruct:70:ggufv2:IQ4_XS,one_word:medication:de,grapefruit,Grapefruit,Case Sensitivity,9808ac596ca95d5b92c5f11e2b5826d1,2024-08-14 15:38:18
+llama-3.1-instruct:70:ggufv2:IQ4_XS,one_word:medication:en,grapefruit,Grapefruit,Case Sensitivity,9fff21dadf380e58fff7cfeb8a43086d,2024-08-14 15:35:18
+llama-3.1-instruct:70:ggufv2:IQ4_XS,one_word:oncology:de,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,3bcb654ee2e83905265a6286af815821,2024-08-14 15:33:39
+llama-3.1-instruct:70:ggufv2:IQ4_XS,one_word:oncology:de,brustkrebs,Brustkrebs,Case Sensitivity,12bd20c52a6b8aab1b813584f5cd9cd6,2024-08-14 15:34:41
+llama-3.1-instruct:70:ggufv2:IQ4_XS,one_word:oncology:en,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,1edd6afaaf938d3b152460300eecd34a,2024-08-14 15:31:55
+llama-3.1-instruct:70:ggufv2:IQ4_XS,one_word:oncology:en,breast cancer,Breast cancer,Case Sensitivity,fcc446cda12fdd1b6a9c847aca3bd1b7,2024-08-14 15:33:03
+llama-3.1-instruct:70:ggufv2:IQ4_XS,regex:dermatology:de,"eine kombination mit antibiotika (zb doxycyclin oder minocyclin) ist oft notwendig, um bakterielle superinfektionen zu vermeideneine kombination mit antibiotika (zb doxycyclin oder minocyclin) ist oft notwendig, um bakterielle superinfektionen zu vermeideneine kombination mit antibiotika (zb doxycyclin oder minocyclin) ist oft notwendig, um bakterielle superinfektionen zu vermeiden",kontrazeption|verhütung,Entire Answer Incorrect,1fc05019f7d29bc830bdc1fcc60d7305,2024-08-14 15:16:00
+llama-3.1-instruct:70:ggufv2:IQ4_XS,regex:dermatology:de,"es gibt mehrere klinische formen des basalzellkarzinoms, darunter:
+
+* noduläres basalzellkarzinom
+* superfizielles basalzellkarzinom
+* morpheiformes basalzellkarzinom
+* pigmentiertes basalzellkarzinom
+* sclerosierendes basalzellkarzinom
+* metatypisches basalzellkarzinom
+* fibroepitheliales basalzellkarzinomes gibt mehrere klinische formen des basalzellkarzinoms, darunter:
+
+* noduläres basalzellkarzinom
+* superfizielles basalzellkarzinom
+* morpheiformes basalzellkarzinom
+* pigmentiertes basalzellkarzinom
+* sclerosierendes basalzellkarzinom
+* metatypisches basalzellkarzinom
+* fibroepitheliales basalzellkarzinomes gibt mehrere klinische formen des basalzellkarzinoms, darunter:
+
+* noduläres basalzellkarzinom
+* superfizielles basalzellkarzinom
+* morpheiformes basalzellkarzinom
+* pigmentiertes basalzellkarzinom
+* sclerosierendes basalzellkarzinom
+* metatypisches basalzellkarzinom
+* fibroepitheliales basalzellkarzinomes gibt mehrere klinische formen des basalzellkarzinoms, darunter:
+
+* noduläres basalzellkarzinom
+* superfizielles basalzellkarzinom
+* morpheiformes basalzellkarzinom
+* pigmentiertes basalzellkarzinom
+* sclerosierendes basalzellkarzinom
+* metatypisches basalzellkarzinom
+* fibroepitheliales basalzellkarzinomes gibt mehrere klinische formen des basalzellkarzinoms, darunter:
+
+* noduläres basalzellkarzinom
+* superfizielles basalzellkarzinom
+* morpheiformes basalzellkarzinom
+* pigmentiertes basalzellkarzinom
+* sclerosierendes basalzellkarzinom
+* metatypisches basalzellkarzinom
+* fibroepitheliales basalzellkarzinomes gibt mehrere klinische formen des basalzellkarzinoms, darunter:
+
+* noduläres basalzellkarzinom
+* superfizielles basalzellkarzinom
+* morpheiformes basalzellkarzinom
+* pigmentiertes basalzellkarzinom
+* sclerosierendes basalzellkarzinom
+* metatypisches basalzellkarzinom
+* fibroepitheliales basalzellkarzinom",destruiert|destruierend,Entire Answer Incorrect,791d91c0e022e9c69df04de343437cc3,2024-08-14 15:18:51
+llama-3.1-instruct:70:ggufv2:IQ4_XS,regex:dermatology:de,"kleinkinder, ältere menschen und menschen mit geschwächtem immunsystemkleinkinder, ältere menschen und menschen mit geschwächtem immunsystemkleinkinder, ältere menschen und menschen mit geschwächtem immunsystem",alte|ältere,Entire Answer Incorrect,aa20eb5b95b2e78e13538beb85263191,2024-08-14 15:19:31
+llama-3.1-instruct:70:ggufv2:IQ4_XS,regex:dermatology:en,birth control pillsbirth control pillsbirth control pills,contraception|prevention|contraceptive|contraceptiva,Entire Answer Incorrect,403b64ec6c32b29e709afc4cdcfa37e8,2024-08-14 15:21:15
+llama-3.1-instruct:70:ggufv2:IQ4_XS,regex:dermatology:en,"there are several clinical forms of basal cell carcinoma, including:
+
+1 nodular
+2 superficial
+3 sclerosing (morpheic)
+4 pigmented
+5 cystic
+6 adenoid (adenoid basal cell carcinoma)there are several clinical forms of basal cell carcinoma, including:
+
+1 nodular
+2 superficial
+3 sclerosing (morpheic)
+4 pigmented
+5 cystic
+6 adenoid (adenoid basal cell carcinoma)there are several clinical forms of basal cell carcinoma, including:
+
+1 nodular
+2 superficial
+3 sclerosing (morpheic)
+4 pigmented
+5 cystic
+6 adenoid (adenoid basal cell carcinoma)there are several clinical forms of basal cell carcinoma, including:
+
+1 nodular
+2 superficial
+3 sclerosing (morpheic)
+4 pigmented
+5 cystic
+6 adenoid (adenoid basal cell carcinoma)there are several clinical forms of basal cell carcinoma, including:
+
+1 nodular
+2 superficial
+3 sclerosing (morpheic)
+4 pigmented
+5 cystic
+6 adenoid (adenoid basal cell carcinoma)there are several clinical forms of basal cell carcinoma, including:
+
+1 nodular
+2 superficial
+3 sclerosing (morpheic)
+4 pigmented
+5 cystic
+6 adenoid (adenoid basal cell carcinoma)",destroyed|destructed|destroying|destructive,Entire Answer Incorrect,a15e01513ce0aa1c860c80047ad4d1f7,2024-08-14 15:23:44
+llama-3.1-instruct:70:ggufv2:IQ4_XS,regex:eeg_data:de,"eine gute frage
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: berechnet als (links - rechts) / (links + rechts)
+2 **lateralisationsindex (li)**: berechnet als (links - rechts) / (links + rechts) * 100
+3 **asymmetrie-koeffizient (ac)**: berechnet als (links - rechts) / (|links| + |rechts|)
+
+diese berechnungen werden häufig verwendet, um die asymmetrie zwischen elektrodenpaaren in eeg-signalen zu quantifiziereneine gute frage
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: berechnet als (links - rechts) / (links + rechts)
+2 **lateralisationsindex (li)**: berechnet als (links - rechts) / (links + rechts) * 100
+3 **asymmetrie-koeffizient (ac)**: berechnet als (links - rechts) / (|links| + |rechts|)
+
+diese berechnungen werden häufig verwendet, um die asymmetrie zwischen elektrodenpaaren in eeg-signalen zu quantifiziereneine gute frage
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: berechnet als (links - rechts) / (links + rechts)
+2 **lateralisationsindex (li)**: berechnet als (links - rechts) / (links + rechts) * 100
+3 **asymmetrie-koeffizient (ac)**: berechnet als (links - rechts) / (|links| + |rechts|)
+
+diese berechnungen werden häufig verwendet, um die asymmetrie zwischen elektrodenpaaren in eeg-signalen zu quantifiziereneine gute frage
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: berechnet als (links - rechts) / (links + rechts)
+2 **lateralisationsindex (li)**: berechnet als (links - rechts) / (links + rechts) * 100
+3 **asymmetrie-koeffizient (ac)**: berechnet als (links - rechts) / (|links| + |rechts|)
+
+diese berechnungen werden häufig verwendet, um die asymmetrie zwischen elektrodenpaaren in eeg-signalen zu quantifiziereneine gute frage
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: berechnet als (links - rechts) / (links + rechts)
+2 **lateralisationsindex (li)**: berechnet als (links - rechts) / (links + rechts) * 100
+3 **asymmetrie-koeffizient (ac)**: berechnet als (links - rechts) / (|links| + |rechts|)
+
+diese berechnungen werden häufig verwendet, um die asymmetrie zwischen elektrodenpaaren in eeg-signalen zu quantifiziereneine gute frage
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: berechnet als (links - rechts) / (links + rechts)
+2 **lateralisationsindex (li)**: berechnet als (links - rechts) / (links + rechts) * 100
+3 **asymmetrie-koeffizient (ac)**: berechnet als (links - rechts) / (|links| + |rechts|)
+
+diese berechnungen werden häufig verwendet, um die asymmetrie zwischen elektrodenpaaren in eeg-signalen zu quantifiziereneine gute frage
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: berechnet als (links - rechts) / (links + rechts)
+2 **lateralisationsindex (li)**: berechnet als (links - rechts) / (links + rechts) * 100
+3 **asymmetrie-koeffizient (ac)**: berechnet als (links - rechts) / (|links| + |rechts|)
+
+diese berechnungen werden häufig verwendet, um die asymmetrie zwischen elektrodenpaaren in eeg-signalen zu quantifiziereneine gute frage
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: berechnet als (links - rechts) / (links + rechts)
+2 **lateralisationsindex (li)**: berechnet als (links - rechts) / (links + rechts) * 100
+3 **asymmetrie-koeffizient (ac)**: berechnet als (links - rechts) / (|links| + |rechts|)
+
+diese berechnungen werden häufig verwendet, um die asymmetrie zwischen elektrodenpaaren in eeg-signalen zu quantifiziereneine gute frage
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 **asymmetrie-index (ai)**: berechnet als (links - rechts) / (links + rechts)
+2 **lateralisationsindex (li)**: berechnet als (links - rechts) / (links + rechts) * 100
+3 **asymmetrie-koeffizient (ac)**: berechnet als (links - rechts) / (|links| + |rechts|)
+
+diese berechnungen werden häufig verwendet, um die asymmetrie zwischen elektrodenpaaren in eeg-signalen zu quantifizieren",Coherence|Logarithmierte Differenz,Entire Answer Incorrect,65270f78b5a362b25c2eba10bf29fcd2,2024-08-14 15:28:42
+llama-3.1-instruct:70:ggufv2:IQ4_XS,regex:medication:de,"ja, zb cortison, blutverdünnungsmittel und bestimmte antibiotikaja, zb cortison, blutverdünnungsmittel und bestimmte antibiotikaja, zb cortison, blutverdünnungsmittel und bestimmte antibiotikaja, zb cortison, blutverdünnungsmittel und bestimmte antibiotikaja, zb cortison, blutverdünnungsmittel und bestimmte antibiotikaja, zb cortison, blutverdünnungsmittel und bestimmte antibiotika",SSRI|Antikoagulanzien,Entire Answer Incorrect,955aa256fa5e3c5d64c3da32e0e1a3e8,2024-08-14 14:57:01
+llama-3.1-instruct:70:ggufv2:IQ4_XS,regex:medication:de,"ja, zb cortison, blutverdünnungsmittel und bestimmte antibiotikaja, zb cortison, blutverdünnungsmittel und bestimmte antibiotikaja, zb cortison, blutverdünnungsmittel und bestimmte antibiotika",A|n|t|i|k|o|a|g|u|l|a|n|z|i|e|n,Entire Answer Incorrect,9968b545d277c4a7d33d284b34848485,2024-08-14 15:38:43
+llama-3.1-instruct:70:ggufv2:IQ4_XS,regex:medication:en,"ibuprofen should not be taken with:
+
+* aspirin
+* other nsaids (eg diclofenac, naproxen)
+* anticoagulants (eg warfarin)
+* corticosteroids
+* lithium
+* methotrexate
+* diuretics (eg furosemide)ibuprofen should not be taken with:
+
+* aspirin
+* other nsaids (eg diclofenac, naproxen)
+* anticoagulants (eg warfarin)
+* corticosteroids
+* lithium
+* methotrexate
+* diuretics (eg furosemide)ibuprofen should not be taken with:
+
+* aspirin
+* other nsaids (eg diclofenac, naproxen)
+* anticoagulants (eg warfarin)
+* corticosteroids
+* lithium
+* methotrexate
+* diuretics (eg furosemide)",N|S|A|I|D,Entire Answer Incorrect,662d96ab02c1d2010d7a6361246babe4,2024-08-14 15:37:41
+llama-3.1-instruct:70:ggufv2:IQ4_XS,regex:mental_disorders:de,durch selbstbeschränkung der nahrungsaufnahmedurch selbstbeschränkung der nahrungsaufnahmedurch selbstbeschränkung der nahrungsaufnahme,mehr|sport|bewegung|gewichtsverlust|untergewicht,Entire Answer Incorrect,6902bf072a74fade65945a330eeb6663,2024-08-14 15:00:28
+llama-3.1-instruct:70:ggufv2:IQ4_XS,regex:mental_disorders:de,"im icd-11 ist die dissoziative identitätsstörung unter den ""dissoziativen störungen"" klassifiziertim icd-11 ist die dissoziative identitätsstörung unter den ""dissoziativen störungen"" klassifiziertim icd-11 ist die dissoziative identitätsstörung unter den ""dissoziativen störungen"" klassifiziert",konversionsstörungen|konversion,Entire Answer Incorrect,4c3ecd657bbb3e27310ccbf4fd764373,2024-08-14 15:02:29
+llama-3.1-instruct:70:ggufv2:IQ4_XS,regex:mental_disorders:de,zur abwehr von traumatischen erlebnissenzur abwehr von traumatischen erlebnissenzur abwehr von traumatischen erlebnissen,Trauma|traumatische erinnerungen|traumatische erfahrungen,Entire Answer Incorrect,05df998b4e9fd0c9ce60733fef85f81c,2024-08-14 15:02:47
+llama-3.1-instruct:70:ggufv2:IQ4_XS,regex:mental_disorders:en,"restrictive eating patterns, significant weight loss, and fear of gaining weightrestrictive eating patterns, significant weight loss, and fear of gaining weightrestrictive eating patterns, significant weight loss, and fear of gaining weight",low|lose|reduce|weight|loss,Entire Answer Incorrect,ca80de48842f83e93192c1801f5d3899,2024-08-14 15:06:39
+llama-3.1-instruct:70:ggufv2:IQ4_XS,regex:mental_disorders:en,stabilization phasestabilization phasestabilization phase,therapy|phase,Entire Answer Incorrect,1c2f31edc1a455696900d2c2dcc5eae1,2024-08-14 15:06:57
+llama-3.1-instruct:70:ggufv2:IQ4_XS,regex:mental_disorders:en,cognitive-behavioral therapy (cbt) and medication (ssris)cognitive-behavioral therapy (cbt) and medication (ssris)cognitive-behavioral therapy (cbt) and medication (ssris),medication|drug|drug therapy,Entire Answer Incorrect,b50c5cdcdbffe0f67717f142569087fb,2024-08-14 15:07:25
+llama-3.1-instruct:70:ggufv2:IQ4_XS,regex:mental_disorders:en,"dissociative identity disorder falls under ""dissociative disorders"" in icd-11, and more specifically under the subcategory ""other specified dissociative disorders""dissociative identity disorder falls under ""dissociative disorders"" in icd-11, and more specifically under the subcategory ""other specified dissociative disorders""dissociative identity disorder falls under ""dissociative disorders"" in icd-11, and more specifically under the subcategory ""other specified dissociative disorders""",conversion disorders|conversion,Entire Answer Incorrect,d2107d493a89fb18b06ed6743f6b1b14,2024-08-14 15:08:49
+llama-3.1-instruct:70:ggufv2:IQ4_XS,short_words:emergency:de,"rest, ice, compression, elevation","Rest, Ice, Compression, Elevation",Case Sensitivity,81a2192f2ccf338dc9a4ae9464c812ea,2024-08-14 15:41:01
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:biochemistry:de,ja,nein,Other,a077c65c160ec20d3f631b44e709d753,2024-08-14 17:29:46
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:biochemistry:en,yes,no,Other,710c11b68f99087ee79c398c65ca9215,2024-08-14 17:58:54
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:cardiology:de,ja,nein,Other,c271320748d103b55ce9ac1cae4f08c4,2024-08-14 17:26:19
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:cardiology:de,nein,ja,Other,5fc10a4ce23c7080ddfc05ea71cb1c54,2024-08-14 17:26:26
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:cardiology:de,mann,Mann,Case Sensitivity,e825d5741f4dbc5c6586a50bdafe17a5,2024-08-14 17:26:44
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:cardiology:de,ja,nein,Other,0a18949c7f2aa9448c810e595ff37185,2024-08-14 17:26:48
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:cardiology:en,men,Men,Case Sensitivity,1a9f9fea0c4cb9aa2476fb76317ff471,2024-08-14 17:27:33
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:cardiology:en,yes,no,Other,8c8c14070ebeaf1a90e6e376f3efa49c,2024-08-14 17:27:40
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:dermatology:de,ja,nein,Other,32cf33685a9e00909d6d16a9b7bde20f,2024-08-14 17:28:31
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:dermatology:de,ja,nein,Other,8769a0f64879cab927a79ff77d52423b,2024-08-14 17:28:59
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:dermatology:en,yes,no,Other,3f185e0a1089b6484420e1c6fdffc1a4,2024-08-14 17:36:05
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:dermatology:en,"no
+
+angioedema is typically caused by a type 1 hypersensitivity reaction, not a type 4 reaction according to coombs",no,Partial Match,6a661c4f100e7fd238f836656d35c3ed,2024-08-14 17:36:55
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:dermatology:en,"no
+
+koplik's spots are typically associated with measles, not oral thrush oral thrush is typically characterised by white patches on the tongue and other parts of the mouth",no,Partial Match,4e601339372d36dee12e275191869b20,2024-08-14 17:37:51
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:emergency:de,ja,nein,Other,e6ae9d66e25f379dbb454a6d65152d38,2024-08-14 18:01:26
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:emergency:en,no,yes,Other,17e0f19ccbbcf0bfba6f30d8ce573421,2024-08-14 18:02:47
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:medication:de,ja,nein,Other,dfb3c7a3687c1d2c57d158bdc5a3cffd,2024-08-14 17:58:44
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:medication:en,yes,no,Other,43fe3c10aca393d174422996a21f8d88,2024-08-14 17:55:34
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:mental_disorders:de,ja,nein,Other,ae14302fc8e54ce6a36cb4561a19744d,2024-08-14 17:11:38
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:mental_disorders:de,ja,nein,Other,986bface7636d49099e787fa45bf8d5c,2024-08-14 17:11:56
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:mental_disorders:de,ja,nein,Other,26e8e2a0036b84be9ebf8be32fbd8b26,2024-08-14 17:11:59
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:mental_disorders:en,yes,no,Other,b2ab8ea86e24e799101e3d4bc8864fed,2024-08-14 17:19:11
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:mental_disorders:en,"no
+
+the correct sentence should be: 
+
+in psychotherapy for generalized anxiety disorder, learning avoidance strategies to get rid of worries is not a common technique
+
+explanation: in psychotherapy for generalized anxiety disorder, the goal is often to help patients confront and manage their worries, rather than avoid them avoidance strategies can actually perpetuate anxiety in the long run",no,Partial Match,25db6983321e301a46af5ef5ab4f0977,2024-08-14 17:20:38
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:mental_disorders:en,yes,no,Other,87eef24cb37bc2b5a1f895615087f06c,2024-08-14 17:20:54
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:mental_disorders:en,yes,no,Other,8754a973c95a5722f7e35fde19043ac9,2024-08-14 17:21:03
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:mental_disorders:en,yes,no,Other,80d089e429b5da675799376b8ab45730,2024-08-14 17:21:06
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:physiology:de,ja,nein,Other,518ac2973fba63e0f949bfc9ba180075,2024-08-14 17:39:20
+llama-3.1-instruct:70:ggufv2:Q3_K_S,dichotomous:physiology:en,yes,no,Other,d85e27cf5f44aa37ed756a1dc8c307bf,2024-08-14 17:11:47
+llama-3.1-instruct:70:ggufv2:Q3_K_S,multiple_choice:mental_disorders:de,"e,f","d,e,f",Partial Match,da34c39cd52df137b216ebf9539f454d,2024-08-14 17:12:22
+llama-3.1-instruct:70:ggufv2:Q3_K_S,multiple_choice:mental_disorders:de,"b,c","b,c,e",Partial Match,363a2f9f466bd1615291f2445afc145b,2024-08-14 17:13:23
+llama-3.1-instruct:70:ggufv2:Q3_K_S,multiple_choice:mental_disorders:en,"b,c","b,c,e",Partial Match,002f4e67ac1868322ed812b3fc353173,2024-08-14 17:22:06
+llama-3.1-instruct:70:ggufv2:Q3_K_S,one_word:cardiology:en,digoxin,Digoxin,Case Sensitivity,d56125629d337c89218bceb5cfd671f8,2024-08-14 17:28:23
+llama-3.1-instruct:70:ggufv2:Q3_K_S,one_word:emergency:de,sauerstoffreiches,Sauerstoffreiches,Case Sensitivity,8ff560765b068093a632aee039c96175,2024-08-14 18:02:14
+llama-3.1-instruct:70:ggufv2:Q3_K_S,one_word:medication:de,grapefruit,Grapefruit,Case Sensitivity,9808ac596ca95d5b92c5f11e2b5826d1,2024-08-14 17:59:13
+llama-3.1-instruct:70:ggufv2:Q3_K_S,one_word:medication:en,grapefruit,Grapefruit,Case Sensitivity,9fff21dadf380e58fff7cfeb8a43086d,2024-08-14 17:56:03
+llama-3.1-instruct:70:ggufv2:Q3_K_S,one_word:oncology:de,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,3bcb654ee2e83905265a6286af815821,2024-08-14 17:54:14
+llama-3.1-instruct:70:ggufv2:Q3_K_S,one_word:oncology:de,brustkrebs,Brustkrebs,Case Sensitivity,12bd20c52a6b8aab1b813584f5cd9cd6,2024-08-14 17:55:23
+llama-3.1-instruct:70:ggufv2:Q3_K_S,one_word:oncology:en,"gtv, ctv, ptv","GTV,CTV,PTV",Format Error,1edd6afaaf938d3b152460300eecd34a,2024-08-14 17:52:17
+llama-3.1-instruct:70:ggufv2:Q3_K_S,one_word:oncology:en,breast cancer,Breast cancer,Case Sensitivity,fcc446cda12fdd1b6a9c847aca3bd1b7,2024-08-14 17:53:32
+llama-3.1-instruct:70:ggufv2:Q3_K_S,one_word:physiology:de,die richtige antwort ist: p-welle,p-welle,Partial Match,46630900b1d6a473f239c79225d4bf17,2024-08-14 17:43:14
+llama-3.1-instruct:70:ggufv2:Q3_K_S,regex:dermatology:de,tetracycline oder erythromycintetracycline oder erythromycintetracycline oder erythromycin,kontrazeption|verhütung,Entire Answer Incorrect,1fc05019f7d29bc830bdc1fcc60d7305,2024-08-14 17:30:53
+llama-3.1-instruct:70:ggufv2:Q3_K_S,regex:dermatology:de,"psoriasis, neurodermitis und vitiligopsoriasis, neurodermitis und vitiligopsoriasis, neurodermitis und vitiligo",p|s|o|r|i|a|s|i|s,Entire Answer Incorrect,fcc743609f41eb99e28e96cdcbf61b39,2024-08-14 17:31:22
+llama-3.1-instruct:70:ggufv2:Q3_K_S,regex:dermatology:de,"es gibt mehrere klinische formen des basalzellkarzinoms, darunter:
+
+* noduläres basalzellkarzinom
+* ulzerierendes basalzellkarzinom
+* pigmentiertes basalzellkarzinom
+* cystisches basalzellkarzinom
+* morpheiformes basalzellkarzinom
+* superfizielles basalzellkarzinom
+
+diese formen können sich in ihrem aussehen und verhalten unterscheidenes gibt mehrere klinische formen des basalzellkarzinoms, darunter:
+
+* noduläres basalzellkarzinom
+* ulzerierendes basalzellkarzinom
+* pigmentiertes basalzellkarzinom
+* cystisches basalzellkarzinom
+* morpheiformes basalzellkarzinom
+* superfizielles basalzellkarzinom
+
+diese formen können sich in ihrem aussehen und verhalten unterscheidenes gibt mehrere klinische formen des basalzellkarzinoms, darunter:
+
+* noduläres basalzellkarzinom
+* ulzerierendes basalzellkarzinom
+* pigmentiertes basalzellkarzinom
+* cystisches basalzellkarzinom
+* morpheiformes basalzellkarzinom
+* superfizielles basalzellkarzinom
+
+diese formen können sich in ihrem aussehen und verhalten unterscheiden",destruiert|destruierend,Entire Answer Incorrect,791d91c0e022e9c69df04de343437cc3,2024-08-14 17:35:00
+llama-3.1-instruct:70:ggufv2:Q3_K_S,regex:dermatology:de,ältere menschen und menschen mit geschwächtem immunsystemältere menschen und menschen mit geschwächtem immunsystemältere menschen und menschen mit geschwächtem immunsystemältere menschen und menschen mit geschwächtem immunsystemältere menschen und menschen mit geschwächtem immunsystemältere menschen und menschen mit geschwächtem immunsystem,alte|ältere,Entire Answer Incorrect,aa20eb5b95b2e78e13538beb85263191,2024-08-14 17:35:49
+llama-3.1-instruct:70:ggufv2:Q3_K_S,regex:dermatology:en,birth control pillsbirth control pillsbirth control pills,contraception|prevention|contraceptive|contraceptiva,Entire Answer Incorrect,403b64ec6c32b29e709afc4cdcfa37e8,2024-08-14 17:38:39
+llama-3.1-instruct:70:ggufv2:Q3_K_S,regex:dermatology:en,"there are several clinical forms of basal cell carcinoma, including:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented
+5 cystic
+6 basosquamousthere are several clinical forms of basal cell carcinoma, including:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented
+5 cystic
+6 basosquamousthere are several clinical forms of basal cell carcinoma, including:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented
+5 cystic
+6 basosquamousthere are several clinical forms of basal cell carcinoma, including:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented
+5 cystic
+6 basosquamousthere are several clinical forms of basal cell carcinoma, including:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented
+5 cystic
+6 basosquamousthere are several clinical forms of basal cell carcinoma, including:
+
+1 nodular
+2 superficial
+3 morpheaform (sclerosing)
+4 pigmented
+5 cystic
+6 basosquamous",destroyed|destructed|destroying|destructive,Entire Answer Incorrect,a15e01513ce0aa1c860c80047ad4d1f7,2024-08-14 17:41:58
+llama-3.1-instruct:70:ggufv2:Q3_K_S,regex:dermatology:en,"infants, elderly, and those with weakened immune systemsinfants, elderly, and those with weakened immune systemsinfants, elderly, and those with weakened immune systems",old|elder,Entire Answer Incorrect,5fd37e8df64240a554b231185a6c2769,2024-08-14 17:42:52
+llama-3.1-instruct:70:ggufv2:Q3_K_S,regex:eeg_data:de,"eine kurze und präzise antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 asymmetrie-index (ai)
+2 lateralisationsindex (li)
+3 hemisphärische asymmetrie-index (hai)
+
+diese indizes werden verwendet, um die unterschiede in der aktivität zwischen den beiden hemisphären des gehirns zu messeneine kurze und präzise antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 asymmetrie-index (ai)
+2 lateralisationsindex (li)
+3 hemisphärische asymmetrie-index (hai)
+
+diese indizes werden verwendet, um die unterschiede in der aktivität zwischen den beiden hemisphären des gehirns zu messeneine kurze und präzise antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 asymmetrie-index (ai)
+2 lateralisationsindex (li)
+3 hemisphärische asymmetrie-index (hai)
+
+diese indizes werden verwendet, um die unterschiede in der aktivität zwischen den beiden hemisphären des gehirns zu messeneine kurze und präzise antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 asymmetrie-index (ai)
+2 lateralisationsindex (li)
+3 hemisphärische asymmetrie-index (hai)
+
+diese indizes werden verwendet, um die unterschiede in der aktivität zwischen den beiden hemisphären des gehirns zu messeneine kurze und präzise antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 asymmetrie-index (ai)
+2 lateralisationsindex (li)
+3 hemisphärische asymmetrie-index (hai)
+
+diese indizes werden verwendet, um die unterschiede in der aktivität zwischen den beiden hemisphären des gehirns zu messeneine kurze und präzise antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 asymmetrie-index (ai)
+2 lateralisationsindex (li)
+3 hemisphärische asymmetrie-index (hai)
+
+diese indizes werden verwendet, um die unterschiede in der aktivität zwischen den beiden hemisphären des gehirns zu messeneine kurze und präzise antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 asymmetrie-index (ai)
+2 lateralisationsindex (li)
+3 hemisphärische asymmetrie-index (hai)
+
+diese indizes werden verwendet, um die unterschiede in der aktivität zwischen den beiden hemisphären des gehirns zu messeneine kurze und präzise antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 asymmetrie-index (ai)
+2 lateralisationsindex (li)
+3 hemisphärische asymmetrie-index (hai)
+
+diese indizes werden verwendet, um die unterschiede in der aktivität zwischen den beiden hemisphären des gehirns zu messeneine kurze und präzise antwort
+
+die drei gängigsten berechnungen für die asymmetrie zwischen elektrodenpaaren in eeg-signalen sind:
+
+1 asymmetrie-index (ai)
+2 lateralisationsindex (li)
+3 hemisphärische asymmetrie-index (hai)
+
+diese indizes werden verwendet, um die unterschiede in der aktivität zwischen den beiden hemisphären des gehirns zu messen",Coherence|Logarithmierte Differenz,Entire Answer Incorrect,65270f78b5a362b25c2eba10bf29fcd2,2024-08-14 17:47:59
+llama-3.1-instruct:70:ggufv2:Q3_K_S,regex:medication:de,"ja, zum beispiel antikoagulanzien, kortikosteroide, antihypertensiva, lithium, methotrexat, koffein, theophyllin und alkoholja, zum beispiel antikoagulanzien, kortikosteroide, antihypertensiva, lithium, methotrexat, koffein, theophyllin und alkoholja, zum beispiel antikoagulanzien, kortikosteroide, antihypertensiva, lithium, methotrexat, koffein, theophyllin und alkohol",SSRI|Antikoagulanzien,Entire Answer Incorrect,955aa256fa5e3c5d64c3da32e0e1a3e8,2024-08-14 17:11:29
+llama-3.1-instruct:70:ggufv2:Q3_K_S,regex:medication:de,"ja, zum beispiel antikoagulanzien, kortikosteroide, antihypertensiva, lithium, methotrexat, koffein, theophyllin und alkoholja, zum beispiel antikoagulanzien, kortikosteroide, antihypertensiva, lithium, methotrexat, koffein, theophyllin und alkoholja, zum beispiel antikoagulanzien, kortikosteroide, antihypertensiva, lithium, methotrexat, koffein, theophyllin und alkohol",A|n|t|i|k|o|a|g|u|l|a|n|z|i|e|n,Entire Answer Incorrect,9968b545d277c4a7d33d284b34848485,2024-08-14 18:00:10
+llama-3.1-instruct:70:ggufv2:Q3_K_S,regex:medication:en,"ibuprofen should not be taken with:
+
+* aspirin
+* other nsaids (eg diclofenac, naproxen)
+* blood thinners (eg warfarin)
+* certain antidepressants (eg ssris)
+* certain blood pressure medications (eg ace inhibitors)ibuprofen should not be taken with:
+
+* aspirin
+* other nsaids (eg diclofenac, naproxen)
+* blood thinners (eg warfarin)
+* certain antidepressants (eg ssris)
+* certain blood pressure medications (eg ace inhibitors)ibuprofen should not be taken with:
+
+* aspirin
+* other nsaids (eg diclofenac, naproxen)
+* blood thinners (eg warfarin)
+* certain antidepressants (eg ssris)
+* certain blood pressure medications (eg ace inhibitors)",N|S|A|I|D,Entire Answer Incorrect,662d96ab02c1d2010d7a6361246babe4,2024-08-14 17:58:34
+llama-3.1-instruct:70:ggufv2:Q3_K_S,regex:mental_disorders:de,kognitive verhaltenstherapie (kvt) und expositionstherapiekognitive verhaltenstherapie (kvt) und expositionstherapiekognitive verhaltenstherapie (kvt) und expositionstherapie,Medikamente|Medikamentöse Therapie,Entire Answer Incorrect,93ddb1dce70d9cb4e4ca07108e0dcc29,2024-08-14 17:17:11
+llama-3.1-instruct:70:ggufv2:Q3_K_S,regex:mental_disorders:de,"im icd-11 ist die dissoziative identitätsstörung unter den ""dissoziativen störungen"" klassifiziertim icd-11 ist die dissoziative identitätsstörung unter den ""dissoziativen störungen"" klassifiziertim icd-11 ist die dissoziative identitätsstörung unter den ""dissoziativen störungen"" klassifiziert",konversionsstörungen|konversion,Entire Answer Incorrect,4c3ecd657bbb3e27310ccbf4fd764373,2024-08-14 17:18:49
+llama-3.1-instruct:70:ggufv2:Q3_K_S,regex:mental_disorders:de,zur selbstschutz und stressbewältigungzur selbstschutz und stressbewältigungzur selbstschutz und stressbewältigung,Trauma|traumatische erinnerungen|traumatische erfahrungen,Entire Answer Incorrect,05df998b4e9fd0c9ce60733fef85f81c,2024-08-14 17:19:04
+llama-3.1-instruct:70:ggufv2:Q3_K_S,regex:mental_disorders:en,stabilization phasestabilization phasestabilization phase,therapy|phase,Entire Answer Incorrect,1c2f31edc1a455696900d2c2dcc5eae1,2024-08-14 17:24:19
+llama-3.1-instruct:70:ggufv2:Q3_K_S,regex:mental_disorders:en,cognitive behavioral therapy (cbt) and exposure therapycognitive behavioral therapy (cbt) and exposure therapycognitive behavioral therapy (cbt) and exposure therapycognitive behavioral therapy (cbt) and exposure therapycognitive behavioral therapy (cbt) and exposure therapycognitive behavioral therapy (cbt) and exposure therapy,medication|drug|drug therapy,Entire Answer Incorrect,b50c5cdcdbffe0f67717f142569087fb,2024-08-14 17:24:50
+llama-3.1-instruct:70:ggufv2:Q3_K_S,regex:mental_disorders:en,dissociative disordersdissociative disordersdissociative disorders,conversion disorders|conversion,Entire Answer Incorrect,d2107d493a89fb18b06ed6743f6b1b14,2024-08-14 17:26:01
 llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:biochemistry:de,ja,nein,Other,a077c65c160ec20d3f631b44e709d753,2024-08-13 20:09:11
 llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:biochemistry:en,yes,no,Other,710c11b68f99087ee79c398c65ca9215,2024-08-13 20:13:10
 llama-3.1-instruct:8:ggufv2:IQ4_XS,dichotomous:cardiology:de,ja,nein,Other,c271320748d103b55ce9ac1cae4f08c4,2024-08-13 20:08:44
