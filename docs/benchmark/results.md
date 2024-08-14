@@ -104,4 +104,12 @@ In this set of tasks, we test LLM abilities to extract text from a given documen
 
     {{ read_csv('benchmark/results/processed/multimodal_answer.csv', colalign=("center","center","center","center","center")) }}
 
-![Stripplot Extraction Subtask](images/stripplot-extraction-tasks.png)
+![Stripplot Extraction Subtask](../images/stripplot-extraction-tasks.png)
+
+## Medical Exam Question Answering
+
+In this set of tasks, we test LLM abilities to answer medical exam questions.
+
+=== "Overall Performance"
+
+    {{ read_csv('benchmark/results/processed/medical_exam.csv', colalign=("center","center","center","center","center")) }}

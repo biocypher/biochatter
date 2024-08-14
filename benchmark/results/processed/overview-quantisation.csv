@@ -2,10 +2,10 @@ Model name,Size,Version,Quantisation,Median Accuracy,SD
 gpt-3.5-turbo-0125,175,,,0.87,0.21
 gpt-4-turbo-2024-04-09,Unknown,,,0.83,0.3
 gpt-4-0613,Unknown,,,0.78,0.18
+gpt-3.5-turbo-0613,175,,,0.76,0.21
 gpt-4-0125-preview,Unknown,,,0.73,0.3
 gpt-4o-2024-05-13,Unknown,,,0.73,0.35
 openhermes-2.5,7,ggufv2,Q5_K_M,0.73,0.32
-gpt-3.5-turbo-0613,175,,,0.73,0.24
 openhermes-2.5,7,ggufv2,Q8_0,0.71,0.32
 openhermes-2.5,7,ggufv2,Q4_K_M,0.71,0.33
 gpt-4o-mini-2024-07-18,Unknown,,,0.7,0.27

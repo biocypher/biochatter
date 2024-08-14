@@ -11,7 +11,7 @@ KG build, deployment, and web app for LLM-based question answering.
 First, build your KG. For this example, we use the [BioCypher Pole
 KG](https://github.com/biocypher/pole) as a demo KG. The KG is based on an
 open-source dataset of crime statistics in Manchester. The schema of the demo KG
-is described in the [Knowledge Graph RAG](vignette-kg.md) vignette. For building
+is described in the [Knowledge Graph RAG](kg.md) vignette. For building
 your own KG, refer to the [BioCypher documentation](https://biocypher.org).
 
 This KG is built, imported, and deployed in the first three stages of the
@@ -68,5 +68,5 @@ tabs](https://github.com/biocypher/biochatter-light?tab=readme-ov-file#tab-selec
 so check back for more options in the future. Creating your own tabs is also
 accessible via our modular architecture and the simple
 [Streamlit](https://streamlit.io) framework for UI design. Check the [advanced
-vignette](vignette-custom-bclight-advanced.md) and the codebase of [BioChatter
+vignette](custom-bclight-advanced.md) and the codebase of [BioChatter
 Light](https://github.com/biocypher/biochatter-light) for more information.

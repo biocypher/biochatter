@@ -115,6 +115,9 @@ def _delete_outdated_benchmark_results(data_dict: dict) -> None:
 
     # delete outdated results
     for file in result_files:
+        continue
+        # turn off deletion for now
+
         if "multimodal_answer" in file:
             continue
         result_file = pd.read_csv(file, header=0)

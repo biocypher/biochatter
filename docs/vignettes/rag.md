@@ -21,7 +21,7 @@ limited by the scale of the vector database system. In this case, and for
 demonstration purposes, we uploaded the four manuscripts, which leads to the
 state shown in the screenshot below. You can find the citations below.
 
-![RAG Settings](images/rag-settings.png)
+![RAG Settings](../images/rag-settings.png)
 
 Note that we chose to split the documents into fragments of 1000 characters
 each. We could have split by tokens instead, or changed the fragment length and
@@ -39,7 +39,7 @@ dialogue with the assistant. We use `gpt-3.5-turbo-0613` in this example
 (deprecated as of July 16 2024), which is a very affordable model. The procedure
 is demonstrated in the GIF below.
 
-![RAG Demo](images/rag-demo.gif)
+![RAG Demo](../images/rag-demo.gif)
 
 ## Comparison with ChatGPT
 
