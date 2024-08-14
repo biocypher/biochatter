@@ -273,7 +273,7 @@ class VectorDatabaseAgentMilvus:
             using=self.alias,
         )
         self._col_metadata.load()
-
+        
     def _create_metadata_collection(self) -> None:
         """
         Create metadata collection.
@@ -286,38 +286,39 @@ class VectorDatabaseAgentMilvus:
         vector "embedding". The field "isDeleted" is used to specify if the
         document is deleted.
         """
+        MAX_LENGTH = 10000
         doc_id = FieldSchema(
             name="id", dtype=DataType.INT64, is_primary=True, auto_id=True
         )
         doc_name = FieldSchema(
-            name="name", dtype=DataType.VARCHAR, max_length=255
+            name="name", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
         )
         doc_author = FieldSchema(
-            name="author", dtype=DataType.VARCHAR, max_length=255
+            name="author", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
         )
         doc_title = FieldSchema(
-            name="title", dtype=DataType.VARCHAR, max_length=1000
+            name="title", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
         )
         doc_format = FieldSchema(
             name="format", dtype=DataType.VARCHAR, max_length=255
         )
         doc_subject = FieldSchema(
-            name="subject", dtype=DataType.VARCHAR, max_length=255
+            name="subject", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
         )
         doc_creator = FieldSchema(
-            name="creator", dtype=DataType.VARCHAR, max_length=255
+            name="creator", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
         )
         doc_producer = FieldSchema(
-            name="producer", dtype=DataType.VARCHAR, max_length=255
+            name="producer", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
         )
         doc_creationDate = FieldSchema(
-            name="creationDate", dtype=DataType.VARCHAR, max_length=64
+            name="creationDate", dtype=DataType.VARCHAR, max_length=1024
         )
         doc_modDate = FieldSchema(
-            name="modDate", dtype=DataType.VARCHAR, max_length=64
+            name="modDate", dtype=DataType.VARCHAR, max_length=1024
         )
         doc_source = FieldSchema(
-            name="source", dtype=DataType.VARCHAR, max_length=1000
+            name="source", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
         )
         embedding = FieldSchema(
             name="embedding",
@@ -521,7 +522,7 @@ class VectorDatabaseAgentMilvus:
         return expr.replace('"', "").replace("'", "")
 
     def similarity_search(
-        self, query: str, k: int = 3, doc_ids: list[str] = None
+        self, query: str, k: int = 3, doc_ids: Optional[list[str]] = None
     ) -> list[Document]:
         """
         Perform similarity search insider the currently active database
@@ -538,8 +539,8 @@ class VectorDatabaseAgentMilvus:
 
             k (int): the number of results to return
 
-            doc_ids(List[str] optional): the list of document ids, do similarity search across the
-            specified documents
+            doc_ids (Optional[list[str]]): the list of document ids, do
+                similarity search across the specified documents
 
         Returns:
             List[Document]: search results
@@ -568,8 +569,8 @@ class VectorDatabaseAgentMilvus:
         Args:
             doc_id (str): the document to be deleted
 
-            doc_ids(List[str] optional): the list of document ids, defines documents scope
-            within which remove operation occurs.
+            doc_ids (Optional[list[str]]): the list of document ids, defines
+                documents scope within which remove operation occurs.
 
         Returns:
             bool: True if the document is deleted, False otherwise
@@ -609,8 +610,9 @@ class VectorDatabaseAgentMilvus:
         Get all non-deleted documents from the currently active database.
 
         Args:
-            doc_ids(List[str] optional): the list of document ids, defines documents scope within
-            which the operation of obaining all documents occurs
+            doc_ids (List[str] optional): the list of document ids, defines
+                documents scope within which the operation of obtaining all
+                documents occurs
 
         Returns:
             List[Dict]: the metadata of all non-deleted documents in the form

@@ -44,35 +44,60 @@ plugins:
       default_handler: python
   - table-reader
   - social
+  - redirects:
+      redirect_maps:
+        "vignette-custom-bclight-simple.md": "vignettes/custom-bclight-simple.md"
+        "vignette-custom-bclight-advanced.md": "vignettes/custom-bclight-advanced.md"
+        "vignette-kg.md": "vignettes/kg.md"
+        "vignette-rag.md": "vignettes/rag.md"
+        "benchmarking.md": "features/benchmark.md"
+        "chat.md": "features/chat.md"
+        "rag.md": "features/rag.md"
+        "reflexion-agent.md": "features/reflexion-agent.md"
+        "open-llm.md": "features/open-llm.md"
+        "wasm.md": "features/wasm.md"
+        "podcast.md": "features/podcast.md"
+        "llm_connect-reference.md": "api-docs/llm_connect.md"
+        "vectorstore-reference.md": "api-docs/vectorstore.md"
+        "kg-reference.md": "api-docs/kg.md"
+        "api-reference.md": "api-docs/api-calling.md"
+        "reflexion-reference.md": "api-docs/reflexion.md"
+        "podcast-reference.md": "api-docs/podcast.md"
+        "benchmark.md": "benchmark/overview.md"
+        "benchmark-results.md": "benchmark/results.md"
+        "benchmark-developer.md": "benchmark/developer.md"
 
 site_url: https://biochatter.org/
 
 nav:
   - Home: index.md
   - Features:
-      - Basic Usage - Chat: chat.md
-      - Retrieval-Augmented Generation: rag.md
-      - Reflexion via LangGraph: reflexion-agent.md
-      - Open-source and Local LLMs: open-llm.md
-      - LLM in your Browser - WebAssembly: wasm.md
-      - Benchmarking: benchmarking.md
-      - Podcast my Paper: podcast.md
+      - Home: features/index.md
+      - Basic Usage - Chat: features/chat.md
+      - Retrieval-Augmented Generation: features/rag.md
+      - Reflexion via LangGraph: features/reflexion-agent.md
+      - Open-source and Local LLMs: features/open-llm.md
+      - LLM in your Browser - WebAssembly: features/wasm.md
+      - The Living Benchmark: features/benchmark.md
+      - Podcast my Paper: features/podcast.md
   - Benchmark:
-      - Overview: benchmark.md
-      - All Results: benchmark-results.md
-      - Developer Guide: benchmark-developer.md
+      - Overview: benchmark/overview.md
+      - All Results: benchmark/results.md
+      - Developer Guide: benchmark/developer.md
   - Vignettes:
-      - Knowledge Graph RAG: vignette-kg.md
-      - Retrieval-Augmented Generation (RAG): vignette-rag.md
-      - Customising BioChatter Light - Simple: vignette-custom-bclight-simple.md
-      - Customising BioChatter Light - Advanced: vignette-custom-bclight-advanced.md
+      - Home: vignettes/index.md
+      - Knowledge Graph RAG: vignettes/kg.md
+      - Retrieval-Augmented Generation (RAG): vignettes/rag.md
+      - Customising BioChatter Light - Simple: vignettes/custom-bclight-simple.md
+      - Customising BioChatter Light - Advanced: vignettes/custom-bclight-advanced.md
   - API Reference:
-      - LLM Connectivity: llm_connect-reference.md
-      - Vectorstore Agent: vectorstore-reference.md
-      - Knowledge Graph Agent: kg-reference.md
-      - API Agent: api-reference.md
-      - Reflexion Agent: reflexion-reference.md
-      - Podcast: podcast-reference.md
+      - Home: api-docs/index.md
+      - LLM Connectivity: api-docs/llm_connect.md
+      - Vectorstore Agent: api-docs/vectorstore.md
+      - Knowledge Graph Agent: api-docs/kg.md
+      - API Agent: api-docs/api-calling.md
+      - Reflexion Agent: api-docs/reflexion.md
+      - Podcast: api-docs/podcast.md
 
 repo_url: https://github.com/biocypher/biochatter
 repo_name: biocypher/biochatter

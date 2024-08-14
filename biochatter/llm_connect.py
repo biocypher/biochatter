@@ -11,7 +11,7 @@ except ImportError:
     st = None
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, Tuple
 import json
 import base64
 import logging
@@ -333,7 +333,8 @@ class Conversation(ABC):
             agent for agent in self.rag_agents if agent.use_prompt
         ]
         decider_agent = RagAgentSelector(
-            rag_agents=rag_agents, conversation_factory=lambda: self,
+            rag_agents=rag_agents,
+            conversation_factory=lambda: self,
         )
         result = decider_agent.execute(text)
         if result.tool_result is not None and len(result.tool_result) > 0:
@@ -415,7 +416,7 @@ class Conversation(ABC):
             )
         return last_context
 
-    def get_msg_json(self):
+    def get_msg_json(self) -> str:
         """
         Return a JSON representation (of a list of dicts) of the messages in
         the conversation. The keys of the dicts are the roles, the values are
@@ -476,16 +477,13 @@ class WasmConversation(Conversation):
             split_correction=split_correction,
         )
 
-    def query(self, text: str):
+    def query(self, text: str) -> Tuple:
         """
         Return the entire message history as a single string. This is the
         message that is sent to the wasm model.
 
         Args:
             text (str): The user query.
-
-            collection_name (str): The name of the collection to use for
-                retrieval-augmented generation.
 
         Returns:
             tuple: A tuple containing the message history as a single string,
@@ -835,7 +833,7 @@ class XinferenceConversation(Conversation):
         """
         pass
 
-    def set_api_key(self):
+    def set_api_key(self) -> bool:
         """
         Try to get the Xinference model from the client API. If the model is
         found, initialise the conversational agent. If the model is not found,
@@ -1122,7 +1120,7 @@ class GptConversation(Conversation):
         self.ca_model_name = "gpt-3.5-turbo"
         # TODO make accessible by drop-down
 
-    def set_api_key(self, api_key: str, user: str):
+    def set_api_key(self, api_key: str, user: str) -> bool:
         """
         Set the API key for the OpenAI API. If the key is valid, initialise the
         conversational agent. Set the user for usage statistics.
@@ -1294,7 +1292,7 @@ class AzureGptConversation(GptConversation):
         self.base_url = base_url
         self.deployment_name = deployment_name
 
-    def set_api_key(self, api_key: str, user: Optional[str] = None):
+    def set_api_key(self, api_key: str, user: Optional[str] = None) -> bool:
         """
         Set the API key for the Azure API. If the key is valid, initialise the
         conversational agent. No user stats on Azure.

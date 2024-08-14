@@ -1,3 +1,4 @@
+import math
 import os
 import re
 
@@ -33,6 +34,9 @@ def on_pre_build(config, **kwargs) -> None:
 
     overview = create_overview_table(result_files_path, result_file_names)
 
+    plot_text2cypher()
+    plot_image_caption_confidence()
+    plot_medical_exam()
     plot_accuracy_per_model(overview)
     plot_accuracy_per_quantisation(overview)
     plot_accuracy_per_task(overview)
@@ -42,6 +46,159 @@ def on_pre_build(config, **kwargs) -> None:
     plot_extraction_tasks()
     plot_comparison_naive_biochatter(overview)
     calculate_stats(overview)
+
+
+def plot_text2cypher():
+    """
+
+    Get entity_selection, relationship_selection, property_selection,
+    property_exists, query_generation, and end_to_end_query_generation results
+    files, combine and preprocess them and plot the accuracy for each model as a
+    boxplot.
+
+    """
+    entity_selection = pd.read_csv("benchmark/results/entity_selection.csv")
+    entity_selection["task"] = "entity_selection"
+    relationship_selection = pd.read_csv(
+        "benchmark/results/relationship_selection.csv"
+    )
+    relationship_selection["task"] = "relationship_selection"
+    property_selection = pd.read_csv("benchmark/results/property_selection.csv")
+    property_selection["task"] = "property_selection"
+    property_exists = pd.read_csv("benchmark/results/property_exists.csv")
+    property_exists["task"] = "property_exists"
+    query_generation = pd.read_csv("benchmark/results/query_generation.csv")
+    query_generation["task"] = "query_generation"
+    end_to_end_query_generation = pd.read_csv(
+        "benchmark/results/end_to_end_query_generation.csv"
+    )
+    end_to_end_query_generation["task"] = "end_to_end_query_generation"
+
+    # combine all results
+    results = pd.concat(
+        [
+            entity_selection,
+            relationship_selection,
+            property_selection,
+            property_exists,
+            query_generation,
+            end_to_end_query_generation,
+        ]
+    )
+
+    # calculate accuracy
+    results["score_possible"] = results["score"].apply(
+        lambda x: float(x.split("/")[1])
+    )
+    results["scores"] = results["score"].apply(lambda x: x.split("/")[0])
+    results["score_achieved"] = results["scores"].apply(
+        lambda x: (
+            np.mean([float(score) for score in x.split(";")])
+            if ";" in x
+            else float(x)
+        )
+    )
+    results["accuracy"] = results["score_achieved"] / results["score_possible"]
+    results["score_sd"] = results["scores"].apply(
+        lambda x: (
+            np.std([float(score) for score in x.split(";")], ddof=1)
+            if ";" in x
+            else 0
+        )
+    )
+
+    results["model"] = results["model_name"].apply(lambda x: x.split(":")[0])
+    # create labels: openhermes, llama-3, gpt, based on model name, for all
+    # other models, use "other open source"
+    results["model_family"] = results["model"].apply(
+        lambda x: (
+            "openhermes"
+            if "openhermes" in x
+            else (
+                "llama-3"
+                if "llama-3" in x
+                else "gpt" if "gpt" in x else "other open source"
+            )
+        )
+    )
+
+    # order task by median accuracy ascending
+    task_order = (
+        results.groupby("task")["accuracy"].median().sort_values().index
+    )
+
+    # order model_family by median accuracy ascending within each task
+    results["model_family"] = results["model_family"].astype(
+        pd.CategoricalDtype(
+            categories=["other open source", "llama-3", "openhermes", "gpt"],
+            ordered=True,
+        )
+    )
+
+    # plot results per task
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(6, 4))
+    plt.xticks(rotation=45, ha="right")
+    sns.boxplot(
+        x="task",
+        y="accuracy",
+        hue="model_family",
+        data=results,
+        order=task_order,
+    )
+    plt.legend(bbox_to_anchor=(1, 1), loc="upper left")
+    plt.savefig(
+        "docs/images/boxplot-text2cypher.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+
+
+def plot_image_caption_confidence():
+    """
+    Get multimodal_answer_confidence.csv file, preprocess it and plot the
+    confidence scores for correct and incorrect answers as histograms. Correct
+    answer confidence values are in the correct_confidence column and incorrect
+    answer confidence values are in the incorrect_confidence column; both
+    columns contain individual confidence values (integers between 1 and 10)
+    separated by semicolons.
+    """
+    results = pd.read_csv("benchmark/results/multimodal_answer_confidence.csv")
+    correct_values = results["correct_confidence"].to_list()
+    incorrect_values = results["incorrect_confidence"].to_list()
+    # flatten lists of confidence values
+    correct_values = [
+        int(value) for sublist in correct_values for value in sublist.split(";")
+    ]
+    for value in list(incorrect_values):
+        if math.isnan(value):
+            incorrect_values.remove(value)
+        if isinstance(value, float):
+            continue
+        if ";" in value:
+            incorrect_values.remove(value)
+            incorrect_values.extend([int(val) for val in value.split(";")])
+
+    incorrect_values = [int(value) for value in incorrect_values]
+
+    # plot histograms of both correct and incorrect confidence values with
+    # transparency, correct green, incorrect red
+    plt.figure(figsize=(6, 4))
+    plt.hist(
+        [correct_values, incorrect_values],
+        bins=range(1, 12),
+        color=["green", "red"],
+        label=["Correct", "Incorrect"],
+    )
+    plt.xlabel("Confidence")
+    plt.ylabel("Count")
+    plt.xticks(range(1, 11))
+    plt.legend()
+    plt.savefig(
+        "docs/images/histogram-image-caption-confidence.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
 
 
 def preprocess_results_for_frontend(
@@ -102,9 +259,9 @@ def preprocess_results_for_frontend(
         axis=1,
     )
 
-    aggregated_scores[
-        "Full model name"
-    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
     aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
     aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
     aggregated_scores["Score SD"] = aggregated_scores["score_sd"]
@@ -174,9 +331,9 @@ def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
         axis=1,
     )
 
-    aggregated_scores[
-        "Full model name"
-    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
         "subtask"
     )
@@ -233,9 +390,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     )
 
     overview_per_quantisation = overview
-    overview_per_quantisation[
-        "Full model name"
-    ] = overview_per_quantisation.index
+    overview_per_quantisation["Full model name"] = (
+        overview_per_quantisation.index
+    )
     overview_per_quantisation[
         ["Model name", "Size", "Version", "Quantisation"]
     ] = overview_per_quantisation["Full model name"].str.split(":", expand=True)
@@ -267,9 +424,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         ]
     ]
     # round mean and sd to 2 decimal places
-    overview_per_quantisation.loc[
-        :, "Median Accuracy"
-    ] = overview_per_quantisation["Median Accuracy"].round(2)
+    overview_per_quantisation.loc[:, "Median Accuracy"] = (
+        overview_per_quantisation["Median Accuracy"].round(2)
+    )
     overview_per_quantisation.loc[:, "SD"] = overview_per_quantisation[
         "SD"
     ].round(2)
@@ -714,9 +871,9 @@ def plot_extraction_tasks():
         axis=1,
     )
 
-    aggregated_scores[
-        "Full model name"
-    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
         "subtask"
     )
@@ -751,6 +908,169 @@ def plot_extraction_tasks():
     plt.legend(bbox_to_anchor=(1, 1), loc="upper left")
     plt.savefig(
         "docs/images/stripplot-extraction-tasks.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+
+
+def plot_medical_exam():
+    """
+    Load raw result for medical_exam; aggregate based on the language and
+    calculate mean accuracy for each model. Plot a stripplot of the mean
+    accuracy across models, coloured by language.
+    """
+    medical_exam = pd.read_csv("benchmark/results/medical_exam.csv")
+
+    medical_exam["score_possible"] = medical_exam["score"].apply(
+        lambda x: float(x.split("/")[1])
+    )
+    medical_exam["scores"] = medical_exam["score"].apply(
+        lambda x: x.split("/")[0]
+    )
+    medical_exam["score_achieved"] = medical_exam["scores"].apply(
+        lambda x: (
+            np.mean([float(score) for score in x.split(";")])
+            if ";" in x
+            else float(x)
+        )
+    )
+    medical_exam["accuracy"] = (
+        medical_exam["score_achieved"] / medical_exam["score_possible"]
+    )
+    medical_exam["score_sd"] = medical_exam["scores"].apply(
+        lambda x: (
+            np.std([float(score) for score in x.split(";")], ddof=1)
+            if ";" in x
+            else 0
+        )
+    )
+    medical_exam["task"] = medical_exam["subtask"].apply(
+        lambda x: x.split(":")[0]
+    )
+    medical_exam["domain"] = medical_exam["subtask"].apply(
+        lambda x: x.split(":")[1]
+    )
+    medical_exam["language"] = medical_exam["subtask"].apply(
+        lambda x: x.split(":")[2]
+    )
+
+    # processing: remove "short_words" task, not informative
+    medical_exam = medical_exam[medical_exam["task"] != "short_words"]
+
+    # plot language comparison
+    aggregated_scores_language = medical_exam.groupby(
+        ["model_name", "language"]
+    ).agg(
+        {
+            "accuracy": "mean",
+            "score_sd": "mean",
+        }
+    )
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(6, 4))
+    sns.boxplot(
+        x="language",
+        y="accuracy",
+        data=aggregated_scores_language,
+    )
+
+    plt.savefig(
+        "docs/images/boxplot-medical-exam-language.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+
+    # plot language comparison per domain
+    aggregated_scores_language_domain = medical_exam.groupby(
+        ["model_name", "language", "domain"]
+    ).agg(
+        {
+            "accuracy": "mean",
+            "score_sd": "mean",
+        }
+    )
+    # calculate mean accuracy per language and domain
+    mean_accuracy = aggregated_scores_language_domain.groupby(
+        ["language", "domain"]
+    )["accuracy"].mean()
+    # sort domains by mean accuracy
+    sorted_domains = mean_accuracy.sort_values(
+        ascending=False
+    ).index.get_level_values("domain")
+
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(6, 4))
+    plt.xticks(rotation=45, ha="right")
+    sns.boxplot(
+        x="domain",
+        y="accuracy",
+        hue="language",
+        data=aggregated_scores_language_domain,
+        order=sorted_domains,
+    )
+
+    plt.savefig(
+        "docs/images/boxplot-medical-exam-language-domain.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+
+    # plot task comparison
+    aggregated_scores_task = medical_exam.groupby(["model_name", "task"]).agg(
+        {
+            "accuracy": "mean",
+            "score_sd": "mean",
+        }
+    )
+    # calculate mean accuracy per task
+    mean_accuracy = aggregated_scores_task.groupby("task")["accuracy"].mean()
+    # sort tasks by mean accuracy
+    sorted_tasks = mean_accuracy.sort_values(ascending=False).index
+
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(6, 4))
+    plt.xticks(rotation=45, ha="right")
+    sns.boxplot(
+        x="task",
+        y="accuracy",
+        data=aggregated_scores_task,
+        order=sorted_tasks,
+    )
+
+    plt.savefig(
+        "docs/images/boxplot-medical-exam-task.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+
+    # plot domain comparison
+    aggregated_scores_domain = medical_exam.groupby(
+        ["model_name", "domain"]
+    ).agg(
+        {
+            "accuracy": "mean",
+            "score_sd": "mean",
+        }
+    )
+    # calculate mean accuracy per domain
+    mean_accuracy = aggregated_scores_domain.groupby("domain")[
+        "accuracy"
+    ].mean()
+    # sort domains by mean accuracy
+    sorted_domains = mean_accuracy.sort_values(ascending=False).index
+
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(6, 4))
+    plt.xticks(rotation=45, ha="right")
+    sns.boxplot(
+        x="domain",
+        y="accuracy",
+        data=aggregated_scores_domain,
+        order=sorted_domains,
+    )
+
+    plt.savefig(
+        "docs/images/boxplot-medical-exam-domain.png",
         bbox_inches="tight",
         dpi=300,
     )
