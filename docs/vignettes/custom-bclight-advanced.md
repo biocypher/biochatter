@@ -22,8 +22,8 @@ and transparent) and simple interfaces (driven by conversational AI). We will be
 using BioCypher and BioChatter for these two components.
 
 We will use a GitHub Project board
-([here](https://github.com/orgs/biocypher/projects/6/views/1)) as the "ground
-truth" for our project management tool. This is close to a real-world scenario
+([here](https://github.com/orgs/biocypher/projects/6/views/1)) as the data
+source for our project management tool. This is close to a real-world scenario
 and allows connectivity to code repositories, issues, pull requests, and other
 components of computational collaboration. The linked project is "synthetic"
 data for demonstration purposes. The repository to build the KG and deploy the
