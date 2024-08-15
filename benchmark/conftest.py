@@ -8,34 +8,123 @@ import numpy as np
 import pandas as pd
 
 from biochatter.prompts import BioCypherPromptEngine
-from biochatter.llm_connect import GptConversation, XinferenceConversation
+from biochatter.llm_connect import (
+    AnthropicConversation,
+    GptConversation,
+    XinferenceConversation,
+)
 from .load_dataset import get_benchmark_dataset
 from .benchmark_utils import benchmark_already_executed
 
 # how often should each benchmark be run?
-N_ITERATIONS = 5
+N_ITERATIONS = 3
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
 
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
-    "gpt-3.5-turbo-0125",
-    "gpt-4-0613",
-    "gpt-4-0125-preview",
-    "gpt-4-turbo-2024-04-09",
-    "gpt-4o-2024-05-13",
-    "gpt-4o-mini-2024-07-18",
+    # "gpt-3.5-turbo-0125",
+    # "gpt-4-0613",
+    # "gpt-4-0125-preview",
+    # "gpt-4-turbo-2024-04-09",
+    # "gpt-4o-2024-05-13",
+    # "gpt-4o-mini-2024-07-18",
+]
+
+ANTHROPIC_MODEL_NAMES = [
+    # "claude-3-5-sonnet-20240620",
+    # "claude-3-opus-20240229",  # does not make a lot of sense to use, as more expensive and "less intelligent" (according to anthropic)
 ]
 
 XINFERENCE_MODELS = {
-    # "chatglm3": {
+    # "code-llama-instruct": {
     #     "model_size_in_billions": [
-    #         6,
+    #         7,
+    #         13,
+    #         34,
     #     ],
-    #     "model_format": "ggmlv3",
+    #     "model_format": "ggufv2",
     #     "quantization": [
-    #         "q4_0",
+    #         "Q2_K",
+    #         # "Q3_K_L",
+    #         "Q3_K_M",
+    #         # "Q3_K_S",
+    #         # "Q4_0",
+    #         "Q4_K_M",
+    #         # "Q4_K_S",
+    #         # "Q5_0",
+    #         "Q5_K_M",
+    #         # "Q5_K_S",
+    #         "Q6_K",
+    #         "Q8_0",
+    #     ],
+    # },
+    # "c4ai-command-r-v01": {
+    #     "model_size_in_billions": [
+    #         35,
+    #         # 104,  # this model has no quantisations
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         # "Q2_K",  # Xinference reports out of memory (makes no sense); apparently the current implementation requires too much memory somehow (the model is only 20GB)
+    #         # "Q3_K_L",
+    #         # "Q3_K_M",
+    #         # "Q3_K_S",
+    #         # "Q4_0",
+    #         "Q4_K_M",
+    #         # "Q4_K_S",
+    #         # "Q5_0",
+    #         # "Q5_K_M",
+    #         # "Q5_K_S",
+    #         # "Q6_K",
+    #         # "Q8_0",
+    #     ],
+    # },
+    # "custom-llama-3-instruct": {
+    #     "model_size_in_billions": [
+    #         70,
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         "IQ1_M",
+    #     ],
+    # },
+    # "gemma-it": {
+    #     "model_size_in_billions": [
+    #         2,
+    #         7,
+    #     ],
+    #     "model_format": "pytorch",
+    #     "quantization": [
+    #         "none",
+    #         "4-bit",
+    #         "8-bit",
+    #     ],
+    # },
+    # "glm4-chat": {
+    #     "model_size_in_billions": [
+    #         9,
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         # "Q2_K",
+    #         # "IQ3_XS",
+    #         # "IQ3_S",
+    #         # "IQ3_M",
+    #         # "Q3_K_S",
+    #         # "Q3_K_L",
+    #         # "Q3_K",
+    #         "IQ4_XS",
+    #         # "IQ4_NL",
+    #         # "Q4_K_S",
+    #         # "Q4_K",
+    #         # "Q5_K_S",
+    #         # "Q5_K",
+    #         # "Q6_K",
+    #         # "Q8_0",
+    #         # "BF16",
+    #         # "FP16",
     #     ],
     # },
     # "llama-2-chat": {
@@ -79,62 +168,29 @@ XINFERENCE_MODELS = {
     #         # "Q4_K_M",
     #     ],
     # },
-    # "code-llama-instruct": {
+    # "llama-3.1-instruct": {
     #     "model_size_in_billions": [
-    #         7,
-    #         13,
-    #         34,
+    #         8,
+    #         # 70,
     #     ],
     #     "model_format": "ggufv2",
     #     "quantization": [
-    #         "Q2_K",
+    #         # 8B model quantisations
     #         # "Q3_K_L",
-    #         "Q3_K_M",
+    #         "IQ4_XS",
+    #         # "Q4_K_M",
+    #         # "Q5_K_M",
+    #         # "Q6_K",
+    #         # "Q8_0",
+    #         # 70B model quantisations
+    #         # "IQ2_M",
+    #         # "Q2_K",
     #         # "Q3_K_S",
-    #         # "Q4_0",
-    #         "Q4_K_M",
-    #         # "Q4_K_S",
-    #         # "Q5_0",
-    #         "Q5_K_M",
-    #         # "Q5_K_S",
-    #         "Q6_K",
-    #         "Q8_0",
-    #     ],
-    # },
-    # "mixtral-instruct-v0.1": {
-    #     "model_size_in_billions": [
-    #         "46_7",
-    #     ],
-    #     "model_format": "ggufv2",
-    #     "quantization": [
-    #         "Q2_K",
-    #         # "Q3_K_M",
-    #         # "Q4_0",
-    #         "Q4_K_M",
-    #         # "Q5_0",
-    #         "Q5_K_M",
-    #         "Q6_K",
-    #         "Q8_0",
-    #     ],
-    # },
-    # "openhermes-2.5": {
-    #     "model_size_in_billions": [
-    #         7,
-    #     ],
-    #     "model_format": "ggufv2",
-    #     "quantization": [
-    #         "Q2_K",
-    #         # "Q3_K_S",
-    #         "Q3_K_M",
-    #         # "Q3_K_L",
-    #         # "Q4_0",
-    #         # "Q4_K_S",
-    #         "Q4_K_M",
-    #         # "Q5_0",
-    #         # "Q5_K_S",
-    #         "Q5_K_M",
-    #         "Q6_K",
-    #         "Q8_0",
+    #         # "IQ4_XS",
+    #         # "Q4_K_M",  # crazy slow on mbp m3 max
+    #         # "Q5_K_M",
+    #         # "Q6_K",
+    #         # "Q8_0",
     #     ],
     # },
     # "mistral-instruct-v0.2": {
@@ -157,25 +213,20 @@ XINFERENCE_MODELS = {
     #         "Q8_0",
     #     ],
     # },
-    # "gemma-it": {
+    # "mixtral-instruct-v0.1": {
     #     "model_size_in_billions": [
-    #         2,
-    #         7,
-    #     ],
-    #     "model_format": "pytorch",
-    #     "quantization": [
-    #         "none",
-    #         "4-bit",
-    #         "8-bit",
-    #     ],
-    # },
-    # "custom-llama-3-instruct": {
-    #     "model_size_in_billions": [
-    #         70,
+    #         "46_7",
     #     ],
     #     "model_format": "ggufv2",
     #     "quantization": [
-    #         "IQ1_M",
+    #         "Q2_K",
+    #         # "Q3_K_M",
+    #         # "Q4_0",
+    #         "Q4_K_M",
+    #         # "Q5_0",
+    #         "Q5_K_M",
+    #         "Q6_K",
+    #         "Q8_0",
     #     ],
     # },
     # "openbiollm-llama3-8b": {
@@ -185,6 +236,26 @@ XINFERENCE_MODELS = {
     #     "model_format": "pytorch",
     #     "quantization": [
     #         "none",
+    #     ],
+    # },
+    # "openhermes-2.5": {
+    #     "model_size_in_billions": [
+    #         7,
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         "Q2_K",
+    #         # "Q3_K_S",
+    #         "Q3_K_M",
+    #         # "Q3_K_L",
+    #         # "Q4_0",
+    #         # "Q4_K_S",
+    #         "Q4_K_M",
+    #         # "Q5_0",
+    #         # "Q5_K_S",
+    #         "Q5_K_M",
+    #         "Q6_K",
+    #         "Q8_0",
     #     ],
     # },
 }
@@ -199,7 +270,9 @@ XINFERENCE_MODEL_NAMES = [
     for quantization in XINFERENCE_MODELS[model_name]["quantization"]
 ]
 
-BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + XINFERENCE_MODEL_NAMES
+BENCHMARKED_MODELS = (
+    OPENAI_MODEL_NAMES + ANTHROPIC_MODEL_NAMES + XINFERENCE_MODEL_NAMES
+)
 BENCHMARKED_MODELS.sort()
 
 # Xinference IP and port
@@ -283,21 +356,6 @@ def calculate_bool_vector_score(vector: list[bool]) -> tuple[int, int]:
 
 
 @pytest.fixture
-def prompt_engine(request, model_name):
-    """
-    Generates a constructor for the prompt engine for the current model name.
-    """
-
-    def setup_prompt_engine(kg_schema_dict):
-        return BioCypherPromptEngine(
-            schema_config_or_info_dict=kg_schema_dict,
-            model_name=model_name,
-        )
-
-    return setup_prompt_engine
-
-
-@pytest.fixture
 def conversation(request, model_name, client):
     """
     Decides whether to run the test or skip due to the test having been run
@@ -321,6 +379,17 @@ def conversation(request, model_name, client):
         conversation.set_api_key(
             os.getenv("OPENAI_API_KEY"), user="benchmark_user"
         )
+
+    elif model_name in ANTHROPIC_MODEL_NAMES:
+        conversation = AnthropicConversation(
+            model_name=model_name,
+            prompts={},
+            correct=False,
+        )
+        conversation.set_api_key(
+            os.getenv("ANTHROPIC_API_KEY"), user="benchmark_user"
+        )
+
     elif model_name in XINFERENCE_MODEL_NAMES:
         (
             _model_name,
@@ -376,6 +445,25 @@ def conversation(request, model_name, client):
         )
 
     return conversation
+
+
+@pytest.fixture
+def prompt_engine(request, model_name, conversation):
+    """
+    Generates a constructor for the prompt engine for the current model name.
+    """
+
+    def conversation_factory():
+        return conversation
+
+    def setup_prompt_engine(kg_schema_dict):
+        return BioCypherPromptEngine(
+            schema_config_or_info_dict=kg_schema_dict,
+            model_name=model_name,
+            conversation_factory=conversation_factory,
+        )
+
+    return setup_prompt_engine
 
 
 @pytest.fixture
