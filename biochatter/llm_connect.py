@@ -77,7 +77,7 @@ class Conversation(ABC):
         self,
         model_name: str,
         prompts: dict,
-        correct: bool = True,
+        correct: bool = False,
         split_correction: bool = False,
         use_ragagent_selector: bool = False,
     ):
@@ -458,7 +458,7 @@ class WasmConversation(Conversation):
         self,
         model_name: str,
         prompts: dict,
-        correct: bool = True,
+        correct: bool = False,
         split_correction: bool = False,
     ):
         """
@@ -523,7 +523,7 @@ class XinferenceConversation(Conversation):
         base_url: str,
         prompts: dict,
         model_name: str = "auto",
-        correct: bool = True,
+        correct: bool = False,
         split_correction: bool = False,
     ):
         """
@@ -891,7 +891,7 @@ class OllamaConversation(Conversation):
         base_url: str,
         prompts: dict,
         model_name: str = "llama3",
-        correct: bool = True,
+        correct: bool = False,
         split_correction: bool = False,
     ):
         """
@@ -1095,7 +1095,7 @@ class AnthropicConversation(Conversation):
         self,
         model_name: str,
         prompts: dict,
-        correct: bool = True,
+        correct: bool = False,
         split_correction: bool = False,
     ):
         """
@@ -1317,7 +1317,7 @@ class GptConversation(Conversation):
         self,
         model_name: str,
         prompts: dict,
-        correct: bool = True,
+        correct: bool = False,
         split_correction: bool = False,
     ):
         """
@@ -1478,7 +1478,7 @@ class AzureGptConversation(GptConversation):
         deployment_name: str,
         model_name: str,
         prompts: dict,
-        correct: bool = True,
+        correct: bool = False,
         split_correction: bool = False,
         version: Optional[str] = None,
         base_url: Optional[str] = None,
