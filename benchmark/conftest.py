@@ -34,7 +34,7 @@ OPENAI_MODEL_NAMES = [
 
 ANTHROPIC_MODEL_NAMES = [
     # "claude-3-5-sonnet-20240620",
-    # "claude-3-opus-20240229",  # does not make a lot of sense to use, as more expensive and "less intelligent" (according to anthropic)
+    "claude-3-opus-20240229",  # does not make a lot of sense to use, as more expensive and "less intelligent" (according to anthropic)
 ]
 
 XINFERENCE_MODELS = {
@@ -168,31 +168,31 @@ XINFERENCE_MODELS = {
     #         # "Q4_K_M",
     #     ],
     # },
-    "llama-3.1-instruct": {
-        "model_size_in_billions": [
-            # 8,
-            70,
-        ],
-        "model_format": "ggufv2",
-        "quantization": [
-            # 8B model quantisations
-            # "Q3_K_L",
-            # "IQ4_XS",
-            # "Q4_K_M",
-            # "Q5_K_M",
-            # "Q6_K",
-            # "Q8_0",
-            # 70B model quantisations
-            # "IQ2_M",
-            # "Q2_K",
-            # "Q3_K_S",
-            # "IQ4_XS",
-            "Q4_K_M",
-            # "Q5_K_M",
-            # "Q6_K",
-            "Q8_0",
-        ],
-    },
+    # "llama-3.1-instruct": {
+    #     "model_size_in_billions": [
+    #         8,
+    #         # 70,
+    #     ],
+    #     "model_format": "ggufv2",
+    #     "quantization": [
+    #         # 8B model quantisations
+    #         # "Q3_K_L",
+    #         "IQ4_XS",
+    #         # "Q4_K_M",
+    #         # "Q5_K_M",
+    #         # "Q6_K",
+    #         # "Q8_0",
+    #         # 70B model quantisations
+    #         # "IQ2_M",
+    #         # "Q2_K",
+    #         # "Q3_K_S",
+    #         # "IQ4_XS",
+    #         # "Q4_K_M",  # crazy slow on mbp m3 max
+    #         # "Q5_K_M",
+    #         # "Q6_K",
+    #         # "Q8_0",
+    #     ],
+    # },
     # "mistral-instruct-v0.2": {
     #     "model_size_in_billions": [
     #         7,

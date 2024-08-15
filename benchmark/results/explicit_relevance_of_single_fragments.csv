@@ -11,6 +11,12 @@ claude-3-5-sonnet-20240620,explicit_relevance_no:more_explicit,1;1;1/1,3,4e339a2
 claude-3-5-sonnet-20240620,explicit_relevance_no:repeat_instruction,1;1;1/1,3,06ef683cbe870dedc3a8eb8b685d17ef,2024-08-13 18:04:05,0.6.3
 claude-3-5-sonnet-20240620,explicit_relevance_no:simple,1;1;1/1,3,3e9b2999942707e4a353efe70d40467a,2024-08-13 18:03:59,0.6.3
 claude-3-5-sonnet-20240620,explicit_relevance_yes,1;1;1/1,3,1f7a20371c9b65790b9b8e8be116b246,2024-08-13 18:04:09,0.6.3
+claude-3-opus-20240229,explicit_evaluation_no,1;1;1/1,3,d15e0094569f8df146459b50a781fc55,2024-08-15 14:45:58,0.6.3
+claude-3-opus-20240229,explicit_evaluation_yes,1;1;1/1,3,1773602eac8037fbea015069d5f15cd2,2024-08-15 14:46:02,0.6.3
+claude-3-opus-20240229,explicit_relevance_no:more_explicit,1;1;1/1,3,4e339a2cacca377559effd6decd33e53,2024-08-15 14:45:43,0.6.3
+claude-3-opus-20240229,explicit_relevance_no:repeat_instruction,1;1;1/1,3,06ef683cbe870dedc3a8eb8b685d17ef,2024-08-15 14:45:48,0.6.3
+claude-3-opus-20240229,explicit_relevance_no:simple,0;0;0/1,3,3e9b2999942707e4a353efe70d40467a,2024-08-15 14:45:38,0.6.3
+claude-3-opus-20240229,explicit_relevance_yes,1;1;1/1,3,1f7a20371c9b65790b9b8e8be116b246,2024-08-15 14:45:53,0.6.3
 code-llama-instruct:13:ggufv2:Q2_K,explicit_evaluation_no,0.2/1,5,d15e0094569f8df146459b50a781fc55,2024-02-10 00:02:51,0.4.10
 code-llama-instruct:13:ggufv2:Q2_K,explicit_evaluation_yes,0.0/1,5,1773602eac8037fbea015069d5f15cd2,2024-02-10 00:03:00,0.4.10
 code-llama-instruct:13:ggufv2:Q2_K,explicit_relevance_no:more_explicit,0.0/1,5,4e339a2cacca377559effd6decd33e53,2024-02-10 00:05:16,0.4.10

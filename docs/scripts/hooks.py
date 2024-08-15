@@ -653,7 +653,8 @@ def plot_scatter_per_quantisation(overview):
     jitter_values = {
         "gpt-3": -0.2,
         "gpt-4": 0.2,
-        "claude-3-5-sonnet-20240620": 0.0,
+        "claude-3-opus-20240229": -0.05,
+        "claude-3-5-sonnet-20240620": 0.05,
     }
 
     for model, jitter in jitter_values.items():
@@ -669,6 +670,7 @@ def plot_scatter_per_quantisation(overview):
     model_names_order = [
         "chatglm3",
         "claude-3-5-sonnet-20240620",
+        "claude-3-opus-20240229",
         "code-llama-instruct",
         "gpt-3.5-turbo-0613",
         "gpt-3.5-turbo-0125",
