@@ -60,6 +60,20 @@ designate the `OPENAI_API_KEY` variable in your environment directly (`export
 OPENAI_API_KEY=sk-...`) by adding it to your shell configuration (e.g., the
 `zshrc`).
 
+## Using Anthropic models (Claude)
+
+Similarly, to use an Anthropic model, you need a billable account with Anthropic
+API access, and to set the `ANTHROPIC_API_KEY` variable in your environment.
+
+```python
+from biochatter.llm_connect import AnthropicConversation
+
+conversation = AnthropicConversation(
+    model_name="claude-3-5-sonnet-20240620",
+    prompts={},
+)
+```
+
 ## Multimodal models - Text and image
 
 We support multimodal queries in models that offer these capabilities after the
