@@ -34,7 +34,7 @@ OPENAI_MODEL_NAMES = [
 
 ANTHROPIC_MODEL_NAMES = [
     # "claude-3-5-sonnet-20240620",
-    "claude-3-opus-20240229",  # does not make a lot of sense to use, as more expensive and "less intelligent" (according to anthropic)
+    # "claude-3-opus-20240229",  # does not make a lot of sense to use, as more expensive and "less intelligent" (according to anthropic)
 ]
 
 XINFERENCE_MODELS = {
@@ -67,18 +67,18 @@ XINFERENCE_MODELS = {
     #     ],
     #     "model_format": "ggufv2",
     #     "quantization": [
-    #         "Q2_K",
+    #         # "Q2_K",  # Xinference reports out of memory (makes no sense); apparently the current implementation requires too much memory somehow (the model is only 20GB)
     #         # "Q3_K_L",
-    #         "Q3_K_M",
+    #         # "Q3_K_M",
     #         # "Q3_K_S",
     #         # "Q4_0",
     #         "Q4_K_M",
     #         # "Q4_K_S",
     #         # "Q5_0",
-    #         "Q5_K_M",
+    #         # "Q5_K_M",
     #         # "Q5_K_S",
-    #         "Q6_K",
-    #         "Q8_0",
+    #         # "Q6_K",
+    #         # "Q8_0",
     #     ],
     # },
     # "custom-llama-3-instruct": {
