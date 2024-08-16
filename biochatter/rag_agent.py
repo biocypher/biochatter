@@ -22,6 +22,7 @@ class RagAgent:
         embedding_func: Optional[object] = None,
         documentids_workspace: Optional[list[str]] = None,
         agent_desc: Optional[str] = None,
+        use_reflexion: Optional[bool]=False,
     ) -> None:
         ######
         ##TO DO
@@ -66,6 +67,8 @@ class RagAgent:
             agent_desc (str): A description of the agent. If not provided, the
                 agent will generate a description based on the mode.
 
+            use_reflexion (bool): Whether to use ReflexionAgent to generate 
+                query.
         """
         self.mode = mode
         self.model_name = model_name
@@ -91,6 +94,7 @@ class RagAgent:
                 connection_args=connection_args,
                 schema_config_or_info_dict=self.schema_config_or_info_dict,
                 conversation_factory=conversation_factory,
+                use_reflexion=use_reflexion,
             )
 
             self.agent.connect()

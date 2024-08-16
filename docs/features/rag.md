@@ -321,6 +321,7 @@ dbHost = VectorDatabaseAgentMilvus(
     embedding_collection_name=EMBEDDING_NAME,
     metadata_collection_name=METADATA_NAME
 )
+dbHost.connect()
 ```
 
 This establishes a connection with the vector database (using a host IP and

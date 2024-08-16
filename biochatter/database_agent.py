@@ -16,6 +16,7 @@ class DatabaseAgent:
         connection_args: dict,
         schema_config_or_info_dict: dict,
         conversation_factory: Callable,
+        use_reflexion: bool,
     ) -> None:
         """
         Create a DatabaseAgent analogous to the VectorDatabaseAgentMilvus class,
@@ -28,6 +29,9 @@ class DatabaseAgent:
 
             conversation_factory (Callable): A function to create a conversation
                 for creating the KG query.
+            
+            use_reflexion (bool): Whether to use ReflexionAgent to generate 
+                query.
         """
         self.conversation_factory = conversation_factory
         self.prompt_engine = BioCypherPromptEngine(
@@ -37,6 +41,7 @@ class DatabaseAgent:
         )
         self.connection_args = connection_args
         self.driver = None
+        self.use_reflexion = use_reflexion
 
     def connect(self) -> None:
         """
@@ -58,13 +63,21 @@ class DatabaseAgent:
         return not self.driver is None
 
     def _generate_query(self, query: str):
-        agent = KGQueryReflexionAgent(
-            self.conversation_factory,
-            self.connection_args,
-        )
-        query_prompt = self.prompt_engine.generate_query_prompt(query)
-        agent_result = agent.execute(query, query_prompt)
-        return agent_result.answer, agent_result.tool_result
+        if self.use_reflexion:
+            agent = KGQueryReflexionAgent(
+                self.conversation_factory,
+                self.connection_args,
+            )
+            query_prompt = self.prompt_engine.generate_query_prompt(query)
+            agent_result = agent.execute(query, query_prompt)
+            tool_result = [agent_result.tool_result] \
+                if agent_result.tool_result is not None \
+                else None
+            return agent_result.answer, tool_result
+        else:
+            query = self.prompt_engine.generate_query(query)
+            results = self.driver.query(query=query)
+            return query, results
 
     def get_query_results(self, query: str, k: int = 3) -> list[Document]:
         """
@@ -90,7 +103,7 @@ class DatabaseAgent:
         if tool_result is not None:
             # If _generate_query() already returned tool_result, we won't connect
             # to graph database to query result any more
-            results = [tool_result]
+            results = tool_result
         else:
             results = self.driver.query(query=cypher_query)
 
