@@ -291,7 +291,7 @@ def test_cypher_query_generation(prompt_engine):
             "'(:Disease)-(:PERTURBED)->(:Protein)', "
             "'(:Disease)-(:PERTURBED)->(:Gene)', generate a Cypher query using "
             "one of these combinations. Only return the query, without any "
-            "additional text."
+            "additional text, symbols or characters --- just query statement."
         )
         assert "MATCH" in query
         assert "RETURN" in query
@@ -357,7 +357,7 @@ def test_sql_query_generation(prompt_engine):
             "'(:Disease)-(:PERTURBED)->(:Protein)', "
             "'(:Disease)-(:PERTURBED)->(:Gene)', generate a SQL query using "
             "one of these combinations. Only return the query, without any "
-            "additional text."
+            "additional text, symbols or characters --- just query statement."
         )
         assert "SELECT" in query
         assert "Gene" in query
