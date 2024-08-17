@@ -1,4 +1,4 @@
-from typing import Tuple, Optional, Dict
+from typing import Tuple, Optional
 import uuid
 import random
 import logging
@@ -20,8 +20,8 @@ from .constants import MAX_AGENT_DESC_LENGTH
 
 logger = logging.getLogger(__name__)
 
-DOCUMENT_METADATA_COLLECTION_NAME = "DocumentMetadata"
-DOCUMENT_EMBEDDINGS_COLLECTION_NAME = "DocumentEmbeddings"
+DOCUMENT_METADATA_COLLECTION_NAME = "DocumentMetadata1"
+DOCUMENT_EMBEDDINGS_COLLECTION_NAME = "DocumentEmbeddings1"
 
 METADATA_VECTOR_DIM = 2
 METADATA_FIELDS = [
@@ -273,7 +273,7 @@ class VectorDatabaseAgentMilvus:
             using=self.alias,
         )
         self._col_metadata.load()
-        
+
     def _create_metadata_collection(self) -> None:
         """
         Create metadata collection.
@@ -631,7 +631,7 @@ class VectorDatabaseAgentMilvus:
             raise e
 
     def get_description(self, doc_ids: Optional[list[str]] = None):
-        def get_name(meta: Dict[str, str]):
+        def get_name(meta: dict[str, str]):
             name_col = ["title", "name", "subject", "source"]
             for col in name_col:
                 if meta[col] is not None and len(meta[col]) > 0:

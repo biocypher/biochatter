@@ -26,7 +26,7 @@ classDiagram
         +similarity_search()
         +get_description()
     }
-    
+
     class DatabaseAgent {
         -model_name
         -connection_args
@@ -35,14 +35,14 @@ classDiagram
         +connect()
         +get_query_results()
     }
-    
+
     class VectorDatabaseAgentMilvus {
         -embedding_func
         -connection_args
         +connect()
         +similarity_search()
     }
-    
+
     class APIAgent {
         -BlastFetcher
         -BlastInterpreter
@@ -50,7 +50,7 @@ classDiagram
         +connect()
         +get_query_results()
     }
-    
+
     RagAgent --> DatabaseAgent : uses when mode is 'kg'
     RagAgent --> VectorDatabaseAgentMilvus : uses when mode is 'vectorstore'
     RagAgent --> APIAgent : uses when mode is, e.g., 'api_blast'
@@ -321,6 +321,7 @@ dbHost = VectorDatabaseAgentMilvus(
     embedding_collection_name=EMBEDDING_NAME,
     metadata_collection_name=METADATA_NAME
 )
+dbHost.connect()
 ```
 
 This establishes a connection with the vector database (using a host IP and

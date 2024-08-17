@@ -212,7 +212,7 @@ def _get_private_key_from_env_variable() -> rsa.PrivateKey:
     return private_key
 
 
-def _get_encrypted_test_data() -> Dict[str, Dict[str, str]]:
+def _get_encrypted_test_data() -> Dict[str, dict[str, str]]:
     """Get encrypted test data.
     currently from manually copied file benchmark/encrypted_llm_test_data.json
     TODO: automatically load test dataset (from github releases)?
@@ -259,7 +259,7 @@ def _decrypt_data(
     return decrypted_test_data
 
 
-def _decrypt(payload: Dict[str, str], private_key: rsa.PrivateKey) -> str:
+def _decrypt(payload: dict[str, str], private_key: rsa.PrivateKey) -> str:
     """Decrypt a payload.
 
     Args:
