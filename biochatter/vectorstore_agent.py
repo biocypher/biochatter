@@ -20,8 +20,8 @@ from .constants import MAX_AGENT_DESC_LENGTH
 
 logger = logging.getLogger(__name__)
 
-DOCUMENT_METADATA_COLLECTION_NAME = "DocumentMetadata"
-DOCUMENT_EMBEDDINGS_COLLECTION_NAME = "DocumentEmbeddings"
+DOCUMENT_METADATA_COLLECTION_NAME = "DocumentMetadata1"
+DOCUMENT_EMBEDDINGS_COLLECTION_NAME = "DocumentEmbeddings1"
 
 METADATA_VECTOR_DIM = 2
 METADATA_FIELDS = [
