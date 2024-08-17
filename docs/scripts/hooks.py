@@ -37,13 +37,13 @@ def on_pre_build(config, **kwargs) -> None:
     plot_text2cypher()
     plot_image_caption_confidence()
     plot_medical_exam()
+    plot_extraction_tasks()
+    plot_scatter_per_quantisation(overview)
     plot_accuracy_per_model(overview)
     plot_accuracy_per_quantisation(overview)
     plot_accuracy_per_task(overview)
-    plot_scatter_per_quantisation(overview)
     plot_task_comparison(overview)
     plot_rag_tasks(overview)
-    plot_extraction_tasks()
     plot_comparison_naive_biochatter(overview)
     calculate_stats(overview)
 
@@ -409,7 +409,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     )
     overview_per_quantisation["Size"] = overview_per_quantisation.apply(
         lambda row: (
-            "Unknown" if "gpt-4" in row["Model name"] else row["Size"]
+            "Unknown"
+            if "gpt-4" in row["Model name"] or "claude" in row["Model name"]
+            else row["Size"]
         ),
         axis=1,
     )
@@ -474,7 +476,7 @@ def plot_accuracy_per_model(overview) -> None:
         "Strip plot across tasks, per Model, coloured by size (billions of parameters)"
     )
     plt.ylim(-0.1, 1.1)
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=45, ha="right")
     plt.legend(bbox_to_anchor=(0, 0), loc="lower left")
     plt.savefig(
         "docs/images/stripplot-per-model.png",
@@ -604,7 +606,7 @@ def plot_scatter_per_quantisation(overview):
     overview_melted = overview_melted.drop_duplicates()
 
     sns.set_theme(style="whitegrid")
-    plt.figure(figsize=(6, 4))
+    plt.figure(figsize=(12, 8))
     # order x axis quantisation values numerically
     overview_melted["Quantisation"] = pd.Categorical(
         overview_melted["Quantisation"],
@@ -638,17 +640,21 @@ def plot_scatter_per_quantisation(overview):
     # Add jitter to x-coordinates
     x = pd.Categorical(overview_melted["Quantisation"]).codes.astype(float)
 
-    # Create a mask for 'openhermes' and 'gpt' models
+    # Create a mask for 'openhermes' and closed models
     mask_openhermes = overview_melted["Model name"] == "openhermes-2.5"
-    mask_gpt = overview_melted["Model name"].str.contains("gpt")
+    mask_closed = overview_melted["Model name"].str.contains(
+        "gpt|claude", case=False, regex=True
+    )
 
     # Do not add jitter for 'openhermes' model
     x[mask_openhermes] += 0
 
-    # Manually enter jitter values for 'gpt' models
+    # Manually enter jitter values for closed models
     jitter_values = {
         "gpt-3": -0.2,
         "gpt-4": 0.2,
+        "claude-3-opus-20240229": -0.05,
+        "claude-3-5-sonnet-20240620": 0.05,
     }
 
     for model, jitter in jitter_values.items():
@@ -656,60 +662,33 @@ def plot_scatter_per_quantisation(overview):
         x[mask_model] += jitter
 
     # For other models, add the original jitter
-    x[~mask_openhermes & ~mask_gpt] += np.random.normal(
-        0, 0.1, size=len(x[~mask_openhermes & ~mask_gpt])
+    x[~mask_openhermes & ~mask_closed] += np.random.normal(
+        0, 0.1, size=len(x[~mask_openhermes & ~mask_closed])
     )
 
-    # Create a ColorBrewer palette
-    palette = sns.color_palette(cc.glasbey, n_colors=14)
-
-    # Define a dictionary mapping model names to colors
-    color_dict = {
-        "gpt-3.5-turbo-0613": palette[0],
-        "gpt-3.5-turbo-0125": palette[1],
-        "gpt-4-0613": palette[2],
-        "gpt-4-0125-preview": palette[3],
-        "gpt-4-turbo-2024-04-09": palette[4],
-        "gpt-4o-2024-05-13": palette[5],
-        "gpt-4o-mini-2024-07-18": palette[6],
-        "openhermes-2.5": palette[7],
-        "llama-2-chat": palette[8],
-        "llama-3-instruct": palette[9],
-        "mixtral-instruct-v0.1": palette[10],
-        "mistral-instruct-v0.2": palette[11],
-        "chatglm3": palette[12],
-        "code-llama-instruct": palette[13],
-    }
-
-    # Use the dictionary as the palette argument in sns.scatterplot
-    ax = sns.scatterplot(
-        x=x,
-        y="Mean Accuracy",
-        hue="Model name",
-        size="Size",
-        sizes=(10, 300),
-        data=overview_melted,
-        palette=color_dict,  # Use the color dictionary here
-        alpha=0.5,
-    )
-
+    # Define the order of model names
     model_names_order = [
-        "Model name",
-        "gpt-3.5-turbo-0125",
+        "chatglm3",
+        "claude-3-5-sonnet-20240620",
+        "claude-3-opus-20240229",
+        "code-llama-instruct",
         "gpt-3.5-turbo-0613",
+        "gpt-3.5-turbo-0125",
         "gpt-4-0613",
         "gpt-4-0125-preview",
         "gpt-4-turbo-2024-04-09",
         "gpt-4o-2024-05-13",
         "gpt-4o-mini-2024-07-18",
-        "openhermes-2.5",
         "llama-2-chat",
         "llama-3-instruct",
-        "code-llama-instruct",
+        "llama-3.1-instruct",
         "mixtral-instruct-v0.1",
         "mistral-instruct-v0.2",
-        "chatglm3",
-        "Size",
+        "openhermes-2.5",
+    ]
+
+    # Define the order of sizes
+    size_order = [
         "Unknown",
         "175",
         "70",
@@ -721,12 +700,38 @@ def plot_scatter_per_quantisation(overview):
         "6",
     ]
 
-    # Reorder the legend
+    # Create a ColorBrewer palette
+    palette = sns.color_palette(cc.glasbey, n_colors=len(model_names_order))
+
+    # Define a dictionary mapping model names to colors using the order list
+    color_dict = {
+        model: palette[i] for i, model in enumerate(model_names_order)
+    }
+
+    # Use the dictionary as the palette argument in sns.scatterplot
+    ax = sns.scatterplot(
+        x=x,
+        y="Median Accuracy",
+        hue="Model name",
+        size="Size",
+        sizes=(10, 300),
+        data=overview_melted,
+        palette=color_dict,  # Use the color dictionary here
+        alpha=0.5,
+    )
+
+    # Reorder the legend using the same order list
     handles, labels = ax.get_legend_handles_labels()
-    order = [labels.index(name) for name in model_names_order]
+    order = (
+        ["Model name"]
+        + [name for name in model_names_order if name in labels]
+        + ["Size"]
+        + [size for size in size_order if size in labels]
+    )
+    order_indices = [labels.index(name) for name in order if name in labels]
     plt.legend(
-        [handles[idx] for idx in order],
-        [labels[idx] for idx in order],
+        [handles[idx] for idx in order_indices],
+        [labels[idx] for idx in order_indices],
         bbox_to_anchor=(1.05, 1),
         loc="upper left",
     )
@@ -1240,6 +1245,7 @@ def melt_and_process(overview):
             ">= 16-bit*"
             if "gpt-3.5-turbo" in row["Model name"]
             or "gpt-4" in row["Model name"]
+            or "claude" in row["Model name"]
             else row["Quantisation"]
         ),
         axis=1,
