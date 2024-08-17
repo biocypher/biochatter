@@ -1,6 +1,6 @@
-import math
 import os
 import re
+import math
 
 import seaborn as sns
 import colorcet as cc
@@ -117,7 +117,9 @@ def plot_text2cypher():
             else (
                 "llama-3"
                 if "llama-3" in x
-                else "gpt" if "gpt" in x else "other open source"
+                else "gpt"
+                if "gpt" in x
+                else "other open source"
             )
         )
     )
@@ -259,9 +261,9 @@ def preprocess_results_for_frontend(
         axis=1,
     )
 
-    aggregated_scores["Full model name"] = (
-        aggregated_scores.index.get_level_values("model_name")
-    )
+    aggregated_scores[
+        "Full model name"
+    ] = aggregated_scores.index.get_level_values("model_name")
     aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
     aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
     aggregated_scores["Score SD"] = aggregated_scores["score_sd"]
@@ -331,9 +333,9 @@ def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
         axis=1,
     )
 
-    aggregated_scores["Full model name"] = (
-        aggregated_scores.index.get_level_values("model_name")
-    )
+    aggregated_scores[
+        "Full model name"
+    ] = aggregated_scores.index.get_level_values("model_name")
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
         "subtask"
     )
@@ -390,9 +392,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     )
 
     overview_per_quantisation = overview
-    overview_per_quantisation["Full model name"] = (
-        overview_per_quantisation.index
-    )
+    overview_per_quantisation[
+        "Full model name"
+    ] = overview_per_quantisation.index
     overview_per_quantisation[
         ["Model name", "Size", "Version", "Quantisation"]
     ] = overview_per_quantisation["Full model name"].str.split(":", expand=True)
@@ -426,9 +428,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         ]
     ]
     # round mean and sd to 2 decimal places
-    overview_per_quantisation.loc[:, "Median Accuracy"] = (
-        overview_per_quantisation["Median Accuracy"].round(2)
-    )
+    overview_per_quantisation.loc[
+        :, "Median Accuracy"
+    ] = overview_per_quantisation["Median Accuracy"].round(2)
     overview_per_quantisation.loc[:, "SD"] = overview_per_quantisation[
         "SD"
     ].round(2)
@@ -876,9 +878,9 @@ def plot_extraction_tasks():
         axis=1,
     )
 
-    aggregated_scores["Full model name"] = (
-        aggregated_scores.index.get_level_values("model_name")
-    )
+    aggregated_scores[
+        "Full model name"
+    ] = aggregated_scores.index.get_level_values("model_name")
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
         "subtask"
     )

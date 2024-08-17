@@ -1,6 +1,7 @@
+import os
+
 from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage, SystemMessage
-import os
 
 chat = ChatAnthropic(
     model_name="claude-3-5-sonnet-20240620",

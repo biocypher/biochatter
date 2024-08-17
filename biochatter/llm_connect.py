@@ -11,7 +11,7 @@ except ImportError:
     st = None
 
 from abc import ABC, abstractmethod
-from typing import Optional, Tuple
+from typing import Optional
 import json
 import base64
 import logging
@@ -479,7 +479,7 @@ class WasmConversation(Conversation):
             split_correction=split_correction,
         )
 
-    def query(self, text: str) -> Tuple:
+    def query(self, text: str) -> tuple:
         """
         Return the entire message history as a single string. This is the
         message that is sent to the wasm model.

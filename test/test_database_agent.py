@@ -6,17 +6,17 @@ from biochatter.langgraph_agent_base import ReflexionAgentResult
 
 def test_get_query_results_with_reflexion():
     db_agent = DatabaseAgent(
-        "model_name",
-        {
+        model_name="model_name",
+        connection_args={
             "db_name": "test_db",
             "host": "localhost",
             "port": 7687,
             "user": "neo4j",
             "password": "password",
         },
-        {"schema_config": "test_schema"},
-        None,
-        True,
+        schema_config_or_info_dict={"schema_config": "test_schema"},
+        conversation_factory=None,
+        use_reflexion=True,
     )
     db_agent.connect()  # Call the connect method to initialize the driver
 
@@ -63,17 +63,17 @@ def test_get_query_results_with_reflexion():
 
 def test_get_query_results_without_reflexion():
     db_agent = DatabaseAgent(
-        "model_name",
-        {
+        model_name="model_name",
+        connection_args={
             "db_name": "test_db",
             "host": "localhost",
             "port": 7687,
             "user": "neo4j",
             "password": "password",
         },
-        {"schema_config": "test_schema"},
-        None,
-        False,
+        schema_config_or_info_dict={"schema_config": "test_schema"},
+        conversation_factory=None,
+        use_reflexion=False,
     )
     db_agent.connect()  # Call the connect method to initialize the driver
 
