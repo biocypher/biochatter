@@ -115,6 +115,21 @@ class DatabaseAgent:
         # than k
         if results is None or len(results) == 0 or results[0] is None:
             return []
+        if len(results[0]) == 0:
+            return [
+                Document(
+                    page_content = (
+                        "I didn't find any result in knowledge graph, "
+                        f"but here is the query I used: {cypher_query}. "
+                        "You can ask user to refine the question, "
+                        "but don't make up anything."
+                    ),
+                    metadata={
+                        "cypher_query": cypher_query,
+                    },
+                )
+            ]
+        
         for result in results[0]:
             documents.append(
                 Document(
