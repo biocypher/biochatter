@@ -144,20 +144,20 @@ The process involves the following steps:
 ### Identifying data sources and creating a knowledge graph schema
 
 We examine the data sources described above and design a KG schema that can accommodate the data.
-The configuration file, `schema_config.yaml`, can be seen in the `config` directory of the repository.
+The configuration file, [schema_config.yaml](https://github.com/biocypher/decider-genetics/blob/main/config/schema_config.yaml), can be seen in the `config` directory of the repository.
 The schema should also be designed with LLM access in mind; performance in generating specific queries can be adjusted for in step three (troubleshooting using BioChatter Light).
 We created a bespoke adapters for the genetics data of the DECIDER cohort according to the output format of the genetics pipeline, and reused existing adapters for the open resources.
-They can be found in the `decider_genetics/adapters` directory of the repository.
+They can be found in the [decider_genetics/adapters](https://github.com/biocypher/decider-genetics/tree/main/decider_genetics/adapters) directory of the repository.
 For this use case, we created synthetic data to stand in for the real data for privacy reasons; the synthetic data are available in the `data` directory.
 
 ### Building the KG with BioCypher
 
 In the dedicated adapters for the DECIDER genetics data, we pull the data from the synthetic data files and build the KG.
 We perform simplifying computations, as described above, to facilitate standard workflows (such as counting alleles, identifying pathogenic variants, and calculating tumour purity).
-We mold the data into the specified schema in a transparent and reproducible manner by configuring the adapters (see the `decider_genetics/adapters` directory).
+We mold the data into the specified schema in a transparent and reproducible manner by configuring the adapters (see the [decider_genetics/adapters](https://github.com/biocypher/decider-genetics/tree/main/decider_genetics/adapters) directory).
 
 After creating the schema and adapters, we run the build script to populate the KG.
-BioCypher is configured using the `biocypher_config.yaml` file in the `config` directory.
+BioCypher is configured using the [biocypher_config.yaml](https://github.com/biocypher/decider-genetics/blob/main/config/biocypher_config.yaml) file in the `config` directory.
 Using the Docker Compose workflow included in the BioCypher template repository, we build a containerised version of the KG.
 We can inspect the KG in the Neo4j browser at `http://localhost:7474` after running the build script.
 Any changes, if needed, can be made to the configuration of schema and adapters.
@@ -165,7 +165,7 @@ Any changes, if needed, can be made to the configuration of schema and adapters.
 ### Using BioChatter Light to develop and troubleshoot the KG application
 
 Upon deploying the KG via Docker, we can use a custom BioChatter Light application to interact with the KG.
-Briefly, we remove all components except the KG interaction panel via environment variables in the `docker-compose.yml` file (see also the corresponding [vignette](custom-bclight-simple.md)).
+Briefly, we remove all components except the KG interaction panel via environment variables in the [docker-compose.yml](https://github.com/biocypher/decider-genetics/blob/main/docker-compose.yml) file (see also the corresponding [vignette](custom-bclight-simple.md)).
 This allows us to start the KG and interact with it using an LLM in a reproducible manner with just one command.
 We can then test the LLM-KG interaction by asking questions and examining the generated queries and its results from the KG.
 Once we are satisfied with the KG schema and LLM performance, we can advance to the next step.
@@ -179,8 +179,8 @@ An online demonstration of this application can be found at []().
 
 We can further customise the Docker workflow to start the BioChatter Next application, including its REST API middleware `biochatter-server`.
 In addition to deploying all software components, we can also customise its appearance and functionality.
-Using the `biochatter-next.yaml` configuration file (in `config`, as all other configuration files), we can adjust the welcome message, how-to-use section, the system prompts for the LLM, which tools can be used by the LLM agent, the connection details of externally hosted KG or vectorstore, and other parameters.
-We then start BioChatter Next using a dedicated Docker Compose file, which includes the `biochatter-server` middleware and the BioChatter Next application.
+Using the [biochatter-next.yaml](https://github.com/biocypher/decider-genetics/blob/main/config/biochatter-next.yaml) configuration file (in `config`, as all other configuration files), we can adjust the welcome message, how-to-use section, the system prompts for the LLM, which tools can be used by the LLM agent, the connection details of externally hosted KG or vectorstore, and other parameters.
+We then start BioChatter Next using a [dedicated Docker Compose file](https://github.com/biocypher/decider-genetics/blob/main/docker-compose-next.yml), which includes the `biochatter-server` middleware and the BioChatter Next application.
 
 The BioChatter Next application, including the customisation of the LLM and the integration of the KG, can be built using `docker compose -f docker-compose-next.yml up -d` in the root directory of the [repository](https://github.com/biocypher/decider-genetics).
 An online demonstration of this application can be found at []().
