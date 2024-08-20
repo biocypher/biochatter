@@ -90,6 +90,7 @@ nav:
       - Retrieval-Augmented Generation (RAG): vignettes/rag.md
       - Customising BioChatter Light - Simple: vignettes/custom-bclight-simple.md
       - Customising BioChatter Light - Advanced: vignettes/custom-bclight-advanced.md
+      - Customising BioChatter Light and Next - Cancer Genetics Use Case: vignettes/custom-decider-use-case.md
   - API Reference:
       - Home: api-docs/index.md
       - LLM Connectivity: api-docs/llm_connect.md
