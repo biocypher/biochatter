@@ -29,9 +29,9 @@ class DatabaseAgent:
 
             conversation_factory (Callable): A function to create a conversation
                 for creating the KG query.
-            
-            use_reflexion (bool): Whether to use ReflexionAgent to generate 
-                query.
+
+            use_reflexion (bool): Whether to use the ReflexionAgent to generate
+                the query.
         """
         self.conversation_factory = conversation_factory
         self.prompt_engine = BioCypherPromptEngine(
@@ -70,9 +70,11 @@ class DatabaseAgent:
             )
             query_prompt = self.prompt_engine.generate_query_prompt(query)
             agent_result = agent.execute(query, query_prompt)
-            tool_result = [agent_result.tool_result] \
-                if agent_result.tool_result is not None \
+            tool_result = (
+                [agent_result.tool_result]
+                if agent_result.tool_result is not None
                 else None
+            )
             return agent_result.answer, tool_result
         else:
             query = self.prompt_engine.generate_query(query)

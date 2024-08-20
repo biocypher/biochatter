@@ -1,4 +1,4 @@
-from typing import Any, Optional, Dict
+from typing import Any, Optional
 from datetime import datetime
 from collections.abc import Callable
 import json
@@ -94,7 +94,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
     def __init__(
         self,
         conversation_factory: Callable,
-        connection_args: Dict[str, str],
+        connection_args: dict[str, str],
         query_lang: Optional[str] = "Cypher",
         max_steps: Optional[int] = 20,
     ):

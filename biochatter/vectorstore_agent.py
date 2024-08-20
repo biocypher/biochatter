@@ -1,4 +1,4 @@
-from typing import Tuple, Optional, Dict
+from typing import Tuple, Optional
 import uuid
 import random
 import logging
@@ -273,7 +273,7 @@ class VectorDatabaseAgentMilvus:
             using=self.alias,
         )
         self._col_metadata.load()
-        
+
     def _create_metadata_collection(self) -> None:
         """
         Create metadata collection.
@@ -631,7 +631,7 @@ class VectorDatabaseAgentMilvus:
             raise e
 
     def get_description(self, doc_ids: Optional[list[str]] = None):
-        def get_name(meta: Dict[str, str]):
+        def get_name(meta: dict[str, str]):
             name_col = ["title", "name", "subject", "source"]
             for col in name_col:
                 if meta[col] is not None and len(meta[col]) > 0:

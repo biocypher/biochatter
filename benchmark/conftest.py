@@ -9,8 +9,8 @@ import pandas as pd
 
 from biochatter.prompts import BioCypherPromptEngine
 from biochatter.llm_connect import (
-    AnthropicConversation,
     GptConversation,
+    AnthropicConversation,
     XinferenceConversation,
 )
 from .load_dataset import get_benchmark_dataset

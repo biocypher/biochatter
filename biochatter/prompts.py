@@ -220,7 +220,7 @@ class BioCypherPromptEngine:
                     msg += f"'(:{pair[0]})-(:{key})->(:{pair[1]})', "
             msg += f"generate a {query_language} query using one of these combinations. "
 
-        msg += "Only return the query, without any additional text, symbols or characters --- just query statement."
+        msg += "Only return the query, without any additional text, symbols or characters --- just the query statement."
         return msg
 
     def generate_query_prompt(
