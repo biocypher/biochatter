@@ -126,7 +126,7 @@ Create prompt with explanation of the thought process and important parameters r
 ## Building the application
 
 We will explain how to use the BioCypher ecosystem, specifically, BioCypher and BioChatter, to build a decision support application for a cancer geneticist.
-The code base for this use case, including all details on how to set up the KG and the application, is available at [https://github.com/biocypher/decider-genetics](https://github.com/biocypher/decider-genetics).
+The code base for this use case, including all details on how to set up the KG and the applications, is available at [https://github.com/biocypher/decider-genetics](https://github.com/biocypher/decider-genetics).
 You can find live demonstrations of the application at links provided in the README of the repository.
 The build procedures can be reproduced by cloning the repository and running `docker-compose up -d` (or the equivalent for the Next app) in the root directory (note that the default configuration requires authentication with OpenAI services).
 The process involves the following steps:
@@ -165,12 +165,15 @@ Any changes, if needed, can be made to the configuration of schema and adapters.
 ### Using BioChatter Light to develop and troubleshoot the KG application
 
 Upon deploying the KG via Docker, we can use a custom BioChatter Light application to interact with the KG.
-Briefly, we remove all components except the KG interaction panel via environment variables in the `docker-compose.yml` file (see also [Supplementary Note: Customisation]).
+Briefly, we remove all components except the KG interaction panel via environment variables in the `docker-compose.yml` file (see also the corresponding [vignette](custom-bclight-simple.md)).
 This allows us to start the KG and interact with it using an LLM in a reproducible manner with just one command.
 We can then test the LLM-KG interaction by asking questions and examining the generated queries and its results from the KG.
 Once we are satisfied with the KG schema and LLM performance, we can advance to the next step.
 
-<!-- TODO show online version? -->
+The BioChatter Light application, including the KG creation, can be built using `docker compose up -d` in the root directory of the [repository](https://github.com/biocypher/decider-genetics).
+An online demonstration of this application can be found at []().
+
+<!-- TODO show online version -->
 
 ### Customising BioChatter Next to yield an integrated conversational interface
 
@@ -178,6 +181,11 @@ We can further customise the Docker workflow to start the BioChatter Next applic
 In addition to deploying all software components, we can also customise its appearance and functionality.
 Using the `biochatter-next.yaml` configuration file (in `config`, as all other configuration files), we can adjust the welcome message, how-to-use section, the system prompts for the LLM, which tools can be used by the LLM agent, the connection details of externally hosted KG or vectorstore, and other parameters.
 We then start BioChatter Next using a dedicated Docker Compose file, which includes the `biochatter-server` middleware and the BioChatter Next application.
+
+The BioChatter Next application, including the customisation of the LLM and the integration of the KG, can be built using `docker compose -f docker-compose-next.yml up -d` in the root directory of the [repository](https://github.com/biocypher/decider-genetics).
+An online demonstration of this application can be found at []().
+
+<!-- TODO show online version -->
 
 ### Deploying the applications
 
