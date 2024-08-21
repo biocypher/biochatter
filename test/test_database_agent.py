@@ -44,20 +44,9 @@ def test_get_query_results_with_reflexion():
             result = db_agent.get_query_results("test_query", 3)
 
     # Check if the result is as expected
-    expected_result = [
-        Document(
-            page_content='{"key": "value"}',
-            metadata={"cypher_query": "test_query"},
-        ),
-        Document(
-            page_content='{"key": "value"}',
-            metadata={"cypher_query": "test_query"},
-        ),
-        Document(
-            page_content='{"key": "value"}',
-            metadata={"cypher_query": "test_query"},
-        ),
-    ]
+    expected_result = db_agent._build_response([
+        {"key": "value"},{"key": "value"},{"key": "value"},{"key": "value"}
+    ], "test_query")
     assert result == expected_result
 
 
@@ -98,18 +87,7 @@ def test_get_query_results_without_reflexion():
             result = db_agent.get_query_results("test_query", 3)
 
     # Check if the result is as expected
-    expected_result = [
-        Document(
-            page_content='{"key": "value"}',
-            metadata={"cypher_query": "test_query"},
-        ),
-        Document(
-            page_content='{"key": "value"}',
-            metadata={"cypher_query": "test_query"},
-        ),
-        Document(
-            page_content='{"key": "value"}',
-            metadata={"cypher_query": "test_query"},
-        ),
-    ]
+    expected_result = db_agent._build_response([
+        {"key": "value"},{"key": "value"},{"key": "value"},{"key": "value"}
+    ], "test_query")
     assert result == expected_result

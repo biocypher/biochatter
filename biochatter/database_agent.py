@@ -1,5 +1,6 @@
 from collections.abc import Callable
 import json
+from typing import Dict, List, Optional
 
 from langchain.schema import Document
 import neo4j_utils as nu
@@ -81,6 +82,41 @@ class DatabaseAgent:
             results = self.driver.query(query=query)
             return query, results
 
+    def _build_response(
+            self, 
+            results: List[Dict], 
+            cypher_query: str, 
+            results_num: Optional[int]=3
+        ) -> List[Document]:
+        if len(results) == 0:
+            return [Document(
+                page_content=(
+                    "I didn't find any result in knowledge graph, "
+                    f"but here is the query I used: {cypher_query}. "
+                    "You can ask user to refine the question. "
+                    "Note: in your answer, please always quote the query "
+                    "so that user is able to refine his question."
+                ),
+                metadata = {
+                    "cypher_query": cypher_query
+                },
+            )]
+        
+        clipped_results = results[:results_num] if results_num > 0 else results
+        results_dump = json.dumps(clipped_results)
+
+        return [Document(
+            page_content=(
+                "The results retrieved from knowledge graph are: "
+                f"{results_dump}. "
+                f"The query used is: {cypher_query}. "
+                "Note: in your answer, please always quote the query "
+                "so that user is able to refine his question"
+            ),
+            metadata = {
+                "cypher_query": cypher_query
+            },
+        )]
     def get_query_results(self, query: str, k: int = 3) -> list[Document]:
         """
         Generate a query using the prompt engine and return the results.
@@ -109,41 +145,15 @@ class DatabaseAgent:
         else:
             results = self.driver.query(query=cypher_query)
 
-        documents = []
         # return first k results
         # returned nodes can have any formatting, and can also be empty or fewer
         # than k
         if results is None or len(results) == 0 or results[0] is None:
             return []
-        if len(results[0]) == 0:
-            return [
-                Document(
-                    page_content = (
-                        "I didn't find any result in knowledge graph, "
-                        f"but here is the query I used: {cypher_query}. "
-                        "You can ask user to refine the question, "
-                        "but don't make up anything."
-                    ),
-                    metadata={
-                        "cypher_query": cypher_query,
-                    },
-                )
-            ]
+        return self._build_response(
+            results=results[0], cypher_query=cypher_query, results_num=k
+        )
         
-        for result in results[0]:
-            documents.append(
-                Document(
-                    page_content=json.dumps(result),
-                    metadata={
-                        "cypher_query": cypher_query,
-                    },
-                )
-            )
-            if len(documents) == k:
-                break
-
-        return documents
-
     def get_description(self):
         result = self.driver.query("MATCH (n:Schema_info) RETURN n LIMIT 1")
 
