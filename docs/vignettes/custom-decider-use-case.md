@@ -152,6 +152,18 @@ We created a bespoke adapters for the genetics data of the DECIDER cohort accord
 They can be found in the [decider_genetics/adapters](https://github.com/biocypher/decider-genetics/tree/main/decider_genetics/adapters) directory of the repository.
 For this use case, we created synthetic data to stand in for the real data for privacy reasons; the synthetic data are available in the `data` directory.
 
+This is the schema of our KG:
+
+```mermaid
+graph TD;
+    Patient[Patient] -->|PatientToSequenceVariantAssociation| SequenceVariant[SequenceVariant]
+    Patient[Patient] -->|PatientToCopyNumberAlterationAssociation| CopyNumberAlteration[CopyNumberAlteration]
+    SequenceVariant[SequenceVariant] -->|SequenceVariantToGeneAssociation| Gene[Gene]
+    CopyNumberAlteration[CopyNumberAlteration] -->|CopyNumberAlterationToGeneAssociation| Gene[Gene]
+    Gene[Gene] -->|GeneToBiologicalProcessAssociation| BiologicalProcess[BiologicalProcess]
+    Gene[Gene] -->|GeneDruggabilityAssociation| Drug[Drug]
+```
+
 ### Building the KG with BioCypher
 
 In the dedicated adapters for the DECIDER genetics data, we pull the data from the synthetic data files and build the KG.
