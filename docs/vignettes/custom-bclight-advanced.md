@@ -32,6 +32,11 @@ BioChatter Light web app is available
 
 ## Build the KG
 
+!!! info inline end "GitHub Project access token"
+    Be aware that running this script will require a GitHub token with access to
+    the project board. This token should be stored in the environment variable
+    `BIOCYPHER_GITHUB_PROJECT_TOKEN`.
+
 We modified an existing adapter for the GitHub GraphQL API to pull data from the
 GitHub Project board. Thus, the time investment to build the KG was minimal
 (~3h); this is one central principle of BioCypher. We adapted the code
@@ -57,10 +62,6 @@ Other available fields include `Title`, `Assignees`, `Status`, `Labels`,
 such as `Priority` and `Size`, are properties of the project item in our current
 implementation. These assignments, including the schmema of the graph, can be
 flexibly adapted by using BioCypher mechanisms.
-
-Be aware that running this script will require a GitHub token with access to the
-project board. This token should be stored in the environment variable
-`BIOCYPHER_GITHUB_PROJECT_TOKEN`.
 
 ## Add the additional tabs to BioChatter Light
 
@@ -124,21 +125,24 @@ services:
       - TASK_SETTINGS_PANEL_TAB=true
 ```
 
+!!! info inline end "Authentication"
+    For using the app with the standard OpenAI LLM, we need to provide the
+    `OPENAI_API_KEY` environment variable. This key can be obtained from the
+    OpenAI website.
+
 You can see the full configuration in the `docker-compose.yml` file of the
 [project-planning](https://github.com/biocypher/project-planning) repository.
 For public deployment, we also added a password-protected version of the KG,
 which only requires a few additional lines in the `docker-compose-password.yml`
-file. To deploy the tool on a cloud VM, we now only need to run the following
+file.
+
+To deploy the tool on a cloud VM, we now only need to run the following
 commands:
 
 ```bash
 git clone https://github.com/biocypher/project-planning.git
 docker-compose -f project-planning/docker-compose-password.yml up -d
 ```
-
-We just need to make sure to provide an `OPENAI_API_KEY` and a
-`BIOCYPHER_GITHUB_PROJECT_TOKEN` in the VM's environment to be accessed by the
-Docker workflow.
 
 ## Useful tips for deployment
 
@@ -156,10 +160,14 @@ server {
 
     location / {
         proxy_pass http://localhost:8501;
+        proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_read_timeout 86400;
     }
 }
 ```

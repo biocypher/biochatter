@@ -52,6 +52,11 @@ to `true`, which tells BioChatter Light to connect to the KG on the Docker
 network, which uses the service name as the hostname, so in this case, `deploy`
 instead of the default `localhost`.
 
+!!! info inline end "Authentication"
+    For using the app with the standard OpenAI LLM, we need to provide the
+    `OPENAI_API_KEY` environment variable. This key can be obtained from the
+    OpenAI website.
+    
 We then turn off all default tabs (chatting, prompt engineering, RAG, and the
 correcting agent) and turn on the KG tab. Running the docker compose with these
 settings will build and deploy the KG and the BioChatter Light web app with only
