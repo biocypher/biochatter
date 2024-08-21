@@ -184,7 +184,13 @@ This allows us to start the KG and interact with it using an LLM in a reproducib
 We can then test the LLM-KG interaction by asking questions and examining the generated queries and its results from the KG.
 Once we are satisfied with the KG schema and LLM performance, we can advance to the next step.
 
+!!! info inline end "OpenAI API key needed"
+    In the standard configuration, we use the OpenAI API to generate queries.
+    Provide your `OPENAI_API_KEY` in the shell environment, or modify the
+    application to call a different LLM.
+
 The BioChatter Light application, including the KG creation, can be built using `docker compose up -d` in the root directory of the [repository](https://github.com/biocypher/decider-genetics).
+
 An online demonstration of this application can be found at [https://decider-light.biochatter.org](https://decider-light.biochatter.org).
 You can use this demonstration to test the KG - LLM interaction, asking questions such as:
 
@@ -211,6 +217,11 @@ We can further customise the Docker workflow to start the BioChatter Next applic
 In addition to deploying all software components, we can also customise its appearance and functionality.
 Using the [biochatter-next.yaml](https://github.com/biocypher/decider-genetics/blob/main/config/biochatter-next.yaml) configuration file (in `config`, as all other configuration files), we can adjust the welcome message, how-to-use section, the system prompts for the LLM, which tools can be used by the LLM agent, the connection details of externally hosted KG or vectorstore, and other parameters.
 We then start BioChatter Next using a [dedicated Docker Compose file](https://github.com/biocypher/decider-genetics/blob/main/docker-compose-next.yml), which includes the `biochatter-server` middleware and the BioChatter Next application.
+
+!!! info inline end "OpenAI API key needed"
+    In the standard configuration, we use the OpenAI API to generate queries.
+    Provide your `OPENAI_API_KEY` in the `.bioserver.env` file, or modify the
+    application to call a different LLM.
 
 The BioChatter Next application, including the customisation of the LLM and the integration of the KG, can be built using `docker compose -f docker-compose-next.yml up -d` in the root directory of the [repository](https://github.com/biocypher/decider-genetics).
 An online demonstration of this application can be found at [https://decider-next.biochatter.org](https://decider-next.biochatter.org).
