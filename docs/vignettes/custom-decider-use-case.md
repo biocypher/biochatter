@@ -171,9 +171,7 @@ We can then test the LLM-KG interaction by asking questions and examining the ge
 Once we are satisfied with the KG schema and LLM performance, we can advance to the next step.
 
 The BioChatter Light application, including the KG creation, can be built using `docker compose up -d` in the root directory of the [repository](https://github.com/biocypher/decider-genetics).
-An online demonstration of this application can be found at []().
-
-<!-- TODO show online version -->
+An online demonstration of this application can be found at [https://decider-light.biochatter.org](https://decider-light.biochatter.org).
 
 ### Customising BioChatter Next to yield an integrated conversational interface
 
@@ -183,9 +181,7 @@ Using the [biochatter-next.yaml](https://github.com/biocypher/decider-genetics/b
 We then start BioChatter Next using a [dedicated Docker Compose file](https://github.com/biocypher/decider-genetics/blob/main/docker-compose-next.yml), which includes the `biochatter-server` middleware and the BioChatter Next application.
 
 The BioChatter Next application, including the customisation of the LLM and the integration of the KG, can be built using `docker compose -f docker-compose-next.yml up -d` in the root directory of the [repository](https://github.com/biocypher/decider-genetics).
-An online demonstration of this application can be found at []().
-
-<!-- TODO show online version -->
+An online demonstration of this application can be found at [https://decider-next.biochatter.org](https://decider-next.biochatter.org).
 
 ### Deploying the applications
 
