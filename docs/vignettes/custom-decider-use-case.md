@@ -6,7 +6,7 @@ This example is part of the BioChatter manuscript supplement.
 
 ## Background
 
-Personalized medicine tailors treatment to a patient's unique genetic makeup.
+Personalised medicine tailors treatment to a patient's unique genetic makeup.
 In cancer care, this approach helps categorize patients and assign them to specific treatment groups in clinical trials.
 However, interpreting and making decisions based on this data is challenging due to the complexity of genetic variations, the interaction between genes and environmental factors, tumor diversity, patient histories, and the vast amount of data produced by advanced technologies.
 
@@ -68,13 +68,15 @@ In addition, we provide access to more resources via the RAG and API agents:
 
 ## The geneticist's workflow
 
-Personalized cancer therapy is guided by identifying somatic genomic driver events in specific genes, particularly when these involve well-known hotspot mutations. However, unique somatic events in the same genes or pathways can create a "grey zone" that requires manual geneticist analysis to determine their clinical significance.
+Personalised cancer therapy is guided by identifying somatic genomic driver events in specific genes, particularly when these involve well-known hotspot mutations.
+However, unique somatic events in the same genes or pathways can create a "grey zone" that requires manual geneticist analysis to determine their clinical significance.
 
 To address this, a comprehensive BioCypher backend processes whole-genome sequencing data to catalog somatic changes, annotating their consequences and potential actionability.
 These data can then be linked to external resources for clinical interpretation.
-For example, certain mutations in the BRCA1 or ERBB2 genes can indicate sensitivity to specific treatments like PARP inhibitors or trastuzumab.
+For example, certain mutations in the BRCA1 or ERBB2 genes can indicate sensitivity to specific treatments such as PARP inhibitors or trastuzumab.
 
-To fully leverage actionable data, the integration of patient-specific information with literature on drug targets and mechanisms of action or resistance is essential. [OncoKB](https://www.oncokb.org/actionable-genes#sections=Tx) is the primary resource for this information, accessible through drug annotations added to the knowledge graph (KG) and via the BioChatter API calling mechanism.
+To fully leverage actionable data, the integration of patient-specific information with literature on drug targets and mechanisms of action or resistance is essential.
+[OncoKB](https://www.oncokb.org/actionable-genes#sections=Tx) is the primary resource for this information, accessible through drug annotations added to the knowledge graph (KG) and via the BioChatter API calling mechanism.
 
 Additionally, semantic search tools facilitate access to relevant biomedical literature, enabling geneticists to quickly verify findings against established treatments or resistance mechanisms.
 
