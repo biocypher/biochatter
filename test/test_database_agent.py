@@ -45,7 +45,7 @@ def test_get_query_results_with_reflexion():
 
     # Check if the result is as expected
     expected_result = db_agent._build_response([
-        {"key": "value"},{"key": "value"},{"key": "value"},{"key": "value"}
+        {"key": "value"},{"key": "value"},{"key": "value"},
     ], "test_query")
     assert result == expected_result
 
@@ -88,6 +88,6 @@ def test_get_query_results_without_reflexion():
 
     # Check if the result is as expected
     expected_result = db_agent._build_response([
-        {"key": "value"},{"key": "value"},{"key": "value"},{"key": "value"}
+        {"key": "value"},{"key": "value"},{"key": "value"},
     ], "test_query")
     assert result == expected_result
