@@ -174,6 +174,24 @@ Once we are satisfied with the KG schema and LLM performance, we can advance to 
 
 The BioChatter Light application, including the KG creation, can be built using `docker compose up -d` in the root directory of the [repository](https://github.com/biocypher/decider-genetics).
 An online demonstration of this application can be found at [https://decider-light.biochatter.org](https://decider-light.biochatter.org).
+You can use this demonstration to test the KG - LLM interaction, asking questions such as:
+
+- How many patients do we have on record, and what are their names?
+
+- What was patient1's response to previous treatment, and which treatment did they receive?
+
+- Which patients have HR deficiency but have not received PARP inhibitors?
+
+- How many patients had severe adverse reactions, and to which drugs?
+
+- Does patient1 have a sequence variant in a gene that is druggable? Which drug, and what evidence level has the association?
+
+- Does patient1 have a sequence variant in a gene that is druggable with evidence level "1"? Which drug? Return unique values.
+
+- Does patient1 have a copy number variant in a gene that is druggable with evidence level "1"? Which drug? Return unique values.
+
+The query returned by the model can also be modified and rerun without an additional call to the LLM, allowing for easy troubleshooting and exploration of the KG.
+The schema information of the KG is displayed in the lower section of the page for reference.
 
 ### Customising BioChatter Next to yield an integrated conversational interface
 
