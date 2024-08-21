@@ -94,8 +94,9 @@ class DatabaseAgent:
                     "I didn't find any result in knowledge graph, "
                     f"but here is the query I used: {cypher_query}. "
                     "You can ask user to refine the question. "
-                    "Note: in your answer, please always quote the query "
-                    "so that user is able to refine his question."
+                    "Note: please ensure to include the query in quotation "
+                    "marks in your response so that the user can refine "
+                    "their question effectively."
                 ),
                 metadata = {
                     "cypher_query": cypher_query
@@ -110,8 +111,9 @@ class DatabaseAgent:
                 "The results retrieved from knowledge graph are: "
                 f"{results_dump}. "
                 f"The query used is: {cypher_query}. "
-                "Note: in your answer, please always quote the query "
-                "so that user is able to refine his question"
+                "Note: please ensure to include the query in quotation "
+                "marks in your response so that the user can refine "
+                "their question effectively."
             ),
             metadata = {
                 "cypher_query": cypher_query
