@@ -117,9 +117,7 @@ def plot_text2cypher():
             else (
                 "llama-3"
                 if "llama-3" in x
-                else "gpt"
-                if "gpt" in x
-                else "other open source"
+                else "gpt" if "gpt" in x else "other open source"
             )
         )
     )
@@ -261,9 +259,9 @@ def preprocess_results_for_frontend(
         axis=1,
     )
 
-    aggregated_scores[
-        "Full model name"
-    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
     aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
     aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
     aggregated_scores["Score SD"] = aggregated_scores["score_sd"]
@@ -333,9 +331,9 @@ def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
         axis=1,
     )
 
-    aggregated_scores[
-        "Full model name"
-    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
         "subtask"
     )
@@ -392,9 +390,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     )
 
     overview_per_quantisation = overview
-    overview_per_quantisation[
-        "Full model name"
-    ] = overview_per_quantisation.index
+    overview_per_quantisation["Full model name"] = (
+        overview_per_quantisation.index
+    )
     overview_per_quantisation[
         ["Model name", "Size", "Version", "Quantisation"]
     ] = overview_per_quantisation["Full model name"].str.split(":", expand=True)
@@ -428,9 +426,9 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         ]
     ]
     # round mean and sd to 2 decimal places
-    overview_per_quantisation.loc[
-        :, "Median Accuracy"
-    ] = overview_per_quantisation["Median Accuracy"].round(2)
+    overview_per_quantisation.loc[:, "Median Accuracy"] = (
+        overview_per_quantisation["Median Accuracy"].round(2)
+    )
     overview_per_quantisation.loc[:, "SD"] = overview_per_quantisation[
         "SD"
     ].round(2)
@@ -878,9 +876,9 @@ def plot_extraction_tasks():
         axis=1,
     )
 
-    aggregated_scores[
-        "Full model name"
-    ] = aggregated_scores.index.get_level_values("model_name")
+    aggregated_scores["Full model name"] = (
+        aggregated_scores.index.get_level_values("model_name")
+    )
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
         "subtask"
     )
@@ -1093,6 +1091,9 @@ def plot_comparison_naive_biochatter(overview):
         )
     ]
 
+    # print number of rows of each task
+    print(overview_melted["Task"].value_counts())
+
     sns.set_theme(style="whitegrid")
     plt.figure(figsize=(6, 4))
     sns.boxplot(
@@ -1114,6 +1115,56 @@ def plot_comparison_naive_biochatter(overview):
     )
     plt.savefig(
         "docs/images/boxplot-naive-vs-biochatter.pdf",
+        bbox_inches="tight",
+    )
+    plt.close()
+
+    # plot scatter plot
+    plt.figure(figsize=(6, 4))
+    sns.stripplot(
+        x="Task",
+        y="Accuracy",
+        data=overview_melted,
+        jitter=0.2,
+        alpha=0.8,
+    )
+    plt.ylim(0, 1)
+    plt.xlabel(None)
+    plt.xticks(
+        ticks=range(len(overview_melted["Task"].unique())),
+        labels=["BioChatter", "Naive LLM (using full YAML schema)"],
+    )
+    plt.savefig(
+        "docs/images/scatter-naive-vs-biochatter.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+    plt.savefig(
+        "docs/images/scatter-naive-vs-biochatter.pdf",
+        bbox_inches="tight",
+    )
+    plt.close()
+
+    # plit violin plot
+    plt.figure(figsize=(6, 4))
+    sns.violinplot(
+        x="Task",
+        y="Accuracy",
+        data=overview_melted,
+    )
+    plt.ylim(0, 1)
+    plt.xlabel(None)
+    plt.xticks(
+        ticks=range(len(overview_melted["Task"].unique())),
+        labels=["BioChatter", "Naive LLM (using full YAML schema)"],
+    )
+    plt.savefig(
+        "docs/images/violin-naive-vs-biochatter.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+    plt.savefig(
+        "docs/images/violin-naive-vs-biochatter.pdf",
         bbox_inches="tight",
     )
     plt.close()
