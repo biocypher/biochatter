@@ -1,6 +1,8 @@
 # Custom BioChatter Light and Next: Cancer Genetics Use Case
 
 This example is part of the BioChatter manuscript supplement.
+We demonstrate the resulting applications as web apps at [https://decider-light.biochatter.org](https://decider-light.biochatter.org) and [https://decider-next.biochatter.org](https://decider-next.biochatter.org).
+Find more information on how to build and use these apps below.
 
 <!-- TODO DOI -->
 
