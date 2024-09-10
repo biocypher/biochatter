@@ -1362,7 +1362,7 @@ class GptConversation(Conversation):
         """
         client = openai.OpenAI(
             api_key=api_key,
-            base_url=self.base_url
+            base_url=self.base_url,
         )
         self.user = user
 
@@ -1372,11 +1372,13 @@ class GptConversation(Conversation):
                 model_name=self.model_name,
                 temperature=0,
                 openai_api_key=api_key,
+                base_url=self.base_url,
             )
             self.ca_chat = ChatOpenAI(
                 model_name=self.ca_model_name,
                 temperature=0,
                 openai_api_key=api_key,
+                base_url=self.base_url,
             )
             if user == "community":
                 self.usage_stats = get_stats(user=user)
