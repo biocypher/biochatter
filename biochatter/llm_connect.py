@@ -1319,6 +1319,7 @@ class GptConversation(Conversation):
         prompts: dict,
         correct: bool = False,
         split_correction: bool = False,
+        base_url : str = None,
     ):
         """
         Connect to OpenAI's GPT API and set up a conversation with the user.
@@ -1333,6 +1334,8 @@ class GptConversation(Conversation):
             split_correction (bool): Whether to correct the model output by
                 splitting the output into sentences and correcting each
                 sentence individually.
+
+            base_url (str): Optional OpenAI base_url value to use custom endpoint URL instead of default
         """
         super().__init__(
             model_name=model_name,
@@ -1340,7 +1343,7 @@ class GptConversation(Conversation):
             correct=correct,
             split_correction=split_correction,
         )
-
+        self.base_url = base_url
         self.ca_model_name = "gpt-3.5-turbo"
         # TODO make accessible by drop-down
 
@@ -1359,6 +1362,7 @@ class GptConversation(Conversation):
         """
         client = openai.OpenAI(
             api_key=api_key,
+            base_url=self.base_url
         )
         self.user = user
 
