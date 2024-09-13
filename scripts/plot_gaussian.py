@@ -31,9 +31,9 @@ plt.gca().spines["right"].set_visible(False)
 plt.grid(False)
 plt.title("")
 
-# Show axes, x is "Impact", y is "Labs"
-plt.xlabel('"Impact"')
-plt.ylabel("Number of Labs")
+# # Show axes, x is "Impact", y is "Labs"
+# plt.xlabel('"Impact"')
+# plt.ylabel("Number of Labs")
 
 # Show the simplified plot
 plt.show()
