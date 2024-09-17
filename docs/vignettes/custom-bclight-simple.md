@@ -76,7 +76,7 @@ accessible via our modular architecture and the simple
 vignette](custom-bclight-advanced.md) and the codebase of [BioChatter
 Light](https://github.com/biocypher/biochatter-light) for more information.
 
-!!! info inline end "Note"
+!!! note "Open-source LLMs"
     You can use a locally hosted open-source LLM model by using the
     `docker-compose-ollama.yml` as an example (this deployment requires Ollama
     to be installed on your machine). See more
