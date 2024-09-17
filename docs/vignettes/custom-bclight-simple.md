@@ -75,3 +75,9 @@ accessible via our modular architecture and the simple
 [Streamlit](https://streamlit.io) framework for UI design. Check the [advanced
 vignette](custom-bclight-advanced.md) and the codebase of [BioChatter
 Light](https://github.com/biocypher/biochatter-light) for more information.
+
+!!! info inline end "Note"
+    You can use a locally hosted open-source LLM model by using the
+    `docker-compose-ollama.yml` as an example (this deployment requires Ollama
+    to be installed on your machine). See more
+    [here](https://github.com/biocypher/biochatter-light#open-source-model-deployment).
