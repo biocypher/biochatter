@@ -1167,8 +1167,8 @@ class AnthropicConversation(Conversation):
         as context. Correct the response if necessary.
 
         Returns:
-            tuple: A tuple containing the response from the Anthropic API and the
-                token usage.
+            tuple: A tuple containing the response from the Anthropic API and
+                the token usage.
         """
         try:
             history = self._create_history()
@@ -1319,7 +1319,7 @@ class GptConversation(Conversation):
         prompts: dict,
         correct: bool = False,
         split_correction: bool = False,
-        base_url : str = None,
+        base_url: str = None,
     ):
         """
         Connect to OpenAI's GPT API and set up a conversation with the user.
@@ -1335,7 +1335,8 @@ class GptConversation(Conversation):
                 splitting the output into sentences and correcting each
                 sentence individually.
 
-            base_url (str): Optional OpenAI base_url value to use custom endpoint URL instead of default
+            base_url (str): Optional OpenAI base_url value to use custom
+                endpoint URL instead of default
         """
         super().__init__(
             model_name=model_name,
