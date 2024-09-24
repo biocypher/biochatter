@@ -95,13 +95,13 @@ class BioCypherPromptEngine:
                         value["represented_as"] == "node"
                         and name_indicates_relationship
                     ):
-                        self.relationships[
-                            sentencecase_to_pascalcase(key)
-                        ] = value
+                        self.relationships[sentencecase_to_pascalcase(key)] = (
+                            value
+                        )
                     elif value["represented_as"] == "edge":
-                        self.relationships[
-                            sentencecase_to_pascalcase(key)
-                        ] = value
+                        self.relationships[sentencecase_to_pascalcase(key)] = (
+                            value
+                        )
         else:
             for key, value in schema_config.items():
                 if not isinstance(value, dict):
@@ -393,7 +393,12 @@ class BioCypherPromptEngine:
                 pairs = []
                 for s in source:
                     for t in target:
-                        pairs.append((s, t))
+                        pairs.append(
+                            (
+                                sentencecase_to_pascalcase(s),
+                                sentencecase_to_pascalcase(t),
+                            )
+                        )
                 rels[key] = pairs
                 source_and_target_present = True
             else:

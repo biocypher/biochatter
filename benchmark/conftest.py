@@ -24,7 +24,7 @@ BENCHMARK_DATASET = get_benchmark_dataset()
 
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
-    # "gpt-3.5-turbo-0125",
+    "gpt-3.5-turbo-0125",
     # "gpt-4-0613",
     # "gpt-4-0125-preview",
     # "gpt-4-turbo-2024-04-09",
