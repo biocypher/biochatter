@@ -25,11 +25,11 @@ BENCHMARK_DATASET = get_benchmark_dataset()
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
     "gpt-3.5-turbo-0125",
-    # "gpt-4-0613",
-    # "gpt-4-0125-preview",
-    # "gpt-4-turbo-2024-04-09",
-    # "gpt-4o-2024-05-13",
-    # "gpt-4o-mini-2024-07-18",
+    "gpt-4-0613",
+    "gpt-4-0125-preview",
+    "gpt-4-turbo-2024-04-09",
+    "gpt-4o-2024-05-13",
+    "gpt-4o-mini-2024-07-18",
 ]
 
 ANTHROPIC_MODEL_NAMES = [
@@ -168,31 +168,31 @@ XINFERENCE_MODELS = {
     #         # "Q4_K_M",
     #     ],
     # },
-    # "llama-3.1-instruct": {
-    #     "model_size_in_billions": [
-    #         8,
-    #         # 70,
-    #     ],
-    #     "model_format": "ggufv2",
-    #     "quantization": [
-    #         # 8B model quantisations
-    #         # "Q3_K_L",
-    #         "IQ4_XS",
-    #         # "Q4_K_M",
-    #         # "Q5_K_M",
-    #         # "Q6_K",
-    #         # "Q8_0",
-    #         # 70B model quantisations
-    #         # "IQ2_M",
-    #         # "Q2_K",
-    #         # "Q3_K_S",
-    #         # "IQ4_XS",
-    #         # "Q4_K_M",  # crazy slow on mbp m3 max
-    #         # "Q5_K_M",
-    #         # "Q6_K",
-    #         # "Q8_0",
-    #     ],
-    # },
+    "llama-3.1-instruct": {
+        "model_size_in_billions": [
+            8,
+            # 70,
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            # 8B model quantisations
+            # "Q3_K_L",
+            "IQ4_XS",
+            # "Q4_K_M",
+            # "Q5_K_M",
+            # "Q6_K",
+            # "Q8_0",
+            # 70B model quantisations
+            # "IQ2_M",
+            # "Q2_K",
+            # "Q3_K_S",
+            # "IQ4_XS",
+            # "Q4_K_M",  # crazy slow on mbp m3 max
+            # "Q5_K_M",
+            # "Q6_K",
+            # "Q8_0",
+        ],
+    },
     # "mistral-instruct-v0.2": {
     #     "model_size_in_billions": [
     #         7,
