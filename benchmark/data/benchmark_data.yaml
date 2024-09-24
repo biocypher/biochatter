@@ -120,6 +120,44 @@ biocypher_query_generation:
           "\\(([a-zA-Z]*(:Protein)?)\\)<-\\[([a-zA-Z]*)?:GeneToProteinAssociation]-|-\\[([a-zA-Z]*)?:GeneToProteinAssociation]->\\(([a-zA-Z]*(:Protein)?)\\)",
         ]
 
+  - case: safety_simple
+    input:
+      kg_schema: safety_kg
+      prompt: Which organs are in our dataset?
+    expected:
+      entities: ["Organ"]
+      relationships: []
+      relationship_labels: {}
+      properties:
+        Organ: ["name"]
+      parts_of_query: ["^MATCH", "RETURN", "([a-zA-Z]*:Organ)", "name"]
+
+  - case: safety_medium
+    input:
+      kg_schema: safety_kg
+      prompt: Which model systems are used in the brain?
+    expected:
+      entities: ["ModelSystem", "Organ"]
+      relationships: ["ModelSystemRelevantToOrgan"]
+      relationship_labels:
+        ModelSystemRelevantToOrgan:
+          source: ModelSystem
+          target: Organ
+      properties:
+        ModelSystem: ["name"]
+        Organ: ["name"]
+      parts_of_query:
+        [
+          "^MATCH",
+          "RETURN",
+          "([a-zA-Z]*:ModelSystem)",
+          "([a-zA-Z]*:Organ)",
+          "([a-zA-Z]*)?:ModelSystemRelevantToOrgan]",
+          "[Bb]rain",
+          "\\(.*:ModelSystem\\)-\\[:ModelSystemRelevantToOrgan\\]->\\(.*:Organ\\)|\\(.*:Organ\\)<-\\[:ModelSystemRelevantToOrgan\\]-\\(.*:ModelSystem\\)",
+          "WHERE [a-zA-Z]*\\.name|{name:",
+        ]
+
 rag_interpretation:
   # test simple irrelevance judgement
   - case: explicit_relevance_no
@@ -3383,3 +3421,203 @@ kg_schemas:
         name: str
         score: float
         taxon: int
+
+  safety_kg:
+    case study:
+      represented_as: node
+      input_label: :CaseStudy
+      is_a: named thing
+      properties:
+        name: str
+        description: str
+    organ:
+      represented_as: node
+      input_label: :Organ
+      is_a: gross anatomical structure
+      properties:
+        name: str
+    web page:
+      represented_as: node
+      is_a: named thing
+      input_label: :WebPage
+      synonym: web page
+      properties:
+        name: str
+    AOP:
+      represented_as: node
+      input_label: :AOP
+      is_a: named thing
+      properties:
+        name: str
+        id: str
+        creator: str
+        description: str
+        source: str
+    key event:
+      represented_as: node
+      input_label: :KeyEvent
+      is_a: named thing
+      properties:
+        name: str
+        KEID: str
+        description: str
+    chemical:
+      represented_as: node
+      input_label: :Chemical
+      synonym_for: small molecule
+      properties:
+        name: str
+        CAS: str
+        SMILES: str
+        InChIKey: str
+        chemical group: str
+    bioassay:
+      is_a: named thing
+      represented_as: node
+      input_label: :Bioassay
+      properties:
+        name: str
+        measured: str
+    model system:
+      is_a: organismal entity
+      represented_as: node
+      input_label: :Model_system
+      properties:
+        name: str
+        cell type: str
+        description: str
+    computational model:
+      is_a: information content entity
+      represented_as: node
+      input_label: :Computational_model
+      properties:
+        name: str
+        type: str
+        language: str
+        input: str
+        output: str
+    measurable endpoint:
+      represented_as: node
+      is_a: phenomenon
+      input_label: :Measurable_endpoint
+      properties:
+        name: str
+        description: str
+        type: str
+    experimental condition:
+      is_a: study variable
+      represented_as: node
+      input_label: :Experimental_condition
+      properties:
+        exposure_duration: str
+        exposure_concentration: str
+        condition_name: str
+        description: str
+    case study related organ:
+      is_a: association
+      represented_as: edge
+      source: case study
+      target: organ
+      input_label: case_study_related_organ
+    AOP includes mie:
+      is_a: association
+      represented_as: edge
+      source: AOP
+      target: key event
+      input_label: AOP_includes_mie
+    AOP includes ao:
+      is_a: association
+      represented_as: edge
+      source: AOP
+      target: key event
+      input_label: AOP_includes_ao
+    AOP includes key event:
+      is_a: association
+      represented_as: edge
+      source: AOP
+      target: key event
+      input_label: AOP_includes_key_event
+    AOP relevant stressor:
+      is_a: association
+      represented_as: edge
+      source: AOP
+      target: stressor
+      input_label: AOP_relevant_stressor
+    chemical measured with bioassay:
+      is_a: association
+      represented_as: edge
+      source: chemical
+      target: bioassay
+      input_label: chemical_measured_with_bioassay
+    bioassay executed on model system:
+      is_a: association
+      represented_as: edge
+      source: bioassay
+      target: model system
+      input_label: bioassay_executed_on_model_system
+    case study relevant chemical:
+      is_a: association
+      represented_as: edge
+      source: case study
+      target: chemical
+      input_label: case_study_relevant_chemical
+    case study relevant model system:
+      is_a: association
+      represented_as: edge
+      source: case study
+      target: model system
+      input_label: case_study_relevant_model_system
+    case study relevant computational model:
+      is_a: association
+      represented_as: edge
+      source: case study
+      target: computational model
+      input_label: case_study_relevant_computational_model
+    chemical measured in model system:
+      is_a: association
+      represented_as: edge
+      source: chemical
+      target: model system
+      input_label: chemical_measured_in_model_system
+    chemical relevant to computational model:
+      is_a: association
+      represented_as: edge
+      source: chemical
+      target: computational model
+      input_label: chemical_relevant_to_computational_model
+    bioassay related organ:
+      is_a: association
+      represented_as: edge
+      source: bioassay
+      target: organ
+      input_label: bioassay_related_organ
+    model system relevant to organ:
+      is_a: association
+      represented_as: edge
+      source: model system
+      target: organ
+      input_label: model_system_relevant_to_organ
+    computational model relevant to organ:
+      is_a: association
+      represented_as: edge
+      source: computational model
+      target: organ
+      input_label: computational_model_relevant_to_organ
+    case study relevant endpoint:
+      is_a: association
+      represented_as: edge
+      source: case study
+      target: measurable endpoint
+      input_label: case_study_relevant_endpoint
+    bioassay used with experimental condition:
+      is_a: association
+      represented_as: edge
+      source: bioassay
+      target: experimental_condition
+      input_label: bioassay_used_with_experimental_condition
+    chemical to web page association:
+      is_a: association
+      represented_as: edge
+      source: chemical
+      target: web page
+      input_label: chemical_webpage
