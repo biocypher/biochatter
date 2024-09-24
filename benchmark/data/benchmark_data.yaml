@@ -158,6 +158,39 @@ biocypher_query_generation:
           "WHERE [a-zA-Z]*\\.name|{name:",
         ]
 
+  - case: safety_complex
+    input:
+      kg_schema: safety_kg
+      prompt: Which case studies are performed on the brain, and which chemicals are used in these case studies?
+    expected:
+      entities: ["CaseStudy", "Organ", "Chemical"]
+      relationships: ["CaseStudyRelatedOrgan", "CaseStudyRelevantChemical"]
+      relationship_labels:
+        CaseStudyRelatedOrgan:
+          source: CaseStudy
+          target: Organ
+        CaseStudyRelevantChemical:
+          source: CaseStudy
+          target: Chemical
+      properties:
+        CaseStudy: ["name"]
+        Organ: ["name"]
+        Chemical: ["name"]
+      parts_of_query:
+        [
+          "^MATCH",
+          "RETURN",
+          "([a-zA-Z]*:CaseStudy)",
+          "([a-zA-Z]*:Organ)",
+          "([a-zA-Z]*:Chemical)",
+          "([a-zA-Z]*)?:CaseStudyRelatedOrgan]",
+          "([a-zA-Z]*)?:CaseStudyRelevantChemical]",
+          "[Bb]rain",
+          "\\(.*:CaseStudy\\)-\\[:CaseStudyRelatedOrgan\\]->\\(.*:Organ\\)|\\(.*:Organ\\)<-\\[:CaseStudyRelatedOrgan\\]-\\(.*:CaseStudy\\)",
+          "\\(.*:CaseStudy\\)-\\[:CaseStudyRelevantChemical\\]->\\(.*:Chemical\\)|\\(.*:Chemical\\)<-\\[:CaseStudyRelevantChemical\\]-\\(.*:CaseStudy\\)",
+          "WHERE [a-zA-Z]*\\.name|{name:",
+        ]
+
 rag_interpretation:
   # test simple irrelevance judgement
   - case: explicit_relevance_no
