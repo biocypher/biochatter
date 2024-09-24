@@ -498,12 +498,16 @@ class BioCypherPromptEngine:
                     if source is None:
                         continue
                     if source not in self.selected_entities:
-                        self.selected_entities.append(source)
+                        self.selected_entities.append(
+                            sentencecase_to_pascalcase(source)
+                        )
                 for target in targets:
                     if target is None:
                         continue
                     if target not in self.selected_entities:
-                        self.selected_entities.append(target)
+                        self.selected_entities.append(
+                            sentencecase_to_pascalcase(target)
+                        )
 
         return bool(result)
 
