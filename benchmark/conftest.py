@@ -546,38 +546,38 @@ def pytest_generate_tests(metafunc):
     Called once for each test case in the benchmark test collection.
     If fixture is part of test declaration, the test is parametrized.
     """
-    # Load the data file
-    data_file = BENCHMARK_DATASET["benchmark_data.yaml"]
+    # Load the data
+    data = BENCHMARK_DATASET
 
     # Parametrize the fixtures with the collected rows
     if "test_data_biocypher_query_generation" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_biocypher_query_generation",
-            data_file["biocypher_query_generation"],
+            data["biocypher_query_generation"],
         )
     if "test_data_rag_interpretation" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_rag_interpretation",
-            data_file["rag_interpretation"],
+            data["rag_interpretation"],
         )
     if "test_data_text_extraction" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_text_extraction",
-            data_file["text_extraction"],
+            data["text_extraction"],
         )
     if "test_data_api_calling" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_api_calling",
-            data_file["api_calling"],
+            data["api_calling"],
         )
     if "test_data_medical_exam" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_medical_exam",
-            data_file["medical_exam"],
+            data["medical_exam"],
         )
 
 
 @pytest.fixture
 def kg_schemas():
-    data_file = BENCHMARK_DATASET["benchmark_data.yaml"]
-    return data_file["kg_schemas"]
+    data = BENCHMARK_DATASET
+    return data["kg_schemas"]

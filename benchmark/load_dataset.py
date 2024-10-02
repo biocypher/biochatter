@@ -48,34 +48,47 @@ def _load_hold_out_test_dataset() -> Dict[str, pd.DataFrame | Dict[str, str]]:
     return decrypted_test_data
 
 
-def _load_test_data_from_this_repository():
-    """Load test data from this repository.
+def _get_all_benchmark_files(directory_path):
+    """Get all files in the directory ending with _data.yaml.
+
+    Args:
+        directory_path (str): Path to the directory.
 
     Returns:
-        dict: keys are filenames and values are test data.
+        list: List of file paths ending with _data.yaml.
+    """
+    return [
+        os.path.join(directory_path, f)
+        for f in os.listdir(directory_path)
+        if f.endswith("_data.yaml")
+    ]
+
+
+def _load_test_data_from_this_repository():
+    """Load and combine test data from this repository.
+
+    Returns:
+        dict: Combined test data from all YAML files.
     """
     print("Using public test data from this repository for benchmarking.")
     directory_path = "./benchmark/data"
-    files_in_directory = _get_all_files(directory_path)
+    benchmark_files = _get_all_benchmark_files(directory_path)
 
-    test_data = {}
-    for file_path in files_in_directory:
-        if file_path.endswith(".yaml"):
-            with open(file_path, "r", encoding="utf-8") as stream:
-                try:
-                    yaml_data = yaml.safe_load(stream)
+    combined_data = {}
+    for file_path in benchmark_files:
+        with open(file_path, "r", encoding="utf-8", errors="ignore") as stream:
+            try:
+                yaml_data = yaml.safe_load(stream)
+                if not isinstance(yaml_data, dict):
+                    raise ValueError(
+                        f"Expected a dictionary but got {type(yaml_data)} from file {file_path}"
+                    )
+                yaml_data = _get_yaml_data(yaml_data)
+                combined_data.update(yaml_data)
+            except yaml.YAMLError as exc:
+                print(exc)
 
-                    if "_data" in file_path:
-                        yaml_data = _get_yaml_data(yaml_data)
-
-                    file_name = os.path.basename(file_path)
-
-                    test_data[file_name] = yaml_data
-
-                except yaml.YAMLError as exc:
-                    print(exc)
-
-    return test_data
+    return combined_data
 
 
 def _get_yaml_data(yaml_data):
@@ -293,18 +306,5 @@ def _apply_literal_eval(df: pd.DataFrame, columns: list[str]):
             )
 
 
-def _get_all_files(directory: str) -> list[str]:
-    """Get all files in a directory.
-
-    Args:
-        directory (str): Path to directory.
-
-    Returns:
-        List[str]: List of file paths.
-    """
-    all_files = []
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            file_path = os.path.join(root, file)
-            all_files.append(file_path)
-    return all_files
+if __name__ == "__main__":
+    get_benchmark_dataset()
