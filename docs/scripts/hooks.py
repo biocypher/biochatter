@@ -617,6 +617,7 @@ def plot_accuracy_per_task(overview):
             "gpt-4-0613": "gpt-4",
             "gpt-4-0125-preview": "gpt-4",
             "gpt-4o-2024-05-13": "gpt-4",
+            "gpt-4o-2024-08-06": "gpt-4",
         },
         regex=True,
     )
@@ -778,6 +779,7 @@ def plot_scatter_per_quantisation(overview):
         "gpt-4-0125-preview",
         "gpt-4-turbo-2024-04-09",
         "gpt-4o-2024-05-13",
+        "gpt-4o-2024-08-06",
         "gpt-4o-mini-2024-07-18",
         "llama-2-chat",
         "llama-3-instruct",
