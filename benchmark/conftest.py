@@ -17,7 +17,7 @@ from .load_dataset import get_benchmark_dataset
 from .benchmark_utils import benchmark_already_executed
 
 # how often should each benchmark be run?
-N_ITERATIONS = 1
+N_ITERATIONS = 3
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
@@ -29,6 +29,7 @@ OPENAI_MODEL_NAMES = [
     "gpt-4-0125-preview",
     "gpt-4-turbo-2024-04-09",
     "gpt-4o-2024-05-13",
+    "gpt-4o-2024-08-06",
     "gpt-4o-mini-2024-07-18",
 ]
 
@@ -40,8 +41,8 @@ ANTHROPIC_MODEL_NAMES = [
 XINFERENCE_MODELS = {
     # "code-llama-instruct": {
     #     "model_size_in_billions": [
-    #         7,
-    #         13,
+    #         # 7,
+    #         # 13,
     #         34,
     #     ],
     #     "model_format": "ggufv2",
@@ -127,28 +128,28 @@ XINFERENCE_MODELS = {
     #         # "FP16",
     #     ],
     # },
-    # "llama-2-chat": {
-    #     "model_size_in_billions": [
-    #         7,
-    #         13,
-    #         # 70,
-    #     ],
-    #     "model_format": "ggufv2",
-    #     "quantization": [
-    #         "Q2_K",
-    #         # "Q3_K_S",
-    #         "Q3_K_M",
-    #         # "Q3_K_L",
-    #         # "Q4_0",
-    #         # "Q4_K_S",
-    #         "Q4_K_M",
-    #         # "Q5_0",
-    #         # "Q5_K_S",
-    #         "Q5_K_M",
-    #         "Q6_K",
-    #         "Q8_0",
-    #     ],
-    # },
+    "llama-2-chat": {
+        "model_size_in_billions": [
+            7,
+            # 13,
+            # 70,
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            "Q2_K",
+            # "Q3_K_S",
+            "Q3_K_M",
+            # "Q3_K_L",
+            # "Q4_0",
+            # "Q4_K_S",
+            "Q4_K_M",
+            # "Q5_0",
+            # "Q5_K_S",
+            "Q5_K_M",
+            "Q6_K",
+            "Q8_0",
+        ],
+    },
     # "llama-3-instruct": {
     #     "model_size_in_billions": [
     #         8,
@@ -176,12 +177,12 @@ XINFERENCE_MODELS = {
         "model_format": "ggufv2",
         "quantization": [
             # 8B model quantisations
-            # "Q3_K_L",
+            "Q3_K_L",
             "IQ4_XS",
-            # "Q4_K_M",
+            "Q4_K_M",
             # "Q5_K_M",
             # "Q6_K",
-            # "Q8_0",
+            "Q8_0",
             # 70B model quantisations
             # "IQ2_M",
             # "Q2_K",
@@ -238,26 +239,26 @@ XINFERENCE_MODELS = {
     #         "none",
     #     ],
     # },
-    # "openhermes-2.5": {
-    #     "model_size_in_billions": [
-    #         7,
-    #     ],
-    #     "model_format": "ggufv2",
-    #     "quantization": [
-    #         "Q2_K",
-    #         # "Q3_K_S",
-    #         "Q3_K_M",
-    #         # "Q3_K_L",
-    #         # "Q4_0",
-    #         # "Q4_K_S",
-    #         "Q4_K_M",
-    #         # "Q5_0",
-    #         # "Q5_K_S",
-    #         "Q5_K_M",
-    #         "Q6_K",
-    #         "Q8_0",
-    #     ],
-    # },
+    "openhermes-2.5": {
+        "model_size_in_billions": [
+            7,
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            "Q2_K",
+            # "Q3_K_S",
+            "Q3_K_M",
+            # "Q3_K_L",
+            # "Q4_0",
+            # "Q4_K_S",
+            "Q4_K_M",
+            # "Q5_0",
+            # "Q5_K_S",
+            "Q5_K_M",
+            "Q6_K",
+            "Q8_0",
+        ],
+    },
 }
 
 # create concrete benchmark list by concatenating all combinations of model
