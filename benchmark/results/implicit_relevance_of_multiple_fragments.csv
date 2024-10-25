@@ -53,6 +53,8 @@ gpt-4-turbo-2024-04-09,implicit_relevance_no,1;1;1;1;1/1,5,b24fb31fd761b0f3e308b
 gpt-4-turbo-2024-04-09,implicit_relevance_yes,1;1;1;1;1/1,5,f9d749647929fcb55321c614a3bf8d20,2024-07-30 23:54:27,0.5.1
 gpt-4o-2024-05-13,implicit_relevance_no,0.4/1,5,b24fb31fd761b0f3e308bebd70ce4277,2024-05-15 11:48:08,0.4.10
 gpt-4o-2024-05-13,implicit_relevance_yes,1.0/1,5,f9d749647929fcb55321c614a3bf8d20,2024-05-15 11:48:22,0.4.10
+gpt-4o-2024-08-06,implicit_relevance_no,0;1;0/1,3,b24fb31fd761b0f3e308bebd70ce4277,2024-10-25 06:31:34,0.7.5
+gpt-4o-2024-08-06,implicit_relevance_yes,1;1;1/1,3,f9d749647929fcb55321c614a3bf8d20,2024-10-25 06:31:46,0.7.5
 gpt-4o-mini-2024-07-18,implicit_relevance_no,0;0;0;0;0/1,5,b24fb31fd761b0f3e308bebd70ce4277,2024-07-31 15:12:31,0.5.1
 gpt-4o-mini-2024-07-18,implicit_relevance_yes,1;1;1;1;1/1,5,f9d749647929fcb55321c614a3bf8d20,2024-07-31 15:12:49,0.5.1
 llama-2-chat:13:ggufv2:Q2_K,implicit_relevance:no,0.0/1,5,b24fb31fd761b0f3e308bebd70ce4277,2024-02-10 12:37:59,0.4.10

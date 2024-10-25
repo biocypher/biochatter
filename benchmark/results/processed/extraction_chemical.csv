@@ -2,8 +2,9 @@ Full model name,Subtask,Score achieved,Score possible,Score SD,Accuracy,Iteratio
 claude-3-opus-20240229,chemical,24.0,27.0,0.0,0.8888888888888888,3
 claude-3-5-sonnet-20240620,chemical,21.666666666666668,27.0,0.0,0.8024691358024691,3
 llama-3.1-instruct:70:ggufv2:IQ4_XS,chemical,20.0,27.0,0.0,0.7407407407407407,3
-llama-3.1-instruct:70:ggufv2:Q3_K_S,chemical,18.0,27.0,0.0,0.6666666666666666,3
+gpt-4o-2024-08-06,chemical,18.666666666666668,27.0,0.0,0.6913580246913581,3
 llama-3.1-instruct:70:ggufv2:IQ2_M,chemical,18.0,27.0,0.0,0.6666666666666666,3
+llama-3.1-instruct:70:ggufv2:Q3_K_S,chemical,18.0,27.0,0.0,0.6666666666666666,3
 gpt-4-turbo-2024-04-09,chemical,29.188034188034187,45.0,0.0,0.6486229819563153,5
 gpt-4o-mini-2024-07-18,chemical,27.77777777777778,45.0,0.0,0.6172839506172839,5
 llama-3.1-instruct:8:ggufv2:IQ4_XS,chemical,12.345121114053153,27.0,0.0,0.45722670792789455,3

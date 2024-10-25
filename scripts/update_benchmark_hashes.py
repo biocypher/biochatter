@@ -4,7 +4,7 @@ import yaml
 
 import pandas as pd
 
-from benchmark.load_dataset import _get_all_files, _get_yaml_data
+from benchmark.load_dataset import _get_all_benchmark_files, _get_yaml_data
 
 
 def _update_hashes_in_results():
@@ -16,7 +16,7 @@ def _update_hashes_in_results():
     avoid rerunning expensive benchmarks.
     """
     directory_path = "./benchmark/data"
-    files_in_directory = _get_all_files(directory_path)
+    files_in_directory = _get_all_benchmark_files(directory_path)
 
     for file_path in files_in_directory:
         if file_path.endswith(".yaml"):
@@ -62,9 +62,9 @@ def _update_hashes_in_results():
                             subtask = (
                                 row["subtask"].replace("_", "").replace(":", "")
                             )
-                            result_file.at[
-                                index, "md5_hash"
-                            ] = reference_hashes[subtask]
+                            result_file.at[index, "md5_hash"] = (
+                                reference_hashes[subtask]
+                            )
 
                         result_file.to_csv(file, index=False)
 

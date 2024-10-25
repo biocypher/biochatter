@@ -24,12 +24,13 @@ BENCHMARK_DATASET = get_benchmark_dataset()
 
 # which models should be benchmarked?
 OPENAI_MODEL_NAMES = [
-    # "gpt-3.5-turbo-0125",
-    # "gpt-4-0613",
-    # "gpt-4-0125-preview",
-    # "gpt-4-turbo-2024-04-09",
-    # "gpt-4o-2024-05-13",
-    # "gpt-4o-mini-2024-07-18",
+    "gpt-3.5-turbo-0125",
+    "gpt-4-0613",
+    "gpt-4-0125-preview",
+    "gpt-4-turbo-2024-04-09",
+    "gpt-4o-2024-05-13",
+    "gpt-4o-2024-08-06",
+    "gpt-4o-mini-2024-07-18",
 ]
 
 ANTHROPIC_MODEL_NAMES = [
@@ -40,8 +41,8 @@ ANTHROPIC_MODEL_NAMES = [
 XINFERENCE_MODELS = {
     # "code-llama-instruct": {
     #     "model_size_in_billions": [
-    #         7,
-    #         13,
+    #         # 7,
+    #         # 13,
     #         34,
     #     ],
     #     "model_format": "ggufv2",
@@ -127,28 +128,28 @@ XINFERENCE_MODELS = {
     #         # "FP16",
     #     ],
     # },
-    # "llama-2-chat": {
-    #     "model_size_in_billions": [
-    #         7,
-    #         13,
-    #         # 70,
-    #     ],
-    #     "model_format": "ggufv2",
-    #     "quantization": [
-    #         "Q2_K",
-    #         # "Q3_K_S",
-    #         "Q3_K_M",
-    #         # "Q3_K_L",
-    #         # "Q4_0",
-    #         # "Q4_K_S",
-    #         "Q4_K_M",
-    #         # "Q5_0",
-    #         # "Q5_K_S",
-    #         "Q5_K_M",
-    #         "Q6_K",
-    #         "Q8_0",
-    #     ],
-    # },
+    "llama-2-chat": {
+        "model_size_in_billions": [
+            7,
+            # 13,
+            # 70,
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            "Q2_K",
+            # "Q3_K_S",
+            "Q3_K_M",
+            # "Q3_K_L",
+            # "Q4_0",
+            # "Q4_K_S",
+            "Q4_K_M",
+            # "Q5_0",
+            # "Q5_K_S",
+            "Q5_K_M",
+            "Q6_K",
+            "Q8_0",
+        ],
+    },
     # "llama-3-instruct": {
     #     "model_size_in_billions": [
     #         8,
@@ -168,31 +169,31 @@ XINFERENCE_MODELS = {
     #         # "Q4_K_M",
     #     ],
     # },
-    # "llama-3.1-instruct": {
-    #     "model_size_in_billions": [
-    #         8,
-    #         # 70,
-    #     ],
-    #     "model_format": "ggufv2",
-    #     "quantization": [
-    #         # 8B model quantisations
-    #         # "Q3_K_L",
-    #         "IQ4_XS",
-    #         # "Q4_K_M",
-    #         # "Q5_K_M",
-    #         # "Q6_K",
-    #         # "Q8_0",
-    #         # 70B model quantisations
-    #         # "IQ2_M",
-    #         # "Q2_K",
-    #         # "Q3_K_S",
-    #         # "IQ4_XS",
-    #         # "Q4_K_M",  # crazy slow on mbp m3 max
-    #         # "Q5_K_M",
-    #         # "Q6_K",
-    #         # "Q8_0",
-    #     ],
-    # },
+    "llama-3.1-instruct": {
+        "model_size_in_billions": [
+            8,
+            # 70,
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            # 8B model quantisations
+            "Q3_K_L",
+            "IQ4_XS",
+            "Q4_K_M",
+            # "Q5_K_M",
+            # "Q6_K",
+            "Q8_0",
+            # 70B model quantisations
+            # "IQ2_M",
+            # "Q2_K",
+            # "Q3_K_S",
+            # "IQ4_XS",
+            # "Q4_K_M",  # crazy slow on mbp m3 max
+            # "Q5_K_M",
+            # "Q6_K",
+            # "Q8_0",
+        ],
+    },
     # "mistral-instruct-v0.2": {
     #     "model_size_in_billions": [
     #         7,
@@ -238,26 +239,26 @@ XINFERENCE_MODELS = {
     #         "none",
     #     ],
     # },
-    # "openhermes-2.5": {
-    #     "model_size_in_billions": [
-    #         7,
-    #     ],
-    #     "model_format": "ggufv2",
-    #     "quantization": [
-    #         "Q2_K",
-    #         # "Q3_K_S",
-    #         "Q3_K_M",
-    #         # "Q3_K_L",
-    #         # "Q4_0",
-    #         # "Q4_K_S",
-    #         "Q4_K_M",
-    #         # "Q5_0",
-    #         # "Q5_K_S",
-    #         "Q5_K_M",
-    #         "Q6_K",
-    #         "Q8_0",
-    #     ],
-    # },
+    "openhermes-2.5": {
+        "model_size_in_billions": [
+            7,
+        ],
+        "model_format": "ggufv2",
+        "quantization": [
+            "Q2_K",
+            # "Q3_K_S",
+            "Q3_K_M",
+            # "Q3_K_L",
+            # "Q4_0",
+            # "Q4_K_S",
+            "Q4_K_M",
+            # "Q5_0",
+            # "Q5_K_S",
+            "Q5_K_M",
+            "Q6_K",
+            "Q8_0",
+        ],
+    },
 }
 
 # create concrete benchmark list by concatenating all combinations of model
@@ -546,38 +547,38 @@ def pytest_generate_tests(metafunc):
     Called once for each test case in the benchmark test collection.
     If fixture is part of test declaration, the test is parametrized.
     """
-    # Load the data file
-    data_file = BENCHMARK_DATASET["benchmark_data.yaml"]
+    # Load the data
+    data = BENCHMARK_DATASET
 
     # Parametrize the fixtures with the collected rows
     if "test_data_biocypher_query_generation" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_biocypher_query_generation",
-            data_file["biocypher_query_generation"],
+            data["biocypher_query_generation"],
         )
     if "test_data_rag_interpretation" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_rag_interpretation",
-            data_file["rag_interpretation"],
+            data["rag_interpretation"],
         )
     if "test_data_text_extraction" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_text_extraction",
-            data_file["text_extraction"],
+            data["text_extraction"],
         )
     if "test_data_api_calling" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_api_calling",
-            data_file["api_calling"],
+            data["api_calling"],
         )
     if "test_data_medical_exam" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_medical_exam",
-            data_file["medical_exam"],
+            data["medical_exam"],
         )
 
 
 @pytest.fixture
 def kg_schemas():
-    data_file = BENCHMARK_DATASET["benchmark_data.yaml"]
-    return data_file["kg_schemas"]
+    data = BENCHMARK_DATASET
+    return data["kg_schemas"]

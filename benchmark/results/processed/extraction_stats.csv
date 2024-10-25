@@ -1,7 +1,8 @@
 Full model name,Subtask,Score achieved,Score possible,Score SD,Accuracy,Iterations
 claude-3-5-sonnet-20240620,stats,27.0,27.0,0.0,1.0,3
-gpt-4-turbo-2024-04-09,stats,45.0,45.0,0.0,1.0,5
 claude-3-opus-20240229,stats,27.0,27.0,0.0,1.0,3
+gpt-4-turbo-2024-04-09,stats,45.0,45.0,0.0,1.0,5
+gpt-4o-2024-08-06,stats,26.53846153846154,27.0,0.0,0.982905982905983,3
 gpt-4o-mini-2024-07-18,stats,42.56410256410256,45.0,0.0,0.9458689458689459,5
 llama-3.1-instruct:70:ggufv2:IQ4_XS,stats,24.0,27.0,0.0,0.8888888888888888,3
 llama-3.1-instruct:8:ggufv2:Q6_K,stats,18.662237949366663,27.0,0.0,0.6911939981246912,3

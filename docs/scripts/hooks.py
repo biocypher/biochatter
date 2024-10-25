@@ -35,6 +35,7 @@ def on_pre_build(config, **kwargs) -> None:
     overview = create_overview_table(result_files_path, result_file_names)
 
     plot_text2cypher()
+    plot_text2cypher_safety_only()
     plot_image_caption_confidence()
     plot_medical_exam()
     plot_extraction_tasks()
@@ -149,6 +150,105 @@ def plot_text2cypher():
     plt.legend(bbox_to_anchor=(1, 1), loc="upper left")
     plt.savefig(
         "docs/images/boxplot-text2cypher.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+
+
+def plot_text2cypher_safety_only():
+    """
+
+    Get entity_selection, relationship_selection, property_selection,
+    property_exists, query_generation, and end_to_end_query_generation results
+    files, combine and preprocess them and plot the accuracy for each model as a
+    boxplot. Only use data that has 'safety' in the task name.
+
+    """
+    entity_selection = pd.read_csv("benchmark/results/entity_selection.csv")
+    entity_selection["task"] = "entity_selection"
+    relationship_selection = pd.read_csv(
+        "benchmark/results/relationship_selection.csv"
+    )
+    relationship_selection["task"] = "relationship_selection"
+    property_selection = pd.read_csv("benchmark/results/property_selection.csv")
+    property_selection["task"] = "property_selection"
+    property_exists = pd.read_csv("benchmark/results/property_exists.csv")
+    property_exists["task"] = "property_exists"
+    query_generation = pd.read_csv("benchmark/results/query_generation.csv")
+    query_generation["task"] = "query_generation"
+    end_to_end_query_generation = pd.read_csv(
+        "benchmark/results/end_to_end_query_generation.csv"
+    )
+    end_to_end_query_generation["task"] = "end_to_end_query_generation"
+
+    # combine all results
+    results = pd.concat(
+        [
+            entity_selection,
+            relationship_selection,
+            property_selection,
+            property_exists,
+            query_generation,
+            end_to_end_query_generation,
+        ]
+    )
+
+    # only include rows where 'safety' is in the subtask name
+    results = results[results["subtask"].str.contains("safety")]
+
+    # calculate accuracy
+    results["score_possible"] = results["score"].apply(
+        lambda x: float(x.split("/")[1])
+    )
+    results["scores"] = results["score"].apply(lambda x: x.split("/")[0])
+    results["score_achieved"] = results["scores"].apply(
+        lambda x: (
+            np.mean([float(score) for score in x.split(";")])
+            if ";" in x
+            else float(x)
+        )
+    )
+    results["accuracy"] = results["score_achieved"] / results["score_possible"]
+    results["score_sd"] = results["scores"].apply(
+        lambda x: (
+            np.std([float(score) for score in x.split(";")], ddof=1)
+            if ";" in x
+            else 0
+        )
+    )
+
+    results["model"] = results["model_name"].apply(lambda x: x.split(":")[0])
+
+    # order task by median accuracy ascending
+    task_order = (
+        results.groupby("task")["accuracy"].median().sort_values().index
+    )
+
+    # order model by median accuracy ascending within each task
+    results["model"] = results["model"].astype(
+        pd.CategoricalDtype(
+            categories=results.groupby("model")["accuracy"]
+            .median()
+            .sort_values()
+            .index,
+            ordered=True,
+        )
+    )
+
+    # plot results per task
+    sns.set_theme(style="whitegrid")
+    plt.figure(figsize=(6, 4))
+
+    plt.xticks(rotation=45, ha="right")
+    sns.stripplot(
+        x="model",
+        y="accuracy",
+        hue="subtask",
+        data=results,
+    )
+    plt.legend(bbox_to_anchor=(1, 1), loc="upper left")
+    plt.savefig(
+        "docs/images/stripplot-text2cypher-safety.png",
         bbox_inches="tight",
         dpi=300,
     )
@@ -517,6 +617,7 @@ def plot_accuracy_per_task(overview):
             "gpt-4-0613": "gpt-4",
             "gpt-4-0125-preview": "gpt-4",
             "gpt-4o-2024-05-13": "gpt-4",
+            "gpt-4o-2024-08-06": "gpt-4",
         },
         regex=True,
     )
@@ -678,6 +779,7 @@ def plot_scatter_per_quantisation(overview):
         "gpt-4-0125-preview",
         "gpt-4-turbo-2024-04-09",
         "gpt-4o-2024-05-13",
+        "gpt-4o-2024-08-06",
         "gpt-4o-mini-2024-07-18",
         "llama-2-chat",
         "llama-3-instruct",
