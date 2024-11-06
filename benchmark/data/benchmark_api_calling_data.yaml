@@ -66,9 +66,10 @@ api_calling:
           "isFunctionalFusion=true",
           "tumorType=Lung%20Adenocarcinoma",
         ]
-  - case: biotools:topic:proteomics
+  - case: biotools:topic:metabolomics
     input:
       prompt:
-        fuzzy_search: "Which tools can I use for proteomics?"
+        fuzzy_search: "Which tools can I use for metabolomics?"
     expected:
-      parts_of_query: ["https://bio.tools/api/t/", "\\?topic=", "[pP]roteomics"]
+      parts_of_query:
+        ["https://bio.tools/api/t/", "\\?topic=", "[mM]etabolomics"]
