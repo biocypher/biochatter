@@ -244,7 +244,7 @@ Here is the information relevant to the question found on the bio.tools web API:
 class BioToolsQueryParameters(BaseModel):
     base_url: str = Field(
         default="https://bio.tools/api/",
-        description="Base URL for the BioTools API. Default is the demo instance.",
+        description="Base URL for the BioTools API.",
     )
     endpoint: str = Field(
         ...,

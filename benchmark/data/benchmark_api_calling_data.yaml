@@ -3,11 +3,16 @@
 #
 # Test case keys:
 # - input (for creating the test)
-# - expected (for asserting ourcomes and generating a score)
+# - expected (for asserting outcomes and generating a score)
 # - case (for categorizing the test case)
 #
 # If any input is a dictionary itself, it will be expanded into separate test
 # cases, using the top-level key to create a concatenated test case purpose.
+#
+# We are using regular expressions to evaluate the expected parts, to be able to
+# account for variations in the output (e.g. whitespace, capitalization). Make
+# sure to escape special characters in the regular expressions, such as '?',
+# '.', etc., by adding two backslashes before them.
 
 api_calling:
   - case: oncokb:braf:melanoma
@@ -17,7 +22,7 @@ api_calling:
     expected:
       parts_of_query:
         [
-          "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange?",
+          "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange\\?",
           "hugoSymbol=BRAF",
           "alteration=V600E",
           "tumorType=Melanoma",
@@ -29,7 +34,8 @@ api_calling:
     expected:
       parts_of_query:
         [
-          "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange?hugoSymbol=TP53",
+          "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange\\?",
+          "hugoSymbol=TP53",
           "alteration=R273C",
           "tumorType=Colon%20Adenocarcinoma",
         ]
@@ -41,7 +47,7 @@ api_calling:
     expected:
       parts_of_query:
         [
-          "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange?",
+          "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange\\?",
           "hugoSymbol=BRAF",
           "alteration=N486_P490del",
           "tumorType=Histiocytosis",
@@ -53,10 +59,16 @@ api_calling:
     expected:
       parts_of_query:
         [
-          "https://demo.oncokb.org/api/v1/annotate/structuralVariants?",
+          "https://demo.oncokb.org/api/v1/annotate/structuralVariants\\?",
           "hugoSymbolA=CD74",
           "hugoSymbolB=ROS1",
           "structuralVariantType=FUSION",
           "isFunctionalFusion=true",
           "tumorType=Lung%20Adenocarcinoma",
         ]
+  - case: biotools:topic:proteomics
+    input:
+      prompt:
+        exact_spelling: "Which tools can I use for proteomics?"
+    expected:
+      parts_of_query: ["https://bio.tools/api/t/", "\\?topic=", "[pP]roteomics"]
