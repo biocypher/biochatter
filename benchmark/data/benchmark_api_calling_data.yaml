@@ -69,6 +69,6 @@ api_calling:
   - case: biotools:topic:proteomics
     input:
       prompt:
-        exact_spelling: "Which tools can I use for proteomics?"
+        fuzzy_search: "Which tools can I use for proteomics?"
     expected:
       parts_of_query: ["https://bio.tools/api/t/", "\\?topic=", "[pP]roteomics"]
