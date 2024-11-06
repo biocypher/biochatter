@@ -1,10 +1,11 @@
 from urllib.parse import urlencode
 import inspect
+import re
 
 import pytest
 
 from biochatter._misc import ensure_iterable
-from biochatter.api_agent.oncokb import OncoKBQueryBuilder
+from biochatter.api_agent import OncoKBQueryBuilder, BioToolsQueryBuilder
 from .conftest import calculate_bool_vector_score
 from .benchmark_utils import (
     skip_if_already_run,
@@ -31,24 +32,27 @@ def test_api_calling(
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
-        builder = OncoKBQueryBuilder()
+        if "oncokb" in yaml_data["case"]:
+            builder = OncoKBQueryBuilder()
+        elif "biotools" in yaml_data["case"]:
+            builder = BioToolsQueryBuilder()
         parameters = builder.parameterise_query(
             question=yaml_data["input"]["prompt"],
             conversation=conversation,
         )
 
-        params = parameters.dict(exclude_unset=True)
+        params = parameters.dict(exclude_none=True)
         endpoint = params.pop("endpoint")
         base_url = params.pop("base_url")
         params.pop("question_uuid")
-        full_url = f"{base_url}/{endpoint}"
+        full_url = f"{base_url.rstrip('/')}/{endpoint.lstrip('/')}"
         api_query = f"{full_url}?{urlencode(params)}"
 
         score = []
         for expected_part in ensure_iterable(
             yaml_data["expected"]["parts_of_query"]
         ):
-            if expected_part in api_query:
+            if re.search(expected_part, api_query):
                 score.append(True)
             else:
                 score.append(False)
