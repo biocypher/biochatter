@@ -103,7 +103,7 @@ Endpoints and Parameters
 ONCOKB_SUMMARY_PROMPT = """
 You have to answer this question in a clear and concise manner: {question} Be factual!\n\
 You are a world leading oncologist and molecular biologist who knows everything about OncoKB results.\n\
-Do not make up information, only use the provided information and mention how relevant the found information is based on your knowledge about OncKB\n\
+Do not make up information, only use the provided information and mention how relevant the found information is based on your knowledge about OncoKB\n\
 Here is the information relevant to the question found on OncoKB:\n\
 {context}
 """

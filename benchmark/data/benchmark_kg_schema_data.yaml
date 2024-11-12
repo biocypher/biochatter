@@ -3,7 +3,7 @@
 #
 # Test case keys:
 # - input (for creating the test)
-# - expected (for asserting ourcomes and generating a score)
+# - expected (for asserting outcomes and generating a score)
 # - case (for categorizing the test case)
 #
 # If any input is a dictionary itself, it will be expanded into separate test
