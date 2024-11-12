@@ -583,7 +583,7 @@ class BioToolsInterpreter(BaseInterpreter):
         response_text: str,
     ) -> str:
         """
-        Function to extract the answer from the BLAST results.
+        Function to extract the answer from the bio.tools results.
 
         Args:
             question (str): The question to be answered.
@@ -591,7 +591,7 @@ class BioToolsInterpreter(BaseInterpreter):
             response_text (str): The response.text returned by bio.tools.
 
         Returns:
-            str: The extracted answer from the BLAST results.
+            str: The extracted answer from the bio.tools results.
 
         """
         prompt = ChatPromptTemplate.from_messages(
