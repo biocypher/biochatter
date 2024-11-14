@@ -5,7 +5,11 @@ import re
 import pytest
 
 from biochatter._misc import ensure_iterable
-from biochatter.api_agent import OncoKBQueryBuilder, BioToolsQueryBuilder
+from biochatter.api_agent import (
+    OncoKBQueryBuilder,
+    BioToolsQueryBuilder,
+    BrAPIQueryBuilder,
+)
 from .conftest import calculate_bool_vector_score
 from .benchmark_utils import (
     skip_if_already_run,
@@ -36,6 +40,8 @@ def test_api_calling(
             builder = OncoKBQueryBuilder()
         elif "biotools" in yaml_data["case"]:
             builder = BioToolsQueryBuilder()
+        elif "brapi" in yaml_data["case"]:
+            builder = BrAPIQueryBuilder()
         parameters = builder.parameterise_query(
             question=yaml_data["input"]["prompt"],
             conversation=conversation,
