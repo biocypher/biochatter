@@ -12,7 +12,7 @@ from biochatter.llm_connect import Conversation
 from .abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
 
 BRAPI_QUERY_PROMPT = """
-You are a world class algorithm for creating queries in structured formats. Your task is to use the web API of Breeding API (BrAPI) to answer questions about <content>.
+You are a world class algorithm for creating queries in structured formats. Your task is to use the web API of Breeding API (BrAPI) to answer questions about plant germplasm or phenotyping studies.
 
 You have to extract the appropriate information out of the examples:
 1. To list information about the tools, use the endpoint <endpoint> with parameters like <param examples>.
@@ -22,11 +22,24 @@ Use these formats to generate queries based on the question provided. Below is m
 
 Base URL
 
-<base URL>
+https://urgi.versailles.inrae.fr/faidare/brapi/v1/
 
 Endpoints and Parameters
 
-<general API usage, examples, copy some parts of the BrAPI docs?>
+1. Get germplasm 
+	•	GET /germplasm
+	•	Parameters:
+        •	accessionNumber	The unique identifier for a material or germplasm within a genebankMCPD (v2.1) (ACCENUMB) 2. This is the unique identifier for accessions within a genebank, and is assigned when a sample is entered into the genebank collection (e.g. "PI 113869").
+        •	collection	A specific panel/collection/population name this germplasm belongs to.
+        •	binomialName	The full binomial name (scientific name) to identify a germplasm
+        •	genus	Genus name to identify germplasm
+        •	species	Species name to identify germplasm
+        •	synonym	Alternative name or ID used to reference this germplasm
+        •	studyDbId	Use this parameter to only return results associated with the given Study unique identifier. Use GET /studies to find the list of available Studies on a server.
+        •	germplasmName	Use this parameter to only return results associated with the given Germplasm by its human readable name. Use GET /germplasm to find the list of available Germplasm on a server.
+        •	germplasmPUI	Use this parameter to only return results associated with the given Germplasm by its global permanent unique identifier. Use GET /germplasm to find the list of available Germplasm on a server.
+
+
 
 """
 
@@ -54,6 +67,42 @@ class BrAPIQueryParameters(BaseModel):
     question_uuid: Optional[str] = Field(
         default_factory=lambda: str(uuid.uuid4()),
         description="Unique identifier for the question.",
+    )
+    accessionNumber	: str = Field(
+        default=None,
+        description="The unique identifier for a material or germplasm within a genebankMCPD (v2.1) (ACCENUMB) 2. This is the unique identifier for accessions within a genebank, and is assigned when a sample is entered into the genebank collection (e.g. \"PI 113869\".)",
+    )
+    collection : str = Field(
+        default=None,
+        description="A specific panel/collection/population name this germplasm belongs to.",
+    )
+    binomialName : str = Field(
+        default=None,
+        description="The full binomial name (scientific name) to identify a germplasm.",
+    )
+    genus : str = Field(
+        default=None,
+        description="Genus name to identify germplasm.",
+    )
+    species : str = Field(
+        default=None,
+        description="Species name to identify germplasm.",
+    )
+    synonym : str = Field(
+        default=None,
+        description="Alternative name or ID used to reference this germplasm.",
+    )
+    studyDbId : str = Field(
+        default=None,
+        description="Use this parameter to only return results associated with the given Study unique identifier. Use GET /studies to find the list of available Studies on a server.",
+    )
+    germplasmName : str = Field(
+        default=None,
+        description="Use this parameter to only return results associated with the given Germplasm by its human readable name. Use GET /germplasm to find the list of available Germplasm on a server.",
+    )
+    germplasmPUI : str = Field(
+        default=None,
+        description="Use this parameter to only return results associated with the given Germplasm by its global permanent unique identifier. Use GET /germplasm to find the list of available Germplasm on a server.",
     )
 
 

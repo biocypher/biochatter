@@ -73,3 +73,12 @@ api_calling:
     expected:
       parts_of_query:
         ["https://bio.tools/api/t/", "\\?topic=", "[mM]etabolomics"]
+  - case: brapi:germplasm:poc
+    input:
+      prompt:
+        fuzzy_search: "What germplasms belong to Vitis Species?"
+    expected:
+      parts_of_query:
+        ["https://urgi.versailles.inrae.fr/faidare/brapi/v1/", "\\germplasm", "Vitis"]
+
+
