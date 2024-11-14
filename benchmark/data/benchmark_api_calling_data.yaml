@@ -76,9 +76,12 @@ api_calling:
   - case: brapi:germplasm:poc
     input:
       prompt:
-        fuzzy_search: "What germplasms belong to Vitis Species?"
+        fuzzy_search: "What germplasms belong to the Vitis genus?"
     expected:
       parts_of_query:
-        ["https://urgi.versailles.inrae.fr/faidare/brapi/v1/", "\\germplasm", "Vitis"]
-
-
+        [
+          "https://urgi.versailles.inrae.fr/faidare/brapi/v1/",
+          "germplasm",
+          "\\?genus",
+          "Vitis",
+        ]

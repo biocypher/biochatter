@@ -19,6 +19,7 @@ gpt-4o-2024-05-13,oncokb:braf:histiocytosis:exact_spelling,4;4;4/4,3,f7e5a41f8fb
 gpt-4o-2024-05-13,oncokb:braf:melanoma:exact_spelling,4;4;4/4,3,b52eb44672033de81ec2213895507706,2024-07-18 12:27:07,0.4.13
 gpt-4o-2024-05-13,oncokb:ros1:lung_adenocarcinoma:exact_spelling,3;3;3/6,3,a453756cc6dd549acb390cdf6108eddf,2024-07-18 12:27:35,0.4.13
 gpt-4o-2024-05-13,oncokb:tp53:colon_adenocarcinoma:exact_spelling,2;2;2/3,3,72f23eb51d35737c7a446180582488ab,2024-07-18 12:27:13,0.4.13
+gpt-4o-2024-08-06,brapi:germplasm:poc:fuzzy_search,4/4,1,a906498221d9ee3fddd857529a7f6af8,2024-11-14 14:16:09,0.7.5
 gpt-4o-mini-2024-07-18,oncokb:braf:histiocytosis:descriptive_spelling,3;3;3;3;3/4,5,a52dc4ba2dd21ff2aa53654c3f26b2c5,2024-07-31 00:14:55,0.5.1
 gpt-4o-mini-2024-07-18,oncokb:braf:histiocytosis:exact_spelling,4;4;4;4;4/4,5,f7e5a41f8fb5eb520571bc46c8e4916c,2024-07-31 00:14:48,0.5.1
 gpt-4o-mini-2024-07-18,oncokb:braf:melanoma:exact_spelling,4;4;4;4;4/4,5,b52eb44672033de81ec2213895507706,2024-07-31 00:14:32,0.5.1

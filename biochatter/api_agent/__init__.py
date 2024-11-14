@@ -11,6 +11,7 @@ from .bio_tools import (
     BioToolsInterpreter,
     BioToolsQueryBuilder,
 )
+from .brapi import BrAPIQueryBuilder, BrAPIFetcher, BrAPIInterpreter
 from .api_agent import APIAgent
 
 __all__ = [
