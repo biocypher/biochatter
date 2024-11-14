@@ -85,3 +85,17 @@ api_calling:
           "\\?genus",
           "Vitis",
         ]
+  - case: brapi:germplasm:genusAndSpecies
+    input:
+      prompt:
+        fuzzy_search: "What germplasms belong to the Vitis genus and species vinifera?"
+    expected:
+      parts_of_query:
+        [
+          "https://urgi.versailles.inrae.fr/faidare/brapi/v1/germplasm",
+          "\\?genus",
+          "Vitis",
+          "\\&species",
+          "vinifera",
+        ]
+
