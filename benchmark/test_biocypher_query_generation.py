@@ -1,16 +1,17 @@
-import re
-import json
 import inspect
+import json
+import re
 
 import pytest
 
 from biochatter.prompts import BioCypherPromptEngine
-from .conftest import calculate_bool_vector_score
+
 from .benchmark_utils import (
-    skip_if_already_run,
     get_result_file_path,
+    skip_if_already_run,
     write_results_to_file,
 )
+from .conftest import calculate_bool_vector_score
 
 
 def test_naive_query_generation_using_schema(
@@ -23,7 +24,9 @@ def test_naive_query_generation_using_schema(
     yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     skip_if_already_run(
-        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+        model_name=model_name,
+        task=task,
+        md5_hash=yaml_data["hash"],
     )
     schema = kg_schemas[yaml_data["input"]["kg_schema"]]
 
@@ -33,11 +36,11 @@ def test_naive_query_generation_using_schema(
         conversation.append_system_message(
             "You are a database expert. Please write a Cypher query to "
             "retrieve information for the user. The schema of the graph is "
-            "defined as follows: "
+            "defined as follows: ",
         )
         conversation.append_system_message(json.dumps(schema, indent=2))
         conversation.append_system_message(
-            "Only return the query, nothing else."
+            "Only return the query, nothing else.",
         )
 
         query, _, _ = conversation.query(yaml_data["input"]["prompt"])
@@ -46,12 +49,11 @@ def test_naive_query_generation_using_schema(
         for expected_part_of_query in yaml_data["expected"]["parts_of_query"]:
             if isinstance(expected_part_of_query, tuple):
                 score.append(
-                    expected_part_of_query[0] in query
-                    or expected_part_of_query[1] in query
+                    expected_part_of_query[0] in query or expected_part_of_query[1] in query,
                 )
             else:
                 score.append(
-                    (re.search(expected_part_of_query, query) is not None)
+                    re.search(expected_part_of_query, query) is not None,
                 )
         return calculate_bool_vector_score(score)
 
@@ -74,11 +76,14 @@ def get_prompt_engine(
     """Helper function to create the prompt engine for the test.
 
     Args:
+    ----
         kg_schema_dict (dict): The KG schema
         create_prompt_engine: The function to create the BioCypherPromptEngine
 
     Returns:
+    -------
         BioCypherPromptEngine: The prompt engine for the test
+
     """
     return create_prompt_engine(kg_schema_dict=kg_schema_dict)
 
@@ -94,10 +99,13 @@ def test_entity_selection(
     yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     skip_if_already_run(
-        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+        model_name=model_name,
+        task=task,
+        md5_hash=yaml_data["hash"],
     )
     prompt_engine = get_prompt_engine(
-        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]],
+        prompt_engine,
     )
 
     def run_test():
@@ -138,10 +146,13 @@ def test_relationship_selection(
     if not yaml_data["expected"]["relationships"]:
         pytest.skip("No relationships to test")
     skip_if_already_run(
-        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+        model_name=model_name,
+        task=task,
+        md5_hash=yaml_data["hash"],
     )
     prompt_engine = get_prompt_engine(
-        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]],
+        prompt_engine,
     )
 
     prompt_engine.question = yaml_data["input"]["prompt"]
@@ -155,23 +166,18 @@ def test_relationship_selection(
         assert success
 
         score = []
-        for expected_relationship_label_key in yaml_data["expected"][
-            "relationship_labels"
-        ].keys():
+        for expected_relationship_label_key in yaml_data["expected"]["relationship_labels"].keys():
             score.append(
-                expected_relationship_label_key
-                in prompt_engine.selected_relationship_labels.keys()
+                expected_relationship_label_key in prompt_engine.selected_relationship_labels.keys(),
             )
 
-            for expected_relationship_label_value in yaml_data["expected"][
-                "relationship_labels"
-            ][expected_relationship_label_key]:
+            for expected_relationship_label_value in yaml_data["expected"]["relationship_labels"][
+                expected_relationship_label_key
+            ]:
                 try:
                     score.append(
                         expected_relationship_label_value
-                        in prompt_engine.selected_relationship_labels[
-                            expected_relationship_label_key
-                        ]
+                        in prompt_engine.selected_relationship_labels[expected_relationship_label_key],
                     )
                 except KeyError:
                     score.append(False)
@@ -200,17 +206,18 @@ def test_property_selection(
     yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     skip_if_already_run(
-        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+        model_name=model_name,
+        task=task,
+        md5_hash=yaml_data["hash"],
     )
     prompt_engine = get_prompt_engine(
-        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]],
+        prompt_engine,
     )
 
     prompt_engine.question = yaml_data["input"]["prompt"]
     prompt_engine.selected_entities = yaml_data["expected"]["entities"]
-    prompt_engine.selected_relationships = yaml_data["expected"][
-        "relationships"
-    ]
+    prompt_engine.selected_relationships = yaml_data["expected"]["relationships"]
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
@@ -218,35 +225,25 @@ def test_property_selection(
 
         if success:
             score = []
-            for expected_property_key in yaml_data["expected"][
-                "properties"
-            ].keys():
+            for expected_property_key in yaml_data["expected"]["properties"].keys():
                 try:
                     score.append(
-                        expected_property_key
-                        in prompt_engine.selected_properties.keys()
+                        expected_property_key in prompt_engine.selected_properties.keys(),
                     )
                 except KeyError:
                     score.append(False)
 
-                for expected_property_value in yaml_data["expected"][
-                    "properties"
-                ][expected_property_key]:
+                for expected_property_value in yaml_data["expected"]["properties"][expected_property_key]:
                     try:
                         score.append(
-                            expected_property_value
-                            in prompt_engine.selected_properties[
-                                expected_property_key
-                            ]
+                            expected_property_value in prompt_engine.selected_properties[expected_property_key],
                         )
                     except KeyError:
                         score.append(False)
         else:
             total_properties = len(
-                yaml_data["expected"]["properties"].keys()
-            ) + sum(
-                len(v) for v in yaml_data["expected"]["properties"].values()
-            )
+                yaml_data["expected"]["properties"].keys(),
+            ) + sum(len(v) for v in yaml_data["expected"]["properties"].values())
             score = [False] * total_properties
 
         return calculate_bool_vector_score(score)
@@ -274,10 +271,13 @@ def test_query_generation(
     yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     skip_if_already_run(
-        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+        model_name=model_name,
+        task=task,
+        md5_hash=yaml_data["hash"],
     )
     prompt_engine = get_prompt_engine(
-        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]],
+        prompt_engine,
     )
 
     def run_test():
@@ -295,12 +295,11 @@ def test_query_generation(
         for expected_part_of_query in yaml_data["expected"]["parts_of_query"]:
             if isinstance(expected_part_of_query, tuple):
                 score.append(
-                    expected_part_of_query[0] in query
-                    or expected_part_of_query[1] in query
+                    expected_part_of_query[0] in query or expected_part_of_query[1] in query,
                 )
             else:
                 score.append(
-                    (re.search(expected_part_of_query, query) is not None)
+                    re.search(expected_part_of_query, query) is not None,
                 )
         return calculate_bool_vector_score(score)
 
@@ -327,10 +326,13 @@ def test_end_to_end_query_generation(
     yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     skip_if_already_run(
-        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+        model_name=model_name,
+        task=task,
+        md5_hash=yaml_data["hash"],
     )
     prompt_engine = get_prompt_engine(
-        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]],
+        prompt_engine,
     )
 
     def run_test():
@@ -341,19 +343,16 @@ def test_end_to_end_query_generation(
                 query_language="Cypher",
             )
             score = []
-            for expected_part_of_query in yaml_data["expected"][
-                "parts_of_query"
-            ]:
+            for expected_part_of_query in yaml_data["expected"]["parts_of_query"]:
                 if isinstance(expected_part_of_query, tuple):
                     score.append(
-                        expected_part_of_query[0] in query
-                        or expected_part_of_query[1] in query
+                        expected_part_of_query[0] in query or expected_part_of_query[1] in query,
                     )
                 else:
                     score.append(
-                        (re.search(expected_part_of_query, query) is not None)
+                        re.search(expected_part_of_query, query) is not None,
                     )
-        except ValueError as e:
+        except ValueError:
             score = [False for _ in yaml_data["expected"]["parts_of_query"]]
 
         return calculate_bool_vector_score(score)
@@ -464,10 +463,13 @@ def test_property_exists(
     yaml_data = test_data_biocypher_query_generation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     skip_if_already_run(
-        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+        model_name=model_name,
+        task=task,
+        md5_hash=yaml_data["hash"],
     )
     prompt_engine = get_prompt_engine(
-        kg_schemas[yaml_data["input"]["kg_schema"]], prompt_engine
+        kg_schemas[yaml_data["input"]["kg_schema"]],
+        prompt_engine,
     )
 
     def run_test():
@@ -490,22 +492,16 @@ def test_property_exists(
         ) = get_used_property_from_query(query)
 
         for entity, property in used_entity_property.items():
-            if (
-                entity in prompt_engine.entities.keys()
-                and "properties" in prompt_engine.entities[entity]
-            ):
+            if entity in prompt_engine.entities.keys() and "properties" in prompt_engine.entities[entity]:
                 # check property used is in available properties for entities
                 avail_property_entity = list(
-                    prompt_engine.entities[entity]["properties"].keys()
+                    prompt_engine.entities[entity]["properties"].keys(),
                 )
                 score.append(property in avail_property_entity)
-            elif (
-                entity in prompt_engine.relationships.keys()
-                and "properties" in prompt_engine.relationships[entity]
-            ):
+            elif entity in prompt_engine.relationships.keys() and "properties" in prompt_engine.relationships[entity]:
                 # check property used is in available properties for relationships
                 avail_property_entity = list(
-                    prompt_engine.relationships[entity]["properties"].keys()
+                    prompt_engine.relationships[entity]["properties"].keys(),
                 )
                 score.append(property in avail_property_entity)
             else:
@@ -537,10 +533,9 @@ def test_regex(test_data_biocypher_query_generation):
     for expected_part_of_query in yaml_data["expected"]["parts_of_query"]:
         if isinstance(expected_part_of_query, tuple):
             score.append(
-                expected_part_of_query[0] in query
-                or expected_part_of_query[1] in query
+                expected_part_of_query[0] in query or expected_part_of_query[1] in query,
             )
         else:
-            score.append((re.search(expected_part_of_query, query) is not None))
+            score.append(re.search(expected_part_of_query, query) is not None)
 
         assert True

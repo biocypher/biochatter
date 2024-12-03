@@ -1,17 +1,14 @@
-from typing import Optional
-from urllib.parse import urlencode
-from collections.abc import Callable
-import re
-import time
 import uuid
+from collections.abc import Callable
 
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.pydantic_v1 import Field, BaseModel
-from langchain_core.output_parsers import StrOutputParser
-from langchain.chains.openai_functions import create_structured_output_runnable
 import requests
+from langchain.chains.openai_functions import create_structured_output_runnable
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.pydantic_v1 import BaseModel, Field
 
 from biochatter.llm_connect import Conversation
+
 from .abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
 
 ONCOKB_QUERY_PROMPT = """
@@ -118,70 +115,75 @@ class OncoKBQueryParameters(BaseModel):
         ...,
         description="Specific API endpoint to hit. Example: 'annotate/mutations/byProteinChange'.",
     )
-    referenceGenome: Optional[str] = Field(
+    referenceGenome: str | None = Field(
         default="GRCh37",
         description="Reference genome, either GRCh37 or GRCh38. The default is GRCh37.",
     )
-    hugoSymbol: Optional[str] = Field(
+    hugoSymbol: str | None = Field(
         None,
         description="The gene symbol used in Human Genome Organisation. Example: BRAF.",
     )
-    entrezGeneId: Optional[int] = Field(
+    entrezGeneId: int | None = Field(
         None,
         description="The entrez gene ID. Higher priority than hugoSymbol. Example: 673.",
     )
-    tumorType: Optional[str] = Field(
+    tumorType: str | None = Field(
         None,
         description="OncoTree(http://oncotree.info) tumor type name. The field supports OncoTree Code, OncoTree Name and OncoTree Main type. Example: Melanoma.",
     )
-    alteration: Optional[str] = Field(
-        None, description="Protein Change. Example: V600E."
+    alteration: str | None = Field(
+        None,
+        description="Protein Change. Example: V600E.",
     )
-    consequence: Optional[str] = Field(
-        None, description="Consequence. Example: missense_variant."
+    consequence: str | None = Field(
+        None,
+        description="Consequence. Example: missense_variant.",
     )
-    proteinStart: Optional[int] = Field(
-        None, description="Protein Start. Example: 600."
+    proteinStart: int | None = Field(
+        None,
+        description="Protein Start. Example: 600.",
     )
-    proteinEnd: Optional[int] = Field(
-        None, description="Protein End. Example: 600."
+    proteinEnd: int | None = Field(
+        None,
+        description="Protein End. Example: 600.",
     )
-    copyNameAlterationType: Optional[str] = Field(
+    copyNameAlterationType: str | None = Field(
         None,
         description="Copy number alteration type. Available types: AMPLIFICATION, DELETION, GAIN, LOSS.",
     )
-    structuralVariantType: Optional[str] = Field(
+    structuralVariantType: str | None = Field(
         None,
         description="Structural variant type. Available values: DELETION, TRANSLOCATION, DUPLICATION, INSERTION, INVERSION, FUSION, UNKNOWN.",
     )
-    isFunctionalFusion: Optional[bool] = Field(
+    isFunctionalFusion: bool | None = Field(
         default=False,
         description="Whether it is a functional fusion. Default value: false.",
     )
-    hugoSymbolA: Optional[str] = Field(
+    hugoSymbolA: str | None = Field(
         None,
         description="The gene symbol A used in Human Genome Organisation. Example: ABL1.",
     )
-    entrezGeneIdA: Optional[int] = Field(
+    entrezGeneIdA: int | None = Field(
         None,
         description="The entrez gene ID A. Higher priority than hugoSymbolA. Example: 25.",
     )
-    hugoSymbolB: Optional[str] = Field(
+    hugoSymbolB: str | None = Field(
         None,
         description="The gene symbol B used in Human Genome Organisation. Example: BCR.",
     )
-    entrezGeneIdB: Optional[int] = Field(
+    entrezGeneIdB: int | None = Field(
         None,
         description="The entrez gene ID B. Higher priority than hugoSymbolB. Example: 613.",
     )
-    genomicLocation: Optional[str] = Field(
+    genomicLocation: str | None = Field(
         None,
         description="Genomic location. Example: 7,140453136,140453136,A,T.",
     )
-    hgvsg: Optional[str] = Field(
-        None, description="HGVS genomic format. Example: 7:g.140453136A>T."
+    hgvsg: str | None = Field(
+        None,
+        description="HGVS genomic format. Example: 7:g.140453136A>T.",
     )
-    question_uuid: Optional[str] = Field(
+    question_uuid: str | None = Field(
         default_factory=lambda: str(uuid.uuid4()),
         description="Unique identifier for the question.",
     )
@@ -195,18 +197,20 @@ class OncoKBQueryBuilder(BaseQueryBuilder):
         query_parameters: "OncoKBQueryParameters",
         conversation: "Conversation",
     ) -> Callable:
-        """
-        Creates a runnable object for executing queries using the LangChain
+        """Creates a runnable object for executing queries using the LangChain
         `create_structured_output_runnable` method.
 
         Args:
+        ----
             query_parameters: A Pydantic data model that specifies the fields of
                 the API that should be queried.
 
             conversation: A BioChatter conversation object.
 
         Returns:
+        -------
             A Callable object that can execute the query.
+
         """
         return create_structured_output_runnable(
             output_schema=query_parameters,
@@ -219,35 +223,36 @@ class OncoKBQueryBuilder(BaseQueryBuilder):
         question: str,
         conversation: "Conversation",
     ) -> OncoKBQueryParameters:
-        """
-        Generates an OncoKBQuery object based on the given question, prompt, and
+        """Generates an OncoKBQuery object based on the given question, prompt, and
         BioChatter conversation. Uses a Pydantic model to define the API fields.
         Creates a runnable that can be invoked on LLMs that are qualified to
         parameterise functions.
 
         Args:
+        ----
             question (str): The question to be answered.
 
             conversation: The conversation object used for parameterising the
                 OncoKBQuery.
 
         Returns:
+        -------
             OncoKBQueryParameters: the parameterised query object (Pydantic model)
+
         """
         runnable = self.create_runnable(
             query_parameters=OncoKBQueryParameters,
             conversation=conversation,
         )
         oncokb_call_obj = runnable.invoke(
-            {"input": f"Answer:\n{question} based on:\n {ONCOKB_QUERY_PROMPT}"}
+            {"input": f"Answer:\n{question} based on:\n {ONCOKB_QUERY_PROMPT}"},
         )
         oncokb_call_obj.question_uuid = str(uuid.uuid4())
         return oncokb_call_obj
 
 
 class OncoKBFetcher(BaseFetcher):
-    """
-    A class for retrieving API results from OncoKB given a parameterized
+    """A class for retrieving API results from OncoKB given a parameterized
     OncoKBQuery.
     """
 
@@ -259,18 +264,23 @@ class OncoKBFetcher(BaseFetcher):
         self.base_url = "https://demo.oncokb.org/api/v1"
 
     def fetch_results(
-        self, request_data: OncoKBQueryParameters, retries: Optional[int] = 3
+        self,
+        request_data: OncoKBQueryParameters,
+        retries: int | None = 3,
     ) -> str:
         """Function to submit the OncoKB query and fetch the results directly.
         No multi-step procedure, thus no wrapping of submission and retrieval in
         this case.
 
         Args:
+        ----
             request_data: OncoKBQuery object (Pydantic model) containing the
                 OncoKB query parameters.
 
         Returns:
+        -------
             str: The results of the OncoKB query.
+
         """
         # Submit the query and get the URL
         params = request_data.dict(exclude_unset=True)
@@ -294,15 +304,16 @@ class OncoKBInterpreter(BaseInterpreter):
         conversation_factory: Callable,
         response_text: str,
     ) -> str:
-        """
-        Function to extract the answer from the BLAST results.
+        """Function to extract the answer from the BLAST results.
 
         Args:
+        ----
             question (str): The question to be answered.
             conversation_factory: A BioChatter conversation object.
             response_text (str): The response.text returned by OncoKB.
 
         Returns:
+        -------
             str: The extracted answer from the BLAST results.
 
         """
@@ -316,10 +327,11 @@ class OncoKBInterpreter(BaseInterpreter):
                     "them for the user.",
                 ),
                 ("user", "{input}"),
-            ]
+            ],
         )
         summary_prompt = ONCOKB_SUMMARY_PROMPT.format(
-            question=question, context=response_text
+            question=question,
+            context=response_text,
         )
         output_parser = StrOutputParser()
         conversation = conversation_factory()

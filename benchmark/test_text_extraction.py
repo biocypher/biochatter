@@ -3,8 +3,8 @@ import inspect
 import evaluate
 
 from .benchmark_utils import (
-    skip_if_already_run,
     get_result_file_path,
+    skip_if_already_run,
     write_results_to_file,
 )
 
@@ -25,7 +25,9 @@ def test_sourcedata_info_extraction(
     yaml_data = test_data_text_extraction
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     skip_if_already_run(
-        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+        model_name=model_name,
+        task=task,
+        md5_hash=yaml_data["hash"],
     )
 
     def run_test():
@@ -33,8 +35,8 @@ def test_sourcedata_info_extraction(
         # Define the system prompt
         [
             conversation.append_system_message(
-                yaml_data["input"]["system_messages"]
-            )
+                yaml_data["input"]["system_messages"],
+            ),
         ]
 
         user_query = (
@@ -45,7 +47,8 @@ def test_sourcedata_info_extraction(
 
         response, _, _ = conversation.query(user_query)
         rouge_score = calculate_rouge_score(
-            response, yaml_data["expected"]["answer"]
+            response,
+            yaml_data["expected"]["answer"],
         )
 
         return (rouge_score, 1)
@@ -66,6 +69,4 @@ def calculate_rouge_score(response, expected):
     """Application of the ROUGE metric to evaluate the response of the model."""
     rouge = evaluate.load("rouge")
 
-    return rouge.compute(predictions=[response], references=[expected])[
-        "rouge1"
-    ]
+    return rouge.compute(predictions=[response], references=[expected])["rouge1"]

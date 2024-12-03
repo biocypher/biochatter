@@ -1,12 +1,11 @@
-from unittest.mock import patch
 import os
+from unittest.mock import patch
 
 import pytest
 
 from benchmark.conftest import calculate_bool_vector_score
 from biochatter.rag_agent import RagAgent, RagAgentModeEnum
-from biochatter.vectorstore import Document, DocumentReader, DocumentEmbedder
-from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
+from biochatter.vectorstore import Document, DocumentEmbedder, DocumentReader
 
 # setup milvus connection
 if os.getenv("DEVCONTAINER"):
@@ -60,8 +59,7 @@ search_docs = [
         metadata={id: "1"},
     ),
     Document(
-        page_content="BioCypher has been built with continuous consideration "
-        "of the FAIR and TRUST",
+        page_content="BioCypher has been built with continuous consideration of the FAIR and TRUST",
         metadata={id: "1"},
     ),
     Document(
@@ -87,26 +85,20 @@ def test_retrieval_augmented_generation(model, chunk_size):
 
     with (
         patch(
-            "biochatter.vectorstore.OpenAIEmbeddings"
+            "biochatter.vectorstore.OpenAIEmbeddings",
         ) as mock_openaiembeddings,
         patch(
-            "biochatter.vectorstore_agent.VectorDatabaseAgentMilvus"
+            "biochatter.vectorstore_agent.VectorDatabaseAgentMilvus",
         ) as mock_host_1,
         patch("biochatter.vectorstore.VectorDatabaseAgentMilvus") as mock_host,
         patch(
-            "biochatter.vectorstore.RecursiveCharacterTextSplitter"
+            "biochatter.vectorstore.RecursiveCharacterTextSplitter",
         ) as mock_textsplitter,
     ):
         # mocking
-        mock_textsplitter.from_huggingface_tokenizer.return_value = (
-            mock_textsplitter()
-        )
-        mock_textsplitter.from_tiktoken_encoder.return_value = (
-            mock_textsplitter()
-        )
-        mock_textsplitter.return_value.split_documents.return_value = (
-            splitted_docs
-        )
+        mock_textsplitter.from_huggingface_tokenizer.return_value = mock_textsplitter()
+        mock_textsplitter.from_tiktoken_encoder.return_value = mock_textsplitter()
+        mock_textsplitter.return_value.split_documents.return_value = splitted_docs
         mock_host.return_value.store_embeddings.return_value = "1"
         mock_host_1.return_value.similarity_search.return_value = search_docs
 
@@ -131,10 +123,7 @@ def test_retrieval_augmented_generation(model, chunk_size):
         correct = ["BioCypher" in result[0] for result in results]
 
         # delete embeddings
-        [
-            doc_embedder.database_host.remove_document(doc_id)
-            for doc_id in doc_ids
-        ]
+        [doc_embedder.database_host.remove_document(doc_id) for doc_id in doc_ids]
 
         # record sum in CSV file
         assert calculate_bool_vector_score(correct) == (3, 3)

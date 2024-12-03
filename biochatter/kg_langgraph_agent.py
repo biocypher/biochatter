@@ -1,22 +1,20 @@
-from typing import Any, Optional
-from datetime import datetime
-from collections.abc import Callable
 import json
 import logging
+from collections.abc import Callable
+from datetime import datetime
 
-from langgraph.graph import END
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.messages import AIMessage, BaseMessage, ToolMessage
-from langchain_core.pydantic_v1 import Field, BaseModel
-from langchain.output_parsers.openai_tools import (
-    PydanticToolsParser,
-    JsonOutputToolsParser,
-)
 import neo4j_utils as nu
+from langchain.output_parsers.openai_tools import (
+    JsonOutputToolsParser,
+    PydanticToolsParser,
+)
+from langchain_core.messages import AIMessage, BaseMessage, ToolMessage
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.pydantic_v1 import BaseModel, Field
+from langchain_openai import ChatOpenAI
+from langgraph.graph import END
 
 from biochatter.langgraph_agent_base import (
-    END_NODE,
     EXECUTE_TOOL_NODE,
     ReflexionAgent,
     ReflexionAgentLogger,
@@ -37,7 +35,7 @@ class KGQueryReflexionAgentLogger(ReflexionAgentLogger):
             self._log_message(f"## {step}, {node_name}")
             self._log_message(f'Answer: {parsed_output[0]["args"]["answer"]}')
             self._log_message(
-                f'Reflection | Improving: {parsed_output[0]["args"]["reflection"]}'
+                f'Reflection | Improving: {parsed_output[0]["args"]["reflection"]}',
             )
             self._log_message("Reflection | Search Queries:")
             for i, sq in enumerate(parsed_output[0]["args"][SEARCH_QUERIES]):
@@ -46,14 +44,14 @@ class KGQueryReflexionAgentLogger(ReflexionAgentLogger):
                 self._log_message("Reflection | Revised Query:")
                 self._log_message(parsed_output[0]["args"][REVISED_QUERY])
             self._log_message(
-                "-------------------------------- Node Output --------------------------------"
+                "-------------------------------- Node Output --------------------------------",
             )
-        except Exception as e:
+        except Exception:
             self._log_message(str(output)[:100] + " ...", "error")
 
     def log_final_result(self, final_result: ReflexionAgentResult) -> None:
         self._log_message(
-            "\n\n-------------------------------- Final Generated Response --------------------------------"
+            "\n\n-------------------------------- Final Generated Response --------------------------------",
         )
         obj = vars(final_result)
         self._log_message(json.dumps(obj))
@@ -75,10 +73,10 @@ class GenerateQuery(BaseModel):
     """Generate the query."""
 
     answer: str = Field(
-        description="Cypher query for graph database according to user's question."
+        description="Cypher query for graph database according to user's question.",
     )
     reflection: str = Field(
-        description="Your reflection on the initial answer, critique of what to improve"
+        description="Your reflection on the initial answer, critique of what to improve",
     )
     search_queries: list[str] = Field(description=SEARCH_QUERIES_DESCRIPTION)
 
@@ -95,11 +93,10 @@ class KGQueryReflexionAgent(ReflexionAgent):
         self,
         conversation_factory: Callable,
         connection_args: dict[str, str],
-        query_lang: Optional[str] = "Cypher",
-        max_steps: Optional[int] = 20,
+        query_lang: str | None = "Cypher",
+        max_steps: int | None = 20,
     ):
-        """
-        LLM agent reflexion framework:
+        r"""LLM agent reflexion framework:
 
         start -> draft -> execute tool -> revise -> evaluation -> end
                             /|\                        |
@@ -110,6 +107,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
         query implementation.
 
         Args:
+        ----
             conversation_factory: function to return the Conversation to use for
                 the LLM connection
 
@@ -143,7 +141,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
                         "2. Please limit the results to a maximum of 30 items"
                     ),
                 ),
-            ]
+            ],
         ).partial(time=lambda: datetime.now().isoformat())
         self.parser = JsonOutputToolsParser(return_id=True)
         self.connection_args = connection_args
@@ -153,12 +151,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
         if self.neodriver is not None:
             return
         try:
-            db_uri = (
-                "bolt://"
-                + self.connection_args.get("host")
-                + ":"
-                + self.connection_args.get("port")
-            )
+            db_uri = "bolt://" + self.connection_args.get("host") + ":" + self.connection_args.get("port")
             self.neodriver = nu.Driver(
                 db_name=self.connection_args.get("db_name") or "neo4j",
                 db_uri=db_uri,
@@ -167,10 +160,10 @@ class KGQueryReflexionAgent(ReflexionAgent):
             logger.error(e)
 
     def _query_graph_database(self, query: str):
-        """
-        Try to execute the query in Neo4j and return the result.
+        """Try to execute the query in Neo4j and return the result.
 
         Args:
+        ----
             query: the query string
 
         """
@@ -182,11 +175,12 @@ class KGQueryReflexionAgent(ReflexionAgent):
             return []  # empty result
 
     def _create_initial_responder(
-        self, prompt: Optional[str] = None
+        self,
+        prompt: str | None = None,
     ) -> ResponderWithRetries:
         llm: ChatOpenAI = self.conversation.chat
         initial_chain = self.actor_prompt_template.partial(
-            instruction=prompt if prompt is not None else ""
+            instruction=prompt if prompt is not None else "",
         ) | llm.bind_tools(
             tools=[GenerateQuery],
             tool_choice="GenerateQuery",
@@ -195,7 +189,8 @@ class KGQueryReflexionAgent(ReflexionAgent):
         return ResponderWithRetries(runnable=initial_chain, validator=validator)
 
     def _create_revise_responder(
-        self, prompt: str | None = None
+        self,
+        prompt: str | None = None,
     ) -> ResponderWithRetries:
         revision_instruction = """
         Revise your previous query using the query result and follow the guidelines:
@@ -205,14 +200,15 @@ class KGQueryReflexionAgent(ReflexionAgent):
         """
         llm: ChatOpenAI = self.conversation.chat
         revision_chain = self.actor_prompt_template.partial(
-            instruction=revision_instruction
+            instruction=revision_instruction,
         ) | llm.bind_tools(
             tools=[ReviseQuery],
             tool_choice="ReviseQuery",
         )
         validator = PydanticToolsParser(tools=[ReviseQuery])
         return ResponderWithRetries(
-            runnable=revision_chain, validator=validator
+            runnable=revision_chain,
+            validator=validator,
         )
 
     def _tool_function(self, state: list[BaseMessage]):
@@ -225,11 +221,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
                 query = (
                     parsed_args[REVISED_QUERY]
                     if REVISED_QUERY in parsed_args
-                    else (
-                        parsed_args[REVISED_QUERY_DESCRIPTION]
-                        if REVISED_QUERY_DESCRIPTION in parsed_args
-                        else None
-                    )
+                    else (parsed_args[REVISED_QUERY_DESCRIPTION] if REVISED_QUERY_DESCRIPTION in parsed_args else None)
                 )
                 if query is not None:
                     result = self._query_graph_database(query)
@@ -247,10 +239,10 @@ class KGQueryReflexionAgent(ReflexionAgent):
                         {
                             "query": query,
                             "result": result[0] if len(result) > 0 else [],
-                        }
+                        },
                     )
             except Exception as e:
-                logger.error(f"Error occurred: {str(e)}")
+                logger.error(f"Error occurred: {e!s}")
 
         content = None
         if len(results) > 1:
@@ -286,9 +278,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
                     for k in res.keys():
                         if res[k] is None:
                             continue
-                        if isinstance(res[k], str) and (
-                            res[k] == "None" or res[k] == "null"
-                        ):
+                        if isinstance(res[k], str) and (res[k] == "None" or res[k] == "null"):
                             continue
                         empty = False
                         break
@@ -316,15 +306,16 @@ class KGQueryReflexionAgent(ReflexionAgent):
         if res == END:
             return res
         score = self._get_last_score(state)
-        if not score is None and score >= 7:
+        if score is not None and score >= 7:
             return END
         query_results_num = KGQueryReflexionAgent._get_last_tool_results_num(
-            state
+            state,
         )
         return END if query_results_num > 0 else EXECUTE_TOOL_NODE
 
     def _parse_final_result(
-        self, messages: list[BaseMessage]
+        self,
+        messages: list[BaseMessage],
     ) -> ReflexionAgentResult:
         output = messages[-1]
         result = self.parser.invoke(output)[0]["args"]

@@ -1,19 +1,15 @@
-import re
 import inspect
+import re
 
-import nltk
-import pytest
-
-from biochatter._misc import ensure_iterable
-from .conftest import calculate_bool_vector_score
 from .benchmark_utils import (
-    skip_if_already_run,
-    get_result_file_path,
-    write_results_to_file,
     categorize_failure_modes,
     get_failure_mode_file_path,
+    get_result_file_path,
+    skip_if_already_run,
     write_failure_modes_to_file,
+    write_results_to_file,
 )
+from .conftest import calculate_bool_vector_score
 
 
 def test_medical_exam(
@@ -38,7 +34,9 @@ def test_medical_exam(
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
 
     skip_if_already_run(
-        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+        model_name=model_name,
+        task=task,
+        md5_hash=yaml_data["hash"],
     )
     failure_mode = "other"
     actual_answer = ""
@@ -50,17 +48,12 @@ def test_medical_exam(
         nonlocal failure_mode
         conversation.reset()  # needs to be reset for each test
         # Define the system prompt
-        [
-            conversation.append_system_message(m)
-            for m in yaml_data["input"]["system_messages"]
-        ]
+        [conversation.append_system_message(m) for m in yaml_data["input"]["system_messages"]]
         # Define the user prompt
         response, _, _ = conversation.query(yaml_data["input"]["prompt"])
 
         # Set response to lower case and remove punctuation
-        response = (
-            response.lower().replace(".", "").replace("?", "").replace("!", "")
-        ).strip()
+        response = (response.lower().replace(".", "").replace("?", "").replace("!", "")).strip()
 
         print(yaml_data["case"])
         print(response)
@@ -78,7 +71,8 @@ def test_medical_exam(
             if not is_correct:
                 actual_answer = response
                 failure_mode = categorize_failure_modes(
-                    actual_answer, expected_answer
+                    actual_answer,
+                    expected_answer,
                 )
 
         # calculate for answers with regex
@@ -94,7 +88,9 @@ def test_medical_exam(
                     score.append(False)
                     actual_answer = actual_answer + response
                     failure_mode = categorize_failure_modes(
-                        actual_answer, expected_answer, True
+                        actual_answer,
+                        expected_answer,
+                        True,
                     )
 
         return calculate_bool_vector_score(score)

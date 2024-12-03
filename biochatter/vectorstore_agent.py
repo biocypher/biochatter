@@ -1,20 +1,19 @@
-from typing import Tuple, Optional
-import uuid
-import random
 import logging
+import random
+import uuid
 
-from pymilvus import (
-    DataType,
-    Collection,
-    FieldSchema,
-    MilvusException,
-    CollectionSchema,
-    utility,
-    connections,
-)
 from langchain.schema import Document
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import Milvus
+from pymilvus import (
+    Collection,
+    CollectionSchema,
+    DataType,
+    FieldSchema,
+    MilvusException,
+    connections,
+    utility,
+)
 
 from .constants import MAX_AGENT_DESC_LENGTH
 
@@ -40,23 +39,25 @@ METADATA_FIELDS = [
 
 
 def align_metadata(
-    metadata: list[dict], isDeleted: Optional[bool] = False
+    metadata: list[dict],
+    isDeleted: bool | None = False,
 ) -> list[list]:
-    """
-
-    Ensure that specific metadata fields are present; if not provided, fill with
+    """Ensure that specific metadata fields are present; if not provided, fill with
     "unknown". Also, add a random vector to each metadata item to simulate an
     embedding.
 
     Args:
+    ----
         metadata (List[Dict]): List of metadata items
 
         isDeleted (Optional[bool], optional): Whether the document is deleted.
             Defaults to False.
 
     Returns:
+    -------
         List[List]: List of metadata items, with each item being a list of
             metadata fields.
+
     """
     ret = []
     fields = METADATA_FIELDS.copy()
@@ -65,27 +66,26 @@ def align_metadata(
         ret.append([item[k] if k in item else "unknown" for item in metadata])
 
     ret.append(
-        [
-            [random.random() for _ in range(METADATA_VECTOR_DIM)]
-            for _ in range(len(metadata))
-        ]
+        [[random.random() for _ in range(METADATA_VECTOR_DIM)] for _ in range(len(metadata))],
     )
     ret.append([isDeleted for _ in metadata])
     return ret
 
 
 def align_embeddings(docs: list[Document], meta_id: int) -> list[Document]:
-    """
-    Ensure that the metadata id is present in each document.
+    """Ensure that the metadata id is present in each document.
 
     Args:
+    ----
         docs (List[Document]): List of documents
 
         meta_id (int): Metadata id to assign to the documents
 
     Returns:
+    -------
         List[Document]: List of documents, with each document having a metadata
             id.
+
     """
     ret = []
     for doc in docs:
@@ -93,12 +93,12 @@ def align_embeddings(docs: list[Document], meta_id: int) -> list[Document]:
             Document(
                 page_content=doc.page_content,
                 metadata={"meta_id": meta_id},
-            )
+            ),
         )
     return ret
 
 
-def validate_connection_args(connection_args: Optional[dict] = None):
+def validate_connection_args(connection_args: dict | None = None):
     if connection_args is None:
         return {
             "host": "127.0.0.1",
@@ -113,8 +113,7 @@ def validate_connection_args(connection_args: Optional[dict] = None):
 
 
 class VectorDatabaseAgentMilvus:
-    """
-    The VectorDatabaseAgentMilvus class manages vector databases in a connected
+    """The VectorDatabaseAgentMilvus class manages vector databases in a connected
     host database. It manages an embedding collection
     `_col_embeddings:langchain.vectorstores.Milvus`, which is the main
     information on the embedded text fragments and the basis for similarity
@@ -135,12 +134,12 @@ class VectorDatabaseAgentMilvus:
     def __init__(
         self,
         embedding_func: OpenAIEmbeddings,
-        connection_args: Optional[dict] = None,
-        embedding_collection_name: Optional[str] = None,
-        metadata_collection_name: Optional[str] = None,
+        connection_args: dict | None = None,
+        embedding_collection_name: str | None = None,
+        metadata_collection_name: str | None = None,
     ):
-        """
-        Args:
+        """Args:
+        ----
             embedding_func OpenAIEmbeddings: Function used to embed the text
 
             connection_args Optional dict: args to connect Vector Database
@@ -148,21 +147,17 @@ class VectorDatabaseAgentMilvus:
             embedding_collection_name Optional str: exposed for test
 
             metadata_collection_name Optional str: exposed for test
+
         """
         self._embedding_func = embedding_func
-        self._col_embeddings: Optional[Milvus] = None
-        self._col_metadata: Optional[Collection] = None
+        self._col_embeddings: Milvus | None = None
+        self._col_metadata: Collection | None = None
         self._connection_args = validate_connection_args(connection_args)
-        self._embedding_name = (
-            embedding_collection_name or DOCUMENT_EMBEDDINGS_COLLECTION_NAME
-        )
-        self._metadata_name = (
-            metadata_collection_name or DOCUMENT_METADATA_COLLECTION_NAME
-        )
+        self._embedding_name = embedding_collection_name or DOCUMENT_EMBEDDINGS_COLLECTION_NAME
+        self._metadata_name = metadata_collection_name or DOCUMENT_METADATA_COLLECTION_NAME
 
     def connect(self) -> None:
-        """
-        Connect to a host and read two document collections (the default names
+        """Connect to a host and read two document collections (the default names
         are `DocumentEmbeddings` and `DocumentMetadata`) in the currently active
         database (default database name is `default`); if those document
         collections don't exist, create the two collections.
@@ -174,30 +169,39 @@ class VectorDatabaseAgentMilvus:
         self.alias = self._create_connection_alias(host, port, user, password)
 
     def _init_host(self) -> None:
-        """
-        Initialize host. Will read/create document collection inside currently
+        """Initialize host. Will read/create document collection inside currently
         active database.
         """
         self._create_collections()
 
     def _create_connection_alias(
-        self, host: str, port: str, user: str, password: str
+        self,
+        host: str,
+        port: str,
+        user: str,
+        password: str,
     ) -> str:
-        """
-        Connect to host and create a connection alias for metadata collection
+        """Connect to host and create a connection alias for metadata collection
         using a random uuid.
 
         Args:
+        ----
             host (str): host ip address
             port (str): host port
 
         Returns:
+        -------
             str: connection alias
+
         """
         alias = uuid.uuid4().hex
         try:
             connections.connect(
-                host=host, port=port, user=user, password=password, alias=alias
+                host=host,
+                port=port,
+                user=user,
+                password=password,
+                alias=alias,
             )
             logger.debug(f"Created new connection using: {alias}")
             return alias
@@ -206,12 +210,12 @@ class VectorDatabaseAgentMilvus:
             raise e
 
     def _create_collections(self) -> None:
-        """
-        Create or load the embedding and metadata collections from the currently
+        """Create or load the embedding and metadata collections from the currently
         active database.
         """
         embedding_exists = utility.has_collection(
-            self._embedding_name, using=self.alias
+            self._embedding_name,
+            using=self.alias,
         )
         meta_exists = utility.has_collection(
             self._metadata_name,
@@ -232,9 +236,7 @@ class VectorDatabaseAgentMilvus:
         self._col_metadata.load()
 
     def _load_embeddings_collection(self) -> None:
-        """
-        Load embeddings collection from currently active database.
-        """
+        """Load embeddings collection from currently active database."""
         try:
             self._col_embeddings = Milvus(
                 embedding_function=self._embedding_func,
@@ -243,13 +245,12 @@ class VectorDatabaseAgentMilvus:
             )
         except MilvusException as e:
             logger.error(
-                f"Failed to load embeddings collection {self._embedding_name}."
+                f"Failed to load embeddings collection {self._embedding_name}.",
             )
             raise e
 
     def _create_embeddings_collection(self) -> None:
-        """
-        Create embedding collection.
+        """Create embedding collection.
         All fields: "meta_id", "vector"
         """
         try:
@@ -260,14 +261,12 @@ class VectorDatabaseAgentMilvus:
             )
         except MilvusException as e:
             logger.error(
-                f"Failed to create embeddings collection {self._embedding_name}"
+                f"Failed to create embeddings collection {self._embedding_name}",
             )
             raise e
 
     def _load_metadata_collection(self) -> None:
-        """
-        Load metadata collection from currently active database.
-        """
+        """Load metadata collection from currently active database."""
         self._col_metadata = Collection(
             self._metadata_name,
             using=self.alias,
@@ -275,8 +274,7 @@ class VectorDatabaseAgentMilvus:
         self._col_metadata.load()
 
     def _create_metadata_collection(self) -> None:
-        """
-        Create metadata collection.
+        """Create metadata collection.
 
         All fields: "id", "name", "author", "title", "format", "subject",
         "creator", "producer", "creationDate", "modDate", "source", "embedding",
@@ -288,37 +286,60 @@ class VectorDatabaseAgentMilvus:
         """
         MAX_LENGTH = 10000
         doc_id = FieldSchema(
-            name="id", dtype=DataType.INT64, is_primary=True, auto_id=True
+            name="id",
+            dtype=DataType.INT64,
+            is_primary=True,
+            auto_id=True,
         )
         doc_name = FieldSchema(
-            name="name", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
+            name="name",
+            dtype=DataType.VARCHAR,
+            max_length=MAX_LENGTH,
         )
         doc_author = FieldSchema(
-            name="author", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
+            name="author",
+            dtype=DataType.VARCHAR,
+            max_length=MAX_LENGTH,
         )
         doc_title = FieldSchema(
-            name="title", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
+            name="title",
+            dtype=DataType.VARCHAR,
+            max_length=MAX_LENGTH,
         )
         doc_format = FieldSchema(
-            name="format", dtype=DataType.VARCHAR, max_length=255
+            name="format",
+            dtype=DataType.VARCHAR,
+            max_length=255,
         )
         doc_subject = FieldSchema(
-            name="subject", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
+            name="subject",
+            dtype=DataType.VARCHAR,
+            max_length=MAX_LENGTH,
         )
         doc_creator = FieldSchema(
-            name="creator", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
+            name="creator",
+            dtype=DataType.VARCHAR,
+            max_length=MAX_LENGTH,
         )
         doc_producer = FieldSchema(
-            name="producer", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
+            name="producer",
+            dtype=DataType.VARCHAR,
+            max_length=MAX_LENGTH,
         )
         doc_creationDate = FieldSchema(
-            name="creationDate", dtype=DataType.VARCHAR, max_length=1024
+            name="creationDate",
+            dtype=DataType.VARCHAR,
+            max_length=1024,
         )
         doc_modDate = FieldSchema(
-            name="modDate", dtype=DataType.VARCHAR, max_length=1024
+            name="modDate",
+            dtype=DataType.VARCHAR,
+            max_length=1024,
         )
         doc_source = FieldSchema(
-            name="source", dtype=DataType.VARCHAR, max_length=MAX_LENGTH
+            name="source",
+            dtype=DataType.VARCHAR,
+            max_length=MAX_LENGTH,
         )
         embedding = FieldSchema(
             name="embedding",
@@ -347,20 +368,17 @@ class VectorDatabaseAgentMilvus:
         schema = CollectionSchema(fields=fields)
         try:
             self._col_metadata = Collection(
-                name=self._metadata_name, schema=schema, using=self.alias
+                name=self._metadata_name,
+                schema=schema,
+                using=self.alias,
             )
         except MilvusException as e:
             logger.error(f"Failed to create collection {self._metadata_name}")
             raise e
 
     def _create_metadata_collection_index(self) -> None:
-        """
-        Create index for metadata collection in currently active database.
-        """
-        if (
-            not isinstance(self._col_metadata, Collection)
-            or len(self._col_metadata.indexes) > 0
-        ):
+        """Create index for metadata collection in currently active database."""
+        if not isinstance(self._col_metadata, Collection) or len(self._col_metadata.indexes) > 0:
             return
 
         index_params = {
@@ -377,22 +395,23 @@ class VectorDatabaseAgentMilvus:
             )
         except MilvusException as e:
             logger.error(
-                "Failed to create index for meta collection "
-                f"{self._metadata_name}."
+                "Failed to create index for meta collection " f"{self._metadata_name}.",
             )
             raise e
 
     def _insert_data(self, documents: list[Document]) -> str:
-        """
-        Insert documents into the currently active database.
+        """Insert documents into the currently active database.
 
         Args:
+        ----
             documents (List[Documents]): documents array, usually from
                 DocumentReader.load_document, DocumentReader.document_from_pdf,
                 DocumentReader.document_from_txt
 
         Returns:
+        -------
             str: document id
+
         """
         if len(documents) == 0:
             return None
@@ -403,7 +422,7 @@ class VectorDatabaseAgentMilvus:
             meta_id = str(result.primary_keys[0])
             self._col_metadata.flush()
         except MilvusException as e:
-            logger.error(f"Failed to insert meta data")
+            logger.error("Failed to insert meta data")
             raise e
         aligned_docs = align_embeddings(documents, meta_id)
         try:
@@ -416,40 +435,44 @@ class VectorDatabaseAgentMilvus:
             )
         except MilvusException as e:
             logger.error(
-                "Failed to insert data to embedding collection "
-                f"{self._embedding_name}."
+                "Failed to insert data to embedding collection " f"{self._embedding_name}.",
             )
             raise e
         return meta_id
 
     def store_embeddings(self, documents: list[Document]) -> str:
-        """
-        Store documents in the currently active database.
+        """Store documents in the currently active database.
 
         Args:
+        ----
             documents (List[Documents]): documents array, usually from
                 DocumentReader.load_document, DocumentReader.document_from_pdf,
                 DocumentReader.document_from_txt
 
         Returns:
+        -------
             str: document id
+
         """
         if len(documents) == 0:
-            return
+            return None
         return self._insert_data(documents)
 
     def _build_embedding_search_expression(
-        self, meta_ids: list[dict]
-    ) -> Optional[str]:
-        """
-        Build search expression for embedding collection. The generated
+        self,
+        meta_ids: list[dict],
+    ) -> str | None:
+        """Build search expression for embedding collection. The generated
         expression follows the pattern: "meta_id in [{id1}, {id2}, ...]
 
         Args:
+        ----
             meta_ids: the array of metadata id in metadata collection
 
         Returns:
+        -------
             str: search expression or None
+
         """
         if len(meta_ids) == 0:
             return "meta_id in []"
@@ -462,25 +485,30 @@ class VectorDatabaseAgentMilvus:
         return built_expr
 
     def _join_embedding_and_metadata_results(
-        self, result_embedding: list[Document], result_meta: list[dict]
+        self,
+        result_embedding: list[Document],
+        result_meta: list[dict],
     ) -> list[Document]:
-        """
-        Join the search results of embedding collection and results of metadata.
+        """Join the search results of embedding collection and results of metadata.
 
         Args:
+        ----
             result_embedding (List[Document]): search result of embedding
                 collection
 
             result_meta (List[Dict]): search result of metadata collection
 
         Returns:
+        -------
             List[Document]: combined results like
                 [{page_content: str, metadata: {...}}]
+
         """
 
         def _find_metadata_by_id(
-            metadata: list[dict], id: str
-        ) -> Optional[dict]:
+            metadata: list[dict],
+            id: str,
+        ) -> dict | None:
             for d in metadata:
                 if str(d["id"]) == id:
                     return d
@@ -491,41 +519,41 @@ class VectorDatabaseAgentMilvus:
             found = _find_metadata_by_id(result_meta, res.metadata["meta_id"])
             if found is None:  # discard
                 logger.error(
-                    f"Failed to join meta_id {res.metadata['meta_id']}"
+                    f"Failed to join meta_id {res.metadata['meta_id']}",
                 )
                 continue
             joined_docs.append(
-                Document(page_content=res.page_content, metadata=found)
+                Document(page_content=res.page_content, metadata=found),
             )
         return joined_docs
 
     @staticmethod
     def _build_meta_col_query_expr_for_all_documents(
-        doc_ids: Optional[list[str]] = None,
+        doc_ids: list[str] | None = None,
     ) -> str:
-        """
-        Build metadata collection query expression to obtain all documents.
+        """Build metadata collection query expression to obtain all documents.
 
         Args:
+        ----
             doc_ids: the list of document ids (metadata ids), if thie argument is None,
                      that is, the query is to get all undeleted documents in metadata collection.
                      Otherwise, the query is to getr all undeleted documents form provided doc_ids
 
         Returns:
+        -------
             query: str
+
         """
-        expr = (
-            f"id in {doc_ids} and isDeleted == false"
-            if doc_ids is not None
-            else "isDeleted == false"
-        )
+        expr = f"id in {doc_ids} and isDeleted == false" if doc_ids is not None else "isDeleted == false"
         return expr.replace('"', "").replace("'", "")
 
     def similarity_search(
-        self, query: str, k: int = 3, doc_ids: Optional[list[str]] = None
+        self,
+        query: str,
+        k: int = 3,
+        doc_ids: list[str] | None = None,
     ) -> list[Document]:
-        """
-        Perform similarity search insider the currently active database
+        """Perform similarity search insider the currently active database
         according to the input query.
 
         This method will:
@@ -535,6 +563,7 @@ class VectorDatabaseAgentMilvus:
         3. combine metadata and embeddings
 
         Args:
+        ----
             query (str): query string
 
             k (int): the number of results to return
@@ -543,48 +572,57 @@ class VectorDatabaseAgentMilvus:
                 similarity search across the specified documents
 
         Returns:
+        -------
             List[Document]: search results
+
         """
         result_metadata = []
         expr = VectorDatabaseAgentMilvus._build_meta_col_query_expr_for_all_documents(
-            doc_ids
+            doc_ids,
         )
         result_metadata = self._col_metadata.query(
-            expr=expr, output_fields=METADATA_FIELDS
+            expr=expr,
+            output_fields=METADATA_FIELDS,
         )
         expr = self._build_embedding_search_expression(result_metadata)
         result_embedding = self._col_embeddings.similarity_search(
-            query=query, k=k, expr=expr
+            query=query,
+            k=k,
+            expr=expr,
         )
         return self._join_embedding_and_metadata_results(
-            result_embedding, result_metadata
+            result_embedding,
+            result_metadata,
         )
 
     def remove_document(
-        self, doc_id: str, doc_ids: Optional[list[str]] = None
+        self,
+        doc_id: str,
+        doc_ids: list[str] | None = None,
     ) -> bool:
-        """
-        Remove the document include meta data and its embeddings.
+        """Remove the document include meta data and its embeddings.
 
         Args:
+        ----
             doc_id (str): the document to be deleted
 
             doc_ids (Optional[list[str]]): the list of document ids, defines
                 documents scope within which remove operation occurs.
 
         Returns:
+        -------
             bool: True if the document is deleted, False otherwise
+
         """
         if not self._col_metadata:
             return False
-        if doc_ids is not None and (
-            len(doc_ids) == 0 or (len(doc_ids) > 0 and not doc_id in doc_ids)
-        ):
+        if doc_ids is not None and (len(doc_ids) == 0 or (len(doc_ids) > 0 and doc_id not in doc_ids)):
             return False
         try:
             expr = f"id in [{doc_id}]"
             res = self._col_metadata.query(
-                expr=expr, output_fields=METADATA_FIELDS
+                expr=expr,
+                output_fields=METADATA_FIELDS,
             )
             if len(res) == 0:
                 return False
@@ -604,33 +642,37 @@ class VectorDatabaseAgentMilvus:
             raise e
 
     def get_all_documents(
-        self, doc_ids: Optional[list[str]] = None
+        self,
+        doc_ids: list[str] | None = None,
     ) -> list[dict]:
-        """
-        Get all non-deleted documents from the currently active database.
+        """Get all non-deleted documents from the currently active database.
 
         Args:
+        ----
             doc_ids (List[str] optional): the list of document ids, defines
                 documents scope within which the operation of obtaining all
                 documents occurs
 
         Returns:
+        -------
             List[Dict]: the metadata of all non-deleted documents in the form
                 [{{id}, {author}, {source}, ...}]
+
         """
         try:
             expr = VectorDatabaseAgentMilvus._build_meta_col_query_expr_for_all_documents(
-                doc_ids
+                doc_ids,
             )
             result_metadata = self._col_metadata.query(
-                expr=expr, output_fields=METADATA_FIELDS
+                expr=expr,
+                output_fields=METADATA_FIELDS,
             )
             return result_metadata
         except MilvusException as e:
             logger.error(e)
             raise e
 
-    def get_description(self, doc_ids: Optional[list[str]] = None):
+    def get_description(self, doc_ids: list[str] | None = None):
         def get_name(meta: dict[str, str]):
             name_col = ["title", "name", "subject", "source"]
             for col in name_col:
@@ -639,7 +681,7 @@ class VectorDatabaseAgentMilvus:
             return ""
 
         expr = VectorDatabaseAgentMilvus._build_meta_col_query_expr_for_all_documents(
-            doc_ids
+            doc_ids,
         )
         result = self._col_metadata.query(
             expr=expr,

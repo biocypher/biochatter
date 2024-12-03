@@ -1,22 +1,19 @@
+import math
 import os
 import re
-import math
 
-import seaborn as sns
 import colorcet as cc
 import matplotlib
-
 import numpy as np
+import seaborn as sns
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-
 import pandas as pd
 
 
 def on_pre_build(config, **kwargs) -> None:
     """This function is called when building the documentation."""
-
     result_files_path = "benchmark/results/"
 
     result_file_names = [
@@ -24,8 +21,8 @@ def on_pre_build(config, **kwargs) -> None:
         for f in os.listdir(result_files_path)
         if os.path.isfile(os.path.join(result_files_path, f))
         and f.endswith(".csv")
-        and not "failure_mode" in f
-        and not "confidence" in f
+        and "failure_mode" not in f
+        and "confidence" not in f
     ]
 
     for file_name in result_file_names:
@@ -50,9 +47,7 @@ def on_pre_build(config, **kwargs) -> None:
 
 
 def plot_text2cypher():
-    """
-
-    Get entity_selection, relationship_selection, property_selection,
+    """Get entity_selection, relationship_selection, property_selection,
     property_exists, query_generation, and end_to_end_query_generation results
     files, combine and preprocess them and plot the accuracy for each model as a
     boxplot.
@@ -61,7 +56,7 @@ def plot_text2cypher():
     entity_selection = pd.read_csv("benchmark/results/entity_selection.csv")
     entity_selection["task"] = "entity_selection"
     relationship_selection = pd.read_csv(
-        "benchmark/results/relationship_selection.csv"
+        "benchmark/results/relationship_selection.csv",
     )
     relationship_selection["task"] = "relationship_selection"
     property_selection = pd.read_csv("benchmark/results/property_selection.csv")
@@ -71,7 +66,7 @@ def plot_text2cypher():
     query_generation = pd.read_csv("benchmark/results/query_generation.csv")
     query_generation["task"] = "query_generation"
     end_to_end_query_generation = pd.read_csv(
-        "benchmark/results/end_to_end_query_generation.csv"
+        "benchmark/results/end_to_end_query_generation.csv",
     )
     end_to_end_query_generation["task"] = "end_to_end_query_generation"
 
@@ -84,28 +79,20 @@ def plot_text2cypher():
             property_exists,
             query_generation,
             end_to_end_query_generation,
-        ]
+        ],
     )
 
     # calculate accuracy
     results["score_possible"] = results["score"].apply(
-        lambda x: float(x.split("/")[1])
+        lambda x: float(x.split("/")[1]),
     )
     results["scores"] = results["score"].apply(lambda x: x.split("/")[0])
     results["score_achieved"] = results["scores"].apply(
-        lambda x: (
-            np.mean([float(score) for score in x.split(";")])
-            if ";" in x
-            else float(x)
-        )
+        lambda x: (np.mean([float(score) for score in x.split(";")]) if ";" in x else float(x)),
     )
     results["accuracy"] = results["score_achieved"] / results["score_possible"]
     results["score_sd"] = results["scores"].apply(
-        lambda x: (
-            np.std([float(score) for score in x.split(";")], ddof=1)
-            if ";" in x
-            else 0
-        )
+        lambda x: (np.std([float(score) for score in x.split(";")], ddof=1) if ";" in x else 0),
     )
 
     results["model"] = results["model_name"].apply(lambda x: x.split(":")[0])
@@ -115,25 +102,19 @@ def plot_text2cypher():
         lambda x: (
             "openhermes"
             if "openhermes" in x
-            else (
-                "llama-3"
-                if "llama-3" in x
-                else "gpt" if "gpt" in x else "other open source"
-            )
-        )
+            else ("llama-3" if "llama-3" in x else "gpt" if "gpt" in x else "other open source")
+        ),
     )
 
     # order task by median accuracy ascending
-    task_order = (
-        results.groupby("task")["accuracy"].median().sort_values().index
-    )
+    task_order = results.groupby("task")["accuracy"].median().sort_values().index
 
     # order model_family by median accuracy ascending within each task
     results["model_family"] = results["model_family"].astype(
         pd.CategoricalDtype(
             categories=["other open source", "llama-3", "openhermes", "gpt"],
             ordered=True,
-        )
+        ),
     )
 
     # plot results per task
@@ -156,9 +137,7 @@ def plot_text2cypher():
 
 
 def plot_text2cypher_safety_only():
-    """
-
-    Get entity_selection, relationship_selection, property_selection,
+    """Get entity_selection, relationship_selection, property_selection,
     property_exists, query_generation, and end_to_end_query_generation results
     files, combine and preprocess them and plot the accuracy for each model as a
     boxplot. Only use data that has 'safety' in the task name.
@@ -167,7 +146,7 @@ def plot_text2cypher_safety_only():
     entity_selection = pd.read_csv("benchmark/results/entity_selection.csv")
     entity_selection["task"] = "entity_selection"
     relationship_selection = pd.read_csv(
-        "benchmark/results/relationship_selection.csv"
+        "benchmark/results/relationship_selection.csv",
     )
     relationship_selection["task"] = "relationship_selection"
     property_selection = pd.read_csv("benchmark/results/property_selection.csv")
@@ -177,7 +156,7 @@ def plot_text2cypher_safety_only():
     query_generation = pd.read_csv("benchmark/results/query_generation.csv")
     query_generation["task"] = "query_generation"
     end_to_end_query_generation = pd.read_csv(
-        "benchmark/results/end_to_end_query_generation.csv"
+        "benchmark/results/end_to_end_query_generation.csv",
     )
     end_to_end_query_generation["task"] = "end_to_end_query_generation"
 
@@ -190,7 +169,7 @@ def plot_text2cypher_safety_only():
             property_exists,
             query_generation,
             end_to_end_query_generation,
-        ]
+        ],
     )
 
     # only include rows where 'safety' is in the subtask name
@@ -198,41 +177,28 @@ def plot_text2cypher_safety_only():
 
     # calculate accuracy
     results["score_possible"] = results["score"].apply(
-        lambda x: float(x.split("/")[1])
+        lambda x: float(x.split("/")[1]),
     )
     results["scores"] = results["score"].apply(lambda x: x.split("/")[0])
     results["score_achieved"] = results["scores"].apply(
-        lambda x: (
-            np.mean([float(score) for score in x.split(";")])
-            if ";" in x
-            else float(x)
-        )
+        lambda x: (np.mean([float(score) for score in x.split(";")]) if ";" in x else float(x)),
     )
     results["accuracy"] = results["score_achieved"] / results["score_possible"]
     results["score_sd"] = results["scores"].apply(
-        lambda x: (
-            np.std([float(score) for score in x.split(";")], ddof=1)
-            if ";" in x
-            else 0
-        )
+        lambda x: (np.std([float(score) for score in x.split(";")], ddof=1) if ";" in x else 0),
     )
 
     results["model"] = results["model_name"].apply(lambda x: x.split(":")[0])
 
     # order task by median accuracy ascending
-    task_order = (
-        results.groupby("task")["accuracy"].median().sort_values().index
-    )
+    task_order = results.groupby("task")["accuracy"].median().sort_values().index
 
     # order model by median accuracy ascending within each task
     results["model"] = results["model"].astype(
         pd.CategoricalDtype(
-            categories=results.groupby("model")["accuracy"]
-            .median()
-            .sort_values()
-            .index,
+            categories=results.groupby("model")["accuracy"].median().sort_values().index,
             ordered=True,
-        )
+        ),
     )
 
     # plot results per task
@@ -255,8 +221,7 @@ def plot_text2cypher_safety_only():
 
 
 def plot_image_caption_confidence():
-    """
-    Get multimodal_answer_confidence.csv file, preprocess it and plot the
+    """Get multimodal_answer_confidence.csv file, preprocess it and plot the
     confidence scores for correct and incorrect answers as histograms. Correct
     answer confidence values are in the correct_confidence column and incorrect
     answer confidence values are in the incorrect_confidence column; both
@@ -267,9 +232,7 @@ def plot_image_caption_confidence():
     correct_values = results["correct_confidence"].to_list()
     incorrect_values = results["incorrect_confidence"].to_list()
     # flatten lists of confidence values
-    correct_values = [
-        int(value) for sublist in correct_values for value in sublist.split(";")
-    ]
+    correct_values = [int(value) for sublist in correct_values for value in sublist.split(";")]
     for value in list(incorrect_values):
         if math.isnan(value):
             incorrect_values.remove(value)
@@ -302,44 +265,37 @@ def plot_image_caption_confidence():
 
 
 def preprocess_results_for_frontend(
-    raw_results: pd.DataFrame, path: str, file_name: str
+    raw_results: pd.DataFrame,
+    path: str,
+    file_name: str,
 ) -> None:
     """Preprocesses the results for the frontend and store them on disk.
 
     Args:
+    ----
         raw_results (pd.DataFrame): The raw results.
         path (str): The path to the result files.
         file_name (str): The file name of the result file.
+
     """
     raw_results["score_possible"] = raw_results.apply(
-        lambda x: float(x["score"].split("/")[1]) * x["iterations"], axis=1
+        lambda x: float(x["score"].split("/")[1]) * x["iterations"],
+        axis=1,
     )
     raw_results["scores"] = raw_results["score"].apply(
-        lambda x: x.split("/")[0]
+        lambda x: x.split("/")[0],
     )
     raw_results["score_achieved"] = raw_results["scores"].apply(
-        lambda x: (
-            np.sum([float(score) for score in x.split(";")])
-            if ";" in x
-            else float(x)
-        )
+        lambda x: (np.sum([float(score) for score in x.split(";")]) if ";" in x else float(x)),
     )
     # multiply score_achieved by iterations if no semicolon in scores
     # TODO remove once all benchmarks are in new format
     raw_results["score_achieved"] = raw_results.apply(
-        lambda x: (
-            x["score_achieved"] * x["iterations"]
-            if ";" not in x["scores"]
-            else x["score_achieved"]
-        ),
+        lambda x: (x["score_achieved"] * x["iterations"] if ";" not in x["scores"] else x["score_achieved"]),
         axis=1,
     )
     raw_results["score_sd"] = raw_results["scores"].apply(
-        lambda x: (
-            np.std([float(score) for score in x.split(";")], ddof=1)
-            if ";" in x
-            else 0
-        )
+        lambda x: (np.std([float(score) for score in x.split(";")], ddof=1) if ";" in x else 0),
     )
     aggregated_scores = raw_results.groupby(["model_name"]).agg(
         {
@@ -347,21 +303,15 @@ def preprocess_results_for_frontend(
             "score_achieved": "sum",
             "score_sd": "sum",
             "iterations": "first",
-        }
+        },
     )
 
     aggregated_scores["Accuracy"] = aggregated_scores.apply(
-        lambda row: (
-            row["score_achieved"] / row["score_possible"]
-            if row["score_possible"] != 0
-            else 0
-        ),
+        lambda row: (row["score_achieved"] / row["score_possible"] if row["score_possible"] != 0 else 0),
         axis=1,
     )
 
-    aggregated_scores["Full model name"] = (
-        aggregated_scores.index.get_level_values("model_name")
-    )
+    aggregated_scores["Full model name"] = aggregated_scores.index.get_level_values("model_name")
     aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
     aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
     aggregated_scores["Score SD"] = aggregated_scores["score_sd"]
@@ -386,32 +336,24 @@ def preprocess_results_for_frontend(
 
 
 def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
-    """
-    Write one csv file per subtask for sourcedata_info_extraction results in the
+    """Write one csv file per subtask for sourcedata_info_extraction results in the
     same format as the other results files.
     """
     raw_results["subtask"] = raw_results["subtask"].apply(
-        lambda x: x.split(":")[1]
+        lambda x: x.split(":")[1],
     )
     raw_results["score_possible"] = raw_results.apply(
-        lambda x: float(x["score"].split("/")[1]) * x["iterations"], axis=1
+        lambda x: float(x["score"].split("/")[1]) * x["iterations"],
+        axis=1,
     )
     raw_results["scores"] = raw_results["score"].apply(
-        lambda x: x.split("/")[0]
+        lambda x: x.split("/")[0],
     )
     raw_results["score_achieved"] = raw_results["scores"].apply(
-        lambda x: (
-            np.sum([float(score) for score in x.split(";")])
-            if ";" in x
-            else float(x)
-        )
+        lambda x: (np.sum([float(score) for score in x.split(";")]) if ";" in x else float(x)),
     )
     raw_results["score_sd"] = raw_results["scores"].apply(
-        lambda x: (
-            np.std([float(score) for score in x.split(";")], ddof=1)
-            if ";" in x
-            else 0
-        )
+        lambda x: (np.std([float(score) for score in x.split(";")], ddof=1) if ";" in x else 0),
     )
     aggregated_scores = raw_results.groupby(["model_name", "subtask"]).agg(
         {
@@ -419,23 +361,17 @@ def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
             "score_achieved": "sum",
             "score_sd": "mean",
             "iterations": "first",
-        }
+        },
     )
 
     aggregated_scores["Accuracy"] = aggregated_scores.apply(
-        lambda row: (
-            row["score_achieved"] / row["score_possible"]
-            if row["score_possible"] != 0
-            else 0
-        ),
+        lambda row: (row["score_achieved"] / row["score_possible"] if row["score_possible"] != 0 else 0),
         axis=1,
     )
 
-    aggregated_scores["Full model name"] = (
-        aggregated_scores.index.get_level_values("model_name")
-    )
+    aggregated_scores["Full model name"] = aggregated_scores.index.get_level_values("model_name")
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
-        "subtask"
+        "subtask",
     )
     aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
     aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
@@ -461,14 +397,14 @@ def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
 
 
 def create_overview_table(result_files_path: str, result_file_names: list[str]):
-    """
-
-    Creates an overview table for the frontend with y-axis = models and x-axis =
+    """Creates an overview table for the frontend with y-axis = models and x-axis =
     tasks.
 
     Args:
+    ----
         result_files_path (str): The path to the result files.
         result_file_names (List[str]): The names of the result files.
+
     """
     subtask_results = []
     for file in result_file_names:
@@ -490,29 +426,19 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     )
 
     overview_per_quantisation = overview
-    overview_per_quantisation["Full model name"] = (
-        overview_per_quantisation.index
-    )
-    overview_per_quantisation[
-        ["Model name", "Size", "Version", "Quantisation"]
-    ] = overview_per_quantisation["Full model name"].str.split(":", expand=True)
+    overview_per_quantisation["Full model name"] = overview_per_quantisation.index
+    overview_per_quantisation[["Model name", "Size", "Version", "Quantisation"]] = overview_per_quantisation[
+        "Full model name"
+    ].str.split(":", expand=True)
     # convert underscores in Size to commas
-    overview_per_quantisation["Size"] = overview_per_quantisation[
-        "Size"
-    ].str.replace("_", ",")
+    overview_per_quantisation["Size"] = overview_per_quantisation["Size"].str.replace("_", ",")
     # add size 175 for gpt-3.5-turbo and Unknown for gpt-4
     overview_per_quantisation["Size"] = overview_per_quantisation.apply(
-        lambda row: (
-            "175" if "gpt-3.5-turbo" in row["Model name"] else row["Size"]
-        ),
+        lambda row: ("175" if "gpt-3.5-turbo" in row["Model name"] else row["Size"]),
         axis=1,
     )
     overview_per_quantisation["Size"] = overview_per_quantisation.apply(
-        lambda row: (
-            "Unknown"
-            if "gpt-4" in row["Model name"] or "claude" in row["Model name"]
-            else row["Size"]
-        ),
+        lambda row: ("Unknown" if "gpt-4" in row["Model name"] or "claude" in row["Model name"] else row["Size"]),
         axis=1,
     )
     overview_per_quantisation = overview_per_quantisation[
@@ -526,12 +452,8 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
         ]
     ]
     # round mean and sd to 2 decimal places
-    overview_per_quantisation.loc[:, "Median Accuracy"] = (
-        overview_per_quantisation["Median Accuracy"].round(2)
-    )
-    overview_per_quantisation.loc[:, "SD"] = overview_per_quantisation[
-        "SD"
-    ].round(2)
+    overview_per_quantisation.loc[:, "Median Accuracy"] = overview_per_quantisation["Median Accuracy"].round(2)
+    overview_per_quantisation.loc[:, "SD"] = overview_per_quantisation["SD"].round(2)
     overview_per_quantisation.to_csv(
         f"{result_files_path}processed/overview-quantisation.csv",
         index=False,
@@ -540,21 +462,20 @@ def create_overview_table(result_files_path: str, result_file_names: list[str]):
     # group by model name and size, aggregate different quantisations
     # keep models that do not have sizes
     overview_per_size = overview_per_quantisation.groupby(
-        ["Model name", "Size"]
+        ["Model name", "Size"],
     ).agg(
         {
             "Median Accuracy": "median",
             "SD": "mean",
-        }
+        },
     )
     # round mean and SD to 2 decimal places
-    overview_per_size["Median Accuracy"] = overview_per_size[
-        "Median Accuracy"
-    ].round(2)
+    overview_per_size["Median Accuracy"] = overview_per_size["Median Accuracy"].round(2)
     overview_per_size["SD"] = overview_per_size["SD"].round(2)
     # sort by mean, descending
     overview_per_size = overview_per_size.sort_values(
-        by="Median Accuracy", ascending=False
+        by="Median Accuracy",
+        ascending=False,
     )
     overview_per_size.to_csv(
         f"{result_files_path}processed/overview-model.csv",
@@ -570,10 +491,13 @@ def plot_accuracy_per_model(overview) -> None:
     sns.set_theme(style="whitegrid")
     plt.figure(figsize=(10, 6))
     sns.stripplot(
-        x="Model name", y="Accuracy", hue="Size", data=overview_melted
+        x="Model name",
+        y="Accuracy",
+        hue="Size",
+        data=overview_melted,
     )
     plt.title(
-        "Strip plot across tasks, per Model, coloured by size (billions of parameters)"
+        "Strip plot across tasks, per Model, coloured by size (billions of parameters)",
     )
     plt.ylim(-0.1, 1.1)
     plt.xticks(rotation=45, ha="right")
@@ -592,7 +516,10 @@ def plot_accuracy_per_quantisation(overview) -> None:
 
     plt.figure(figsize=(10, 6))
     sns.boxplot(
-        x="Model name", y="Accuracy", hue="Quantisation", data=overview_melted
+        x="Model name",
+        y="Accuracy",
+        hue="Quantisation",
+        data=overview_melted,
     )
     plt.title("Boxplot across tasks, per Quantisation")
     plt.xticks(rotation=45)
@@ -608,9 +535,7 @@ def plot_accuracy_per_task(overview):
     overview_melted = melt_and_process(overview)
 
     # concatenate model name and quantisation
-    overview_melted["Coarse model name"] = overview_melted[
-        "Model name"
-    ].replace(
+    overview_melted["Coarse model name"] = overview_melted["Model name"].replace(
         {
             "gpt-3.5-turbo-0613": "gpt-3.5-turbo",
             "gpt-3.5-turbo-0125": "gpt-3.5-turbo",
@@ -627,20 +552,18 @@ def plot_accuracy_per_task(overview):
 
     # Define the color palette
     palette = sns.color_palette(
-        "Set1", len(overview_melted["Coarse model name"].unique())
+        "Set1",
+        len(overview_melted["Coarse model name"].unique()),
     )
 
     # Calculate mean accuracy for each task
-    task_order = (
-        overview_melted.groupby("Task")["Accuracy"]
-        .mean()
-        .sort_values()
-        .index[::-1]
-    )
+    task_order = overview_melted.groupby("Task")["Accuracy"].mean().sort_values().index[::-1]
 
     # Sort the dataframe
     overview_melted["Task"] = pd.Categorical(
-        overview_melted["Task"], categories=task_order, ordered=True
+        overview_melted["Task"],
+        categories=task_order,
+        ordered=True,
     )
     overview_melted = overview_melted.sort_values("Task")
 
@@ -744,7 +667,9 @@ def plot_scatter_per_quantisation(overview):
     # Create a mask for 'openhermes' and closed models
     mask_openhermes = overview_melted["Model name"] == "openhermes-2.5"
     mask_closed = overview_melted["Model name"].str.contains(
-        "gpt|claude", case=False, regex=True
+        "gpt|claude",
+        case=False,
+        regex=True,
     )
 
     # Do not add jitter for 'openhermes' model
@@ -764,7 +689,9 @@ def plot_scatter_per_quantisation(overview):
 
     # For other models, add the original jitter
     x[~mask_openhermes & ~mask_closed] += np.random.normal(
-        0, 0.1, size=len(x[~mask_openhermes & ~mask_closed])
+        0,
+        0.1,
+        size=len(x[~mask_openhermes & ~mask_closed]),
     )
 
     # Define the order of model names
@@ -806,9 +733,7 @@ def plot_scatter_per_quantisation(overview):
     palette = sns.color_palette(cc.glasbey, n_colors=len(model_names_order))
 
     # Define a dictionary mapping model names to colors using the order list
-    color_dict = {
-        model: palette[i] for i, model in enumerate(model_names_order)
-    }
+    color_dict = {model: palette[i] for i, model in enumerate(model_names_order)}
 
     # Use the dictionary as the palette argument in sns.scatterplot
     ax = sns.scatterplot(
@@ -844,7 +769,7 @@ def plot_scatter_per_quantisation(overview):
         labels=overview_melted["Quantisation"].cat.categories,
     )
     plt.title(
-        "Scatter plot across models, per quantisation, coloured by model name, size by model size (billions of parameters)"
+        "Scatter plot across models, per quantisation, coloured by model name, size by model size (billions of parameters)",
     )
     plt.xticks(rotation=45)
     plt.savefig(
@@ -887,17 +812,14 @@ def plot_rag_tasks(overview):
             [
                 "explicit_relevance_of_single_fragments",
                 "implicit_relevance_of_multiple_fragments",
-            ]
+            ],
         )
     ]
 
     # order models by median accuracy, inverse
     overview_melted["Model name"] = pd.Categorical(
         overview_melted["Model name"],
-        categories=overview_melted.groupby("Model name")["Median Accuracy"]
-        .median()
-        .sort_values()
-        .index[::-1],
+        categories=overview_melted.groupby("Model name")["Median Accuracy"].median().sort_values().index[::-1],
         ordered=True,
     )
 
@@ -934,55 +856,44 @@ def plot_rag_tasks(overview):
 
 
 def plot_extraction_tasks():
-    """
-    Load raw result file for sourcedata_info_extraction; aggregate based on the
+    """Load raw result file for sourcedata_info_extraction; aggregate based on the
     subtask name and calculate mean accuracy for each model. Plot a stripplot
     of the mean accuracy across models, coloured by subtask.
     """
     sourcedata_info_extraction = pd.read_csv(
-        "benchmark/results/sourcedata_info_extraction.csv"
+        "benchmark/results/sourcedata_info_extraction.csv",
     )
     # split subtask at colon and use second element
-    sourcedata_info_extraction["subtask"] = sourcedata_info_extraction[
-        "subtask"
-    ].apply(lambda x: x.split(":")[1])
-    sourcedata_info_extraction["score_possible"] = sourcedata_info_extraction[
-        "score"
-    ].apply(lambda x: float(x.split("/")[1]))
-    sourcedata_info_extraction["scores"] = sourcedata_info_extraction[
-        "score"
-    ].apply(lambda x: x.split("/")[0])
-    sourcedata_info_extraction["score_achieved"] = sourcedata_info_extraction[
-        "scores"
-    ].apply(lambda x: np.mean(float(x.split(";")[0])) if ";" in x else float(x))
-    sourcedata_info_extraction["score_sd"] = sourcedata_info_extraction[
-        "scores"
-    ].apply(lambda x: np.std(float(x.split(";")[0])) if ";" in x else 0)
+    sourcedata_info_extraction["subtask"] = sourcedata_info_extraction["subtask"].apply(lambda x: x.split(":")[1])
+    sourcedata_info_extraction["score_possible"] = sourcedata_info_extraction["score"].apply(
+        lambda x: float(x.split("/")[1]),
+    )
+    sourcedata_info_extraction["scores"] = sourcedata_info_extraction["score"].apply(lambda x: x.split("/")[0])
+    sourcedata_info_extraction["score_achieved"] = sourcedata_info_extraction["scores"].apply(
+        lambda x: np.mean(float(x.split(";")[0])) if ";" in x else float(x),
+    )
+    sourcedata_info_extraction["score_sd"] = sourcedata_info_extraction["scores"].apply(
+        lambda x: np.std(float(x.split(";")[0])) if ";" in x else 0,
+    )
     aggregated_scores = sourcedata_info_extraction.groupby(
-        ["model_name", "subtask"]
+        ["model_name", "subtask"],
     ).agg(
         {
             "score_possible": "sum",
             "score_achieved": "sum",
             "score_sd": "first",
             "iterations": "first",
-        }
+        },
     )
 
     aggregated_scores["Accuracy"] = aggregated_scores.apply(
-        lambda row: (
-            row["score_achieved"] / row["score_possible"]
-            if row["score_possible"] != 0
-            else 0
-        ),
+        lambda row: (row["score_achieved"] / row["score_possible"] if row["score_possible"] != 0 else 0),
         axis=1,
     )
 
-    aggregated_scores["Full model name"] = (
-        aggregated_scores.index.get_level_values("model_name")
-    )
+    aggregated_scores["Full model name"] = aggregated_scores.index.get_level_values("model_name")
     aggregated_scores["Subtask"] = aggregated_scores.index.get_level_values(
-        "subtask"
+        "subtask",
     )
     aggregated_scores["Score achieved"] = aggregated_scores["score_achieved"]
     aggregated_scores["Score possible"] = aggregated_scores["score_possible"]
@@ -1021,44 +932,33 @@ def plot_extraction_tasks():
 
 
 def plot_medical_exam():
-    """
-    Load raw result for medical_exam; aggregate based on the language and
+    """Load raw result for medical_exam; aggregate based on the language and
     calculate mean accuracy for each model. Plot a stripplot of the mean
     accuracy across models, coloured by language.
     """
     medical_exam = pd.read_csv("benchmark/results/medical_exam.csv")
 
     medical_exam["score_possible"] = medical_exam["score"].apply(
-        lambda x: float(x.split("/")[1])
+        lambda x: float(x.split("/")[1]),
     )
     medical_exam["scores"] = medical_exam["score"].apply(
-        lambda x: x.split("/")[0]
+        lambda x: x.split("/")[0],
     )
     medical_exam["score_achieved"] = medical_exam["scores"].apply(
-        lambda x: (
-            np.mean([float(score) for score in x.split(";")])
-            if ";" in x
-            else float(x)
-        )
+        lambda x: (np.mean([float(score) for score in x.split(";")]) if ";" in x else float(x)),
     )
-    medical_exam["accuracy"] = (
-        medical_exam["score_achieved"] / medical_exam["score_possible"]
-    )
+    medical_exam["accuracy"] = medical_exam["score_achieved"] / medical_exam["score_possible"]
     medical_exam["score_sd"] = medical_exam["scores"].apply(
-        lambda x: (
-            np.std([float(score) for score in x.split(";")], ddof=1)
-            if ";" in x
-            else 0
-        )
+        lambda x: (np.std([float(score) for score in x.split(";")], ddof=1) if ";" in x else 0),
     )
     medical_exam["task"] = medical_exam["subtask"].apply(
-        lambda x: x.split(":")[0]
+        lambda x: x.split(":")[0],
     )
     medical_exam["domain"] = medical_exam["subtask"].apply(
-        lambda x: x.split(":")[1]
+        lambda x: x.split(":")[1],
     )
     medical_exam["language"] = medical_exam["subtask"].apply(
-        lambda x: x.split(":")[2]
+        lambda x: x.split(":")[2],
     )
 
     # processing: remove "short_words" task, not informative
@@ -1066,12 +966,12 @@ def plot_medical_exam():
 
     # plot language comparison
     aggregated_scores_language = medical_exam.groupby(
-        ["model_name", "language"]
+        ["model_name", "language"],
     ).agg(
         {
             "accuracy": "mean",
             "score_sd": "mean",
-        }
+        },
     )
     sns.set_theme(style="whitegrid")
     plt.figure(figsize=(6, 4))
@@ -1089,20 +989,20 @@ def plot_medical_exam():
 
     # plot language comparison per domain
     aggregated_scores_language_domain = medical_exam.groupby(
-        ["model_name", "language", "domain"]
+        ["model_name", "language", "domain"],
     ).agg(
         {
             "accuracy": "mean",
             "score_sd": "mean",
-        }
+        },
     )
     # calculate mean accuracy per language and domain
     mean_accuracy = aggregated_scores_language_domain.groupby(
-        ["language", "domain"]
+        ["language", "domain"],
     )["accuracy"].mean()
     # sort domains by mean accuracy
     sorted_domains = mean_accuracy.sort_values(
-        ascending=False
+        ascending=False,
     ).index.get_level_values("domain")
 
     sns.set_theme(style="whitegrid")
@@ -1127,7 +1027,7 @@ def plot_medical_exam():
         {
             "accuracy": "mean",
             "score_sd": "mean",
-        }
+        },
     )
     # calculate mean accuracy per task
     mean_accuracy = aggregated_scores_task.groupby("task")["accuracy"].mean()
@@ -1152,17 +1052,15 @@ def plot_medical_exam():
 
     # plot domain comparison
     aggregated_scores_domain = medical_exam.groupby(
-        ["model_name", "domain"]
+        ["model_name", "domain"],
     ).agg(
         {
             "accuracy": "mean",
             "score_sd": "mean",
-        }
+        },
     )
     # calculate mean accuracy per domain
-    mean_accuracy = aggregated_scores_domain.groupby("domain")[
-        "accuracy"
-    ].mean()
+    mean_accuracy = aggregated_scores_domain.groupby("domain")["accuracy"].mean()
     # sort domains by mean accuracy
     sorted_domains = mean_accuracy.sort_values(ascending=False).index
 
@@ -1189,7 +1087,7 @@ def plot_comparison_naive_biochatter(overview):
     # select tasks naive_query_generation_using_schema and query_generation
     overview_melted = overview_melted[
         overview_melted["Task"].isin(
-            ["naive_query_generation_using_schema", "query_generation"]
+            ["naive_query_generation_using_schema", "query_generation"],
         )
     ]
 
@@ -1277,12 +1175,8 @@ def calculate_stats(overview):
     # calculate p-value between naive and biochatter
     from scipy.stats import ttest_ind
 
-    biochatter = overview_melted[overview_melted["Task"] == "query_generation"][
-        "Accuracy"
-    ].dropna()
-    naive = overview_melted[
-        overview_melted["Task"] == "naive_query_generation_using_schema"
-    ]["Accuracy"].dropna()
+    biochatter = overview_melted[overview_melted["Task"] == "query_generation"]["Accuracy"].dropna()
+    naive = overview_melted[overview_melted["Task"] == "naive_query_generation_using_schema"]["Accuracy"].dropna()
 
     t_stat, p_value = ttest_ind(biochatter, naive)
 
@@ -1298,7 +1192,7 @@ def calculate_stats(overview):
     # calculate correlation between LLM size and accuracy for all tasks
     # convert size to float, make Unknown = 300, replace commas with dots
     size = overview_melted["Size"].apply(
-        lambda x: 300 if x == "Unknown" else float(x.replace(",", "."))
+        lambda x: 300 if x == "Unknown" else float(x.replace(",", ".")),
     )
     from scipy.stats import pearsonr
 
@@ -1331,7 +1225,7 @@ def calculate_stats(overview):
     # calculate correlation between quantisation and accuracy for all tasks
     # convert quantisation to float, make >= 16-bit* = 16, replace -bit with nothing
     quantisation = overview_melted["Quantisation"].apply(
-        lambda x: 16 if x == ">= 16-bit*" else float(x.replace("-bit", ""))
+        lambda x: 16 if x == ">= 16-bit*" else float(x.replace("-bit", "")),
     )
     # Create a mask of rows where 'Accuracy' is not NaN
     mask = overview_melted["Accuracy"].notna()
@@ -1341,7 +1235,8 @@ def calculate_stats(overview):
     accuracy = overview_melted["Accuracy"][mask]
 
     quant_accuracy_corr, quant_accuracy_p_value = pearsonr(
-        quantisation, accuracy
+        quantisation,
+        accuracy,
     )
     # plot scatter plot
     plt.figure(figsize=(6, 4))
@@ -1364,13 +1259,13 @@ def calculate_stats(overview):
     with open("benchmark/results/processed/correlations.txt", "w") as f:
         f.write(f"Size vs accuracy Pearson correlation: {size_accuracy_corr}\n")
         f.write(
-            f"Size vs accuracy Pearson correlation p-value: {size_accuracy_p_value}\n"
+            f"Size vs accuracy Pearson correlation p-value: {size_accuracy_p_value}\n",
         )
         f.write(
-            f"Quantisation vs accuracy Pearson correlation: {quant_accuracy_corr}\n"
+            f"Quantisation vs accuracy Pearson correlation: {quant_accuracy_corr}\n",
         )
         f.write(
-            f"Quantisation vs accuracy Pearson correlation p-value: {quant_accuracy_p_value}\n"
+            f"Quantisation vs accuracy Pearson correlation p-value: {quant_accuracy_p_value}\n",
         )
 
 
@@ -1392,15 +1287,13 @@ def melt_and_process(overview):
     # unify quantisation names: 2-bit, 3-bit, etc
     digit_pattern = r"\d+"
     overview_melted["Quantisation"] = overview_melted["Quantisation"].apply(
-        lambda x: f"{re.findall(digit_pattern, x)[0]}-bit" if x else "None"
+        lambda x: f"{re.findall(digit_pattern, x)[0]}-bit" if x else "None",
     )
     # set quantisation of gpt models to None
     overview_melted["Quantisation"] = overview_melted.apply(
         lambda row: (
             ">= 16-bit*"
-            if "gpt-3.5-turbo" in row["Model name"]
-            or "gpt-4" in row["Model name"]
-            or "claude" in row["Model name"]
+            if "gpt-3.5-turbo" in row["Model name"] or "gpt-4" in row["Model name"] or "claude" in row["Model name"]
             else row["Quantisation"]
         ),
         axis=1,

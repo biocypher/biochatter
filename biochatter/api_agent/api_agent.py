@@ -1,4 +1,3 @@
-from typing import Optional
 from collections.abc import Callable
 
 from pydantic import BaseModel
@@ -29,15 +28,14 @@ class APIAgent:
         fetcher: "BaseFetcher",
         interpreter: "BaseInterpreter",
     ):
-        """
-
-        API agent class to interact with a tool's API for querying and fetching
+        """API agent class to interact with a tool's API for querying and fetching
         results.  The query fields have to be defined in a Pydantic model
         (`BaseModel`) and used (i.e., parameterised by the LLM) in the query
         builder. Specific API agents are defined in submodules of this directory
         (`api_agent`). The agent's logic is implemented in the `execute` method.
 
-        Attributes:
+        Attributes
+        ----------
             conversation_factory (Callable): A function used to create a
                 BioChatter conversation, providing LLM access.
 
@@ -49,6 +47,7 @@ class APIAgent:
 
             result_interpreter (BaseInterpreter): An instance of a child of the
                 BaseInterpreter class.
+
         """
         self.conversation_factory = conversation_factory
         self.query_builder = query_builder
@@ -56,9 +55,8 @@ class APIAgent:
         self.interpreter = interpreter
         self.final_answer = None
 
-    def parameterise_query(self, question: str) -> Optional[BaseModel]:
-        """
-        Use LLM to parameterise a query (a Pydantic model) based on the given
+    def parameterise_query(self, question: str) -> BaseModel | None:
+        """Use LLM to parameterise a query (a Pydantic model) based on the given
         question using a BioChatter conversation instance.
         """
         try:
@@ -68,13 +66,14 @@ class APIAgent:
             print(f"Error generating query: {e}")
             return None
 
-    def fetch_results(self, query_model: str) -> Optional[str]:
-        """
-        Fetch the results of the query using the individual API's implementation
+    def fetch_results(self, query_model: str) -> str | None:
+        """Fetch the results of the query using the individual API's implementation
         (either single-step or submit-retrieve).
 
         Args:
+        ----
             query_model: the parameterised query Pydantic model
+
         """
         try:
             return self.fetcher.fetch_results(query_model, 100)
@@ -83,11 +82,11 @@ class APIAgent:
             return None
 
     def summarise_results(
-        self, question: str, response_text: str
-    ) -> Optional[str]:
-        """
-        Summarise the retrieved results to extract the answer to the question.
-        """
+        self,
+        question: str,
+        response_text: str,
+    ) -> str | None:
+        """Summarise the retrieved results to extract the answer to the question."""
         try:
             return self.interpreter.summarise_results(
                 question=question,
@@ -98,15 +97,16 @@ class APIAgent:
             print(f"Error extracting answer: {e}")
             return None
 
-    def execute(self, question: str) -> Optional[str]:
-        """
-        Wrapper that uses class methods to execute the API agent logic. Consists
+    def execute(self, question: str) -> str | None:
+        """Wrapper that uses class methods to execute the API agent logic. Consists
         of 1) query generation, 2) query submission, 3) results fetching, and
         4) answer extraction. The final answer is stored in the final_answer
         attribute.
 
         Args:
+        ----
             question (str): The question to be answered.
+
         """
         # Generate query
         try:
@@ -138,7 +138,4 @@ class APIAgent:
         return final_answer
 
     def get_description(self, tool_name: str, tool_desc: str):
-        return (
-            f"This API agent interacts with {tool_name}'s API for querying and "
-            f"fetching results. {tool_desc}"
-        )
+        return f"This API agent interacts with {tool_name}'s API for querying and fetching results. {tool_desc}"

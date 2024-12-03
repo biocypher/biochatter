@@ -1,17 +1,18 @@
-from urllib.parse import urlencode
 import inspect
 import re
+from urllib.parse import urlencode
 
 import pytest
 
 from biochatter._misc import ensure_iterable
-from biochatter.api_agent import OncoKBQueryBuilder, BioToolsQueryBuilder
-from .conftest import calculate_bool_vector_score
+from biochatter.api_agent import BioToolsQueryBuilder, OncoKBQueryBuilder
+
 from .benchmark_utils import (
-    skip_if_already_run,
     get_result_file_path,
+    skip_if_already_run,
     write_results_to_file,
 )
+from .conftest import calculate_bool_vector_score
 
 
 def test_api_calling(
@@ -23,11 +24,13 @@ def test_api_calling(
     yaml_data = test_data_api_calling
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     skip_if_already_run(
-        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+        model_name=model_name,
+        task=task,
+        md5_hash=yaml_data["hash"],
     )
     if "gpt-" not in model_name:
         pytest.skip(
-            f"model {model_name} does not support API calling for {task} benchmark"
+            f"model {model_name} does not support API calling for {task} benchmark",
         )
 
     def run_test():
@@ -50,7 +53,7 @@ def test_api_calling(
 
         score = []
         for expected_part in ensure_iterable(
-            yaml_data["expected"]["parts_of_query"]
+            yaml_data["expected"]["parts_of_query"],
         ):
             if re.search(expected_part, api_query):
                 score.append(True)

@@ -1,18 +1,18 @@
-from typing import Optional
-from urllib.parse import urlencode
-from collections.abc import Callable
 import re
 import time
 import uuid
+from collections.abc import Callable
+from urllib.parse import urlencode
 
-from pydantic import Field, BaseModel
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.pydantic_v1 import Field, BaseModel
-from langchain_core.output_parsers import StrOutputParser
-from langchain.chains.openai_functions import create_structured_output_runnable
 import requests
+from langchain.chains.openai_functions import create_structured_output_runnable
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 
 from biochatter.llm_connect import Conversation
+
 from .abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
 
 BLAST_QUERY_PROMPT = """
@@ -43,61 +43,61 @@ BLAST_SUMMARY_PROMPT = """
 
 
 class BlastQueryParameters(BaseModel):
-    """
-
-    BlastQuery is a Pydantic model for the parameters of a BLAST query request,
+    """BlastQuery is a Pydantic model for the parameters of a BLAST query request,
     used for configuring and sending a request to the NCBI BLAST query API. The
     fields are dynamically configured by the LLM based on the user's question.
 
     """
 
-    url: Optional[str] = Field(
+    url: str | None = Field(
         default="https://blast.ncbi.nlm.nih.gov/Blast.cgi?",
         description="ALWAYS USE DEFAULT, DO NOT CHANGE",
     )
-    cmd: Optional[str] = Field(
+    cmd: str | None = Field(
         default="Put",
         description="Command to execute, 'Put' for submitting query, 'Get' for retrieving results.",
     )
-    program: Optional[str] = Field(
+    program: str | None = Field(
         default="blastn",
         description="BLAST program to use, e.g., 'blastn' for nucleotide-nucleotide BLAST, 'blastp' for protein-protein BLAST.",
     )
-    database: Optional[str] = Field(
+    database: str | None = Field(
         default="nt",
         description="Database to search, e.g., 'nt' for nucleotide database, 'nr' for non redundant protein database, pdb the Protein Data Bank database, which is used specifically for protein structures, 'refseq_rna' and 'refseq_genomic': specialized databases for RNA sequences and genomic sequences",
     )
-    query: Optional[str] = Field(
+    query: str | None = Field(
         None,
         description="Nucleotide or protein sequence for the BLAST or blat query, make sure to always keep the entire sequence given.",
     )
-    format_type: Optional[str] = Field(
+    format_type: str | None = Field(
         default="Text",
         description="Format of the BLAST results, e.g., 'Text', 'XML'.",
     )
-    rid: Optional[str] = Field(
-        None, description="Request ID for retrieving BLAST results."
+    rid: str | None = Field(
+        None,
+        description="Request ID for retrieving BLAST results.",
     )
-    other_params: Optional[dict] = Field(
+    other_params: dict | None = Field(
         default={"email": "user@example.com"},
         description="Other optional BLAST parameters, including user email.",
     )
-    max_hits: Optional[int] = Field(
+    max_hits: int | None = Field(
         default=15,
         description="Maximum number of hits to return in the BLAST results.",
     )
-    sort_by: Optional[str] = Field(
+    sort_by: str | None = Field(
         default="score",
         description="Criterion to sort BLAST results by, e.g., 'score', 'evalue'.",
     )
-    megablast: Optional[str] = Field(
-        default="on", description="Set to 'on' for human genome alignemnts"
+    megablast: str | None = Field(
+        default="on",
+        description="Set to 'on' for human genome alignemnts",
     )
-    question_uuid: Optional[str] = Field(
+    question_uuid: str | None = Field(
         default_factory=lambda: str(uuid.uuid4()),
         description="Unique identifier for the question.",
     )
-    full_url: Optional[str] = Field(
+    full_url: str | None = Field(
         default="TBF",
         description="Full URL to be used to submit the BLAST query",
     )
@@ -111,18 +111,20 @@ class BlastQueryBuilder(BaseQueryBuilder):
         query_parameters: "BlastQueryParameters",
         conversation: "Conversation",
     ) -> Callable:
-        """
-        Creates a runnable object for executing queries using the LangChain
+        """Creates a runnable object for executing queries using the LangChain
         `create_structured_output_runnable` method.
 
         Args:
+        ----
             query_parameters: A Pydantic data model that specifies the fields of
                 the API that should be queried.
 
             conversation: A BioChatter conversation object.
 
         Returns:
+        -------
             A Callable object that can execute the query.
+
         """
         return create_structured_output_runnable(
             output_schema=query_parameters,
@@ -135,35 +137,36 @@ class BlastQueryBuilder(BaseQueryBuilder):
         question: str,
         conversation: "Conversation",
     ) -> BlastQueryParameters:
-        """
-        Generates a BlastQuery object based on the given question, prompt, and
+        """Generates a BlastQuery object based on the given question, prompt, and
         BioChatter conversation. Uses a Pydantic model to define the API fields.
         Creates a runnable that can be invoked on LLMs that are qualified to
         parameterise functions.
 
         Args:
+        ----
             question (str): The question to be answered.
 
             conversation: The conversation object used for parameterising the
                 BlastQuery.
 
         Returns:
+        -------
             BlastQuery: the parameterised query object (Pydantic model)
+
         """
         runnable = self.create_runnable(
             query_parameters=BlastQueryParameters,
             conversation=conversation,
         )
         blast_call_obj = runnable.invoke(
-            {"input": f"Answer:\n{question} based on:\n {BLAST_QUERY_PROMPT}"}
+            {"input": f"Answer:\n{question} based on:\n {BLAST_QUERY_PROMPT}"},
         )
         blast_call_obj.question_uuid = str(uuid.uuid4())
         return blast_call_obj
 
 
 class BlastFetcher(BaseFetcher):
-    """
-    A class for retrieving API results from BLAST given a parameterised
+    """A class for retrieving API results from BLAST given a parameterised
     BlastQuery.
 
     TODO add a limit of characters to be returned from the response.text?
@@ -174,10 +177,14 @@ class BlastFetcher(BaseFetcher):
         It submits the structured BlastQuery obj and return the RID.
 
         Args:
+        ----
             request_data: BlastQuery object containing the BLAST query
                 parameters.
+
         Returns:
+        -------
             str: The Request ID (RID) for the submitted BLAST query.
+
         """
         data = {
             "CMD": request_data.cmd,
@@ -250,7 +257,8 @@ class BlastFetcher(BaseFetcher):
                 if "ThereAreHits=yes" in status_text:
                     print(f"{question_uuid} results are ready, retrieving.")
                     results_response = requests.get(
-                        base_url, params=get_results_params
+                        base_url,
+                        params=get_results_params,
                     )
                     results_response.raise_for_status()
                     # Save the results to a file
@@ -259,23 +267,27 @@ class BlastFetcher(BaseFetcher):
                     return "No hits found"
         if attempt == retries - 1:
             raise TimeoutError(
-                "Maximum attempts reached. Results may not be ready."
+                "Maximum attempts reached. Results may not be ready.",
             )
 
     def fetch_results(
-        self, query_model: BlastQueryParameters, retries: int = 20
+        self,
+        query_model: BlastQueryParameters,
+        retries: int = 20,
     ) -> str:
-        """
-        Submit request and fetch results from BLAST API. Wraps individual
+        """Submit request and fetch results from BLAST API. Wraps individual
         submission and retrieval of results.
 
         Args:
+        ----
             query_model: the Pydantic model of the query
 
             retries: the number of maximum retries
 
         Returns:
+        -------
             str: the result from the BLAST API
+
         """
         rid = self._submit_query(request_data=query_model)
         return self._fetch_results(
@@ -292,15 +304,16 @@ class BlastInterpreter(BaseInterpreter):
         conversation_factory: Callable,
         response_text: str,
     ) -> str:
-        """
-        Function to extract the answer from the BLAST results.
+        """Function to extract the answer from the BLAST results.
 
         Args:
+        ----
             question (str): The question to be answered.
             conversation_factory: A BioChatter conversation object.
             response_text (str): The response.text returned by NCBI.
 
         Returns:
+        -------
             str: The extracted answer from the BLAST results.
 
         """
@@ -311,10 +324,11 @@ class BlastInterpreter(BaseInterpreter):
                     "You are a world class molecular biologist who knows everything about NCBI and BLAST results.",
                 ),
                 ("user", "{input}"),
-            ]
+            ],
         )
         summary_prompt = BLAST_SUMMARY_PROMPT.format(
-            question=question, context=response_text
+            question=question,
+            context=response_text,
         )
         output_parser = StrOutputParser()
         conversation = conversation_factory()
