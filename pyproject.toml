@@ -87,6 +87,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.ruff]
 line-length = 120
 select = ["ALL"]
+target-version = "py310"
 
 [tool.ruff.lint.pycodestyle]
 max-doc-length = 80
