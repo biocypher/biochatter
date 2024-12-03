@@ -1,5 +1,4 @@
 from collections.abc import Callable
-from typing import Optional
 
 
 class RagAgentModeEnum:
@@ -13,16 +12,16 @@ class RagAgent:
     def __init__(
         self,
         mode: str,
-        model_name: Optional[str] = "gpt-3.5-turbo",
-        connection_args: Optional[dict] = None,
-        n_results: Optional[int] = 3,
-        use_prompt: Optional[bool] = False,
-        schema_config_or_info_dict: Optional[dict] = None,
-        conversation_factory: Optional[Callable] = None,
-        embedding_func: Optional[object] = None,
-        documentids_workspace: Optional[list[str]] = None,
-        agent_desc: Optional[str] = None,
-        use_reflexion: Optional[bool] = False,
+        model_name: str | None = "gpt-3.5-turbo",
+        connection_args: dict | None = None,
+        n_results: int | None = 3,
+        use_prompt: bool | None = False,
+        schema_config_or_info_dict: dict | None = None,
+        conversation_factory: Callable | None = None,
+        embedding_func: object | None = None,
+        documentids_workspace: list[str] | None = None,
+        agent_desc: str | None = None,
+        use_reflexion: bool | None = False,
     ) -> None:
         ######
         ##TO DO
@@ -161,7 +160,7 @@ class RagAgent:
         return self._agent_desc
 
     @agent_description.setter
-    def agent_description(self, val: Optional[str] = None):
+    def agent_description(self, val: str | None = None):
         self._agent_desc = val
 
     def generate_responses(self, user_question: str) -> list[tuple]:

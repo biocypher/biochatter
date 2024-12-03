@@ -1,5 +1,4 @@
 from collections.abc import Callable
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -56,7 +55,7 @@ class APIAgent:
         self.interpreter = interpreter
         self.final_answer = None
 
-    def parameterise_query(self, question: str) -> Optional[BaseModel]:
+    def parameterise_query(self, question: str) -> BaseModel | None:
         """Use LLM to parameterise a query (a Pydantic model) based on the given
         question using a BioChatter conversation instance.
         """
@@ -67,7 +66,7 @@ class APIAgent:
             print(f"Error generating query: {e}")
             return None
 
-    def fetch_results(self, query_model: str) -> Optional[str]:
+    def fetch_results(self, query_model: str) -> str | None:
         """Fetch the results of the query using the individual API's implementation
         (either single-step or submit-retrieve).
 
@@ -86,7 +85,7 @@ class APIAgent:
         self,
         question: str,
         response_text: str,
-    ) -> Optional[str]:
+    ) -> str | None:
         """Summarise the retrieved results to extract the answer to the question."""
         try:
             return self.interpreter.summarise_results(
@@ -98,7 +97,7 @@ class APIAgent:
             print(f"Error extracting answer: {e}")
             return None
 
-    def execute(self, question: str) -> Optional[str]:
+    def execute(self, question: str) -> str | None:
         """Wrapper that uses class methods to execute the API agent logic. Consists
         of 1) query generation, 2) query submission, 3) results fetching, and
         4) answer extraction. The final answer is stored in the final_answer

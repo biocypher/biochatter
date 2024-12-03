@@ -1,10 +1,10 @@
 import uuid
-from typing import Any, Optional, Union
+from typing import Any
 
 from pymilvus import DataType, FieldSchema
 
 
-def has_collection(name, using: Optional[str] = None):
+def has_collection(name, using: str | None = None):
     return True
 
 
@@ -41,7 +41,7 @@ class Collection:
     def flush(self):
         pass
 
-    def similarity_search(self, query: str, k: int, expr: Optional[str] = None):
+    def similarity_search(self, query: str, k: int, expr: str | None = None):
         pass
 
     def load(self):
@@ -64,9 +64,9 @@ class Collection:
 
     def insert(
         self,
-        data: Union[list, dict],
-        partition_name: Optional[str] = None,
-        timeout: Optional[float] = None,
+        data: list | dict,
+        partition_name: str | None = None,
+        timeout: float | None = None,
         **kwargs,
     ):
         id = uuid.uuid4().hex
@@ -79,9 +79,9 @@ class Connections:
         self,
         host: str,
         port: str,
-        alias: Optional[str] = None,
-        user: Optional[str] = "",
-        password: Optional[str] = "",
+        alias: str | None = None,
+        user: str | None = "",
+        password: str | None = "",
     ):
         pass
 
@@ -90,7 +90,7 @@ connections = Connections()
 
 
 class Utility:
-    def has_collection(self, name: str, using: Optional[str] = None):
+    def has_collection(self, name: str, using: str | None = None):
         return True
 
 

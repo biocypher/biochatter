@@ -323,7 +323,7 @@ def test_wasm_conversation():
     assert result == test_query + "\nSystem message"
 
 
-@pytest.fixture
+@pytest.fixture()
 def xinference_conversation():
     with patch("xinference.client.Client") as mock_client:
         # Mock the authentication check
@@ -588,4 +588,3 @@ def test_local_image_query_xinference():
         image_url="test/figure_panel.jpg",
     )
     assert isinstance(result, str)
-

@@ -1,6 +1,5 @@
 import json
 from collections.abc import Callable
-from typing import Optional
 
 import neo4j_utils as nu
 from langchain.schema import Document
@@ -81,7 +80,7 @@ class DatabaseAgent:
         self,
         results: list[dict],
         cypher_query: str,
-        results_num: Optional[int] = 3,
+        results_num: int | None = 3,
     ) -> list[Document]:
         if len(results) == 0:
             return [

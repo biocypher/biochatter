@@ -14,7 +14,6 @@ import json
 import logging
 import urllib.parse
 from abc import ABC, abstractmethod
-from typing import Optional
 
 import anthropic
 import nltk
@@ -120,7 +119,7 @@ class Conversation(ABC):
         return -1, None
 
     @abstractmethod
-    def set_api_key(self, api_key: str, user: Optional[str] = None):
+    def set_api_key(self, api_key: str, user: str | None = None):
         pass
 
     def get_prompts(self):
@@ -863,7 +862,7 @@ class XinferenceConversation(Conversation):
 
 
 class OllamaConversation(Conversation):
-    def set_api_key(self, api_key: str, user: Optional[str] = None):
+    def set_api_key(self, api_key: str, user: str | None = None):
         pass
 
     def __init__(
@@ -1472,8 +1471,8 @@ class AzureGptConversation(GptConversation):
         prompts: dict,
         correct: bool = False,
         split_correction: bool = False,
-        version: Optional[str] = None,
-        base_url: Optional[str] = None,
+        version: str | None = None,
+        base_url: str | None = None,
     ):
         """Connect to Azure's GPT API and set up a conversation with the user.
 
@@ -1573,7 +1572,7 @@ class BloomConversation(Conversation):
 
         self.messages = []
 
-    def set_api_key(self, api_key: str, user: Optional[str] = None):
+    def set_api_key(self, api_key: str, user: str | None = None):
         self.chat = HuggingFaceHub(
             repo_id=self.model_name,
             model_kwargs={"temperature": 1.0},  # "regular sampling"

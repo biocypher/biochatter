@@ -2,14 +2,9 @@
 # TODO: have a utils package for both repos
 
 import re
-from collections.abc import Iterable
+from collections.abc import Generator, ItemsView, Iterable, KeysView, Mapping, ValuesView
 from typing import (
     Any,
-    Generator,
-    ItemsView,
-    KeysView,
-    Mapping,
-    ValuesView,
 )
 
 import stringcase

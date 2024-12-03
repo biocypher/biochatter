@@ -1,7 +1,6 @@
 import json
 import os
 from collections.abc import Callable
-from typing import Optional
 
 import yaml
 
@@ -12,10 +11,10 @@ from .llm_connect import Conversation, GptConversation
 class BioCypherPromptEngine:
     def __init__(
         self,
-        schema_config_or_info_path: Optional[str] = None,
-        schema_config_or_info_dict: Optional[dict] = None,
+        schema_config_or_info_path: str | None = None,
+        schema_config_or_info_dict: dict | None = None,
         model_name: str = "gpt-3.5-turbo",
-        conversation_factory: Optional[Callable] = None,
+        conversation_factory: Callable | None = None,
     ) -> None:
         """Given a biocypher schema configuration, extract the entities and
         relationships, and for each extract their mode of representation (node
@@ -157,7 +156,7 @@ class BioCypherPromptEngine:
         entities: list,
         relationships: dict,
         properties: dict,
-        query_language: Optional[str] = "Cypher",
+        query_language: str | None = "Cypher",
     ) -> str:
         """Generate a prompt for a large language model to generate a database
         query based on the selected entities, relationships, and properties.
@@ -203,7 +202,7 @@ class BioCypherPromptEngine:
     def generate_query_prompt(
         self,
         question: str,
-        query_language: Optional[str] = "Cypher",
+        query_language: str | None = "Cypher",
     ) -> str:
         """Generate a prompt for a large language model to generate a database
         query based on the user's question and class attributes informing about
@@ -235,7 +234,7 @@ class BioCypherPromptEngine:
     def generate_query(
         self,
         question: str,
-        query_language: Optional[str] = "Cypher",
+        query_language: str | None = "Cypher",
     ) -> str:
         """Wrap entity and property selection and query generation; return the
         generated query.
@@ -267,7 +266,7 @@ class BioCypherPromptEngine:
 
     def _get_conversation(
         self,
-        model_name: Optional[str] = None,
+        model_name: str | None = None,
     ) -> "Conversation":
         """Create a conversation object given a model name.
 

@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from collections.abc import Callable
-from typing import Optional
 
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel
@@ -91,7 +90,7 @@ class BaseFetcher(ABC):
     def fetch_results(
         self,
         query_model: BaseModel,
-        retries: Optional[int] = 3,
+        retries: int | None = 3,
     ):
         """Fetches results by submitting a query. Can implement a multi-step
         procedure if submitting and fetching are distinct processes (e.g., in

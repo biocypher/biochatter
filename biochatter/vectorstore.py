@@ -1,5 +1,3 @@
-from typing import Optional
-
 import fitz  # this is PyMuPDF (PyPI pymupdf package, not fitz)
 import openai
 from langchain.schema import Document
@@ -24,20 +22,20 @@ class DocumentEmbedder:
         chunk_size: int = 1000,
         chunk_overlap: int = 0,
         split_by_characters: bool = True,
-        separators: Optional[list] = None,
+        separators: list | None = None,
         n_results: int = 3,
-        model: Optional[str] = "text-embedding-ada-002",
-        vector_db_vendor: Optional[str] = None,
-        connection_args: Optional[dict] = None,
-        embedding_collection_name: Optional[str] = None,
-        metadata_collection_name: Optional[str] = None,
-        api_key: Optional[str] = None,
-        is_azure: Optional[bool] = False,
-        azure_deployment: Optional[str] = None,
-        azure_endpoint: Optional[str] = None,
-        base_url: Optional[str] = None,
-        embeddings: Optional[OpenAIEmbeddings | XinferenceEmbeddings | OllamaEmbeddings] = None,
-        documentids_workspace: Optional[list[str]] = None,
+        model: str | None = "text-embedding-ada-002",
+        vector_db_vendor: str | None = None,
+        connection_args: dict | None = None,
+        embedding_collection_name: str | None = None,
+        metadata_collection_name: str | None = None,
+        api_key: str | None = None,
+        is_azure: bool | None = False,
+        azure_deployment: str | None = None,
+        azure_endpoint: str | None = None,
+        base_url: str | None = None,
+        embeddings: OpenAIEmbeddings | XinferenceEmbeddings | OllamaEmbeddings | None = None,
+        documentids_workspace: list[str] | None = None,
     ) -> None:
         """Class that handles the retrieval-augmented generation (RAG) functionality
         of BioChatter. It splits text into chunks, embeds them, and stores them in
@@ -235,16 +233,16 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
         chunk_size: int = 1000,
         chunk_overlap: int = 0,
         split_by_characters: bool = True,
-        separators: Optional[list] = None,
+        separators: list | None = None,
         n_results: int = 3,
-        model: Optional[str] = "auto",
-        vector_db_vendor: Optional[str] = None,
-        connection_args: Optional[dict] = None,
-        embedding_collection_name: Optional[str] = None,
-        metadata_collection_name: Optional[str] = None,
-        api_key: Optional[str] = "none",
-        base_url: Optional[str] = None,
-        documentids_workspace: Optional[list[str]] = None,
+        model: str | None = "auto",
+        vector_db_vendor: str | None = None,
+        connection_args: dict | None = None,
+        embedding_collection_name: str | None = None,
+        metadata_collection_name: str | None = None,
+        api_key: str | None = "none",
+        base_url: str | None = None,
+        documentids_workspace: list[str] | None = None,
     ):
         """Extension of the DocumentEmbedder class that uses Xinference for
         embeddings.
@@ -362,16 +360,16 @@ class OllamaDocumentEmbedder(DocumentEmbedder):
         chunk_size: int = 1000,
         chunk_overlap: int = 0,
         split_by_characters: bool = True,
-        separators: Optional[list] = None,
+        separators: list | None = None,
         n_results: int = 3,
-        model: Optional[str] = "nomic-embed-text",
-        vector_db_vendor: Optional[str] = None,
-        connection_args: Optional[dict] = None,
-        embedding_collection_name: Optional[str] = None,
-        metadata_collection_name: Optional[str] = None,
-        api_key: Optional[str] = "none",
-        base_url: Optional[str] = None,
-        documentids_workspace: Optional[list[str]] = None,
+        model: str | None = "nomic-embed-text",
+        vector_db_vendor: str | None = None,
+        connection_args: dict | None = None,
+        embedding_collection_name: str | None = None,
+        metadata_collection_name: str | None = None,
+        api_key: str | None = "none",
+        base_url: str | None = None,
+        documentids_workspace: list[str] | None = None,
     ):
         """Extension of the DocumentEmbedder class that uses Ollama for
         embeddings.

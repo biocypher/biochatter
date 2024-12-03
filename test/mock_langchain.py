@@ -1,5 +1,5 @@
 import uuid
-from typing import Any, Optional
+from typing import Any
 from unittest.mock import Mock
 
 
@@ -26,10 +26,10 @@ class OpenAIEmbeddings:
 class Milvus:
     def __init__(
         self,
-        embedding_function: Optional[OpenAIEmbeddings] = None,
-        collection_name: Optional[str] = "default",
-        connection_args: Optional[dict[str, Any]] = None,
-        documents: Optional[list[Document]] = None,
+        embedding_function: OpenAIEmbeddings | None = None,
+        collection_name: str | None = "default",
+        connection_args: dict[str, Any] | None = None,
+        documents: list[Document] | None = None,
     ) -> None:
         self.documents: dict[list[Document]] = {} if documents is None else {uuid.uuid4().hex: documents}
         self.col = Mock()
@@ -55,7 +55,7 @@ class Milvus:
         self,
         query: str,
         k: int,
-        expr: Optional[str] = None,
+        expr: str | None = None,
     ) -> list[Document]:
         from random import randint
 

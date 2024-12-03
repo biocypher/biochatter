@@ -1,7 +1,6 @@
 import logging
 import random
 import uuid
-from typing import Optional
 
 from langchain.schema import Document
 from langchain_community.embeddings import OpenAIEmbeddings
@@ -41,7 +40,7 @@ METADATA_FIELDS = [
 
 def align_metadata(
     metadata: list[dict],
-    isDeleted: Optional[bool] = False,
+    isDeleted: bool | None = False,
 ) -> list[list]:
     """Ensure that specific metadata fields are present; if not provided, fill with
     "unknown". Also, add a random vector to each metadata item to simulate an
@@ -99,7 +98,7 @@ def align_embeddings(docs: list[Document], meta_id: int) -> list[Document]:
     return ret
 
 
-def validate_connection_args(connection_args: Optional[dict] = None):
+def validate_connection_args(connection_args: dict | None = None):
     if connection_args is None:
         return {
             "host": "127.0.0.1",
@@ -135,9 +134,9 @@ class VectorDatabaseAgentMilvus:
     def __init__(
         self,
         embedding_func: OpenAIEmbeddings,
-        connection_args: Optional[dict] = None,
-        embedding_collection_name: Optional[str] = None,
-        metadata_collection_name: Optional[str] = None,
+        connection_args: dict | None = None,
+        embedding_collection_name: str | None = None,
+        metadata_collection_name: str | None = None,
     ):
         """Args:
         ----
@@ -151,8 +150,8 @@ class VectorDatabaseAgentMilvus:
 
         """
         self._embedding_func = embedding_func
-        self._col_embeddings: Optional[Milvus] = None
-        self._col_metadata: Optional[Collection] = None
+        self._col_embeddings: Milvus | None = None
+        self._col_metadata: Collection | None = None
         self._connection_args = validate_connection_args(connection_args)
         self._embedding_name = embedding_collection_name or DOCUMENT_EMBEDDINGS_COLLECTION_NAME
         self._metadata_name = metadata_collection_name or DOCUMENT_METADATA_COLLECTION_NAME
@@ -462,7 +461,7 @@ class VectorDatabaseAgentMilvus:
     def _build_embedding_search_expression(
         self,
         meta_ids: list[dict],
-    ) -> Optional[str]:
+    ) -> str | None:
         """Build search expression for embedding collection. The generated
         expression follows the pattern: "meta_id in [{id1}, {id2}, ...]
 
@@ -509,7 +508,7 @@ class VectorDatabaseAgentMilvus:
         def _find_metadata_by_id(
             metadata: list[dict],
             id: str,
-        ) -> Optional[dict]:
+        ) -> dict | None:
             for d in metadata:
                 if str(d["id"]) == id:
                     return d
@@ -530,7 +529,7 @@ class VectorDatabaseAgentMilvus:
 
     @staticmethod
     def _build_meta_col_query_expr_for_all_documents(
-        doc_ids: Optional[list[str]] = None,
+        doc_ids: list[str] | None = None,
     ) -> str:
         """Build metadata collection query expression to obtain all documents.
 
@@ -552,7 +551,7 @@ class VectorDatabaseAgentMilvus:
         self,
         query: str,
         k: int = 3,
-        doc_ids: Optional[list[str]] = None,
+        doc_ids: list[str] | None = None,
     ) -> list[Document]:
         """Perform similarity search insider the currently active database
         according to the input query.
@@ -599,7 +598,7 @@ class VectorDatabaseAgentMilvus:
     def remove_document(
         self,
         doc_id: str,
-        doc_ids: Optional[list[str]] = None,
+        doc_ids: list[str] | None = None,
     ) -> bool:
         """Remove the document include meta data and its embeddings.
 
@@ -644,7 +643,7 @@ class VectorDatabaseAgentMilvus:
 
     def get_all_documents(
         self,
-        doc_ids: Optional[list[str]] = None,
+        doc_ids: list[str] | None = None,
     ) -> list[dict]:
         """Get all non-deleted documents from the currently active database.
 
@@ -673,7 +672,7 @@ class VectorDatabaseAgentMilvus:
             logger.error(e)
             raise e
 
-    def get_description(self, doc_ids: Optional[list[str]] = None):
+    def get_description(self, doc_ids: list[str] | None = None):
         def get_name(meta: dict[str, str]):
             name_col = ["title", "name", "subject", "source"]
             for col in name_col:

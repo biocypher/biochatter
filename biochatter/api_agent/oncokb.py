@@ -1,6 +1,5 @@
 import uuid
 from collections.abc import Callable
-from typing import Optional
 
 import requests
 from langchain.chains.openai_functions import create_structured_output_runnable
@@ -116,75 +115,75 @@ class OncoKBQueryParameters(BaseModel):
         ...,
         description="Specific API endpoint to hit. Example: 'annotate/mutations/byProteinChange'.",
     )
-    referenceGenome: Optional[str] = Field(
+    referenceGenome: str | None = Field(
         default="GRCh37",
         description="Reference genome, either GRCh37 or GRCh38. The default is GRCh37.",
     )
-    hugoSymbol: Optional[str] = Field(
+    hugoSymbol: str | None = Field(
         None,
         description="The gene symbol used in Human Genome Organisation. Example: BRAF.",
     )
-    entrezGeneId: Optional[int] = Field(
+    entrezGeneId: int | None = Field(
         None,
         description="The entrez gene ID. Higher priority than hugoSymbol. Example: 673.",
     )
-    tumorType: Optional[str] = Field(
+    tumorType: str | None = Field(
         None,
         description="OncoTree(http://oncotree.info) tumor type name. The field supports OncoTree Code, OncoTree Name and OncoTree Main type. Example: Melanoma.",
     )
-    alteration: Optional[str] = Field(
+    alteration: str | None = Field(
         None,
         description="Protein Change. Example: V600E.",
     )
-    consequence: Optional[str] = Field(
+    consequence: str | None = Field(
         None,
         description="Consequence. Example: missense_variant.",
     )
-    proteinStart: Optional[int] = Field(
+    proteinStart: int | None = Field(
         None,
         description="Protein Start. Example: 600.",
     )
-    proteinEnd: Optional[int] = Field(
+    proteinEnd: int | None = Field(
         None,
         description="Protein End. Example: 600.",
     )
-    copyNameAlterationType: Optional[str] = Field(
+    copyNameAlterationType: str | None = Field(
         None,
         description="Copy number alteration type. Available types: AMPLIFICATION, DELETION, GAIN, LOSS.",
     )
-    structuralVariantType: Optional[str] = Field(
+    structuralVariantType: str | None = Field(
         None,
         description="Structural variant type. Available values: DELETION, TRANSLOCATION, DUPLICATION, INSERTION, INVERSION, FUSION, UNKNOWN.",
     )
-    isFunctionalFusion: Optional[bool] = Field(
+    isFunctionalFusion: bool | None = Field(
         default=False,
         description="Whether it is a functional fusion. Default value: false.",
     )
-    hugoSymbolA: Optional[str] = Field(
+    hugoSymbolA: str | None = Field(
         None,
         description="The gene symbol A used in Human Genome Organisation. Example: ABL1.",
     )
-    entrezGeneIdA: Optional[int] = Field(
+    entrezGeneIdA: int | None = Field(
         None,
         description="The entrez gene ID A. Higher priority than hugoSymbolA. Example: 25.",
     )
-    hugoSymbolB: Optional[str] = Field(
+    hugoSymbolB: str | None = Field(
         None,
         description="The gene symbol B used in Human Genome Organisation. Example: BCR.",
     )
-    entrezGeneIdB: Optional[int] = Field(
+    entrezGeneIdB: int | None = Field(
         None,
         description="The entrez gene ID B. Higher priority than hugoSymbolB. Example: 613.",
     )
-    genomicLocation: Optional[str] = Field(
+    genomicLocation: str | None = Field(
         None,
         description="Genomic location. Example: 7,140453136,140453136,A,T.",
     )
-    hgvsg: Optional[str] = Field(
+    hgvsg: str | None = Field(
         None,
         description="HGVS genomic format. Example: 7:g.140453136A>T.",
     )
-    question_uuid: Optional[str] = Field(
+    question_uuid: str | None = Field(
         default_factory=lambda: str(uuid.uuid4()),
         description="Unique identifier for the question.",
     )
@@ -267,7 +266,7 @@ class OncoKBFetcher(BaseFetcher):
     def fetch_results(
         self,
         request_data: OncoKBQueryParameters,
-        retries: Optional[int] = 3,
+        retries: int | None = 3,
     ) -> str:
         """Function to submit the OncoKB query and fetch the results directly.
         No multi-step procedure, thus no wrapping of submission and retrieval in

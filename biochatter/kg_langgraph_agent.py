@@ -2,7 +2,6 @@ import json
 import logging
 from collections.abc import Callable
 from datetime import datetime
-from typing import Optional
 
 import neo4j_utils as nu
 from langchain.output_parsers.openai_tools import (
@@ -94,8 +93,8 @@ class KGQueryReflexionAgent(ReflexionAgent):
         self,
         conversation_factory: Callable,
         connection_args: dict[str, str],
-        query_lang: Optional[str] = "Cypher",
-        max_steps: Optional[int] = 20,
+        query_lang: str | None = "Cypher",
+        max_steps: int | None = 20,
     ):
         r"""LLM agent reflexion framework:
 
@@ -177,7 +176,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
 
     def _create_initial_responder(
         self,
-        prompt: Optional[str] = None,
+        prompt: str | None = None,
     ) -> ResponderWithRetries:
         llm: ChatOpenAI = self.conversation.chat
         initial_chain = self.actor_prompt_template.partial(

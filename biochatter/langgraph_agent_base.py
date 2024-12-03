@@ -3,7 +3,7 @@ import logging
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from datetime import datetime
-from typing import Any, List, Literal, Optional
+from typing import Any, Literal
 
 from langchain_core.messages import (
     AIMessage,
@@ -44,7 +44,7 @@ class ReflexionAgentLogger:
     def _log_message(
         self,
         msg: str = "",
-        level: Optional[Literal["info", "error", "warn"]] = "info",
+        level: Literal["info", "error", "warn"] | None = "info",
     ):
         """Save log message
 
@@ -101,7 +101,7 @@ END_NODE = END
 
 
 class ReflexionAgentResult:
-    def __init__(self, answer: str | None, tool_result: List[Any] | None):
+    def __init__(self, answer: str | None, tool_result: list[Any] | None):
         self.answer = answer
         self.tool_result = tool_result
 
@@ -119,8 +119,8 @@ class ReflexionAgent(ABC):
     def __init__(
         self,
         conversation_factory: Callable,
-        max_steps: Optional[int] = 20,
-        agent_logger: Optional[ReflexionAgentLogger] = ReflexionAgentLogger(),
+        max_steps: int | None = 20,
+        agent_logger: ReflexionAgentLogger | None = ReflexionAgentLogger(),
     ):
         """Args:
         ----
@@ -162,7 +162,7 @@ class ReflexionAgent(ABC):
     @abstractmethod
     def _create_initial_responder(
         self,
-        prompt: Optional[str] = None,
+        prompt: str | None = None,
     ) -> ResponderWithRetries:
         """Draft responder, draft initial answer
         Args:
@@ -172,7 +172,7 @@ class ReflexionAgent(ABC):
     @abstractmethod
     def _create_revise_responder(
         self,
-        prompt: Optional[str] = None,
+        prompt: str | None = None,
     ) -> ResponderWithRetries:
         """Revise responder, revise answer according to tool function result
         Args:
@@ -231,7 +231,7 @@ class ReflexionAgent(ABC):
             return content["result"]
         return None
 
-    def _build_graph(self, prompt: Optional[str] = None):
+    def _build_graph(self, prompt: str | None = None):
         """Build Langgraph graph for execution of chained LLM processes.
 
         Args:
@@ -263,8 +263,8 @@ class ReflexionAgent(ABC):
 
     def _execute_graph(
         self,
-        graph: Optional[CompiledGraph] = None,
-        question: Optional[str] = "",
+        graph: CompiledGraph | None = None,
+        question: str | None = "",
     ) -> ReflexionAgentResult:
         """Execute Langgraph graph
         Args:
@@ -303,7 +303,7 @@ class ReflexionAgent(ABC):
     def execute(
         self,
         question: str,
-        prompt: Optional[str] = None,
+        prompt: str | None = None,
     ) -> ReflexionAgentResult:
         """Execute ReflexionAgent. Wrapper for building a graph and executing it,
         returning the final answer.
