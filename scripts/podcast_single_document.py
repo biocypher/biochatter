@@ -1,22 +1,26 @@
 #!/usr/bin/env python3
 
-import os
 import argparse
+import os
 
 from biochatter.podcast import Podcaster
 from biochatter.vectorstore import DocumentReader
 
 # Create the parser
 parser = argparse.ArgumentParser(
-    description="Generate a podcast from a document."
+    description="Generate a podcast from a document.",
 )
 
 # Add the arguments
 parser.add_argument(
-    "input_path", type=str, help="The path to the input document."
+    "input_path",
+    type=str,
+    help="The path to the input document.",
 )
 parser.add_argument(
-    "output_path", type=str, help="The path to the output document."
+    "output_path",
+    type=str,
+    help="The path to the output document.",
 )
 try:
     args = parser.parse_args()

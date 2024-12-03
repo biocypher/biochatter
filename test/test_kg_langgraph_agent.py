@@ -1,17 +1,15 @@
-from types import UnionType
-from typing import Any
 from collections.abc import Callable
+from typing import Any
 
-from langgraph.graph import END
-from langchain_core.messages import AIMessage, BaseMessage
-from langchain.output_parsers.openai_tools import PydanticToolsParser
 import pytest
 import shortuuid
+from langchain.output_parsers.openai_tools import PydanticToolsParser
+from langchain_core.messages import AIMessage, BaseMessage
 
 from biochatter.kg_langgraph_agent import (
-    ReviseQuery,
     GenerateQuery,
     KGQueryReflexionAgent,
+    ReviseQuery,
 )
 from biochatter.langgraph_agent_base import ResponderWithRetries
 
@@ -31,8 +29,8 @@ class InitialResponder:
                         "name": "GenerateQuery",
                     },
                     "type": "function",
-                }
-            ]
+                },
+            ],
         }
         msg.id = id
         msg.tool_calls = [
@@ -42,11 +40,11 @@ class InitialResponder:
                     "answer": "MATCH (g:gene {name: 'EOMES'})-[:regulate]->(c:gene) RETURN DISTINCT c.name LIMIT 5",
                     "reflection": "The query correctly identifies genes regulated by EOMES, which can help determine its primary and secondary functions based on the regulated genes' roles.",
                     "search_queries": [
-                        "MATCH (g:gene {name: 'EOMES'})-[:regulate]->(c:gene) RETURN DISTINCT c.name LIMIT 5"
+                        "MATCH (g:gene {name: 'EOMES'})-[:regulate]->(c:gene) RETURN DISTINCT c.name LIMIT 5",
                     ],
                 },
                 "id": id,
-            }
+            },
         ]
         return msg
 
@@ -68,8 +66,8 @@ class ReviseResponder:
                                 "name": "ReviseQuery",
                             },
                             "type": "function",
-                        }
-                    ]
+                        },
+                    ],
                 },
                 response_metadata={
                     "token_usage": {
@@ -97,7 +95,7 @@ class ReviseResponder:
                                     "severity": "safe",
                                 },
                             },
-                        }
+                        },
                     ],
                     "finish_reason": "stop",
                     "logprobs": None,
@@ -111,12 +109,12 @@ class ReviseResponder:
                             "answer": "MATCH (g:gene {name: 'EOMES'})-[:regulate]->(c:gene) RETURN DISTINCT c.name LIMIT 5",
                             "reflection": "The initial query returned no results. To improve the query, I will remove the relationship constraint and try to find any connections or properties related to EOMES that might indicate its primary and secondary functions.",
                             "search_queries": [
-                                "MATCH (g:gene {name: 'EOMES'})-[:regulate]->(c:gene) RETURN DISTINCT c.name LIMIT 5"
+                                "MATCH (g:gene {name: 'EOMES'})-[:regulate]->(c:gene) RETURN DISTINCT c.name LIMIT 5",
                             ],
                             "revised_query": "MATCH (g:gene {name: 'EOMES'})-[]->(c) RETURN DISTINCT c.name, labels(c) LIMIT 5",
                         },
                         "id": "call_wTO40b9rXHhNhxNEG3IHn3Nj",
-                    }
+                    },
                 ],
             )
         else:
@@ -131,8 +129,8 @@ class ReviseResponder:
                                 "name": "ReviseQuery",
                             },
                             "type": "function",
-                        }
-                    ]
+                        },
+                    ],
                 },
                 response_metadata={
                     "token_usage": {
@@ -160,7 +158,7 @@ class ReviseResponder:
                                     "severity": "safe",
                                 },
                             },
-                        }
+                        },
                     ],
                     "finish_reason": "stop",
                     "logprobs": None,
@@ -174,12 +172,12 @@ class ReviseResponder:
                             "answer": "MATCH (g:gene {name: 'EOMES'})-->(c:gene) RETURN DISTINCT c.name LIMIT 5;",
                             "reflection": "The revised query successfully returned results by removing the relationship constraint. This indicates that EOMES is connected to other genes, but the specific 'regulate' relationship might not be explicitly defined in the database. The revised query is more flexible and provides the needed information.",
                             "search_queries": [
-                                "MATCH (g:gene {name: 'EOMES'})-->(c:gene) RETURN DISTINCT c.name LIMIT 5;"
+                                "MATCH (g:gene {name: 'EOMES'})-->(c:gene) RETURN DISTINCT c.name LIMIT 5;",
                             ],
                             "revised_query": "MATCH (g:gene {name: 'EOMES'})-->(c:gene) RETURN DISTINCT c.name LIMIT 5;",
                         },
                         "id": "call_Eciqf2ZviAjYinzi4zpgiNej",
-                    }
+                    },
                 ],
             )
 
@@ -195,11 +193,15 @@ class KGQueryReflexionAgentMock(KGQueryReflexionAgent):
         recursion_limit: int | None = 20,
     ):
         super().__init__(
-            conversation_factory, connection_args, query_lang, recursion_limit
+            conversation_factory,
+            connection_args,
+            query_lang,
+            recursion_limit,
         )
 
     def _create_initial_responder(
-        self, prompt: str | None = None
+        self,
+        prompt: str | None = None,
     ) -> ResponderWithRetries:
         runnable = InitialResponder()
         validator = PydanticToolsParser(tools=[GenerateQuery])
@@ -209,7 +211,8 @@ class KGQueryReflexionAgentMock(KGQueryReflexionAgent):
         )
 
     def _create_revise_responder(
-        self, prompt: str | None = None
+        self,
+        prompt: str | None = None,
     ) -> ResponderWithRetries:
         runnable = ReviseResponder()
         validator = PydanticToolsParser(tools=[ReviseQuery])
@@ -242,7 +245,7 @@ class KGQueryReflexionAgentMock(KGQueryReflexionAgent):
                         "c.name": None,
                         "labels(c)": ["ontology", "cell_line_or_tissue"],
                     },
-                ]
+                ],
             ]
 
 
@@ -251,7 +254,7 @@ class ChatOpenAIMock:
         self.chat = None
 
 
-@pytest.fixture
+@pytest.fixture()
 def kgQueryAgent():
     return KGQueryReflexionAgentMock(
         connection_args={"host": "localhost", "port": "7687"},
@@ -262,7 +265,4 @@ def kgQueryAgent():
 def test_execute(kgQueryAgent):
     question = "What genes does EOMES primarily regulate?"
     agent_result = kgQueryAgent.execute(question=question)
-    assert (
-        agent_result.answer
-        == "MATCH (g:gene {name: 'EOMES'})-->(c:gene) RETURN DISTINCT c.name LIMIT 5;"
-    )
+    assert agent_result.answer == "MATCH (g:gene {name: 'EOMES'})-->(c:gene) RETURN DISTINCT c.name LIMIT 5;"

@@ -1,32 +1,28 @@
-from typing import Any, Dict
-from datetime import datetime
-from collections.abc import Callable
 import json
+from collections.abc import Callable
+from datetime import datetime
 
-from langgraph.graph import END
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.messages import AIMessage, BaseMessage, ToolMessage
-from langchain_core.pydantic_v1 import Field, BaseModel
 from langchain.output_parsers.openai_tools import (
-    PydanticToolsParser,
     JsonOutputToolsParser,
+    PydanticToolsParser,
 )
+from langchain_core.messages import AIMessage, BaseMessage, ToolMessage
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_core.pydantic_v1 import BaseModel, Field
+from langchain_openai import ChatOpenAI
+from langgraph.graph import END
 
-from .rag_agent import RagAgent
 from .langgraph_agent_base import (
-    EXECUTE_TOOL_NODE,
     ReflexionAgent,
     ReflexionAgentLogger,
     ReflexionAgentResult,
     ResponderWithRetries,
 )
+from .rag_agent import RagAgent
 
 
 class RagAgentSelectLogger(ReflexionAgentLogger):
-    """
-    RagAgentSelector logger
-    """
+    """RagAgentSelector logger"""
 
     def __init__(self) -> None:
         super().__init__()
@@ -37,54 +33,56 @@ class RagAgentSelectLogger(ReflexionAgentLogger):
             self._log_message(f"## {step}, {node_name}")
             self._log_message(f'Answer: {parsed_output[0]["args"]["answer"]}')
             self._log_message(
-                f'Reflection | Improving: {parsed_output[0]["args"]["reflection"]}'
+                f'Reflection | Improving: {parsed_output[0]["args"]["reflection"]}',
             )
             if "revised_answer" in parsed_output[0]["args"]:
                 self._log_message("Reflection | Revised Answer:")
                 self._log_message(parsed_output[0]["args"]["revised_answer"])
             self._log_message(
-                "-------------------------------- Node Output --------------------------------"
+                "-------------------------------- Node Output --------------------------------",
             )
-        except Exception as e:
+        except Exception:
             self._log_message(str(output)[:100] + " ...", "error")
 
     def log_final_result(self, final_result: ReflexionAgentResult) -> None:
         self._log_message(
-            "\n\n-------------------------------- Final Generated Response --------------------------------"
+            "\n\n-------------------------------- Final Generated Response --------------------------------",
         )
         obj = vars(final_result)
         self._log_message(json.dumps(obj))
 
 
 class RagAgentChoiceModel(BaseModel):
-    "Choose RagAgent"
+    """Choose RagAgent"""
 
     answer: str = Field(
-        description="RagAgent name that is the most appropriate to provide supplementary information"
+        description="RagAgent name that is the most appropriate to provide supplementary information",
     )
     reflection: str = Field(
-        description="Your reflection on the initial answer, critique of what to improve"
+        description="Your reflection on the initial answer, critique of what to improve",
     )
 
 
 class RagAgentRevisionModel(RagAgentChoiceModel):
-    "Revise your previous answer"
+    """Revise your previous answer"""
+
     revised_answer: str = Field(description="Revised RagAgent name")
     score: str = Field(
         description=(
             "the score for the chosen rag agent based on its inquired result"
             "and the relevance to user's question, "
             " with 0 representing the lowest score and 10 representing the highest score."
-        )
+        ),
     )
 
 
 class RagAgentSelector(ReflexionAgent):
     def __init__(
-        self, rag_agents: list[RagAgent], conversation_factory: Callable
+        self,
+        rag_agents: list[RagAgent],
+        conversation_factory: Callable,
     ):
-        """
-        The class RagAgentSelector uses an LLM to choose the appropriate rag agent
+        """The class RagAgentSelector uses an LLM to choose the appropriate rag agent
         for a given user question.
         """
         super().__init__(
@@ -93,8 +91,7 @@ class RagAgentSelector(ReflexionAgent):
         )
         self.rag_agents = rag_agents
         agent_desc = [
-            f"{ix}. {rag_agents[ix].mode}: {rag_agents[ix].get_description()}"
-            for ix in range(len(rag_agents))
+            f"{ix}. {rag_agents[ix].mode}: {rag_agents[ix].get_description()}" for ix in range(len(rag_agents))
         ]
         rag_agents_desc = "\n\n".join(agent_desc)
         self.actor_prompt_template = ChatPromptTemplate.from_messages(
@@ -115,7 +112,7 @@ class RagAgentSelector(ReflexionAgent):
                     "system",
                     "Only return rag agent name according to user's question above.",
                 ),
-            ]
+            ],
         ).partial(
             time=lambda: datetime.now().isoformat(),
             rag_agents_desc=rag_agents_desc,
@@ -123,19 +120,22 @@ class RagAgentSelector(ReflexionAgent):
         self.parser = JsonOutputToolsParser(return_id=True)
 
     def _create_initial_responder(
-        self, prompt: str | None = None
+        self,
+        prompt: str | None = None,
     ) -> ResponderWithRetries:
         llm: ChatOpenAI = self.conversation.chat
         initial_chain = self.actor_prompt_template.partial(
             instruction="",
         ) | llm.bind_tools(
-            tools=[RagAgentChoiceModel], tool_choice="RagAgentChoiceModel"
+            tools=[RagAgentChoiceModel],
+            tool_choice="RagAgentChoiceModel",
         )
         validator = PydanticToolsParser(tools=[RagAgentChoiceModel])
         return ResponderWithRetries(runnable=initial_chain, validator=validator)
 
     def _create_revise_responder(
-        self, prompt: str | None = None
+        self,
+        prompt: str | None = None,
     ) -> ResponderWithRetries:
         revision_instruction = """
 Revise your previous chosen rag agent based on the result of the rag agent and follow the guidelines:
@@ -144,7 +144,7 @@ Revise your previous chosen rag agent based on the result of the rag agent and f
 """
         llm = self.conversation.chat
         revision_chain = self.actor_prompt_template.partial(
-            instruction=revision_instruction
+            instruction=revision_instruction,
         ) | llm.bind_tools(
             tools=[RagAgentRevisionModel],
             tool_choice="RagAgentRevisionModel",
@@ -165,8 +165,7 @@ Revise your previous chosen rag agent based on the result of the rag agent and f
             parsed_args = parsed_msg["args"]
             agent_name = (
                 parsed_args["revised_answer"]
-                if "revised_answer" in parsed_args
-                and len(parsed_args["revised_answer"]) > 0
+                if "revised_answer" in parsed_args and len(parsed_args["revised_answer"]) > 0
                 else parsed_args["answer"]
             )
             # get agent according to agent name
@@ -181,7 +180,7 @@ Revise your previous chosen rag agent based on the result of the rag agent and f
             result = found_agent.generate_responses(user_question)
             if len(result) > 0:
                 content = json.dumps(
-                    {"rag_agent": found_agent.mode, "result": result}
+                    {"rag_agent": found_agent.mode, "result": result},
                 )
                 break
         content = (
@@ -191,7 +190,7 @@ Revise your previous chosen rag agent based on the result of the rag agent and f
                 {
                     "rag_agent": "",
                     "result": [],
-                }
+                },
             )
         )
         return ToolMessage(content=content, tool_call_id=parsed_msg["id"])
@@ -200,7 +199,8 @@ Revise your previous chosen rag agent based on the result of the rag agent and f
         return END  # here we use one-pass loop for sake of performance
 
     def _parse_final_result(
-        self, messages: list[BaseMessage]
+        self,
+        messages: list[BaseMessage],
     ) -> ReflexionAgentResult:
         output = messages[-1]
         result = self.parser.invoke(output)[0]["args"]

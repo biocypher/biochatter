@@ -1,15 +1,13 @@
 import os
 
-import yaml
-
 import pandas as pd
+import yaml
 
 from benchmark.load_dataset import _get_all_benchmark_files, _get_yaml_data
 
 
 def _update_hashes_in_results():
-    """
-    This function replaces the md5_hash in the benchmark results with the
+    """This function replaces the md5_hash in the benchmark results with the
     corresponding hash from the reference_hashes, matching the case in the
     subtask column. Do this only if the test has not changed, but for some
     reason the hash has changed without affecting the test. This is purely to
@@ -20,7 +18,7 @@ def _update_hashes_in_results():
 
     for file_path in files_in_directory:
         if file_path.endswith(".yaml"):
-            with open(file_path, "r") as stream:
+            with open(file_path) as stream:
                 try:
                     yaml_data = yaml.safe_load(stream)
                     if "_data" in file_path:
@@ -33,23 +31,18 @@ def _update_hashes_in_results():
                         if isinstance(yaml_data[key], list):
                             for i in range(len(yaml_data[key])):
                                 if isinstance(yaml_data[key][i], dict):
-                                    reference_hashes[
-                                        yaml_data[key][i]["case"]
-                                    ] = yaml_data[key][i]["hash"]
+                                    reference_hashes[yaml_data[key][i]["case"]] = yaml_data[key][i]["hash"]
                                     current_hashes.add(
-                                        yaml_data[key][i]["hash"]
+                                        yaml_data[key][i]["hash"],
                                     )
 
                     reference_hashes = {
-                        key.replace("_", "").replace(":", ""): value
-                        for key, value in reference_hashes.items()
+                        key.replace("_", "").replace(":", ""): value for key, value in reference_hashes.items()
                     }
 
                     # get all result files
                     result_files = [
-                        f"benchmark/results/{file}"
-                        for file in os.listdir("benchmark/results")
-                        if file.endswith(".csv")
+                        f"benchmark/results/{file}" for file in os.listdir("benchmark/results") if file.endswith(".csv")
                     ]
 
                     # update hashes in results
@@ -59,12 +52,8 @@ def _update_hashes_in_results():
                         # corresponding hash from reference_hashes, matching the
                         # case in the subtask column
                         for index, row in result_file.iterrows():
-                            subtask = (
-                                row["subtask"].replace("_", "").replace(":", "")
-                            )
-                            result_file.at[index, "md5_hash"] = (
-                                reference_hashes[subtask]
-                            )
+                            subtask = row["subtask"].replace("_", "").replace(":", "")
+                            result_file.at[index, "md5_hash"] = reference_hashes[subtask]
 
                         result_file.to_csv(file, index=False)
 

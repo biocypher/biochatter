@@ -1,17 +1,17 @@
-from typing import Any
-from unittest.mock import Mock, MagicMock, patch
-from collections.abc import Callable
 import os
+from collections.abc import Callable
+from typing import Any
+from unittest.mock import MagicMock, patch
 
-from pydantic import BaseModel
 import pytest
+from pydantic import BaseModel
 
-from biochatter.llm_connect import Conversation, GptConversation
 from biochatter.api_agent.abc import (
     BaseFetcher,
     BaseInterpreter,
     BaseQueryBuilder,
 )
+from biochatter.api_agent.api_agent import APIAgent
 from biochatter.api_agent.blast import (
     BLAST_QUERY_PROMPT,
     BLAST_SUMMARY_PROMPT,
@@ -28,7 +28,7 @@ from biochatter.api_agent.oncokb import (
     OncoKBQueryBuilder,
     OncoKBQueryParameters,
 )
-from biochatter.api_agent.api_agent import APIAgent
+from biochatter.llm_connect import Conversation, GptConversation
 
 
 def conversation_factory():
@@ -43,12 +43,16 @@ def conversation_factory():
 
 class TestQueryBuilder(BaseQueryBuilder):
     def create_runnable(
-        self, query_parameters: BaseModel, conversation: Conversation
+        self,
+        query_parameters: BaseModel,
+        conversation: Conversation,
     ) -> Callable[..., Any]:
         return "mock_runnable"
 
     def parameterise_query(
-        self, question: str, conversation: Conversation
+        self,
+        question: str,
+        conversation: Conversation,
     ) -> BaseModel:
         return "mock_result"
 
@@ -75,22 +79,22 @@ class MockModel(BaseModel):
     field: str
 
 
-@pytest.fixture
+@pytest.fixture()
 def query_builder():
     return TestQueryBuilder()
 
 
-@pytest.fixture
+@pytest.fixture()
 def fetcher():
     return TestFetcher()
 
 
-@pytest.fixture
+@pytest.fixture()
 def interpreter():
     return TestInterpreter()
 
 
-@pytest.fixture
+@pytest.fixture()
 def test_agent(query_builder, fetcher, interpreter):
     return APIAgent(
         conversation_factory=MagicMock(),
@@ -130,7 +134,8 @@ class TestBlastQueryBuilder:
 
         # Act
         result = builder.create_runnable(
-            query_parameters=query_parameters, llm=None
+            query_parameters=query_parameters,
+            llm=None,
         )
 
         # Assert
@@ -157,7 +162,8 @@ class TestBlastQueryBuilder:
 
         # Act
         result = builder.parameterise_query(
-            question, mock_conversation_instance
+            question,
+            mock_conversation_instance,
         )
 
         # Assert
@@ -166,7 +172,7 @@ class TestBlastQueryBuilder:
             conversation=mock_conversation_instance,
         )
         mock_runnable.invoke.assert_called_once_with(
-            {"input": f"Answer:\n{question} based on:\n {BLAST_QUERY_PROMPT}"}
+            {"input": f"Answer:\n{question} based on:\n {BLAST_QUERY_PROMPT}"},
         )
         assert result == mock_blast_query_parameters
         assert hasattr(result, "question_uuid")
@@ -227,18 +233,19 @@ class TestBlastFetcher:
 
         # Act & Assert
         with pytest.raises(
-            ValueError, match="RID not found in BLAST submission response."
+            ValueError,
+            match="RID not found in BLAST submission response.",
         ):
             fetcher._submit_query(query_parameters)
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_conversation():
     with patch("biochatter.llm_connect.GptConversation") as mock:
         yield mock
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_output_parser():
     with patch("biochatter.api_agent.blast.StrOutputParser") as mock:
         mock_parser = MagicMock()
@@ -246,16 +253,14 @@ def mock_output_parser():
         yield mock_parser
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_chain(mock_conversation, mock_output_parser):
     with patch(
-        "biochatter.api_agent.blast.ChatPromptTemplate.from_messages"
+        "biochatter.api_agent.blast.ChatPromptTemplate.from_messages",
     ) as mock_prompt:
         mock_prompt_instance = MagicMock()
         mock_prompt.return_value = mock_prompt_instance
-        mock_chain = (
-            mock_prompt_instance | mock_conversation.chat | mock_output_parser
-        )
+        mock_chain = mock_prompt_instance | mock_conversation.chat | mock_output_parser
         yield mock_chain
 
 
@@ -267,7 +272,8 @@ class TestBlastInterpreter:
         question = "What is the best hit?"
         expected_context = "Mocked context from file"
         expected_summary_prompt = BLAST_SUMMARY_PROMPT.format(
-            question=question, context=expected_context
+            question=question,
+            context=expected_context,
         )
         expected_answer = "Mocked answer"
         # Mock the methods and functions
@@ -275,13 +281,15 @@ class TestBlastInterpreter:
 
         # Act
         result = interpreter.summarise_results(
-            question, mock_conversation, expected_context
+            question,
+            mock_conversation,
+            expected_context,
         )
 
         # Assert
         assert result == expected_answer
         mock_chain.invoke.assert_called_once_with(
-            {"input": {expected_summary_prompt}}
+            {"input": {expected_summary_prompt}},
         )
 
 
@@ -300,7 +308,8 @@ class TestOncoKBQueryBuilder:
 
         # Act
         result = builder.create_runnable(
-            query_parameters=query_parameters, llm=None
+            query_parameters=query_parameters,
+            llm=None,
         )
 
         # Assert
@@ -327,7 +336,8 @@ class TestOncoKBQueryBuilder:
 
         # Act
         result = builder.parameterise_query(
-            question, mock_conversation_instance
+            question,
+            mock_conversation_instance,
         )
 
         # Assert
@@ -336,7 +346,7 @@ class TestOncoKBQueryBuilder:
             conversation=mock_conversation_instance,
         )
         mock_runnable.invoke.assert_called_once_with(
-            {"input": f"Answer:\n{question} based on:\n {ONCOKB_QUERY_PROMPT}"}
+            {"input": f"Answer:\n{question} based on:\n {ONCOKB_QUERY_PROMPT}"},
         )
         assert result == mock_oncokb_query_parameters
         assert hasattr(result, "question_uuid")
@@ -360,13 +370,13 @@ class TestOncoKBFetcher:
         assert result == mock_response
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_conversation():
     with patch("biochatter.llm_connect.GptConversation") as mock:
         yield mock
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_output_parser():
     with patch("biochatter.api_agent.oncokb.StrOutputParser") as mock:
         mock_parser = MagicMock()
@@ -374,16 +384,14 @@ def mock_output_parser():
         yield mock_parser
 
 
-@pytest.fixture
+@pytest.fixture()
 def mock_chain(mock_conversation, mock_output_parser):
     with patch(
-        "biochatter.api_agent.oncokb.ChatPromptTemplate.from_messages"
+        "biochatter.api_agent.oncokb.ChatPromptTemplate.from_messages",
     ) as mock_prompt:
         mock_prompt_instance = MagicMock()
         mock_prompt.return_value = mock_prompt_instance
-        mock_chain = (
-            mock_prompt_instance | mock_conversation.chat | mock_output_parser
-        )
+        mock_chain = mock_prompt_instance | mock_conversation.chat | mock_output_parser
         yield mock_chain
 
 
@@ -394,7 +402,8 @@ class TestOncoKBInterpreter:
         question = "What is the best hit?"
         expected_context = "Mocked context from file"
         expected_summary_prompt = ONCOKB_SUMMARY_PROMPT.format(
-            question=question, context=expected_context
+            question=question,
+            context=expected_context,
         )
         expected_answer = "Mocked answer"
 
@@ -403,11 +412,13 @@ class TestOncoKBInterpreter:
 
         # Act
         result = interpreter.summarise_results(
-            question, mock_conversation, expected_context
+            question,
+            mock_conversation,
+            expected_context,
         )
 
         # Assert
         assert result == expected_answer
         mock_chain.invoke.assert_called_once_with(
-            {"input": {expected_summary_prompt}}
+            {"input": {expected_summary_prompt}},
         )

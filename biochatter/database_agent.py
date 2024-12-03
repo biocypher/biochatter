@@ -1,13 +1,13 @@
-from collections.abc import Callable
 import json
-from typing import Dict, List, Optional
+from collections.abc import Callable
+from typing import Optional
 
-from langchain.schema import Document
 import neo4j_utils as nu
+from langchain.schema import Document
 
-from .prompts import BioCypherPromptEngine
 from .constants import MAX_AGENT_DESC_LENGTH
 from .kg_langgraph_agent import KGQueryReflexionAgent
+from .prompts import BioCypherPromptEngine
 
 
 class DatabaseAgent:
@@ -19,12 +19,12 @@ class DatabaseAgent:
         conversation_factory: Callable,
         use_reflexion: bool,
     ) -> None:
-        """
-        Create a DatabaseAgent analogous to the VectorDatabaseAgentMilvus class,
+        """Create a DatabaseAgent analogous to the VectorDatabaseAgentMilvus class,
         which can return results from a database using a query engine. Currently
         limited to Neo4j for development.
 
         Args:
+        ----
             connection_args (dict): A dictionary of arguments to connect to the
                 database. Contains database name, URI, user, and password.
 
@@ -33,6 +33,7 @@ class DatabaseAgent:
 
             use_reflexion (bool): Whether to use the ReflexionAgent to generate
                 the query.
+
         """
         self.conversation_factory = conversation_factory
         self.prompt_engine = BioCypherPromptEngine(
@@ -45,9 +46,7 @@ class DatabaseAgent:
         self.use_reflexion = use_reflexion
 
     def connect(self) -> None:
-        """
-        Connect to the database and authenticate.
-        """
+        """Connect to the database and authenticate."""
         db_name = self.connection_args.get("db_name")
         uri = f"{self.connection_args.get('host')}:{self.connection_args.get('port')}"
         uri = uri if uri.startswith("bolt://") else "bolt://" + uri
@@ -61,7 +60,7 @@ class DatabaseAgent:
         )
 
     def is_connected(self) -> bool:
-        return not self.driver is None
+        return self.driver is not None
 
     def _generate_query(self, query: str):
         if self.use_reflexion:
@@ -71,11 +70,7 @@ class DatabaseAgent:
             )
             query_prompt = self.prompt_engine.generate_query_prompt(query)
             agent_result = agent.execute(query, query_prompt)
-            tool_result = (
-                [agent_result.tool_result]
-                if agent_result.tool_result is not None
-                else None
-            )
+            tool_result = [agent_result.tool_result] if agent_result.tool_result is not None else None
             return agent_result.answer, tool_result
         else:
             query = self.prompt_engine.generate_query(query)
@@ -84,10 +79,10 @@ class DatabaseAgent:
 
     def _build_response(
         self,
-        results: List[Dict],
+        results: list[dict],
         cypher_query: str,
         results_num: Optional[int] = 3,
-    ) -> List[Document]:
+    ) -> list[Document]:
         if len(results) == 0:
             return [
                 Document(
@@ -100,7 +95,7 @@ class DatabaseAgent:
                         "their question effectively."
                     ),
                     metadata={"cypher_query": cypher_query},
-                )
+                ),
             ]
 
         clipped_results = results[:results_num] if results_num > 0 else results
@@ -117,28 +112,30 @@ class DatabaseAgent:
                     "their question effectively."
                 ),
                 metadata={"cypher_query": cypher_query},
-            )
+            ),
         ]
 
     def get_query_results(self, query: str, k: int = 3) -> list[Document]:
-        """
-        Generate a query using the prompt engine and return the results.
+        """Generate a query using the prompt engine and return the results.
         Replicates vector database similarity search API. Results are returned
         as a list of Document objects to align with the vector database agent.
 
         Args:
+        ----
             query (str): A query string.
 
             k (int): The number of results to return.
 
         Returns:
+        -------
             List[Document]: A list of Document objects. The page content values
                 are the literal dictionaries returned by the query, the metadata
                 values are the cypher query used to generate the results, for
                 now.
+
         """
         (cypher_query, tool_result) = self._generate_query(
-            query
+            query,
         )  # self.prompt_engine.generate_query(query)
         # TODO some logic if it fails?
         if tool_result is not None:
@@ -154,7 +151,9 @@ class DatabaseAgent:
         if results is None or len(results) == 0 or results[0] is None:
             return []
         return self._build_response(
-            results=results[0], cypher_query=cypher_query, results_num=k
+            results=results[0],
+            cypher_query=cypher_query,
+            results_num=k,
         )
 
     def get_description(self):
@@ -162,13 +161,8 @@ class DatabaseAgent:
 
         if result[0]:
             schema_info_node = result[0][0]["n"]
-            schema_dict_content = schema_info_node["schema_info"][
-                :MAX_AGENT_DESC_LENGTH
-            ]  # limit to 1000 characters
-            return (
-                f"the graph database contains the following nodes and edges: \n\n"
-                f"{schema_dict_content}"
-            )
+            schema_dict_content = schema_info_node["schema_info"][:MAX_AGENT_DESC_LENGTH]  # limit to 1000 characters
+            return f"the graph database contains the following nodes and edges: \n\n{schema_dict_content}"
 
         # schema_info is not found in database
         nodes_query = "MATCH (n) RETURN DISTINCT labels(n) LIMIT 300"

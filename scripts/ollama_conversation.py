@@ -1,5 +1,4 @@
-"""
-Short helper script to quickly run a conversation with a self-hosted LLM via the
+"""Short helper script to quickly run a conversation with a self-hosted LLM via the
 XinferenceConversation class.
 """
 

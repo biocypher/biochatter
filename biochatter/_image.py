@@ -1,24 +1,27 @@
+import base64
 import io
 import os
-import base64
-import tempfile  # needed for test
 import subprocess
+import tempfile
 
-from PIL import Image
 import pdf2image
+from PIL import Image
 
 
 def convert_and_resize_image(image: Image, max_size: int = 1024) -> Image:
-    """
-    Convert the image to RGB format if needed and resize it to have a maximum
-    dimension of max_size.
+    """Convert the image to RGB format.
 
-    Parameters:
+    Do so if needed and resize it to have a maximum dimension of max_size.
+
+    Args:
+    ----
         image (PIL.Image): The input image.
         max_size (int): The maximum size for the image's width or height.
 
     Returns:
+    -------
         PIL.Image: The converted and resized PIL image.
+
     """
     if image.mode != "RGB":
         image = image.convert("RGB")
@@ -27,14 +30,16 @@ def convert_and_resize_image(image: Image, max_size: int = 1024) -> Image:
 
 
 def convert_to_png(image: Image) -> bytes:
-    """
-    Convert a PIL image to PNG format.
+    """Convert a PIL image to PNG format.
 
-    Parameters:
+    Args:
+    ----
         image (PIL.Image): The input image.
 
     Returns:
+    -------
         bytes: The PNG image data.
+
     """
     with io.BytesIO() as output:
         image.save(output, format="PNG")
@@ -42,15 +47,17 @@ def convert_to_png(image: Image) -> bytes:
 
 
 def convert_to_pil_image(file_path: str, dpi: int = 300) -> Image:
-    """
-    Convert various image formats (PDF, EPS, TIFF, JPG, PNG) to a PIL image.
+    """Convert various image formats (PDF, EPS, TIFF, JPG, PNG) to a PIL image.
 
-    Parameters:
+    Args:
+    ----
         file_path (str): The path to the image file.
         dpi (int): Dots per inch for high-resolution EPS conversion.
 
     Returns:
+    -------
         PIL.Image: The converted PIL image.
+
     """
     file_path = os.path.abspath(file_path)
     file_ext = os.path.splitext(file_path)[1].lower()
@@ -84,16 +91,18 @@ def convert_to_pil_image(file_path: str, dpi: int = 300) -> Image:
 
 
 def process_image(path: str, max_size: int) -> str:
-    """
-    Process an image, converting it to PNG and resizing if necessary, then
+    """Process an image, converting it to PNG and resizing if necessary, then
     encode to base64.
 
-    Parameters:
+    Args:
+    ----
         path (str): The path to the image file.
         max_size (int): The maximum size for the image's width or height.
 
     Returns:
+    -------
         str: The base64 encoded image data.
+
     """
     image = convert_to_pil_image(path)
     png_image = convert_to_png(image)
@@ -101,14 +110,16 @@ def process_image(path: str, max_size: int) -> str:
 
 
 def encode_image(image_path):
-    """
-    Encode an image file to a base64 string, converting formats if necessary.
+    """Encode an image file to a base64 string, converting formats if necessary.
 
-    Parameters:
+    Args:
+    ----
         image_path (str): The path to the image file.
 
     Returns:
+    -------
         str: The base64 encoded image data.
+
     """
     supported_formats = (".webp", ".jpg", ".jpeg", ".gif", ".png")
     file_ext = os.path.splitext(image_path)[1].lower()
@@ -121,31 +132,31 @@ def encode_image(image_path):
 
 
 def encode_image_from_url(url: str) -> str:
-    """
-    Download an image from a URL, convert to base64, and return the base64
+    """Download an image from a URL, convert to base64, and return the base64
     string.
 
-    Parameters:
+    Args:
+    ----
         url (str): The URL of the image.
 
     Returns:
+    -------
         str: The base64 encoded image data.
+
     """
     from urllib.request import urlopen
-    import tempfile
 
     # Get the file extension from the content type
     with urlopen(url) as response:
         content_type = response.info().get_content_type()
         extension = content_type.split("/")[-1]
-        extension = (
-            "jpg" if extension == "jpeg" else extension
-        )  # normalize extension
+        extension = "jpg" if extension == "jpeg" else extension  # normalize extension
 
     with (
         urlopen(url) as response,
         tempfile.NamedTemporaryFile(
-            suffix=f".{extension}", delete=False
+            suffix=f".{extension}",
+            delete=False,
         ) as tmp_file,
     ):
         tmp_file.write(response.read())

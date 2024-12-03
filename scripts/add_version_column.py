@@ -4,16 +4,11 @@ import pandas as pd
 
 
 def _add_version_column():
-    """
-    Go through all benchmark result files and add a column for the version of
+    """Go through all benchmark result files and add a column for the version of
     biochatter, `biochatter_version`, to the results. Also add the value `0.4.10`
     as a default value to all rows.
     """
-    result_files = [
-        f"benchmark/results/{file}"
-        for file in os.listdir("benchmark/results")
-        if file.endswith(".csv")
-    ]
+    result_files = [f"benchmark/results/{file}" for file in os.listdir("benchmark/results") if file.endswith(".csv")]
 
     for file in result_files:
         result_file = pd.read_csv(file, header=0)

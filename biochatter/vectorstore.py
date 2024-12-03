@@ -1,18 +1,17 @@
 from typing import Optional
 
-from transformers import GPT2TokenizerFast
+import fitz  # this is PyMuPDF (PyPI pymupdf package, not fitz)
+import openai
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.document_loaders import TextLoader
 from langchain_community.embeddings import (
     OllamaEmbeddings,
     XinferenceEmbeddings,
 )
-from langchain_community.vectorstores import Milvus
-from langchain_community.document_loaders import TextLoader
-from langchain_community.embeddings.openai import OpenAIEmbeddings
 from langchain_community.embeddings.azure_openai import AzureOpenAIEmbeddings
-import fitz  # this is PyMuPDF (PyPI pymupdf package, not fitz)
-import openai
+from langchain_community.embeddings.openai import OpenAIEmbeddings
+from transformers import GPT2TokenizerFast
 
 from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
 
@@ -37,19 +36,16 @@ class DocumentEmbedder:
         azure_deployment: Optional[str] = None,
         azure_endpoint: Optional[str] = None,
         base_url: Optional[str] = None,
-        embeddings: Optional[
-            OpenAIEmbeddings | XinferenceEmbeddings | OllamaEmbeddings
-        ] = None,
+        embeddings: Optional[OpenAIEmbeddings | XinferenceEmbeddings | OllamaEmbeddings] = None,
         documentids_workspace: Optional[list[str]] = None,
     ) -> None:
-        """
-        Class that handles the retrieval-augmented generation (RAG) functionality
+        """Class that handles the retrieval-augmented generation (RAG) functionality
         of BioChatter. It splits text into chunks, embeds them, and stores them in
         a vector database. It can then be used to do similarity search on the
         database.
 
         Args:
-
+        ----
             used (bool, optional): whether RAG has been used (frontend setting).
                 Defaults to False.
 
@@ -113,20 +109,19 @@ class DocumentEmbedder:
 
         if embeddings:
             self.embeddings = embeddings
-        else:
-            if not self.online:
-                self.embeddings = (
-                    OpenAIEmbeddings(openai_api_key=api_key, model=model)
-                    if not is_azure
-                    else AzureOpenAIEmbeddings(
-                        api_key=api_key,
-                        azure_deployment=azure_deployment,
-                        azure_endpoint=azure_endpoint,
-                        model=model,
-                    )
+        elif not self.online:
+            self.embeddings = (
+                OpenAIEmbeddings(openai_api_key=api_key, model=model)
+                if not is_azure
+                else AzureOpenAIEmbeddings(
+                    api_key=api_key,
+                    azure_deployment=azure_deployment,
+                    azure_endpoint=azure_endpoint,
+                    model=model,
                 )
-            else:
-                self.embeddings = None
+            )
+        else:
+            self.embeddings = None
 
         # connection arguments
         self.connection_args = connection_args or {
@@ -188,31 +183,25 @@ class DocumentEmbedder:
         else:
             return RecursiveCharacterTextSplitter.from_tiktoken_encoder(
                 encoding_name="",
-                model_name=(
-                    DEFAULT_OPENAI_MODEL
-                    if not self.model_name
-                    else self.model_name
-                ),
+                model_name=(DEFAULT_OPENAI_MODEL if not self.model_name else self.model_name),
                 chunk_size=self.chunk_size,
                 chunk_overlap=self.chunk_overlap,
                 separators=self.separators,
             )
 
     def _text_splitter(self) -> RecursiveCharacterTextSplitter:
-        return (
-            self._characters_splitter()
-            if self.split_by_characters
-            else self._tokens_splitter()
-        )
+        return self._characters_splitter() if self.split_by_characters else self._tokens_splitter()
 
     def save_document(self, doc: list[Document]) -> str:
-        """
-        This function saves document to the vector database
+        """This function saves document to the vector database
         Args:
             doc List[Document]: document content, read with DocumentReader load_document(),
                 or document_from_pdf(), document_from_txt()
-        Returns:
+
+        Returns
+        -------
             str: document id, which can be used to remove an uploaded document with remove_document()
+
         """
         splitted = self._split_document(doc)
         return self._store_embeddings(splitted)
@@ -229,12 +218,13 @@ class DocumentEmbedder:
 
     def get_all_documents(self) -> list[dict]:
         return self.database_host.get_all_documents(
-            doc_ids=self.documentids_workspace
+            doc_ids=self.documentids_workspace,
         )
 
     def remove_document(self, doc_id: str) -> None:
         return self.database_host.remove_document(
-            doc_id, self.documentids_workspace
+            doc_id,
+            self.documentids_workspace,
         )
 
 
@@ -256,12 +246,11 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
         base_url: Optional[str] = None,
         documentids_workspace: Optional[list[str]] = None,
     ):
-        """
-        Extension of the DocumentEmbedder class that uses Xinference for
+        """Extension of the DocumentEmbedder class that uses Xinference for
         embeddings.
 
         Args:
-
+        ----
             used (bool, optional): whether RAG has been used (frontend setting).
 
             chunk_size (int, optional): size of chunks to split text into.
@@ -329,14 +318,14 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
             api_key=api_key,
             base_url=base_url,
             embeddings=XinferenceEmbeddings(
-                server_url=base_url, model_uid=self.model_uid
+                server_url=base_url,
+                model_uid=self.model_uid,
             ),
             documentids_workspace=documentids_workspace,
         )
 
     def load_models(self) -> None:
-        """
-        Get all models that are currently available on the Xinference server and
+        """Get all models that are currently available on the Xinference server and
         write them to `self.models`.
         """
         for id, model in self.client.list_models().items():
@@ -344,15 +333,17 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
             self.models[model["model_name"]] = model
 
     def list_models_by_type(self, type: str) -> list[str]:
-        """
-        Return all models of a certain type that are currently available on the
+        """Return all models of a certain type that are currently available on the
         Xinference server.
 
         Args:
+        ----
             type (str): type of model to list (e.g. "embedding", "chat")
 
         Returns:
+        -------
             List[str]: list of model names
+
         """
         names = []
         for name, model in self.models.items():
@@ -382,12 +373,11 @@ class OllamaDocumentEmbedder(DocumentEmbedder):
         base_url: Optional[str] = None,
         documentids_workspace: Optional[list[str]] = None,
     ):
-        """
-        Extension of the DocumentEmbedder class that uses Ollama for
+        """Extension of the DocumentEmbedder class that uses Ollama for
         embeddings.
 
         Args:
-
+        ----
             used (bool, optional): whether RAG has been used (frontend setting).
 
             chunk_size (int, optional): size of chunks to split text into.
@@ -448,7 +438,8 @@ class OllamaDocumentEmbedder(DocumentEmbedder):
             api_key=api_key,
             base_url=base_url,
             embeddings=OllamaEmbeddings(
-                base_url=base_url, model=self.model_name
+                base_url=base_url,
+                model=self.model_name,
             ),
             documentids_workspace=documentids_workspace,
         )
@@ -456,15 +447,17 @@ class OllamaDocumentEmbedder(DocumentEmbedder):
 
 class DocumentReader:
     def load_document(self, path: str) -> list[Document]:
-        """
-        Loads a document from a path; accepts txt and pdf files. Txt files are
+        """Loads a document from a path; accepts txt and pdf files. Txt files are
         loaded as-is, pdf files are converted to text using fitz.
 
         Args:
+        ----
             path (str): path to document
 
         Returns:
+        -------
             List[Document]: list of documents
+
         """
         if path.endswith(".txt"):
             loader = TextLoader(path)
@@ -483,19 +476,21 @@ class DocumentReader:
                 Document(
                     page_content=text,
                     metadata=meta,
-                )
+                ),
             ]
 
     def document_from_pdf(self, pdf: bytes) -> list[Document]:
-        """
-        Receive a byte representation of a pdf file and return a list of Documents
+        """Receive a byte representation of a pdf file and return a list of Documents
         with metadata.
 
         Args:
+        ----
             pdf (bytes): byte representation of pdf file
 
         Returns:
+        -------
             List[Document]: list of documents
+
         """
         doc = fitz.open(stream=pdf, filetype="pdf")
         text = ""
@@ -509,24 +504,26 @@ class DocumentReader:
             Document(
                 page_content=text,
                 metadata=meta,
-            )
+            ),
         ]
 
     def document_from_txt(self, txt: bytes) -> list[Document]:
-        """
-        Receive a byte representation of a txt file and return a list of Documents
+        """Receive a byte representation of a txt file and return a list of Documents
         with metadata.
 
         Args:
+        ----
             txt (bytes): byte representation of txt file
 
         Returns:
+        -------
             List[Document]: list of documents
+
         """
         meta = {"source": "txt"}
         return [
             Document(
                 page_content=txt,
                 metadata=meta,
-            )
+            ),
         ]

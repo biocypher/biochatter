@@ -1,5 +1,5 @@
-from typing import Any, Union, Optional
 import uuid
+from typing import Any, Optional, Union
 
 from pymilvus import DataType, FieldSchema
 
@@ -8,17 +8,17 @@ def has_collection(name, using: Optional[str] = None):
     return True
 
 
-class CollectionSchema(object):
+class CollectionSchema:
     def __init__(self, fields: list[FieldSchema]):
         pass
 
 
-class CollectionRecord(object):
+class CollectionRecord:
     def __init__(self, key: str) -> None:
         self.primary_keys = [key]
 
 
-class Collection(object):
+class Collection:
     def __init__(
         self,
         name: str,
@@ -55,7 +55,10 @@ class Collection(object):
         return []
 
     def create_index(
-        self, field_name: str, index_params: dict[str, Any], using: str
+        self,
+        field_name: str,
+        index_params: dict[str, Any],
+        using: str,
     ):
         pass
 
@@ -71,7 +74,7 @@ class Collection(object):
         return CollectionRecord(id)
 
 
-class Connections(object):
+class Connections:
     def connect(
         self,
         host: str,

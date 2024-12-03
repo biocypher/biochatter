@@ -7,10 +7,7 @@ from biochatter.vectorstore import DocumentReader
 
 
 @pytest.mark.skip(
-    reason=(
-        "More of an integration test without asserts. "
-        "Currently used for debugging, to be later replaced."
-    )
+    reason=("More of an integration test without asserts. Currently used for debugging, to be later replaced."),
 )
 def test_podcast():
     # runs long, requires OpenAI API key
@@ -36,11 +33,7 @@ def test_podcast_to_text():
 
     # test the podcast_to_text method
     expected_text = (
-        "You are listening to: "
-        + podcaster.podcast_info
-        + "\n\n"
-        + "\n\n".join(podcaster.processed_sections)
-        + "\n\n"
+        "You are listening to: " + podcaster.podcast_info + "\n\n" + "\n\n".join(podcaster.processed_sections) + "\n\n"
     )
     assert podcaster.podcast_to_text() == expected_text
 

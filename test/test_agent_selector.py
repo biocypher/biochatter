@@ -1,23 +1,20 @@
-from unittest.mock import MagicMock, patch
-import os
 import json
 import logging
+from unittest.mock import MagicMock
 
-from dotenv import load_dotenv
-from langchain_core.messages import AIMessage, BaseMessage
-from langchain.output_parsers.openai_tools import PydanticToolsParser
-import pytest
-import shortuuid
 import neo4j_utils as nu
+import shortuuid
+from dotenv import load_dotenv
+from langchain.output_parsers.openai_tools import PydanticToolsParser
+from langchain_core.messages import AIMessage, BaseMessage
 
-from biochatter.rag_agent import RagAgent, RagAgentModeEnum
-from biochatter.llm_connect import AzureGptConversation
+from biochatter.langgraph_agent_base import ResponderWithRetries
+from biochatter.rag_agent import RagAgentModeEnum
 from biochatter.selector_agent import (
-    RagAgentSelector,
     RagAgentChoiceModel,
     RagAgentRevisionModel,
+    RagAgentSelector,
 )
-from biochatter.langgraph_agent_base import ResponderWithRetries
 
 load_dotenv()
 
@@ -30,12 +27,7 @@ def find_schema_info_node(connection_args: dict):
         Look for a schema info node in the connected BioCypher graph and load the
         schema info if present.
         """
-        db_uri = (
-            "bolt://"
-            + connection_args.get("host")
-            + ":"
-            + connection_args.get("port")
-        )
+        db_uri = "bolt://" + connection_args.get("host") + ":" + connection_args.get("port")
         neodriver = nu.Driver(
             db_name=connection_args.get("db_name") or "neo4j",
             db_uri=db_uri,
@@ -70,14 +62,12 @@ class InitialResponder:
                 {
                     "id": id,
                     "function": {
-                        "arguments": '{"answer":"'
-                        + f"{self.rag_agent}"
-                        + '","reflection":"mock reflection"}',
+                        "arguments": '{"answer":"' + f"{self.rag_agent}" + '","reflection":"mock reflection"}',
                         "name": "RagAgentChoiceModel",
                     },
                     "type": "function",
-                }
-            ]
+                },
+            ],
         }
         msg.id = id
         msg.tool_calls = [
@@ -88,7 +78,7 @@ class InitialResponder:
                     "reflection": "mock reflection",
                 },
                 "id": id,
-            }
+            },
         ]
         return msg
 
@@ -113,8 +103,8 @@ class ReviseResponder:
                             "name": "RagAgentRevisionModel",
                         },
                         "type": "function",
-                    }
-                ]
+                    },
+                ],
             },
             response_metadata={
                 "token_usage": {
@@ -136,7 +126,7 @@ class ReviseResponder:
                             "sexual": {"filtered": False, "severity": "safe"},
                             "violence": {"filtered": False, "severity": "safe"},
                         },
-                    }
+                    },
                 ],
                 "finish_reason": "stop",
                 "logprobs": None,
@@ -154,7 +144,7 @@ class ReviseResponder:
                         "tool_result": "mock result",
                     },
                     "id": "call_wTO40b9",
-                }
+                },
             ],
         )
 
@@ -165,7 +155,8 @@ class AgentSelectorMock(RagAgentSelector):
         self.expected_ragagent = expected
 
     def _create_initial_responder(
-        self, prompt: str | None = None
+        self,
+        prompt: str | None = None,
     ) -> ResponderWithRetries:
         runnable = InitialResponder(self.expected_ragagent)
         validator = PydanticToolsParser(tools=[RagAgentChoiceModel])
@@ -175,7 +166,8 @@ class AgentSelectorMock(RagAgentSelector):
         )
 
     def _create_revise_responder(
-        self, prompt: str | None = None
+        self,
+        prompt: str | None = None,
     ) -> ResponderWithRetries:
         runnable = ReviseResponder(self.expected_ragagent)
         validator = PydanticToolsParser(tools=[RagAgentRevisionModel])
@@ -190,15 +182,15 @@ def create_agent_selector(expected_rag_agent: str):
         return_value=[
             ('{"bp.name": "mock"}', {"cypher_query": "mock query"}),
             ('{"bp.name": "mock"}', {"cypher_query": "balahbalah"}),
-        ]
+        ],
     )
     vectorstoreAgent = MagicMock()
     vectorstoreAgent.mode = RagAgentModeEnum.VectorStore
     vectorstoreAgent.get_description = MagicMock(
-        return_value="mock vector store"
+        return_value="mock vector store",
     )
     vectorstoreAgent.generate_responses = MagicMock(
-        return_value=["mock content 1", "mock content 2"]
+        return_value=["mock content 1", "mock content 2"],
     )
     blastAgent = MagicMock()
     blastAgent.mode = RagAgentModeEnum.API_BLAST
@@ -207,7 +199,7 @@ def create_agent_selector(expected_rag_agent: str):
         return_value=[
             "blast search result 1",
             "blast search result 2",
-        ]
+        ],
     )
     oncokbAgent = MagicMock()
     oncokbAgent.mode = RagAgentModeEnum.API_ONCOKB
@@ -216,7 +208,7 @@ def create_agent_selector(expected_rag_agent: str):
         return_value=[
             "oncokb search result 1",
             "oncokb search result 2",
-        ]
+        ],
     )
     return AgentSelectorMock(
         rag_agents=[dbAgent, vectorstoreAgent, blastAgent, oncokbAgent],
@@ -228,7 +220,7 @@ def create_agent_selector(expected_rag_agent: str):
 def test_agent_selector_oncokb():
     agent_selector = create_agent_selector(str(RagAgentModeEnum.API_ONCOKB))
     result = agent_selector.execute(
-        "What is the oncogenic potential of BRAF V600E mutation?"
+        "What is the oncogenic potential of BRAF V600E mutation?",
     )
     assert result.answer == "api_oncokb"
 
@@ -236,7 +228,7 @@ def test_agent_selector_oncokb():
 def test_agent_selector_blast():
     agent_selector = create_agent_selector(str(RagAgentModeEnum.API_BLAST))
     result = agent_selector.execute(
-        "Which organism does this sequence belong to? GATACGCGGCCACAGTACGACAATCTTCAG"
+        "Which organism does this sequence belong to? GATACGCGGCCACAGTACGACAATCTTCAG",
     )
     assert result.answer == "api_blast"
 
@@ -250,6 +242,6 @@ def test_agent_selector_kg():
 def test_agent_selector_vectorstore():
     agent_selector = create_agent_selector(str(RagAgentModeEnum.VectorStore))
     result = agent_selector.execute(
-        "What is reported in the literature about the BRAF V600E mutation?"
+        "What is reported in the literature about the BRAF V600E mutation?",
     )
     assert result.answer == "vectorstore"
