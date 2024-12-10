@@ -3,7 +3,7 @@
 #
 # Test case keys:
 # - input (for creating the test)
-# - expected (for asserting outcomes and generating a score)
+# - expected (for asserting ourcomes and generating a score)
 # - case (for categorizing the test case)
 #
 # If any input is a dictionary itself, it will be expanded into separate test
@@ -334,3 +334,216 @@ kg_schemas:
       source: chemical
       target: web page
       input_label: chemical_webpage
+
+  hetionet:
+    gene:
+      input_label:
+        - hgnc
+        - ensg
+      is_relationship: false
+      preferred_id: hgnc
+      present_in_knowledge_graph: true
+      properties:
+        symbol: str
+        name: str
+        description: str
+        taxon: int
+      represented_as: node
+    disease:
+      input_label: Disease
+      is_relationship: false
+      preferred_id: doid
+      present_in_knowledge_graph: true
+      properties:
+        name: str
+        mesh_id: str
+        umls_id: str
+      represented_as: node
+    compound:
+      input_label: Compound
+      is_relationship: false
+      preferred_id: drugbank
+      present_in_knowledge_graph: true
+      properties:
+        name: str
+        smiles: str
+        inchi: str
+      represented_as: node
+    pathway:
+      input_label: Pathway
+      is_relationship: false
+      preferred_id:
+        - reactome
+        - kegg
+      present_in_knowledge_graph: true
+      properties:
+        name: str
+        source: str
+      represented_as: node
+    anatomy:
+      input_label: Anatomy
+      is_relationship: false
+      preferred_id: uberon
+      present_in_knowledge_graph: true
+      properties:
+        name: str
+      represented_as: node
+    gene-disease association:
+      input_label: gene_disease_association
+      is_relationship: true
+      label_as_edge: ASSOCIATED_WITH
+      present_in_knowledge_graph: true
+      properties:
+        score: float
+        evidence: str
+      represented_as: edge
+      source: gene
+      target: disease
+    compound-disease treatment:
+      input_label: compound_treats_disease
+      is_relationship: true
+      label_as_edge: TREATS
+      present_in_knowledge_graph: true
+      properties:
+        phase: int
+        source: str
+      represented_as: edge
+      source: compound
+      target: disease
+    gene-compound interaction:
+      input_label: gene_compound_interaction
+      is_relationship: true
+      label_as_edge: INTERACTS_WITH
+      present_in_knowledge_graph: true
+      properties:
+        action: str
+        affinity: float
+      represented_as: edge
+      source: gene
+      target: compound
+    pathway-disease association:
+      input_label: pathway_disease_association
+      is_relationship: true
+      label_as_edge: INVOLVED_IN
+      present_in_knowledge_graph: true
+      properties:
+        evidence: str
+        source: str
+      represented_as: edge
+      source: pathway
+      target: disease
+    gene-pathway association:
+      input_label: gene_pathway_association
+      is_relationship: true
+      label_as_edge: PARTICIPATES_IN
+      present_in_knowledge_graph: true
+      properties:
+        evidence: str
+      represented_as: edge
+      source: gene
+      target: pathway
+    disease-symptom association:
+      input_label: disease_symptom_association
+      is_relationship: true
+      label_as_edge: ASSOCIATED_WITH_SYMPTOM
+      present_in_knowledge_graph: true
+      properties:
+        source: str
+        evidence: str
+      represented_as: edge
+      source: disease
+      target: symptom
+    side effect:
+      input_label: side_effect
+      is_relationship: true
+      label_as_edge: CAUSES_SIDE_EFFECT
+      present_in_knowledge_graph: true
+      properties:
+        severity: str
+      represented_as: edge
+      source: compound
+      target: symptom
+  
+  open-targets:
+    human gene:
+      is_a: gene
+      represented_as: node
+      preferred_id: ensembl
+      input_label: ensembl
+      properties:
+        approvedSymbol: str
+        approvedName: str
+        biotype: str
+    mouse gene:
+      is_a: gene
+      represented_as: node
+      preferred_id: ensembl
+      input_label: mouse gene
+      properties:
+        targetInModel: str
+        targetInModelMgiId: str
+        targetFromSourceId: str
+    # otar has no Bioregistry entry
+    disease:
+      represented_as: node
+      preferred_id: [mondo, efo, hp, orphanet, otar, oba, ncit, doid, obi, ogms]
+      input_label: [mondo, efo, hp, orphanet, otar, oba, ncit, doid, obi, ogms]
+      properties:
+        code: str
+        name: str
+        description: str
+        ontology: str
+    drug:
+      represented_as: node
+      preferred_id: chembl
+      input_label: chembl
+      properties:
+        name: str
+        description: str
+    go term:
+      is_a: biological entity # activity, process, or location
+      represented_as: node
+      preferred_id: go
+      input_label: go
+      properties:
+        name: str
+    mouse phenotype:
+      is_a: phenotypic feature
+      represented_as: node
+      preferred_id: mp
+      input_label: mp
+      properties:
+        modelPhenotypeLabel: str
+        targetFromSourceId: str
+        targetInModelEnsemblId: str
+    gene to disease association:
+      represented_as: edge
+      preferred_id:
+        [
+          affected pathway,
+          somatic mutation,
+          genetic association,
+          literature,
+          animal model,
+          known drug,
+          rna expression,
+        ]
+      input_label:
+        [
+          affected_pathway,
+          somatic_mutation,
+          genetic_association,
+          literature,
+          animal_model,
+          known_drug,
+          rna_expression,
+        ]
+      properties:
+        literature: str[]
+        score: double
+    gene to go term association:
+      is_a: association
+      represented_as: edge
+      source: gene
+      target: go term
+      input_label: GENE_TO_GO_TERM_ASSOCIATION
