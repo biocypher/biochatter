@@ -8,11 +8,25 @@
 # 4. Write the anndata object to [xxx] format -> built-in anndata api
 
 import uuid
+from collections.abc import Callable
 from typing import Optional
 
+from langchain.chains.openai_functions import create_structured_output_runnable
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.pydantic_v1 import BaseModel, Field
 from pydantic import BaseModel, Field
 
 from .abc import BaseQueryBuilder
+
+if TYPE_CHECKING:
+    from biochatter.llm_connect import Conversation
+
+from typing import TYPE_CHECKING
+
+AnnDataIO_QUERY_PROMPT = """
+
+"""
 
 
 class AnnDataIOParameters(BaseModel):
@@ -58,4 +72,66 @@ class AnnDataIOParameters(BaseModel):
 
 
 class AnndataIOQueryBuilder(BaseQueryBuilder):
+    """A class for building a BlastQuery object."""
 
+    def create_runnable(
+        self,
+        query_parameters: "AnnDataIOParameters",
+        conversation: "Conversation",
+    ) -> Callable:
+        """Create a runnable object for executing queries.
+
+        Creates a runnable using the LangChain
+        `create_structured_output_runnable` method.
+
+        Args:
+        ----
+            query_parameters: A Pydantic data model that specifies the fields of
+                the API that should be queried.
+
+            conversation: A BioChatter conversation object.
+
+        Returns:
+        -------
+            A Callable object that can execute the query.
+
+        """
+        return create_structured_output_runnable(
+            output_schema=query_parameters,
+            llm=conversation.chat,
+            prompt=self.structured_output_prompt,
+        )
+
+    def parameterise_query(
+        self,
+        question: str,
+        conversation: "Conversation",
+    ) -> AnnDataIOParameters:
+        """Generate a BlastQuery object.
+
+        Generates the object based on the given question, prompt, and
+        BioChatter conversation. Uses a Pydantic model to define the API fields.
+        Creates a runnable that can be invoked on LLMs that are qualified to
+        parameterise functions.
+
+        Args:
+        ----
+            question (str): The question to be answered.
+
+            conversation: The conversation object used for parameterising the
+                BlastQuery.
+
+        Returns:
+        -------
+            BlastQuery: the parameterised query object (Pydantic model)
+
+        """
+        runnable = self.create_runnable(
+            query_parameters=AnnDataIOParameters,
+            conversation=conversation,
+        )
+        blast_call_obj = runnable.invoke(
+            {"input": f"Answer:\n{question} based on:\n {AnnDataIO_QUERY_PROMPT}"},
+        )
+        blast_call_obj.question_uuid = str(uuid.uuid4())
+        return blast_call_obj
