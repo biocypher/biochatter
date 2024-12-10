@@ -1,6 +1,6 @@
-### Aim
-## For any question about anndata:
-## return the code to answer the question
+# Aim
+# For any question about anndata:
+# return the code to answer the question
 
 # 1. Read in anndata object from any anndata api supported format -> built-in anndata api
 # 2. Concatenate the anndata object -> built-in anndata api
@@ -9,7 +9,7 @@
 
 import uuid
 from collections.abc import Callable
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from langchain.chains.openai_functions import create_structured_output_runnable
 from langchain_core.output_parsers import StrOutputParser
@@ -17,15 +17,80 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
 from pydantic import BaseModel, Field
 
+from biochatter.llm_connect import Conversation, GptConversation
+
 from .abc import BaseQueryBuilder
 
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
 
-from typing import TYPE_CHECKING
 
-AnnDataIO_QUERY_PROMPT = """
+ANNDATA_IO_QUERY_PROMPT = """
+You are a world class algorithm, computational biologist with world leading knowledge
+of the anndata package.
+You are also an expert algorithm to return structured output formats.
 
+You will be asked to provide code to answer a specific questions involving the anndata package.
+NEVER return a code snippet or code itself, instead you have to return a structured output format.
+You will have to create a structured output formats containing method:argument fields.
+
+Here are the possible questions you might be asked:
+<question: output> TBD
+<question: output> TBD
+<question: output> TBD
+
+BASED ON THE DOCUMENTATION below:
+### 1. Reading AnnData Native Formats
+- **HDF5 (.h5ad):**
+  `io.read_h5ad(filename[, backed, as_sparse, ...])`
+  - Reads `.h5ad`-formatted HDF5 file.
+
+- **Zarr:**
+  `io.read_zarr(store)`
+  - Reads from a hierarchical Zarr array store.
+
+### 2. Reading Specific Portions of AnnData
+- **Individual Elements (e.g., obs, varm, etc.):**
+  `io.read_elem(elem)`
+  - Reads an individual element from a store.
+
+- **Backed Mode-Compatible Sparse Dataset:**
+  `io.sparse_dataset(group)`
+  - Generates a sparse dataset class compatible with backed mode.
+
+### 3. Reading Non-Native Formats
+#### 3.1 General Tips
+- Non-native formats may not represent all aspects of AnnData objects.
+- Assembling the AnnData object manually from individual parts may be more successful.
+
+#### 3.2 Supported Formats
+- **CSV:**
+  `io.read_csv(filename[, delimiter, ...])`
+  - Reads `.csv` file.
+
+- **Excel (.xlsx):**
+  `io.read_excel(filename, sheet[, dtype])`
+  - Reads `.xlsx` (Excel) file.
+
+- **HDF5 (.h5):**
+  `io.read_hdf(filename, key)`
+  - Reads `.h5` (HDF5) file.
+
+- **Loom:**
+  `io.read_loom(filename, *[, sparse, cleanup, ...])`
+  - Reads `.loom`-formatted HDF5 file.
+
+- **Matrix Market (.mtx):**
+  `io.read_mtx(filename[, dtype])`
+  - Reads `.mtx` file.
+
+- **Text (.txt, .tab, .data):**
+  `io.read_text(filename[, delimiter, ...])`
+  - Reads `.txt`, `.tab`, or `.data` text files.
+
+- **UMI Tools Matrix:**
+  `io.read_umi_tools(filename[, dtype])`
+  - Reads a gzipped condensed count matrix from UMI Tools.
 """
 
 
@@ -71,7 +136,7 @@ class AnnDataIOParameters(BaseModel):
     )
 
 
-class AnndataIOQueryBuilder(BaseQueryBuilder):
+class AnnDataIOQueryBuilder(BaseQueryBuilder):
     """A class for building a BlastQuery object."""
 
     def create_runnable(
@@ -131,7 +196,7 @@ class AnndataIOQueryBuilder(BaseQueryBuilder):
             conversation=conversation,
         )
         blast_call_obj = runnable.invoke(
-            {"input": f"Answer:\n{question} based on:\n {AnnDataIO_QUERY_PROMPT}"},
+            {"input": f"Answer:\n{question} based on:\n {ANNDATA_IO_QUERY_PROMPT}"},
         )
         blast_call_obj.question_uuid = str(uuid.uuid4())
         return blast_call_obj
