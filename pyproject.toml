@@ -32,8 +32,8 @@ Issues = "https://github.com/biocypher/biochatter/issues"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.13"
-langchain = "^0.2.5"
-openai = "^1.1.0"
+langchain = "^0.3.10"
+openai = "1.57.1"
 pymupdf = "^1.22.3"
 pymilvus = "2.2.8"
 nltk = "^3.8.1"
@@ -43,7 +43,7 @@ stringcase = "^1.2.0"
 transformers = "^4.30.2"
 streamlit = { version = "^1.23.1", optional = true }
 gTTS = { version = "^2.3.2", optional = true }
-xinference = { version = "^0.14.1", optional = true }
+xinference = { version = "^1.0.1", optional = true }
 rsa = "^4.9"
 cryptography = "^41.0.7"
 neo4j-utils = "^0.0.7"
@@ -52,16 +52,16 @@ rouge_score = "0.1.2"
 evaluate = "^0.4.1"
 pillow = ">=10.2,<11.0"
 pdf2image = "^1.16.0"
-langchain-community = "^0.2.5"
-langgraph = "^0.1.5"
-langchain-openai = "^0.1.14"
+langchain-community = "^0.3.10"
+langgraph = "^0.2.56"
+langchain-openai = "^0.2.12"
 tiktoken = "0.7.0"
 grandalf = "^0.8"
 importlib-metadata = "^8.0.0"
 colorcet = "^3.1.0"
+langchain-anthropic = "^0.3.0"
+anthropic = "^0.40.0"
 
-langchain-anthropic = "^0.1.22"
-anthropic = "^0.33.0"
 [tool.poetry.extras]
 streamlit = ["streamlit"]
 podcast = ["gTTS"]
