@@ -94,109 +94,75 @@ BASED ON THE DOCUMENTATION below:
 """
 
 
-class AnnDataIOParameters(BaseModel):
-    """Pydantic model for AnnData input/output operations.
+class ReadH5AD(BaseModel):
+    """Read .h5ad-formatted hdf5 file."""
 
-    This class is used to configure and perform various AnnData I/O tasks,
-    such as reading and writing files in different formats.
-    """
-
-    # Reading AnnData native formats
-    read_h5ad: Optional[str] = Field(
-        None,
-        description="Path to the .h5ad-formatted HDF5 file. Use this to read an AnnData\
-            object in .h5ad format.",
-    )
-    read_zarr: Optional[str] = Field(
-        None,
-        description="Path to a hierarchical Zarr array store to read AnnData data.",
-    )
-    # Reading other formats
-    read_csv: Optional[str] = Field(
-        None,
-        description="Path to a .csv file to read into AnnData.",
-    )
-    read_excel: Optional[str] = Field(
-        None,
-        description="Path to an .xlsx (Excel) file to read into AnnData.",
-    )
-    excel_sheet: Optional[str] = Field(
-        None,
-        description="Sheet name to read from the .xlsx file.",
-    )
-    read_hdf: Optional[list] = Field(
-        None,
-        description="A sorted list where the first element is the path to the \
-        .h5 (HDF5) file to read into AnnData. The second element is the key to the \
-            data set, the user will input this and specify it as a string.",
-    )
-    operation_uuid: Optional[str] = Field(
-        default_factory=lambda: str(uuid.uuid4()),
-        description="Unique identifier for the operation.",
-    )
+    filename: str = Field(..., description="Path to the .h5ad file")
+    backed: str = Field(
+        None, description="Mode to access file: None, 'r' for read-only")
+    as_sparse: str = Field(
+        None, description="Convert to sparse format: 'csr', 'csc', or None")
+    as_sparse_fmt: str = Field(
+        None, description="Sparse format if converting, e.g., 'csr'")
+    index_unique: str = Field(
+        None, description="Make index unique by appending suffix if needed")
 
 
-class AnnDataIOQueryBuilder(BaseQueryBuilder):
-    """A class for building a BlastQuery object."""
+class ReadZarr(BaseModel):
+    """Read from a hierarchical Zarr array store."""
 
-    def create_runnable(
-        self,
-        query_parameters: "AnnDataIOParameters",
-        conversation: "Conversation",
-    ) -> Callable:
-        """Create a runnable object for executing queries.
+    store: str = Field(..., description="Path or URL to the Zarr store")
 
-        Creates a runnable using the LangChain
-        `create_structured_output_runnable` method.
 
-        Args:
-        ----
-            query_parameters: A Pydantic data model that specifies the fields of
-                the API that should be queried.
+class ReadCSV(BaseModel):
+    """Read .csv file."""
 
-            conversation: A BioChatter conversation object.
+    filename: str = Field(..., description="Path to the .csv file")
+    delimiter: str = Field(None, description="Delimiter used in the .csv file")
+    first_column_names: bool = Field(
+        None, description="Whether the first column contains names")
 
-        Returns:
-        -------
-            A Callable object that can execute the query.
 
-        """
-        return create_structured_output_runnable(
-            output_schema=query_parameters,
-            llm=conversation.chat,
-            prompt=self.structured_output_prompt,
-        )
+class ReadExcel(BaseModel):
+    """Read .xlsx (Excel) file."""
 
-    def parameterise_query(
-        self,
-        question: str,
-        conversation: "Conversation",
-    ) -> AnnDataIOParameters:
-        """Generate a BlastQuery object.
+    filename: str = Field(..., description="Path to the .xlsx file")
+    sheet: str = Field(None, description="Sheet name or index to read from")
+    dtype: str = Field(
+        None, description="Data type for the resulting dataframe")
 
-        Generates the object based on the given question, prompt, and
-        BioChatter conversation. Uses a Pydantic model to define the API fields.
-        Creates a runnable that can be invoked on LLMs that are qualified to
-        parameterise functions.
 
-        Args:
-        ----
-            question (str): The question to be answered.
+class ReadHDF(BaseModel):
+    """Read .h5 (hdf5) file."""
 
-            conversation: The conversation object used for parameterising the
-                BlastQuery.
+    filename: str = Field(..., description="Path to the .h5 file")
+    key: str = Field(..., description="Group key within the .h5 file")
 
-        Returns:
-        -------
-            BlastQuery: the parameterised query object (Pydantic model)
 
-        """
-        runnable = self.create_runnable(
-            query_parameters=AnnDataIOParameters,
-            conversation=conversation,
-        )
-        blast_call_obj = runnable.invoke(
-            {"input": f"Answer:\n{question} based on:\n {ANNDATA_IO_QUERY_PROMPT}"},
-        )
-        blast_call_obj.question_uuid = str(uuid.uuid4())
-        return blast_call_obj
+class ReadLoom(BaseModel):
+    """Read .loom-formatted hdf5 file."""
+
+    filename: str = Field(..., description="Path to the .loom file")
+    sparse: bool = Field(None, description="Whether to read data as sparse")
+    cleanup: bool = Field(None, description="Clean up invalid entries")
+    X_name: str = Field(None, description="Name to use for X matrix")
+    obs_names: str = Field(
+        None, description="Column to use for observation names")
+    var_names: str = Field(
+        None, description="Column to use for variable names")
+
+
+class ReadMTX(BaseModel):
+    """Read .mtx file."""
+
+    filename: str = Field(..., description="Path to the .mtx file")
+    dtype: str = Field(None, description="Data type for the matrix")
+
+
+class ReadText(BaseModel):
+    """Read .txt, .tab, .data (text) file."""
+
+    filename: str = Field(..., description="Path to the text file")
+    delimiter: str = Field(None, description="Delimiter used in the file")
+    first_column_names: bool = Field(
+        None, description="Whether the first column contains names")
