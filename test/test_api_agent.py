@@ -30,6 +30,12 @@ from biochatter.api_agent.oncokb import (
 )
 from biochatter.llm_connect import Conversation, GptConversation
 
+from biochatter.api_agent.anndata import (
+    ANNDATA_IO_QUERY_PROMPT,
+    AnndataIOueryBuilder,
+    AnndataIOQueryParameters
+)
+
 
 def conversation_factory():
     conversation = GptConversation(
@@ -265,7 +271,7 @@ def mock_chain(mock_conversation, mock_output_parser):
 
 
 class TestBlastInterpreter:
-    ###FIX THIS TEST
+    # FIX THIS TEST
     def test_summarise_results(mock_prompt, mock_conversation, mock_chain):
         # Arrange
         interpreter = BlastInterpreter()
@@ -422,3 +428,54 @@ class TestOncoKBInterpreter:
         mock_chain.invoke.assert_called_once_with(
             {"input": {expected_summary_prompt}},
         )
+
+
+class TestAnndataIOQueryBuilder:
+    @pytest.fixture()
+    def mock_create_runnable(self):
+        with patch(
+            "biochatter.api_agent.anndata.create_structured_output_runnable"
+        ) as mock:
+            mock_runnable = MagicMock()
+            mock.return_value = mock_runnable
+            yield mock_runnable
+
+    def test_create_runnable(self, mock_create_runnable):
+        # Arrange
+        query_builder = AnndataIOueryBuilder()
+        mock_conversation = MagicMock()
+
+        # Act
+        result = query_builder.create_runnable(
+            AnndataIOQueryParameters,
+            mock_conversation,
+        )
+
+        # Assert
+        assert result == mock_create_runnable
+
+    def test_parameterise_query(self, mock_create_runnable):
+        # Arrange
+        query_builder = AnndataIOueryBuilder()
+        mock_conversation = MagicMock()
+        question = "read a .h5ad file into an anndata object."
+        expected_input = f"Answer:\n{question} based on:\n {ANNDATA_IO_QUERY_PROMPT}"
+        mock_query_obj = MagicMock()
+        mock_create_runnable.invoke.return_value = mock_query_obj
+
+        # Act
+        result = query_builder.parameterise_query(question, mock_conversation)
+
+        # Assert
+        mock_create_runnable.invoke.assert_called_once_with(
+            {"input": expected_input})
+        assert hasattr(result, "question_uuid")
+        assert result == mock_query_obj
+
+
+class TestAnndataIOPlFetcher:
+    pass
+
+
+class TestAnndataIOInterpreter:
+    pass
