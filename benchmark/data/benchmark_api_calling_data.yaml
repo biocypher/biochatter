@@ -73,3 +73,10 @@ api_calling:
     expected:
       parts_of_query:
         ["https://bio.tools/api/t/", "\\?topic=", "[mM]etabolomics"]
+  - case: scanpy:pl:dotplot
+    input:
+      prompt:
+        fuzzy_search: "Make a dotplot of n_genes_by_counts vs total_counts."
+    expected:
+      parts_of_query:
+        ["scanpy.pl.dotplot\\(", "n_genes_by_counts", "total_counts", "\\)"]
