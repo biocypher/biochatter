@@ -4,16 +4,13 @@ import uuid
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
-import requests
 from langchain.chains.openai_functions import create_structured_output_runnable
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
 
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
 
-from .abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
+from .abc import BaseQueryBuilder
 
 SCANPY_PL_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats.
@@ -136,33 +133,75 @@ Plot results of simulation.
 """
 
 
-class ScanpyPlQueryParameters(BaseModel):
-    """Parameters for querying the scanpy plotting API."""
+class ScanpyPlScatterQueryParameters(BaseModel):
+    """Parameters for querying the scanpy `pl.scatter` API."""
 
-    scatter: str = Field(
-        default=None,
-        description="scanpy.pl.scatter(adata, x=None, y=None, *, color=None, use_raw=None, layers=None, sort_order=True, alpha=None, basis=None, groups=None, components=None, projection='2d', legend_loc='right margin', legend_fontsize=None, legend_fontweight=None, legend_fontoutline=None, color_map=None, palette=None, frameon=None, right_margin=None, left_margin=None, size=None, marker='.', title=None, show=None, save=None, ax=None)[source]"
-    )
-    heatmap: str = Field(
-        default=None,
-        description="scanpy.pl.heatmap(adata, var_names, groupby, *, use_raw=None, log=False, num_categories=7, dendrogram=False, gene_symbols=None, var_group_positions=None, var_group_labels=None, var_group_rotation=None, layer=None, standard_scale=None, swap_axes=False, show_gene_labels=None, show=None, save=None, figsize=None, vmin=None, vmax=None, vcenter=None, norm=None, **kwds)"
-    )
-    dotplot: str = Field(
-        default=None,
-        description="scanpy.pl.dotplot(adata, var_names, groupby, *, use_raw=None, log=False, num_categories=7, categories_order=None, expression_cutoff=0.0, mean_only_expressed=False, standard_scale=None, title=None, colorbar_title='Mean expression\\nin group', size_title='Fraction of cells\\nin group (%)', figsize=None, dendrogram=False, gene_symbols=None, var_group_positions=None, var_group_labels=None, var_group_rotation=None, layer=None, swap_axes=False, dot_color_df=None, show=None, save=None, ax=None, return_fig=False, vmin=None, vmax=None, vcenter=None, norm=None, cmap='Reds', dot_max=None, dot_min=None, smallest_dot=0.0, **kwds)"
-    )
     question_uuid: str | None = Field(
         default_factory=lambda: str(uuid.uuid4()),
         description="Unique identifier for the question.",
     )
-
+    adata: str = Field(description="Annotated data matrix.",)
+    x: str | None = Field(default=None, description="x coordinate.",)
+    y: str | None = Field(default=None, description="y coordinate.",)
+    color: str | tuple[float, ...] | list[str | tuple[float, ...]] | None = Field(
+        default=None,
+        description="Keys for annotations of observations/cells or variables/genes, or a hex color specification.",
+    )
+    use_raw: bool | None = Field(
+        default=None,
+        description="Whether to use raw attribute of adata. Defaults to True if .raw is present.",
+    )
+    layers: str | list[str] | None = Field(
+        default=None,
+        description="Layer(s) to use from adata's layers attribute.",
+    )
+    basis: str | None = Field(
+        default=None,
+        description="String that denotes a plotting tool that computed coordinates (e.g., 'pca', 'tsne', 'umap').",
+    )
+    sort_order: bool = Field(
+        default=True,
+        description="For continuous annotations used as color parameter, plot data points with higher values on top.",
+    )
+    groups: str | list[str] | None = Field(
+        default=None,
+        description="Restrict to specific categories in categorical observation annotation.",
+    )
+    projection: str = Field(
+        default="2d",
+        description="Projection of plot ('2d' or '3d').",
+    )
+    legend_loc: str | None = Field(
+        default="right margin",
+        description="Location of legend ('none', 'right margin', 'on data', etc.).",
+    )
+    size: int | float | None = Field(
+        default=None,
+        description="Point size. If None, automatically computed as 120000 / n_cells.",
+    )
+    color_map: str | None = Field(
+        default=None,
+        description="Color map to use for continuous variables (e.g., 'magma', 'viridis').",
+    )
+    title: str | list[str] | None = Field(
+        default=None,
+        description="Title for panels either as string or list of strings.",
+    )
+    show: bool | None = Field(
+        default=None,
+        description="Show the plot, do not return axis.",
+    )
+    save: str | bool | None = Field(
+        default=None,
+        description="If True or a str, save the figure. String is appended to default filename.",
+    )
 
 class ScanpyPlQueryBuilder(BaseQueryBuilder):
     """A class for building an ScanpyPlQuery object."""
 
     def create_runnable(
         self,
-        query_parameters: "ScanpyPlQueryParameters",
+        query_parameters: "ScanpyPlScatterQueryParameters",
         conversation: "Conversation",
     ) -> Callable:
         """Create a runnable object for executing queries.
@@ -192,7 +231,7 @@ class ScanpyPlQueryBuilder(BaseQueryBuilder):
         self,
         question: str,
         conversation: "Conversation",
-    ) -> ScanpyPlQueryParameters:
+    ) -> ScanpyPlScatterQueryParameters:
         """Generate an ScanpyPlQuery object.
 
         Generate a ScanpyPlQuery object based on the given question, prompt,
@@ -214,7 +253,7 @@ class ScanpyPlQueryBuilder(BaseQueryBuilder):
 
         """
         runnable = self.create_runnable(
-            query_parameters=ScanpyPlQueryParameters,
+            query_parameters=ScanpyPlScatterQueryParameters,
             conversation=conversation,
         )
         scanpy_pl_call_obj = runnable.invoke(
