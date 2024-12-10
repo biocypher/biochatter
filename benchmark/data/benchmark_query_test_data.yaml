@@ -3,7 +3,7 @@
 #
 # Test case keys:
 # - input (for creating the test)
-# - expected (for asserting outcomes and generating a score)
+# - expected (for asserting ourcomes and generating a score)
 # - case (for categorizing the test case)
 #
 # If any input is a dictionary itself, it will be expanded into separate test
@@ -15,6 +15,7 @@ biocypher_query_generation:
     input:
       kg_schema: gene_kg
       prompt: What is the name of the disease with ICD10 code 'E10'?
+      language: Cypher
     expected:
       entities: ["Disease"]
       relationships: []
@@ -29,11 +30,338 @@ biocypher_query_generation:
           "WHERE [a-zA-Z]*\\.ICD10|{ICD10:",
         ]
 
+  # test additional simple cypher query
+  - case: simple2
+    input:
+      kg_schema: gene_kg
+      prompt: What is the name of the gene with ID '6091'?
+      language: Cypher
+    expected:
+      entities: ["Disease"]
+      relationships: []
+      relationship_labels: {}
+      properties:
+        Gene: ["name", "INSR"]
+      parts_of_query:
+        [
+          "^MATCH",
+          "RETURN",
+          "([a-zA-Z]*:Gene)",
+          "WHERE [a-zA-Z]*\\.id|{id:",
+        ]
+
+  # test additional simple SQL query
+  - case: simple2_SQL
+    input:
+      kg_schema: gene_kg
+      prompt: What is the name of the gene with ID '6091'?
+      language: SQL
+    expected:
+      entities: ["Disease"]
+      relationships: []
+      relationship_labels: {}
+      properties:
+        Gene: ["name", "INSR"]
+      parts_of_query:
+        [
+          "^SELECT",
+          "FROM",
+          "\\s*Gene",
+          "(?i)WHERE\\s+id\\s*=\\s*'6091'",
+          ";$"
+        ]
+
+  # test ability to answer OTAR question
+  - case: OTAR1
+    input:
+      kg_schema: gene_kg
+      prompt: Which cell types are relevant for NASH disease?
+      language: Cypher
+    expected:
+      entities: ["cell_type", "Disease", "Gene", "Protein"]
+      relationships: ["PERTURBED_IN", "GENE_TO_PROTEIN_ASSOCIATION", "GENE_EXPRESSED_IN_CELL_TYPE"]
+      relationship_labels:
+        PERTURBED_IN:
+          source: Protein
+          target: Disease
+        GENE_TO_PROTEIN_ASSOCIATION:
+          source: Gene
+          target: Protein
+        GENE_EXPRESSED_IN_CELL_TYPE:
+          source: Gene
+          target: cell_type
+      properties:
+        Disease: ["name", "ICD10", "DSM5"]
+        cell_type: ["cell_type_name", "medium", "organism"]
+        Gene: ["id", "name", "taxon"]
+        Protein: ["name", "genes", "score", "taxon"]
+        PERTURBED_IN: ["evidence", "score", "source"]
+        GENE_TO_PROTEIN_ASSOCIATION: ["evidence", "score", "source"]
+        GENE_EXPRESSED_IN_CELL_TYPE: ["expression_level"]
+      parts_of_query:
+        [
+          "^MATCH",
+          "([a-zA-Z]*:Disease)",
+          "([a-zA-Z]*:Protein)",
+          "([a-zA-Z]*:Gene)",
+          "([a-zA-Z]*:cell_type)",
+          "\\(.*?\\)-\\[:PERTURBED_IN\\]->\\(.*?\\)",
+          "\\(.*?\\)-\\[:GENE_TO_PROTEIN_ASSOCIATION\\]->\\(.*?\\)",
+          "\\(.*?\\)-\\[:GENE_EXPRESSED_IN_CELL_TYPE\\]->\\(.*?\\)",
+          "NASH",
+          "RETURN\\s+(DISTINCT\\s+)?cell_type\\.name",
+        ]
+
+  # test ability to answer OTAR question with SQL
+  - case: OTAR1_SQL
+    input:
+      kg_schema: gene_kg
+      prompt: Which cell types are relevant for NASH disease?
+      language: SQL
+    expected:
+      entities: ["cell_type", "Disease", "Gene", "Protein"]
+      relationships: ["PERTURBED_IN", "GENE_TO_PROTEIN_ASSOCIATION", "GENE_EXPRESSED_IN_CELL_TYPE"]
+      relationship_labels:
+        PERTURBED_IN:
+          source: Protein
+          target: Disease
+        GENE_TO_PROTEIN_ASSOCIATION:
+          source: Gene
+          target: Protein
+        GENE_EXPRESSED_IN_CELL_TYPE:
+          source: Gene
+          target: cell_type
+      properties:
+        Disease: ["name", "ICD10", "DSM5"]
+        cell_type: ["cell_type_name", "medium", "organism"]
+        Gene: ["id", "name", "taxon"]
+        Protein: ["name", "genes", "score", "taxon"]
+        PERTURBED_IN: ["evidence", "score", "source"]
+        GENE_TO_PROTEIN_ASSOCIATION: ["evidence", "score", "source"]
+        GENE_EXPRESSED_IN_CELL_TYPE: ["expression_level"]
+      parts_of_query:
+          [
+            "SELECT\\s+cell_type\\.cell_type_name",  # Matches the SELECT clause for cell_type_name
+            "FROM\\s+cell_type",                       # Matches the FROM clause
+            "JOIN\\s+Gene_EXPRESSED_IN_CELL_TYPE\\s+.*",  # Matches the JOIN with Gene_EXPRESSED_IN_CELL_TYPE
+            "JOIN\\s+Gene\\s+.*",                     # Matches the JOIN with Gene
+            "JOIN\\s+GENE_TO_PROTEIN_ASSOCIATION\\s+.*",  # Matches the JOIN with GENE_TO_PROTEIN_ASSOCIATION
+            "JOIN\\s+Protein\\s+.*",                  # Matches the JOIN with Protein
+            "JOIN\\s+PERTURBED_IN\\s+.*",             # Matches the JOIN with PERTURBED_IN
+            "JOIN\\s+Disease\\s+.*",                  # Matches the JOIN with Disease
+            "WHERE\\s+Disease\\.name\\s*=\\s*'NASH'\\s*;$"  # Matches the WHERE clause for Disease.name = 'NASH'
+          ]
+
+  # test ability to answer OTAR question with hetionet scheme
+  - case: OTAR1_hetionet
+    input:
+      kg_schema: hetionet
+      prompt: Which cell types are relevant for NASH disease?
+      language: Cypher
+    expected:
+      entities: ["cell_type", "Disease", "Gene", "Compound"]
+      relationships: ["ASSOCIATED_WITH", "INTERACTS_WITH", "PARTICIPATES_IN"]
+      relationship_labels:
+        ASSOCIATED_WITH:
+          source: Gene
+          target: Disease
+        INTERACTS_WITH:
+          source: Gene
+          target: Compound
+        PARTICIPATES_IN:
+          source: Gene
+          target: cell_type
+      properties:
+        Disease: ["name", "mesh_id", "umls_id"]
+        cell_type: ["name"]
+        Gene: ["symbol", "name", "description", "taxon"]
+        Compound: ["name", "smiles", "inchi"]
+        ASSOCIATED_WITH: ["score", "evidence"]
+        INTERACTS_WITH: ["action", "affinity"]
+        PARTICIPATES_IN: ["evidence"]
+      parts_of_query:
+          [
+            "^MATCH",
+            "DISTINCT",
+            "([a-zA-Z]*:Gene)",
+            "([a-zA-Z]*:Disease)",
+            "([a-zA-Z]*:cell_type)",
+            "NASH",
+            "\\(.*:Gene\\)-\\[:PARTICIPATES_IN\\]-|-\\[:PARTICIPATES_IN\\]-\\(.*:Gene\\)",
+            "RETURN\\s+(DISTINCT\\s+)?cell_type\\.name",
+          ]
+
+  # test ability to answer OTAR question with open-targets scheme
+  - case: OTAR1_open_targets
+    input:
+      kg_schema: open-targets
+      prompt: Which cell types are relevant for NASH disease?
+      language: Cypher
+    expected:
+      entities: ["cell_type", "disease", "human gene", "drug", "mouse gene", "go term"]
+      relationships: ["gene to disease association", "gene to go term association"]
+      relationship_labels:
+        gene_to_disease_association:
+          source: human gene
+          target: disease
+        gene_to_go_term_association:
+          source: human gene
+          target: go term
+      properties:
+        disease: ["code", "name", "description", "ontology"]
+        cell_type: ["name"]
+        human_gene: ["approvedSymbol", "approvedName", "biotype"]
+        mouse_gene: ["targetInModel", "targetInModelMgiId", "targetFromSourceId"]
+        drug: ["name", "description"]
+        go_term: ["name"]
+        gene_to_disease_association: ["literature", "score"]
+        gene_to_go_term_association: ["literature"]
+      parts_of_query:
+        [
+          "^MATCH",                             # Basic Cypher match clause
+          "DISTINCT",                           # Using DISTINCT to avoid duplicate results
+          "([a-zA-Z]*:human_gene)",             # Human gene label
+          "([a-zA-Z]*:disease)",                # Disease label
+          "([a-zA-Z]*:cell_type)",              # Cell type label
+          "NASH",                               # Disease name condition for 'NASH'
+          "\\(.*:human_gene\\)-\\[:gene_to_disease_association\\]-\\(.*:disease\\)",  # Association between human gene and disease
+          "\\(.*:human_gene\\)-\\[:gene_to_go_term_association\\]-\\(.*:go_term\\)",  # Association between human gene and GO term
+          "RETURN\\s+(DISTINCT\\s+)?cell_type\\.name",  # Return clause for cell_type names
+        ]
+
+    # test ability to answer question about drugs for a disease in gene_kg
+  - case: DRUG_GENE_KG1
+    input:
+      kg_schema: gene_kg
+      prompt: Are there already drugs for my disease of interest?
+      language: Cypher
+    expected:
+      entities: ["Disease", "Protein", "Gene"]
+      relationships: ["GENE_TO_DISEASE_ASSOCIATION", "GENE_TO_PROTEIN_ASSOCIATION"]
+      relationship_labels:
+        GENE_TO_DISEASE_ASSOCIATION:
+          source: Gene
+          target: Disease
+        GENE_TO_PROTEIN_ASSOCIATION:
+          source: Gene
+          target: Protein
+      properties:
+        Disease: ["name", "ICD10", "DSM5"]
+        Gene: ["id", "name", "taxon"]
+        Protein: ["name", "genes", "score", "taxon"]
+        GENE_TO_DISEASE_ASSOCIATION: ["evidence", "score", "source"]
+        GENE_TO_PROTEIN_ASSOCIATION: ["evidence", "score", "source"]
+      parts_of_query:
+        [
+          "^MATCH",
+          "([a-zA-Z]*:Disease)",
+          "([a-zA-Z]*:Gene)",
+          "([a-zA-Z]*:Protein)",
+          "\\(.*?\\)-\\[:GENE_TO_DISEASE_ASSOCIATION\\]->\\(.*?\\)",
+          "\\(.*?\\)-\\[:GENE_TO_PROTEIN_ASSOCIATION\\]->\\(.*?\\)",
+          "RETURN\\s+(DISTINCT\\s+)?Gene\\.name",
+        ]
+
+      # test ability to answer question about drugs for a disease in safety_kg
+  - case: DRUG_SAFETY_KG1
+    input:
+      kg_schema: safety_kg
+      prompt: Are there already drugs for my disease of interest?
+      language: Cypher
+    expected:
+      entities: ["CaseStudy", "Chemical", "Bioassay", "Organ"]
+      relationships: ["CASE_STUDY_RELEVANT_CHEMICAL", "CHEMICAL_MEASURED_WITH_BIOASSAY", "BIOASSAY_EXECUTED_ON_MODEL_SYSTEM"]
+      relationship_labels:
+        CASE_STUDY_RELEVANT_CHEMICAL:
+          source: CaseStudy
+          target: Chemical
+        CHEMICAL_MEASURED_WITH_BIOASSAY:
+          source: Chemical
+          target: Bioassay
+        BIOASSAY_EXECUTED_ON_MODEL_SYSTEM:
+          source: Bioassay
+          target: ModelSystem
+      properties:
+        CaseStudy: ["name", "description"]
+        Chemical: ["name", "CAS", "SMILES", "InChIKey"]
+        Bioassay: ["name", "measured"]
+        Organ: ["name"]
+        CASE_STUDY_RELEVANT_CHEMICAL: []
+        CHEMICAL_MEASURED_WITH_BIOASSAY: []
+        BIOASSAY_EXECUTED_ON_MODEL_SYSTEM: []
+      parts_of_query:
+        [
+          "^MATCH",
+          "([a-zA-Z]*:CaseStudy)",
+          "([a-zA-Z]*:Chemical)",
+          "([a-zA-Z]*:Bioassay)",
+          "([a-zA-Z]*:ModelSystem)",
+          "\\(.*?\\)-\\[:CASE_STUDY_RELEVANT_CHEMICAL\\]->\\(.*?\\)",
+          "\\(.*?\\)-\\[:CHEMICAL_MEASURED_WITH_BIOASSAY\\]->\\(.*?\\)",
+          "\\(.*?\\)-\\[:BIOASSAY_EXECUTED_ON_MODEL_SYSTEM\\]->\\(.*?\\)",
+          "RETURN\\s+(DISTINCT\\s+)?Chemical\\.name",
+        ]
+
+    # test ability to answer question about available drugs for a disease
+  - case: DRUG1
+    input:
+      kg_schema: hetionet
+      prompt: Are there already drugs for my disease of interest?
+      language: Cypher
+    expected:
+      entities: ["Disease", "Compound"]
+      relationships: ["COMPOUND_DISEASE_TREATMENT"]
+      relationship_labels:
+        COMPOUND_DISEASE_TREATMENT:
+          source: Compound
+          target: Disease
+      properties:
+        Disease: ["name", "mesh_id", "umls_id"]
+        Compound: ["name", "smiles", "inchi"]
+        COMPOUND_DISEASE_TREATMENT: ["phase", "source"]
+      parts_of_query:
+        [
+          "^MATCH",
+          "([a-zA-Z]*:Disease)",
+          "([a-zA-Z]*:Compound)",
+          "\\(.*?\\)-\\[:COMPOUND_DISEASE_TREATMENT\\]->\\(.*?\\)",
+          "RETURN\\s+(DISTINCT\\s+)?Compound\\.name",
+        ]
+        
+  # test ability to answer question about drugs for a disease in open-targets
+  - case: DRUG_OPEN_TARGETS1
+    input:
+      kg_schema: open-targets
+      prompt: Are there already drugs for my disease of interest?
+      language: Cypher
+    expected:
+      entities: ["Disease", "Drug"]
+      relationships: ["GENE_TO_DISEASE_ASSOCIATION"]
+      relationship_labels:
+        GENE_TO_DISEASE_ASSOCIATION:
+          source: Gene
+          target: Disease
+      properties:
+        Disease: ["code", "name", "description", "ontology"]
+        Drug: ["name", "description"]
+        GENE_TO_DISEASE_ASSOCIATION: ["score", "literature"]
+      parts_of_query:
+        [
+          "^MATCH",
+          "([a-zA-Z]*:Disease)",
+          "([a-zA-Z]*:Drug)",
+          "\\(.*?\\)-\\[:GENE_TO_DISEASE_ASSOCIATION\\]->\\(.*?\\)",
+          "RETURN\\s+(DISTINCT\\s+)?Drug\\.name",
+        ]
+
+
+
   # test cypher query with single-word entities
   - case: single_word
     input:
       kg_schema: gene_kg
       prompt: Which genes are associated with mucoviscidosis?
+      language: Cypher
     expected:
       entities: ["Gene", "Disease"]
       relationships: ["GeneToPhenotypeAssociation"]
@@ -62,6 +390,7 @@ biocypher_query_generation:
     input:
       kg_schema: gene_kg
       prompt: Which genes are expressed in fibroblasts?
+      language: Cypher
     expected:
       entities: ["Gene", "CellType"]
       relationships: ["GeneExpressedInCellType"]
@@ -90,6 +419,7 @@ biocypher_query_generation:
     input:
       kg_schema: gene_kg
       prompt: Which proteins are associated with the disease having ICD10 code 'E10', what are their scores, and what is the gene related to these proteins?
+      language: Cypher
     expected:
       entities: ["Protein", "Disease", "Gene"]
       relationships: ["GeneToPhenotypeAssociation", "GeneToProteinAssociation"]
@@ -124,6 +454,7 @@ biocypher_query_generation:
     input:
       kg_schema: safety_kg
       prompt: Which organs are in our dataset?
+      language: Cypher
     expected:
       entities: ["Organ"]
       relationships: []
@@ -136,6 +467,7 @@ biocypher_query_generation:
     input:
       kg_schema: safety_kg
       prompt: Which model systems are used in the brain?
+      language: Cypher
     expected:
       entities: ["ModelSystem", "Organ"]
       relationships: ["ModelSystemRelevantToOrgan"]
@@ -162,6 +494,7 @@ biocypher_query_generation:
     input:
       kg_schema: safety_kg
       prompt: Which case studies are performed on the brain, and which chemicals are used in these case studies?
+      language: Cypher
     expected:
       entities: ["CaseStudy", "Organ", "Chemical"]
       relationships: ["CaseStudyRelatedOrgan", "CaseStudyRelevantChemical"]
