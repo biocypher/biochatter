@@ -5,7 +5,7 @@ from urllib.parse import urlencode
 import pytest
 
 from biochatter._misc import ensure_iterable
-from biochatter.api_agent import BioToolsQueryBuilder, OncoKBQueryBuilder
+from biochatter.api_agent import BioToolsQueryBuilder, OncoKBQueryBuilder, ScanpyPlQueryBuilder
 
 from .benchmark_utils import (
     get_result_file_path,
@@ -39,6 +39,8 @@ def test_api_calling(
             builder = OncoKBQueryBuilder()
         elif "biotools" in yaml_data["case"]:
             builder = BioToolsQueryBuilder()
+        elif "scanpy:pl" in yaml_data["case"]:
+            builder = ScanpyPlQueryBuilder()
         parameters = builder.parameterise_query(
             question=yaml_data["input"]["prompt"],
             conversation=conversation,
