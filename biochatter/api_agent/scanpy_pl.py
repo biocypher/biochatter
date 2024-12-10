@@ -151,6 +151,10 @@ class ScanpyPlQueryParameters(BaseModel):
         default=None,
         description="scanpy.pl.dotplot(adata, var_names, groupby, *, use_raw=None, log=False, num_categories=7, categories_order=None, expression_cutoff=0.0, mean_only_expressed=False, standard_scale=None, title=None, colorbar_title='Mean expression\\nin group', size_title='Fraction of cells\\nin group (%)', figsize=None, dendrogram=False, gene_symbols=None, var_group_positions=None, var_group_labels=None, var_group_rotation=None, layer=None, swap_axes=False, dot_color_df=None, show=None, save=None, ax=None, return_fig=False, vmin=None, vmax=None, vcenter=None, norm=None, cmap='Reds', dot_max=None, dot_min=None, smallest_dot=0.0, **kwds)"
     )
+    question_uuid: str | None = Field(
+        default_factory=lambda: str(uuid.uuid4()),
+        description="Unique identifier for the question.",
+    )
 
 
 class ScanpyPlQueryBuilder(BaseQueryBuilder):
