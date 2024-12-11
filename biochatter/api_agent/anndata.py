@@ -95,10 +95,18 @@ class ReadH5AD(BaseAPIModel):
 
     method_name: str = Field(default="io.read_h5ad", description="NEVER CHANGE")
     filename: str = Field(..., description="Path to the .h5ad file")
-    backed: str = Field(None, description="Mode to access file: None, 'r' for read-only")
-    as_sparse: str = Field(None, description="Convert to sparse format: 'csr', 'csc', or None")
-    as_sparse_fmt: str = Field(None, description="Sparse format if converting, e.g., 'csr'")
-    index_unique: str = Field(None, description="Make index unique by appending suffix if needed")
+    backed: str = Field(
+        None, description="Mode to access file: None, 'r' for read-only"
+    )
+    as_sparse: str = Field(
+        None, description="Convert to sparse format: 'csr', 'csc', or None"
+    )
+    as_sparse_fmt: str = Field(
+        None, description="Sparse format if converting, e.g., 'csr'"
+    )
+    index_unique: str = Field(
+        None, description="Make index unique by appending suffix if needed"
+    )
 
 
 class ReadZarr(BaseAPIModel):
@@ -114,7 +122,9 @@ class ReadCSV(BaseAPIModel):
     method_name: str = Field(default="io.read_csv", description="NEVER CHANGE")
     filename: str = Field(..., description="Path to the .csv file")
     delimiter: str = Field(None, description="Delimiter used in the .csv file")
-    first_column_names: bool = Field(None, description="Whether the first column contains names")
+    first_column_names: bool = Field(
+        None, description="Whether the first column contains names"
+    )
 
 
 class ReadExcel(BaseAPIModel):
@@ -160,7 +170,9 @@ class ReadText(BaseAPIModel):
     method_name: str = Field(default="io.read_text", description="NEVER CHANGE")
     filename: str = Field(..., description="Path to the text file")
     delimiter: str = Field(None, description="Delimiter used in the file")
-    first_column_names: bool = Field(None, description="Whether the first column contains names")
+    first_column_names: bool = Field(
+        None, description="Whether the first column contains names"
+    )
 
 
 class AnnDataIOQueryBuilder(BaseQueryBuilder):
@@ -188,7 +200,7 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
             A Callable object that can execute the query.
 
         """
-        runnable = conversation.chat.bind_tools(query_parameters, system_prompt=ANNDATA_IO_QUERY_PROMPT)
+        runnable = conversation.chat.bind_tools(query_parameters)
         return runnable | PydanticToolsParser(tools=query_parameters)
 
     def parameterise_query(
@@ -225,8 +237,10 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
             ReadText,
             ReadZarr,
         ]
-        runnable = self.create_runnable(conversation=conversation, query_parameters=tools)
+        runnable = self.create_runnable(
+            conversation=conversation, query_parameters=tools
+        )
         anndata_io_call_obj = runnable.invoke(
-            {"input": f"Answer:\n{question}"},
+            question,
         )
         return anndata_io_call_obj
