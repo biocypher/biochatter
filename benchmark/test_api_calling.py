@@ -5,7 +5,7 @@ from urllib.parse import urlencode
 import pytest
 
 from biochatter._misc import ensure_iterable
-from biochatter.api_agent import BioToolsQueryBuilder, OncoKBQueryBuilder, ScanpyPlQueryBuilder
+from biochatter.api_agent import BioToolsQueryBuilder, OncoKBQueryBuilder, ScanpyPlQueryBuilder, format_as_rest_call, format_as_python_call
 
 from .benchmark_utils import (
     get_result_file_path,
@@ -50,12 +50,7 @@ def test_web_api_calling(
             conversation=conversation,
         )
 
-        params = parameters.dict(exclude_none=True)
-        endpoint = params.pop("endpoint")
-        base_url = params.pop("base_url")
-        params.pop("question_uuid")
-        full_url = f"{base_url.rstrip('/')}/{endpoint.lstrip('/')}"
-        api_query = f"{full_url}?{urlencode(params)}"
+        api_query = format_as_rest_call(parameters)
 
         score = []
         for expected_part in ensure_iterable(
@@ -89,7 +84,11 @@ def test_python_api_calling(
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     yaml_data = test_data_api_calling
 
-    # skip if already run
+    skip_if_already_run(
+        model_name=model_name,
+        task=task,
+        md5_hash=yaml_data["hash"],
+    )
 
     if "scanpy" not in yaml_data["case"]:
         pytest.skip(
@@ -105,14 +104,13 @@ def test_python_api_calling(
             conversation=conversation,
         )
 
-        params = parameters.dict(exclude_none=True)
-        params.pop("question_uuid")
+        method_call = format_as_python_call(parameters)
 
         score = []
         for expected_part in ensure_iterable(
             yaml_data["expected"]["parts_of_query"],
         ):
-            if any(expected_part in str(v) for v in params.values()):
+            if re.search(expected_part, method_call):
                 score.append(True)
             else:
                 score.append(False)
