@@ -99,13 +99,17 @@ class ReadH5AD(BaseModel):
 
     filename: str = Field(..., description="Path to the .h5ad file")
     backed: str = Field(
-        None, description="Mode to access file: None, 'r' for read-only")
+        None, description="Mode to access file: None, 'r' for read-only"
+    )
     as_sparse: str = Field(
-        None, description="Convert to sparse format: 'csr', 'csc', or None")
+        None, description="Convert to sparse format: 'csr', 'csc', or None"
+    )
     as_sparse_fmt: str = Field(
-        None, description="Sparse format if converting, e.g., 'csr'")
+        None, description="Sparse format if converting, e.g., 'csr'"
+    )
     index_unique: str = Field(
-        None, description="Make index unique by appending suffix if needed")
+        None, description="Make index unique by appending suffix if needed"
+    )
 
 
 class ReadZarr(BaseModel):
@@ -120,7 +124,8 @@ class ReadCSV(BaseModel):
     filename: str = Field(..., description="Path to the .csv file")
     delimiter: str = Field(None, description="Delimiter used in the .csv file")
     first_column_names: bool = Field(
-        None, description="Whether the first column contains names")
+        None, description="Whether the first column contains names"
+    )
 
 
 class ReadExcel(BaseModel):
@@ -128,8 +133,7 @@ class ReadExcel(BaseModel):
 
     filename: str = Field(..., description="Path to the .xlsx file")
     sheet: str = Field(None, description="Sheet name or index to read from")
-    dtype: str = Field(
-        None, description="Data type for the resulting dataframe")
+    dtype: str = Field(None, description="Data type for the resulting dataframe")
 
 
 class ReadHDF(BaseModel):
@@ -146,10 +150,8 @@ class ReadLoom(BaseModel):
     sparse: bool = Field(None, description="Whether to read data as sparse")
     cleanup: bool = Field(None, description="Clean up invalid entries")
     X_name: str = Field(None, description="Name to use for X matrix")
-    obs_names: str = Field(
-        None, description="Column to use for observation names")
-    var_names: str = Field(
-        None, description="Column to use for variable names")
+    obs_names: str = Field(None, description="Column to use for observation names")
+    var_names: str = Field(None, description="Column to use for variable names")
 
 
 class ReadMTX(BaseModel):
@@ -165,7 +167,8 @@ class ReadText(BaseModel):
     filename: str = Field(..., description="Path to the text file")
     delimiter: str = Field(None, description="Delimiter used in the file")
     first_column_names: bool = Field(
-        None, description="Whether the first column contains names")
+        None, description="Whether the first column contains names"
+    )
 
 
 class AnnDataIOQueryBuilder(BaseQueryBuilder):
