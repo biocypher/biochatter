@@ -102,18 +102,19 @@ class BaseFetcher(ABC):
     @abstractmethod
     def fetch_results(
         self,
-        query_model: BaseModel,
+        query_models: list[BaseModel],
         retries: int | None = 3,
     ):
         """Fetch results by submitting a query.
-        
+
         Can implement a multi-step procedure if submitting and fetching are
         distinct processes (e.g., in the case of long processing times as in the
         case of BLAST).
 
         Args:
         ----
-            query_model: the Pydantic model describing the parameterised query
+            query_models: list of Pydantic models describing the parameterised
+                queries
 
         """
 
