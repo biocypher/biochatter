@@ -11,7 +11,7 @@ import uuid
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Optional
 
-from langchain.chains.openai_functions import create_structured_output_runnable
+from langchain.chains.openai_functions import create_structured_output_runnable, PydanticToolsParser
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
@@ -133,7 +133,8 @@ class ReadExcel(BaseModel):
 
     filename: str = Field(..., description="Path to the .xlsx file")
     sheet: str = Field(None, description="Sheet name or index to read from")
-    dtype: str = Field(None, description="Data type for the resulting dataframe")
+    dtype: str = Field(
+        None, description="Data type for the resulting dataframe")
 
 
 class ReadHDF(BaseModel):
@@ -150,8 +151,10 @@ class ReadLoom(BaseModel):
     sparse: bool = Field(None, description="Whether to read data as sparse")
     cleanup: bool = Field(None, description="Clean up invalid entries")
     X_name: str = Field(None, description="Name to use for X matrix")
-    obs_names: str = Field(None, description="Column to use for observation names")
-    var_names: str = Field(None, description="Column to use for variable names")
+    obs_names: str = Field(
+        None, description="Column to use for observation names")
+    var_names: str = Field(
+        None, description="Column to use for variable names")
 
 
 class ReadMTX(BaseModel):
@@ -172,7 +175,7 @@ class ReadText(BaseModel):
 
 
 class AnnDataIOQueryBuilder(BaseQueryBuilder):
-    """A class for building a BlastQuery object."""
+    """A class for building a AnndataIO query object."""
 
     def create_runnable(
         self,
@@ -226,13 +229,25 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
             BlastQuery: the parameterised query object (Pydantic model)
 
         """
-        tools=[]
+        tools = [
+            ReadCSV,
+            ReadExcel,
+            ReadH5AD,
+            ReadHDF,
+            ReadLoom,
+            ReadMTX,
+            ReadText,
+            ReadZarr,
+        ]
         runnable = self.create_runnable(
-            query_parameters=AnnDataIOParameters,
+            query_parameters=tools,
             conversation=conversation,
         )
-        blast_call_obj = runnable.invoke(
+
+        chain = conversation.bind_tools(
+            tools) | PydanticToolsParser(tools=tools)
+        anndata_io_call_obj = chain.invoke(
             {"input": f"Answer:\n{question} based on:\n {ANNDATA_IO_QUERY_PROMPT}"},
         )
-        blast_call_obj.question_uuid = str(uuid.uuid4())
-        return blast_call_obj
+        anndata_io_call_obj.question_uuid = str(uuid.uuid4())
+        return anndata_io_call_obj
