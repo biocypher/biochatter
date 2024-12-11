@@ -12,7 +12,7 @@ from .blast import (
     BlastQueryParameters,
 )
 from .oncokb import OncoKBFetcher, OncoKBInterpreter, OncoKBQueryBuilder
-from .scanpy_tl import ScanpyTLQueryBuilder
+from .scanpy_tl import ScanpyTLQueryBuilder, ScanpyTLQueryFetcher, ScanpyTLQueryInterpreter
 
 __all__ = [
     "BaseFetcher",
@@ -29,5 +29,7 @@ __all__ = [
     "BioToolsInterpreter",
     "BioToolsQueryBuilder",
     "APIAgent",
-    "ScanpyTLQueryBuilder",
+    "ScanpyTLQueryBuilder", 
+    "ScanpyTLQueryFetcher", 
+    "ScanpyTLQueryInterpreter",
 ]

@@ -1,4 +1,4 @@
-"""Module for interacting with the bio.tools API."""
+"""Module for interacting with the `scanpy` API for data transformation tools (`tl`)."""
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
@@ -150,5 +150,3 @@ class ScanpyTLQueryBuilder(BaseQueryBuilder):
         chain = llm_with_tools | PydanticToolsParser(tools=generated_classes)
         result = chain.invoke(query)
         return result
-    
-
