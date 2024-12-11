@@ -505,5 +505,4 @@ class ScanpyPlQueryBuilder(BaseQueryBuilder):
             ScanpyPlTsneQueryParameters,
         ]
         runnable = self.create_runnable(conversation=conversation, query_parameters=tools)
-        scanpy_pl_call_obj = runnable.invoke(question)
-        return scanpy_pl_call_obj
+        return runnable.invoke(question)
