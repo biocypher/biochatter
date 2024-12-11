@@ -13,6 +13,7 @@ from .blast import (
 )
 from .oncokb import OncoKBFetcher, OncoKBInterpreter, OncoKBQueryBuilder
 from .scanpy_pl import ScanpyPlQueryBuilder
+from .formatters import format_as_rest_call, format_as_python_call
 
 __all__ = [
     "BaseFetcher",
@@ -30,4 +31,6 @@ __all__ = [
     "BioToolsQueryBuilder",
     "APIAgent",
     "ScanpyPlQueryBuilder",
+    "format_as_rest_call",
+    "format_as_python_call",
 ]
