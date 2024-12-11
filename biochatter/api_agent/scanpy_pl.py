@@ -140,7 +140,7 @@ class ScanpyPlScatterQueryParameters(BaseModel):
         default="sc.pl.scatter",
         description="The name of the method to call.",
     )
-    question_uuid: str | None = Field(
+    question_uuid: str = Field(
         default_factory=lambda: str(uuid.uuid4()),
         description="Unique identifier for the question.",
     )
@@ -404,11 +404,11 @@ class ScanpyPlTsneQueryParameters(BaseModel):
         default=False,
         description="Add a thin border around groups of dots.",
     )
-    outline_width: tuple[float, float] = Field(
+    outline_width: tuple[float, ...] = Field(
         default=(0.3, 0.05),
         description="Width of the outline as a fraction of the scatter dot size.",
     )
-    outline_color: tuple[str, str] = Field(
+    outline_color: tuple[str, ...] = Field(
         default=("black", "white"),
         description="Colors for the outline: border color and gap color.",
     )
@@ -472,7 +472,7 @@ class ScanpyPlQueryBuilder(BaseQueryBuilder):
             A Callable object that can execute the query.
 
         """
-        runnable = conversation.chat.bind_tools(query_parameters, system_prompt=SCANPY_PL_QUERY_PROMPT)
+        runnable = conversation.chat.bind_tools(query_parameters)
         return runnable | PydanticToolsParser(tools=query_parameters)
 
     def parameterise_query(
@@ -505,7 +505,5 @@ class ScanpyPlQueryBuilder(BaseQueryBuilder):
             ScanpyPlTsneQueryParameters,
         ]
         runnable = self.create_runnable(conversation=conversation, query_parameters=tools)
-        scanpy_pl_call_obj = runnable.invoke(
-            {"input": f"Answer:\n{question}"},
-        )
+        scanpy_pl_call_obj = runnable.invoke(question)
         return scanpy_pl_call_obj
