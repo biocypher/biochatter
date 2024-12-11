@@ -5,7 +5,7 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from langchain_core.output_parsers import PydanticToolsParser
-from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
