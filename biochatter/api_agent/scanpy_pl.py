@@ -136,6 +136,10 @@ Plot results of simulation.
 class ScanpyPlScatterQueryParameters(BaseModel):
     """Parameters for querying the scanpy `pl.scatter` API."""
 
+    method_name: str = Field(
+        default="sc.pl.scatter",
+        description="The name of the method to call.",
+    )
     question_uuid: str | None = Field(
         default_factory=lambda: str(uuid.uuid4()),
         description="Unique identifier for the question.",
