@@ -28,7 +28,12 @@ from biochatter.api_agent.oncokb import (
     OncoKBQueryBuilder,
     OncoKBQueryParameters,
 )
-from biochatter.api_agent.scanpy_tl import ScanpyTLQueryBuilder
+from biochatter.api_agent.scanpy_pl import (
+    SCANPY_PL_QUERY_PROMPT,
+    ScanpyPlQueryBuilder,
+    ScanpyPlQueryParameters,
+)
+
 from biochatter.llm_connect import Conversation, GptConversation
 
 
@@ -424,73 +429,46 @@ class TestOncoKBInterpreter:
             {"input": {expected_summary_prompt}},
         )
 
-class TestScanpyTLQueryBuilder:
+class TestScanpyPlQueryBuilder:
     @pytest.fixture()
-    def mock_generate_pydantic_classes(self):
-        with patch("biochatter.api_agent.generate_pydantic_classes_from_module.generate_pydantic_classes") as mock:
-            # Return a fake dictionary of generated classes
-            mock.return_value = {"leiden": MagicMock()}
-            yield mock
+    def mock_create_runnable(self):
+        with patch(
+            "biochatter.api_agent.scanpy_pl.create_structured_output_runnable"
+        ) as mock:
+            mock_runnable = MagicMock()
+            mock.return_value = mock_runnable
+            yield mock_runnable
 
-    @pytest.fixture()
-    def mock_pydantic_tools_parser(self):
-        with patch("langchain_core.output_parsers.PydanticToolsParser") as mock_parser_cls:
-            mock_parser_instance = MagicMock()
-            mock_parser_cls.return_value = mock_parser_instance
-            yield mock_parser_cls, mock_parser_instance
-
-    def test_parameterise_query(
-        self,
-        mock_generate_pydantic_classes,
-        mock_pydantic_tools_parser
-    ):
+    def test_create_runnable(self, mock_create_runnable):
         # Arrange
-        query_builder = ScanpyTLQueryBuilder()
+        query_builder = ScanpyPlQueryBuilder()
         mock_conversation = MagicMock()
-        mock_llm = MagicMock()
-        mock_conversation.chat = mock_llm
 
-        # Mock the LLM with tools
-        mock_llm_with_tools = MagicMock()
-        mock_llm.bind_tools.return_value = mock_llm_with_tools
+        # Act
+        result = query_builder.create_runnable(
+            ScanpyPlQueryParameters,
+            mock_conversation,
+        )
 
-        # When we do llm_with_tools | PydanticToolsParser(...) it should return a mock chain
-        mock_parser_cls, mock_parser_instance = mock_pydantic_tools_parser
-        mock_chain = MagicMock()
-        # The '|' operator (pipe) can be emulated by setting return value on __or__
-        mock_llm_with_tools.__or__.return_value = mock_chain
+        # Assert
+        assert result == mock_create_runnable
 
-        # The chain.invoke(...) result
-        mock_result = MagicMock()
-        mock_chain.invoke.return_value = mock_result
-
-        question = "Find the best parameters for leiden clustering."
+    def test_parameterise_query(self, mock_create_runnable):
+        # Arrange
+        query_builder = ScanpyPlQueryBuilder()
+        mock_conversation = MagicMock()
+        question = "Create a scatter plot of n_genes_by_counts vs total_counts."
+        expected_input = f"Answer:\n{question} based on:\n {SCANPY_PL_QUERY_PROMPT}"
+        mock_query_obj = MagicMock()
+        mock_create_runnable.invoke.return_value = mock_query_obj
 
         # Act
         result = query_builder.parameterise_query(question, mock_conversation)
 
         # Assert
-        # Check that generate_pydantic_classes was called with scanpy.tl
-        args, kwargs = mock_generate_pydantic_classes.call_args
-        assert "scanpy.tl" in str(args[0])  # or more robust checks depending on your imports
-
-        # Check that bind_tools was called on the llm
-        mock_llm.bind_tools.assert_called_once()
-
-        # The query should have been passed to chain.invoke
-        # query is built as:
-        # query = [
-        #   ("system", "You're an expert data scientist"), 
-        #   ("human", {question}),
-        # ]
-        mock_chain.invoke.assert_called_once_with([
-            ("system", "You're an expert data scientist"),
-            ("human", {question}),
-        ])
-
-        # Ensure the returned result is the mock_result
-        assert result == mock_result
-
+        mock_create_runnable.invoke.assert_called_once_with({"input": expected_input})
+        assert hasattr(result, "question_uuid")
+        assert result == mock_query_obj
 
 
 

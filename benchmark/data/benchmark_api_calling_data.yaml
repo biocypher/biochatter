@@ -73,10 +73,24 @@ api_calling:
     expected:
       parts_of_query:
         ["https://bio.tools/api/t/", "\\?topic=", "[mM]etabolomics"]
-  - case: scanpy:pp:pca
+  - case: scanpy:pl:scatter
     input:
       prompt:
-        fuzzy_search: "Make a PCA keeping n_comps."
+        exact_variable_names: "Make a scatter plot of n_genes_by_counts vs total_counts."
     expected:
       parts_of_query:
-        ["scanpy.pp.pca\\(", "n_comps=", "\\)"]
+        ["sc.pl.scatter\\(", "n_genes_by_counts", "total_counts", "\\)"]
+  - case: scanpy:pl:pca
+    input:
+      prompt:
+        fuzzy_search: "plot the PCA of the data colored by n_genes_by_counts and total_counts."
+    expected:
+      parts_of_query:
+        ["sc.pl.pca\\(", ["n_genes_by_counts", "total_counts"], "\\)"]
+  - case: scanpy:pl:tsne
+    input:
+      prompt:
+        fuzzy_search: "plot the tsne embeddding of the data colored by n_genes_by_counts."
+    expected:
+      parts_of_query:
+        ["sc.pl.tsne\\(", "n_genes_by_counts", "\\)"]
