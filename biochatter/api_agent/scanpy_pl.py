@@ -867,6 +867,7 @@ class ScanpyPlQueryBuilder(BaseQueryBuilder):
             ScanpyPlPcaQueryParameters,
             ScanpyPlTsneQueryParameters,
             ScanpyPlUmapQueryParameters,
+            ScanpyPlDrawGraphQueryParameters,
         ]
         runnable = self.create_runnable(conversation=conversation, query_parameters=tools)
         return runnable.invoke(question)
