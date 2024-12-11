@@ -105,11 +105,19 @@ Compute densities on embeddings.
 """
 class ScanpyTLQueryBuilder(BaseQueryBuilder):
     """A class for building an ScanpyTLQuery object."""
+    
+    def create_runnable(
+        self,
+        query_parameters: BaseModel,
+        conversation: "Conversation",
+    ):
+        pass
+    
     def parameterise_query(
         self,
         question: str,
         conversation: "Conversation",
-    ) -> ScanpyTLQueryParameters:
+    ):
         """Generate an ScanpyTLQuery object.
 
         Generate a ScanpyTLQuery object based on the given question, prompt,
@@ -142,3 +150,5 @@ class ScanpyTLQueryBuilder(BaseQueryBuilder):
         chain = llm_with_tools | PydanticToolsParser(tools=generated_classes)
         result = chain.invoke(query)
         return result
+    
+
