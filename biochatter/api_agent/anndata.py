@@ -9,15 +9,13 @@
 
 import uuid
 from collections.abc import Callable
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
-from langchain.chains.openai_functions import create_structured_output_runnable
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate
+from langchain.chains.openai_functions import PydanticToolsParser, create_structured_output_runnable
 from langchain_core.pydantic_v1 import BaseModel, Field
 from pydantic import BaseModel, Field
 
-from biochatter.llm_connect import Conversation, GptConversation
+from biochatter.llm_connect import Conversation
 
 from .abc import BaseQueryBuilder
 
@@ -98,18 +96,10 @@ class ReadH5AD(BaseModel):
     """Read .h5ad-formatted hdf5 file."""
 
     filename: str = Field(..., description="Path to the .h5ad file")
-    backed: str = Field(
-        None, description="Mode to access file: None, 'r' for read-only"
-    )
-    as_sparse: str = Field(
-        None, description="Convert to sparse format: 'csr', 'csc', or None"
-    )
-    as_sparse_fmt: str = Field(
-        None, description="Sparse format if converting, e.g., 'csr'"
-    )
-    index_unique: str = Field(
-        None, description="Make index unique by appending suffix if needed"
-    )
+    backed: str = Field(None, description="Mode to access file: None, 'r' for read-only")
+    as_sparse: str = Field(None, description="Convert to sparse format: 'csr', 'csc', or None")
+    as_sparse_fmt: str = Field(None, description="Sparse format if converting, e.g., 'csr'")
+    index_unique: str = Field(None, description="Make index unique by appending suffix if needed")
 
 
 class ReadZarr(BaseModel):
@@ -123,9 +113,7 @@ class ReadCSV(BaseModel):
 
     filename: str = Field(..., description="Path to the .csv file")
     delimiter: str = Field(None, description="Delimiter used in the .csv file")
-    first_column_names: bool = Field(
-        None, description="Whether the first column contains names"
-    )
+    first_column_names: bool = Field(None, description="Whether the first column contains names")
 
 
 class ReadExcel(BaseModel):
@@ -166,6 +154,82 @@ class ReadText(BaseModel):
 
     filename: str = Field(..., description="Path to the text file")
     delimiter: str = Field(None, description="Delimiter used in the file")
-    first_column_names: bool = Field(
-        None, description="Whether the first column contains names"
-    )
+    first_column_names: bool = Field(None, description="Whether the first column contains names")
+
+
+class AnnDataIOQueryBuilder(BaseQueryBuilder):
+    """A class for building a AnndataIO query object."""
+
+    def create_runnable(
+        self,
+        query_parameters: list["BaseModel"],
+        conversation: "Conversation",
+    ) -> Callable:
+        """Create a runnable object for executing queries.
+
+        Creates a runnable using the LangChain
+        `create_structured_output_runnable` method.
+
+        Args:
+        ----
+            query_parameters: A Pydantic data model that specifies the fields of
+                the API that should be queried.
+
+            conversation: A BioChatter conversation object.
+
+        Returns:
+        -------
+            A Callable object that can execute the query.
+
+        """
+        return create_structured_output_runnable(
+            output_schema=query_parameters,
+            llm=conversation.chat,
+            prompt=self.structured_output_prompt,
+        )
+
+    def parameterise_query(
+        self,
+        question: str,
+        conversation: "Conversation",
+    ) -> list["BaseModel"]:
+        """Generate a BlastQuery object.
+
+        Generates the object based on the given question, prompt, and
+        BioChatter conversation. Uses a Pydantic model to define the API fields.
+        Creates a runnable that can be invoked on LLMs that are qualified to
+        parameterise functions.
+
+        Args:
+        ----
+            question (str): The question to be answered.
+
+            conversation: The conversation object used for parameterising the
+                BlastQuery.
+
+        Returns:
+        -------
+            BlastQuery: the parameterised query object (Pydantic model)
+
+        """
+        tools = [
+            ReadCSV,
+            ReadExcel,
+            ReadH5AD,
+            ReadHDF,
+            ReadLoom,
+            ReadMTX,
+            ReadText,
+            ReadZarr,
+        ]
+        runnable = self.create_runnable(
+            query_parameters=tools,
+            conversation=conversation,
+        )
+
+        chain = runnable.bind_tools(tools) | PydanticToolsParser(tools=tools)
+        anndata_io_call_obj = chain.invoke(
+            {"input": f"Answer:\n{question} based on:\n {ANNDATA_IO_QUERY_PROMPT}"},
+        )
+        anndata_io_call_obj.question_uuid = str(uuid.uuid4())
+        return anndata_io_call_obj
