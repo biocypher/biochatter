@@ -104,7 +104,7 @@ def test_python_api_calling(
             conversation=conversation,
         )
 
-        method_call = format_as_python_call(parameters)
+        method_call = format_as_python_call(parameters[0])
 
         score = []
         for expected_part in ensure_iterable(
