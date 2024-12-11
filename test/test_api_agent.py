@@ -11,6 +11,9 @@ from biochatter.api_agent.abc import (
     BaseInterpreter,
     BaseQueryBuilder,
 )
+from biochatter.api_agent.anndata import (
+    AnnDataIOQueryBuilder,
+)
 from biochatter.api_agent.api_agent import APIAgent
 from biochatter.api_agent.blast import (
     BLAST_QUERY_PROMPT,
@@ -29,6 +32,11 @@ from biochatter.api_agent.oncokb import (
     OncoKBQueryParameters,
 )
 from biochatter.api_agent.scanpy_tl import ScanpyTLQueryBuilder
+from biochatter.api_agent.scanpy_pl import (
+    SCANPY_PL_QUERY_PROMPT,
+    ScanpyPlQueryBuilder,
+    ScanpyPlScatterQueryParameters,
+)
 from biochatter.llm_connect import Conversation, GptConversation
 
 
@@ -54,15 +62,19 @@ class TestQueryBuilder(BaseQueryBuilder):
         self,
         question: str,
         conversation: Conversation,
-    ) -> BaseModel:
-        return "mock_result"
+    ) -> list[BaseModel]:
+        return ["mock_result"]
 
 
 class TestFetcher(BaseFetcher):
     def submit_query(self, request_data):
         return "mock_url"
 
-    def fetch_results(self, question_uuid, query_return, max_attempts=10000):
+    def fetch_results(
+        self,
+        request_data: list[BaseModel],
+        retries: int | None = 3,
+    ) -> str:
         return "mock_results"
 
 
@@ -80,22 +92,22 @@ class MockModel(BaseModel):
     field: str
 
 
-@pytest.fixture()
+@pytest.fixture
 def query_builder():
     return TestQueryBuilder()
 
 
-@pytest.fixture()
+@pytest.fixture
 def fetcher():
     return TestFetcher()
 
 
-@pytest.fixture()
+@pytest.fixture
 def interpreter():
     return TestInterpreter()
 
 
-@pytest.fixture()
+@pytest.fixture
 def test_agent(query_builder, fetcher, interpreter):
     return APIAgent(
         conversation_factory=MagicMock(),
@@ -108,7 +120,7 @@ def test_agent(query_builder, fetcher, interpreter):
 class TestAPIAgent:
     def test_parameterise_query(self, test_agent):
         result = test_agent.parameterise_query("Mock question")
-        assert result == "mock_result"
+        assert result == ["mock_result"]
 
     def test_fetch_results(self, test_agent):
         result = test_agent.fetch_results("mock_query_model")
@@ -175,8 +187,10 @@ class TestBlastQueryBuilder:
         mock_runnable.invoke.assert_called_once_with(
             {"input": f"Answer:\n{question} based on:\n {BLAST_QUERY_PROMPT}"},
         )
-        assert result == mock_blast_query_parameters
-        assert hasattr(result, "question_uuid")
+        assert isinstance(result, list)
+        assert len(result) == 1
+        assert result[0] == mock_blast_query_parameters
+        assert hasattr(result[0], "question_uuid")
 
 
 class TestBlastFetcher:
@@ -196,20 +210,20 @@ class TestBlastFetcher:
         mock_submit_query.assert_called_once_with(query_parameters)
         assert result == mock_response
 
-    @patch("biochatter.api_agent.blast.BlastFetcher._fetch_results")
+    @patch("biochatter.api_agent.blast.BlastFetcher.fetch_results")
     def test_fetch_results(self, mock_fetch_results):
         # Arrange
         mock_response = MagicMock()
         mock_fetch_results.return_value = mock_response
 
-        query_id = "test_query_id"
+        query_parameters = [BlastQueryParameters()]
         fetcher = BlastFetcher()
 
         # Act
-        result = fetcher._fetch_results(query_id)
+        result = fetcher.fetch_results(query_parameters)
 
         # Assert
-        mock_fetch_results.assert_called_once_with(query_id)
+        mock_fetch_results.assert_called_once_with([query_parameters[0]])
         assert result == mock_response
 
     @patch("requests.post")
@@ -240,13 +254,13 @@ class TestBlastFetcher:
             fetcher._submit_query(query_parameters)
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_conversation():
     with patch("biochatter.llm_connect.GptConversation") as mock:
         yield mock
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_output_parser():
     with patch("biochatter.api_agent.blast.StrOutputParser") as mock:
         mock_parser = MagicMock()
@@ -254,7 +268,7 @@ def mock_output_parser():
         yield mock_parser
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_chain(mock_conversation, mock_output_parser):
     with patch(
         "biochatter.api_agent.blast.ChatPromptTemplate.from_messages",
@@ -266,7 +280,7 @@ def mock_chain(mock_conversation, mock_output_parser):
 
 
 class TestBlastInterpreter:
-    ###FIX THIS TEST
+    # FIX THIS TEST
     def test_summarise_results(mock_prompt, mock_conversation, mock_chain):
         # Arrange
         interpreter = BlastInterpreter()
@@ -349,8 +363,10 @@ class TestOncoKBQueryBuilder:
         mock_runnable.invoke.assert_called_once_with(
             {"input": f"Answer:\n{question} based on:\n {ONCOKB_QUERY_PROMPT}"},
         )
-        assert result == mock_oncokb_query_parameters
-        assert hasattr(result, "question_uuid")
+        assert isinstance(result, list)
+        assert len(result) == 1
+        assert result[0] == mock_oncokb_query_parameters
+        assert hasattr(result[0], "question_uuid")
 
 
 class TestOncoKBFetcher:
@@ -360,24 +376,24 @@ class TestOncoKBFetcher:
         mock_response = MagicMock()
         mock_fetch_results.return_value = mock_response
 
-        query_id = "test_query_id"
+        query_parameters = [OncoKBQueryParameters(endpoint="test/endpoint")]
         fetcher = OncoKBFetcher()
 
         # Act
-        result = fetcher.fetch_results(query_id)
+        result = fetcher.fetch_results(query_parameters)
 
         # Assert
-        mock_fetch_results.assert_called_once_with(query_id)
+        mock_fetch_results.assert_called_once_with(query_parameters)
         assert result == mock_response
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_conversation():
     with patch("biochatter.llm_connect.GptConversation") as mock:
         yield mock
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_output_parser():
     with patch("biochatter.api_agent.oncokb.StrOutputParser") as mock:
         mock_parser = MagicMock()
@@ -385,7 +401,7 @@ def mock_output_parser():
         yield mock_parser
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_chain(mock_conversation, mock_output_parser):
     with patch(
         "biochatter.api_agent.oncokb.ChatPromptTemplate.from_messages",
@@ -423,7 +439,6 @@ class TestOncoKBInterpreter:
         mock_chain.invoke.assert_called_once_with(
             {"input": {expected_summary_prompt}},
         )
-
 class TestScanpyTLQueryBuilder:
     @pytest.fixture()
     def mock_generate_pydantic_classes(self):
@@ -501,3 +516,49 @@ class TestScanpyPlFetcher:
 
 class TestScanpyPlInterpreter:
     pass
+
+class TestScanpyPlQueryBuilder:
+    @pytest.fixture()
+    def mock_create_runnable(self):
+        with patch(
+            "biochatter.api_agent.scanpy_pl.create_structured_output_runnable"
+        ) as mock:
+            mock_runnable = MagicMock()
+            mock.return_value = mock_runnable
+            yield mock_runnable
+
+
+
+class TestScanpyPlFetcher:
+    pass
+
+
+class TestScanpyPlInterpreter:
+    pass
+
+
+class TestAnndataIOQueryBuilder:
+    @pytest.fixture
+    def mock_create_runnable(self):
+        with patch(
+            "biochatter.api_agent.anndata.AnnDataIOQueryBuilder.create_runnable",
+        ) as mock:
+            mock_runnable = MagicMock()
+            mock.return_value = mock_runnable
+            yield mock_runnable
+
+    def test_parameterise_query(self, mock_create_runnable):
+        # Arrange
+        query_builder = AnnDataIOQueryBuilder()
+        mock_conversation = MagicMock()
+        question = "read a .h5ad file into an anndata object."
+
+        mock_query_obj = MagicMock()
+        mock_create_runnable.invoke.return_value = mock_query_obj
+
+        # Act
+        result = query_builder.parameterise_query(question, mock_conversation)
+
+        # Assert
+        mock_create_runnable.invoke.assert_called_once_with(question)
+        assert result == mock_query_obj
