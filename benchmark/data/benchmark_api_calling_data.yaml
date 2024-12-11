@@ -73,3 +73,10 @@ api_calling:
     expected:
       parts_of_query:
         ["https://bio.tools/api/t/", "\\?topic=", "[mM]etabolomics"]
+  - case: scanpy:pp:pca
+    input:
+      prompt:
+        fuzzy_search: "Make a PCA keeping n_comps."
+    expected:
+      parts_of_query:
+        ["scanpy.pp.pca\\(", "n_comps=", "\\)"]
