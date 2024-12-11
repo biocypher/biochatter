@@ -500,5 +500,5 @@ class TestAnndataIOQueryBuilder:
         result = query_builder.parameterise_query(question, mock_conversation)
 
         # Assert
-        mock_create_runnable.invoke.assert_called_once_with(question)
+        mock_create_runnable.invoke.assert_called_once_with(expected_input)
         assert result == mock_query_obj
