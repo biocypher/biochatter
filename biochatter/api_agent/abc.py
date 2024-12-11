@@ -1,8 +1,14 @@
+"""Abstract base classes for API interaction components.
+
+Provides base classes for query builders, fetchers, and interpreters used in
+API interactions and result processing.
+"""
+
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 
 from langchain_core.prompts import ChatPromptTemplate
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from biochatter.llm_connect import Conversation
 
@@ -12,9 +18,11 @@ class BaseQueryBuilder(ABC):
 
     @property
     def structured_output_prompt(self) -> ChatPromptTemplate:
-        """Defines a structured output prompt template. This provides a default
-        implementation for an API agent that can be overridden by subclasses to
-        return a ChatPromptTemplate-compatible object.
+        """Define a structured output prompt template.
+
+        This provides a default implementation for an API agent that can be
+        overridden by subclasses to return a ChatPromptTemplate-compatible
+        object.
         """
         return ChatPromptTemplate.from_messages(
             [
@@ -36,9 +44,10 @@ class BaseQueryBuilder(ABC):
         query_parameters: "BaseModel",
         conversation: "Conversation",
     ) -> Callable:
-        """Creates a runnable object for executing queries. Must be implemented by
-        subclasses. Should use the LangChain `create_structured_output_runnable`
-        method to generate the Callable.
+        """Create a runnable object for executing queries.
+
+        Must be implemented by subclasses. Should use the LangChain
+        `create_structured_output_runnable` method to generate the Callable.
 
         Args:
         ----
@@ -58,10 +67,12 @@ class BaseQueryBuilder(ABC):
         self,
         question: str,
         conversation: "Conversation",
-    ) -> BaseModel:
-        """Parameterises a query object (a Pydantic model with the fields of the
-        API) based on the given question using a BioChatter conversation
-        instance. Must be implemented by subclasses.
+    ) -> list[BaseModel]:
+        """Parameterise a query object.
+
+        Parameterises a Pydantic model with the fields of the API based on the
+        given question using a BioChatter conversation instance. Must be
+        implemented by subclasses.
 
         Args:
         ----
@@ -72,41 +83,47 @@ class BaseQueryBuilder(ABC):
 
         Returns:
         -------
-            A parameterised instance of the query object (Pydantic BaseModel)
+            A list containing one or more parameterised instance(s) of the query
+            object (Pydantic BaseModel).
 
         """
 
 
 class BaseFetcher(ABC):
-    """Abstract base class for fetchers. A fetcher is responsible for submitting
-    queries (in systems where submission and fetching are separate) and fetching
-    and saving results of queries. It has to implement a `fetch_results()`
-    method, which can wrap a multi-step procedure to submit and retrieve. Should
-    implement retry method to account for connectivity issues or processing
-    times.
+    """Abstract base class for fetchers.
+
+    A fetcher is responsible for submitting queries (in systems where
+    submission and fetching are separate) and fetching and saving results of
+    queries. It has to implement a `fetch_results()` method, which can wrap a
+    multi-step procedure to submit and retrieve. Should implement retry method to
+    account for connectivity issues or processing times.
     """
 
     @abstractmethod
     def fetch_results(
         self,
-        query_model: BaseModel,
+        query_models: list[BaseModel],
         retries: int | None = 3,
     ):
-        """Fetches results by submitting a query. Can implement a multi-step
-        procedure if submitting and fetching are distinct processes (e.g., in
-        the case of long processing times as in the case of BLAST).
+        """Fetch results by submitting a query.
+
+        Can implement a multi-step procedure if submitting and fetching are
+        distinct processes (e.g., in the case of long processing times as in the
+        case of BLAST).
 
         Args:
         ----
-            query_model: the Pydantic model describing the parameterised query
+            query_models: list of Pydantic models describing the parameterised
+                queries
 
         """
 
 
 class BaseInterpreter(ABC):
-    """Abstract base class for result interpreters. The interpreter is aware of the
-    nature and structure of the results and can extract and summarise
-    information from them.
+    """Abstract base class for result interpreters.
+
+    The interpreter is aware of the nature and structure of the results and can
+    extract and summarise information from them.
     """
 
     @abstractmethod
@@ -116,7 +133,7 @@ class BaseInterpreter(ABC):
         conversation_factory: Callable,
         response_text: str,
     ) -> str:
-        """Summarises an answer based on the given parameters.
+        """Summarise an answer based on the given parameters.
 
         Args:
         ----
@@ -140,11 +157,9 @@ class BaseInterpreter(ABC):
         """
 
 
-from pydantic import BaseModel, Field
-
-
 class BaseAPIModel(BaseModel):
     """A base class for all API models.
+
     Includes default fields `uuid` and `method_name`.
     """
 
@@ -152,5 +167,10 @@ class BaseAPIModel(BaseModel):
     method_name: str = Field(..., description="Name of the method to be executed")
 
     class Config:
-        # Ensures the model can be extended without strict type checking on inherited fields.
+        """BaseModel class configuration.
+
+        Ensures the model can be extended without strict type checking on
+        inherited fields.
+        """
+
         arbitrary_types_allowed = True

@@ -55,15 +55,19 @@ class TestQueryBuilder(BaseQueryBuilder):
         self,
         question: str,
         conversation: Conversation,
-    ) -> BaseModel:
-        return "mock_result"
+    ) -> list[BaseModel]:
+        return ["mock_result"]
 
 
 class TestFetcher(BaseFetcher):
     def submit_query(self, request_data):
         return "mock_url"
 
-    def fetch_results(self, question_uuid, query_return, max_attempts=10000):
+    def fetch_results(
+        self,
+        request_data: list[BaseModel],
+        retries: int | None = 3,
+    ) -> str:
         return "mock_results"
 
 
@@ -109,7 +113,7 @@ def test_agent(query_builder, fetcher, interpreter):
 class TestAPIAgent:
     def test_parameterise_query(self, test_agent):
         result = test_agent.parameterise_query("Mock question")
-        assert result == "mock_result"
+        assert result == ["mock_result"]
 
     def test_fetch_results(self, test_agent):
         result = test_agent.fetch_results("mock_query_model")
@@ -176,8 +180,10 @@ class TestBlastQueryBuilder:
         mock_runnable.invoke.assert_called_once_with(
             {"input": f"Answer:\n{question} based on:\n {BLAST_QUERY_PROMPT}"},
         )
-        assert result == mock_blast_query_parameters
-        assert hasattr(result, "question_uuid")
+        assert isinstance(result, list)
+        assert len(result) == 1
+        assert result[0] == mock_blast_query_parameters
+        assert hasattr(result[0], "question_uuid")
 
 
 class TestBlastFetcher:
@@ -197,20 +203,20 @@ class TestBlastFetcher:
         mock_submit_query.assert_called_once_with(query_parameters)
         assert result == mock_response
 
-    @patch("biochatter.api_agent.blast.BlastFetcher._fetch_results")
+    @patch("biochatter.api_agent.blast.BlastFetcher.fetch_results")
     def test_fetch_results(self, mock_fetch_results):
         # Arrange
         mock_response = MagicMock()
         mock_fetch_results.return_value = mock_response
 
-        query_id = "test_query_id"
+        query_parameters = [BlastQueryParameters()]
         fetcher = BlastFetcher()
 
         # Act
-        result = fetcher._fetch_results(query_id)
+        result = fetcher.fetch_results(query_parameters)
 
         # Assert
-        mock_fetch_results.assert_called_once_with(query_id)
+        mock_fetch_results.assert_called_once_with([query_parameters[0]])
         assert result == mock_response
 
     @patch("requests.post")
@@ -350,8 +356,10 @@ class TestOncoKBQueryBuilder:
         mock_runnable.invoke.assert_called_once_with(
             {"input": f"Answer:\n{question} based on:\n {ONCOKB_QUERY_PROMPT}"},
         )
-        assert result == mock_oncokb_query_parameters
-        assert hasattr(result, "question_uuid")
+        assert isinstance(result, list)
+        assert len(result) == 1
+        assert result[0] == mock_oncokb_query_parameters
+        assert hasattr(result[0], "question_uuid")
 
 
 class TestOncoKBFetcher:
@@ -361,14 +369,14 @@ class TestOncoKBFetcher:
         mock_response = MagicMock()
         mock_fetch_results.return_value = mock_response
 
-        query_id = "test_query_id"
+        query_parameters = [OncoKBQueryParameters(endpoint="test/endpoint")]
         fetcher = OncoKBFetcher()
 
         # Act
-        result = fetcher.fetch_results(query_id)
+        result = fetcher.fetch_results(query_parameters)
 
         # Assert
-        mock_fetch_results.assert_called_once_with(query_id)
+        mock_fetch_results.assert_called_once_with(query_parameters)
         assert result == mock_response
 
 
@@ -492,13 +500,5 @@ class TestAnndataIOQueryBuilder:
         result = query_builder.parameterise_query(question, mock_conversation)
 
         # Assert
-        mock_create_runnable.invoke.assert_called_once_with(expected_input)
+        mock_create_runnable.invoke.assert_called_once_with(question)
         assert result == mock_query_obj
-
-
-class TestAnndataIOPlFetcher:
-    pass
-
-
-class TestAnndataIOInterpreter:
-    pass
