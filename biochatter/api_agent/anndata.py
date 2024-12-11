@@ -8,10 +8,9 @@
 # 4. Write the anndata object to [xxx] format -> built-in anndata api
 
 import uuid
-from collections.abc import Callable
 from typing import TYPE_CHECKING
 
-from langchain.chains.openai_functions import PydanticToolsParser, create_structured_output_runnable
+from langchain.chains.openai_functions import PydanticToolsParser
 from langchain_core.pydantic_v1 import BaseModel, Field
 from pydantic import BaseModel, Field
 
@@ -160,40 +159,12 @@ class ReadText(BaseModel):
 class AnnDataIOQueryBuilder(BaseQueryBuilder):
     """A class for building a AnndataIO query object."""
 
-    def create_runnable(
-        self,
-        query_parameters: list["BaseModel"],
-        conversation: "Conversation",
-    ) -> Callable:
-        """Create a runnable object for executing queries.
-
-        Creates a runnable using the LangChain
-        `create_structured_output_runnable` method.
-
-        Args:
-        ----
-            query_parameters: A Pydantic data model that specifies the fields of
-                the API that should be queried.
-
-            conversation: A BioChatter conversation object.
-
-        Returns:
-        -------
-            A Callable object that can execute the query.
-
-        """
-        return create_structured_output_runnable(
-            output_schema=query_parameters,
-            llm=conversation.chat,
-            prompt=self.structured_output_prompt,
-        )
-
     def parameterise_query(
         self,
         question: str,
         conversation: "Conversation",
     ) -> list["BaseModel"]:
-        """Generate a BlastQuery object.
+        """Generate a AnnDataIOQuery object.
 
         Generates the object based on the given question, prompt, and
         BioChatter conversation. Uses a Pydantic model to define the API fields.
@@ -205,11 +176,11 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
             question (str): The question to be answered.
 
             conversation: The conversation object used for parameterising the
-                BlastQuery.
+                AnnDataIOQuery.
 
         Returns:
         -------
-            BlastQuery: the parameterised query object (Pydantic model)
+            AnnDataIOQuery: the parameterised query object (Pydantic model)
 
         """
         tools = [
@@ -222,12 +193,9 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
             ReadText,
             ReadZarr,
         ]
-        runnable = self.create_runnable(
-            query_parameters=tools,
-            conversation=conversation,
-        )
+        runnable = conversation.chat.bind_tools(tools)
 
-        chain = runnable.bind_tools(tools) | PydanticToolsParser(tools=tools)
+        chain = runnable | PydanticToolsParser(tools=tools)
         anndata_io_call_obj = chain.invoke(
             {"input": f"Answer:\n{question} based on:\n {ANNDATA_IO_QUERY_PROMPT}"},
         )
