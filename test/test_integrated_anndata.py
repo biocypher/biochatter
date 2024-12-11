@@ -40,7 +40,9 @@ res = chain.invoke(query)
 
 # Assuming `res[0]` is a Pydantic model instance
 method = res[0].__class__.__name__  # Get the name of the Pydantic class
-method_arguments = res[0].dict()  # Convert the model attributes to a dictionary
+method_arguments = res[0].dict(
+    exclude_none=True
+)  # Convert the model attributes to a dictionary
 
 # Create the final dictionary
 result_dict = {method: method_arguments}

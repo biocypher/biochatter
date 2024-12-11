@@ -7,16 +7,15 @@
 # 3. Filter the anndata object -> NumPy or SciPy sparse matrix api
 # 4. Write the anndata object to [xxx] format -> built-in anndata api
 
-import uuid
+from collections.abc import Callable
 from typing import TYPE_CHECKING
 
 from langchain.chains.openai_functions import PydanticToolsParser
 from langchain_core.pydantic_v1 import BaseModel, Field
-from pydantic import BaseModel, Field
 
 from biochatter.llm_connect import Conversation
 
-from .abc import BaseQueryBuilder
+from .abc import BaseAPIModel, BaseQueryBuilder
 
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
@@ -91,9 +90,10 @@ BASED ON THE DOCUMENTATION below:
 """
 
 
-class ReadH5AD(BaseModel):
+class ReadH5AD(BaseAPIModel):
     """Read .h5ad-formatted hdf5 file."""
 
+    method_name: str = Field(default="io.read_h5ad", description="NEVER CHANGE")
     filename: str = Field(..., description="Path to the .h5ad file")
     backed: str = Field(None, description="Mode to access file: None, 'r' for read-only")
     as_sparse: str = Field(None, description="Convert to sparse format: 'csr', 'csc', or None")
@@ -101,38 +101,43 @@ class ReadH5AD(BaseModel):
     index_unique: str = Field(None, description="Make index unique by appending suffix if needed")
 
 
-class ReadZarr(BaseModel):
+class ReadZarr(BaseAPIModel):
     """Read from a hierarchical Zarr array store."""
 
+    method_name: str = Field(default="io.read_zarr", description="NEVER CHANGE")
     store: str = Field(..., description="Path or URL to the Zarr store")
 
 
-class ReadCSV(BaseModel):
+class ReadCSV(BaseAPIModel):
     """Read .csv file."""
 
+    method_name: str = Field(default="io.read_csv", description="NEVER CHANGE")
     filename: str = Field(..., description="Path to the .csv file")
     delimiter: str = Field(None, description="Delimiter used in the .csv file")
     first_column_names: bool = Field(None, description="Whether the first column contains names")
 
 
-class ReadExcel(BaseModel):
+class ReadExcel(BaseAPIModel):
     """Read .xlsx (Excel) file."""
 
+    method_name: str = Field(default="io.read_excel", description="NEVER CHANGE")
     filename: str = Field(..., description="Path to the .xlsx file")
     sheet: str = Field(None, description="Sheet name or index to read from")
     dtype: str = Field(None, description="Data type for the resulting dataframe")
 
 
-class ReadHDF(BaseModel):
+class ReadHDF(BaseAPIModel):
     """Read .h5 (hdf5) file."""
 
+    method_name: str = Field(default="io.read_hdf", description="NEVER CHANGE")
     filename: str = Field(..., description="Path to the .h5 file")
     key: str = Field(..., description="Group key within the .h5 file")
 
 
-class ReadLoom(BaseModel):
+class ReadLoom(BaseAPIModel):
     """Read .loom-formatted hdf5 file."""
 
+    method_name: str = Field(default="io.read_loom", description="NEVER CHANGE")
     filename: str = Field(..., description="Path to the .loom file")
     sparse: bool = Field(None, description="Whether to read data as sparse")
     cleanup: bool = Field(None, description="Clean up invalid entries")
@@ -141,16 +146,18 @@ class ReadLoom(BaseModel):
     var_names: str = Field(None, description="Column to use for variable names")
 
 
-class ReadMTX(BaseModel):
+class ReadMTX(BaseAPIModel):
     """Read .mtx file."""
 
+    method_name: str = Field(default="io.read_mtx", description="NEVER CHANGE")
     filename: str = Field(..., description="Path to the .mtx file")
     dtype: str = Field(None, description="Data type for the matrix")
 
 
-class ReadText(BaseModel):
+class ReadText(BaseAPIModel):
     """Read .txt, .tab, .data (text) file."""
 
+    method_name: str = Field(default="io.read_text", description="NEVER CHANGE")
     filename: str = Field(..., description="Path to the text file")
     delimiter: str = Field(None, description="Delimiter used in the file")
     first_column_names: bool = Field(None, description="Whether the first column contains names")
@@ -199,5 +206,4 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
         anndata_io_call_obj = chain.invoke(
             {"input": f"Answer:\n{question} based on:\n {ANNDATA_IO_QUERY_PROMPT}"},
         )
-        anndata_io_call_obj.question_uuid = str(uuid.uuid4())
         return anndata_io_call_obj
