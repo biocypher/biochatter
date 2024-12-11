@@ -1,11 +1,11 @@
-from unittest.mock import MagicMock, patch
-import os
 import json
+import os
+from unittest.mock import MagicMock, patch
 
 import pytest
 
-from biochatter.rag_agent import RagAgent, RagAgentModeEnum
 from biochatter.llm_connect import GptConversation
+from biochatter.rag_agent import RagAgent, RagAgentModeEnum
 from biochatter.vectorstore_agent import Document
 
 
@@ -31,7 +31,7 @@ def test_rag_agent_kg_mode():
                             "name": "result1",
                             "description": "result1 description",
                             "type": "result1 type",
-                        }
+                        },
                     },
                 ),
                 metadata={
@@ -45,7 +45,7 @@ def test_rag_agent_kg_mode():
                             "name": "result2",
                             "description": "result2 description",
                             "type": "result2 type",
-                        }
+                        },
                     },
                 ),
                 metadata={
@@ -59,7 +59,7 @@ def test_rag_agent_kg_mode():
                             "name": "result3",
                             "description": "result3 description",
                             "type": "result3 type",
-                        }
+                        },
                     },
                 ),
                 metadata={
@@ -73,7 +73,7 @@ def test_rag_agent_kg_mode():
             model_name="test_model",
             connection_args={"host": "xxx", "port": "xxx"},
             schema_config_or_info_dict={
-                "schema_config_or_info_dict": "test_schema_config_or_info_dict"
+                "schema_config_or_info_dict": "test_schema_config_or_info_dict",
             },
         )
         assert agent.mode == RagAgentModeEnum.KG
@@ -88,7 +88,7 @@ def test_rag_agent_kg_mode():
 
 def test_rag_agent_vectorstore_mode():
     with patch(
-        "biochatter.vectorstore_agent.VectorDatabaseAgentMilvus"
+        "biochatter.vectorstore_agent.VectorDatabaseAgentMilvus",
     ) as MockVectorDatabaseAgentMilvus:
         mock_agent = MockVectorDatabaseAgentMilvus.return_value
         mock_agent.similarity_search.return_value = [
@@ -129,14 +129,18 @@ def test_rag_agent_vectorstore_mode():
         assert type(result[0]) == tuple
         MockVectorDatabaseAgentMilvus.assert_called_once()
         mock_agent.similarity_search.assert_called_once_with(
-            "test question", 3, doc_ids=None
+            "test question",
+            3,
+            doc_ids=None,
         )
 
 
 def test_rag_agent_invalid_mode():
     with pytest.raises(ValueError) as excinfo:
         RagAgent(
-            mode="invalid_mode", model_name="test_model", connection_args={}
+            mode="invalid_mode",
+            model_name="test_model",
+            connection_args={},
         )
     assert "Invalid mode. Choose either" in str(excinfo.value)
 
@@ -154,9 +158,7 @@ def test_rag_agent_api_oncokb_mode(
     mock_fetcher,
     mock_interpreter,
 ):
-    """
-    Test the API agent in 'api_oncokb' mode.
-    """
+    """Test the API agent in 'api_oncokb' mode."""
     # Create an instance of RagAgent in 'api_oncokb' mode
     rag_agent = RagAgent(
         mode=RagAgentModeEnum.API_ONCOKB,
@@ -164,9 +166,7 @@ def test_rag_agent_api_oncokb_mode(
         use_prompt=True,  # Ensure prompts are used to get responses
         conversation_factory=conversation_factory,
     )
-    assert (
-        rag_agent.mode == RagAgentModeEnum.API_ONCOKB
-    ), "Agent mode should be 'api_oncokb'"
+    assert rag_agent.mode == RagAgentModeEnum.API_ONCOKB, "Agent mode should be 'api_oncokb'"
 
     # Define the test question
     question = "What is the oncogenic potential of BRAF mutation?"
@@ -175,9 +175,7 @@ def test_rag_agent_api_oncokb_mode(
     responses = rag_agent.generate_responses(question)
     assert responses, "No responses generated"
     assert isinstance(responses, list), "Responses should be a list"
-    assert all(
-        isinstance(response, tuple) for response in responses
-    ), "Each response should be a tuple"
+    assert all(isinstance(response, tuple) for response in responses), "Each response should be a tuple"
 
     if responses:
         print("Test response:", responses[0][1])
@@ -189,9 +187,7 @@ def test_rag_agent_api_oncokb_mode(
 
 @pytest.mark.skip(reason="Live test for development purposes")
 def test_rag_agent_api_mode_no_mock():
-    """
-    Test the API agent with a specific DNA sequence question.
-    """
+    """Test the API agent with a specific DNA sequence question."""
     # Define the test question
     question = "Which organism does the DNA sequence come from: TTCATCGGTCTGAGCAGAGGATGAAGTTGCAAATGATGCAAGCAAAACAGCTCAAAGATGAAGAGGAAAAGGCTATACACAACAGGAGCAATGTAGATACAGAAGGT"
 
@@ -208,9 +204,7 @@ def test_rag_agent_api_mode_no_mock():
     responses = api_agent.generate_responses(question)
     assert responses, "No responses generated"
     assert isinstance(responses, list), "Responses should be a list"
-    assert all(
-        isinstance(response, tuple) for response in responses
-    ), "Each response should be a tuple"
+    assert all(isinstance(response, tuple) for response in responses), "Each response should be a tuple"
 
     if responses:
         print("Test response:", responses[0][1])

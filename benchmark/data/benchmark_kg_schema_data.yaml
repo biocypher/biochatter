@@ -1,0 +1,336 @@
+# Top-level keys: benchmark modules
+# Values: list of dictionaries, each containing a test case
+#
+# Test case keys:
+# - input (for creating the test)
+# - expected (for asserting outcomes and generating a score)
+# - case (for categorizing the test case)
+#
+# If any input is a dictionary itself, it will be expanded into separate test
+# cases, using the top-level key to create a concatenated test case purpose.
+
+kg_schemas:
+  gene_kg:
+    cell type:
+      input_label: cell_type
+      is_relationship: false
+      preferred_id: cl
+      present_in_knowledge_graph: true
+      properties:
+        cell_type_name: str
+        medium: str
+        organism: str
+      represented_as: node
+    disease:
+      input_label: Disease
+      is_relationship: false
+      preferred_id: doid
+      present_in_knowledge_graph: true
+      properties:
+        DSM5: str
+        ICD10: str
+        name: str
+      represented_as: node
+    gene:
+      exclude_properties: accession
+      input_label:
+        - hgnc
+        - ensg
+      is_relationship: false
+      preferred_id: hgnc
+      present_in_knowledge_graph: true
+      properties:
+        id: str
+        name: str
+        taxon: int
+      represented_as: node
+    gene expressed in cell type:
+      input_label: gene_expressed_in_cell_type
+      is_a: gene to expression site association
+      is_relationship: true
+      label_as_edge: GENE_EXPRESSED_IN_CELL_TYPE
+      present_in_knowledge_graph: true
+      properties:
+        expression_level: float
+      represented_as: edge
+      source: gene
+      target: cell type
+    gene to disease association:
+      input_label: gene_phenotype
+      is_relationship: true
+      label_as_edge: PERTURBED_IN
+      present_in_knowledge_graph: true
+      properties:
+        evidence: str
+        score: float
+        source: str
+      represented_as: edge
+      source: protein
+      target: disease
+    gene to phenotype association:
+      exclude_properties: accession
+      input_label:
+        - protein_disease
+        - gene_disease
+      is_relationship: true
+      label_as_edge: PERTURBED
+      present_in_knowledge_graph: true
+      properties:
+        evidence: str
+        score: float
+        source: str
+      represented_as: edge
+      source: disease
+      target:
+        - protein
+        - gene
+    gene to protein association:
+      input_label: gene_protein
+      is_relationship: true
+      present_in_knowledge_graph: true
+      properties:
+        evidence: str
+        score: float
+        source: str
+      represented_as: edge
+      source: gene
+      target: protein
+    pathway:
+      input_label:
+        - reactome
+        - wikipathways
+      is_relationship: false
+      preferred_id:
+        - reactome
+        - wikipathways
+      present_in_knowledge_graph: false
+      represented_as: node
+    phosphorylation:
+      input_label: phosphorylation
+      is_a: post translational interaction
+      is_relationship: true
+      present_in_knowledge_graph: true
+      represented_as: edge
+      source: protein
+      target: protein
+    post translational interaction:
+      input_label: post_translational
+      is_a: pairwise molecular interaction
+      is_relationship: true
+      label_as_edge: INTERACTS_POST_TRANSLATIONAL
+      present_in_knowledge_graph: false
+      represented_as: node
+      source: protein
+      target: protein
+    protein:
+      db_collection_name: proteins
+      input_label: protein
+      is_relationship: false
+      preferred_id: uniprot
+      present_in_knowledge_graph: true
+      represented_as: node
+      properties:
+        genes: str[]
+        name: str
+        score: float
+        taxon: int
+
+  safety_kg:
+    case study:
+      represented_as: node
+      input_label: :CaseStudy
+      is_a: named thing
+      properties:
+        name: str
+        description: str
+    organ:
+      represented_as: node
+      input_label: :Organ
+      is_a: gross anatomical structure
+      properties:
+        name: str
+    web page:
+      represented_as: node
+      is_a: named thing
+      input_label: :WebPage
+      synonym: web page
+      properties:
+        name: str
+    AOP:
+      represented_as: node
+      input_label: :AOP
+      is_a: named thing
+      properties:
+        name: str
+        id: str
+        creator: str
+        description: str
+        source: str
+    key event:
+      represented_as: node
+      input_label: :KeyEvent
+      is_a: named thing
+      properties:
+        name: str
+        KEID: str
+        description: str
+    chemical:
+      represented_as: node
+      input_label: :Chemical
+      synonym_for: small molecule
+      properties:
+        name: str
+        CAS: str
+        SMILES: str
+        InChIKey: str
+        chemical group: str
+    bioassay:
+      is_a: named thing
+      represented_as: node
+      input_label: :Bioassay
+      properties:
+        name: str
+        measured: str
+    model system:
+      is_a: organismal entity
+      represented_as: node
+      input_label: :Model_system
+      properties:
+        name: str
+        cell type: str
+        description: str
+    computational model:
+      is_a: information content entity
+      represented_as: node
+      input_label: :Computational_model
+      properties:
+        name: str
+        type: str
+        language: str
+        input: str
+        output: str
+    measurable endpoint:
+      represented_as: node
+      is_a: phenomenon
+      input_label: :Measurable_endpoint
+      properties:
+        name: str
+        description: str
+        type: str
+    experimental condition:
+      is_a: study variable
+      represented_as: node
+      input_label: :Experimental_condition
+      properties:
+        exposure_duration: str
+        exposure_concentration: str
+        condition_name: str
+        description: str
+    case study related organ:
+      is_a: association
+      represented_as: edge
+      source: case study
+      target: organ
+      input_label: case_study_related_organ
+    AOP includes mie:
+      is_a: association
+      represented_as: edge
+      source: AOP
+      target: key event
+      input_label: AOP_includes_mie
+    AOP includes ao:
+      is_a: association
+      represented_as: edge
+      source: AOP
+      target: key event
+      input_label: AOP_includes_ao
+    AOP includes key event:
+      is_a: association
+      represented_as: edge
+      source: AOP
+      target: key event
+      input_label: AOP_includes_key_event
+    AOP relevant stressor:
+      is_a: association
+      represented_as: edge
+      source: AOP
+      target: stressor
+      input_label: AOP_relevant_stressor
+    chemical measured with bioassay:
+      is_a: association
+      represented_as: edge
+      source: chemical
+      target: bioassay
+      input_label: chemical_measured_with_bioassay
+    bioassay executed on model system:
+      is_a: association
+      represented_as: edge
+      source: bioassay
+      target: model system
+      input_label: bioassay_executed_on_model_system
+    case study relevant chemical:
+      is_a: association
+      represented_as: edge
+      source: case study
+      target: chemical
+      input_label: case_study_relevant_chemical
+    case study relevant model system:
+      is_a: association
+      represented_as: edge
+      source: case study
+      target: model system
+      input_label: case_study_relevant_model_system
+    case study relevant computational model:
+      is_a: association
+      represented_as: edge
+      source: case study
+      target: computational model
+      input_label: case_study_relevant_computational_model
+    chemical measured in model system:
+      is_a: association
+      represented_as: edge
+      source: chemical
+      target: model system
+      input_label: chemical_measured_in_model_system
+    chemical relevant to computational model:
+      is_a: association
+      represented_as: edge
+      source: chemical
+      target: computational model
+      input_label: chemical_relevant_to_computational_model
+    bioassay related organ:
+      is_a: association
+      represented_as: edge
+      source: bioassay
+      target: organ
+      input_label: bioassay_related_organ
+    model system relevant to organ:
+      is_a: association
+      represented_as: edge
+      source: model system
+      target: organ
+      input_label: model_system_relevant_to_organ
+    computational model relevant to organ:
+      is_a: association
+      represented_as: edge
+      source: computational model
+      target: organ
+      input_label: computational_model_relevant_to_organ
+    case study relevant endpoint:
+      is_a: association
+      represented_as: edge
+      source: case study
+      target: measurable endpoint
+      input_label: case_study_relevant_endpoint
+    bioassay used with experimental condition:
+      is_a: association
+      represented_as: edge
+      source: bioassay
+      target: experimental_condition
+      input_label: bioassay_used_with_experimental_condition
+    chemical to web page association:
+      is_a: association
+      represented_as: edge
+      source: chemical
+      target: web page
+      input_label: chemical_webpage

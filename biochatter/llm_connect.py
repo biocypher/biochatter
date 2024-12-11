@@ -10,21 +10,19 @@ try:
 except ImportError:
     st = None
 
-from abc import ABC, abstractmethod
-from typing import Optional
 import json
-import base64
 import logging
 import urllib.parse
+from abc import ABC, abstractmethod
 
-from langchain_openai import ChatOpenAI, AzureChatOpenAI
-from langchain_anthropic import ChatAnthropic
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
-from langchain_community.chat_models import ChatOllama
-from langchain_community.llms.huggingface_hub import HuggingFaceHub
+import anthropic
 import nltk
 import openai
-import anthropic
+from langchain_anthropic import ChatAnthropic
+from langchain_community.chat_models import ChatOllama
+from langchain_community.llms.huggingface_hub import HuggingFaceHub
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from langchain_openai import AzureChatOpenAI, ChatOpenAI
 
 from ._image import encode_image, encode_image_from_url
 from ._stats import get_stats
@@ -59,9 +57,7 @@ TOKEN_LIMITS = {
 
 
 class Conversation(ABC):
-    """
-
-    Use this class to set up a connection to an LLM API. Can be used to set the
+    """Use this class to set up a connection to an LLM API. Can be used to set the
     user name and API key, append specific messages for system, user, and AI
     roles (if available), set up the general context as well as manual and
     tool-based data inputs, and finally to query the API with prompts made by
@@ -105,8 +101,7 @@ class Conversation(ABC):
         self.user_name = user_name
 
     def set_rag_agent(self, agent: RagAgent):
-        """
-        Update or insert rag_agent: if the rag_agent with the same mode already
+        """Update or insert rag_agent: if the rag_agent with the same mode already
         exists, it will be updated. Otherwise, the new rag_agent will be inserted.
         """
         i, _ = self.find_rag_agent(agent.mode)
@@ -124,7 +119,7 @@ class Conversation(ABC):
         return -1, None
 
     @abstractmethod
-    def set_api_key(self, api_key: str, user: Optional[str] = None):
+    def set_api_key(self, api_key: str, user: str | None = None):
         pass
 
     def get_prompts(self):
@@ -134,11 +129,12 @@ class Conversation(ABC):
         self.prompts = prompts
 
     def append_ai_message(self, message: str) -> None:
-        """
-        Add a message from the AI to the conversation.
+        """Add a message from the AI to the conversation.
 
         Args:
+        ----
             message (str): The message from the AI.
+
         """
         self.messages.append(
             AIMessage(
@@ -147,11 +143,12 @@ class Conversation(ABC):
         )
 
     def append_system_message(self, message: str) -> None:
-        """
-        Add a system message to the conversation.
+        """Add a system message to the conversation.
 
         Args:
+        ----
             message (str): The system message.
+
         """
         self.messages.append(
             SystemMessage(
@@ -160,11 +157,12 @@ class Conversation(ABC):
         )
 
     def append_ca_message(self, message: str) -> None:
-        """
-        Add a message to the correcting agent conversation.
+        """Add a message to the correcting agent conversation.
 
         Args:
+        ----
             message (str): The message to the correcting agent.
+
         """
         self.ca_messages.append(
             SystemMessage(
@@ -173,11 +171,12 @@ class Conversation(ABC):
         )
 
     def append_user_message(self, message: str) -> None:
-        """
-        Add a message from the user to the conversation.
+        """Add a message from the user to the conversation.
 
         Args:
+        ----
             message (str): The message from the user.
+
         """
         self.messages.append(
             HumanMessage(
@@ -186,27 +185,29 @@ class Conversation(ABC):
         )
 
     def append_image_message(
-        self, message: str, image_url: str, local: bool = False
+        self,
+        message: str,
+        image_url: str,
+        local: bool = False,
     ) -> None:
-        """
-        Add a user message with an image to the conversation. Also checks, in
+        """Add a user message with an image to the conversation. Also checks, in
         addition to the `local` flag, if the image URL is a local file path.
         If it is local, the image will be encoded as a base64 string to be
         passed to the LLM.
 
         Args:
+        ----
             message (str): The message from the user.
             image_url (str): The URL of the image.
             local (bool): Whether the image is local or not. If local, it will
                 be encoded as a base64 string to be passed to the LLM.
+
         """
         parsed_url = urllib.parse.urlparse(image_url)
         if local or not parsed_url.netloc:
             image_url = f"data:image/jpeg;base64,{encode_image(image_url)}"
         else:
-            image_url = (
-                f"data:image/jpeg;base64,{encode_image_from_url(image_url)}"
-            )
+            image_url = f"data:image/jpeg;base64,{encode_image_from_url(image_url)}"
 
         self.messages.append(
             HumanMessage(
@@ -218,9 +219,7 @@ class Conversation(ABC):
         )
 
     def setup(self, context: str):
-        """
-        Set up the conversation with general prompts and a context.
-        """
+        """Set up the conversation with general prompts and a context."""
         for msg in self.prompts["primary_model_prompts"]:
             if msg:
                 self.append_system_message(msg)
@@ -247,22 +246,23 @@ class Conversation(ABC):
                 self.append_system_message(msg)
 
     def query(self, text: str, image_url: str = None) -> tuple[str, dict, str]:
-        """
-        The main workflow for querying the LLM API. Appends the most recent
+        """The main workflow for querying the LLM API. Appends the most recent
         query to the conversation, optionally injects context from the RAG
         agent, and runs the primary query method of the child class.
 
         Args:
+        ----
             text (str): The user query.
 
             image_url (str): The URL of an image to include in the conversation.
                 Optional and only supported for models with vision capabilities.
 
         Returns:
+        -------
             tuple: A tuple containing the response from the API, the token usage
                 information, and the correction if necessary/desired.
-        """
 
+        """
         if not image_url:
             self.append_user_message(text)
         else:
@@ -279,11 +279,7 @@ class Conversation(ABC):
         if not self.correct:
             return (msg, token_usage, None)
 
-        cor_msg = (
-            "Correcting (using single sentences) ..."
-            if self.split_correction
-            else "Correcting ..."
-        )
+        cor_msg = "Correcting (using single sentences) ..." if self.split_correction else "Correcting ..."
 
         if st:
             with st.spinner(cor_msg):
@@ -306,12 +302,12 @@ class Conversation(ABC):
             for sentence in sentences:
                 correction = self._correct_response(sentence)
 
-                if not str(correction).lower() in ["ok", "ok."]:
+                if str(correction).lower() not in ["ok", "ok."]:
                     corrections.append(correction)
         else:
             correction = self._correct_response(msg)
 
-            if not str(correction).lower() in ["ok", "ok."]:
+            if str(correction).lower() not in ["ok", "ok."]:
                 corrections.append(correction)
 
         return corrections
@@ -325,15 +321,12 @@ class Conversation(ABC):
         pass
 
     def _inject_context_by_ragagent_selector(self, text: str):
-        """
-        Inject the context generated by RagAgentSelector, which will choose appropriate
+        """Inject the context generated by RagAgentSelector, which will choose appropriate
          rag agent to generate context according to user's question
         Args:
             text (str): The user query to be used for choosing rag agent
         """
-        rag_agents: list[RagAgent] = [
-            agent for agent in self.rag_agents if agent.use_prompt
-        ]
+        rag_agents: list[RagAgent] = [agent for agent in self.rag_agents if agent.use_prompt]
         decider_agent = RagAgentSelector(
             rag_agents=rag_agents,
             conversation_factory=lambda: self,
@@ -343,16 +336,15 @@ class Conversation(ABC):
             return result.tool_result
         # find rag agent selected
         rag_agent = next(
-            [agent for agent in rag_agents if agent.mode == result.answer], None
+            [agent for agent in rag_agents if agent.mode == result.answer],
+            None,
         )
         if rag_agent is None:
             return None
         return rag_agent.generate_responses(text)
 
     def _inject_context(self, text: str):
-        """
-
-        Inject the context received from the RAG agent into the prompt. The RAG
+        """Inject the context received from the RAG agent into the prompt. The RAG
         agent will find the most similar n text fragments and add them to the
         message history object for usage in the next prompt. Uses the document
         summarisation prompt set to inject the context. The ultimate prompt
@@ -360,10 +352,11 @@ class Conversation(ABC):
         for formatting the string).
 
         Args:
+        ----
             text (str): The user query to be used for similarity search.
-        """
 
-        sim_msg = f"Performing similarity search to inject fragments ..."
+        """
+        sim_msg = "Performing similarity search to inject fragments ..."
 
         if st:
             with st.spinner(sim_msg):
@@ -397,35 +390,37 @@ class Conversation(ABC):
                 # if last prompt, format the statements into the prompt
                 if i == len(prompts) - 1:
                     self.append_system_message(
-                        prompt.format(statements=statements)
+                        prompt.format(statements=statements),
                     )
                 else:
                     self.append_system_message(prompt)
 
     def get_last_injected_context(self) -> list[dict]:
-        """
-        Get a formatted list of the last context injected into the
+        """Get a formatted list of the last context injected into the
         conversation. Contains one dictionary for each RAG mode.
 
-        Returns:
+        Returns
+        -------
             List[dict]: A list of dictionaries containing the mode and context
             for each RAG agent.
+
         """
         last_context = []
         for agent in self.rag_agents:
             last_context.append(
-                {"mode": agent.mode, "context": agent.last_response}
+                {"mode": agent.mode, "context": agent.last_response},
             )
         return last_context
 
     def get_msg_json(self) -> str:
-        """
-        Return a JSON representation (of a list of dicts) of the messages in
+        """Return a JSON representation (of a list of dicts) of the messages in
         the conversation. The keys of the dicts are the roles, the values are
         the messages.
 
-        Returns:
+        Returns
+        -------
             str: A JSON representation of the messages in the conversation.
+
         """
         d = []
         for msg in self.messages:
@@ -443,10 +438,7 @@ class Conversation(ABC):
         return json.dumps(d)
 
     def reset(self):
-        """
-        Resets the conversation to the initial state.
-        """
-
+        """Resets the conversation to the initial state."""
         self.history = []
         self.messages = []
         self.ca_messages = []
@@ -461,9 +453,7 @@ class WasmConversation(Conversation):
         correct: bool = False,
         split_correction: bool = False,
     ):
-        """
-
-        This class is used to return the complete query as a string to be used
+        """This class is used to return the complete query as a string to be used
         in the frontend running the wasm model. It does not call the API itself,
         but updates the message history similarly to the other conversation
         classes. It overrides the `query` method from the `Conversation` class
@@ -480,16 +470,18 @@ class WasmConversation(Conversation):
         )
 
     def query(self, text: str) -> tuple:
-        """
-        Return the entire message history as a single string. This is the
+        """Return the entire message history as a single string. This is the
         message that is sent to the wasm model.
 
         Args:
+        ----
             text (str): The user query.
 
         Returns:
+        -------
             tuple: A tuple containing the message history as a single string,
                 and `None` for the second and third elements of the tuple.
+
         """
         self.append_user_message(text)
 
@@ -498,22 +490,17 @@ class WasmConversation(Conversation):
         return (self._primary_query(), None, None)
 
     def _primary_query(self):
-        """
-        Concatenate all messages in the conversation into a single string and
+        """Concatenate all messages in the conversation into a single string and
         return it. Currently discards information about roles (system, user).
         """
         return "\n".join([m.content for m in self.messages])
 
     def _correct_response(self, msg: str):
-        """
-        This method is not used for the wasm model.
-        """
+        """This method is not used for the wasm model."""
         return "ok"
 
     def set_api_key(self, api_key: str, user: str | None = None):
-        """
-        This method is not used for the wasm model.
-        """
+        """This method is not used for the wasm model."""
         return True
 
 
@@ -526,15 +513,13 @@ class XinferenceConversation(Conversation):
         correct: bool = False,
         split_correction: bool = False,
     ):
-        """
-
-        Connect to an open-source LLM via the Xinference client library and set
+        """Connect to an open-source LLM via the Xinference client library and set
         up a conversation with the user.  Also initialise a second
         conversational agent to provide corrections to the model output, if
         necessary.
 
         Args:
-
+        ----
             base_url (str): The base URL of the Xinference instance (should not
             include the /v1 part).
 
@@ -597,13 +582,14 @@ class XinferenceConversation(Conversation):
     #     return names
 
     def append_system_message(self, message: str):
-        """
-        We override the system message addition because Xinference does not
+        """We override the system message addition because Xinference does not
         accept multiple system messages. We concatenate them if there are
         multiple.
 
         Args:
+        ----
             message (str): The message to append.
+
         """
         # if there is not already a system message in self.messages
         if not any(isinstance(m, SystemMessage) for m in self.messages):
@@ -620,9 +606,7 @@ class XinferenceConversation(Conversation):
                     break
 
     def append_ca_message(self, message: str):
-        """
-
-        We also override the system message addition for the correcting agent,
+        """We also override the system message addition for the correcting agent,
         likewise because Xinference does not accept multiple system messages. We
         concatenate them if there are multiple.
 
@@ -630,7 +614,9 @@ class XinferenceConversation(Conversation):
         as the primary one.
 
         Args:
+        ----
             message (str): The message to append.
+
         """
         # if there is not already a system message in self.messages
         if not any(isinstance(m, SystemMessage) for m in self.ca_messages):
@@ -647,9 +633,7 @@ class XinferenceConversation(Conversation):
                     break
 
     def _primary_query(self):
-        """
-
-        Query the Xinference client API with the user's message and return the
+        """Query the Xinference client API with the user's message and return the
         response using the message history (flattery system messages, prior
         conversation) as context. Correct the response if necessary.
 
@@ -660,8 +644,8 @@ class XinferenceConversation(Conversation):
         should be embedded into the first user message.' (from
         https://discuss.huggingface.co/t/issue-with-llama-2-chat-template-and-out-of-date-documentation/61645/3)
 
-        Returns:
-
+        Returns
+        -------
             tuple: A tuple containing the response from the Xinference API
             (formatted similarly to responses from the OpenAI API) and the token
             usage.
@@ -706,17 +690,12 @@ class XinferenceConversation(Conversation):
     def _create_history(self):
         history = []
         # extract text components from message contents
-        msg_texts = [
-            m.content[0]["text"] if isinstance(m.content, list) else m.content
-            for m in self.messages
-        ]
+        msg_texts = [m.content[0]["text"] if isinstance(m.content, list) else m.content for m in self.messages]
 
         # check if last message is an image message
         is_image_message = False
         if isinstance(self.messages[-1].content, list):
-            is_image_message = (
-                self.messages[-1].content[1]["type"] == "image_url"
-            )
+            is_image_message = self.messages[-1].content[1]["type"] == "image_url"
 
         # find location of last AI message (if any)
         last_ai_message = None
@@ -730,16 +709,16 @@ class XinferenceConversation(Conversation):
                 {
                     "role": "user",
                     "content": "\n".join(
-                        [m for m in msg_texts[:last_ai_message]]
+                        [m for m in msg_texts[:last_ai_message]],
                     ),
-                }
+                },
             )
             # then append the last AI message
             history.append(
                 {
                     "role": "assistant",
                     "content": msg_texts[last_ai_message],
-                }
+                },
             )
 
             # then concatenate all messages after that
@@ -748,9 +727,9 @@ class XinferenceConversation(Conversation):
                 {
                     "role": "user",
                     "content": "\n".join(
-                        [m for m in msg_texts[last_ai_message + 1 :]]
+                        [m for m in msg_texts[last_ai_message + 1 :]],
                     ),
-                }
+                },
             )
 
         # if there is no AI message, concatenate all messages into one user
@@ -760,7 +739,7 @@ class XinferenceConversation(Conversation):
                 {
                     "role": "user",
                     "content": "\n".join([m for m in msg_texts[:]]),
-                }
+                },
             )
 
         # if the last message is an image message, add the image to the history
@@ -770,24 +749,25 @@ class XinferenceConversation(Conversation):
                 {
                     "type": "image_url",
                     "image_url": {
-                        "url": self.messages[-1].content[1]["image_url"]["url"]
+                        "url": self.messages[-1].content[1]["image_url"]["url"],
                     },
                 },
             ]
         return history
 
     def _correct_response(self, msg: str):
-        """
-
-        Correct the response from the Xinference API by sending it to a
+        """Correct the response from the Xinference API by sending it to a
         secondary language model. Optionally split the response into single
         sentences and correct each sentence individually. Update usage stats.
 
         Args:
+        ----
             msg (str): The response from the model.
 
         Returns:
+        -------
             str: The corrected response (or OK if no correction necessary).
+
         """
         ca_messages = self.ca_messages.copy()
         ca_messages.append(
@@ -797,8 +777,7 @@ class XinferenceConversation(Conversation):
         )
         ca_messages.append(
             SystemMessage(
-                content="If there is nothing to correct, please respond "
-                "with just 'OK', and nothing else!",
+                content="If there is nothing to correct, please respond with just 'OK', and nothing else!",
             ),
         )
         history = []
@@ -824,42 +803,42 @@ class XinferenceConversation(Conversation):
         return correction
 
     def _update_usage_stats(self, model: str, token_usage: dict):
-        """
-        Update redis database with token usage statistics using the usage_stats
+        """Update redis database with token usage statistics using the usage_stats
         object with the increment method.
 
         Args:
+        ----
             model (str): The model name.
 
             token_usage (dict): The token usage statistics.
+
         """
-        pass
 
     def set_api_key(self) -> bool:
-        """
-        Try to get the Xinference model from the client API. If the model is
+        """Try to get the Xinference model from the client API. If the model is
         found, initialise the conversational agent. If the model is not found,
         `get_model` will raise a RuntimeError.
 
-        Returns:
+        Returns
+        -------
             bool: True if the model is found, False otherwise.
-        """
 
+        """
         try:
             if self.model_name is None or self.model_name == "auto":
                 self.model_name = self.list_models_by_type("chat")[0]
             self.model = self.client.get_model(
-                self.models[self.model_name]["id"]
+                self.models[self.model_name]["id"],
             )
 
             if self.ca_model_name is None or self.ca_model_name == "auto":
                 self.ca_model_name = self.list_models_by_type("chat")[0]
             self.ca_model = self.client.get_model(
-                self.models[self.ca_model_name]["id"]
+                self.models[self.ca_model_name]["id"],
             )
             return True
 
-        except RuntimeError as e:
+        except RuntimeError:
             # TODO handle error, log?
             return False
 
@@ -883,7 +862,7 @@ class XinferenceConversation(Conversation):
 
 
 class OllamaConversation(Conversation):
-    def set_api_key(self, api_key: str, user: Optional[str] = None):
+    def set_api_key(self, api_key: str, user: str | None = None):
         pass
 
     def __init__(
@@ -894,15 +873,13 @@ class OllamaConversation(Conversation):
         correct: bool = False,
         split_correction: bool = False,
     ):
-        """
-
-        Connect to an Ollama LLM via the Ollama/Langchain library and set
+        """Connect to an Ollama LLM via the Ollama/Langchain library and set
         up a conversation with the user. Also initialise a second
         conversational agent to provide corrections to the model output, if
         necessary.
 
         Args:
-
+        ----
             base_url (str): The base URL of the Ollama instance.
 
             prompts (dict): A dictionary of prompts to use for the conversation.
@@ -924,23 +901,28 @@ class OllamaConversation(Conversation):
         )
         self.model_name = model_name
         self.model = ChatOllama(
-            base_url=base_url, model=self.model_name, temperature=0.0
+            base_url=base_url,
+            model=self.model_name,
+            temperature=0.0,
         )
 
         self.ca_model_name = "mixtral:latest"
 
         self.ca_model = ChatOllama(
-            base_url=base_url, model_name=self.ca_model_name, temperature=0.0
+            base_url=base_url,
+            model_name=self.ca_model_name,
+            temperature=0.0,
         )
 
     def append_system_message(self, message: str):
-        """
-        We override the system message addition because Ollama does not
+        """We override the system message addition because Ollama does not
         accept multiple system messages. We concatenate them if there are
         multiple.
 
         Args:
+        ----
             message (str): The message to append.
+
         """
         # if there is not already a system message in self.messages
         if not any(isinstance(m, SystemMessage) for m in self.messages):
@@ -957,9 +939,7 @@ class OllamaConversation(Conversation):
                     break
 
     def append_ca_message(self, message: str):
-        """
-
-        We also override the system message addition for the correcting agent,
+        """We also override the system message addition for the correcting agent,
         likewise because Ollama does not accept multiple system messages. We
         concatenate them if there are multiple.
 
@@ -967,7 +947,9 @@ class OllamaConversation(Conversation):
         as the primary one.
 
         Args:
+        ----
             message (str): The message to append.
+
         """
         # if there is not already a system message in self.messages
         if not any(isinstance(m, SystemMessage) for m in self.ca_messages):
@@ -984,14 +966,12 @@ class OllamaConversation(Conversation):
                     break
 
     def _primary_query(self):
-        """
-
-        Query the Ollama client API with the user's message and return the
+        """Query the Ollama client API with the user's message and return the
         response using the message history (flattery system messages, prior
         conversation) as context. Correct the response if necessary.
 
-        Returns:
-
+        Returns
+        -------
             tuple: A tuple containing the response from the Ollama API
             (formatted similarly to responses from the OpenAI API) and the token
             usage.
@@ -1000,7 +980,7 @@ class OllamaConversation(Conversation):
         try:
             messages = self._create_history(self.messages)
             response = self.model.invoke(
-                messages
+                messages,
                 # ,generate_config={"max_tokens": 2048, "temperature": 0},
             )
         except (
@@ -1043,17 +1023,18 @@ class OllamaConversation(Conversation):
         return history
 
     def _correct_response(self, msg: str):
-        """
-
-        Correct the response from the Ollama API by sending it to a
+        """Correct the response from the Ollama API by sending it to a
         secondary language model. Optionally split the response into single
         sentences and correct each sentence individually. Update usage stats.
 
         Args:
+        ----
             msg (str): The response from the model.
 
         Returns:
+        -------
             str: The corrected response (or OK if no correction necessary).
+
         """
         ca_messages = self.ca_messages.copy()
         ca_messages.append(
@@ -1063,12 +1044,11 @@ class OllamaConversation(Conversation):
         )
         ca_messages.append(
             SystemMessage(
-                content="If there is nothing to correct, please respond "
-                "with just 'OK', and nothing else!",
+                content="If there is nothing to correct, please respond with just 'OK', and nothing else!",
             ),
         )
         response = self.ca_model.invoke(
-            chat_history=self._create_history(self.messages)
+            chat_history=self._create_history(self.messages),
         ).dict()
         correction = response["content"]
         token_usage = response["eval_count"]
@@ -1078,16 +1058,16 @@ class OllamaConversation(Conversation):
         return correction
 
     def _update_usage_stats(self, model: str, token_usage: dict):
-        """
-        Update redis database with token usage statistics using the usage_stats
+        """Update redis database with token usage statistics using the usage_stats
         object with the increment method.
 
         Args:
+        ----
             model (str): The model name.
 
             token_usage (dict): The token usage statistics.
+
         """
-        pass
 
 
 class AnthropicConversation(Conversation):
@@ -1098,12 +1078,12 @@ class AnthropicConversation(Conversation):
         correct: bool = False,
         split_correction: bool = False,
     ):
-        """
-        Connect to Anthropic's API and set up a conversation with the user.
+        """Connect to Anthropic's API and set up a conversation with the user.
         Also initialise a second conversational agent to provide corrections to
         the model output, if necessary.
 
         Args:
+        ----
             model_name (str): The name of the model to use.
 
             prompts (dict): A dictionary of prompts to use for the conversation.
@@ -1111,6 +1091,7 @@ class AnthropicConversation(Conversation):
             split_correction (bool): Whether to correct the model output by
                 splitting the output into sentences and correcting each
                 sentence individually.
+
         """
         super().__init__(
             model_name=model_name,
@@ -1123,17 +1104,19 @@ class AnthropicConversation(Conversation):
         # TODO make accessible by drop-down
 
     def set_api_key(self, api_key: str, user: str) -> bool:
-        """
-        Set the API key for the Anthropic API. If the key is valid, initialise the
+        """Set the API key for the Anthropic API. If the key is valid, initialise the
         conversational agent. Set the user for usage statistics.
 
         Args:
+        ----
             api_key (str): The API key for the Anthropic API.
 
             user (str): The user for usage statistics.
 
         Returns:
+        -------
             bool: True if the API key is valid, False otherwise.
+
         """
         client = anthropic.Anthropic(
             api_key=api_key,
@@ -1157,18 +1140,19 @@ class AnthropicConversation(Conversation):
 
             return True
 
-        except anthropic._exceptions.AuthenticationError as e:
+        except anthropic._exceptions.AuthenticationError:
             return False
 
     def _primary_query(self):
-        """
-        Query the Anthropic API with the user's message and return the response
+        """Query the Anthropic API with the user's message and return the response
         using the message history (flattery system messages, prior conversation)
         as context. Correct the response if necessary.
 
-        Returns:
-            tuple: A tuple containing the response from the Anthropic API and the
-                token usage.
+        Returns
+        -------
+            tuple: A tuple containing the response from the Anthropic API and
+                the token usage.
+
         """
         try:
             history = self._create_history()
@@ -1201,17 +1185,12 @@ class AnthropicConversation(Conversation):
     def _create_history(self):
         history = []
         # extract text components from message contents
-        msg_texts = [
-            m.content[0]["text"] if isinstance(m.content, list) else m.content
-            for m in self.messages
-        ]
+        msg_texts = [m.content[0]["text"] if isinstance(m.content, list) else m.content for m in self.messages]
 
         # check if last message is an image message
         is_image_message = False
         if isinstance(self.messages[-1].content, list):
-            is_image_message = (
-                self.messages[-1].content[1]["type"] == "image_url"
-            )
+            is_image_message = self.messages[-1].content[1]["type"] == "image_url"
 
         # find location of last AI message (if any)
         last_ai_message = None
@@ -1220,9 +1199,7 @@ class AnthropicConversation(Conversation):
                 last_ai_message = i
 
         # Aggregate system messages into one message at the beginning
-        system_messages = [
-            m.content for m in self.messages if isinstance(m, SystemMessage)
-        ]
+        system_messages = [m.content for m in self.messages if isinstance(m, SystemMessage)]
         if system_messages:
             history.append(
                 SystemMessage(content="\n".join(system_messages)),
@@ -1247,7 +1224,7 @@ class AnthropicConversation(Conversation):
             history.append(
                 HumanMessage(
                     content="\n".join(
-                        [m for m in msg_texts[last_ai_message + 1 :]]
+                        [m for m in msg_texts[last_ai_message + 1 :]],
                     ),
                 ),
             )
@@ -1261,7 +1238,7 @@ class AnthropicConversation(Conversation):
             history.append(
                 HumanMessage(
                     content="\n".join(
-                        [m for m in msg_texts[last_system_message + 1 :]]
+                        [m for m in msg_texts[last_system_message + 1 :]],
                     ),
                 ),
             )
@@ -1273,23 +1250,25 @@ class AnthropicConversation(Conversation):
                 {
                     "type": "image_url",
                     "image_url": {
-                        "url": self.messages[-1].content[1]["image_url"]["url"]
+                        "url": self.messages[-1].content[1]["image_url"]["url"],
                     },
                 },
             ]
         return history
 
     def _correct_response(self, msg: str):
-        """
-        Correct the response from the Anthropic API by sending it to a secondary
+        """Correct the response from the Anthropic API by sending it to a secondary
         language model. Optionally split the response into single sentences and
         correct each sentence individually. Update usage stats.
 
         Args:
+        ----
             msg (str): The response from the Anthropic API.
 
         Returns:
+        -------
             str: The corrected response (or OK if no correction necessary).
+
         """
         ca_messages = self.ca_messages.copy()
         ca_messages.append(
@@ -1299,8 +1278,7 @@ class AnthropicConversation(Conversation):
         )
         ca_messages.append(
             SystemMessage(
-                content="If there is nothing to correct, please respond "
-                "with just 'OK', and nothing else!",
+                content="If there is nothing to correct, please respond with just 'OK', and nothing else!",
             ),
         )
 
@@ -1319,13 +1297,14 @@ class GptConversation(Conversation):
         prompts: dict,
         correct: bool = False,
         split_correction: bool = False,
+        base_url: str = None,
     ):
-        """
-        Connect to OpenAI's GPT API and set up a conversation with the user.
+        """Connect to OpenAI's GPT API and set up a conversation with the user.
         Also initialise a second conversational agent to provide corrections to
         the model output, if necessary.
 
         Args:
+        ----
             model_name (str): The name of the model to use.
 
             prompts (dict): A dictionary of prompts to use for the conversation.
@@ -1333,6 +1312,10 @@ class GptConversation(Conversation):
             split_correction (bool): Whether to correct the model output by
                 splitting the output into sentences and correcting each
                 sentence individually.
+
+            base_url (str): Optional OpenAI base_url value to use custom
+                endpoint URL instead of default
+
         """
         super().__init__(
             model_name=model_name,
@@ -1340,25 +1323,28 @@ class GptConversation(Conversation):
             correct=correct,
             split_correction=split_correction,
         )
-
+        self.base_url = base_url
         self.ca_model_name = "gpt-3.5-turbo"
         # TODO make accessible by drop-down
 
     def set_api_key(self, api_key: str, user: str) -> bool:
-        """
-        Set the API key for the OpenAI API. If the key is valid, initialise the
+        """Set the API key for the OpenAI API. If the key is valid, initialise the
         conversational agent. Set the user for usage statistics.
 
         Args:
+        ----
             api_key (str): The API key for the OpenAI API.
 
             user (str): The user for usage statistics.
 
         Returns:
+        -------
             bool: True if the API key is valid, False otherwise.
+
         """
         client = openai.OpenAI(
             api_key=api_key,
+            base_url=self.base_url,
         )
         self.user = user
 
@@ -1368,29 +1354,32 @@ class GptConversation(Conversation):
                 model_name=self.model_name,
                 temperature=0,
                 openai_api_key=api_key,
+                base_url=self.base_url,
             )
             self.ca_chat = ChatOpenAI(
                 model_name=self.ca_model_name,
                 temperature=0,
                 openai_api_key=api_key,
+                base_url=self.base_url,
             )
             if user == "community":
                 self.usage_stats = get_stats(user=user)
 
             return True
 
-        except openai._exceptions.AuthenticationError as e:
+        except openai._exceptions.AuthenticationError:
             return False
 
     def _primary_query(self):
-        """
-        Query the OpenAI API with the user's message and return the response
+        """Query the OpenAI API with the user's message and return the response
         using the message history (flattery system messages, prior conversation)
         as context. Correct the response if necessary.
 
-        Returns:
+        Returns
+        -------
             tuple: A tuple containing the response from the OpenAI API and the
                 token usage.
+
         """
         try:
             response = self.chat.generate([self.messages])
@@ -1422,16 +1411,18 @@ class GptConversation(Conversation):
         return msg, token_usage
 
     def _correct_response(self, msg: str):
-        """
-        Correct the response from the OpenAI API by sending it to a secondary
+        """Correct the response from the OpenAI API by sending it to a secondary
         language model. Optionally split the response into single sentences and
         correct each sentence individually. Update usage stats.
 
         Args:
+        ----
             msg (str): The response from the OpenAI API.
 
         Returns:
+        -------
             str: The corrected response (or OK if no correction necessary).
+
         """
         ca_messages = self.ca_messages.copy()
         ca_messages.append(
@@ -1441,8 +1432,7 @@ class GptConversation(Conversation):
         )
         ca_messages.append(
             SystemMessage(
-                content="If there is nothing to correct, please respond "
-                "with just 'OK', and nothing else!",
+                content="If there is nothing to correct, please respond with just 'OK', and nothing else!",
             ),
         )
 
@@ -1456,18 +1446,19 @@ class GptConversation(Conversation):
         return correction
 
     def _update_usage_stats(self, model: str, token_usage: dict):
-        """
-        Update redis database with token usage statistics using the usage_stats
+        """Update redis database with token usage statistics using the usage_stats
         object with the increment method.
 
         Args:
+        ----
             model (str): The model name.
 
             token_usage (dict): The token usage statistics.
+
         """
         if self.user == "community":
             self.usage_stats.increment(
-                f"usage:[date]:[user]",
+                "usage:[date]:[user]",
                 {f"{k}:{model}": v for k, v in token_usage.items()},
             )
 
@@ -1480,14 +1471,15 @@ class AzureGptConversation(GptConversation):
         prompts: dict,
         correct: bool = False,
         split_correction: bool = False,
-        version: Optional[str] = None,
-        base_url: Optional[str] = None,
+        version: str | None = None,
+        base_url: str | None = None,
     ):
-        """
-        Connect to Azure's GPT API and set up a conversation with the user.
+        """Connect to Azure's GPT API and set up a conversation with the user.
+
         Extends GptConversation.
 
         Args:
+        ----
             deployment_name (str): The name of the Azure deployment to use.
 
             model_name (str): The name of the model to use. This is distinct
@@ -1504,6 +1496,7 @@ class AzureGptConversation(GptConversation):
             version (str): The version of the Azure API to use.
 
             base_url (str): The base URL of the Azure API to use.
+
         """
         super().__init__(
             model_name=model_name,
@@ -1516,18 +1509,21 @@ class AzureGptConversation(GptConversation):
         self.base_url = base_url
         self.deployment_name = deployment_name
 
-    def set_api_key(self, api_key: str, user: Optional[str] = None) -> bool:
-        """
-        Set the API key for the Azure API. If the key is valid, initialise the
-        conversational agent. No user stats on Azure.
+    def set_api_key(self, api_key: str) -> bool:
+        """Set the API key for the Azure API.
+
+        If the key is valid, initialise the conversational agent. No user stats
+        on Azure.
 
         Args:
+        ----
             api_key (str): The API key for the Azure API.
 
         Returns:
+        -------
             bool: True if the API key is valid, False otherwise.
-        """
 
+        """
         try:
             self.chat = AzureChatOpenAI(
                 deployment_name=self.deployment_name,
@@ -1552,13 +1548,11 @@ class AzureGptConversation(GptConversation):
 
             return True
 
-        except openai._exceptions.AuthenticationError as e:
+        except openai._exceptions.AuthenticationError:
             return False
 
     def _update_usage_stats(self, model: str, token_usage: dict):
-        """
-        We do not track usage stats for Azure.
-        """
+        """We do not track usage stats for Azure."""
         return
 
 
@@ -1569,9 +1563,7 @@ class BloomConversation(Conversation):
         prompts: dict,
         split_correction: bool,
     ):
-        """
-        DEPRECATED: Superceded by XinferenceConversation.
-        """
+        """DEPRECATED: Superceded by XinferenceConversation."""
         super().__init__(
             model_name=model_name,
             prompts=prompts,
@@ -1580,7 +1572,7 @@ class BloomConversation(Conversation):
 
         self.messages = []
 
-    def set_api_key(self, api_key: str, user: Optional[str] = None):
+    def set_api_key(self, api_key: str, user: str | None = None):
         self.chat = HuggingFaceHub(
             repo_id=self.model_name,
             model_kwargs={"temperature": 1.0},  # "regular sampling"
@@ -1591,13 +1583,11 @@ class BloomConversation(Conversation):
         try:
             self.chat.generate(["Hello, I am a biomedical researcher."])
             return True
-        except ValueError as e:
+        except ValueError:
             return False
 
     def _cast_messages(self, messages):
-        """
-        Render the different roles of the chat-based conversation as plain text.
-        """
+        """Render the different roles of the chat-based conversation as plain text."""
         cast = ""
         for m in messages:
             if isinstance(m, SystemMessage):

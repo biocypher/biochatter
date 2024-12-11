@@ -1,6 +1,6 @@
-import unittest.mock as mock
+from unittest import mock
 
-from biochatter.database_agent import Document, DatabaseAgent
+from biochatter.database_agent import DatabaseAgent
 from biochatter.langgraph_agent_base import ReflexionAgentResult
 
 
@@ -21,18 +21,16 @@ def test_get_query_results_with_reflexion():
     db_agent.connect()  # Call the connect method to initialize the driver
 
     with mock.patch(
-        "biochatter.database_agent.KGQueryReflexionAgent"
+        "biochatter.database_agent.KGQueryReflexionAgent",
     ) as mock_KGQueryReflexionAgent:
-        mock_KGQueryReflexionAgent.return_value.execute.return_value = (
-            ReflexionAgentResult(
-                answer="test_query",
-                tool_result=[
-                    {"key": "value"},
-                    {"key": "value"},
-                    {"key": "value"},
-                    {"key": "value"},
-                ],
-            )
+        mock_KGQueryReflexionAgent.return_value.execute.return_value = ReflexionAgentResult(
+            answer="test_query",
+            tool_result=[
+                {"key": "value"},
+                {"key": "value"},
+                {"key": "value"},
+                {"key": "value"},
+            ],
         )
 
         # Mock the prompt_engine.generate_query method
@@ -73,7 +71,9 @@ def test_get_query_results_without_reflexion():
 
     # Mock the prompt_engine.generate_query method
     with mock.patch.object(
-        db_agent.prompt_engine, "generate_query", return_value="test_query"
+        db_agent.prompt_engine,
+        "generate_query",
+        return_value="test_query",
     ):
         # Mock the driver.query method
         with mock.patch.object(

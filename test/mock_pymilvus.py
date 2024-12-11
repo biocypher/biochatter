@@ -1,24 +1,24 @@
-from typing import Any, Union, Optional
 import uuid
+from typing import Any
 
 from pymilvus import DataType, FieldSchema
 
 
-def has_collection(name, using: Optional[str] = None):
+def has_collection(name, using: str | None = None):
     return True
 
 
-class CollectionSchema(object):
+class CollectionSchema:
     def __init__(self, fields: list[FieldSchema]):
         pass
 
 
-class CollectionRecord(object):
+class CollectionRecord:
     def __init__(self, key: str) -> None:
         self.primary_keys = [key]
 
 
-class Collection(object):
+class Collection:
     def __init__(
         self,
         name: str,
@@ -41,7 +41,7 @@ class Collection(object):
     def flush(self):
         pass
 
-    def similarity_search(self, query: str, k: int, expr: Optional[str] = None):
+    def similarity_search(self, query: str, k: int, expr: str | None = None):
         pass
 
     def load(self):
@@ -55,15 +55,18 @@ class Collection(object):
         return []
 
     def create_index(
-        self, field_name: str, index_params: dict[str, Any], using: str
+        self,
+        field_name: str,
+        index_params: dict[str, Any],
+        using: str,
     ):
         pass
 
     def insert(
         self,
-        data: Union[list, dict],
-        partition_name: Optional[str] = None,
-        timeout: Optional[float] = None,
+        data: list | dict,
+        partition_name: str | None = None,
+        timeout: float | None = None,
         **kwargs,
     ):
         id = uuid.uuid4().hex
@@ -71,14 +74,14 @@ class Collection(object):
         return CollectionRecord(id)
 
 
-class Connections(object):
+class Connections:
     def connect(
         self,
         host: str,
         port: str,
-        alias: Optional[str] = None,
-        user: Optional[str] = "",
-        password: Optional[str] = "",
+        alias: str | None = None,
+        user: str | None = "",
+        password: str | None = "",
     ):
         pass
 
@@ -87,7 +90,7 @@ connections = Connections()
 
 
 class Utility:
-    def has_collection(self, name: str, using: Optional[str] = None):
+    def has_collection(self, name: str, using: str | None = None):
         return True
 
 

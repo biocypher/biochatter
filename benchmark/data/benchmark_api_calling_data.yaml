@@ -1,0 +1,75 @@
+# Top-level keys: benchmark modules
+# Values: list of dictionaries, each containing a test case
+#
+# Test case keys:
+# - input (for creating the test)
+# - expected (for asserting outcomes and generating a score)
+# - case (for categorizing the test case)
+#
+# If any input is a dictionary itself, it will be expanded into separate test
+# cases, using the top-level key to create a concatenated test case purpose.
+#
+# We are using regular expressions to evaluate the expected parts, to be able to
+# account for variations in the output (e.g. whitespace, capitalization). Make
+# sure to escape special characters in the regular expressions, such as '?',
+# '.', etc., by adding two backslashes before them.
+
+api_calling:
+  - case: oncokb:braf:melanoma
+    input:
+      prompt:
+        exact_spelling: "What is the consequence of the V600E BRAF variant in Melanoma?"
+    expected:
+      parts_of_query:
+        [
+          "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange\\?",
+          "hugoSymbol=BRAF",
+          "alteration=V600E",
+          "tumorType=Melanoma",
+        ]
+  - case: oncokb:tp53:colon_adenocarcinoma
+    input:
+      prompt:
+        exact_spelling: "What is the consequence of the R273C TP53 variant in Colon Adenocarcinoma?"
+    expected:
+      parts_of_query:
+        [
+          "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange\\?",
+          "hugoSymbol=TP53",
+          "alteration=R273C",
+          "tumorType=Colon%20Adenocarcinoma",
+        ]
+  - case: oncokb:braf:histiocytosis
+    input:
+      prompt:
+        exact_spelling: "What is the consequence of the N486_P490del BRAF variant in Histiocytosis?"
+        descriptive_spelling: "What is the consequence of an N486_P490 deletion in BRAF in Histiocytosis?"
+    expected:
+      parts_of_query:
+        [
+          "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange\\?",
+          "hugoSymbol=BRAF",
+          "alteration=N486_P490del",
+          "tumorType=Histiocytosis",
+        ]
+  - case: oncokb:ros1:lung_adenocarcinoma
+    input:
+      prompt:
+        exact_spelling: "What is the consequence of the functional fusion of CD47 and ROS1 in Lung Adenocarcinoma?"
+    expected:
+      parts_of_query:
+        [
+          "https://demo.oncokb.org/api/v1/annotate/structuralVariants\\?",
+          "hugoSymbolA=CD74",
+          "hugoSymbolB=ROS1",
+          "structuralVariantType=FUSION",
+          "isFunctionalFusion=true",
+          "tumorType=Lung%20Adenocarcinoma",
+        ]
+  - case: biotools:topic:metabolomics
+    input:
+      prompt:
+        fuzzy_search: "Which tools can I use for metabolomics?"
+    expected:
+      parts_of_query:
+        ["https://bio.tools/api/t/", "\\?topic=", "[mM]etabolomics"]

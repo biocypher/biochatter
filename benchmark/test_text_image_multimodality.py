@@ -5,26 +5,26 @@
 # The expected answer is whether the figure caption actually belongs to the figure panel
 
 # Load the data
-import os
 import hashlib
 import inspect
-
-import pytest
+import os
 
 import numpy as np
+import pytest
 
 from benchmark.conftest import calculate_bool_vector_score
+
 from .benchmark_utils import (
-    skip_if_already_run,
-    get_result_file_path,
-    write_results_to_file,
     get_confidence_file_path,
+    get_result_file_path,
+    skip_if_already_run,
     write_confidence_to_file,
+    write_results_to_file,
 )
 
 
 # Load the data
-@pytest.fixture
+@pytest.fixture()
 def data_list():
     data_path = "benchmark/data/source_data_clip"
     return [
@@ -36,10 +36,12 @@ def data_list():
 
 # Run benchmark
 def test_multimodal_answer(
-    data_list, model_name, conversation, multiple_testing
+    data_list,
+    model_name,
+    conversation,
+    multiple_testing,
 ):
-    """
-    Select randomly from the list of folders in data_list:
+    """Select randomly from the list of folders in data_list:
     - n examples with true positives (figure and caption match)
     - n examples with true negatives (figure and caption do not match)
 
@@ -66,9 +68,7 @@ def test_multimodal_answer(
 
     def run_test():
         # True positives: list of tuples containing the same file name twice
-        true_positives = [
-            (f, f) for f in np.random.choice(data_list, n, replace=False)
-        ]
+        true_positives = [(f, f) for f in np.random.choice(data_list, n, replace=False)]
         # True negatives: list of tuples containing different file names
         # Check that the randomly selected names are different
         true_negatives = []
@@ -83,7 +83,7 @@ def test_multimodal_answer(
         for f1, f2 in true_positives + true_negatives:
             conversation.reset()
             # Load the image and the caption
-            with open(os.path.join(f1, f1.split("/")[-1] + ".txt"), "r") as f:
+            with open(os.path.join(f1, f1.split("/")[-1] + ".txt")) as f:
                 caption = f.read()
             image_path = os.path.join(f2, f2.split("/")[-1] + ".jpg")
 
@@ -111,7 +111,7 @@ def test_multimodal_answer(
                     "file": f1.split("/")[-1],
                     "answer": answer,
                     "confidence": confidence,
-                }
+                },
             )
 
         # Consume results and write to file

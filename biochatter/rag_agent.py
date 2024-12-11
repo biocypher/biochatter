@@ -1,4 +1,3 @@
-from typing import Optional
 from collections.abc import Callable
 
 
@@ -13,28 +12,27 @@ class RagAgent:
     def __init__(
         self,
         mode: str,
-        model_name: Optional[str] = "gpt-3.5-turbo",
-        connection_args: Optional[dict] = None,
-        n_results: Optional[int] = 3,
-        use_prompt: Optional[bool] = False,
-        schema_config_or_info_dict: Optional[dict] = None,
-        conversation_factory: Optional[Callable] = None,
-        embedding_func: Optional[object] = None,
-        documentids_workspace: Optional[list[str]] = None,
-        agent_desc: Optional[str] = None,
-        use_reflexion: Optional[bool] = False,
+        model_name: str | None = "gpt-3.5-turbo",
+        connection_args: dict | None = None,
+        n_results: int | None = 3,
+        use_prompt: bool | None = False,
+        schema_config_or_info_dict: dict | None = None,
+        conversation_factory: Callable | None = None,
+        embedding_func: object | None = None,
+        documentids_workspace: list[str] | None = None,
+        agent_desc: str | None = None,
+        use_reflexion: bool | None = False,
     ) -> None:
         ######
         ##TO DO
         ######
         # mode: 'api' for the case where the agent is querying an API
         # use_prompt: default TRUE for self.mode == api
-
-        """
-        Create a RAG agent that can return results from a database or vector
+        """Create a RAG agent that can return results from a database or vector
         store using a query engine.
 
         Args:
+        ----
             mode (str): The mode of the agent. Either "kg" or "vectorstore".
 
             model_name (str): The name of the model to use.
@@ -69,6 +67,7 @@ class RagAgent:
 
             use_reflexion (bool): Whether to use the ReflexionAgent to generate
                 the query.
+
         """
         self.mode = mode
         self.model_name = model_name
@@ -82,7 +81,7 @@ class RagAgent:
 
             if not connection_args:
                 raise ValueError(
-                    "Please provide connection args to connect to database."
+                    "Please provide connection args to connect to database.",
                 )
 
             if not schema_config_or_info_dict:
@@ -106,7 +105,7 @@ class RagAgent:
 
             if not connection_args:
                 raise ValueError(
-                    "Please provide connection args to connect to vector store."
+                    "Please provide connection args to connect to vector store.",
                 )
 
             if not embedding_func:
@@ -122,12 +121,12 @@ class RagAgent:
             self.query_func = self.agent.similarity_search
 
         elif self.mode == RagAgentModeEnum.API_BLAST:
+            from .api_agent.api_agent import APIAgent
             from .api_agent.blast import (
                 BlastFetcher,
                 BlastInterpreter,
                 BlastQueryBuilder,
             )
-            from .api_agent.api_agent import APIAgent
 
             self.agent = APIAgent(
                 conversation_factory=conversation_factory,
@@ -137,12 +136,12 @@ class RagAgent:
             )
             self.query_func = self.agent.execute
         elif self.mode == RagAgentModeEnum.API_ONCOKB:
+            from .api_agent.api_agent import APIAgent
             from .api_agent.oncokb import (
                 OncoKBFetcher,
                 OncoKBInterpreter,
                 OncoKBQueryBuilder,
             )
-            from .api_agent.api_agent import APIAgent
 
             self.agent = APIAgent(
                 conversation_factory=conversation_factory,
@@ -153,7 +152,7 @@ class RagAgent:
             self.query_func = self.agent.execute
         else:
             raise ValueError(
-                "Invalid mode. Choose either 'kg', 'vectorstore', 'api_blast', or 'api_oncokb'."
+                "Invalid mode. Choose either 'kg', 'vectorstore', 'api_blast', or 'api_oncokb'.",
             )
 
     @property
@@ -161,23 +160,26 @@ class RagAgent:
         return self._agent_desc
 
     @agent_description.setter
-    def agent_description(self, val: Optional[str] = None):
+    def agent_description(self, val: str | None = None):
         self._agent_desc = val
 
     def generate_responses(self, user_question: str) -> list[tuple]:
-        """
-        Run the query function according to the mode and return the results in a
+        """Run the query function according to the mode and return the results in a
         uniform format (list of tuples, where the first element is the text for
         RAG and the second element is the metadata).
 
         Args:
+        ----
             user_question (str): The user question.
 
         Returns:
+        -------
             results (List[tuple]): A list of tuples containing the results.
 
         Todo:
+        ----
             Which metadata are returned?
+
         """
         self.last_response = []
         if not self.use_prompt:
@@ -216,8 +218,7 @@ class RagAgent:
 
         else:
             raise ValueError(
-                "Invalid mode. Choose either 'kg', 'vectorstore', 'api_blast', "
-                "or 'api_oncokb'."
+                "Invalid mode. Choose either 'kg', 'vectorstore', 'api_blast', or 'api_oncokb'.",
             )
         self.last_response = response
         return response
@@ -249,6 +250,5 @@ class RagAgent:
             return self.agent.get_description(tool_name, tool_desc)
         else:
             raise ValueError(
-                "Invalid mode. Choose either 'kg', 'vectorstore', 'api_blast', "
-                "or 'api_oncokb'."
+                "Invalid mode. Choose either 'kg', 'vectorstore', 'api_blast', or 'api_oncokb'.",
             )

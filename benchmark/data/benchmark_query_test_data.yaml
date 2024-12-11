@@ -1,0 +1,192 @@
+# Top-level keys: benchmark modules
+# Values: list of dictionaries, each containing a test case
+#
+# Test case keys:
+# - input (for creating the test)
+# - expected (for asserting outcomes and generating a score)
+# - case (for categorizing the test case)
+#
+# If any input is a dictionary itself, it will be expanded into separate test
+# cases, using the top-level key to create a concatenated test case purpose.
+
+biocypher_query_generation:
+  # test ability to create a simple cypher query
+  - case: simple
+    input:
+      kg_schema: gene_kg
+      prompt: What is the name of the disease with ICD10 code 'E10'?
+    expected:
+      entities: ["Disease"]
+      relationships: []
+      relationship_labels: {}
+      properties:
+        Disease: ["name", "ICD10"]
+      parts_of_query:
+        [
+          "^MATCH",
+          "RETURN",
+          "([a-zA-Z]*:Disease)",
+          "WHERE [a-zA-Z]*\\.ICD10|{ICD10:",
+        ]
+
+  # test cypher query with single-word entities
+  - case: single_word
+    input:
+      kg_schema: gene_kg
+      prompt: Which genes are associated with mucoviscidosis?
+    expected:
+      entities: ["Gene", "Disease"]
+      relationships: ["GeneToPhenotypeAssociation"]
+      relationship_labels:
+        PERTURBED:
+          source: Disease
+          target: ["Protein", "Gene"]
+      properties:
+        Disease: ["name", "ICD10", "DSM5"]
+        Gene: ["id", "name"]
+        GeneToPhenotypeAssociation: ["score", "source", "evidence"]
+      parts_of_query:
+        [
+          "^MATCH",
+          "RETURN",
+          "([a-zA-Z]*:Gene)",
+          "([a-zA-Z]*:Disease)",
+          "([a-zA-Z]*)?:PERTURBED]",
+          "[Mm]ucoviscidosis",
+          "\\(.*:Gene\\)<-\\[:PERTURBED\\]-|-\\[:PERTURBED\\]->\\(.*:Gene\\)",
+          "WHERE [a-zA-Z]*\\.name|{name:",
+        ]
+
+  # test cypher query with multi-word entities
+  - case: multi_word
+    input:
+      kg_schema: gene_kg
+      prompt: Which genes are expressed in fibroblasts?
+    expected:
+      entities: ["Gene", "CellType"]
+      relationships: ["GeneExpressedInCellType"]
+      relationship_labels:
+        GENE_EXPRESSED_IN_CELL_TYPE:
+          source: Gene
+          target: CellType
+      properties:
+        CellType: cell_type_name
+        Gene: ["id", "name"]
+        GeneExpressedInCellType: expression_level
+      parts_of_query:
+        [
+          "^MATCH",
+          "RETURN",
+          "([a-zA-Z]*:Gene)",
+          "([a-zA-Z]*:CellType.*)",
+          "([a-zA-Z]*)?:GENE_EXPRESSED_IN_CELL_TYPE]",
+          "[Ff]ibroblast",
+          "\\(.*:Gene\\)-\\[:GENE_EXPRESSED_IN_CELL_TYPE\\]->\\(.*:CellType.*\\)|\\(.*:CellType.*\\)<-\\[:GENE_EXPRESSED_IN_CELL_TYPE\\]-\\(.*:Gene\\)",
+          "WHERE [a-zA-Z]*\\.cell_type_name|{cell_type_name:",
+        ]
+
+  # test more complex cypher query
+  - case: complex
+    input:
+      kg_schema: gene_kg
+      prompt: Which proteins are associated with the disease having ICD10 code 'E10', what are their scores, and what is the gene related to these proteins?
+    expected:
+      entities: ["Protein", "Disease", "Gene"]
+      relationships: ["GeneToPhenotypeAssociation", "GeneToProteinAssociation"]
+      relationship_labels:
+        PERTURBED_IN:
+          source: Protein
+          target: Disease
+        GeneToProteinAssociation:
+          source: Gene
+          target: Protein
+      properties:
+        Disease: ["name", "ICD10"]
+        Protein: ["name", "score"]
+        Gene: ["name", "score"]
+        GeneToPhenotypeAssociation: ["score", "source", "evidence"]
+        GeneToProteinAssociation: ["score"]
+      parts_of_query:
+        [
+          "^MATCH",
+          "RETURN",
+          "([a-zA-Z]*:Protein)",
+          "([a-zA-Z]*:Disease)",
+          "([a-zA-Z]*:Gene)",
+          "([a-zA-Z]*)?:PERTURBED_IN]",
+          "([a-zA-Z]*)?:GeneToProteinAssociation]",
+          "WHERE [a-zA-Z]*\\.ICD10|{ICD10:",
+          "\\)<-\\[([a-zA-Z]*)?:PERTURBED_IN]-|-\\[([a-zA-Z]*)?:PERTURBED_IN]->\\(([a-zA-Z]*:Disease)",
+          "\\(([a-zA-Z]*(:Protein)?)\\)<-\\[([a-zA-Z]*)?:GeneToProteinAssociation]-|-\\[([a-zA-Z]*)?:GeneToProteinAssociation]->\\(([a-zA-Z]*(:Protein)?)\\)",
+        ]
+
+  - case: safety_simple
+    input:
+      kg_schema: safety_kg
+      prompt: Which organs are in our dataset?
+    expected:
+      entities: ["Organ"]
+      relationships: []
+      relationship_labels: {}
+      properties:
+        Organ: ["name"]
+      parts_of_query: ["^MATCH", "RETURN", "([a-zA-Z]*:Organ)", "name"]
+
+  - case: safety_medium
+    input:
+      kg_schema: safety_kg
+      prompt: Which model systems are used in the brain?
+    expected:
+      entities: ["ModelSystem", "Organ"]
+      relationships: ["ModelSystemRelevantToOrgan"]
+      relationship_labels:
+        ModelSystemRelevantToOrgan:
+          source: ModelSystem
+          target: Organ
+      properties:
+        ModelSystem: ["name"]
+        Organ: ["name"]
+      parts_of_query:
+        [
+          "^MATCH",
+          "RETURN",
+          "([a-zA-Z]*:ModelSystem)",
+          "([a-zA-Z]*:Organ)",
+          "([a-zA-Z]*)?:ModelSystemRelevantToOrgan]",
+          "[Bb]rain",
+          "\\(.*:ModelSystem\\)-\\[:ModelSystemRelevantToOrgan\\]->\\(.*:Organ\\)|\\(.*:Organ\\)<-\\[:ModelSystemRelevantToOrgan\\]-\\(.*:ModelSystem\\)",
+          "WHERE [a-zA-Z]*\\.name|{name:",
+        ]
+
+  - case: safety_complex
+    input:
+      kg_schema: safety_kg
+      prompt: Which case studies are performed on the brain, and which chemicals are used in these case studies?
+    expected:
+      entities: ["CaseStudy", "Organ", "Chemical"]
+      relationships: ["CaseStudyRelatedOrgan", "CaseStudyRelevantChemical"]
+      relationship_labels:
+        CaseStudyRelatedOrgan:
+          source: CaseStudy
+          target: Organ
+        CaseStudyRelevantChemical:
+          source: CaseStudy
+          target: Chemical
+      properties:
+        CaseStudy: ["name"]
+        Organ: ["name"]
+        Chemical: ["name"]
+      parts_of_query:
+        [
+          "^MATCH",
+          "RETURN",
+          "([a-zA-Z]*:CaseStudy)",
+          "([a-zA-Z]*:Organ)",
+          "([a-zA-Z]*:Chemical)",
+          "([a-zA-Z]*)?:CaseStudyRelatedOrgan]",
+          "([a-zA-Z]*)?:CaseStudyRelevantChemical]",
+          "[Bb]rain",
+          "\\(.*:CaseStudy\\)-\\[:CaseStudyRelatedOrgan\\]->\\(.*:Organ\\)|\\(.*:Organ\\)<-\\[:CaseStudyRelatedOrgan\\]-\\(.*:CaseStudy\\)",
+          "\\(.*:CaseStudy\\)-\\[:CaseStudyRelevantChemical\\]->\\(.*:Chemical\\)|\\(.*:Chemical\\)<-\\[:CaseStudyRelevantChemical\\]-\\(.*:CaseStudy\\)",
+          "WHERE [a-zA-Z]*\\.name|{name:",
+        ]

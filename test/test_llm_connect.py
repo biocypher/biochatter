@@ -1,52 +1,58 @@
-from unittest.mock import Mock, MagicMock, patch, mock_open
-import os
-import base64
+# ruff: noqa: S101  # Use of assert detected
+# ruff: noqa: ANN201  # No docstring in public function
+# ruff: noqa: D103  # Missing docstring in public function
+# ruff: noqa: D100  # Missing docstring in public module
 
-from PIL import Image
-from xinference.client import Client
-from openai._exceptions import NotFoundError
+import os
+from unittest.mock import MagicMock, Mock, mock_open, patch
+
 import openai
 import pytest
+from openai._exceptions import NotFoundError
+from PIL import Image
 
 from biochatter._image import (
-    encode_image,
-    process_image,
-    convert_to_png,
-    convert_to_pil_image,
-    encode_image_from_url,
     convert_and_resize_image,
+    convert_to_pil_image,
+    convert_to_png,
+    encode_image,
+    encode_image_from_url,
+    process_image,
 )
 from biochatter.llm_connect import (
     AIMessage,
-    HumanMessage,
-    SystemMessage,
-    GptConversation,
-    WasmConversation,
-    OllamaConversation,
-    AzureGptConversation,
     AnthropicConversation,
+    AzureGptConversation,
+    GptConversation,
+    HumanMessage,
+    OllamaConversation,
+    SystemMessage,
+    WasmConversation,
     XinferenceConversation,
 )
 
 
 @pytest.fixture(scope="module", autouse=True)
-def manageTestContext():
+def manage_test_context():
     import openai
 
     base_url = openai.base_url
     api_type = openai.api_type
     api_version = openai.api_version
     api_key = openai.api_key
-    # api_key_path = openai.api_key_path
     organization = openai.organization
+    proxy = getattr(openai, "proxy", None)
     yield True
 
     openai.base_url = base_url
     openai.api_type = api_type
     openai.api_version = api_version
     openai.api_key = api_key
-    # openai.api_key_path = api_key_path
     openai.organization = organization
+    if proxy is not None:
+        openai.proxy = proxy
+    elif hasattr(openai, "proxy"):
+        delattr(openai, "proxy")
 
 
 def test_empty_messages():
@@ -78,9 +84,7 @@ def test_multiple_messages():
     convo.messages.append(HumanMessage(content="How are you?"))
     convo.messages.append(AIMessage(content="I'm doing well, thanks!"))
     assert convo.get_msg_json() == (
-        '[{"system": "Hello, world!"}, '
-        '{"user": "How are you?"}, '
-        '{"ai": "I\'m doing well, thanks!"}]'
+        '[{"system": "Hello, world!"}, {"user": "How are you?"}, {"ai": "I\'m doing well, thanks!"}]'
     )
 
 
@@ -119,7 +123,14 @@ def test_openai_catches_authentication_error(mock_openai):
     assert not success
 
 
-def test_azure_raises_request_error():
+@patch("biochatter.llm_connect.AzureChatOpenAI")
+def test_azure_raises_request_error(mock_azure_chat):
+    mock_azure_chat.side_effect = NotFoundError(
+        message="Resource not found",
+        response=Mock(),
+        body=None,
+    )
+
     convo = AzureGptConversation(
         model_name="gpt-35-turbo",
         deployment_name="test_deployment",
@@ -134,13 +145,12 @@ def test_azure_raises_request_error():
 
 
 @patch("biochatter.llm_connect.AzureChatOpenAI")
-def test_azure(mock_azurechat):
+def test_azure(mock_azure_chat):
+    """Test OpenAI Azure endpoint functionality.
+
+    Azure connectivity is enabled by setting the corresponding environment
+    variables.
     """
-    Test OpenAI Azure endpoint functionality. Azure connectivity is enabled by
-    setting the corresponding environment variables.
-    """
-    # mock_azurechat.return_value.generate =
-    openai.proxy = os.getenv("AZURE_TEST_OPENAI_PROXY")
     convo = AzureGptConversation(
         model_name=os.getenv("AZURE_TEST_OPENAI_MODEL_NAME"),
         deployment_name=os.getenv("AZURE_TEST_OPENAI_DEPLOYMENT_NAME"),
@@ -149,6 +159,8 @@ def test_azure(mock_azurechat):
         version=os.getenv("AZURE_TEST_OPENAI_API_VERSION"),
         base_url=os.getenv("AZURE_TEST_OPENAI_API_BASE"),
     )
+
+    mock_azure_chat.return_value = Mock()
 
     assert convo.set_api_key(os.getenv("AZURE_TEST_OPENAI_API_KEY"))
 
@@ -185,13 +197,13 @@ def test_anthropic():
         split_correction=False,
     )
     assert conv.set_api_key(
-        api_key=os.getenv("ANTHROPIC_API_KEY"), user="test_user"
+        api_key=os.getenv("ANTHROPIC_API_KEY"),
+        user="test_user",
     )
 
 
 def test_xinference_init():
-    """
-    Test generic LLM connectivity via the Xinference client. Currently depends
+    """Test generic LLM connectivity via the Xinference client. Currently depends
     on a test server.
     """
     base_url = os.getenv("XINFERENCE_BASE_URL", "http://localhost:9997")
@@ -221,7 +233,7 @@ def test_xinference_chatting():
                         "content": " Hello there, can you sing me a song?",
                     },
                     "finish_reason": "stop",
-                }
+                },
             ],
             "usage": {
                 "prompt_tokens": 93,
@@ -230,9 +242,7 @@ def test_xinference_chatting():
             },
         }
         mock_client.return_value.list_models.return_value = xinference_models
-        mock_client.return_value.get_model.return_value.chat.return_value = (
-            response
-        )
+        mock_client.return_value.get_model.return_value.chat.return_value = response
         convo = XinferenceConversation(
             base_url=base_url,
             prompts={},
@@ -313,9 +323,11 @@ def test_wasm_conversation():
     assert result == test_query + "\nSystem message"
 
 
-@pytest.fixture
+@pytest.fixture()
 def xinference_conversation():
     with patch("xinference.client.Client") as mock_client:
+        # Mock the authentication check
+        mock_client.return_value._check_cluster_authenticated.return_value = None
         mock_client.return_value.list_models.return_value = xinference_models
         mock_client.return_value.get_model.return_value.chat.return_value = (
             {"choices": [{"message": {"content": "Human message"}}]},
@@ -326,10 +338,10 @@ def xinference_conversation():
             prompts={},
             correct=False,
         )
-    return conversation
+        return conversation
 
 
-def test_single_system_message_before_human(xinference_conversation):
+def test_single_system_message_before_human(xinference_conversation: XinferenceConversation):
     xinference_conversation.messages = [
         SystemMessage(content="System message"),
         HumanMessage(content="Human message"),
@@ -341,7 +353,7 @@ def test_single_system_message_before_human(xinference_conversation):
     }
 
 
-def test_multiple_system_messages_before_human(xinference_conversation):
+def test_multiple_system_messages_before_human(xinference_conversation: XinferenceConversation):
     xinference_conversation.messages = [
         SystemMessage(content="System message 1"),
         SystemMessage(content="System message 2"),
@@ -355,7 +367,7 @@ def test_multiple_system_messages_before_human(xinference_conversation):
 
 
 def test_multiple_messages_including_ai_before_system_and_human(
-    xinference_conversation,
+    xinference_conversation: XinferenceConversation,
 ):
     xinference_conversation.messages = [
         HumanMessage(content="Human message history"),
@@ -407,7 +419,8 @@ def test_convert_to_pil_image_pdf(mock_convert_from_path):
     mock_convert_from_path.return_value = [Image.new("RGB", (1000, 1000))]
     with patch("biochatter._image.os.path.exists", return_value=True):
         with patch(
-            "biochatter._image.os.path.abspath", side_effect=lambda x: x
+            "biochatter._image.os.path.abspath",
+            side_effect=lambda x: x,
         ):
             img = convert_to_pil_image("test.pdf")
             assert isinstance(img, Image.Image)
@@ -453,32 +466,23 @@ def test_encode_image_from_url():
         mock_response = MagicMock()
         mock_response.read.return_value = b"image_data"
         mock_urlopen.return_value.__enter__.return_value = mock_response
-        mock_urlopen.return_value.info.return_value.get_content_type.return_value = (
-            "image/jpeg"
-        )
+        mock_urlopen.return_value.info.return_value.get_content_type.return_value = "image/jpeg"
 
-        with patch(
-            "biochatter._image.tempfile.NamedTemporaryFile",
-            new_callable=MagicMock,
-        ) as mock_tempfile:
-            mock_tempfile_instance = (
-                mock_tempfile.return_value.__enter__.return_value
-            )
+        with patch("tempfile.NamedTemporaryFile", new_callable=MagicMock) as mock_tempfile:
+            mock_tempfile_instance = mock_tempfile.return_value.__enter__.return_value
             mock_tempfile_instance.name = "test_temp_file"
 
-            # Using a simple Mock for the write method to avoid issues with MagicMock
             write_mock = Mock()
             mock_tempfile_instance.write = write_mock
 
             with patch("biochatter._image.encode_image") as mock_encode:
                 mock_encode.return_value = "base64string"
 
-                with patch("biochatter._image.os.remove") as mock_remove:
+                with patch("os.remove") as mock_remove:
                     encoded_str = encode_image_from_url(
-                        "http://example.com/image.jpg"
+                        "http://example.com/image.jpg",
                     )
 
-            # Ensure the temporary file write method was called with the correct data
             write_mock.assert_called_once_with(b"image_data")
             mock_remove.assert_called_once_with("test_temp_file")
             assert isinstance(encoded_str, str)
@@ -496,7 +500,7 @@ def test_append_local_image_gpt():
     convo.set_api_key(api_key=os.getenv("OPENAI_API_KEY"), user="test_user")
 
     convo.append_system_message(
-        "You are an editorial assistant to a journal in biomedical science."
+        "You are an editorial assistant to a journal in biomedical science.",
     )
 
     convo.append_image_message(
@@ -523,7 +527,7 @@ def test_local_image_query_gpt():
     convo.set_api_key(api_key=os.getenv("OPENAI_API_KEY"), user="test_user")
 
     convo.append_system_message(
-        "You are an editorial assistant to a journal in biomedical science."
+        "You are an editorial assistant to a journal in biomedical science.",
     )
 
     result, _, _ = convo.query(

@@ -1,12 +1,10 @@
-from unittest.mock import MagicMock, patch
 import os
-
-from xinference.client import Client
+from unittest.mock import patch
 
 from biochatter.vectorstore import (
     Document,
-    DocumentReader,
     DocumentEmbedder,
+    DocumentReader,
     OllamaDocumentEmbedder,
     XinferenceDocumentEmbedder,
 )
@@ -55,12 +53,12 @@ splitted_docs = [
 @patch("biochatter.vectorstore.VectorDatabaseAgentMilvus")
 @patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
 def test_retrieval_augmented_generation(
-    mock_textsplitter, mock_host, mock_openaiembeddings
+    mock_textsplitter,
+    mock_host,
+    mock_openaiembeddings,
 ):
     # mocking
-    mock_textsplitter.from_huggingface_tokenizer.return_value = (
-        mock_textsplitter()
-    )
+    mock_textsplitter.from_huggingface_tokenizer.return_value = mock_textsplitter()
     mock_textsplitter.from_tiktoken_encoder.return_value = mock_textsplitter()
     mock_textsplitter.return_value.split_documents.return_value = splitted_docs
     mock_host.return_value.store_embeddings.return_value = "1"
@@ -101,12 +99,13 @@ def test_retrieval_augmented_generation(
 @patch("biochatter.vectorstore.VectorDatabaseAgentMilvus")
 @patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
 def test_retrieval_augmented_generation_xinference_api(
-    mock_textsplitter, mock_host, mock_embeddings, mock_client
+    mock_textsplitter,
+    mock_host,
+    mock_embeddings,
+    mock_client,
 ):
     # mocking
-    mock_textsplitter.from_huggingface_tokenizer.return_value = (
-        mock_textsplitter()
-    )
+    mock_textsplitter.from_huggingface_tokenizer.return_value = mock_textsplitter()
     mock_textsplitter.from_tiktoken_encoder.return_value = mock_textsplitter()
     mock_textsplitter.return_value.split_documents.return_value = splitted_docs
     mock_host.return_value.store_embeddings.return_value = "1"
@@ -120,7 +119,7 @@ def test_retrieval_augmented_generation_xinference_api(
             "max_tokens": 512,
             "language": ["en"],
             "model_revision": "",
-        }
+        },
     }
 
     pdf_path = "test/bc_summary.pdf"
@@ -133,7 +132,8 @@ def test_retrieval_augmented_generation_xinference_api(
 
     rag_agent = XinferenceDocumentEmbedder(
         base_url=os.getenv(
-            "GENERIC_TEST_OPENAI_BASE_URL", "http://localhost:9997"
+            "GENERIC_TEST_OPENAI_BASE_URL",
+            "http://localhost:9997",
         ),
         embedding_collection_name="ollama_embedding_test",
         metadata_collection_name="xinference_metadata_test",
@@ -164,12 +164,13 @@ def test_retrieval_augmented_generation_xinference_api(
 @patch("biochatter.vectorstore.VectorDatabaseAgentMilvus")
 @patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
 def test_retrieval_augmented_generation_ollama_api(
-    mock_textsplitter, mock_host, mock_embeddings, mock_client
+    mock_textsplitter,
+    mock_host,
+    mock_embeddings,
+    mock_client,
 ):
     # mocking
-    mock_textsplitter.from_huggingface_tokenizer.return_value = (
-        mock_textsplitter()
-    )
+    mock_textsplitter.from_huggingface_tokenizer.return_value = mock_textsplitter()
     mock_textsplitter.from_tiktoken_encoder.return_value = mock_textsplitter()
     mock_textsplitter.return_value.split_documents.return_value = splitted_docs
     mock_host.return_value.store_embeddings.return_value = "1"
@@ -183,7 +184,7 @@ def test_retrieval_augmented_generation_ollama_api(
             "max_tokens": 512,
             "language": ["en"],
             "model_revision": "",
-        }
+        },
     }
 
     pdf_path = "test/bc_summary.pdf"
@@ -283,9 +284,7 @@ def check_document_splitter(
 @patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
 def test_split_by_characters(mock_textsplitter, mock_host, mock_embeddings):
     # character splitter
-    mock_textsplitter.from_huggingface_tokenizer.return_value = (
-        mock_textsplitter()
-    )
+    mock_textsplitter.from_huggingface_tokenizer.return_value = mock_textsplitter()
     mock_textsplitter.from_tiktoken_encoder.return_value = mock_textsplitter()
     mock_textsplitter.return_value.split_documents.return_value = splitted_docs
     rag_agent = DocumentEmbedder(
@@ -293,11 +292,15 @@ def test_split_by_characters(mock_textsplitter, mock_host, mock_embeddings):
         chunk_overlap=CHUNK_OVERLAP,
     )
     check_document_splitter(
-        rag_agent, "test/bc_summary.pdf", len(splitted_docs)
+        rag_agent,
+        "test/bc_summary.pdf",
+        len(splitted_docs),
     )
     check_document_splitter(rag_agent, "test/dcn.pdf", len(splitted_docs))
     check_document_splitter(
-        rag_agent, "test/bc_summary.txt", len(splitted_docs)
+        rag_agent,
+        "test/bc_summary.txt",
+        len(splitted_docs),
     )
 
     # tiktoken
@@ -307,13 +310,17 @@ def test_split_by_characters(mock_textsplitter, mock_host, mock_embeddings):
         chunk_overlap=CHUNK_OVERLAP,
     )
     check_document_splitter(
-        rag_agent, "test/bc_summary.pdf", len(splitted_docs)
+        rag_agent,
+        "test/bc_summary.pdf",
+        len(splitted_docs),
     )
     mock_textsplitter.from_tiktoken_encoder.assert_called_once()
     check_document_splitter(rag_agent, "test/dcn.pdf", len(splitted_docs))
     assert mock_textsplitter.from_tiktoken_encoder.call_count == 2
     check_document_splitter(
-        rag_agent, "test/bc_summary.txt", len(splitted_docs)
+        rag_agent,
+        "test/bc_summary.txt",
+        len(splitted_docs),
     )
     assert mock_textsplitter.from_tiktoken_encoder.call_count == 3
 
@@ -325,12 +332,16 @@ def test_split_by_characters(mock_textsplitter, mock_host, mock_embeddings):
         chunk_overlap=CHUNK_OVERLAP,
     )
     check_document_splitter(
-        rag_agent, "test/bc_summary.pdf", len(splitted_docs)
+        rag_agent,
+        "test/bc_summary.pdf",
+        len(splitted_docs),
     )
     mock_textsplitter.from_huggingface_tokenizer.assert_called_once()
     check_document_splitter(rag_agent, "test/dcn.pdf", len(splitted_docs))
     assert mock_textsplitter.from_huggingface_tokenizer.call_count == 2
     check_document_splitter(
-        rag_agent, "test/bc_summary.txt", len(splitted_docs)
+        rag_agent,
+        "test/bc_summary.txt",
+        len(splitted_docs),
     )
     assert mock_textsplitter.from_huggingface_tokenizer.call_count == 3

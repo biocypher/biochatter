@@ -75,6 +75,7 @@ nav:
       - Home: features/index.md
       - Basic Usage - Chat: features/chat.md
       - Retrieval-Augmented Generation: features/rag.md
+      - API Calling: features/api.md
       - Reflexion via LangGraph: features/reflexion-agent.md
       - Open-source and Local LLMs: features/open-llm.md
       - LLM in your Browser - WebAssembly: features/wasm.md
@@ -90,6 +91,7 @@ nav:
       - Retrieval-Augmented Generation (RAG): vignettes/rag.md
       - Customising BioChatter Light - Simple: vignettes/custom-bclight-simple.md
       - Customising BioChatter Light - Advanced: vignettes/custom-bclight-advanced.md
+      - Customising BioChatter Light and Next - Cancer Genetics Use Case: vignettes/custom-decider-use-case.md
   - API Reference:
       - Home: api-docs/index.md
       - LLM Connectivity: api-docs/llm_connect.md
