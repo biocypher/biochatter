@@ -9,6 +9,8 @@ from .blast import (
     BlastQueryParameters,
 )
 from .oncokb import OncoKBFetcher, OncoKBInterpreter, OncoKBQueryBuilder
+from .scanpy_pl import ScanpyPlQueryBuilder
+from .formatters import format_as_rest_call, format_as_python_call
 
 __all__ = [
     "APIAgent",
@@ -26,4 +28,11 @@ __all__ = [
     "OncoKBFetcher",
     "OncoKBInterpreter",
     "OncoKBQueryBuilder",
+    "BioToolsFetcher",
+    "BioToolsInterpreter",
+    "BioToolsQueryBuilder",
+    "APIAgent",
+    "ScanpyPlQueryBuilder",
+    "format_as_rest_call",
+    "format_as_python_call",
 ]
