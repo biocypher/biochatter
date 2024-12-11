@@ -439,6 +439,53 @@ class TestOncoKBInterpreter:
             {"input": {expected_summary_prompt}},
         )
 
+class TestScanpyTLQueryBuilder:
+    @patch("biochatter.llm_connect.GptConversation")
+    def test_parameterise_query(self, mock_conversation):
+        # Arrange
+        question = "I want to mark mitochondrial genes of my adata object"
+
+        # Mock the list of Pydantic classes as a list of Mock objects
+        class MockTool1(BaseModel):
+            param1: str
+
+        class MockTool2(BaseModel):
+            param2: int
+
+        mock_generated_classes = [MockTool1, MockTool2]
+
+        # Mock the conversation object and LLM
+        mock_conversation_instance = mock_conversation.return_value
+        mock_llm = MagicMock()
+        mock_conversation_instance.chat = mock_llm
+
+        # Mock the LLM with tools
+        mock_llm_with_tools = MagicMock()
+        mock_llm.bind_tools.return_value = mock_llm_with_tools
+
+        # Mock the chain and its invoke method
+        mock_chain = MagicMock()
+        mock_llm_with_tools.__or__.return_value = mock_chain
+        mock_result = {"parameters": {"key_added": "mt_genes"}}
+        mock_chain.invoke.return_value = mock_result
+
+        # Act
+        builder = ScanpyTLQueryBuilder()
+        result = builder.parameterise_query(
+            question, 
+            mock_conversation_instance, 
+            generated_classes=mock_generated_classes
+        )
+
+        # Assert
+        mock_llm.bind_tools.assert_called_once_with(mock_generated_classes)
+        mock_chain.invoke.assert_called_once_with([
+            ("system", "You're an expert data scientist"),
+            ("human", question),
+        ])
+        assert result == mock_result
+
+
 
 class TestScanpyPlQueryBuilder:
     @pytest.fixture()
@@ -452,12 +499,6 @@ class TestScanpyPlQueryBuilder:
 
 
 
-class TestScanpyPlFetcher:
-    pass
-
-
-class TestScanpyPlInterpreter:
-    pass
 
 
 class TestAnndataIOQueryBuilder:
