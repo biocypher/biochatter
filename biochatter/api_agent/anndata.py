@@ -7,7 +7,6 @@
 # 3. Filter the anndata object -> NumPy or SciPy sparse matrix api
 # 4. Write the anndata object to [xxx] format -> built-in anndata api
 
-from collections.abc import Callable
 from typing import TYPE_CHECKING
 
 from langchain.chains.openai_functions import PydanticToolsParser
@@ -200,10 +199,10 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
             ReadText,
             ReadZarr,
         ]
-        runnable = conversation.chat.bind_tools(tools)
+        runnable = conversation.chat.bind_tools(tools, system_prompt=ANNDATA_IO_QUERY_PROMPT)
 
         chain = runnable | PydanticToolsParser(tools=tools)
         anndata_io_call_obj = chain.invoke(
-            {"input": f"Answer:\n{question} based on:\n {ANNDATA_IO_QUERY_PROMPT}"},
+            {"input": f"Answer:\n{question}"},
         )
         return anndata_io_call_obj
