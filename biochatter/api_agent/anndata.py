@@ -7,6 +7,7 @@
 # 3. Filter the anndata object -> NumPy or SciPy sparse matrix api
 # 4. Write the anndata object to [xxx] format -> built-in anndata api
 
+from collections.abc import Callable
 from typing import TYPE_CHECKING
 
 from langchain_core.output_parsers import PydanticToolsParser
@@ -165,6 +166,31 @@ class ReadText(BaseAPIModel):
 class AnnDataIOQueryBuilder(BaseQueryBuilder):
     """A class for building a AnndataIO query object."""
 
+    def create_runnable(
+        self,
+        query_parameters: list["BaseAPIModel"],
+        conversation: "Conversation",
+    ) -> Callable:
+        """Create a runnable object for executing queries.
+
+        Create runnable using the LangChain `create_structured_output_runnable`
+        method.
+
+        Args:
+        ----
+            query_parameters: A Pydantic data model that specifies the fields of
+                the API that should be queried.
+
+            conversation: A BioChatter conversation object.
+
+        Returns:
+        -------
+            A Callable object that can execute the query.
+
+        """
+        runnable = conversation.chat.bind_tools(query_parameters, system_prompt=ANNDATA_IO_QUERY_PROMPT)
+        return runnable | PydanticToolsParser(tools=query_parameters)
+
     def parameterise_query(
         self,
         question: str,
@@ -199,10 +225,8 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
             ReadText,
             ReadZarr,
         ]
-        runnable = conversation.chat.bind_tools(tools, system_prompt=ANNDATA_IO_QUERY_PROMPT)
-
-        chain = runnable | PydanticToolsParser(tools=tools)
-        anndata_io_call_obj = chain.invoke(
+        runnable = self.create_runnable(conversation=conversation, query_parameters=tools)
+        anndata_io_call_obj = runnable.invoke(
             {"input": f"Answer:\n{question}"},
         )
         return anndata_io_call_obj
