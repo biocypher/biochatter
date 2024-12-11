@@ -196,6 +196,89 @@ class ScanpyPlScatterQueryParameters(BaseModel):
         description="If True or a str, save the figure. String is appended to default filename.",
     )
 
+### Embeddings
+class ScanpyPlPcaQueryParameters(BaseModel):
+    """Parameters for querying the scanpy `pl.pca` API."""
+
+    question_uuid: str | None = Field(
+        default=None,
+        description="Unique identifier for the question.",
+    )
+    adata: str = Field(
+        ...,
+        description="Annotated data matrix.",
+    )
+    color: str | list[str] | None = Field(
+        default=None,
+        description="Keys for annotations of observations/cells or variables/genes.",
+    )
+    components: str | list[str] = Field(
+        default="1,2",
+        description="For example, ['1,2', '2,3']. To plot all available components use 'all'.",
+    )
+    projection: str = Field(
+        default="2d",
+        description="Projection of plot.",
+    )
+    legend_loc: str = Field(
+        default="right margin",
+        description="Location of legend.",
+    )
+    legend_fontsize: int | float | str | None = Field(
+        default=None,
+        description="Font size for legend.",
+    )
+    legend_fontweight: int | str | None = Field(
+        default=None,
+        description="Font weight for legend.",
+    )
+    color_map: str | None = Field(
+        default=None,
+        description="String denoting matplotlib color map.",
+    )
+    palette: str | list[str] | dict | None = Field(
+        default=None,
+        description="Colors to use for plotting categorical annotation groups.",
+    )
+    frameon: bool | None = Field(
+        default=None,
+        description="Draw a frame around the scatter plot.",
+    )
+    size: int | float | None = Field(
+        default=None,
+        description="Point size. If `None`, is automatically computed as 120000 / n_cells.",
+    )
+    title: str | list[str] | None = Field(
+        default=None,
+        description="Provide title for panels either as string or list of strings.",
+    )
+    show: bool | None = Field(
+        default=None,
+        description="Show the plot, do not return axis.",
+    )
+    save: str | bool | None = Field(
+        default=None,
+        description="If `True` or a `str`, save the figure.",
+    )
+    ax: str | None = Field(
+        default=None,
+        description="A matplotlib axes object.",
+    )
+    return_fig: bool = Field(
+        default=False,
+        description="Return the matplotlib figure object.",
+    )
+    marker: str | None = Field(
+        default=".",
+        description="Marker symbol.",
+    )
+    annotate_var_explained: bool = Field(
+        default=False,
+        description="Annotate the percentage of explained variance.",
+    )
+
+
+
 class ScanpyPlQueryBuilder(BaseQueryBuilder):
     """A class for building an ScanpyPlQuery object."""
 
