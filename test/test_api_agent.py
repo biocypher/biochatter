@@ -11,6 +11,9 @@ from biochatter.api_agent.abc import (
     BaseInterpreter,
     BaseQueryBuilder,
 )
+from biochatter.api_agent.anndata import (
+    AnnDataIOQueryBuilder,
+)
 from biochatter.api_agent.api_agent import APIAgent
 from biochatter.api_agent.blast import (
     BLAST_QUERY_PROMPT,
@@ -33,7 +36,6 @@ from biochatter.api_agent.scanpy_pl import (
     ScanpyPlQueryBuilder,
     ScanpyPlQueryParameters,
 )
-
 from biochatter.llm_connect import Conversation, GptConversation
 
 
@@ -85,22 +87,22 @@ class MockModel(BaseModel):
     field: str
 
 
-@pytest.fixture()
+@pytest.fixture
 def query_builder():
     return TestQueryBuilder()
 
 
-@pytest.fixture()
+@pytest.fixture
 def fetcher():
     return TestFetcher()
 
 
-@pytest.fixture()
+@pytest.fixture
 def interpreter():
     return TestInterpreter()
 
 
-@pytest.fixture()
+@pytest.fixture
 def test_agent(query_builder, fetcher, interpreter):
     return APIAgent(
         conversation_factory=MagicMock(),
@@ -245,13 +247,13 @@ class TestBlastFetcher:
             fetcher._submit_query(query_parameters)
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_conversation():
     with patch("biochatter.llm_connect.GptConversation") as mock:
         yield mock
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_output_parser():
     with patch("biochatter.api_agent.blast.StrOutputParser") as mock:
         mock_parser = MagicMock()
@@ -259,7 +261,7 @@ def mock_output_parser():
         yield mock_parser
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_chain(mock_conversation, mock_output_parser):
     with patch(
         "biochatter.api_agent.blast.ChatPromptTemplate.from_messages",
@@ -271,7 +273,7 @@ def mock_chain(mock_conversation, mock_output_parser):
 
 
 class TestBlastInterpreter:
-    ###FIX THIS TEST
+    # FIX THIS TEST
     def test_summarise_results(mock_prompt, mock_conversation, mock_chain):
         # Arrange
         interpreter = BlastInterpreter()
@@ -376,13 +378,13 @@ class TestOncoKBFetcher:
         assert result == mock_response
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_conversation():
     with patch("biochatter.llm_connect.GptConversation") as mock:
         yield mock
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_output_parser():
     with patch("biochatter.api_agent.oncokb.StrOutputParser") as mock:
         mock_parser = MagicMock()
@@ -390,7 +392,7 @@ def mock_output_parser():
         yield mock_parser
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_chain(mock_conversation, mock_output_parser):
     with patch(
         "biochatter.api_agent.oncokb.ChatPromptTemplate.from_messages",
@@ -428,6 +430,7 @@ class TestOncoKBInterpreter:
         mock_chain.invoke.assert_called_once_with(
             {"input": {expected_summary_prompt}},
         )
+
 
 class TestScanpyPlQueryBuilder:
     @pytest.fixture()
@@ -471,11 +474,45 @@ class TestScanpyPlQueryBuilder:
         assert result == mock_query_obj
 
 
-
-
 class TestScanpyPlFetcher:
     pass
 
 
 class TestScanpyPlInterpreter:
+    pass
+
+
+class TestAnndataIOQueryBuilder:
+    @pytest.fixture
+    def mock_create_runnable(self):
+        with patch(
+            "biochatter.api_agent.anndata.AnnDataIOQueryBuilder.create_runnable",
+        ) as mock:
+            mock_runnable = MagicMock()
+            mock.return_value = mock_runnable
+            yield mock_runnable
+
+    def test_parameterise_query(self, mock_create_runnable):
+        # Arrange
+        query_builder = AnnDataIOQueryBuilder()
+        mock_conversation = MagicMock()
+        question = "read a .h5ad file into an anndata object."
+        expected_input = {"input": f"Answer:\n{question}"}
+
+        mock_query_obj = MagicMock()
+        mock_create_runnable.invoke.return_value = mock_query_obj
+
+        # Act
+        result = query_builder.parameterise_query(question, mock_conversation)
+
+        # Assert
+        mock_create_runnable.invoke.assert_called_once_with(expected_input)
+        assert result == mock_query_obj
+
+
+class TestAnndataIOPlFetcher:
+    pass
+
+
+class TestAnndataIOInterpreter:
     pass

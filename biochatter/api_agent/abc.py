@@ -138,3 +138,19 @@ class BaseInterpreter(ABC):
             specifics of the results.
 
         """
+
+
+from pydantic import BaseModel, Field
+
+
+class BaseAPIModel(BaseModel):
+    """A base class for all API models.
+    Includes default fields `uuid` and `method_name`.
+    """
+
+    uuid: str | None = Field(None, description="Unique identifier for the model instance")
+    method_name: str = Field(..., description="Name of the method to be executed")
+
+    class Config:
+        # Ensures the model can be extended without strict type checking on inherited fields.
+        arbitrary_types_allowed = True
