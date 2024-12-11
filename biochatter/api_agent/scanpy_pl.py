@@ -4,13 +4,13 @@ import uuid
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
-from langchain.chains.openai_functions import create_structured_output_runnable
+from langchain_core.output_parsers import PydanticToolsParser
 from langchain_core.pydantic_v1 import BaseModel, Field
 
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
 
-from .abc import BaseQueryBuilder
+from .abc import BaseAPIModel, BaseQueryBuilder
 
 SCANPY_PL_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats.
@@ -445,12 +445,14 @@ class ScanpyPlTsneQueryParameters(BaseModel):
         description="Additional arguments passed to `matplotlib.pyplot.scatter()`.",
     )
 
+
+
 class ScanpyPlQueryBuilder(BaseQueryBuilder):
-    """A class for building an ScanpyPlQuery object."""
+    """A class for building a AnndataIO query object."""
 
     def create_runnable(
         self,
-        query_parameters: "ScanpyPlScatterQueryParameters",
+        query_parameters: list["BaseAPIModel"],
         conversation: "Conversation",
     ) -> Callable:
         """Create a runnable object for executing queries.
@@ -470,23 +472,20 @@ class ScanpyPlQueryBuilder(BaseQueryBuilder):
             A Callable object that can execute the query.
 
         """
-        return create_structured_output_runnable(
-            output_schema=query_parameters,
-            llm=conversation.chat,
-            prompt=self.structured_output_prompt,
-        )
+        runnable = conversation.chat.bind_tools(query_parameters, system_prompt=SCANPY_PL_QUERY_PROMPT)
+        return runnable | PydanticToolsParser(tools=query_parameters)
 
     def parameterise_query(
         self,
         question: str,
         conversation: "Conversation",
-    ) -> ScanpyPlScatterQueryParameters:
-        """Generate an ScanpyPlQuery object.
+    ) -> list["BaseModel"]:
+        """Generate a AnnDataIOQuery object.
 
-        Generate a ScanpyPlQuery object based on the given question, prompt,
-        and BioChatter conversation. Uses a Pydantic model to define the API
-        fields.  Creates a runnable that can be invoked on LLMs that are
-        qualified to parameterise functions.
+        Generates the object based on the given question, prompt, and
+        BioChatter conversation. Uses a Pydantic model to define the API fields.
+        Creates a runnable that can be invoked on LLMs that are qualified to
+        parameterise functions.
 
         Args:
         ----
@@ -497,18 +496,16 @@ class ScanpyPlQueryBuilder(BaseQueryBuilder):
 
         Returns:
         -------
-            ScanpyPlQueryParameters: the parameterised query object (Pydantic
-                model)
+            ScanpyPlQuery: the parameterised query object (Pydantic model)
 
         """
-        runnable = self.create_runnable(
-            query_parameters=ScanpyPlScatterQueryParameters,
-            conversation=conversation,
-        )
+        tools = [
+            ScanpyPlScatterQueryParameters,
+            ScanpyPlPcaQueryParameters,
+            ScanpyPlTsneQueryParameters,
+        ]
+        runnable = self.create_runnable(conversation=conversation, query_parameters=tools)
         scanpy_pl_call_obj = runnable.invoke(
-            {
-                "input": f"Answer:\n{question} based on:\n {SCANPY_PL_QUERY_PROMPT}",
-            },
+            {"input": f"Answer:\n{question}"},
         )
-        scanpy_pl_call_obj.question_uuid = str(uuid.uuid4())
         return scanpy_pl_call_obj
