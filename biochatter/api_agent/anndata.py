@@ -7,10 +7,9 @@
 # 3. Filter the anndata object -> NumPy or SciPy sparse matrix api
 # 4. Write the anndata object to [xxx] format -> built-in anndata api
 
-from collections.abc import Callable
 from typing import TYPE_CHECKING
 
-from langchain.chains.openai_functions import PydanticToolsParser
+from langchain_core.output_parsers import PydanticToolsParser
 from langchain_core.pydantic_v1 import BaseModel, Field
 
 from biochatter.llm_connect import Conversation
