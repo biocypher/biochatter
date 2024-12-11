@@ -1,0 +1,106 @@
+# Top-level keys: benchmark modules
+# Values: list of dictionaries, each containing a test case
+#
+# Test case keys:
+# - input (for creating the test)
+# - expected (for asserting outcomes and generating a score)
+# - case (for categorizing the test case)
+#
+# If any input is a dictionary itself, it will be expanded into separate test
+# cases, using the top-level key to create a concatenated test case purpose.
+
+rag_interpretation:
+  # test simple irrelevance judgement
+  - case: explicit_relevance_no
+    input:
+      prompt: Which molecular pathways are associated with cancer?
+      system_messages:
+        simple:
+          [
+            "You will receive a text fragment to help answer the user's question. Your task is to judge this text fragment for relevance to the user's question, and return either 'yes' or 'no'! Here is the fragment: ",
+            "The earth is a globe.",
+          ]
+        more_explicit:
+          [
+            "You will receive a text fragment to help answer the user's question. Your task is to judge this text fragment for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
+            "The earth is a globe.",
+          ]
+        repeat_instruction:
+          [
+            "You will receive a text fragment to help answer the user's question. You should only respond with 'yes' or 'no' without additional words. Your task is to judge this text fragment for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
+            "The earth is a globe.",
+          ]
+    expected:
+      answer: "no"
+
+  # test simple relevance judgement
+  - case: explicit_relevance_yes
+    input:
+      prompt: Which molecular pathways are associated with cancer?
+      system_messages:
+        [
+          "You will receive a text fragment to help answer the user's question. Your task is to judge this text fragment for relevance to the user's question, and return either 'yes' or 'no'; only respond with one word, do not offer explanation or justification! Here is the fragment: ",
+          "The EGFR pathway is deregulated in a number of cancers.",
+        ]
+    expected:
+      answer: "yes"
+
+  # test capability to evaluate response to relevance question negatively
+  - case: explicit_evaluation_no
+    input:
+      prompt: "I'm sorry, but the given text fragments do not provide any relevant information about molecular pathways associated with cancer."
+      system_messages:
+        [
+          "You will receive a statement as an answer to this question: ",
+          "Which molecular pathways are associated with cancer? ",
+          "If the statement is an answer to the question, please type 'answer'. ",
+          "If the statement declines to answer to the question or apologises, giving the reason of lack of relevance of the given text fragments, please type 'decline'. ",
+          "Do not type anything except these two options. Here is the statement: ",
+        ]
+    expected:
+      answer: "decline"
+
+  # test capability to evaluate response to relevance question positively
+  - case: explicit_evaluation_yes
+    input:
+      prompt: "There are several molecular pathways that are associated with cancer, for instance TP53, BRCA1, the STAT inflammatory pathway, and the EGFR pathway."
+      system_messages:
+        [
+          "You will receive a statement as an answer to this question: ",
+          "Which molecular pathways are associated with cancer? ",
+          "If the statement is an answer to the question, please type 'answer'. ",
+          "If the statement declines to answer to the question or apologises, giving the reason of lack of relevance of the given text fragments, please type 'decline'. ",
+          "Do not type anything except these two options. Here is the statement: ",
+        ]
+    expected:
+      answer: "answer"
+
+  # test complex (implicit) irrelevance judgement
+  - case: implicit_relevance_no
+    input:
+      prompt: Which molecular pathways are associated with cancer?
+      system_messages:
+        [
+          "You will receive a number of text fragments to help answer the user's question. Your task is to use the information in these text fragments for answering the user's question, if they are relevant. Here are the fragments: ",
+          "The earth is a globe.",
+          "The Human is the most endurant mammal.",
+          "America was discovered by Columbus.",
+          "The wavelength of red light is longer than that of blue light.",
+        ]
+    expected:
+      behaviour: "decline"
+
+  # test complex (implicit) relevance judgement
+  - case: implicit_relevance_yes
+    input:
+      prompt: Which molecular pathways are associated with cancer?
+      system_messages:
+        [
+          "You will receive a number of text fragments to help answer the user's question. Your task is to use the information in these text fragments for answering the user's question, if they are relevant. Here are the fragments: ",
+          "TP53, when mutated, often is a driving mutation in cancer.",
+          "BRCA1 is an important genetic regulator of breast cancer.",
+          "The STAT inflammatory pathway is often perturbed in cancers.",
+          "The EGFR pathway can lead to excessive growth of cancer cells.",
+        ]
+    expected:
+      behaviour: "answer"

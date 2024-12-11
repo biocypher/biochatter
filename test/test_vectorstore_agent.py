@@ -1,10 +1,8 @@
-"""
-This test needs OPENAI_API_KEY in the environment and a local milvus server.
-"""
+"""This test needs OPENAI_API_KEY in the environment and a local milvus server."""
 
-from unittest.mock import patch
 import os
 import uuid
+from unittest.mock import patch
 
 import pytest
 
@@ -12,15 +10,16 @@ import pytest
 # from pymilvus import utility, Collection, connections
 # from langchain.embeddings import OpenAIEmbeddings
 from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
+
+from .mock_langchain import Document, Milvus, OpenAIEmbeddings
 from .mock_pymilvus import (
-    DataType,
     Collection,
-    FieldSchema,
     CollectionSchema,
-    utility,
+    DataType,
+    FieldSchema,
     connections,
+    utility,
 )
-from .mock_langchain import Milvus, Document, OpenAIEmbeddings
 
 # setup milvus connection
 if os.getenv("DEVCONTAINER"):
@@ -130,15 +129,16 @@ mocked_bc_summary_txt_splitted_texts = [
             "representation. KGs are d"
         ),
         metadata={"source": "test/bc_summary.txt"},
-    )
+    ),
 ]
 
 
-@pytest.fixture
+@pytest.fixture()
 def dbHost():
     with (
         patch(
-            "biochatter.vectorstore_agent.OpenAIEmbeddings", OpenAIEmbeddings
+            "biochatter.vectorstore_agent.OpenAIEmbeddings",
+            OpenAIEmbeddings,
         ),
         patch("biochatter.vectorstore_agent.Document", Document),
         patch("biochatter.vectorstore_agent.Milvus", Milvus),
@@ -148,7 +148,8 @@ def dbHost():
         patch("biochatter.vectorstore_agent.DataType", DataType),
         patch("biochatter.vectorstore_agent.FieldSchema", FieldSchema),
         patch(
-            "biochatter.vectorstore_agent.CollectionSchema", CollectionSchema
+            "biochatter.vectorstore_agent.CollectionSchema",
+            CollectionSchema,
         ),
     ):
         # create dbHost
@@ -213,6 +214,6 @@ def test_build_meta_col_query_expr_for_all_documents():
     ]
     for test_data in data:
         expr = VectorDatabaseAgentMilvus._build_meta_col_query_expr_for_all_documents(
-            test_data[0]
+            test_data[0],
         )
         assert expr == test_data[1]

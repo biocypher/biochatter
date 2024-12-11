@@ -1,23 +1,23 @@
 import os
 
-from xinference.client import Client
-import pytest
-import requests
-
 import numpy as np
 import pandas as pd
+import pytest
+import requests
+from xinference.client import Client
 
-from biochatter.prompts import BioCypherPromptEngine
 from biochatter.llm_connect import (
-    GptConversation,
     AnthropicConversation,
+    GptConversation,
     XinferenceConversation,
 )
-from .load_dataset import get_benchmark_dataset
+from biochatter.prompts import BioCypherPromptEngine
+
 from .benchmark_utils import benchmark_already_executed
+from .load_dataset import get_benchmark_dataset
 
 # how often should each benchmark be run?
-N_ITERATIONS = 3
+N_ITERATIONS = 1
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
@@ -29,6 +29,7 @@ OPENAI_MODEL_NAMES = [
     # "gpt-4-0125-preview",
     # "gpt-4-turbo-2024-04-09",
     # "gpt-4o-2024-05-13",
+    "gpt-4o-2024-08-06",
     # "gpt-4o-mini-2024-07-18",
 ]
 
@@ -40,8 +41,8 @@ ANTHROPIC_MODEL_NAMES = [
 XINFERENCE_MODELS = {
     # "code-llama-instruct": {
     #     "model_size_in_billions": [
-    #         7,
-    #         13,
+    #         # 7,
+    #         # 13,
     #         34,
     #     ],
     #     "model_format": "ggufv2",
@@ -130,7 +131,7 @@ XINFERENCE_MODELS = {
     # "llama-2-chat": {
     #     "model_size_in_billions": [
     #         7,
-    #         13,
+    #         # 13,
     #         # 70,
     #     ],
     #     "model_format": "ggufv2",
@@ -176,12 +177,12 @@ XINFERENCE_MODELS = {
     #     "model_format": "ggufv2",
     #     "quantization": [
     #         # 8B model quantisations
-    #         # "Q3_K_L",
+    #         "Q3_K_L",
     #         "IQ4_XS",
-    #         # "Q4_K_M",
+    #         "Q4_K_M",
     #         # "Q5_K_M",
     #         # "Q6_K",
-    #         # "Q8_0",
+    #         "Q8_0",
     #         # 70B model quantisations
     #         # "IQ2_M",
     #         # "Q2_K",
@@ -264,15 +265,13 @@ XINFERENCE_MODELS = {
 # names, model sizes and quantizations
 XINFERENCE_MODEL_NAMES = [
     f"{model_name}:{model_size}:{model_format}:{quantization}"
-    for model_name in XINFERENCE_MODELS.keys()
+    for model_name in XINFERENCE_MODELS
     for model_size in XINFERENCE_MODELS[model_name]["model_size_in_billions"]
     for model_format in [XINFERENCE_MODELS[model_name]["model_format"]]
     for quantization in XINFERENCE_MODELS[model_name]["quantization"]
 ]
 
-BENCHMARKED_MODELS = (
-    OPENAI_MODEL_NAMES + ANTHROPIC_MODEL_NAMES + XINFERENCE_MODEL_NAMES
-)
+BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + ANTHROPIC_MODEL_NAMES + XINFERENCE_MODEL_NAMES
 BENCHMARKED_MODELS.sort()
 
 # Xinference IP and port
@@ -289,18 +288,14 @@ def client():
 
 @pytest.fixture(scope="session", autouse=True)
 def register_model(client):
-    """
-    Register custom (non-builtin) models with the Xinference server. Should only
+    """Register custom (non-builtin) models with the Xinference server. Should only
     happen once per session.
     """
-
     if client is None:
         return  # ignore if server is not running
 
     registrations = client.list_model_registrations(model_type="LLM")
-    registered_models = [
-        registration["model_name"] for registration in registrations
-    ]
+    registered_models = [registration["model_name"] for registration in registrations]
 
     if "openbiollm-llama3-8b" not in registered_models:
         with open("benchmark/models/openbiollm-llama3-8b.json") as fd:
@@ -314,17 +309,15 @@ def register_model(client):
 
 
 def pytest_collection_modifyitems(items):
-    """
-    Pytest hook function to modify the collected test items.
+    """Pytest hook function to modify the collected test items.
     Called once after collection has been performed.
 
     Used here to order items by their `callspec.id` (which starts with the
     model name and configuration) to ensure running all tests for one model
     before moving to the next model.
     """
-
     items.sort(
-        key=lambda item: (item.callspec.id if hasattr(item, "callspec") else "")
+        key=lambda item: (item.callspec.id if hasattr(item, "callspec") else ""),
     )
 
     # can we skip here the tests (model x hash) that have already been executed?
@@ -336,7 +329,7 @@ def model_name(request):
     return request.param
 
 
-@pytest.fixture
+@pytest.fixture()
 def multiple_testing(request):
     def run_multiple_times(test_func, *args, **kwargs):
         scores = []
@@ -355,10 +348,9 @@ def calculate_bool_vector_score(vector: list[bool]) -> tuple[int, int]:
     return (score, max)
 
 
-@pytest.fixture
+@pytest.fixture()
 def conversation(request, model_name, client):
-    """
-    Decides whether to run the test or skip due to the test having been run
+    """Decides whether to run the test or skip due to the test having been run
     before. If not skipped, will create a conversation object for interfacing
     with the model.
     """
@@ -377,7 +369,8 @@ def conversation(request, model_name, client):
             correct=False,
         )
         conversation.set_api_key(
-            os.getenv("OPENAI_API_KEY"), user="benchmark_user"
+            os.getenv("OPENAI_API_KEY"),
+            user="benchmark_user",
         )
 
     elif model_name in ANTHROPIC_MODEL_NAMES:
@@ -387,7 +380,8 @@ def conversation(request, model_name, client):
             correct=False,
         )
         conversation.set_api_key(
-            os.getenv("ANTHROPIC_API_KEY"), user="benchmark_user"
+            os.getenv("ANTHROPIC_API_KEY"),
+            user="benchmark_user",
         )
 
     elif model_name in XINFERENCE_MODEL_NAMES:
@@ -397,7 +391,7 @@ def conversation(request, model_name, client):
             _model_format,
             _model_quantization,
         ) = model_name.split(":")
-        if not "_" in _model_size:
+        if "_" not in _model_size:
             _model_size = int(_model_size)
 
         # if exact model already running, return conversation
@@ -406,10 +400,8 @@ def conversation(request, model_name, client):
             for running_model in running_models:
                 if (
                     running_models[running_model]["model_name"] == _model_name
-                    and running_models[running_model]["model_size_in_billions"]
-                    == _model_size
-                    and running_models[running_model]["quantization"]
-                    == _model_quantization
+                    and running_models[running_model]["model_size_in_billions"] == _model_size
+                    and running_models[running_model]["quantization"] == _model_quantization
                 ):
                     conversation = XinferenceConversation(
                         base_url=BENCHMARK_URL,
@@ -447,11 +439,9 @@ def conversation(request, model_name, client):
     return conversation
 
 
-@pytest.fixture
+@pytest.fixture()
 def prompt_engine(request, model_name, conversation):
-    """
-    Generates a constructor for the prompt engine for the current model name.
-    """
+    """Generates a constructor for the prompt engine for the current model name."""
 
     def conversation_factory():
         return conversation
@@ -466,7 +456,7 @@ def prompt_engine(request, model_name, conversation):
     return setup_prompt_engine
 
 
-@pytest.fixture
+@pytest.fixture()
 def evaluation_conversation():
     conversation = GptConversation(
         model_name="gpt-3.5-turbo",
@@ -488,15 +478,12 @@ def pytest_addoption(parser):
 
 @pytest.fixture(autouse=True, scope="session")
 def delete_results_csv_file_content(request):
-    """
-    If --run-all is set, the former benchmark data are deleted and all
+    """If --run-all is set, the former benchmark data are deleted and all
     benchmarks are executed again.
     """
     if request.config.getoption("--run-all"):
         RESULT_FILES = [
-            f"benchmark/results/{file}"
-            for file in os.listdir("benchmark/results")
-            if file.endswith(".csv")
+            f"benchmark/results/{file}" for file in os.listdir("benchmark/results") if file.endswith(".csv")
         ]
         for f in RESULT_FILES:
             if os.path.exists(f):
@@ -507,11 +494,7 @@ def delete_results_csv_file_content(request):
 
 @pytest.fixture(scope="session")
 def result_files():
-    RESULT_FILES = [
-        f"benchmark/results/{file}"
-        for file in os.listdir("benchmark/results")
-        if file.endswith(".csv")
-    ]
+    RESULT_FILES = [f"benchmark/results/{file}" for file in os.listdir("benchmark/results") if file.endswith(".csv")]
     result_files = {}
     result_columns = [
         "model_name",
@@ -541,43 +524,42 @@ def result_files():
 
 
 def pytest_generate_tests(metafunc):
-    """
-    Pytest hook function to generate test cases.
+    """Pytest hook function to generate test cases.
     Called once for each test case in the benchmark test collection.
     If fixture is part of test declaration, the test is parametrized.
     """
-    # Load the data file
-    data_file = BENCHMARK_DATASET["benchmark_data.yaml"]
+    # Load the data
+    data = BENCHMARK_DATASET
 
     # Parametrize the fixtures with the collected rows
     if "test_data_biocypher_query_generation" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_biocypher_query_generation",
-            data_file["biocypher_query_generation"],
+            data["biocypher_query_generation"],
         )
     if "test_data_rag_interpretation" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_rag_interpretation",
-            data_file["rag_interpretation"],
+            data["rag_interpretation"],
         )
     if "test_data_text_extraction" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_text_extraction",
-            data_file["text_extraction"],
+            data["text_extraction"],
         )
     if "test_data_api_calling" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_api_calling",
-            data_file["api_calling"],
+            data["api_calling"],
         )
     if "test_data_medical_exam" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_medical_exam",
-            data_file["medical_exam"],
+            data["medical_exam"],
         )
 
 
-@pytest.fixture
+@pytest.fixture()
 def kg_schemas():
-    data_file = BENCHMARK_DATASET["benchmark_data.yaml"]
-    return data_file["kg_schemas"]
+    data = BENCHMARK_DATASET
+    return data["kg_schemas"]

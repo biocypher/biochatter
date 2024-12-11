@@ -52,6 +52,11 @@ to `true`, which tells BioChatter Light to connect to the KG on the Docker
 network, which uses the service name as the hostname, so in this case, `deploy`
 instead of the default `localhost`.
 
+!!! info inline end "Authentication"
+    For using the app with the standard OpenAI LLM, we need to provide the
+    `OPENAI_API_KEY` environment variable. This key can be obtained from the
+    OpenAI website.
+    
 We then turn off all default tabs (chatting, prompt engineering, RAG, and the
 correcting agent) and turn on the KG tab. Running the docker compose with these
 settings will build and deploy the KG and the BioChatter Light web app with only
@@ -70,3 +75,9 @@ accessible via our modular architecture and the simple
 [Streamlit](https://streamlit.io) framework for UI design. Check the [advanced
 vignette](custom-bclight-advanced.md) and the codebase of [BioChatter
 Light](https://github.com/biocypher/biochatter-light) for more information.
+
+!!! note "Open-source LLMs"
+    You can use a locally hosted open-source LLM model by using the
+    `docker-compose-ollama.yml` as an example (this deployment requires Ollama
+    to be installed on your machine). See more
+    [here](https://github.com/biocypher/biochatter-light#open-source-model-deployment).

@@ -81,7 +81,10 @@ expected and test accurately the functionality you aim to test.
 ## Creating new test cases for existing tests
 
 Our test cases are collected in YAML files that follow a simple formalism for
-defining each test. A test case consists of
+defining each test. These files are found in `benchmark/data` and need to end in
+`_data.yaml` in order to be loaded in the test procedure. They include test
+cases and auxiliary materials, such as knowledge graph schemata. A test case
+consists of
 
 - a descriptive name
 
@@ -185,11 +188,11 @@ tests defined above, this equates to:
 
 ```python
 def pytest_generate_tests(metafunc):
-    data_file = BENCHMARK_DATASET["benchmark_data.yaml"]
+    data = BENCHMARK_DATASET
     if "test_data_rag_interpretation" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_rag_interpretation",
-            data_file["rag_interpretation"],
+            data["rag_interpretation"],
         )
 ```
 

@@ -1,11 +1,11 @@
 # BioChatter usage statistics (for community key usage)
 # keep persistent statistics about community key usage in redis
 # adapted from https://github.com/mobarski/ask-my-pdf
-from time import strftime
 import os
+from time import strftime
 
-from retry import retry
 import redis
+from retry import retry
 
 DEFAULT_USER = "community"
 
@@ -68,9 +68,7 @@ def get_community_usage_cost():
     usage_stats = get_stats(user=DEFAULT_USER)
     data = usage_stats.get(f"usage:[date]:{DEFAULT_USER}")
     used = 0.0
-    used += (
-        0.04 * data.get("total_tokens:gpt-4", 0) / 1000
-    )  # prompt_price=0.03 but output_price=0.06
+    used += 0.04 * data.get("total_tokens:gpt-4", 0) / 1000  # prompt_price=0.03 but output_price=0.06
     used += 0.02 * data.get("total_tokens:text-davinci-003", 0) / 1000
     used += 0.002 * data.get("total_tokens:text-curie-001", 0) / 1000
     used += 0.002 * data.get("total_tokens:gpt-3.5-turbo", 0) / 1000

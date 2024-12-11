@@ -1,5 +1,5 @@
-from unittest.mock import Mock, patch
 import re
+from unittest.mock import Mock, patch
 
 import pytest
 
@@ -100,38 +100,31 @@ _kg_selected = {
         },
     },
     "relationships": {
-        "PERTURBED": {"source": "Disease", "target": ["Protein", "Gene"]}
+        "PERTURBED": {"source": "Disease", "target": ["Protein", "Gene"]},
     },
 }
 
 
-@pytest.fixture
+@pytest.fixture()
 def query_handler_basic():
-    query = (
-        "MATCH (d:Disease {name: 'mucoviscidosis'})-[:PERTURBED]->(g:Gene) "
-        "RETURN g.name AS AssociatedGenes"
-    )
+    query = "MATCH (d:Disease {name: 'mucoviscidosis'})-[:PERTURBED]->(g:Gene) RETURN g.name AS AssociatedGenes"
     query_lang = "Cypher"
     question = "Which genes are associated with mucoviscidosis?"
     return BioCypherQueryHandler(query, query_lang, _kg_selected, question)
 
 
-@pytest.fixture
+@pytest.fixture()
 def query_handler_with_kg():
-    query = (
-        "MATCH (d:Disease {name: 'mucoviscidosis'})-[:PERTURBED]->(g:Gene) "
-        "RETURN g.name AS AssociatedGenes"
-    )
+    query = "MATCH (d:Disease {name: 'mucoviscidosis'})-[:PERTURBED]->(g:Gene) RETURN g.name AS AssociatedGenes"
     query_lang = "Cypher"
     question = "Which genes are associated with mucoviscidosis?"
     return BioCypherQueryHandler(query, query_lang, _kg_selected, question, _kg)
 
 
-@pytest.fixture
+@pytest.fixture()
 def query_with_limit_handler():
     query = (
-        "MATCH (d:Disease {name: 'mucoviscidosis'})-[:PERTURBED]->(g:Gene) "
-        "RETURN g.name AS AssociatedGenes LIMIT 25"
+        "MATCH (d:Disease {name: 'mucoviscidosis'})-[:PERTURBED]->(g:Gene) RETURN g.name AS AssociatedGenes LIMIT 25"
     )
     query_lang = "Cypher"
     question = "Which genes are associated with mucoviscidosis?"
@@ -146,9 +139,7 @@ def test_explain(query_handler, request):
 
         mock_gptconv.return_value.query.return_value = [resultMsg, Mock(), None]
         mock_append_system_messages = Mock()
-        mock_gptconv.return_value.append_system_message = (
-            mock_append_system_messages
-        )
+        mock_gptconv.return_value.append_system_message = mock_append_system_messages
         explanation = query_handler.explain_query()
 
         mock_append_system_messages.assert_called_once_with(
@@ -162,7 +153,7 @@ def test_explain(query_handler, request):
             "relationships: "
             f"{list(query_handler.kg_selected['relationships'].keys())}, and "
             f"properties: {query_handler.kg_selected['properties']}. "
-            "Only return the explanation, without any additional text."
+            "Only return the explanation, without any additional text.",
         )
 
 
@@ -195,7 +186,9 @@ def test_update_limit(query_with_limit_handler):
     update_request = "Return maximum 10 results"
     updated_query = update_limit(query_with_limit_handler, update_request)
     assert updated_query == re.sub(
-        r"LIMIT [\d]+", "LIMIT 10", query_with_limit_handler.query
+        r"LIMIT [\d]+",
+        "LIMIT 10",
+        query_with_limit_handler.query,
     )
 
 
@@ -207,13 +200,11 @@ def update_limit(query_handler, update_request):
         )
         mock_gptconv.return_value.query.return_value = [resultMsg, Mock(), None]
         mock_append_system_messages = Mock()
-        mock_gptconv.return_value.append_system_message = (
-            mock_append_system_messages
-        )
+        mock_gptconv.return_value.append_system_message = mock_append_system_messages
         updated_query = query_handler.update_query(update_request)
 
         mock_append_system_messages.assert_called_once_with(
-            system_msg_for_update(query_handler)
+            system_msg_for_update(query_handler),
         )
     return updated_query.strip()
 
@@ -229,13 +220,11 @@ def test_update_sorting(query_handler, request):
         )
         mock_gptconv.return_value.query.return_value = [resultMsg, Mock(), None]
         mock_append_system_messages = Mock()
-        mock_gptconv.return_value.append_system_message = (
-            mock_append_system_messages
-        )
+        mock_gptconv.return_value.append_system_message = mock_append_system_messages
         updated_query = query_handler.update_query(update_request)
 
         mock_append_system_messages.assert_called_once_with(
-            system_msg_for_update(query_handler)
+            system_msg_for_update(query_handler),
         )
     assert query_handler.query in updated_query.strip()
     assert "ORDER BY g.name ASC" in updated_query

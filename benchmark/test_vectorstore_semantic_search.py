@@ -1,11 +1,12 @@
-import os
 import inspect
+import os
 
 import pytest
 
-from biochatter.vectorstore import DocumentReader, DocumentEmbedder
-from .conftest import calculate_bool_vector_score
+from biochatter.vectorstore import DocumentEmbedder, DocumentReader
+
 from .benchmark_utils import get_result_file_path
+from .conftest import calculate_bool_vector_score
 
 # TODO: make vectorstore / retriever a part of the matrix
 
@@ -49,5 +50,5 @@ def test_retrieval_augmented_generation(model, chunk_size):
     # record sum in CSV file
     with open(get_result_file_path(task), "a") as f:
         f.write(
-            f"{model},{chunk_size},{calculate_bool_vector_score(correct)}\n"
+            f"{model},{chunk_size},{calculate_bool_vector_score(correct)}\n",
         )

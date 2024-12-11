@@ -2,13 +2,12 @@ import inspect
 
 import pytest
 
-from biochatter._misc import ensure_iterable
-from .conftest import calculate_bool_vector_score
 from .benchmark_utils import (
-    skip_if_already_run,
     get_result_file_path,
+    skip_if_already_run,
     write_results_to_file,
 )
+from .conftest import calculate_bool_vector_score
 
 
 def test_explicit_relevance_of_single_fragments(
@@ -20,25 +19,22 @@ def test_explicit_relevance_of_single_fragments(
     yaml_data = test_data_rag_interpretation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     skip_if_already_run(
-        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+        model_name=model_name,
+        task=task,
+        md5_hash=yaml_data["hash"],
     )
     if "explicit" not in yaml_data["case"]:
         pytest.skip(
-            f"test case {yaml_data['case']} not supported for {task} benchmark"
+            f"test case {yaml_data['case']} not supported for {task} benchmark",
         )
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
-        [
-            conversation.append_system_message(m)
-            for m in yaml_data["input"]["system_messages"]
-        ]
+        [conversation.append_system_message(m) for m in yaml_data["input"]["system_messages"]]
         response, _, _ = conversation.query(yaml_data["input"]["prompt"])
 
         # lower case, remove punctuation
-        response = (
-            response.lower().replace(".", "").replace("?", "").replace("!", "")
-        ).strip()
+        response = (response.lower().replace(".", "").replace("?", "").replace("!", "")).strip()
 
         score = []
 
@@ -68,19 +64,18 @@ def test_implicit_relevance_of_multiple_fragments(
     yaml_data = test_data_rag_interpretation
     task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
     skip_if_already_run(
-        model_name=model_name, task=task, md5_hash=yaml_data["hash"]
+        model_name=model_name,
+        task=task,
+        md5_hash=yaml_data["hash"],
     )
     if "implicit" not in yaml_data["case"]:
         pytest.skip(
-            f"test case {yaml_data['case']} not supported for {task} benchmark"
+            f"test case {yaml_data['case']} not supported for {task} benchmark",
         )
 
     def run_test():
         conversation.reset()  # needs to be reset for each test
-        [
-            conversation.append_system_message(m)
-            for m in yaml_data["input"]["system_messages"]
-        ]
+        [conversation.append_system_message(m) for m in yaml_data["input"]["system_messages"]]
         response, _, _ = conversation.query(yaml_data["input"]["prompt"])
 
         msg = (
@@ -97,13 +92,9 @@ def test_implicit_relevance_of_multiple_fragments(
         eval, _, _ = evaluation_conversation.query(response)
 
         # lower case, remove punctuation
-        eval = (
-            eval.lower().replace(".", "").replace("?", "").replace("!", "")
-        ).strip()
+        eval = (eval.lower().replace(".", "").replace("?", "").replace("!", "")).strip()
 
-        score = (
-            [True] if eval == yaml_data["expected"]["behaviour"] else [False]
-        )
+        score = [True] if eval == yaml_data["expected"]["behaviour"] else [False]
 
         return calculate_bool_vector_score(score)
 

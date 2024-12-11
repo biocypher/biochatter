@@ -52,7 +52,7 @@ from biochatter.llm_connect import GptConversation
 from biochatter.kg_langgraph_agent import KGQueryReflexionAgent
 def create_conversation():
     conversation = GptConversation(model_name="gpt-3.5-turbo", prompts={})
-    conversation.set_api_key(os.getenv("OPENAI_API_KEY"))
+    conversation.set_api_key(os.getenv("OPENAI_API_KEY"), user="my_user")
     return conversation
 
 connection_args = {
