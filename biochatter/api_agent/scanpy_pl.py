@@ -869,4 +869,5 @@ class ScanpyPlQueryBuilder(BaseQueryBuilder):
             ScanpyPlUmapQueryParameters,
         ]
         runnable = self.create_runnable(conversation=conversation, query_parameters=tools)
-        return runnable.invoke(question)
+        parameterised_models = runnable.invoke(question)
+        return parameterised_models
