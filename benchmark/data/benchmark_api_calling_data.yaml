@@ -87,3 +87,10 @@ api_calling:
     expected:
       parts_of_query:
         ["scanpy.pl.pca\\(", ["n_genes_by_counts", "total_counts"], "\\)"]
+  - case: scanpy:pl:tsne
+    input:
+      prompt:
+        fuzzy_search: "plot the tsne embeddding of the data colored by n_genes_by_counts."
+    expected:
+      parts_of_query:
+        ["scanpy.pl.tsne\\(", "n_genes_by_counts", "\\)"]
