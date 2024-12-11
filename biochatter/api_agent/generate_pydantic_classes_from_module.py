@@ -3,7 +3,6 @@ from typing import Any, Dict, Optional, Type
 from types import ModuleType
 from docstring_parser import parse
 from langchain_core.pydantic_v1 import BaseModel, Field, create_model
-from . import generate_pydantic_classes_from_modules
 
 def generate_pydantic_classes(module: ModuleType) -> list[Type[BaseModel]]:
     """
