@@ -199,10 +199,10 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
             ReadText,
             ReadZarr,
         ]
-        runnable = conversation.chat.bind_tools(tools)
+        runnable = conversation.chat.bind_tools(tools, system_prompt=ANNDATA_IO_QUERY_PROMPT)
 
         chain = runnable | PydanticToolsParser(tools=tools)
         anndata_io_call_obj = chain.invoke(
-            {"input": f"Answer:\n{question} based on:\n {ANNDATA_IO_QUERY_PROMPT}"},
+            {"input": f"Answer:\n{question}"},
         )
         return anndata_io_call_obj
