@@ -1,19 +1,15 @@
-"""Module for interacting with the `scanpy` API for data transformation tools (`tl`)."""
-from collections.abc import Callable
+"""Module for interacting with the `scanpy` API for data tools (`tl`)."""
+
 from typing import TYPE_CHECKING
 
-import requests
-from langchain.chains.openai_functions import create_structured_output_runnable
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.pydantic_v1 import BaseModel, Field
-from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import PydanticToolsParser
+from langchain_core.pydantic_v1 import BaseModel
+
+from .abc import BaseQueryBuilder
+from .generate_pydantic_classes_from_module import generate_pydantic_classes
+
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
-
-from .abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
-from .generate_pydantic_classes_from_module import generate_pydantic_classes
 
 SCANPY_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats. Your task is to use the scanpy python package
@@ -103,16 +99,18 @@ Compute densities on embeddings.
 
 ```
 """
+
+
 class ScanpyTLQueryBuilder(BaseQueryBuilder):
     """A class for building an ScanpyTLQuery object."""
-    
+
     def create_runnable(
         self,
         query_parameters: BaseModel,
         conversation: "Conversation",
     ):
         pass
-    
+
     def parameterise_query(
         self,
         question: str,
@@ -139,14 +137,14 @@ class ScanpyTLQueryBuilder(BaseQueryBuilder):
 
         """
         import scanpy as sc
+
         module = sc.tl
         generated_classes = generate_pydantic_classes(module)
         llm = conversation.chat
         llm_with_tools = llm.bind_tools(generated_classes)
         query = [
-	        ("system", "You're an expert data scientist"), 
+            ("system", "You're an expert data scientist"),
             ("human", {question}),
         ]
         chain = llm_with_tools | PydanticToolsParser(tools=generated_classes)
-        result = chain.invoke(query)
-        return result
+        return chain.invoke(query)
