@@ -83,13 +83,19 @@ api_calling:
   - case: scanpy:pl:pca
     input:
       prompt:
-        fuzzy_search: "plot the PCA of the data colored by n_genes_by_counts and total_counts."
+        explicit_variable_names: "plot the PCA of the data colored by n_genes_by_counts and total_counts."
     expected:
       parts_of_query:
         ["sc.pl.pca\\(", "n_genes_by_counts", "total_counts", "\\)"]
   - case: scanpy:pl:tsne
     input:
       prompt:
-        fuzzy_search: "plot the tsne embeddding of the data colored by n_genes_by_counts."
+        explicit_variable_names: "plot the tsne embeddding of the data colored by n_genes_by_counts."
     expected:
       parts_of_query: ["sc.pl.tsne\\(", "n_genes_by_counts", "\\)"]
+  - case: anndata:read:h5ad
+    input:
+      prompt:
+        explicit_variable_names: "read test.h5ad into an anndata object."
+    expected:
+      parts_of_query: ["anndata.read_h5ad\\(", "filename=test.h5ad", "\\)"]
