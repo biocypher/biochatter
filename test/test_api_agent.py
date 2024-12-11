@@ -36,7 +36,6 @@ from biochatter.api_agent.scanpy_pl import (
     ScanpyPlQueryBuilder,
     ScanpyPlQueryParameters,
 )
-
 from biochatter.llm_connect import Conversation, GptConversation
 
 
@@ -432,6 +431,7 @@ class TestOncoKBInterpreter:
             {"input": {expected_summary_prompt}},
         )
 
+
 class TestScanpyPlQueryBuilder:
     @pytest.fixture()
     def mock_create_runnable(self):
@@ -474,8 +474,6 @@ class TestScanpyPlQueryBuilder:
         assert result == mock_query_obj
 
 
-
-
 class TestScanpyPlFetcher:
     pass
 
@@ -510,62 +508,6 @@ class TestAnndataIOQueryBuilder:
         # Assert
         mock_create_runnable.invoke.assert_called_once_with(expected_input)
         assert result == mock_query_obj
-
-    def test_parameterise_query(self, mock_create_runnable):
-        # Arrange
-        query_builder = AnnDataIOQueryBuilder()
-        mock_conversation = MagicMock()
-        question = "read a .h5ad file into an anndata object."
-        expected_input = {"input": f"Answer:\n{question}"}
-
-        mock_query_obj = MagicMock()
-        mock_create_runnable.invoke.return_value = mock_query_obj
-
-        # Act
-        result = query_builder.parameterise_query(question, mock_conversation)
-
-        # Assert
-        mock_create_runnable.invoke.assert_called_once_with(expected_input)
-        assert result == mock_query_obj
-
-    """def test_parameterise_query(self, mock_conversation):
-        # Arrange
-        query_builder = AnnDataIOQueryBuilder()
-        mock_chain = MagicMock()
-        mock_query_obj = MagicMock()
-
-        # Mock tools
-        tools = [
-            ReadCSV,
-            ReadExcel,
-            ReadH5AD,
-            ReadHDF,
-            ReadLoom,
-            ReadMTX,
-            ReadText,
-            ReadZarr,
-        ]
-
-        # Patch PydanticToolsParser to return the mocked chain
-        with patch("langchain_core.output_parsers.PydanticToolsParser") as mock_pydantic_tools_parser:
-            mock_conversation.chat.bind_tools.return_value = mock_chain
-            mock_chain.invoke.return_value = mock_query_obj
-
-            question = "read a .h5ad file into an anndata object."
-            expected_input = {"input": f"Answer:\n{question}"}
-
-            # Act
-            result = query_builder.parameterise_query(question, mock_conversation)
-
-            # Assert
-            mock_conversation.chat.bind_tools.assert_called_once_with(
-                tools,
-                system_prompt=ANNDATA_IO_QUERY_PROMPT,
-            )
-            mock_pydantic_tools_parser.assert_called_once_with(tools=tools)
-            mock_chain.invoke.assert_called_once_with(expected_input)
-            assert result == mock_query_obj
-"""
 
 
 class TestAnndataIOPlFetcher:
