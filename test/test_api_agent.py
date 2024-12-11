@@ -28,6 +28,7 @@ from biochatter.api_agent.oncokb import (
     OncoKBQueryBuilder,
     OncoKBQueryParameters,
 )
+from biochatter.api_agent.scanpy_tl import ScanpyTLQueryBuilder
 from biochatter.llm_connect import Conversation, GptConversation
 
 
@@ -422,3 +423,81 @@ class TestOncoKBInterpreter:
         mock_chain.invoke.assert_called_once_with(
             {"input": {expected_summary_prompt}},
         )
+
+class TestScanpyTLQueryBuilder:
+    @pytest.fixture()
+    def mock_generate_pydantic_classes(self):
+        with patch("biochatter.api_agent.generate_pydantic_classes_from_module.generate_pydantic_classes") as mock:
+            # Return a fake dictionary of generated classes
+            mock.return_value = {"leiden": MagicMock()}
+            yield mock
+
+    @pytest.fixture()
+    def mock_pydantic_tools_parser(self):
+        with patch("langchain_core.output_parsers.PydanticToolsParser") as mock_parser_cls:
+            mock_parser_instance = MagicMock()
+            mock_parser_cls.return_value = mock_parser_instance
+            yield mock_parser_cls, mock_parser_instance
+
+    def test_parameterise_query(
+        self,
+        mock_generate_pydantic_classes,
+        mock_pydantic_tools_parser
+    ):
+        # Arrange
+        query_builder = ScanpyTLQueryBuilder()
+        mock_conversation = MagicMock()
+        mock_llm = MagicMock()
+        mock_conversation.chat = mock_llm
+
+        # Mock the LLM with tools
+        mock_llm_with_tools = MagicMock()
+        mock_llm.bind_tools.return_value = mock_llm_with_tools
+
+        # When we do llm_with_tools | PydanticToolsParser(...) it should return a mock chain
+        mock_parser_cls, mock_parser_instance = mock_pydantic_tools_parser
+        mock_chain = MagicMock()
+        # The '|' operator (pipe) can be emulated by setting return value on __or__
+        mock_llm_with_tools.__or__.return_value = mock_chain
+
+        # The chain.invoke(...) result
+        mock_result = MagicMock()
+        mock_chain.invoke.return_value = mock_result
+
+        question = "Find the best parameters for leiden clustering."
+
+        # Act
+        result = query_builder.parameterise_query(question, mock_conversation)
+
+        # Assert
+        # Check that generate_pydantic_classes was called with scanpy.tl
+        args, kwargs = mock_generate_pydantic_classes.call_args
+        assert "scanpy.tl" in str(args[0])  # or more robust checks depending on your imports
+
+        # Check that bind_tools was called on the llm
+        mock_llm.bind_tools.assert_called_once()
+
+        # The query should have been passed to chain.invoke
+        # query is built as:
+        # query = [
+        #   ("system", "You're an expert data scientist"), 
+        #   ("human", {question}),
+        # ]
+        mock_chain.invoke.assert_called_once_with([
+            ("system", "You're an expert data scientist"),
+            ("human", {question}),
+        ])
+
+        # Ensure the returned result is the mock_result
+        assert result == mock_result
+
+
+
+
+
+class TestScanpyPlFetcher:
+    pass
+
+
+class TestScanpyPlInterpreter:
+    pass
