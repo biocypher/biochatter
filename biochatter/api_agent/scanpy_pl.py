@@ -277,6 +277,165 @@ class ScanpyPlPcaQueryParameters(BaseModel):
         description="Annotate the percentage of explained variance.",
     )
 
+class ScanpyPlTsneQueryParameters(BaseModel):
+    """Parameters for querying the Scanpy `pl.tsne` API."""
+
+    adata: str = Field(
+        ...,
+        description="Annotated data matrix."
+    )
+    color: str | list[str] | None = Field(
+        default=None,
+        description="Keys for annotations of observations/cells or variables/genes."
+    )
+    gene_symbols: str | None = Field(
+        default=None,
+        description="Column name in `.var` DataFrame that stores gene symbols."
+    )
+    use_raw: bool | None = Field(
+        default=None,
+        description="Use `.raw` attribute of `adata` for coloring with gene expression."
+    )
+    sort_order: bool = Field(
+        default=True,
+        description="Plot data points with higher values on top for continuous annotations."
+    )
+    edges: bool = Field(
+        default=False,
+        description="Show edges."
+    )
+    edges_width: float = Field(
+        default=0.1,
+        description="Width of edges."
+    )
+    edges_color: str | list[float] | list[str] = Field(
+        default='grey',
+        description="Color of edges."
+    )
+    neighbors_key: str | None = Field(
+        default=None,
+        description="Key for neighbors connectivities."
+    )
+    arrows: bool = Field(
+        default=False,
+        description="Show arrows (deprecated in favor of `scvelo.pl.velocity_embedding`)."
+    )
+    arrows_kwds: dict[str, Any] | None = Field(
+        default=None,
+        description="Arguments passed to `quiver()`."
+    )
+    groups: str | None = Field(
+        default=None,
+        description="Restrict to specific categories in categorical observation annotation."
+    )
+    components: str | list[str] | None = Field(
+        default=None,
+        description="Components to plot, e.g., ['1,2', '2,3']. Use 'all' to plot all available components."
+    )
+    projection: str = Field(
+        default='2d',
+        description="Projection of plot ('2d' or '3d')."
+    )
+    legend_loc: str = Field(
+        default='right margin',
+        description="Location of legend."
+    )
+    legend_fontsize: int | float | str | None = Field(
+        default=None,
+        description="Font size for legend."
+    )
+    legend_fontweight: int | str = Field(
+        default='bold',
+        description="Font weight for legend."
+    )
+    legend_fontoutline: int | None = Field(
+        default=None,
+        description="Line width of the legend font outline in pt."
+    )
+    size: float | list[float] | None = Field(
+        default=None,
+        description="Point size. If `None`, computed as 120000 / n_cells."
+    )
+    color_map: str | Any | None = Field(
+        default=None,
+        description="Color map for continuous variables."
+    )
+    palette: str | list[str] | Any | None = Field(
+        default=None,
+        description="Colors for plotting categorical annotation groups."
+    )
+    na_color: str | tuple[float, ...] = Field(
+        default='lightgray',
+        description="Color for null or masked values."
+    )
+    na_in_legend: bool = Field(
+        default=True,
+        description="Include missing values in the legend."
+    )
+    frameon: bool | None = Field(
+        default=None,
+        description="Draw a frame around the scatter plot."
+    )
+    title: str | list[str] | None = Field(
+        default=None,
+        description="Title for panels, either as string or list of strings."
+    )
+    vmin: str | float | Any | list[str | float | Any] | None = Field(
+        default=None,
+        description="Lower limit of the color scale."
+    )
+    vmax: str | float | Any | list[str | float | Any] | None = Field(
+        default=None,
+        description="Upper limit of the color scale."
+    )
+    vcenter: str | float | Any | list[str | float | Any] | None = Field(
+        default=None,
+        description="Center of the color scale, useful for diverging colormaps."
+    )
+    norm: Any | None = Field(
+        default=None,
+        description="Normalization for the colormap."
+    )
+    add_outline: bool = Field(
+        default=False,
+        description="Add a thin border around groups of dots."
+    )
+    outline_width: tuple[float, float] = Field(
+        default=(0.3, 0.05),
+        description="Width of the outline as a fraction of the scatter dot size."
+    )
+    outline_color: tuple[str, str] = Field(
+        default=('black', 'white'),
+        description="Colors for the outline: border color and gap color."
+    )
+    ncols: int = Field(
+        default=4,
+        description="Number of panels per row."
+    )
+    hspace: float = Field(
+        default=0.25,
+        description="Height of the space between multiple panels."
+    )
+    wspace: float | None = Field(
+        default=None,
+        description="Width of the space between multiple panels."
+    )
+    return_fig: bool | None = Field(
+        default=None,
+        description="Return the matplotlib figure."
+    )
+    show: bool | None = Field(
+        default=None,
+        description="Show the plot; do not return axis."
+    )
+    save: str | bool | None = Field(
+        default=None,
+        description="If `True` or a `str`, save the figure."
+    )
+    ax: str | None = Field(
+        default=None,
+        description="A matplotlib axes object."
+    )
 
 
 class ScanpyPlQueryBuilder(BaseQueryBuilder):
