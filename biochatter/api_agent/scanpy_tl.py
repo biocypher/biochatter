@@ -115,6 +115,8 @@ class ScanpyTLQueryBuilder(BaseQueryBuilder):
         self,
         question: str,
         conversation: "Conversation",
+        generated_classes=None,  # Allow external injection of classes
+        module=None,
     ):
         """Generate an ScanpyTLQuery object.
 
@@ -140,11 +142,17 @@ class ScanpyTLQueryBuilder(BaseQueryBuilder):
 
         module = sc.tl
         generated_classes = generate_pydantic_classes(module)
+        # Generate classes if not provided
+        if generated_classes is None:
+            generated_classes = generate_pydantic_classes(module)
+
         llm = conversation.chat
         llm_with_tools = llm.bind_tools(generated_classes)
         query = [
             ("system", "You're an expert data scientist"),
             ("human", {question}),
+            ("system", "You're an expert data scientist"),
+            ("human", question),
         ]
         chain = llm_with_tools | PydanticToolsParser(tools=generated_classes)
         return chain.invoke(query)

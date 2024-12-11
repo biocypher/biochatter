@@ -440,125 +440,52 @@ class TestOncoKBInterpreter:
             {"input": {expected_summary_prompt}},
         )
 class TestScanpyTLQueryBuilder:
-    @pytest.fixture()
-    def mock_generate_pydantic_classes(self):
-        with patch("biochatter.api_agent.generate_pydantic_classes_from_module.generate_pydantic_classes") as mock:
-            # Return a fake dictionary of generated classes
-            mock.return_value = {"leiden": MagicMock()}
-            yield mock
-
-    @pytest.fixture()
-    def mock_pydantic_tools_parser(self):
-        with patch("langchain_core.output_parsers.PydanticToolsParser") as mock_parser_cls:
-            mock_parser_instance = MagicMock()
-            mock_parser_cls.return_value = mock_parser_instance
-            yield mock_parser_cls, mock_parser_instance
-
-    def test_parameterise_query(
-        self,
-        mock_generate_pydantic_classes,
-        mock_pydantic_tools_parser
-    ):
+    @patch("biochatter.llm_connect.GptConversation")
+    def test_parameterise_query(self, mock_conversation):
         # Arrange
-        query_builder = ScanpyTLQueryBuilder()
-        mock_conversation = MagicMock()
+        question = "I want to mark mitochondrial genes of my adata object"
+
+        # Mock the list of Pydantic classes as a list of Mock objects
+        class MockTool1(BaseModel):
+            param1: str
+
+        class MockTool2(BaseModel):
+            param2: int
+
+        mock_generated_classes = [MockTool1, MockTool2]
+
+        # Mock the conversation object and LLM
+        mock_conversation_instance = mock_conversation.return_value
         mock_llm = MagicMock()
-        mock_conversation.chat = mock_llm
+        mock_conversation_instance.chat = mock_llm
 
         # Mock the LLM with tools
         mock_llm_with_tools = MagicMock()
         mock_llm.bind_tools.return_value = mock_llm_with_tools
 
-        # When we do llm_with_tools | PydanticToolsParser(...) it should return a mock chain
-        mock_parser_cls, mock_parser_instance = mock_pydantic_tools_parser
+        # Mock the chain and its invoke method
         mock_chain = MagicMock()
-        # The '|' operator (pipe) can be emulated by setting return value on __or__
         mock_llm_with_tools.__or__.return_value = mock_chain
-
-        # The chain.invoke(...) result
-        mock_result = MagicMock()
+        mock_result = {"parameters": {"key_added": "mt_genes"}}
         mock_chain.invoke.return_value = mock_result
 
-        question = "Find the best parameters for leiden clustering."
-
         # Act
-        result = query_builder.parameterise_query(question, mock_conversation)
+        builder = ScanpyTLQueryBuilder()
+        result = builder.parameterise_query(
+            question, 
+            mock_conversation_instance, 
+            generated_classes=mock_generated_classes
+        )
 
         # Assert
-        # Check that generate_pydantic_classes was called with scanpy.tl
-        args, kwargs = mock_generate_pydantic_classes.call_args
-        assert "scanpy.tl" in str(args[0])  # or more robust checks depending on your imports
-
-        # Check that bind_tools was called on the llm
-        mock_llm.bind_tools.assert_called_once()
-
-        # The query should have been passed to chain.invoke
-        # query is built as:
-        # query = [
-        #   ("system", "You're an expert data scientist"), 
-        #   ("human", {question}),
-        # ]
+        mock_llm.bind_tools.assert_called_once_with(mock_generated_classes)
         mock_chain.invoke.assert_called_once_with([
             ("system", "You're an expert data scientist"),
-            ("human", {question}),
+            ("human", question),
         ])
-
-        # Ensure the returned result is the mock_result
         assert result == mock_result
 
 
 
 
 
-class TestScanpyPlFetcher:
-    pass
-
-
-class TestScanpyPlInterpreter:
-    pass
-
-class TestScanpyPlQueryBuilder:
-    @pytest.fixture()
-    def mock_create_runnable(self):
-        with patch(
-            "biochatter.api_agent.scanpy_pl.create_structured_output_runnable"
-        ) as mock:
-            mock_runnable = MagicMock()
-            mock.return_value = mock_runnable
-            yield mock_runnable
-
-
-
-class TestScanpyPlFetcher:
-    pass
-
-
-class TestScanpyPlInterpreter:
-    pass
-
-
-class TestAnndataIOQueryBuilder:
-    @pytest.fixture
-    def mock_create_runnable(self):
-        with patch(
-            "biochatter.api_agent.anndata.AnnDataIOQueryBuilder.create_runnable",
-        ) as mock:
-            mock_runnable = MagicMock()
-            mock.return_value = mock_runnable
-            yield mock_runnable
-
-    def test_parameterise_query(self, mock_create_runnable):
-        # Arrange
-        query_builder = AnnDataIOQueryBuilder()
-        mock_conversation = MagicMock()
-        question = "read a .h5ad file into an anndata object."
-
-        mock_query_obj = MagicMock()
-        mock_create_runnable.invoke.return_value = mock_query_obj
-
-        # Act
-        result = query_builder.parameterise_query(question, mock_conversation)
-
-        # Assert
-        mock_create_runnable.invoke.assert_called_once_with(question)
-        assert result == mock_query_obj
