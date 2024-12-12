@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from langchain_core.output_parsers import PydanticToolsParser
 from biochatter.llm_connect import Conversation
 from .abc import BaseAPIModel, BaseQueryBuilder
-from typing import Union, Collection, Literal
+from typing import Union, Collection
 from pydantic import BaseModel, Field
 
 if TYPE_CHECKING:
@@ -83,7 +83,7 @@ This prompt guides the user to query the scanpy.pp module for preprocessing task
 
 
 class FilterCellsParams(BaseAPIModel):
-    data: Union['np.ndarray', 'sp.spmatrix', 'AnnData'] = Field(..., description="The (annotated) data matrix.")
+    data: str = Field(..., description="The (annotated) data matrix.")
     min_counts: int | None = Field(None, description="Minimum counts per cell.")
     min_genes: int | None = Field(None, description="Minimum genes expressed in a cell.")
     max_counts: int | None = Field(None, description="Maximum counts per cell.")
@@ -91,7 +91,7 @@ class FilterCellsParams(BaseAPIModel):
     inplace: bool = Field(True, description="Whether to modify the data in place.")
 
 class FilterGenesParams(BaseAPIModel):
-    data: Union['np.ndarray', 'sp.spmatrix', 'AnnData'] = Field(..., description="The (annotated) data matrix.")
+    data: str = Field(..., description="The (annotated) data matrix.")
     min_counts: int | None = Field(None, description="Minimum counts per gene.")
     min_cells: int | None = Field(None, description="Minimum number of cells expressing the gene.")
     max_counts: int | None = Field(None, description="Maximum counts per gene.")
@@ -99,68 +99,89 @@ class FilterGenesParams(BaseAPIModel):
     inplace: bool = Field(True, description="Whether to modify the data in place.")
 
 class HighlyVariableGenesParams(BaseAPIModel):
-    adata: "AnnData" = Field(..., description="Annotated data matrix.")
+    adata: str = Field(..., description="Annotated data matrix.")
     n_top_genes: int | None = Field(None, description="Number of highly-variable genes to keep.")
     min_mean: float = Field(0.0125, description="Minimum mean expression for highly-variable genes.")
     max_mean: float = Field(3, description="Maximum mean expression for highly-variable genes.")
-    flavor: Literal['seurat', 'cell_ranger', 'seurat_v3', 'seurat_v3_paper'] = Field('seurat', description="Method for identifying highly-variable genes.")
+    flavor: str = Field('seurat', description="Method for identifying highly-variable genes.")
     inplace: bool = Field(True, description="Whether to place metrics in .var or return them.")
 
 class Log1pParams(BaseAPIModel):
-    data: Union['np.ndarray', 'sp.spmatrix', 'AnnData'] = Field(..., description="The data matrix.")
+    data: str = Field(..., description="The data matrix.")
     base: float | None = Field(None, description="Base of the logarithm.")
-    copy_param: bool = Field(False, description="If True, return a copy_param of the data.")
+    copy: bool = Field(False, description="If True, return a copy_param of the data.")
     chunked: bool | None = Field(None, description="Process data in chunks.")
+
+    def get_base_copy(self):
+        return super().copy
     
 class PCAParams(BaseAPIModel):
-    data: Union['np.ndarray', 'sp.spmatrix', 'AnnData'] = Field(..., description="The (annotated) data matrix.")
+    data: str = Field(..., description="The (annotated) data matrix.")
     n_comps: int | None = Field(None, description="Number of principal components to compute.")
     layer: str | None = Field(None, description="Element of layers to use for PCA.")
     zero_center: bool = Field(True, description="Whether to zero-center the data.")
     svd_solver: str | None = Field(None, description="SVD solver to use.")
-    copy_param: bool = Field(False, description="If True, return a copy_param of the data.")
+    copy: bool = Field(False, description="If True, return a copy_param of the data.")
+
+    def get_base_copy(self):
+        return super().copy
 
 class NormalizeTotalParams(BaseAPIModel):
-    adata: "AnnData" = Field(..., description="The annotated data matrix.")
+    adata: str = Field(..., description="The annotated data matrix.")
     target_sum: float | None = Field(None, description="Target sum after normalization.")
     exclude_highly_expressed: bool = Field(False, description="Whether to exclude highly expressed genes.")
     inplace: bool = Field(True, description="Whether to update adata or return normalized data.")
     
 class RegressOutParams(BaseAPIModel):
-    adata: "AnnData" = Field(..., description="The annotated data matrix.")
+    adata: str = Field(..., description="The annotated data matrix.")
     keys: str | Collection[str] = Field(..., description="Keys for regression.")
-    copy_param: bool = Field(False, description="If True, return a copy_param of the data.")
+    copy: bool = Field(False, description="If True, return a copy_param of the data.")
+
+    def get_base_copy(self):
+        return super().copy
 
 class ScaleParams(BaseAPIModel):
-    data: Union['np.ndarray', 'sp.spmatrix', 'AnnData'] = Field(..., description="The data matrix.")
+    data: str = Field(..., description="The data matrix.")
     zero_center: bool = Field(True, description="Whether to zero-center the data.")
-    copy_param: bool = Field(False, description="Whether to perform operation inplace.")
+    copy: bool = Field(False, description="Whether to perform operation inplace.")
+
+    def get_base_copy(self):
+        return super().copy
     
 class SubsampleParams(BaseAPIModel):
-    data: Union['np.ndarray', 'sp.spmatrix', 'AnnData'] = Field(..., description="The data matrix.")
+    data: str = Field(..., description="The data matrix.")
     fraction: float | None = Field(None, description="Fraction of observations to subsample.")
     n_obs: int | None = Field(None, description="Number of observations to subsample.")
-    copy_param: bool = Field(False, description="If True, return a copy_param of the data.")
+    copy: bool = Field(False, description="If True, return a copy_param of the data.")
+
+    def get_base_copy(self):
+        return super().copy
 
 class DownsampleCountsParams(BaseAPIModel):
-    adata: "AnnData" = Field(..., description="The annotated data matrix.")
-    counts_per_cell: Union[int, "np.ndarray", None] = Field(None, description="Target total counts per cell.")
+    adata: str = Field(..., description="The annotated data matrix.")
+    counts_per_cell: Union[int, str, None] = Field(None, description="Target total counts per cell.")
     replace: bool = Field(False, description="Whether to sample with replacement.")
-    copy_param: bool = Field(False, description="If True, return a copy_param of the data.")
+    copy: bool = Field(False, description="If True, return a copy_param of the data.")
+
+    def get_base_copy(self):
+        return super().copy
 
 class CombatParams(BaseAPIModel):
-    adata: "AnnData" = Field(..., description="The annotated data matrix.")
+    adata: str = Field(..., description="The annotated data matrix.")
     key: str = Field('batch', description="Key for batch effect removal.")
     inplace: bool = Field(True, description="Whether to replace the data inplace.")
 
 class ScrubletParams(BaseAPIModel):
-    adata: "AnnData" = Field(..., description="Annotated data matrix.")
+    adata: str = Field(..., description="Annotated data matrix.")
     sim_doublet_ratio: float = Field(2.0, description="Number of doublets to simulate.")
     threshold: float | None = Field(None, description="Doublet score threshold.")
-    copy_param: bool = Field(False, description="If True, return a copy_param of the data.")
+    copy: bool = Field(False, description="If True, return a copy_param of the data.")
+
+    def get_base_copy(self):
+        return super().copy
 
 class ScrubletSimulateDoubletsParams(BaseAPIModel):
-    adata: "AnnData" = Field(..., description="Annotated data matrix.")
+    adata: str = Field(..., description="Annotated data matrix.")
     sim_doublet_ratio: float = Field(2.0, description="Number of doublets to simulate.")
     random_seed: int = Field(0, description="Random seed for reproducibility.")
 
