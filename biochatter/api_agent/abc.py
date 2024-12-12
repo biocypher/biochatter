@@ -160,11 +160,11 @@ class BaseInterpreter(ABC):
 class BaseAPIModel(BaseModel):
     """A base class for all API models.
 
-    Includes default fields `uuid` and `method_name`.
+    Includes default fields `question_uuid`
     """
 
-    uuid: str | None = Field(
-        None, description="Unique identifier for the model instance"
+    question_uuid: str | None = Field(
+        None, description="Unique identifier for the question asked to the LLM"
     )
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
