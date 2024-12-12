@@ -2,8 +2,8 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING
 from langchain_core.output_parsers import PydanticToolsParser
 from biochatter.llm_connect import Conversation
-from .abc import BaseAPIModel, BaseQueryBuilder
-from typing import Union, Collection
+from .abc import BaseAPIModel, BaseQueryBuilder, BaseTools
+from typing import Union, Collection, Optional
 from pydantic import BaseModel, Field
 
 if TYPE_CHECKING:
@@ -82,99 +82,151 @@ This prompt guides the user to query the scanpy.pp module for preprocessing task
 """
 
 
-class FilterCellsParams(BaseAPIModel):
-    data: str = Field(..., description="The (annotated) data matrix.")
-    min_counts: int | None = Field(None, description="Minimum counts per cell.")
-    min_genes: int | None = Field(None, description="Minimum genes expressed in a cell.")
-    max_counts: int | None = Field(None, description="Maximum counts per cell.")
-    max_genes: int | None = Field(None, description="Maximum genes expressed in a cell.")
-    inplace: bool = Field(True, description="Whether to modify the data in place.")
+class ScanpyPpFuncs(BaseTools):
+    tools_params = {}
 
-class FilterGenesParams(BaseAPIModel):
-    data: str = Field(..., description="The (annotated) data matrix.")
-    min_counts: int | None = Field(None, description="Minimum counts per gene.")
-    min_cells: int | None = Field(None, description="Minimum number of cells expressing the gene.")
-    max_counts: int | None = Field(None, description="Maximum counts per gene.")
-    max_cells: int | None = Field(None, description="Maximum number of cells expressing the gene.")
-    inplace: bool = Field(True, description="Whether to modify the data in place.")
+    tools_params["filter_cells"] = {
+        "data": (str, Field(..., description="The (annotated) data matrix.")),
+        "min_counts": (Optional[int], Field(None, description="Minimum counts per cell.")),
+        "min_genes": (Optional[int], Field(None, description="Minimum genes expressed in a cell.")),
+        "max_counts": (Optional[int], Field(None, description="Maximum counts per cell.")),
+        "max_genes": (Optional[int], Field(None, description="Maximum genes expressed in a cell.")),
+        "inplace": (bool, Field(True, description="Whether to modify the data in place."))
+    }
 
-class HighlyVariableGenesParams(BaseAPIModel):
-    adata: str = Field(..., description="Annotated data matrix.")
-    n_top_genes: int | None = Field(None, description="Number of highly-variable genes to keep.")
-    min_mean: float = Field(0.0125, description="Minimum mean expression for highly-variable genes.")
-    max_mean: float = Field(3, description="Maximum mean expression for highly-variable genes.")
-    flavor: str = Field('seurat', description="Method for identifying highly-variable genes.")
-    inplace: bool = Field(True, description="Whether to place metrics in .var or return them.")
+    tools_params["filter_genes"] = {
+        "data": (str, Field(..., description="The (annotated) data matrix.")),
+        "min_counts": (Optional[int], Field(None, description="Minimum counts per gene.")),
+        "min_cells": (Optional[int], Field(None, description="Minimum number of cells expressing the gene.")),
+        "max_counts": (Optional[int], Field(None, description="Maximum counts per gene.")),
+        "max_cells": (Optional[int], Field(None, description="Maximum number of cells expressing the gene.")),
+        "inplace": (bool, Field(True, description="Whether to modify the data in place."))
+    }
 
-class Log1pParams(BaseAPIModel):
-    data: str = Field(..., description="The data matrix.")
-    base: float | None = Field(None, description="Base of the logarithm.")
-    copy: bool = Field(False, description="If True, return a copy_param of the data.")
-    chunked: bool | None = Field(None, description="Process data in chunks.")
+    tools_params["highly_variable_genes"] = {
+        "adata": (str, Field(..., description="Annotated data matrix.")),
+        "n_top_genes": (Optional[int], Field(None, description="Number of highly-variable genes to keep.")),
+        "min_mean": (float, Field(0.0125, description="Minimum mean expression for highly-variable genes.")),
+        "max_mean": (float, Field(3, description="Maximum mean expression for highly-variable genes.")),
+        "flavor": (str, Field('seurat', description="Method for identifying highly-variable genes.")),
+        "inplace": (bool, Field(True, description="Whether to place metrics in .var or return them."))
+    }
 
+    tools_params["log1p"] = {
+        "data": (str, Field(..., description="The data matrix.")),
+        "base": (Optional[float], Field(None, description="Base of the logarithm.")),
+        "copy": (bool, Field(False, description="If True, return a copy_param of the data.")),
+        "chunked": (Optional[bool], Field(None, description="Process data in chunks."))
+    }
 
-    
-class PCAParams(BaseAPIModel):
-    data: str = Field(..., description="The (annotated) data matrix.")
-    n_comps: int | None = Field(None, description="Number of principal components to compute.")
-    layer: str | None = Field(None, description="Element of layers to use for PCA.")
-    zero_center: bool = Field(True, description="Whether to zero-center the data.")
-    svd_solver: str | None = Field(None, description="SVD solver to use.")
-    copy: bool = Field(False, description="If True, return a copy_param of the data.")
+    tools_params["pca"] = {
+        "data": (str, Field(..., description="The (annotated) data matrix.")),
+        "n_comps": (Optional[int], Field(None, description="Number of principal components to compute.")),
+        "layer": (Optional[str], Field(None, description="Element of layers to use for PCA.")),
+        "zero_center": (bool, Field(True, description="Whether to zero-center the data.")),
+        "svd_solver": (Optional[str], Field(None, description="SVD solver to use.")),
+        "copy": (bool, Field(False, description="If True, return a copy_param of the data."))
+    }
 
+    tools_params["normalize_total"] = {
+        "adata": (str, Field(..., description="The annotated data matrix.")),
+        "target_sum": (Optional[float], Field(None, description="Target sum after normalization.")),
+        "exclude_highly_expressed": (bool, Field(False, description="Whether to exclude highly expressed genes.")),
+        "inplace": (bool, Field(True, description="Whether to update adata or return normalized data."))
+    }
 
-class NormalizeTotalParams(BaseAPIModel):
-    adata: str = Field(..., description="The annotated data matrix.")
-    target_sum: float | None = Field(None, description="Target sum after normalization.")
-    exclude_highly_expressed: bool = Field(False, description="Whether to exclude highly expressed genes.")
-    inplace: bool = Field(True, description="Whether to update adata or return normalized data.")
-    
-class RegressOutParams(BaseAPIModel):
-    adata: str = Field(..., description="The annotated data matrix.")
-    keys: str | Collection[str] = Field(..., description="Keys for regression.")
-    copy: bool = Field(False, description="If True, return a copy_param of the data.")
+    tools_params["regress_out"] = {
+        "adata": (str, Field(..., description="The annotated data matrix.")),
+        "keys": (Union[str, Collection[str]], Field(..., description="Keys for regression.")),
+        "copy": (bool, Field(False, description="If True, return a copy_param of the data."))
+    }
 
+    tools_params["scale"] = {
+        "data": (str, Field(..., description="The data matrix.")),
+        "zero_center": (bool, Field(True, description="Whether to zero-center the data.")),
+        "copy": (bool, Field(False, description="Whether to perform operation inplace."))
+    }
 
-class ScaleParams(BaseAPIModel):
-    data: str = Field(..., description="The data matrix.")
-    zero_center: bool = Field(True, description="Whether to zero-center the data.")
-    copy: bool = Field(False, description="Whether to perform operation inplace.")
+    tools_params["subsample"] = {
+        "data": (str, Field(..., description="The data matrix.")),
+        "fraction": (Optional[float], Field(None, description="Fraction of observations to subsample.")),
+        "n_obs": (Optional[int], Field(None, description="Number of observations to subsample.")),
+        "copy": (bool, Field(False, description="If True, return a copy_param of the data."))
+    }
 
-    
-class SubsampleParams(BaseAPIModel):
-    data: str = Field(..., description="The data matrix.")
-    fraction: float | None = Field(None, description="Fraction of observations to subsample.")
-    n_obs: int | None = Field(None, description="Number of observations to subsample.")
-    copy: bool = Field(False, description="If True, return a copy_param of the data.")
+    tools_params["downsample_counts"] = {
+        "adata": (str, Field(..., description="The annotated data matrix.")),
+        "counts_per_cell": (Optional[Union[int, str]], Field(None, description="Target total counts per cell.")),
+        "replace": (bool, Field(False, description="Whether to sample with replacement.")),
+        "copy": (bool, Field(False, description="If True, return a copy_param of the data."))
+    }
 
+    tools_params["combat"] = {
+        "adata": (str, Field(..., description="The annotated data matrix.")),
+        "key": (str, Field('batch', description="Key for batch effect removal.")),
+        "inplace": (bool, Field(True, description="Whether to replace the data inplace."))
+    }
 
-class DownsampleCountsParams(BaseAPIModel):
-    adata: str = Field(..., description="The annotated data matrix.")
-    counts_per_cell: Union[int, str, None] = Field(None, description="Target total counts per cell.")
-    replace: bool = Field(False, description="Whether to sample with replacement.")
-    copy: bool = Field(False, description="If True, return a copy_param of the data.")
+    tools_params["scrublet"] = {
+        "adata": (str, Field(..., description="Annotated data matrix.")),
+        "sim_doublet_ratio": (float, Field(2.0, description="Number of doublets to simulate.")),
+        "threshold": (Optional[float], Field(None, description="Doublet score threshold.")),
+        "copy": (bool, Field(False, description="If True, return a copy_param of the data."))
+    }
 
+    tools_params["scrublet_simulate_doublets"] = {
+        "adata": (str, Field(..., description="Annotated data matrix.")),
+        "sim_doublet_ratio": (float, Field(2.0, description="Number of doublets to simulate.")),
+        "random_seed": (int, Field(0, description="Random seed for reproducibility."))
+    }
+    tools_params["calculate_qc_metrics"] = {
+        "adata": (str, Field(..., description="The annotated data matrix.")),
+        "expr_type": (str, Field('counts', description="Name of kind of values in X.")),
+        "var_type": (str, Field('genes', description="The kind of thing the variables are.")),
+        "qc_vars": (Collection[str], Field((),
+                                           description="Keys for boolean columns of .var which identify variables you could want to control for (e.g., “ERCC” or “mito”).")),
+        "percent_top": (Collection[int], Field((50, 100, 200, 500),
+                                               description="List of ranks at which cumulative proportion of expression will be reported as a percentage.")),
+        "layer": (Optional[str], Field(None,
+                                       description="If provided, use adata.layers[layer] for expression values instead of adata.X.")),
+        "use_raw": (
+        bool, Field(False, description="If True, use adata.raw.X for expression values instead of adata.X.")),
+        "inplace": (bool, Field(False, description="Whether to place calculated metrics in adata’s .obs and .var.")),
+        "log1p": (bool, Field(True, description="Set to False to skip computing log1p transformed annotations."))
+    }
 
-class CombatParams(BaseAPIModel):
-    adata: str = Field(..., description="The annotated data matrix.")
-    key: str = Field('batch', description="Key for batch effect removal.")
-    inplace: bool = Field(True, description="Whether to replace the data inplace.")
+    tools_params["recipe_zheng17"] = {
+        "adata": (str, Field(..., description="The annotated data matrix.")),
+        "n_top_genes": (int, Field(1000, description="Number of genes to keep.")),
+        "log": (bool, Field(True, description="Take logarithm of the data.")),
+        "plot": (bool, Field(False, description="Show a plot of the gene dispersion vs. mean relation.")),
+        "copy": (bool, Field(False, description="Return a copy of adata instead of updating it."))
+    }
 
-class ScrubletParams(BaseAPIModel):
-    adata: str = Field(..., description="Annotated data matrix.")
-    sim_doublet_ratio: float = Field(2.0, description="Number of doublets to simulate.")
-    threshold: float | None = Field(None, description="Doublet score threshold.")
-    copy: bool = Field(False, description="If True, return a copy_param of the data.")
+    tools_params["recipe_weinreb17"] = {
+        "adata": (str, Field(..., description="The annotated data matrix.")),
+        "log": (bool, Field(True, description="Logarithmize the data?")),
+        "mean_threshold": (float, Field(0.01, description="Mean expression threshold for gene selection.")),
+        "cv_threshold": (float, Field(2, description="Coefficient of variation threshold for gene selection.")),
+        "n_pcs": (int, Field(50, description="Number of principal components to compute.")),
+        "svd_solver": (str, Field('randomized', description="SVD solver to use for PCA.")),
+        "random_state": (int, Field(0, description="Random seed for reproducibility.")),
+        "copy": (bool, Field(False, description="Return a copy if true, otherwise modifies the original adata object."))
+    }
 
+    tools_params["recipe_seurat"] = {
+        "adata": (str, Field(..., description="The annotated data matrix.")),
+        "log": (bool, Field(True, description="Logarithmize the data?")),
+        "plot": (bool, Field(False, description="Show a plot of the gene dispersion vs. mean relation.")),
+        "copy": (bool, Field(False, description="Return a copy if true, otherwise modifies the original adata object."))
+    }
 
-class ScrubletSimulateDoubletsParams(BaseAPIModel):
-    adata: str = Field(..., description="Annotated data matrix.")
-    sim_doublet_ratio: float = Field(2.0, description="Number of doublets to simulate.")
-    random_seed: int = Field(0, description="Random seed for reproducibility.")
-
+    def __init__(self, tools_params: dict = tools_params):
+        super().__init__()
+        self.tools_params = tools_params
 
 class ScanpyPpQueryBuilder(BaseQueryBuilder):
-    """A class for building a AnndataIO query object."""
+    """A class for building a ScanpyPp query object."""
 
     def create_runnable(
         self,
@@ -206,7 +258,7 @@ class ScanpyPpQueryBuilder(BaseQueryBuilder):
         question: str,
         conversation: "Conversation",
     ) -> list["BaseModel"]:
-        """Generate a AnnDataIOQuery object.
+        """Generate a ScanpyPp query object.
 
         Generates the object based on the given question, prompt, and
         BioChatter conversation. Uses a Pydantic model to define the API fields.
@@ -218,32 +270,19 @@ class ScanpyPpQueryBuilder(BaseQueryBuilder):
             question (str): The question to be answered.
 
             conversation: The conversation object used for parameterising the
-                AnnDataIOQuery.
+                ScanpyPpQuery.
 
         Returns:
         -------
-            AnnDataIOQuery: the parameterised query object (Pydantic model)
+            ScanpyPpQuery: the parameterised query object (Pydantic model)
 
         """
-        tools = [
-            FilterCellsParams,
-            FilterGenesParams,
-            HighlyVariableGenesParams,
-            Log1pParams,
-            PCAParams,
-            NormalizeTotalParams,
-            RegressOutParams,
-            ScaleParams,
-            SubsampleParams,
-            DownsampleCountsParams,
-            CombatParams,
-            ScrubletParams,
-            ScrubletSimulateDoubletsParams,
-        ]
+        tool_maker = ScanpyPpFuncs()
+        tools = tool_maker.make_pydantic_tools()
         runnable = self.create_runnable(
             conversation=conversation, query_parameters=tools
         )
-        anndata_io_call_obj = runnable.invoke(
+        scanpy_pp_call_obj = runnable.invoke(
             question,
         )
-        return anndata_io_call_obj
+        return scanpy_pp_call_obj
