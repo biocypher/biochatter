@@ -481,7 +481,7 @@ class TestAnndataIOQueryBuilder:
     @pytest.fixture
     def mock_create_runnable(self):
         with patch(
-            "biochatter.api_agent.anndata.AnnDataIOQueryBuilder.create_runnable",
+            "biochatter.api_agent.anndata_agent.AnnDataIOQueryBuilder.create_runnable",
         ) as mock:
             mock_runnable = MagicMock()
             mock.return_value = mock_runnable
