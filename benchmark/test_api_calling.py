@@ -50,10 +50,6 @@ def test_web_api_calling(
             builder = OncoKBQueryBuilder()
         elif "biotools" in yaml_data["case"]:
             builder = BioToolsQueryBuilder()
-        elif "scanpy:pl" in yaml_data["case"]:
-            builder = ScanpyPlQueryBuilder()
-        elif "scanpy:tl" in yaml_data["case"]:
-            builder = ScanpyTlQueryBuilder()
         parameters = builder.parameterise_query(
             question=yaml_data["input"]["prompt"],
             conversation=conversation,
