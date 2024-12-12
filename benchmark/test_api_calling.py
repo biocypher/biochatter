@@ -4,7 +4,15 @@ import re
 import pytest
 
 from biochatter._misc import ensure_iterable
-from biochatter.api_agent import BioToolsQueryBuilder, OncoKBQueryBuilder, ScanpyPlQueryBuilder, AnnDataIOQueryBuilder, format_as_rest_call, format_as_python_call
+from biochatter.api_agent import (
+    AnnDataIOQueryBuilder,
+    BioToolsQueryBuilder,
+    OncoKBQueryBuilder,
+    ScanpyPlQueryBuilder,
+    ScanpyTlQueryBuilder,
+    format_as_python_call,
+    format_as_rest_call,
+)
 
 from .benchmark_utils import (
     get_result_file_path,
@@ -44,6 +52,8 @@ def test_web_api_calling(
             builder = BioToolsQueryBuilder()
         elif "scanpy:pl" in yaml_data["case"]:
             builder = ScanpyPlQueryBuilder()
+        elif "scanpy:tl" in yaml_data["case"]:
+            builder = ScanpyTlQueryBuilder()
         parameters = builder.parameterise_query(
             question=yaml_data["input"]["prompt"],
             conversation=conversation,
@@ -73,6 +83,7 @@ def test_web_api_calling(
         get_result_file_path(task),
     )
 
+
 def test_python_api_calling(
     model_name,
     test_data_api_calling,
@@ -100,6 +111,8 @@ def test_python_api_calling(
             builder = ScanpyPlQueryBuilder()
         elif "anndata" in yaml_data["case"]:
             builder = AnnDataIOQueryBuilder()
+        elif "scanpy:tl" in yaml_data["case"]:
+            builder = ScanpyTlQueryBuilder()
         parameters = builder.parameterise_query(
             question=yaml_data["input"]["prompt"],
             conversation=conversation,
