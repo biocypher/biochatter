@@ -33,7 +33,7 @@ from biochatter.api_agent.scanpy_pl import (
     ScanpyPlQueryBuilder,
 )
 
-from biochatter.api_agent.scanpy_tl import ScanpyTLQueryBuilder, SCANPY_QUERY_PROMPT
+from biochatter.api_agent.scanpy_tl import ScanpyTlQueryBuilder
 from biochatter.llm_connect import Conversation, GptConversation
 
 from langchain_core.output_parsers import PydanticToolsParser
@@ -544,7 +544,7 @@ class TestScanpyTLQueryBuilder:
         mock_llm_with_tools.__or__.return_value = mock_chain
 
         # Act
-        builder = ScanpyTLQueryBuilder()
+        builder = ScanpyTlQueryBuilder()
         result = builder.create_runnable(
             query_parameters=mock_generated_classes,
             conversation=mock_conversation_instance,
