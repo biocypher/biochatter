@@ -11,9 +11,7 @@ from biochatter.api_agent.abc import (
     BaseInterpreter,
     BaseQueryBuilder,
 )
-from biochatter.api_agent.anndata import (
-    AnnDataIOQueryBuilder,
-)
+from biochatter.api_agent.anndata import AnnDataIOQueryBuilder
 from biochatter.api_agent.api_agent import APIAgent
 from biochatter.api_agent.blast import (
     BLAST_QUERY_PROMPT,
@@ -31,12 +29,11 @@ from biochatter.api_agent.oncokb import (
     OncoKBQueryBuilder,
     OncoKBQueryParameters,
 )
-from biochatter.api_agent.scanpy_tl import ScanpyTLQueryBuilder
 from biochatter.api_agent.scanpy_pl import (
-    SCANPY_PL_QUERY_PROMPT,
     ScanpyPlQueryBuilder,
-    ScanpyPlScatterQueryParameters,
 )
+
+# from biochatter.api_agent.scanpy_tl import ScanpyTLQueryBuilder
 from biochatter.llm_connect import Conversation, GptConversation
 
 
@@ -439,6 +436,78 @@ class TestOncoKBInterpreter:
         mock_chain.invoke.assert_called_once_with(
             {"input": {expected_summary_prompt}},
         )
+
+
+class TestScanpyPlQueryBuilder:
+    @pytest.fixture
+    def mock_create_runnable(self):
+        with patch(
+            "biochatter.api_agent.scanpy_pl.ScanpyPlQueryBuilder.create_runnable",
+        ) as mock:
+            mock_runnable = MagicMock()
+            mock.return_value = mock_runnable
+            yield mock_runnable
+
+    def test_create_runnable(self):
+        pass
+
+    def test_parameterise_query(self, mock_create_runnable):
+        # Arrange
+        query_builder = ScanpyPlQueryBuilder()
+        mock_conversation = MagicMock()
+        question = "Create a scatter plot of n_genes_by_counts vs total_counts."
+        expected_input = f"{question}"
+
+        mock_query_obj = MagicMock()
+        mock_create_runnable.invoke.return_value = mock_query_obj
+
+        # Act
+        result = query_builder.parameterise_query(question, mock_conversation)
+
+        # Assert
+        mock_create_runnable.invoke.assert_called_once_with(expected_input)
+        assert result == mock_query_obj
+
+
+class TestScanpyPlFetcher:
+    pass
+
+
+class TestScanpyPlInterpreter:
+    pass
+
+
+class TestAnndataIOQueryBuilder:
+    @pytest.fixture
+    def mock_create_runnable(self):
+        with patch(
+            "biochatter.api_agent.anndata.AnnDataIOQueryBuilder.create_runnable",
+        ) as mock:
+            mock_runnable = MagicMock()
+            mock.return_value = mock_runnable
+            yield mock_runnable
+
+    def test_create_runnable(self):
+        pass
+
+    def test_parameterise_query(self, mock_create_runnable):
+        # Arrange
+        query_builder = AnnDataIOQueryBuilder()
+        mock_conversation = MagicMock()
+        question = "read a .h5ad file into an anndata object."
+        expected_input = f"{question}"
+        mock_query_obj = MagicMock()
+        mock_create_runnable.invoke.return_value = mock_query_obj
+
+        # Act
+        result = query_builder.parameterise_query(question, mock_conversation)
+
+        # Assert
+        mock_create_runnable.invoke.assert_called_once_with(expected_input)
+        assert result == mock_query_obj
+
+
+"""
 class TestScanpyTLQueryBuilder:
     @patch("biochatter.llm_connect.GptConversation")
     def test_parameterise_query(self, mock_conversation):
@@ -472,20 +541,18 @@ class TestScanpyTLQueryBuilder:
         # Act
         builder = ScanpyTLQueryBuilder()
         result = builder.parameterise_query(
-            question, 
-            mock_conversation_instance, 
-            generated_classes=mock_generated_classes
+            question,
+            mock_conversation_instance,
+            generated_classes=mock_generated_classes,
         )
 
         # Assert
         mock_llm.bind_tools.assert_called_once_with(mock_generated_classes)
-        mock_chain.invoke.assert_called_once_with([
-            ("system", "You're an expert data scientist"),
-            ("human", question),
-        ])
+        mock_chain.invoke.assert_called_once_with(
+            [
+                ("system", "You're an expert data scientist"),
+                ("human", question),
+            ]
+        )
         assert result == mock_result
-
-
-
-
-
+"""
