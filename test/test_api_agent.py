@@ -12,6 +12,7 @@ from biochatter.api_agent.abc import (
     BaseQueryBuilder,
 )
 from biochatter.api_agent.anndata import AnnDataIOQueryBuilder
+from biochatter.api_agent.scanpy_pp_reduced import ScanpyPpQueryBuilder
 from biochatter.api_agent.api_agent import APIAgent
 from biochatter.api_agent.blast import (
     BLAST_QUERY_PROMPT,
@@ -508,7 +509,35 @@ class TestAnndataIOQueryBuilder:
         mock_create_runnable.invoke.assert_called_once_with(expected_input)
         assert result == mock_query_obj
 
+class TestScanpyPpQueryBuilder:
+    @pytest.fixture
+    def mock_create_runnable(self):
+        with patch(
+            "biochatter.api_agent.scanpy_pp_reduced.ScanpyPpQueryBuilder.create_runnable",
+        ) as mock:
+            mock_runnable = MagicMock()
+            mock.return_value = mock_runnable
+            yield mock_runnable
 
+    def test_create_runnable(self):
+        pass
+
+    def test_parameterise_query(self, mock_create_runnable):
+        # Arrange
+        query_builder = ScanpyPpQueryBuilder()
+        mock_conversation = MagicMock()
+        question = "I want to use scanpy pp to filter cells with at least 200 genes"
+        expected_input = f"{question}"
+        mock_query_obj = MagicMock()
+        mock_create_runnable.invoke.return_value = mock_query_obj
+
+        # Act
+        result = query_builder.parameterise_query(question, mock_conversation)
+
+        # Assert
+        mock_create_runnable.invoke.assert_called_once_with(expected_input)
+        assert result == mock_query_obj
+"""
 class TestScanpyTLQueryBuilder:
     @pytest.fixture
     def mock_create_runnable(self):
