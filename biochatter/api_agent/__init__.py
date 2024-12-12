@@ -37,6 +37,7 @@ __all__ = [
     "OncoKBInterpreter",
     "OncoKBQueryBuilder",
     "ScanpyPlQueryBuilder",
+    "ScanpyPlQueryBuilderReduced",
     "ScanpyTlQueryBuilder",
     "format_as_python_call",
     "format_as_rest_call",
