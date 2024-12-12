@@ -9,6 +9,7 @@ from biochatter.api_agent import (
     OncoKBQueryBuilder,
     ScanpyPlQueryBuilder,
     ScanpyPlQueryBuilderReduced,
+    ScanpyTlQueryBuilder,
     AnnDataIOQueryBuilder,
     format_as_rest_call,
     format_as_python_call,
