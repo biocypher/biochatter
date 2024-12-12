@@ -168,10 +168,11 @@ class BaseAPIModel(BaseModel):
     )
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-class BaseTools():
+class BaseTools:
     """Abstract base class for tools."""
+
     def make_pydantic_tools(self) -> list[BaseAPIModel]:
-        """Uses pydantics create_model to create a list of pydantic tools from a dictionary of parameters"""
+        """Create a list of pydantic tools from a dictionary of parameters."""
         tools = []
         for func_name, tool_params in self.tools_params.items():
             tools.append(create_model(func_name, **tool_params, __base__=BaseAPIModel))
