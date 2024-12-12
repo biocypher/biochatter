@@ -2,15 +2,14 @@
 
 import uuid
 from collections.abc import Callable
-from typing import TYPE_CHECKING, Any
-
+from typing import TYPE_CHECKING, Any, Optional
 from langchain_core.output_parsers import PydanticToolsParser
 from pydantic import BaseModel, Field
 
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
 
-from .abc import BaseAPIModel, BaseQueryBuilder
+from .abc import BaseAPIModel, BaseQueryBuilder, BaseTools
 
 SCANPY_PL_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats.
@@ -132,250 +131,91 @@ pl.sim
 Plot results of simulation.
 """
 
+class ScanpyPlTools(BaseTools):
+    """A class containing parameters for Scanpy plotting functions."""
+    
+    tools_params = {}
 
-class ScanpyPlScatterQueryParameters(BaseModel):
-    """Parameters for querying the scanpy `pl.scatter` API."""
+    # Parameters for sc.pl.scatter
+    tools_params["sc.pl.scatter"] = {
+        "method_name": (str, Field(default="sc.pl.scatter", description="The name of the method to call")),
+        "adata": (str, Field(description="Annotated data matrix")),
+        "x": (Optional[str], Field(default=None, description="x coordinate")),
+        "y": (Optional[str], Field(default=None, description="y coordinate")),
+        "color": (Optional[str | tuple[float, ...] | list[str | tuple[float, ...]]], Field(default=None, description="Keys for annotations of observations/cells or variables/genes, or a hex color specification")),
+        "use_raw": (Optional[bool], Field(default=None, description="Whether to use raw attribute of adata. Defaults to True if .raw is present")),
+        "layers": (Optional[str | list[str]], Field(default=None, description="Layer(s) to use from adata's layers attribute")),
+        "basis": (Optional[str], Field(default=None, description="String that denotes a plotting tool that computed coordinates"))
+    }
 
-    method_name: str = Field(
-        default="sc.pl.scatter",
-        description="The name of the method to call.",
-    )
-    question_uuid: str = Field(
-        default_factory=lambda: str(uuid.uuid4()),
-        description="Unique identifier for the question.",
-    )
-    adata: str = Field(description="Annotated data matrix.",)
-    x: str | None = Field(default=None, description="x coordinate.",)
-    y: str | None = Field(default=None, description="y coordinate.",)
-    color: str | tuple[float, ...] | list[str | tuple[float, ...]] | None = Field(
-        default=None,
-        description="Keys for annotations of observations/cells or variables/genes, or a hex color specification.",
-    )
-    use_raw: bool | None = Field(
-        default=None,
-        description="Whether to use raw attribute of adata. Defaults to True if .raw is present.",
-    )
-    layers: str | list[str] | None = Field(
-        default=None,
-        description="Layer(s) to use from adata's layers attribute.",
-    )
-    basis: str | None = Field(
-        default=None,
-        description="String that denotes a plotting tool that computed coordinates (e.g., 'pca', 'tsne', 'umap').",
-    )
+    # Parameters for sc.pl.pca
+    tools_params["sc.pl.pca"] = {
+        "method_name": (str, Field(default="sc.pl.pca", description="The name of the method to call")),
+        "adata": (str, Field(..., description="Annotated data matrix")),
+        "color": (Optional[str | list[str]], Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
+        "color_map": (Optional[str], Field(default=None, description="String denoting matplotlib color map"))
+    }
 
-### Embeddings
-class ScanpyPlPcaQueryParameters(BaseModel):
-    """Parameters for querying the scanpy `pl.pca` API."""
+    # Parameters for sc.pl.tsne
+    tools_params["sc.pl.tsne"] = {
+        "question_uuid": (Optional[str], Field(default=None, description="Unique identifier for the question")),
+        "adata": (str, Field(..., description="Annotated data matrix")),
+        "color": (Optional[str | list[str]], Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
+        "gene_symbols": (Optional[str], Field(default=None, description="Column name in `.var` DataFrame that stores gene symbols")),
+        "groups": (Optional[str], Field(default=None, description="Restrict to specific categories in categorical observation annotation")),
+        "vmin": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="Lower limit of the color scale")),
+        "vmax": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="Upper limit of the color scale")),
+        "vcenter": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="Center of the color scale, useful for diverging colormaps"))
+    }
 
-    method_name: str = Field(
-        default="sc.pl.pca",
-        description="The name of the method to call.",
-    )
-    question_uuid: str | None = Field(
-        default=None,
-        description="Unique identifier for the question.",
-    )
-    adata: str = Field(
-        ...,
-        description="Annotated data matrix.",
-    )
-    color: str | list[str] | None = Field(
-        default=None,
-        description="Keys for annotations of observations/cells or variables/genes.",
-    )
-    color_map: str | None = Field(
-        default=None,
-        description="String denoting matplotlib color map.",
-    )
+    # Parameters for sc.pl.umap
+    tools_params["sc.pl.umap"] = {
+        "question_uuid": (Optional[str], Field(default=None, description="Unique identifier for the question")),
+        "adata": (str, Field(..., description="Annotated data matrix")),
+        "color": (Optional[str | list[str]], Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
+        "gene_symbols": (Optional[str], Field(default=None, description="Column name in `.var` DataFrame that stores gene symbols")),
+        "layer": (Optional[str], Field(default=None, description="Name of the AnnData object layer to plot")),
+        "vmin": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="Lower limit of the color scale")),
+        "vmax": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="Upper limit of the color scale")),
+        "vcenter": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="Center of the color scale, useful for diverging colormaps"))
+    }
 
-class ScanpyPlTsneQueryParameters(BaseModel):
-    """Parameters for querying the Scanpy `pl.tsne` API."""
+    # Parameters for sc.pl.draw_graph
+    tools_params["sc.pl.draw_graph"] = {
+        "question_uuid": (Optional[str], Field(default=None, description="Unique identifier for the question")),
+        "adata": (str, Field(..., description="Annotated data matrix")),
+        "color": (Optional[str | list[str]], Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
+        "gene_symbols": (Optional[str], Field(default=None, description="Column name in `.var` DataFrame that stores gene symbols")),
+        "color_map": (Optional[str | Any], Field(default=None, description="Color map to use for continuous variables")),
+        "palette": (Optional[str | list[str] | Any], Field(default=None, description="Colors to use for plotting categorical annotation groups")),
+        "vmin": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="The value representing the lower limit of the color scale")),
+        "vmax": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="The value representing the upper limit of the color scale")),
+        "vcenter": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="The value representing the center of the color scale"))
+    }
 
-    method_name: str = Field(
-        default="sc.pl.tsne",
-        description="The name of the method to call.",
-    )
-    question_uuid: str | None = Field(
-        default=None,
-        description="Unique identifier for the question.",
-    )
-    adata: str = Field(
-        ...,
-        description="Annotated data matrix.",
-    )
-    color: str | list[str] | None = Field(
-        default=None,
-        description="Keys for annotations of observations/cells or variables/genes.",
-    )
-    gene_symbols: str | None = Field(
-        default=None,
-        description="Column name in `.var` DataFrame that stores gene symbols.",
-    )
-    groups: str | None = Field(
-        default=None,
-        description="Restrict to specific categories in categorical observation annotation.",
-    )
-    vmin: str | float | Any | list[str | float | Any] | None = Field(
-        default=None,
-        description="Lower limit of the color scale.",
-    )
-    vmax: str | float | Any | list[str | float | Any] | None = Field(
-        default=None,
-        description="Upper limit of the color scale.",
-    )
-    vcenter: str | float | Any | list[str | float | Any] | None = Field(
-        default=None,
-        description="Center of the color scale, useful for diverging colormaps.",
-    )
+    # Parameters for sc.pl.spatial
+    tools_params["sc.pl.spatial"] = {
+        "question_uuid": (Optional[str], Field(default=None, description="Unique identifier for the question")),
+        "adata": (str, Field(..., description="Annotated data matrix")),
+        "color": (Optional[str | list[str]], Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
+        "gene_symbols": (Optional[str], Field(default=None, description="Column name in `.var` DataFrame that stores gene symbols")),
+        "layer": (Optional[str], Field(default=None, description="Name of the AnnData object layer to plot")),
+        "library_id": (Optional[str], Field(default=None, description="Library ID for Visium data, e.g., key in `adata.uns['spatial']`")),
+        "img_key": (Optional[str], Field(default=None, description="Key for image data, used to get `img` and `scale_factor` from 'images' and 'scalefactors' entries for this library")),
+        "img": (Optional[Any], Field(default=None, description="Image data to plot, overrides `img_key`")),
+        "scale_factor": (Optional[float], Field(default=None, description="Scaling factor used to map from coordinate space to pixel space")),
+        "spot_size": (Optional[float], Field(default=None, description="Diameter of spot (in coordinate space) for each point")),
+        "vmin": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="The value representing the lower limit of the color scale")),
+        "vmax": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="The value representing the upper limit of the color scale")),
+        "vcenter": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="The value representing the center of the color scale"))
+    }
 
-class ScanpyPlUmapQueryParameters(BaseModel):
-    """Parameters for querying the Scanpy `pl.umap` API."""
-
-    method_name: str = Field(
-        default="sc.pl.umap",
-        description="The name of the method to call.",
-    )
-    question_uuid: str | None = Field(
-        default=None,
-        description="Unique identifier for the question.",
-    )
-    adata: str = Field(
-        ...,
-        description="Annotated data matrix.",
-    )
-    color: str | list[str] | None = Field(
-        default=None,
-        description="Keys for annotations of observations/cells or variables/genes."
-    )
-    gene_symbols: str | None = Field(
-        default=None,
-        description="Column name in `.var` DataFrame that stores gene symbols.",
-    )
-    layer: str | None = Field(
-        default=None,
-        description="Name of the AnnData object layer to plot.",
-    )
-    vmax: str | float | Any | list[str | float | Any] | None = Field(
-        default=None,
-        description="Upper limit of the color scale.",
-    )
-    vmin: str | float | Any | list[str | float | Any] | None = Field(
-        default=None,
-        description="Lower limit of the color scale.",
-    )
-    vcenter: str | float | Any | list[str | float | Any] | None = Field(
-        default=None,
-        description="Center of the color scale, useful for diverging colormaps.",
-    )
-
-class ScanpyPlDrawGraphQueryParameters(BaseModel):
-    """Parameters for querying the Scanpy `pl.draw_graph` API."""
-
-    method_name: str = Field(
-        default="sc.pl.draw_graph",
-        description="The name of the method to call.",
-    )
-    question_uuid: str | None = Field(
-        default=None,
-        description="Unique identifier for the question.",
-    )
-    adata: str = Field(
-        ...,
-        description="Annotated data matrix.",
-    )
-    color: str | list[str] | None = Field(
-        default=None,
-        description="Keys for annotations of observations/cells or variables/genes.",
-    )
-    gene_symbols: str | None = Field(
-        default=None,
-        description="Column name in `.var` DataFrame that stores gene symbols.",
-    )
-    color_map: str | Any | None = Field(
-        default=None,
-        description="Color map to use for continuous variables.",
-    )
-    palette: str | list[str] | Any | None = Field(
-        default=None,
-        description="Colors to use for plotting categorical annotation groups.",
-    )
-    vmin: str | float | Any | list[str | float | Any] | None = Field(
-        default=None,
-        description="The value representing the lower limit of the color scale.",
-    )
-    vmax: str | float | Any | list[str | float | Any] | None = Field(
-        default=None,
-        description="The value representing the upper limit of the color scale.",
-    )
-    vcenter: str | float | Any | list[str | float | Any] | None = Field(
-        default=None,
-        description="The value representing the center of the color scale.",
-    )
-
-class ScanpyPlSpatialQueryParameters(BaseModel):
-    """Parameters for querying the Scanpy `pl.spatial` API."""
-
-    method_name: str = Field(
-        default="sc.pl.spatial",
-        description="The name of the method to call.",
-    )
-    question_uuid: str | None = Field(
-        default=None,
-        description="Unique identifier for the question.",
-    )
-    adata: str = Field(
-        ...,
-        description="Annotated data matrix.",
-    )
-    color: str | list[str] | None = Field(
-        default=None,
-        description="Keys for annotations of observations/cells or variables/genes.",
-    )
-    gene_symbols: str | None = Field(
-        default=None,
-        description="Column name in `.var` DataFrame that stores gene symbols.",
-    )
-    layer: str | None = Field(
-        default=None,
-        description="Name of the AnnData object layer to plot.",
-    )
-    library_id: str | None = Field(
-        default=None,
-        description="Library ID for Visium data, e.g., key in `adata.uns['spatial']`.",
-    )
-    img_key: str | None = Field(
-        default=None,
-        description="Key for image data, used to get `img` and `scale_factor` from 'images' and 'scalefactors' entries for this library.",
-    )
-    img: Any | None = Field(
-        default=None,
-        description="Image data to plot, overrides `img_key`.",
-    )
-    scale_factor: float | None = Field(
-        default=None,
-        description="Scaling factor used to map from coordinate space to pixel space.",
-    )
-    spot_size: float | None = Field(
-        default=None,
-        description="Diameter of spot (in coordinate space) for each point.",
-    )
-    vmin: str | float | Any | list[str | float | Any] | None = Field(
-        default=None,
-        description="The value representing the lower limit of the color scale.",
-    )
-    vmax: str | float | Any | list[str | float | Any] | None = Field(
-        default=None,
-        description="The value representing the upper limit of the color scale.",
-    )
-    vcenter: str | float | Any | list[str | float | Any] | None = Field(
-        default=None,
-        description="The value representing the center of the color scale.",
-    )
-
+    def __init__(self):
+        """Initialize the tools by creating Pydantic models from the parameters."""
+        self.tools = self.make_pydantic_tools()
 
 class ScanpyPlQueryBuilder(BaseQueryBuilder):
-    """A class for building a AnndataIO query object."""
+    """A class for building a ScanpyPl query object."""
 
     def create_runnable(
         self,
@@ -426,13 +266,7 @@ class ScanpyPlQueryBuilder(BaseQueryBuilder):
             ScanpyPlQuery: the parameterised query object (Pydantic model)
 
         """
-        tools = [
-            ScanpyPlScatterQueryParameters,
-            ScanpyPlPcaQueryParameters,
-            ScanpyPlTsneQueryParameters,
-            ScanpyPlUmapQueryParameters,
-            ScanpyPlDrawGraphQueryParameters,
-            ScanpyPlSpatialQueryParameters,
-        ]
+        tool_maker = ScanpyPlTools()
+        tools = tool_maker.make_pydantic_tools()
         runnable = self.create_runnable(conversation=conversation, query_parameters=tools)
         return runnable.invoke(question)
