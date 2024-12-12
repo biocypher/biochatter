@@ -12,7 +12,7 @@ from biochatter.api_agent.abc import (
     BaseQueryBuilder,
 )
 
-from biochatter.api_agent.anndata import AnnDataIOQueryBuilder
+from biochatter.api_agent.anndata_agent import AnnDataIOQueryBuilder
 from biochatter.api_agent.scanpy_pp_reduced import ScanpyPpQueryBuilder
 
 from biochatter.api_agent.api_agent import APIAgent

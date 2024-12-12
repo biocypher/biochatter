@@ -112,8 +112,7 @@ class Log1pParams(BaseAPIModel):
     copy: bool = Field(False, description="If True, return a copy_param of the data.")
     chunked: bool | None = Field(None, description="Process data in chunks.")
 
-    def get_base_copy(self):
-        return super().copy
+
     
 class PCAParams(BaseAPIModel):
     data: str = Field(..., description="The (annotated) data matrix.")
@@ -123,8 +122,6 @@ class PCAParams(BaseAPIModel):
     svd_solver: str | None = Field(None, description="SVD solver to use.")
     copy: bool = Field(False, description="If True, return a copy_param of the data.")
 
-    def get_base_copy(self):
-        return super().copy
 
 class NormalizeTotalParams(BaseAPIModel):
     adata: str = Field(..., description="The annotated data matrix.")
@@ -137,16 +134,12 @@ class RegressOutParams(BaseAPIModel):
     keys: str | Collection[str] = Field(..., description="Keys for regression.")
     copy: bool = Field(False, description="If True, return a copy_param of the data.")
 
-    def get_base_copy(self):
-        return super().copy
 
 class ScaleParams(BaseAPIModel):
     data: str = Field(..., description="The data matrix.")
     zero_center: bool = Field(True, description="Whether to zero-center the data.")
     copy: bool = Field(False, description="Whether to perform operation inplace.")
 
-    def get_base_copy(self):
-        return super().copy
     
 class SubsampleParams(BaseAPIModel):
     data: str = Field(..., description="The data matrix.")
@@ -154,8 +147,6 @@ class SubsampleParams(BaseAPIModel):
     n_obs: int | None = Field(None, description="Number of observations to subsample.")
     copy: bool = Field(False, description="If True, return a copy_param of the data.")
 
-    def get_base_copy(self):
-        return super().copy
 
 class DownsampleCountsParams(BaseAPIModel):
     adata: str = Field(..., description="The annotated data matrix.")
@@ -163,8 +154,6 @@ class DownsampleCountsParams(BaseAPIModel):
     replace: bool = Field(False, description="Whether to sample with replacement.")
     copy: bool = Field(False, description="If True, return a copy_param of the data.")
 
-    def get_base_copy(self):
-        return super().copy
 
 class CombatParams(BaseAPIModel):
     adata: str = Field(..., description="The annotated data matrix.")
@@ -177,8 +166,6 @@ class ScrubletParams(BaseAPIModel):
     threshold: float | None = Field(None, description="Doublet score threshold.")
     copy: bool = Field(False, description="If True, return a copy_param of the data.")
 
-    def get_base_copy(self):
-        return super().copy
 
 class ScrubletSimulateDoubletsParams(BaseAPIModel):
     adata: str = Field(..., description="Annotated data matrix.")
