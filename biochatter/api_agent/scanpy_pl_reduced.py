@@ -136,7 +136,7 @@ Plot results of simulation.
 class ScanpyPlScatterQueryParameters(BaseModel):
     """Parameters for querying the scanpy `pl.scatter` API."""
 
-    title: str = Field(
+    method_name: str = Field(
         default="sc.pl.scatter",
         description="The name of the method to call.",
     )
@@ -168,7 +168,7 @@ class ScanpyPlScatterQueryParameters(BaseModel):
 class ScanpyPlPcaQueryParameters(BaseModel):
     """Parameters for querying the scanpy `pl.pca` API."""
 
-    title: str = Field(
+    method_name: str = Field(
         default="sc.pl.pca",
         description="The name of the method to call.",
     )
@@ -192,7 +192,7 @@ class ScanpyPlPcaQueryParameters(BaseModel):
 class ScanpyPlTsneQueryParameters(BaseModel):
     """Parameters for querying the Scanpy `pl.tsne` API."""
 
-    title: str = Field(
+    method_name: str = Field(
         default="sc.pl.tsne",
         description="The name of the method to call.",
     )
@@ -232,7 +232,7 @@ class ScanpyPlTsneQueryParameters(BaseModel):
 class ScanpyPlUmapQueryParameters(BaseModel):
     """Parameters for querying the Scanpy `pl.umap` API."""
 
-    title: str = Field(
+    method_name: str = Field(
         default="sc.pl.umap",
         description="The name of the method to call.",
     )
@@ -272,7 +272,7 @@ class ScanpyPlUmapQueryParameters(BaseModel):
 class ScanpyPlDrawGraphQueryParameters(BaseModel):
     """Parameters for querying the Scanpy `pl.draw_graph` API."""
 
-    title: str = Field(
+    method_name: str = Field(
         default="sc.pl.draw_graph",
         description="The name of the method to call.",
     )
@@ -316,7 +316,7 @@ class ScanpyPlDrawGraphQueryParameters(BaseModel):
 class ScanpyPlSpatialQueryParameters(BaseModel):
     """Parameters for querying the Scanpy `pl.spatial` API."""
 
-    title: str = Field(
+    method_name: str = Field(
         default="sc.pl.spatial",
         description="The name of the method to call.",
     )
@@ -399,7 +399,7 @@ class ScanpyPlQueryBuilder(BaseQueryBuilder):
             A Callable object that can execute the query.
 
         """
-        runnable = conversation.chat.bind_tools(query_parameters)
+        runnable = conversation.chat.bind_tools(query_parameters, tool_choice="required")
         return runnable | PydanticToolsParser(tools=query_parameters)
 
     def parameterise_query(
