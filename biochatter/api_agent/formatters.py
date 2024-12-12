@@ -38,6 +38,6 @@ def format_as_python_call(model: BaseAPIModel) -> str:
     method_name = params.pop("method_name", None)
     params.pop("question_uuid", None)
 
-    param_str = ", ".join(f"{k}={repr(v)}" for k, v in params.items())
+    param_str = ", ".join(f"{k}={v!r}" for k, v in params.items())
 
     return f"{method_name}({param_str})"
