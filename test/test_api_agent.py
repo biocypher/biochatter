@@ -539,7 +539,7 @@ class TestScanpyPpQueryBuilder:
         # Assert
         mock_create_runnable.invoke.assert_called_once_with(expected_input)
         assert result == mock_query_obj
-"""
+
 class TestScanpyTLQueryBuilder:
     @pytest.fixture
     def mock_create_runnable(self):
@@ -604,4 +604,3 @@ class TestScanpyTLQueryBuilder:
         # Assert
         mock_create_runnable.invoke.assert_called_once_with(expected_input)
         assert result == mock_query_obj
-"""
