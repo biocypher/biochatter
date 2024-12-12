@@ -3,7 +3,7 @@ import scanpy as sc
 from biochatter.api_agent.generate_pydantic_classes_from_module import generate_pydantic_classes
 
 
-def test_generate_pydantic_classes() -> None:
+def test_generate_pydantic_classes():
     # Generate the Pydantic classes
     generated_classes = generate_pydantic_classes(sc.tl)
 
@@ -21,7 +21,7 @@ def test_generate_pydantic_classes() -> None:
         assert isinstance(schema["properties"], dict)
 
 
-def test_generate_pydantic_classes_umap() -> None:
+def test_generate_pydantic_classes_umap():
     # Test a specific function we know should be in sc.tl
     generated_classes = generate_pydantic_classes(sc.tl)
 

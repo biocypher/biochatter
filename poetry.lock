@@ -224,7 +224,7 @@ save = ["vl-convert-python (>=1.7.0)"]
 name = "anndata"
 version = "0.11.1"
 description = "Annotated data."
-optional = true
+optional = false
 python-versions = ">=3.10"
 files = [
     {file = "anndata-0.11.1-py3-none-any.whl", hash = "sha256:2c974e54434548b9c7a415fe9a3082aac76a7233a9b9e785830b9c9161f673ac"},
@@ -314,7 +314,7 @@ trio = ["trio (>=0.26.1)"]
 name = "array-api-compat"
 version = "1.9.1"
 description = "A wrapper around NumPy and other array libraries to make them compatible with the Array API standard"
-optional = true
+optional = false
 python-versions = ">=3.9"
 files = [
     {file = "array_api_compat-1.9.1-py3-none-any.whl", hash = "sha256:41a2703a662832d21619359ddddc5c0449876871f6c01e108c335f2a9432df94"},
@@ -1796,7 +1796,7 @@ files = [
 name = "h5py"
 version = "3.12.1"
 description = "Read and write HDF5 files from Python"
-optional = true
+optional = false
 python-versions = ">=3.9"
 files = [
     {file = "h5py-3.12.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:2f0f1a382cbf494679c07b4371f90c70391dedb027d517ac94fa2c05299dacda"},
@@ -2451,7 +2451,7 @@ langsmith-pyo3 = ["langsmith-pyo3 (>=0.1.0rc2,<0.2.0)"]
 name = "legacy-api-wrap"
 version = "1.4.1"
 description = ""
-optional = true
+optional = false
 python-versions = ">=3.8"
 files = [
     {file = "legacy_api_wrap-1.4.1-py3-none-any.whl", hash = "sha256:8ba214242e836cebfd3b64c1a1653fce955abb0f9e4c7dffb51f2ad014def0eb"},
@@ -2465,7 +2465,7 @@ test = ["anyconfig[toml] (>=0.14)", "coverage", "coverage-rich", "pytest"]
 name = "llvmlite"
 version = "0.43.0"
 description = "lightweight wrapper around basic LLVM functionality"
-optional = true
+optional = false
 python-versions = ">=3.9"
 files = [
     {file = "llvmlite-0.43.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:a289af9a1687c6cf463478f0fa8e8aa3b6fb813317b0d70bf1ed0759eab6f761"},
@@ -3113,7 +3113,7 @@ pyspark = ["pyspark (>=3.3.0)"]
 name = "natsort"
 version = "8.4.0"
 description = "Simple yet flexible natural sorting in Python."
-optional = true
+optional = false
 python-versions = ">=3.7"
 files = [
     {file = "natsort-8.4.0-py3-none-any.whl", hash = "sha256:4732914fb471f56b5cce04d7bae6f164a592c7712e1c85f9ef585e197299521c"},
@@ -3158,7 +3158,7 @@ toml = "*"
 name = "networkx"
 version = "3.4.2"
 description = "Python package for creating and manipulating graphs and networks"
-optional = true
+optional = false
 python-versions = ">=3.10"
 files = [
     {file = "networkx-3.4.2-py3-none-any.whl", hash = "sha256:df5d4365b724cf81b8c6a7312509d0c22386097011ad1abe274afd5e9d3bbc5f"},
@@ -3213,7 +3213,7 @@ files = [
 name = "numba"
 version = "0.60.0"
 description = "compiling Python code using LLVM"
-optional = true
+optional = false
 python-versions = ">=3.9"
 files = [
     {file = "numba-0.60.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:5d761de835cd38fb400d2c26bb103a2726f548dc30368853121d66201672e651"},
@@ -3708,7 +3708,7 @@ files = [
 name = "patsy"
 version = "1.0.1"
 description = "A Python package for describing statistical models and for building design matrices."
-optional = true
+optional = false
 python-versions = ">=3.6"
 files = [
     {file = "patsy-1.0.1-py2.py3-none-any.whl", hash = "sha256:751fb38f9e97e62312e921a1954b81e1bb2bcda4f5eeabaf94db251ee791509c"},
@@ -4378,7 +4378,7 @@ files = [
 name = "pynndescent"
 version = "0.5.13"
 description = "Nearest Neighbor Descent"
-optional = true
+optional = false
 python-versions = "*"
 files = [
     {file = "pynndescent-0.5.13-py3-none-any.whl", hash = "sha256:69aabb8f394bc631b6ac475a1c7f3994c54adf3f51cd63b2730fefba5771b949"},
@@ -5113,7 +5113,7 @@ torch = ["safetensors[numpy]", "torch (>=1.10)"]
 name = "scanpy"
 version = "1.10.4"
 description = "Single-Cell Analysis in Python."
-optional = true
+optional = false
 python-versions = ">=3.10"
 files = [
     {file = "scanpy-1.10.4-py3-none-any.whl", hash = "sha256:d93256d0e8e6e34639ff9bf20bdde0162b5162c6f18f151d90b3eb9ea54ff03a"},
@@ -5165,7 +5165,7 @@ test-min = ["profimp", "pytest (>=8.2)", "pytest-cov", "pytest-mock", "pytest-nu
 name = "scikit-learn"
 version = "1.6.0"
 description = "A set of python modules for machine learning and data mining"
-optional = true
+optional = false
 python-versions = ">=3.9"
 files = [
     {file = "scikit_learn-1.6.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:366fb3fa47dce90afed3d6106183f4978d6f24cfd595c2373424171b915ee718"},
@@ -5305,7 +5305,7 @@ doc = ["Sphinx", "sphinx-rtd-theme"]
 name = "session-info"
 version = "1.0.0"
 description = "session_info outputs version information for modules loaded in the current session, Python, and the OS."
-optional = true
+optional = false
 python-versions = ">=3.6"
 files = [
     {file = "session_info-1.0.0.tar.gz", hash = "sha256:3cda5e03cca703f32ae2eadbd6bd80b6c21442cfb60e412c21cb8ad6d5cbb6b7"},
@@ -5524,7 +5524,7 @@ full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.7
 name = "statsmodels"
 version = "0.14.4"
 description = "Statistical computations and models for Python"
-optional = true
+optional = false
 python-versions = ">=3.9"
 files = [
     {file = "statsmodels-0.14.4-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:7a62f1fc9086e4b7ee789a6f66b3c0fc82dd8de1edda1522d30901a0aa45e42b"},
@@ -5575,7 +5575,7 @@ docs = ["ipykernel", "jupyter-client", "matplotlib", "nbconvert", "nbformat", "n
 name = "stdlib-list"
 version = "0.11.0"
 description = "A list of Python Standard Libraries (2.7 through 3.12)."
-optional = true
+optional = false
 python-versions = ">=3.9"
 files = [
     {file = "stdlib_list-0.11.0-py3-none-any.whl", hash = "sha256:8bf8decfffaaf273d4cfeb5bd852b910a00dec1037dcf163576803622bccf597"},
@@ -5695,7 +5695,7 @@ test = ["pytest", "tornado (>=4.5)", "typeguard"]
 name = "threadpoolctl"
 version = "3.5.0"
 description = "threadpoolctl"
-optional = true
+optional = false
 python-versions = ">=3.8"
 files = [
     {file = "threadpoolctl-3.5.0-py3-none-any.whl", hash = "sha256:56c1e26c150397e58c4926da8eeee87533b1e32bef131bd4bf6a2f45f3185467"},
@@ -6252,7 +6252,7 @@ files = [
 name = "umap-learn"
 version = "0.5.7"
 description = "Uniform Manifold Approximation and Projection"
-optional = true
+optional = false
 python-versions = "*"
 files = [
     {file = "umap-learn-0.5.7.tar.gz", hash = "sha256:b2a97973e4c6ffcebf241100a8de589a4c84126a832ab40f296c6d9fcc5eb19e"},
@@ -6871,4 +6871,4 @@ xinference = ["xinference"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "e837ae8b937c1c38947b1a9f9046d5de3ea7f4158c0b7c8ca65327d60dd8d05d"
+content-hash = "a02897708b90a745f340d646175df2d2666ebdde2d8bd3c8f6695ff75239f0d4"
