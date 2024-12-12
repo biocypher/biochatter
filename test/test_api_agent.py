@@ -33,8 +33,10 @@ from biochatter.api_agent.scanpy_pl import (
     ScanpyPlQueryBuilder,
 )
 
-# from biochatter.api_agent.scanpy_tl import ScanpyTLQueryBuilder
+from biochatter.api_agent.scanpy_tl import ScanpyTlQueryBuilder
 from biochatter.llm_connect import Conversation, GptConversation
+
+from langchain_core.output_parsers import PydanticToolsParser
 
 
 def conversation_factory():
@@ -507,13 +509,18 @@ class TestAnndataIOQueryBuilder:
         assert result == mock_query_obj
 
 
-"""
 class TestScanpyTLQueryBuilder:
-    @patch("biochatter.llm_connect.GptConversation")
-    def test_parameterise_query(self, mock_conversation):
-        # Arrange
-        question = "I want to mark mitochondrial genes of my adata object"
+    @pytest.fixture
+    def mock_create_runnable(self):
+        with patch(
+            "biochatter.api_agent.anndata.AnnDataIOQueryBuilder.create_runnable",
+        ) as mock:
+            mock_runnable = MagicMock()
+            mock.return_value = mock_runnable
+            yield mock_runnable
 
+    @patch("biochatter.llm_connect.GptConversation")
+    def test_create_runnable(self, mock_conversation):
         # Mock the list of Pydantic classes as a list of Mock objects
         class MockTool1(BaseModel):
             param1: str
@@ -532,62 +539,31 @@ class TestScanpyTLQueryBuilder:
         mock_llm_with_tools = MagicMock()
         mock_llm.bind_tools.return_value = mock_llm_with_tools
 
-        # Mock the chain and its invoke method
+        # Mock the chain
         mock_chain = MagicMock()
         mock_llm_with_tools.__or__.return_value = mock_chain
-        mock_result = {"parameters": {"key_added": "mt_genes"}}
-        mock_chain.invoke.return_value = mock_result
 
         # Act
-        builder = ScanpyTLQueryBuilder()
-        result = builder.parameterise_query(
-            question,
-            mock_conversation_instance,
-            generated_classes=mock_generated_classes,
+        builder = ScanpyTlQueryBuilder()
+        result = builder.create_runnable(
+            query_parameters=mock_generated_classes,
+            conversation=mock_conversation_instance,
         )
 
         # Assert
-        mock_llm.bind_tools.assert_called_once_with(mock_generated_classes)
-        mock_chain.invoke.assert_called_once_with(
-            [
-                ("system", "You're an expert data scientist"),
-                ("human", question),
-            ]
+        mock_llm.bind_tools.assert_called_once_with(mock_generated_classes, tool_choice = "required")
+        mock_llm_with_tools.__or__.assert_called_once_with(
+            PydanticToolsParser(tools=mock_generated_classes)
         )
-        assert result == mock_result
-
-
-
-class TestScanpyPlQueryBuilder:
-    @pytest.fixture()
-    def mock_create_runnable(self):
-        with patch(
-            "biochatter.api_agent.scanpy_pl.create_structured_output_runnable"
-        ) as mock:
-            mock_runnable = MagicMock()
-            mock.return_value = mock_runnable
-            yield mock_runnable
-
-
-
-
-
-class TestAnndataIOQueryBuilder:
-    @pytest.fixture
-    def mock_create_runnable(self):
-        with patch(
-            "biochatter.api_agent.anndata.AnnDataIOQueryBuilder.create_runnable",
-        ) as mock:
-            mock_runnable = MagicMock()
-            mock.return_value = mock_runnable
-            yield mock_runnable
+        # Verify the returned chain
+        assert result == mock_chain
 
     def test_parameterise_query(self, mock_create_runnable):
         # Arrange
         query_builder = AnnDataIOQueryBuilder()
         mock_conversation = MagicMock()
-        question = "read a .h5ad file into an anndata object."
-
+        question = "i want to run PCA on my data"
+        expected_input = f"{question}"
         mock_query_obj = MagicMock()
         mock_create_runnable.invoke.return_value = mock_query_obj
 
@@ -595,5 +571,5 @@ class TestAnndataIOQueryBuilder:
         result = query_builder.parameterise_query(question, mock_conversation)
 
         # Assert
-        mock_create_runnable.invoke.assert_called_once_with(question)
+        mock_create_runnable.invoke.assert_called_once_with(expected_input)
         assert result == mock_query_obj
