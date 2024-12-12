@@ -11,8 +11,10 @@ from biochatter.api_agent.abc import (
     BaseInterpreter,
     BaseQueryBuilder,
 )
+
 from biochatter.api_agent.anndata import AnnDataIOQueryBuilder
 from biochatter.api_agent.scanpy_pp_reduced import ScanpyPpQueryBuilder
+
 from biochatter.api_agent.api_agent import APIAgent
 from biochatter.api_agent.blast import (
     BLAST_QUERY_PROMPT,
@@ -484,7 +486,7 @@ class TestAnndataIOQueryBuilder:
     @pytest.fixture
     def mock_create_runnable(self):
         with patch(
-            "biochatter.api_agent.anndata.AnnDataIOQueryBuilder.create_runnable",
+            "biochatter.api_agent.anndata_agent.AnnDataIOQueryBuilder.create_runnable",
         ) as mock:
             mock_runnable = MagicMock()
             mock.return_value = mock_runnable
