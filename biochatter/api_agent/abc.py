@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Callable
 
 from langchain_core.prompts import ChatPromptTemplate
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, create_model, ConfigDict
 
 from biochatter.llm_connect import Conversation
 
@@ -166,13 +166,13 @@ class BaseAPIModel(BaseModel):
     uuid: str | None = Field(
         None, description="Unique identifier for the model instance"
     )
-    method_name: str = Field(..., description="Name of the method to be executed")
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    class Config:
-        """BaseModel class configuration.
-
-        Ensures the model can be extended without strict type checking on
-        inherited fields.
-        """
-
-        arbitrary_types_allowed = True
+class BaseTools():
+    """Abstract base class for tools."""
+    def make_pydantic_tools(self) -> list[BaseAPIModel]:
+        """Uses pydantics create_model to create a list of pydantic tools from a dictionary of parameters"""
+        tools = []
+        for func_name, tool_params in self.tools_params.items():
+            tools.append(create_model(func_name, **tool_params, __base__=BaseAPIModel))
+        return tools
