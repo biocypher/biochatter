@@ -56,7 +56,7 @@ def test_web_api_calling(
             conversation=conversation,
         )
 
-        api_query = format_as_rest_call(parameters)
+        api_query = format_as_rest_call(parameters[0])
 
         score = []
         for expected_part in ensure_iterable(
@@ -115,7 +115,7 @@ def test_python_api_calling(
             conversation=conversation,
         )
 
-        method_call = format_as_python_call(parameters[0])
+        method_call = format_as_python_call(parameters[0]) if parameters else ""
 
         score = []
         for expected_part in ensure_iterable(
@@ -168,7 +168,7 @@ def test_python_api_calling_reduced(
             conversation=conversation,
         )
 
-        method_call = format_as_python_call(parameters[0])
+        method_call = format_as_python_call(parameters[0]) if parameters else ""
 
         score = []
         for expected_part in ensure_iterable(
