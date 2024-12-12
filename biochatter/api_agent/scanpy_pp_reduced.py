@@ -195,6 +195,8 @@ class ScanpyPPQueryBuilder(BaseQueryBuilder):
         question: str,
         conversation: "Conversation",
     ) -> list["BaseModel"]:
+        
+        
         """Generate a ScanpyPPIOQuery object.
 
         Generates the object based on the given question, prompt, and
@@ -215,19 +217,29 @@ class ScanpyPPQueryBuilder(BaseQueryBuilder):
 
         """
         tools = [
-            ReadCSV,
-            ReadExcel,
-            ReadH5AD,
-            ReadHDF,
-            ReadLoom,
-            ReadMTX,
-            ReadText,
-            ReadZarr,
+        "FilterCellsParams",
+        "FilterGenesParams",
+        "HighlyVariableGenesParams",
+        "Log1pParams",
+        "PCAParams",
+        "NormalizeTotalParams",
+        "RegressOutParams",
+        "ScaleParams",
+        "SubsampleParams",
+        "DownsampleCountsParams",
+        "CombatParams",
+        "ScrubletParams",
+        "ScrubletSimulateDoubletsParams",
         ]
+
         runnable = self.create_runnable(
-            conversation=conversation, query_parameters=tools
+            query_parameters=tools,
+            conversation=conversation,
         )
-        anndata_io_call_obj = runnable.invoke(
-            question,
+        oncokb_call_obj = runnable.invoke(
+            {
+                "input": f"Answer:\n{question} based on:\n {SCANPY_PL_QUERY_PROMPT}",
+            },
         )
-        return anndata_io_call_obj
+        oncokb_call_obj.question_uuid = str(uuid.uuid4())
+        return [oncokb_call_obj]
