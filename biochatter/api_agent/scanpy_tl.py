@@ -1,15 +1,12 @@
 """Module for interacting with the `scanpy` API for data tools (`tl`)."""
 
-from typing import TYPE_CHECKING
-
 from langchain_core.output_parsers import PydanticToolsParser
 from langchain_core.pydantic_v1 import BaseModel
 
 from .abc import BaseQueryBuilder
 from .generate_pydantic_classes_from_module import generate_pydantic_classes
+from biochatter.llm_connect import Conversation
 
-if TYPE_CHECKING:
-    from biochatter.llm_connect import Conversation
 
 SCANPY_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats. Your task is to use the scanpy python package
