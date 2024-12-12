@@ -12,6 +12,7 @@ from biochatter.api_agent.abc import (
     BaseQueryBuilder,
 )
 from biochatter.api_agent.anndata import AnnDataIOQueryBuilder
+from biochatter.api_agent.scanpy_pp_reduced import ScanpyPpQueryBuilder
 from biochatter.api_agent.api_agent import APIAgent
 from biochatter.api_agent.blast import (
     BLAST_QUERY_PROMPT,
@@ -521,7 +522,7 @@ class TestScanpyPpQueryBuilder:
 
     def test_parameterise_query(self, mock_create_runnable):
         # Arrange
-        query_builder = AnnDataIOQueryBuilder()
+        query_builder = ScanpyPpQueryBuilder()
         mock_conversation = MagicMock()
         question = "I want to use scanpy pp to filter cells with at least 200 genes"
         expected_input = f"{question}"
