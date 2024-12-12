@@ -216,30 +216,29 @@ class ScanpyPPQueryBuilder(BaseQueryBuilder):
 
         """
         tools = [
-        "FilterCellsParams",
-        "FilterGenesParams",
-        "HighlyVariableGenesParams",
-        "Log1pParams",
-        "PCAParams",
-        "NormalizeTotalParams",
-        "RegressOutParams",
-        "ScaleParams",
-        "SubsampleParams",
-        "DownsampleCountsParams",
-        "CombatParams",
-        "ScrubletParams",
-        "ScrubletSimulateDoubletsParams",
+        FilterCellsParams,
+        FilterGenesParams,
+        HighlyVariableGenesParams,
+        Log1pParams,
+        PCAParams,
+        NormalizeTotalParams,
+        RegressOutParams,
+        ScaleParams,
+        SubsampleParams,
+        DownsampleCountsParams,
+        CombatParams,
+        ScrubletParams,
+        ScrubletSimulateDoubletsParams,
         ]
 
         runnable = self.create_runnable(
             query_parameters=tools,
             conversation=conversation,
         )
-        oncokb_call_obj = runnable.invoke(
-            {
-                "input": f"Answer:\n{question} based on:\n {SCANPY_PL_QUERY_PROMPT}",
-            },
-        )
+        oncokb_call_obj = runnable.invoke(f"{question} based on this system prompt:{SCANPY_PL_QUERY_PROMPT}")
         oncokb_call_obj.question_uuid = str(uuid.uuid4())
         return [oncokb_call_obj]
+    
+
+
 
