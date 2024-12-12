@@ -154,9 +154,9 @@ api_calling:
         abbreviations: "spatial data plt with n_genes_by_counts as colors."
         general_question: "How can I plot the spatial data with n_genes_by_counts as colors?"
         help_request: "Can you help me with plotting the spatial data with n_genes_by_counts as colors?"
-      expected:
-        parts_of_query:
-          ["sc.pl.spatial\\(", "adata=adata", "n_genes_by_counts", "\\)"]
+    expected:
+      parts_of_query:
+        ["sc.pl.spatial\\(", "adata=adata", "n_genes_by_counts", "\\)"]
   - case: anndata:read:h5ad
     input:
       prompt:
