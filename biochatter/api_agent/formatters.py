@@ -2,7 +2,8 @@
 
 from urllib.parse import urlencode
 
-from pydantic import BaseModel
+from .abc import BaseAPIModel, BaseModel
+
 
 def format_as_rest_call(model: BaseModel) -> str:
     """Convert a parameter model (BaseModel) into a REST API call string.
@@ -22,7 +23,8 @@ def format_as_rest_call(model: BaseModel) -> str:
     full_url = f"{base_url.rstrip('/')}/{endpoint.strip('/')}"
     return f"{full_url}?{urlencode(params)}"
 
-def format_as_python_call(model: BaseModel) -> str:
+
+def format_as_python_call(model: BaseAPIModel) -> str:
     """Convert a parameter model into a Python method call string.
 
     Args:

@@ -11,8 +11,8 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING
 
 from langchain_core.output_parsers import PydanticToolsParser
-from langchain_core.pydantic_v1 import BaseModel, Field
 
+# from langchain_core.pydantic_v1 import BaseModel, Field
 from biochatter.llm_connect import Conversation
 
 from .abc import BaseAPIModel, BaseQueryBuilder
@@ -20,6 +20,10 @@ from .abc import BaseAPIModel, BaseQueryBuilder
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
 
+
+from typing import Optional
+
+from pydantic import BaseModel, Field
 
 ANNDATA_IO_QUERY_PROMPT = """
 You are a world class algorithm, computational biologist with world leading knowledge
@@ -94,18 +98,18 @@ class ReadH5AD(BaseAPIModel):
     """Read .h5ad-formatted hdf5 file."""
 
     method_name: str = Field(default="io.read_h5ad", description="NEVER CHANGE")
-    filename: str = Field(..., description="Path to the .h5ad file")
-    backed: str = Field(
-        None, description="Mode to access file: None, 'r' for read-only"
+    filename: str = Field(default="dummy.h5ad", description="Path to the .h5ad file")
+    backed: Optional[str] = Field(
+        default=None, description="Mode to access file: None, 'r' for read-only"
     )
-    as_sparse: str = Field(
-        None, description="Convert to sparse format: 'csr', 'csc', or None"
+    as_sparse: Optional[str] = Field(
+        default=None, description="Convert to sparse format: 'csr', 'csc', or None"
     )
-    as_sparse_fmt: str = Field(
-        None, description="Sparse format if converting, e.g., 'csr'"
+    as_sparse_fmt: Optional[str] = Field(
+        default=None, description="Sparse format if converting, e.g., 'csr'"
     )
-    index_unique: str = Field(
-        None, description="Make index unique by appending suffix if needed"
+    index_unique: Optional[str] = Field(
+        default=None, description="Make index unique by appending suffix if needed"
     )
 
 
@@ -113,16 +117,22 @@ class ReadZarr(BaseAPIModel):
     """Read from a hierarchical Zarr array store."""
 
     method_name: str = Field(default="io.read_zarr", description="NEVER CHANGE")
-    store: str = Field(..., description="Path or URL to the Zarr store")
+    filename: str = Field(
+        default="placeholder.zarr", description="Path or URL to the Zarr store"
+    )
 
 
 class ReadCSV(BaseAPIModel):
     """Read .csv file."""
 
     method_name: str = Field(default="io.read_csv", description="NEVER CHANGE")
-    filename: str = Field(..., description="Path to the .csv file")
-    delimiter: str = Field(None, description="Delimiter used in the .csv file")
-    first_column_names: bool = Field(
+    filename: str = Field(
+        default="placeholder.csv", description="Path to the .csv file"
+    )
+    delimiter: Optional[str] = Field(
+        None, description="Delimiter used in the .csv file"
+    )
+    first_column_names: Optional[bool] = Field(
         None, description="Whether the first column contains names"
     )
 
@@ -131,46 +141,60 @@ class ReadExcel(BaseAPIModel):
     """Read .xlsx (Excel) file."""
 
     method_name: str = Field(default="io.read_excel", description="NEVER CHANGE")
-    filename: str = Field(..., description="Path to the .xlsx file")
-    sheet: str = Field(None, description="Sheet name or index to read from")
-    dtype: str = Field(None, description="Data type for the resulting dataframe")
+    filename: str = Field(
+        default="placeholder.xlsx", description="Path to the .xlsx file"
+    )
+    sheet: Optional[str] = Field(None, description="Sheet name or index to read from")
+    dtype: Optional[str] = Field(
+        None, description="Data type for the resulting dataframe"
+    )
 
 
 class ReadHDF(BaseAPIModel):
     """Read .h5 (hdf5) file."""
 
     method_name: str = Field(default="io.read_hdf", description="NEVER CHANGE")
-    filename: str = Field(..., description="Path to the .h5 file")
-    key: str = Field(..., description="Group key within the .h5 file")
+    filename: str = Field(default="placeholder.h5", description="Path to the .h5 file")
+    key: Optional[str] = Field(None, description="Group key within the .h5 file")
 
 
 class ReadLoom(BaseAPIModel):
     """Read .loom-formatted hdf5 file."""
 
     method_name: str = Field(default="io.read_loom", description="NEVER CHANGE")
-    filename: str = Field(..., description="Path to the .loom file")
-    sparse: bool = Field(None, description="Whether to read data as sparse")
-    cleanup: bool = Field(None, description="Clean up invalid entries")
-    X_name: str = Field(None, description="Name to use for X matrix")
-    obs_names: str = Field(None, description="Column to use for observation names")
-    var_names: str = Field(None, description="Column to use for variable names")
+    filename: str = Field(
+        default="placeholder.loom", description="Path to the .loom file"
+    )
+    sparse: Optional[bool] = Field(None, description="Whether to read data as sparse")
+    cleanup: Optional[bool] = Field(None, description="Clean up invalid entries")
+    X_name: Optional[str] = Field(None, description="Name to use for X matrix")
+    obs_names: Optional[str] = Field(
+        None, description="Column to use for observation names"
+    )
+    var_names: Optional[str] = Field(
+        None, description="Column to use for variable names"
+    )
 
 
 class ReadMTX(BaseAPIModel):
     """Read .mtx file."""
 
     method_name: str = Field(default="io.read_mtx", description="NEVER CHANGE")
-    filename: str = Field(..., description="Path to the .mtx file")
-    dtype: str = Field(None, description="Data type for the matrix")
+    filename: str = Field(
+        default="placeholder.mtx", description="Path to the .mtx file"
+    )
+    dtype: Optional[str] = Field(None, description="Data type for the matrix")
 
 
 class ReadText(BaseAPIModel):
     """Read .txt, .tab, .data (text) file."""
 
     method_name: str = Field(default="io.read_text", description="NEVER CHANGE")
-    filename: str = Field(..., description="Path to the text file")
-    delimiter: str = Field(None, description="Delimiter used in the file")
-    first_column_names: bool = Field(
+    filename: str = Field(
+        default="placeholder.txt", description="Path to the text file"
+    )
+    delimiter: Optional[str] = Field(None, description="Delimiter used in the file")
+    first_column_names: Optional[bool] = Field(
         None, description="Whether the first column contains names"
     )
 

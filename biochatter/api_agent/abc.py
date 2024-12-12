@@ -163,7 +163,9 @@ class BaseAPIModel(BaseModel):
     Includes default fields `uuid` and `method_name`.
     """
 
-    uuid: str | None = Field(None, description="Unique identifier for the model instance")
+    uuid: str | None = Field(
+        None, description="Unique identifier for the model instance"
+    )
     method_name: str = Field(..., description="Name of the method to be executed")
 
     class Config:
