@@ -20,10 +20,10 @@ from types import MappingProxyType, ModuleType
 from typing import Any
 
 from docstring_parser import parse
-from langchain_core.pydantic_v1 import BaseModel, Field, create_model
+from langchain_core.pydantic_v1 import Field, create_model
+from biochatter.api_agent.abc import BaseAPIModel
 
-
-def generate_pydantic_classes(module: ModuleType) -> list[type[BaseModel]]:
+def generate_pydantic_classes(module: ModuleType) -> list[type[BaseAPIModel]]:
     """Generate Pydantic classes for each callable.
 
     For each callable (function/method) in a given module. Extracts parameters
@@ -52,7 +52,7 @@ def generate_pydantic_classes(module: ModuleType) -> list[type[BaseModel]]:
       required.
 
     """
-    base_attributes = set(dir(BaseModel))
+    base_attributes = set(dir(BaseAPIModel))
     classes_list = []
 
     for name, func in inspect.getmembers(module, inspect.isfunction):
@@ -117,6 +117,11 @@ def generate_pydantic_classes(module: ModuleType) -> list[type[BaseModel]]:
             fields[field_name] = (annotation, Field(**field_kwargs))
 
         # Create the Pydantic model
-        tl_parameters_model = create_model(name, **fields)
+
+        tl_parameters_model = create_model(
+            name,
+            **fields,
+            __base__=BaseAPIModel
+            )
         classes_list.append(tl_parameters_model)
     return classes_list
