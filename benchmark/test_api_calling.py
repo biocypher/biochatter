@@ -9,6 +9,7 @@ from biochatter.api_agent import (
     OncoKBQueryBuilder,
     ScanpyPlQueryBuilder,
     ScanpyPlQueryBuilderReduced,
+    ScanpyTlQueryBuilder,
     AnnDataIOQueryBuilder,
     format_as_rest_call,
     format_as_python_call,
@@ -50,14 +51,12 @@ def test_web_api_calling(
             builder = OncoKBQueryBuilder()
         elif "biotools" in yaml_data["case"]:
             builder = BioToolsQueryBuilder()
-        elif "scanpy:pl" in yaml_data["case"]:
-            builder = ScanpyPlQueryBuilder()
         parameters = builder.parameterise_query(
             question=yaml_data["input"]["prompt"],
             conversation=conversation,
         )
 
-        api_query = format_as_rest_call(parameters)
+        api_query = format_as_rest_call(parameters[0])
 
         score = []
         for expected_part in ensure_iterable(
@@ -80,6 +79,7 @@ def test_web_api_calling(
         yaml_data["hash"],
         get_result_file_path(task),
     )
+
 
 def test_python_api_calling(
     model_name,
@@ -108,12 +108,14 @@ def test_python_api_calling(
             builder = ScanpyPlQueryBuilder()
         elif "anndata" in yaml_data["case"]:
             builder = AnnDataIOQueryBuilder()
+        elif "scanpy:tl" in yaml_data["case"]:
+            builder = ScanpyTlQueryBuilder()
         parameters = builder.parameterise_query(
             question=yaml_data["input"]["prompt"],
             conversation=conversation,
         )
 
-        method_call = format_as_python_call(parameters[0])
+        method_call = format_as_python_call(parameters[0]) if parameters else ""
 
         score = []
         for expected_part in ensure_iterable(
@@ -166,7 +168,7 @@ def test_python_api_calling_reduced(
             conversation=conversation,
         )
 
-        method_call = format_as_python_call(parameters[0])
+        method_call = format_as_python_call(parameters[0]) if parameters else ""
 
         score = []
         for expected_part in ensure_iterable(
