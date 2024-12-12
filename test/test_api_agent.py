@@ -487,8 +487,44 @@ class TestAnndataIOQueryBuilder:
             mock.return_value = mock_runnable
             yield mock_runnable
 
-    def test_create_runnable(self):
-        pass
+    @patch("biochatter.llm_connect.GptConversation")
+    def test_create_runnable(self, mock_conversation):
+        # Mock the list of Pydantic classes as a list of Mock objects
+        class MockTool1(BaseModel):
+            param1: str
+
+        class MockTool2(BaseModel):
+            param2: int
+
+        mock_generated_classes = [MockTool1, MockTool2]
+
+        # Mock the conversation object and LLM
+        mock_conversation_instance = mock_conversation.return_value
+        mock_llm = MagicMock()
+        mock_conversation_instance.chat = mock_llm
+
+        # Mock the LLM with tools
+        mock_llm_with_tools = MagicMock()
+        mock_llm.bind_tools.return_value = mock_llm_with_tools
+
+        # Mock the chain
+        mock_chain = MagicMock()
+        mock_llm_with_tools.__or__.return_value = mock_chain
+
+        # Act
+        builder = AnnDataIOQueryBuilder()
+        result = builder.create_runnable(
+            query_parameters=mock_generated_classes,
+            conversation=mock_conversation_instance,
+        )
+
+        # Assert
+        mock_llm.bind_tools.assert_called_once_with(mock_generated_classes, tool_choice="required")
+        mock_llm_with_tools.__or__.assert_called_once_with(
+            PydanticToolsParser(tools=mock_generated_classes),
+        )
+        # Verify the returned chain
+        assert result == mock_chain
 
     def test_parameterise_query(self, mock_create_runnable):
         # Arrange
