@@ -1,16 +1,20 @@
-import uuid
 from collections.abc import Callable
-from typing import TYPE_CHECKING, Any, Collection, Optional, Union, Literal
+from typing import TYPE_CHECKING
+
 from langchain_core.output_parsers import PydanticToolsParser
-from pydantic import BaseModel, Field
-from typing import Union
-import numpy as np
-import scipy.sparse as sp
-from  anndata import AnnData
+
+# from langchain_core.pydantic_v1 import BaseModel, Field
+from biochatter.llm_connect import Conversation
+
+from .abc import BaseAPIModel, BaseQueryBuilder
+
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
-from biochatter.api_agent.abc import BaseAPIModel, BaseQueryBuilder
 
+
+from typing import Union, Collection, Literal
+
+from pydantic import BaseModel, Field
 
 SCANPY_PL_QUERY_PROMPT = """
 Scanpy Preprocessing (scanpy.pp) Query Guide
@@ -198,8 +202,7 @@ class ScanpyPpQueryBuilder(BaseQueryBuilder):
         question: str,
         conversation: "Conversation",
     ) -> list["BaseModel"]:
-
-        """Generate a ScanpyPPIOQuery object.
+        """Generate a AnnDataIOQuery object.
 
         Generates the object based on the given question, prompt, and
         BioChatter conversation. Uses a Pydantic model to define the API fields.
@@ -219,29 +222,24 @@ class ScanpyPpQueryBuilder(BaseQueryBuilder):
 
         """
         tools = [
-        FilterCellsParams,
-        FilterGenesParams,
-        HighlyVariableGenesParams,
-        Log1pParams,
-        PCAParams,
-        NormalizeTotalParams,
-        RegressOutParams,
-        ScaleParams,
-        SubsampleParams,
-        DownsampleCountsParams,
-        CombatParams,
-        ScrubletParams,
-        ScrubletSimulateDoubletsParams,
+            FilterCellsParams,
+            FilterGenesParams,
+            HighlyVariableGenesParams,
+            Log1pParams,
+            PCAParams,
+            NormalizeTotalParams,
+            RegressOutParams,
+            ScaleParams,
+            SubsampleParams,
+            DownsampleCountsParams,
+            CombatParams,
+            ScrubletParams,
+            ScrubletSimulateDoubletsParams,
         ]
-
         runnable = self.create_runnable(
-            query_parameters=tools,
-            conversation=conversation,
+            conversation=conversation, query_parameters=tools
         )
-        oncokb_call_obj = runnable.invoke(f"{question} based on this system prompt:{SCANPY_PL_QUERY_PROMPT}")
-        oncokb_call_obj.question_uuid = str(uuid.uuid4())
-        return [oncokb_call_obj]
-    
-
-
-
+        anndata_io_call_obj = runnable.invoke(
+            question,
+        )
+        return anndata_io_call_obj
