@@ -167,7 +167,7 @@ class BaseAPIModel(BaseModel):
         None,
         description="Unique identifier for the model instance",
     )
-    title: str = Field(..., description="Name of the method to be executed")
+    method_name: str = Field(..., description="Name of the method to be executed")
 
     class Config:
         """BaseModel class configuration.

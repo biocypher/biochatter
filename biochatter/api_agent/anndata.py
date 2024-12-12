@@ -8,7 +8,7 @@
 # 4. Write the anndata object to [xxx] format -> built-in anndata api
 
 from collections.abc import Callable
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from langchain_core.output_parsers import PydanticToolsParser
 
@@ -31,59 +31,74 @@ You are also an expert algorithm to return structured output formats.
 You will be asked to provide code to answer a specific questions involving the anndata package.
 NEVER return a code snippet or code itself, instead you have to return a structured output format.
 You will have to create a structured output formats containing method:argument fields.
-BASED ON THE DOCUMENTATION below:
-### 1. Reading AnnData Native Formats
-- **HDF5 (.h5ad):**
-  `io.read_h5ad(filename[, backed, as_sparse, ...])`
-  - Reads `.h5ad`-formatted HDF5 file.
 
-- **Zarr:**
-  `io.read_zarr(store)`
-  - Reads from a hierarchical Zarr array store.
-
-### 2. Reading Specific Portions of AnnData
-- **Individual Elements (e.g., obs, varm, etc.):**
-  `io.read_elem(elem)`
-  - Reads an individual element from a store.
-
-- **Backed Mode-Compatible Sparse Dataset:**
-  `io.sparse_dataset(group)`
-  - Generates a sparse dataset class compatible with backed mode.
-
-### 3. Reading Non-Native Formats
-#### 3.1 General Tips
-- Non-native formats may not represent all aspects of AnnData objects.
-- Assembling the AnnData object manually from individual parts may be more successful.
-
-#### 3.2 Supported Formats
-- **CSV:**
-  `io.read_csv(filename[, delimiter, ...])`
-  - Reads `.csv` file.
-
-- **Excel (.xlsx):**
-  `io.read_excel(filename, sheet[, dtype])`
-  - Reads `.xlsx` (Excel) file.
-
-- **HDF5 (.h5):**
-  `io.read_hdf(filename, key)`
-  - Reads `.h5` (HDF5) file.
-
-- **Loom:**
-  `io.read_loom(filename, *[, sparse, cleanup, ...])`
-  - Reads `.loom`-formatted HDF5 file.
-
-- **Matrix Market (.mtx):**
-  `io.read_mtx(filename[, dtype])`
-  - Reads `.mtx` file.
-
-- **Text (.txt, .tab, .data):**
-  `io.read_text(filename[, delimiter, ...])`
-  - Reads `.txt`, `.tab`, or `.data` text files.
-
-- **UMI Tools Matrix:**
-  `io.read_umi_tools(filename[, dtype])`
-  - Reads a gzipped condensed count matrix from UMI Tools.
+You will be asked to read in an anndata object from any anndata api supported format OR
+to concatenate the anndata objects.
+FOR THE MapAnnData, BE SURE TO ALWAYS USE THE variable of the anndata GIVEN IN THE INPUT, REPLACE IT IN THE method_name
+Use the tools available:
 """
+
+
+class ConcatenateAnnData(BaseAPIModel):
+    """Concatenate AnnData objects along an axis."""
+
+    method_name: str = Field(default="anndata.concat", description="NEVER CHANGE")
+    adatas: list | dict = Field(
+        ...,
+        description="The objects to be concatenated. Either a list of AnnData objects or a mapping of keys to AnnData objects.",
+    )
+    axis: str = Field(
+        default="obs",
+        description="Axis to concatenate along. Can be 'obs' (0) or 'var' (1). Default is 'obs'.",
+    )
+    join: str = Field(
+        default="inner",
+        description="How to align values when concatenating. Options: 'inner' or 'outer'. Default is 'inner'.",
+    )
+    merge: str | Callable | None = Field(
+        default=None,
+        description="How to merge elements not aligned to the concatenated axis. Strategies include 'same', 'unique', 'first', 'only', or a callable function.",
+    )
+    uns_merge: str | Callable | None = Field(
+        default=None,
+        description="How to merge the .uns elements. Uses the same strategies as 'merge'.",
+    )
+    label: str | None = Field(
+        default=None,
+        description="Column in axis annotation (.obs or .var) to place batch information. Default is None.",
+    )
+    keys: list | None = Field(
+        default=None,
+        description="Names for each object being concatenated. Used for column values or appended to the index if 'index_unique' is not None. Default is None.",
+    )
+    index_unique: str | None = Field(
+        default=None,
+        description="Delimiter for making the index unique. When None, original indices are kept.",
+    )
+    fill_value: Any | None = Field(
+        default=None,
+        description="Value used to fill missing indices when join='outer'. Default behavior depends on array type.",
+    )
+    pairwise: bool = Field(
+        default=False,
+        description="Include pairwise elements along the concatenated dimension. Default is False.",
+    )
+
+
+class MapAnnData(BaseAPIModel):
+    """Apply mapping functions to elements of AnnData."""
+
+    method_name: str = Field(
+        default="anndata.obs|var['annotation_name'].map",
+        description=(
+            "ALWAYS ALWAYS ALWAYS REPLACE THE anndata BY THE ONE GIVEN BY THE INPUT"
+            "Specifies the AnnData attribute and operation being performed. "
+            "For example, 'obs.map' applies a mapping function or dictionary to the specified column in `adata.obs`. "
+            "This must always include the AnnData component and the `.map` operation. "
+            "Adapt the component (e.g., 'obs', 'var', etc.) to the specific use case."
+        ),
+    )
+    dics: dict | None = Field(default=None, description="Dictionary to map over.")
 
 
 class ReadH5AD(BaseAPIModel):
@@ -268,13 +283,15 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
             ReadMTX,
             ReadText,
             ReadZarr,
+            ConcatenateAnnData,
+            MapAnnData,
         ]
         runnable = self.create_runnable(
             conversation=conversation,
             query_parameters=tools,
         )
         query = [
-            ("system", "You are great at doing stuff"),
+            ("system", ANNDATA_IO_QUERY_PROMPT),
             ("human", f"{question}"),
         ]
         anndata_io_call_obj = runnable.invoke(
