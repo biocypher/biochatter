@@ -31,12 +31,6 @@ You are also an expert algorithm to return structured output formats.
 You will be asked to provide code to answer a specific questions involving the anndata package.
 NEVER return a code snippet or code itself, instead you have to return a structured output format.
 You will have to create a structured output formats containing method:argument fields.
-
-Here are the possible questions you might be asked:
-<question: output> TBD
-<question: output> TBD
-<question: output> TBD
-
 BASED ON THE DOCUMENTATION below:
 ### 1. Reading AnnData Native Formats
 - **HDF5 (.h5ad):**
@@ -95,7 +89,7 @@ BASED ON THE DOCUMENTATION below:
 class ReadH5AD(BaseAPIModel):
     """Read .h5ad-formatted hdf5 file."""
 
-    method_name: str = Field(default="io.read_h5ad", description="NEVER CHANGE")
+    title: str = Field(default="io.read_h5ad", description="NEVER CHANGE")
     filename: str = Field(default="dummy.h5ad", description="Path to the .h5ad file")
     backed: str | None = Field(
         default=None,
@@ -118,7 +112,7 @@ class ReadH5AD(BaseAPIModel):
 class ReadZarr(BaseAPIModel):
     """Read from a hierarchical Zarr array store."""
 
-    method_name: str = Field(default="io.read_zarr", description="NEVER CHANGE")
+    title: str = Field(default="io.read_zarr", description="NEVER CHANGE")
     filename: str = Field(
         default="placeholder.zarr",
         description="Path or URL to the Zarr store",
@@ -128,7 +122,7 @@ class ReadZarr(BaseAPIModel):
 class ReadCSV(BaseAPIModel):
     """Read .csv file."""
 
-    method_name: str = Field(default="io.read_csv", description="NEVER CHANGE")
+    title: str = Field(default="io.read_csv", description="NEVER CHANGE")
     filename: str = Field(
         default="placeholder.csv",
         description="Path to the .csv file",
@@ -146,7 +140,7 @@ class ReadCSV(BaseAPIModel):
 class ReadExcel(BaseAPIModel):
     """Read .xlsx (Excel) file."""
 
-    method_name: str = Field(default="io.read_excel", description="NEVER CHANGE")
+    title: str = Field(default="io.read_excel", description="NEVER CHANGE")
     filename: str = Field(
         default="placeholder.xlsx",
         description="Path to the .xlsx file",
@@ -161,7 +155,7 @@ class ReadExcel(BaseAPIModel):
 class ReadHDF(BaseAPIModel):
     """Read .h5 (hdf5) file."""
 
-    method_name: str = Field(default="io.read_hdf", description="NEVER CHANGE")
+    title: str = Field(default="io.read_hdf", description="NEVER CHANGE")
     filename: str = Field(default="placeholder.h5", description="Path to the .h5 file")
     key: str | None = Field(None, description="Group key within the .h5 file")
 
@@ -169,7 +163,7 @@ class ReadHDF(BaseAPIModel):
 class ReadLoom(BaseAPIModel):
     """Read .loom-formatted hdf5 file."""
 
-    method_name: str = Field(default="io.read_loom", description="NEVER CHANGE")
+    title: str = Field(default="io.read_loom", description="NEVER CHANGE")
     filename: str = Field(
         default="placeholder.loom",
         description="Path to the .loom file",
@@ -190,7 +184,7 @@ class ReadLoom(BaseAPIModel):
 class ReadMTX(BaseAPIModel):
     """Read .mtx file."""
 
-    method_name: str = Field(default="io.read_mtx", description="NEVER CHANGE")
+    title: str = Field(default="io.read_mtx", description="NEVER CHANGE")
     filename: str = Field(
         default="placeholder.mtx",
         description="Path to the .mtx file",
@@ -201,7 +195,7 @@ class ReadMTX(BaseAPIModel):
 class ReadText(BaseAPIModel):
     """Read .txt, .tab, .data (text) file."""
 
-    method_name: str = Field(default="io.read_text", description="NEVER CHANGE")
+    title: str = Field(default="io.read_text", description="NEVER CHANGE")
     filename: str = Field(
         default="placeholder.txt",
         description="Path to the text file",
@@ -279,7 +273,11 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
             conversation=conversation,
             query_parameters=tools,
         )
+        query = [
+            ("system", "You are great at doing stuff"),
+            ("human", f"{question}"),
+        ]
         anndata_io_call_obj = runnable.invoke(
-            f"{question}",
+            query,
         )
         return anndata_io_call_obj

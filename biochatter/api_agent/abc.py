@@ -164,9 +164,10 @@ class BaseAPIModel(BaseModel):
     """
 
     uuid: str | None = Field(
-        None, description="Unique identifier for the model instance"
+        None,
+        description="Unique identifier for the model instance",
     )
-    method_name: str = Field(..., description="Name of the method to be executed")
+    title: str = Field(..., description="Name of the method to be executed")
 
     class Config:
         """BaseModel class configuration.
