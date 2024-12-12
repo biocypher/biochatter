@@ -112,7 +112,7 @@ class ScanpyTLQueryBuilder(BaseQueryBuilder):
         conversation: Conversation,
     ) -> Callable:
 
-        runnable = conversation.chat.bind_tools(query_parameters)
+        runnable = conversation.chat.bind_tools(query_parameters, tool_choice = "required")
         return runnable | PydanticToolsParser(tools=query_parameters)
 
     def parameterise_query(

@@ -543,7 +543,7 @@ class TestScanpyTLQueryBuilder:
 
         # Assert
         # Verify that `bind_tools` was called with the correct query parameters
-        mock_llm.bind_tools.assert_called_once_with(mock_generated_classes)
+        mock_llm.bind_tools.assert_called_once_with(mock_generated_classes, tool_choice = "required")
         # Verify the chain was created with PydanticToolsParser
         mock_llm_with_tools.__or__.assert_called_once_with(
             PydanticToolsParser(tools=mock_generated_classes)
@@ -582,7 +582,6 @@ class TestScanpyTLQueryBuilder:
         mock_result = {"parameters": {"key_added": "mt_genes"}}
         mock_chain.invoke.return_value = mock_result
 
-        # Mock module
         mock_module = MagicMock()
 
         # Act
@@ -593,12 +592,11 @@ class TestScanpyTLQueryBuilder:
             module=mock_module,
         )
 
-        # Verify the invoke was called with the correct query
         mock_chain.invoke.assert_called_once_with(
             [
                 ("system", SCANPY_QUERY_PROMPT),
                 ("human", question),
             ]
         )
-        # Verify the result is correctly returned
+
         assert result == mock_result
