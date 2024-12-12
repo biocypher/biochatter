@@ -558,15 +558,16 @@ class TestScanpyTlQueryBuilder:
 
     def test_parameterise_query(self, mock_create_runnable):
         # Arrange
-        query_builder = AnnDataIOQueryBuilder()
+        query_builder = ScanpyTlQueryBuilder()
         mock_conversation = MagicMock()
         question = "i want to run PCA on my data"
         expected_input = [("system", SCANPY_QUERY_PROMPT), ("human", question)]
         mock_query_obj = MagicMock()
         mock_create_runnable.invoke.return_value = mock_query_obj
+        module = MagicMock()
 
         # Act
-        result = query_builder.parameterise_query(question, mock_conversation)
+        result = query_builder.parameterise_query(question, mock_conversation, module)
 
         # Assert
         mock_create_runnable.invoke.assert_called_once_with(expected_input)
