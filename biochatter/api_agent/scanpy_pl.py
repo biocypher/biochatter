@@ -132,7 +132,7 @@ Plot results of simulation.
 
 class ScanpyPlTools(BaseTools):
     """A class containing parameters for Scanpy plotting functions."""
-    
+
     tools_params = {}
 
     # Parameters for sc.pl.scatter
