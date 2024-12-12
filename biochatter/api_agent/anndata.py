@@ -232,7 +232,7 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
             A Callable object that can execute the query.
 
         """
-        runnable = conversation.chat.bind_tools(query_parameters)
+        runnable = conversation.chat.bind_tools(query_parameters, tool_choice="required")
         return runnable | PydanticToolsParser(tools=query_parameters)
 
     def parameterise_query(
