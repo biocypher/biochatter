@@ -19,3 +19,4 @@ serve.sh
 .blast/*
 .api_results/*
 *.coverage
+scaling_test.py
