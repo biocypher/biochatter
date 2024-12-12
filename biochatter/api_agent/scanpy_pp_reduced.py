@@ -82,6 +82,7 @@ General Functions
 
 Use the provided documentation to craft precise queries for any preprocessing needs in Scanpy. Ensure that your function call starts with scanpy.pp. and that you include relevant parameters based on the query.
 
+This prompt guides the user to query the scanpy.pp module for preprocessing tasks, assisting with the construction of specific preprocessing operations, such as filtering, normalization, scaling, and more.
 """
 
 
@@ -239,6 +240,6 @@ class ScanpyPpQueryBuilder(BaseQueryBuilder):
             conversation=conversation, query_parameters=tools
         )
         anndata_io_call_obj = runnable.invoke(
-            f"{SCANPY_PL_QUERY_PROMPT}And the question is {question}",
+            question,
         )
         return anndata_io_call_obj
