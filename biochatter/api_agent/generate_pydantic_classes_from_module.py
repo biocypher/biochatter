@@ -1,18 +1,27 @@
-"""Autogenerate Pydantic classes from a module.
+"""AutoGenerate Pydantic classes for each callable.
 
 This module provides a function to generate Pydantic classes for each callable
 (function/method) in a given module. It extracts parameters from docstrings
 using docstring-parser and creates Pydantic models with fields corresponding to
 the parameters. If a parameter name conflicts with BaseModel attributes, it is
 aliased.
+
+Examples
+--------
+>>> import scanpy as sc
+>>> generated_classes = generate_pydantic_classes(sc.tl)
+>>> for model in generated_classes:
+...     print(model.schema())
+
 """
 
 import inspect
-from types import ModuleType, MappingProxyType
+from types import MappingProxyType, ModuleType
 from typing import Any
 
 from docstring_parser import parse
 from langchain_core.pydantic_v1 import BaseModel, Field, create_model
+
 
 def generate_pydantic_classes(module: ModuleType) -> list[type[BaseModel]]:
     """Generate Pydantic classes for each callable.
@@ -54,8 +63,7 @@ def generate_pydantic_classes(module: ModuleType) -> list[type[BaseModel]]:
         # Parse docstring for parameter descriptions
         doc = inspect.getdoc(func) or ""
         parsed_doc = parse(doc)
-        doc_params = {p.arg_name: p.description or "No description available."
-                      for p in parsed_doc.params}
+        doc_params = {p.arg_name: p.description or "No description available." for p in parsed_doc.params}
 
         sig = inspect.signature(func)
         fields = {}
@@ -109,15 +117,6 @@ def generate_pydantic_classes(module: ModuleType) -> list[type[BaseModel]]:
             fields[field_name] = (annotation, Field(**field_kwargs))
 
         # Create the Pydantic model
-        tl_parameters_model = create_model(
-            name,
-            **fields)
+        tl_parameters_model = create_model(name, **fields)
         classes_list.append(tl_parameters_model)
     return classes_list
-
-
-# Example usage:
-#import scanpy as sc
-#generated_classes = generate_pydantic_classes(sc.tl)
-#for func in generated_classes:  
-#    print(func.schema())
