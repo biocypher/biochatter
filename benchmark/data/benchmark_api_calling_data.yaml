@@ -76,34 +76,30 @@ api_calling:
   - case: scanpy:pl:scatter
     input:
       prompt:
-        exact_variable_names: "Make a scatter plot of n_genes_by_counts vs total_counts."
+        specify_axes: "Make a scatter plot with axis being n_genes_by_counts vs total_counts."
+        abbreviations: "scatter plt with x-axis = n_genes_by_counts and y-axis = total_counts."
+        general_question: "How can I make a scatter plot with n_genes_by_counts and total_counts?"
+        help_request: "Can you help me with making a scatter plot with n_genes_by_counts and total_counts?"
     expected:
       parts_of_query:
         ["sc.pl.scatter\\(", "adata=adata", "n_genes_by_counts", "total_counts", "\\)"]
-  - case: scanpy:pl:pca-aspecific
+  - case: scanpy:pl:pca
     input:
       prompt:
-        aspecific_question: "plot the PCA embedding colored by detected genes and detected transcripts"
+        specify_colors: "plot the PCA embedding colored by n_genes_by_counts and total_counts"
+        abbreviations: "plt the PC emb with n_genes_by_counts and total_counts as colors."
+        general_question: "How can I plot the PCA embedding with n_genes_by_counts and total_counts as colors?"
+        help_request: "Can you help me with plotting the PCA embedding with n_genes_by_counts and total_counts as colors?"
     expected:
       parts_of_query:
         ["sc.pl.pca\\(", "adata=adata", "n_genes_by_counts", "total_counts", "\\)"]
-  - case: scanpy:pl:pca-explicit
+  - case: scanpy:pl:tsne
     input:
       prompt:
-        explicit_variable_names: "plot the PCA of the adata colored by n_genes_by_counts and total_counts."
-    expected:
-      parts_of_query:
-        ["sc.pl.pca\\(", "adata=adata", "n_genes_by_counts", "total_counts", "\\)"]
-  - case: scanpy:pl:tsne-aspecific
-    input:
-      prompt:
-        aspecific_question: "plot a tsne colored by number of detected genes."
-    expected:
-      parts_of_query: ["sc.pl.tsne\\(", "adata=adata", "n_genes_by_counts", "\\)"]
-  - case: scanpy:pl:tsne-explicit
-    input:
-      prompt:
-        explicit_variable_names: "plot the tsne embeddding of the adata colored by n_genes_by_counts."
+        specify_colors: "plot a tsne colored by number of n_genes_by_counts."
+        abbreviations: "tsne plt with n_genes_by_counts as colors."
+        general_question: "How can I plot a tsne with n_genes_by_counts as colors?"
+        help_request: "Can you help me with plotting a tsne with n_genes_by_counts as colors?"
     expected:
       parts_of_query: ["sc.pl.tsne\\(", "adata=adata", "n_genes_by_counts", "\\)"]
   - case: anndata:read:h5ad
