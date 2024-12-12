@@ -28,9 +28,25 @@ def generate_pydantic_classes(module: ModuleType) -> list[Type[BaseModel]]:
     
     Parameters
     ----------
+=======
+from types import ModuleType
+
+from docstring_parser import parse
+from langchain_core.pydantic_v1 import BaseModel, Field, create_model
+
+def generate_pydantic_classes(module: ModuleType) -> list[type[BaseModel]]:
+    """Generate Pydantic classes for each callable.
+
+    For each callable (function/method) in a given module. Extracts parameters
+    from docstrings using docstring-parser. Each generated class has fields
+    corresponding to the parameters of the function. If a parameter name
+    conflicts with BaseModel attributes, it is aliased.
+
+    Params:
+    -------
     module : ModuleType
         The Python module from which to extract functions and generate models.
-        
+
     Returns
     -------
     list[Type[BaseModel]]
@@ -42,6 +58,7 @@ def generate_pydantic_classes(module: ModuleType) -> list[Type[BaseModel]]:
       external classes that are not easily JSON-serializable.
     - Optional parameters (those with a None default) are represented as `Optional[Any]`.
     - Required parameters (no default) use `...` to indicate that the field is required.
+    
     """
     base_attributes = set(dir(BaseModel))
     classes_list = []
@@ -112,7 +129,6 @@ def generate_pydantic_classes(module: ModuleType) -> list[Type[BaseModel]]:
             name,
             **fields)
         classes_list.append(TLParametersModel)
-
     return classes_list
 
 
