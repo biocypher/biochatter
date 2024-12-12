@@ -11,6 +11,7 @@ from .blast import (
 from .oncokb import OncoKBFetcher, OncoKBInterpreter, OncoKBQueryBuilder
 #from .scanpy_tl import ScanpyTLQueryBuilder, ScanpyTLQueryFetcher, ScanpyTLQueryInterpreter
 from .scanpy_pl import ScanpyPlQueryBuilder
+from .scanpy_pl_reduced import ScanpyPlQueryBuilder as ScanpyPlQueryBuilderReduced
 from .formatters import format_as_rest_call, format_as_python_call
 
 __all__ = [
@@ -37,6 +38,7 @@ __all__ = [
     "ScanpyTLQueryFetcher", 
     "ScanpyTLQueryInterpreter",
     "ScanpyPlQueryBuilder",
+    "ScanpyPlQueryBuilderReduced",
     "format_as_rest_call",
     "format_as_python_call",
 ]
