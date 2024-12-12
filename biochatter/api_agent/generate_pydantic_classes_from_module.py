@@ -1,26 +1,36 @@
+"""Autogenerate Pydantic classes from a module.
+
+This module provides a function to generate Pydantic classes for each callable
+(function/method) in a given module. It extracts parameters from docstrings
+using docstring-parser and creates Pydantic models with fields corresponding to
+the parameters. If a parameter name conflicts with BaseModel attributes, it is
+aliased.
+"""
+
 import inspect
-from typing import Any, Dict, Optional, Type
 from types import ModuleType
+
 from docstring_parser import parse
 from langchain_core.pydantic_v1 import BaseModel, Field, create_model
 
-def generate_pydantic_classes(module: ModuleType) -> list[Type[BaseModel]]:
-    """
-    Generate Pydantic classes for each callable (function/method) in a given module.
-    
-    Extracts parameters from docstrings using docstring-parser. Each generated class
-    has fields corresponding to the parameters of the function. If a parameter name 
+def generate_pydantic_classes(module: ModuleType) -> list[type[BaseModel]]:
+    """Generate Pydantic classes for each callable.
+
+    For each callable (function/method) in a given module. Extracts parameters
+    from docstrings using docstring-parser. Each generated class has fields
+    corresponding to the parameters of the function. If a parameter name
     conflicts with BaseModel attributes, it is aliased.
-    
-    Parameters
-    ----------
+
+    Params:
+    -------
     module : ModuleType
         The Python module from which to extract functions and generate models.
-        
+
     Returns
     -------
-    Dict[str, Type[BaseModel]]
-        A dictionary mapping function names to their corresponding Pydantic model classes.
+    list[type[BaseModel]]
+        A list of Pydantic model classes.
+
     """
     base_attributes = set(dir(BaseModel))
     classes_list = []
@@ -33,12 +43,12 @@ def generate_pydantic_classes(module: ModuleType) -> list[Type[BaseModel]]:
         doc = inspect.getdoc(func)
         if not doc:
             # If no docstring, still create a model with no fields
-            TLParametersModel = create_model(f"{name}")
-            classes_list.append(TLParametersModel)
+            tl_parameters_model = create_model(f"{name}")
+            classes_list.append(tl_parameters_model)
             continue
 
         parsed_doc = parse(doc)
-        
+
         # Collect parameter descriptions
         param_info = {}
         for p in parsed_doc.params:
@@ -61,17 +71,17 @@ def generate_pydantic_classes(module: ModuleType) -> list[Type[BaseModel]]:
                 field_name = aliased_name
 
             # Without type info, default to Optional[str]
-            fields[field_name] = (Optional[str], Field(**field_kwargs))
+            fields[field_name] = (str | None, Field(**field_kwargs))
 
         # Dynamically create the model for this function
-        TLParametersModel = create_model(name, **fields)
-        classes_list.append(TLParametersModel)
+        tl_parameters_model = create_model(name, **fields)
+        classes_list.append(tl_parameters_model)
 
     return classes_list
 
 
 # Example usage:
-#import scanpy as sc
-#generated_classes = generate_pydantic_classes(sc.tl)
-#for func in generated_classes:  
-#    print(func.schema())
+# import scanpy as sc
+# generated_classes = generate_pydantic_classes(sc.tl)
+# for func in generated_classes:
+#     print(func.schema())
