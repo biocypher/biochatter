@@ -21,7 +21,7 @@ def test_generate_pydantic_classes() -> None:
         assert isinstance(schema["properties"], dict)
 
 
-def test_generate_pydantic_classes_sc_tl_pca() -> None:
+def test_generate_pydantic_classes_umap() -> None:
     # Test a specific function we know should be in sc.tl
     generated_classes = generate_pydantic_classes(sc.tl)
 

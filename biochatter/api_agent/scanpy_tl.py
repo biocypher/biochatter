@@ -1,11 +1,14 @@
 """Module for interacting with the `scanpy` API for data tools (`tl`)."""
+from types import ModuleType
 
+from collections.abc import Callable
 from typing import TYPE_CHECKING
 
 from langchain_core.output_parsers import PydanticToolsParser
 from langchain_core.pydantic_v1 import BaseModel
 
-from .abc import BaseQueryBuilder
+from .abc import BaseQueryBuilder, BaseAPIModel
+from biochatter.llm_connect import Conversation
 from .generate_pydantic_classes_from_module import generate_pydantic_classes
 
 if TYPE_CHECKING:
@@ -100,23 +103,24 @@ Compute densities on embeddings.
 ```
 """
 
-
 class ScanpyTLQueryBuilder(BaseQueryBuilder):
     """A class for building an ScanpyTLQuery object."""
 
     def create_runnable(
         self,
-        query_parameters: BaseModel,
-        conversation: "Conversation",
-    ):
-        pass
+        query_parameters: list["BaseAPIModel"],
+        conversation: Conversation,
+    ) -> Callable:
+
+        runnable = conversation.chat.bind_tools(query_parameters, tool_choice = "required")
+        return runnable | PydanticToolsParser(tools=query_parameters)
 
     def parameterise_query(
         self,
         question: str,
         conversation: "Conversation",
-        generated_classes=None,  # Allow external injection of classes
-        module=None,
+        module: ModuleType,
+        generated_classes=None,  # Allow external injection of classes for testing purposes
     ):
         """Generate an ScanpyTLQuery object.
 
@@ -138,21 +142,16 @@ class ScanpyTLQueryBuilder(BaseQueryBuilder):
                 model)
 
         """
-        import scanpy as sc
-
-        module = sc.tl
-        generated_classes = generate_pydantic_classes(module)
-        # Generate classes if not provided
         if generated_classes is None:
-            generated_classes = generate_pydantic_classes(module)
+            tools = generate_pydantic_classes(module)
+        
+        runnable = self.create_runnable(
+            conversation=conversation, query_parameters=tools
+        )
 
-        llm = conversation.chat
-        llm_with_tools = llm.bind_tools(generated_classes)
         query = [
-            ("system", "You're an expert data scientist"),
-            ("human", {question}),
-            ("system", "You're an expert data scientist"),
+            ("system", SCANPY_QUERY_PROMPT),            
             ("human", question),
         ]
-        chain = llm_with_tools | PydanticToolsParser(tools=generated_classes)
-        return chain.invoke(query)
+
+        return runnable.invoke(query)
