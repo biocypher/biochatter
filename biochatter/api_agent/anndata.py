@@ -21,8 +21,6 @@ if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
 
 
-from typing import Optional
-
 from pydantic import BaseModel, Field
 
 ANNDATA_IO_QUERY_PROMPT = """
@@ -99,17 +97,21 @@ class ReadH5AD(BaseAPIModel):
 
     method_name: str = Field(default="io.read_h5ad", description="NEVER CHANGE")
     filename: str = Field(default="dummy.h5ad", description="Path to the .h5ad file")
-    backed: Optional[str] = Field(
-        default=None, description="Mode to access file: None, 'r' for read-only"
+    backed: str | None = Field(
+        default=None,
+        description="Mode to access file: None, 'r' for read-only",
     )
-    as_sparse: Optional[str] = Field(
-        default=None, description="Convert to sparse format: 'csr', 'csc', or None"
+    as_sparse: str | None = Field(
+        default=None,
+        description="Convert to sparse format: 'csr', 'csc', or None",
     )
-    as_sparse_fmt: Optional[str] = Field(
-        default=None, description="Sparse format if converting, e.g., 'csr'"
+    as_sparse_fmt: str | None = Field(
+        default=None,
+        description="Sparse format if converting, e.g., 'csr'",
     )
-    index_unique: Optional[str] = Field(
-        default=None, description="Make index unique by appending suffix if needed"
+    index_unique: str | None = Field(
+        default=None,
+        description="Make index unique by appending suffix if needed",
     )
 
 
@@ -118,7 +120,8 @@ class ReadZarr(BaseAPIModel):
 
     method_name: str = Field(default="io.read_zarr", description="NEVER CHANGE")
     filename: str = Field(
-        default="placeholder.zarr", description="Path or URL to the Zarr store"
+        default="placeholder.zarr",
+        description="Path or URL to the Zarr store",
     )
 
 
@@ -127,13 +130,16 @@ class ReadCSV(BaseAPIModel):
 
     method_name: str = Field(default="io.read_csv", description="NEVER CHANGE")
     filename: str = Field(
-        default="placeholder.csv", description="Path to the .csv file"
+        default="placeholder.csv",
+        description="Path to the .csv file",
     )
-    delimiter: Optional[str] = Field(
-        None, description="Delimiter used in the .csv file"
+    delimiter: str | None = Field(
+        None,
+        description="Delimiter used in the .csv file",
     )
-    first_column_names: Optional[bool] = Field(
-        None, description="Whether the first column contains names"
+    first_column_names: bool | None = Field(
+        None,
+        description="Whether the first column contains names",
     )
 
 
@@ -142,11 +148,13 @@ class ReadExcel(BaseAPIModel):
 
     method_name: str = Field(default="io.read_excel", description="NEVER CHANGE")
     filename: str = Field(
-        default="placeholder.xlsx", description="Path to the .xlsx file"
+        default="placeholder.xlsx",
+        description="Path to the .xlsx file",
     )
-    sheet: Optional[str] = Field(None, description="Sheet name or index to read from")
-    dtype: Optional[str] = Field(
-        None, description="Data type for the resulting dataframe"
+    sheet: str | None = Field(None, description="Sheet name or index to read from")
+    dtype: str | None = Field(
+        None,
+        description="Data type for the resulting dataframe",
     )
 
 
@@ -155,7 +163,7 @@ class ReadHDF(BaseAPIModel):
 
     method_name: str = Field(default="io.read_hdf", description="NEVER CHANGE")
     filename: str = Field(default="placeholder.h5", description="Path to the .h5 file")
-    key: Optional[str] = Field(None, description="Group key within the .h5 file")
+    key: str | None = Field(None, description="Group key within the .h5 file")
 
 
 class ReadLoom(BaseAPIModel):
@@ -163,16 +171,19 @@ class ReadLoom(BaseAPIModel):
 
     method_name: str = Field(default="io.read_loom", description="NEVER CHANGE")
     filename: str = Field(
-        default="placeholder.loom", description="Path to the .loom file"
+        default="placeholder.loom",
+        description="Path to the .loom file",
     )
-    sparse: Optional[bool] = Field(None, description="Whether to read data as sparse")
-    cleanup: Optional[bool] = Field(None, description="Clean up invalid entries")
-    X_name: Optional[str] = Field(None, description="Name to use for X matrix")
-    obs_names: Optional[str] = Field(
-        None, description="Column to use for observation names"
+    sparse: bool | None = Field(None, description="Whether to read data as sparse")
+    cleanup: bool | None = Field(None, description="Clean up invalid entries")
+    X_name: str | None = Field(None, description="Name to use for X matrix")
+    obs_names: str | None = Field(
+        None,
+        description="Column to use for observation names",
     )
-    var_names: Optional[str] = Field(
-        None, description="Column to use for variable names"
+    var_names: str | None = Field(
+        None,
+        description="Column to use for variable names",
     )
 
 
@@ -181,9 +192,10 @@ class ReadMTX(BaseAPIModel):
 
     method_name: str = Field(default="io.read_mtx", description="NEVER CHANGE")
     filename: str = Field(
-        default="placeholder.mtx", description="Path to the .mtx file"
+        default="placeholder.mtx",
+        description="Path to the .mtx file",
     )
-    dtype: Optional[str] = Field(None, description="Data type for the matrix")
+    dtype: str | None = Field(None, description="Data type for the matrix")
 
 
 class ReadText(BaseAPIModel):
@@ -191,11 +203,13 @@ class ReadText(BaseAPIModel):
 
     method_name: str = Field(default="io.read_text", description="NEVER CHANGE")
     filename: str = Field(
-        default="placeholder.txt", description="Path to the text file"
+        default="placeholder.txt",
+        description="Path to the text file",
     )
-    delimiter: Optional[str] = Field(None, description="Delimiter used in the file")
-    first_column_names: Optional[bool] = Field(
-        None, description="Whether the first column contains names"
+    delimiter: str | None = Field(None, description="Delimiter used in the file")
+    first_column_names: bool | None = Field(
+        None,
+        description="Whether the first column contains names",
     )
 
 
@@ -262,9 +276,10 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
             ReadZarr,
         ]
         runnable = self.create_runnable(
-            conversation=conversation, query_parameters=tools
+            conversation=conversation,
+            query_parameters=tools,
         )
         anndata_io_call_obj = runnable.invoke(
-            question,
+            f"{question}",
         )
         return anndata_io_call_obj
