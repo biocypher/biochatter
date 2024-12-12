@@ -3,6 +3,7 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING, Any, Collection, Optional, Union, Literal
 from langchain_core.output_parsers import PydanticToolsParser
 from pydantic import BaseAPIModel, Field
+
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
 
@@ -78,7 +79,6 @@ Use the provided documentation to craft precise queries for any preprocessing ne
 This prompt guides the user to query the scanpy.pp module for preprocessing tasks, assisting with the construction of specific preprocessing operations, such as filtering, normalization, scaling, and more.
 """
 
-
 class FilterCellsParams(BaseAPIModel):
     data: "np.ndarray" | "spmatrix" | "AnnData" = Field(..., description="The (annotated) data matrix.")
     min_counts: int | None = Field(None, description="Minimum counts per cell.")
@@ -86,6 +86,7 @@ class FilterCellsParams(BaseAPIModel):
     max_counts: int | None = Field(None, description="Maximum counts per cell.")
     max_genes: int | None = Field(None, description="Maximum genes expressed in a cell.")
     inplace: bool = Field(True, description="Whether to modify the data in place.")
+
 
 class FilterGenesParams(BaseAPIModel):
     data: "np.ndarray" | "spmatrix" | "AnnData" = Field(..., description="The (annotated) data matrix.")
@@ -95,6 +96,7 @@ class FilterGenesParams(BaseAPIModel):
     max_cells: int | None = Field(None, description="Maximum number of cells expressing the gene.")
     inplace: bool = Field(True, description="Whether to modify the data in place.")
 
+
 class HighlyVariableGenesParams(BaseAPIModel):
     adata: "AnnData" = Field(..., description="Annotated data matrix.")
     n_top_genes: int | None = Field(None, description="Number of highly-variable genes to keep.")
@@ -103,12 +105,14 @@ class HighlyVariableGenesParams(BaseAPIModel):
     flavor: Literal['seurat', 'cell_ranger', 'seurat_v3', 'seurat_v3_paper'] = Field('seurat', description="Method for identifying highly-variable genes.")
     inplace: bool = Field(True, description="Whether to place metrics in .var or return them.")
 
+
 class Log1pParams(BaseAPIModel):
     data: "AnnData" | "np.ndarray" | "spmatrix" = Field(..., description="The data matrix.")
     base: float | None = Field(None, description="Base of the logarithm.")
     copy: bool = Field(False, description="If True, return a copy of the data.")
     chunked: bool | None = Field(None, description="Process data in chunks.")
     
+
 class PCAParams(BaseAPIModel):
     data: "AnnData" | "np.ndarray" | "spmatrix" = Field(..., description="The (annotated) data matrix.")
     n_comps: int | None = Field(None, description="Number of principal components to compute.")
@@ -117,22 +121,26 @@ class PCAParams(BaseAPIModel):
     svd_solver: str | None = Field(None, description="SVD solver to use.")
     copy: bool = Field(False, description="If True, return a copy of the data.")
 
+
 class NormalizeTotalParams(BaseAPIModel):
     adata: "AnnData" = Field(..., description="The annotated data matrix.")
     target_sum: float | None = Field(None, description="Target sum after normalization.")
     exclude_highly_expressed: bool = Field(False, description="Whether to exclude highly expressed genes.")
     inplace: bool = Field(True, description="Whether to update adata or return normalized data.")
     
+
 class RegressOutParams(BaseAPIModel):
     adata: "AnnData" = Field(..., description="The annotated data matrix.")
     keys: str | Collection[str] = Field(..., description="Keys for regression.")
     copy: bool = Field(False, description="If True, return a copy of the data.")
+
 
 class ScaleParams(BaseAPIModel):
     data: "AnnData" | "spmatrix" | "np.ndarray" = Field(..., description="The data matrix.")
     zero_center: bool = Field(True, description="Whether to zero-center the data.")
     copy: bool = Field(False, description="Whether to perform operation inplace.")
     
+
 class SubsampleParams(BaseAPIModel):
     data: "AnnData" | "np.ndarray" | "spmatrix" = Field(..., description="The data matrix.")
     fraction: float | None = Field(None, description="Fraction of observations to subsample.")
@@ -144,6 +152,7 @@ class DownsampleCountsParams(BaseAPIModel):
     counts_per_cell: int | "np.ndarray" | None = Field(None, description="Target total counts per cell.")
     replace: bool = Field(False, description="Whether to sample with replacement.")
     copy: bool = Field(False, description="If True, return a copy of the data.")
+
 
 class CombatParams(BaseAPIModel):
     adata: "AnnData" = Field(..., description="The annotated data matrix.")
