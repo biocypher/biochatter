@@ -1,4 +1,5 @@
 """Autogenerate Pydantic classes from a module.
+
 This module provides a function to generate Pydantic classes for each callable
 (function/method) in a given module. It extracts parameters from docstrings
 using docstring-parser and creates Pydantic models with fields corresponding to
@@ -7,8 +8,9 @@ aliased.
 """
 
 import inspect
-from typing import Any, Dict, Optional, Type, get_origin, get_args
 from types import ModuleType, MappingProxyType
+from typing import Any
+
 from docstring_parser import parse
 from langchain_core.pydantic_v1 import BaseModel, Field, create_model
 
@@ -28,15 +30,18 @@ def generate_pydantic_classes(module: ModuleType) -> list[type[BaseModel]]:
     Returns
     -------
     list[Type[BaseModel]]
-        A list of Pydantic model classes corresponding to each function found in `module`.
-        
+        A list of Pydantic model classes corresponding to each function found in
+            `module`.
+
     Notes
     -----
-    - For now, all parameter types are set to `Any` to avoid complications with complex or
-      external classes that are not easily JSON-serializable.
-    - Optional parameters (those with a None default) are represented as `Optional[Any]`.
-    - Required parameters (no default) use `...` to indicate that the field is required.
-    
+    - For now, all parameter types are set to `Any` to avoid complications with
+      complex or external classes that are not easily JSON-serializable.
+    - Optional parameters (those with a None default) are represented as
+      `Optional[Any]`.
+    - Required parameters (no default) use `...` to indicate that the field is
+      required.
+
     """
     base_attributes = set(dir(BaseModel))
     classes_list = []
@@ -73,7 +78,7 @@ def generate_pydantic_classes(module: ModuleType) -> list[type[BaseModel]]:
                     default_value = dict(default_value)
 
                 # Handle non-JSON-compliant float values by converting to string
-                if default_value in [float('inf'), float('-inf'), float('nan'), float('-nan')]:
+                if default_value in [float("inf"), float("-inf"), float("nan"), float("-nan")]:
                     default_value = str(default_value)
             else:
                 default_value = ...  # No default means required
@@ -81,14 +86,15 @@ def generate_pydantic_classes(module: ModuleType) -> list[type[BaseModel]]:
             # For now, all parameter types are Any
             annotation = Any
 
-            # Append the original annotation as a note in the description if available
+            # Append the original annotation as a note in the description if
+            # available
             if param.annotation is not inspect.Parameter.empty:
                 description += f"\nOriginal type annotation: {param.annotation}"
 
             # If default_value is None, parameter can be Optional
             # If not required, mark as Optional[Any]
             if default_value is None:
-                annotation = Optional[Any]
+                annotation = Any | None
 
             # Prepare field kwargs
             field_kwargs = {"description": description, "default": default_value}
@@ -103,10 +109,10 @@ def generate_pydantic_classes(module: ModuleType) -> list[type[BaseModel]]:
             fields[field_name] = (annotation, Field(**field_kwargs))
 
         # Create the Pydantic model
-        TLParametersModel = create_model(
+        tl_parameters_model = create_model(
             name,
             **fields)
-        classes_list.append(TLParametersModel)
+        classes_list.append(tl_parameters_model)
     return classes_list
 
 
