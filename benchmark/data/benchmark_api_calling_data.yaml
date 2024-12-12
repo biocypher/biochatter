@@ -94,7 +94,13 @@ api_calling:
         help_request: "Can you help me with making a scatter plot with n_genes_by_counts and total_counts?"
     expected:
       parts_of_query:
-        ["sc.pl.scatter\\(", "adata=adata", "n_genes_by_counts", "total_counts", "\\)"]
+        [
+          "sc.pl.scatter\\(",
+          "adata=adata",
+          "n_genes_by_counts",
+          "total_counts",
+          "\\)",
+        ]
   - case: scanpy:pl:pca
     input:
       prompt:
@@ -104,7 +110,13 @@ api_calling:
         help_request: "Can you help me with plotting the PCA embedding with n_genes_by_counts and total_counts as colors?"
     expected:
       parts_of_query:
-        ["sc.pl.pca\\(", "adata=adata", "n_genes_by_counts", "total_counts", "\\)"]
+        [
+          "sc.pl.pca\\(",
+          "adata=adata",
+          "n_genes_by_counts",
+          "total_counts",
+          "\\)",
+        ]
   - case: scanpy:pl:tsne
     input:
       prompt:
@@ -113,7 +125,8 @@ api_calling:
         general_question: "How can I plot a tsne with n_genes_by_counts as colors?"
         help_request: "Can you help me with plotting a tsne with n_genes_by_counts as colors?"
     expected:
-      parts_of_query: ["sc.pl.tsne\\(", "adata=adata", "n_genes_by_counts", "\\)"]
+      parts_of_query:
+        ["sc.pl.tsne\\(", "adata=adata", "n_genes_by_counts", "\\)"]
   - case: scanpy:pl:umap
     input:
       prompt:
@@ -122,7 +135,8 @@ api_calling:
         general_question: "How can I plot a umap with n_genes_by_counts as colors?"
         help_request: "Can you help me with plotting a umap with n_genes_by_counts as colors?"
     expected:
-      parts_of_query: ["sc.pl.umap\\(", "adata=adata", "n_genes_by_counts", "\\)"]
+      parts_of_query:
+        ["sc.pl.umap\\(", "adata=adata", "n_genes_by_counts", "\\)"]
   - case: scanpy:pl:draw_graph
     input:
       prompt:
@@ -131,7 +145,8 @@ api_calling:
         general_question: "How can I plot a force-directed graph with n_genes_by_counts as colors?"
         help_request: "Can you help me with plotting a force-directed graph with n_genes_by_counts as colors?"
     expected:
-      parts_of_query: ["sc.pl.draw_graph\\(", "adata=adata", "n_genes_by_counts", "\\)"]
+      parts_of_query:
+        ["sc.pl.draw_graph\\(", "adata=adata", "n_genes_by_counts", "\\)"]
   - case: scanpy:pl:spatial
     input:
       prompt:
@@ -140,12 +155,11 @@ api_calling:
         general_question: "How can I plot the spatial data with n_genes_by_counts as colors?"
         help_request: "Can you help me with plotting the spatial data with n_genes_by_counts as colors?"
       expected:
-        parts_of_query: ["sc.pl.spatial\\(", "adata=adata", "n_genes_by_counts", "\\)"]
+        parts_of_query:
+          ["sc.pl.spatial\\(", "adata=adata", "n_genes_by_counts", "\\)"]
   - case: anndata:read:h5ad
     input:
       prompt:
         explicit_variable_names: "read test.h5ad into an anndata object."
     expected:
       parts_of_query: ["anndata.read_h5ad\\(", "filename=test.h5ad", "\\)"]
-
-
