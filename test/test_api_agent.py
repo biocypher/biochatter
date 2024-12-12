@@ -4,6 +4,7 @@ from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
+from langchain_core.output_parsers import PydanticToolsParser
 from pydantic import BaseModel
 
 from biochatter.api_agent.abc import (
@@ -11,7 +12,7 @@ from biochatter.api_agent.abc import (
     BaseInterpreter,
     BaseQueryBuilder,
 )
-from biochatter.api_agent.anndata import AnnDataIOQueryBuilder
+from biochatter.api_agent.anndata import ANNDATA_IO_QUERY_PROMPT, AnnDataIOQueryBuilder
 from biochatter.api_agent.api_agent import APIAgent
 from biochatter.api_agent.blast import (
     BLAST_QUERY_PROMPT,
@@ -32,11 +33,8 @@ from biochatter.api_agent.oncokb import (
 from biochatter.api_agent.scanpy_pl import (
     ScanpyPlQueryBuilder,
 )
-
-from biochatter.api_agent.scanpy_tl import ScanpyTlQueryBuilder
+from biochatter.api_agent.scanpy_tl import SCANPY_QUERY_PROMPT, ScanpyTlQueryBuilder
 from biochatter.llm_connect import Conversation, GptConversation
-
-from langchain_core.output_parsers import PydanticToolsParser
 
 
 def conversation_factory():
@@ -497,7 +495,7 @@ class TestAnndataIOQueryBuilder:
         query_builder = AnnDataIOQueryBuilder()
         mock_conversation = MagicMock()
         question = "read a .h5ad file into an anndata object."
-        expected_input = f"{question}"
+        expected_input = [("system", ANNDATA_IO_QUERY_PROMPT), ("human", question)]
         mock_query_obj = MagicMock()
         mock_create_runnable.invoke.return_value = mock_query_obj
 
@@ -509,11 +507,11 @@ class TestAnndataIOQueryBuilder:
         assert result == mock_query_obj
 
 
-class TestScanpyTLQueryBuilder:
+class TestScanpyTlQueryBuilder:
     @pytest.fixture
     def mock_create_runnable(self):
         with patch(
-            "biochatter.api_agent.anndata.AnnDataIOQueryBuilder.create_runnable",
+            "biochatter.api_agent.scanpy_tl.ScanpyTlQueryBuilder.create_runnable",
         ) as mock:
             mock_runnable = MagicMock()
             mock.return_value = mock_runnable
@@ -551,9 +549,9 @@ class TestScanpyTLQueryBuilder:
         )
 
         # Assert
-        mock_llm.bind_tools.assert_called_once_with(mock_generated_classes, tool_choice = "required")
+        mock_llm.bind_tools.assert_called_once_with(mock_generated_classes, tool_choice="required")
         mock_llm_with_tools.__or__.assert_called_once_with(
-            PydanticToolsParser(tools=mock_generated_classes)
+            PydanticToolsParser(tools=mock_generated_classes),
         )
         # Verify the returned chain
         assert result == mock_chain
@@ -563,7 +561,7 @@ class TestScanpyTLQueryBuilder:
         query_builder = AnnDataIOQueryBuilder()
         mock_conversation = MagicMock()
         question = "i want to run PCA on my data"
-        expected_input = f"{question}"
+        expected_input = [("system", SCANPY_QUERY_PROMPT), ("human", question)]
         mock_query_obj = MagicMock()
         mock_create_runnable.invoke.return_value = mock_query_obj
 
