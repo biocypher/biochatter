@@ -8,7 +8,8 @@ aliased.
 """
 
 import inspect
-from types import ModuleType
+from types import ModuleType, MappingProxyType
+from typing import Any
 
 from docstring_parser import parse
 from langchain_core.pydantic_v1 import BaseModel, Field, create_model
@@ -28,60 +29,95 @@ def generate_pydantic_classes(module: ModuleType) -> list[type[BaseModel]]:
 
     Returns
     -------
-    list[type[BaseModel]]
-        A list of Pydantic model classes.
+    list[Type[BaseModel]]
+        A list of Pydantic model classes corresponding to each function found in
+            `module`.
+
+    Notes
+    -----
+    - For now, all parameter types are set to `Any` to avoid complications with
+      complex or external classes that are not easily JSON-serializable.
+    - Optional parameters (those with a None default) are represented as
+      `Optional[Any]`.
+    - Required parameters (no default) use `...` to indicate that the field is
+      required.
 
     """
     base_attributes = set(dir(BaseModel))
     classes_list = []
 
-    # Iterate over all callables in the module
     for name, func in inspect.getmembers(module, inspect.isfunction):
-        # skip if method starts with _
+        # Skip private/internal functions (e.g., _something)
         if name.startswith("_"):
             continue
-        doc = inspect.getdoc(func)
-        if not doc:
-            # If no docstring, still create a model with no fields
-            tl_parameters_model = create_model(f"{name}")
-            classes_list.append(tl_parameters_model)
-            continue
 
+        # Parse docstring for parameter descriptions
+        doc = inspect.getdoc(func) or ""
         parsed_doc = parse(doc)
+        doc_params = {p.arg_name: p.description or "No description available."
+                      for p in parsed_doc.params}
 
-        # Collect parameter descriptions
-        param_info = {}
-        for p in parsed_doc.params:
-            if p.arg_name not in param_info:
-                param_info[p.arg_name] = p.description or "No description available."
-
-        # Prepare fields for create_model
+        sig = inspect.signature(func)
         fields = {}
-        alias_map = {}
 
-        for param_name, param_desc in param_info.items():
-            field_kwargs = {"default": None, "description": param_desc}
+        for param_name, param in sig.parameters.items():
+            # Skip *args and **kwargs for now
+            if param_name in ("args", "kwargs"):
+                continue
+
+            # Fetch docstring description or fallback
+            description = doc_params.get(param_name, "No description available.")
+
+            # Determine default value
+            # If no default, we use `...` indicating a required field
+            if param.default is not inspect.Parameter.empty:
+                default_value = param.default
+
+                # Convert MappingProxyType to a dict for JSON compatibility
+                if isinstance(default_value, MappingProxyType):
+                    default_value = dict(default_value)
+
+                # Handle non-JSON-compliant float values by converting to string
+                if default_value in [float("inf"), float("-inf"), float("nan"), float("-nan")]:
+                    default_value = str(default_value)
+            else:
+                default_value = ...  # No default means required
+
+            # For now, all parameter types are Any
+            annotation = Any
+
+            # Append the original annotation as a note in the description if
+            # available
+            if param.annotation is not inspect.Parameter.empty:
+                description += f"\nOriginal type annotation: {param.annotation}"
+
+            # If default_value is None, parameter can be Optional
+            # If not required, mark as Optional[Any]
+            if default_value is None:
+                annotation = Any | None
+
+            # Prepare field kwargs
+            field_kwargs = {"description": description, "default": default_value}
+
+            # If field name conflicts with BaseModel attributes, alias it
             field_name = param_name
-
-            # Alias if conflicts with BaseModel attributes
             if param_name in base_attributes:
-                aliased_name = param_name + "_param"
+                alias_name = param_name + "_param"
                 field_kwargs["alias"] = param_name
-                alias_map[aliased_name] = param_name
-                field_name = aliased_name
+                field_name = alias_name
 
-            # Without type info, default to Optional[str]
-            fields[field_name] = (str | None, Field(**field_kwargs))
+            fields[field_name] = (annotation, Field(**field_kwargs))
 
-        # Dynamically create the model for this function
-        tl_parameters_model = create_model(name, **fields)
+        # Create the Pydantic model
+        tl_parameters_model = create_model(
+            name,
+            **fields)
         classes_list.append(tl_parameters_model)
-
     return classes_list
 
 
 # Example usage:
-# import scanpy as sc
-# generated_classes = generate_pydantic_classes(sc.tl)
-# for func in generated_classes:
-#     print(func.schema())
+#import scanpy as sc
+#generated_classes = generate_pydantic_classes(sc.tl)
+#for func in generated_classes:  
+#    print(func.schema())
