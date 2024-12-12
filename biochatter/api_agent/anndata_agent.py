@@ -104,7 +104,7 @@ class MapAnnData(BaseAPIModel):
 class ReadH5AD(BaseAPIModel):
     """Read .h5ad-formatted hdf5 file."""
 
-    title: str = Field(default="io.read_h5ad", description="NEVER CHANGE")
+    method_name: str = Field(default="io.read_h5ad", description="NEVER CHANGE")
     filename: str = Field(default="dummy.h5ad", description="Path to the .h5ad file")
     backed: str | None = Field(
         default=None,
@@ -127,7 +127,7 @@ class ReadH5AD(BaseAPIModel):
 class ReadZarr(BaseAPIModel):
     """Read from a hierarchical Zarr array store."""
 
-    title: str = Field(default="io.read_zarr", description="NEVER CHANGE")
+    method_name: str = Field(default="io.read_zarr", description="NEVER CHANGE")
     filename: str = Field(
         default="placeholder.zarr",
         description="Path or URL to the Zarr store",
@@ -137,7 +137,7 @@ class ReadZarr(BaseAPIModel):
 class ReadCSV(BaseAPIModel):
     """Read .csv file."""
 
-    title: str = Field(default="io.read_csv", description="NEVER CHANGE")
+    method_name: str = Field(default="io.read_csv", description="NEVER CHANGE")
     filename: str = Field(
         default="placeholder.csv",
         description="Path to the .csv file",
@@ -155,7 +155,7 @@ class ReadCSV(BaseAPIModel):
 class ReadExcel(BaseAPIModel):
     """Read .xlsx (Excel) file."""
 
-    title: str = Field(default="io.read_excel", description="NEVER CHANGE")
+    method_name: str = Field(default="io.read_excel", description="NEVER CHANGE")
     filename: str = Field(
         default="placeholder.xlsx",
         description="Path to the .xlsx file",
@@ -170,7 +170,7 @@ class ReadExcel(BaseAPIModel):
 class ReadHDF(BaseAPIModel):
     """Read .h5 (hdf5) file."""
 
-    title: str = Field(default="io.read_hdf", description="NEVER CHANGE")
+    method_name: str = Field(default="io.read_hdf", description="NEVER CHANGE")
     filename: str = Field(default="placeholder.h5", description="Path to the .h5 file")
     key: str | None = Field(None, description="Group key within the .h5 file")
 
@@ -178,7 +178,7 @@ class ReadHDF(BaseAPIModel):
 class ReadLoom(BaseAPIModel):
     """Read .loom-formatted hdf5 file."""
 
-    title: str = Field(default="io.read_loom", description="NEVER CHANGE")
+    method_name: str = Field(default="io.read_loom", description="NEVER CHANGE")
     filename: str = Field(
         default="placeholder.loom",
         description="Path to the .loom file",
@@ -199,7 +199,7 @@ class ReadLoom(BaseAPIModel):
 class ReadMTX(BaseAPIModel):
     """Read .mtx file."""
 
-    title: str = Field(default="io.read_mtx", description="NEVER CHANGE")
+    method_name: str = Field(default="io.read_mtx", description="NEVER CHANGE")
     filename: str = Field(
         default="placeholder.mtx",
         description="Path to the .mtx file",
@@ -210,7 +210,7 @@ class ReadMTX(BaseAPIModel):
 class ReadText(BaseAPIModel):
     """Read .txt, .tab, .data (text) file."""
 
-    title: str = Field(default="io.read_text", description="NEVER CHANGE")
+    method_name: str = Field(default="io.read_text", description="NEVER CHANGE")
     filename: str = Field(
         default="placeholder.txt",
         description="Path to the text file",

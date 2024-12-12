@@ -3,7 +3,7 @@
 from urllib.parse import urlencode
 
 from .abc import BaseAPIModel, BaseModel
-from .anndata import MapAnnData
+from .anndata_agent import MapAnnData
 
 
 def format_as_rest_call(model: BaseModel) -> str:

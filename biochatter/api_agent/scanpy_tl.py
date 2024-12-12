@@ -2,16 +2,13 @@
 
 from collections.abc import Callable
 from types import ModuleType
-from typing import TYPE_CHECKING
 
 from langchain_core.output_parsers import PydanticToolsParser
 
+from biochatter.llm_connect import Conversation
+
 from .abc import BaseAPIModel, BaseQueryBuilder
 from .generate_pydantic_classes_from_module import generate_pydantic_classes
-
-if TYPE_CHECKING:
-    from biochatter.llm_connect import Conversation
-from biochatter.llm_connect import Conversation
 
 SCANPY_QUERY_PROMPT = """
 
