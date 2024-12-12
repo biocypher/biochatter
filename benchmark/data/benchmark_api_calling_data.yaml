@@ -93,7 +93,6 @@ api_calling:
         explicit_variable_names: "plot the tsne embeddding of the data colored by n_genes_by_counts."
     expected:
       parts_of_query: ["sc.pl.tsne\\(", "n_genes_by_counts", "\\)"]
-      parts_of_query: ["sc.pl.tsne\\(", "n_genes_by_counts", "\\)"]
   - case: anndata:read:h5ad
     input:
       prompt:
