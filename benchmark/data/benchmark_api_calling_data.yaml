@@ -73,6 +73,18 @@ api_calling:
     expected:
       parts_of_query:
         ["https://bio.tools/api/t/", "\\?topic=", "[mM]etabolomics"]
+  - case: scanpy:tl:leiden
+    input:
+      prompt:
+        explicit_variable_names: "Perform Leiden clustering on the data with resolution 0.5."
+    expected:
+      parts_of_query: ["sc.tl.leiden\\(", "resolution=0.5", "\\)"]
+  - case: scanpy:tl:umap
+    input:
+      prompt:
+        explicit_variable_names: "Calculate UMAP embedding with minimum distance 0.3 and spread 1.0."
+    expected:
+      parts_of_query: ["sc.tl.umap\\(", "min_dist=0.3", "spread=1.0", "\\)"]
   - case: scanpy:pl:scatter
     input:
       prompt:
@@ -99,3 +111,5 @@ api_calling:
         explicit_variable_names: "read test.h5ad into an anndata object."
     expected:
       parts_of_query: ["anndata.read_h5ad\\(", "filename=test.h5ad", "\\)"]
+
+
