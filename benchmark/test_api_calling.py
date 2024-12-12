@@ -1,11 +1,10 @@
 import inspect
 import re
-from urllib.parse import urlencode
 
 import pytest
 
 from biochatter._misc import ensure_iterable
-from biochatter.api_agent import BioToolsQueryBuilder, OncoKBQueryBuilder, ScanpyPlQueryBuilder, format_as_rest_call, format_as_python_call
+from biochatter.api_agent import BioToolsQueryBuilder, OncoKBQueryBuilder, ScanpyPlQueryBuilder, AnnDataIOQueryBuilder, format_as_rest_call, format_as_python_call
 
 from .benchmark_utils import (
     get_result_file_path,
@@ -90,7 +89,7 @@ def test_python_api_calling(
         md5_hash=yaml_data["hash"],
     )
 
-    if "scanpy" not in yaml_data["case"]:
+    if "scanpy" not in yaml_data["case"] and "anndata" not in yaml_data["case"]:
         pytest.skip(
             "Function to be tested is not a Python API",
         )
@@ -99,6 +98,8 @@ def test_python_api_calling(
         conversation.reset()  # needs to be reset for each test
         if "scanpy:pl" in yaml_data["case"]:
             builder = ScanpyPlQueryBuilder()
+        elif "anndata" in yaml_data["case"]:
+            builder = AnnDataIOQueryBuilder()
         parameters = builder.parameterise_query(
             question=yaml_data["input"]["prompt"],
             conversation=conversation,

@@ -5,7 +5,7 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from langchain_core.output_parsers import PydanticToolsParser
-from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
@@ -136,7 +136,7 @@ Plot results of simulation.
 class ScanpyPlScatterQueryParameters(BaseModel):
     """Parameters for querying the scanpy `pl.scatter` API."""
 
-    method_name: str = Field(
+    title: str = Field(
         default="sc.pl.scatter",
         description="The name of the method to call.",
     )
@@ -187,10 +187,6 @@ class ScanpyPlScatterQueryParameters(BaseModel):
         default=None,
         description="Color map to use for continuous variables (e.g., 'magma', 'viridis').",
     )
-    title: str | list[str] | None = Field(
-        default=None,
-        description="Title for panels either as string or list of strings.",
-    )
     show: bool | None = Field(
         default=None,
         description="Show the plot, do not return axis.",
@@ -204,6 +200,10 @@ class ScanpyPlScatterQueryParameters(BaseModel):
 class ScanpyPlPcaQueryParameters(BaseModel):
     """Parameters for querying the scanpy `pl.pca` API."""
 
+    title: str = Field(
+        default="sc.pl.pca",
+        description="The name of the method to call.",
+    )
     question_uuid: str | None = Field(
         default=None,
         description="Unique identifier for the question.",
@@ -252,10 +252,6 @@ class ScanpyPlPcaQueryParameters(BaseModel):
         default=None,
         description="Point size. If `None`, is automatically computed as 120000 / n_cells.",
     )
-    title: str | list[str] | None = Field(
-        default=None,
-        description="Provide title for panels either as string or list of strings.",
-    )
     show: bool | None = Field(
         default=None,
         description="Show the plot, do not return axis.",
@@ -284,6 +280,14 @@ class ScanpyPlPcaQueryParameters(BaseModel):
 class ScanpyPlTsneQueryParameters(BaseModel):
     """Parameters for querying the Scanpy `pl.tsne` API."""
 
+    title: str = Field(
+        default="sc.pl.tsne",
+        description="The name of the method to call.",
+    )
+    question_uuid: str | None = Field(
+        default=None,
+        description="Unique identifier for the question.",
+    )
     adata: str = Field(
         ...,
         description="Annotated data matrix.",
@@ -380,10 +384,6 @@ class ScanpyPlTsneQueryParameters(BaseModel):
         default=None,
         description="Draw a frame around the scatter plot.",
     )
-    title: str | list[str] | None = Field(
-        default=None,
-        description="Title for panels, either as string or list of strings.",
-    )
     vmin: str | float | Any | list[str | float | Any] | None = Field(
         default=None,
         description="Lower limit of the color scale.",
@@ -448,6 +448,14 @@ class ScanpyPlTsneQueryParameters(BaseModel):
 class ScanpyPlUmapQueryParameters(BaseModel):
     """Parameters for querying the Scanpy `pl.umap` API."""
 
+    title: str = Field(
+        default="sc.pl.umap",
+        description="The name of the method to call.",
+    )
+    question_uuid: str | None = Field(
+        default=None,
+        description="Unique identifier for the question.",
+    )
     adata: str = Field(
         ...,
         description="Annotated data matrix.",
@@ -608,10 +616,6 @@ class ScanpyPlUmapQueryParameters(BaseModel):
         default=None,
         description="Width of the space between multiple panels.",
     )
-    title: str | list[str] | None = Field(
-        default=None,
-        description="Title for panels, either as string or list of strings.",
-    )
     show: bool | None = Field(
         default=None,
         description="Show the plot; do not return axis.",
@@ -640,6 +644,14 @@ class ScanpyPlUmapQueryParameters(BaseModel):
 class ScanpyPlDrawGraphQueryParameters(BaseModel):
     """Parameters for querying the Scanpy `pl.draw_graph` API."""
 
+    title: str = Field(
+        default="sc.pl.draw_graph",
+        description="The name of the method to call.",
+    )
+    question_uuid: str | None = Field(
+        default=None,
+        description="Unique identifier for the question.",
+    )
     adata: str = Field(
         ...,
         description="Annotated data matrix.",
@@ -740,10 +752,6 @@ class ScanpyPlDrawGraphQueryParameters(BaseModel):
         default=None,
         description="Draw a frame around the scatter plot.",
     )
-    title: str | list[str] | None = Field(
-        default=None,
-        description="Provide title for panels either as string or list of strings.",
-    )
     vmin: str | float | Any | list[str | float | Any] | None = Field(
         default=None,
         description="The value representing the lower limit of the color scale.",
@@ -813,6 +821,14 @@ class ScanpyPlDrawGraphQueryParameters(BaseModel):
 class ScanpyPlSpatialQueryParameters(BaseModel):
     """Parameters for querying the Scanpy `pl.spatial` API."""
 
+    title: str = Field(
+        default="sc.pl.spatial",
+        description="The name of the method to call.",
+    )
+    question_uuid: str | None = Field(
+        default=None,
+        description="Unique identifier for the question.",
+    )
     adata: str = Field(
         ...,
         description="Annotated data matrix.",
@@ -924,10 +940,6 @@ class ScanpyPlSpatialQueryParameters(BaseModel):
     frameon: bool | None = Field(
         default=None,
         description="Draw a frame around the scatter plot.",
-    )
-    title: str | list[str] | None = Field(
-        default=None,
-        description="Provide title for panels either as string or list of strings.",
     )
     vmin: str | float | Any | list[str | float | Any] | None = Field(
         default=None,
