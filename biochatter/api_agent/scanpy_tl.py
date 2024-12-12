@@ -1,129 +1,91 @@
 """Module for interacting with the `scanpy` API for data tools (`tl`)."""
 
+from collections.abc import Callable
+from types import ModuleType
 from typing import TYPE_CHECKING
 
 from langchain_core.output_parsers import PydanticToolsParser
-from langchain_core.pydantic_v1 import BaseModel
 
-from .abc import BaseQueryBuilder
+from .abc import BaseQueryBuilder, BaseAPIModel
 from .generate_pydantic_classes_from_module import generate_pydantic_classes
+from biochatter.llm_connect import Conversation
 
-if TYPE_CHECKING:
-    from biochatter.llm_connect import Conversation
 
 SCANPY_QUERY_PROMPT = """
-You are a world class algorithm for creating queries in structured formats. Your task is to use the scanpy python package
-to provide the user with the appropriate function call to answer their question. You focus on the scanpy.tl module, which has 
-the following overview:
-Any transformation of the data matrix that is not *preprocessing*. In contrast to a *preprocessing* function, a *tool* usually adds an easily interpretable annotation to the data matrix, which can then be visualized with a corresponding plotting function.
+
+You are a world class algorithm for creating queries in structured formats. Your
+task is to use the scanpy python package to provide the user with the
+appropriate function call to answer their question. You focus on the scanpy.tl
+module, which has the following overview: Any transformation of the data matrix
+that is not *preprocessing*. In contrast to a *preprocessing* function, a *tool*
+usually adds an easily interpretable annotation to the data matrix, which can
+then be visualized with a corresponding plotting function.
 
 ### Embeddings
-
-```{eval-rst}
-.. autosummary::
-   :nosignatures:
-   :toctree: ../generated/
 
    pp.pca
    tl.tsne
    tl.umap
    tl.draw_graph
    tl.diffmap
-```
 
 Compute densities on embeddings.
 
-```{eval-rst}
-.. autosummary::
-   :nosignatures:
-   :toctree: ../generated/
-
    tl.embedding_density
-```
 
 ### Clustering and trajectory inference
-
-```{eval-rst}
-.. autosummary::
-   :nosignatures:
-   :toctree: ../generated/
 
    tl.leiden
    tl.louvain
    tl.dendrogram
    tl.dpt
    tl.paga
-```
 
 ### Data integration
 
-```{eval-rst}
-.. autosummary::
-   :nosignatures:
-   :toctree: ../generated/
-
    tl.ingest
-```
 
 ### Marker genes
-
-```{eval-rst}
-.. autosummary::
-   :nosignatures:
-   :toctree: ../generated/
 
    tl.rank_genes_groups
    tl.filter_rank_genes_groups
    tl.marker_gene_overlap
-```
 
 ### Gene scores, Cell cycle
 
-```{eval-rst}
-.. autosummary::
-   :nosignatures:
-   :toctree: ../generated/
-
    tl.score_genes
    tl.score_genes_cell_cycle
-```
 
 ### Simulations
 
-```{eval-rst}
-.. autosummary::
-   :nosignatures:
-   :toctree: ../generated/
-
    tl.sim
-
-```
 """
 
-
-class ScanpyTLQueryBuilder(BaseQueryBuilder):
-    """A class for building an ScanpyTLQuery object."""
+class ScanpyTlQueryBuilder(BaseQueryBuilder):
+    """A class for building an ScanpyTlQuery object."""
 
     def create_runnable(
         self,
-        query_parameters: BaseModel,
-        conversation: "Conversation",
-    ):
-        pass
+        query_parameters: list["BaseAPIModel"],
+        conversation: Conversation,
+    ) -> Callable:
+
+        runnable = conversation.chat.bind_tools(query_parameters, tool_choice = "required")
+        return runnable | PydanticToolsParser(tools=query_parameters)
 
     def parameterise_query(
         self,
         question: str,
         conversation: "Conversation",
-        generated_classes=None,  # Allow external injection of classes
-        module=None,
+        module: ModuleType,
+        generated_classes=None,  # Allow external injection of classes for testing purposes
     ):
         """Generate an ScanpyTLQuery object.
 
-        Generate a ScanpyTLQuery object based on the given question, prompt,
-        and BioChatter conversation. Uses a Pydantic model to define the API
-        fields. Using langchains .bind_tools method to allow the LLM to parameterise
-        the function call, based on the functions available in thescanpy.tl module.
+        Generate a ScanpyTLQuery object based on the given question, prompt, and
+        BioChatter conversation. Uses a Pydantic model to define the API fields.
+        Using langchains .bind_tools method to allow the LLM to parameterise the
+        function call, based on the functions available in thescanpy.tl module.
 
         Args:
         ----
@@ -138,21 +100,16 @@ class ScanpyTLQueryBuilder(BaseQueryBuilder):
                 model)
 
         """
-        import scanpy as sc
-
-        module = sc.tl
-        generated_classes = generate_pydantic_classes(module)
-        # Generate classes if not provided
         if generated_classes is None:
-            generated_classes = generate_pydantic_classes(module)
+            tools = generate_pydantic_classes(module)
 
-        llm = conversation.chat
-        llm_with_tools = llm.bind_tools(generated_classes)
+        runnable = self.create_runnable(
+            conversation=conversation, query_parameters=tools,
+        )
+
         query = [
-            ("system", "You're an expert data scientist"),
-            ("human", {question}),
-            ("system", "You're an expert data scientist"),
+            ("system", SCANPY_QUERY_PROMPT),
             ("human", question),
         ]
-        chain = llm_with_tools | PydanticToolsParser(tools=generated_classes)
-        return chain.invoke(query)
+
+        return runnable.invoke(query)
