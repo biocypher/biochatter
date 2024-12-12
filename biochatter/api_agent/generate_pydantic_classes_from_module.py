@@ -12,28 +12,6 @@ from types import ModuleType, MappingProxyType
 from docstring_parser import parse
 from langchain_core.pydantic_v1 import BaseModel, Field, create_model
 
-def _is_optional_type(t):
-    """Check if a given type annotation is Optional[...] or Any."""
-    if t is Any:
-        return True
-    origin = get_origin(t)
-    if origin is getattr(__import__('typing'), 'Union', None):
-        args = get_args(t)
-        return type(None) in args
-    return False
-
-def generate_pydantic_classes(module: ModuleType) -> list[Type[BaseModel]]:
-    """
-    Generate Pydantic classes for each public callable (function/method) in a given module.
-    
-    Parameters
-    ----------
-=======
-from types import ModuleType
-
-from docstring_parser import parse
-from langchain_core.pydantic_v1 import BaseModel, Field, create_model
-
 def generate_pydantic_classes(module: ModuleType) -> list[type[BaseModel]]:
     """Generate Pydantic classes for each callable.
 
