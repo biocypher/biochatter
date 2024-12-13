@@ -139,7 +139,6 @@ def test_python_api_calling(
         get_result_file_path(task),
     )
 
-
 def test_python_api_calling_reduced(
     model_name,
     test_data_api_calling,

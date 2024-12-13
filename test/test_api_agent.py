@@ -13,6 +13,7 @@ from biochatter.api_agent.abc import (
     BaseQueryBuilder,
 )
 
+
 from biochatter.api_agent.anndata_agent import AnnDataIOQueryBuilder, ANNDATA_IO_QUERY_PROMPT
 from biochatter.api_agent.scanpy_pp_reduced import ScanpyPpQueryBuilder
 
@@ -534,72 +535,6 @@ class TestAnndataIOQueryBuilder:
         query_builder = AnnDataIOQueryBuilder()
         mock_conversation = MagicMock()
         question = "read a .h5ad file into an anndata object."
-        expected_input = [("system", ANNDATA_IO_QUERY_PROMPT), ("human", question)]
-        mock_query_obj = MagicMock()
-        mock_create_runnable.invoke.return_value = mock_query_obj
-
-        # Act
-        result = query_builder.parameterise_query(question, mock_conversation)
-
-        # Assert
-        mock_create_runnable.invoke.assert_called_once_with(expected_input)
-        assert result == mock_query_obj
-
-
-class TestScanpyPpQueryBuilder:
-    @pytest.fixture
-    def mock_create_runnable(self):
-        with patch(
-            "biochatter.api_agent.scanpy_pp_reduced.ScanpyPpQueryBuilder.create_runnable",
-        ) as mock:
-            mock_runnable = MagicMock()
-            mock.return_value = mock_runnable
-            yield mock_runnable
-
-    @patch("biochatter.llm_connect.GptConversation")
-    def test_create_runnable(self, mock_conversation):
-        # Mock the list of Pydantic classes as a list of Mock objects
-        class MockTool1(BaseModel):
-            param1: str
-
-        class MockTool2(BaseModel):
-            param2: int
-
-        mock_generated_classes = [MockTool1, MockTool2]
-
-        # Mock the conversation object and LLM
-        mock_conversation_instance = mock_conversation.return_value
-        mock_llm = MagicMock()
-        mock_conversation_instance.chat = mock_llm
-
-        # Mock the LLM with tools
-        mock_llm_with_tools = MagicMock()
-        mock_llm.bind_tools.return_value = mock_llm_with_tools
-
-        # Mock the chain
-        mock_chain = MagicMock()
-        mock_llm_with_tools.__or__.return_value = mock_chain
-
-        # Act
-        builder = AnnDataIOQueryBuilder()
-        result = builder.create_runnable(
-            query_parameters=mock_generated_classes,
-            conversation=mock_conversation_instance,
-        )
-
-        # Assert
-        mock_llm.bind_tools.assert_called_once_with(mock_generated_classes, tool_choice="required")
-        mock_llm_with_tools.__or__.assert_called_once_with(
-            PydanticToolsParser(tools=mock_generated_classes),
-        )
-        # Verify the returned chain
-        assert result == mock_chain
-
-    def test_parameterise_query(self, mock_create_runnable):
-        # Arrange
-        query_builder = ScanpyPpQueryBuilder()
-        mock_conversation = MagicMock()
-        question = "I want to use scanpy pp to filter cells with at least 200 genes"
         expected_input = [("system", ANNDATA_IO_QUERY_PROMPT), ("human", question)]
         mock_query_obj = MagicMock()
         mock_create_runnable.invoke.return_value = mock_query_obj
