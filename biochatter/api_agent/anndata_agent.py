@@ -8,22 +8,20 @@
 # 4. Write the anndata object to [xxx] format -> built-in anndata api
 
 from collections.abc import Callable
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from langchain_core.output_parsers import PydanticToolsParser
 
 # from langchain_core.pydantic_v1 import BaseModel, Field
 from biochatter.llm_connect import Conversation
 
-from biochatter.api_agent.abc import BaseAPIModel, BaseQueryBuilder, BaseTools
+from .abc import BaseAPIModel, BaseQueryBuilder
 
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
 
 
-from typing import Optional
-# Careful as this is not the same as the langchain_core.pydantic_v1
-from pydantic import BaseModel, Field, create_model
+from pydantic import BaseModel, Field
 
 ANNDATA_IO_QUERY_PROMPT = """
 You are a world class algorithm, computational biologist with world leading knowledge
@@ -34,131 +32,194 @@ You will be asked to provide code to answer a specific questions involving the a
 NEVER return a code snippet or code itself, instead you have to return a structured output format.
 You will have to create a structured output formats containing method:argument fields.
 
-Here are the possible questions you might be asked:
-<question: output> TBD
-<question: output> TBD
-<question: output> TBD
-
-BASED ON THE DOCUMENTATION below:
-### 1. Reading AnnData Native Formats
-- **HDF5 (.h5ad):**
-  `io.read_h5ad(filename[, backed, as_sparse, ...])`
-  - Reads `.h5ad`-formatted HDF5 file.
-
-- **Zarr:**
-  `io.read_zarr(store)`
-  - Reads from a hierarchical Zarr array store.
-
-### 2. Reading Specific Portions of AnnData
-- **Individual Elements (e.g., obs, varm, etc.):**
-  `io.read_elem(elem)`
-  - Reads an individual element from a store.
-
-- **Backed Mode-Compatible Sparse Dataset:**
-  `io.sparse_dataset(group)`
-  - Generates a sparse dataset class compatible with backed mode.
-
-### 3. Reading Non-Native Formats
-#### 3.1 General Tips
-- Non-native formats may not represent all aspects of AnnData objects.
-- Assembling the AnnData object manually from individual parts may be more successful.
-
-#### 3.2 Supported Formats
-- **CSV:**
-  `io.read_csv(filename[, delimiter, ...])`
-  - Reads `.csv` file.
-
-- **Excel (.xlsx):**
-  `io.read_excel(filename, sheet[, dtype])`
-  - Reads `.xlsx` (Excel) file.
-
-- **HDF5 (.h5):**
-  `io.read_hdf(filename, key)`
-  - Reads `.h5` (HDF5) file.
-
-- **Loom:**
-  `io.read_loom(filename, *[, sparse, cleanup, ...])`
-  - Reads `.loom`-formatted HDF5 file.
-
-- **Matrix Market (.mtx):**
-  `io.read_mtx(filename[, dtype])`
-  - Reads `.mtx` file.
-
-- **Text (.txt, .tab, .data):**
-  `io.read_text(filename[, delimiter, ...])`
-  - Reads `.txt`, `.tab`, or `.data` text files.
-
-- **UMI Tools Matrix:**
-  `io.read_umi_tools(filename[, dtype])`
-  - Reads a gzipped condensed count matrix from UMI Tools.
+You will be asked to read in an anndata object from any anndata api supported format OR
+to concatenate the anndata objects.
+FOR THE MapAnnData, BE SURE TO ALWAYS USE THE variable of the anndata GIVEN IN THE INPUT, REPLACE IT IN THE method_name
+Use the tools available:
 """
-class Tools(BaseTools):
-    tools_params = {}
-    tools_params["io.read_h5ad"] = {
-        "filename": (str, Field(default="dummy.h5ad", description="Path to the .h5ad file")),
-        "backed": (Optional[str], Field(default=None, description="Mode to access file: None, 'r' for read-only")),
-        "as_sparse": (Optional[str], Field(default=None, description="Convert to sparse format: 'csr', 'csc', or None")),
-        "as_sparse_fmt": (Optional[str], Field(default=None, description="Sparse format if converting, e.g., 'csr'")),
-        "index_unique": (Optional[str], Field(default=None, description="Make index unique by appending suffix if needed"))
-        }
 
-    # Parameters for io.read_zarr
-    tools_params["io.read_zarr"] = {
-        "method_name": (str, Field(default="io.read_zarr", description="NEVER CHANGE")),
-        "filename": (str, Field(default="placeholder.zarr", description="Path or URL to the Zarr store"))
-    }
 
-    # Parameters for io.read_csv
-    tools_params["io.read_csv"] = {
-        "method_name": (str, Field(default="io.read_csv", description="NEVER CHANGE")),
-        "filename": (str, Field(default="placeholder.csv", description="Path to the .csv file")),
-        "delimiter": (Optional[str], Field(default=None, description="Delimiter used in the .csv file")),
-        "first_column_names": (Optional[bool], Field(default=None, description="Whether the first column contains names"))
-    }
+class ConcatenateAnnData(BaseAPIModel):
+    """Concatenate AnnData objects along an axis."""
 
-    # Parameters for io.read_excel
-    tools_params["io.read_excel"] = {
-        "method_name": (str, Field(default="io.read_excel", description="NEVER CHANGE")),
-        "filename": (str, Field(default="placeholder.xlsx", description="Path to the .xlsx file")),
-        "sheet": (Optional[str], Field(default=None, description="Sheet name or index to read from")),
-        "dtype": (Optional[str], Field(default=None, description="Data type for the resulting dataframe"))
-    }
+    method_name: str = Field(default="anndata.concat", description="NEVER CHANGE")
+    adatas: list | dict = Field(
+        ...,
+        description="The objects to be concatenated. Either a list of AnnData objects or a mapping of keys to AnnData objects.",
+    )
+    axis: str = Field(
+        default="obs",
+        description="Axis to concatenate along. Can be 'obs' (0) or 'var' (1). Default is 'obs'.",
+    )
+    join: str = Field(
+        default="inner",
+        description="How to align values when concatenating. Options: 'inner' or 'outer'. Default is 'inner'.",
+    )
+    merge: str | Callable | None = Field(
+        default=None,
+        description="How to merge elements not aligned to the concatenated axis. Strategies include 'same', 'unique', 'first', 'only', or a callable function.",
+    )
+    uns_merge: str | Callable | None = Field(
+        default=None,
+        description="How to merge the .uns elements. Uses the same strategies as 'merge'.",
+    )
+    label: str | None = Field(
+        default=None,
+        description="Column in axis annotation (.obs or .var) to place batch information. Default is None.",
+    )
+    keys: list | None = Field(
+        default=None,
+        description="Names for each object being concatenated. Used for column values or appended to the index if 'index_unique' is not None. Default is None.",
+    )
+    index_unique: str | None = Field(
+        default=None,
+        description="Delimiter for making the index unique. When None, original indices are kept.",
+    )
+    fill_value: Any | None = Field(
+        default=None,
+        description="Value used to fill missing indices when join='outer'. Default behavior depends on array type.",
+    )
+    pairwise: bool = Field(
+        default=False,
+        description="Include pairwise elements along the concatenated dimension. Default is False.",
+    )
 
-    # Parameters for io.read_hdf
-    tools_params["io.read_hdf"] = {
-        "method_name": (str, Field(default="io.read_hdf", description="NEVER CHANGE")),
-        "filename": (str, Field(default="placeholder.h5", description="Path to the .h5 file")),
-        "key": (Optional[str], Field(default=None, description="Group key within the .h5 file"))
-    }
 
-    # Parameters for io.read_loom
-    tools_params["io.read_loom"] = {
-        "method_name": (str, Field(default="io.read_loom", description="NEVER CHANGE")),
-        "filename": (str, Field(default="placeholder.loom", description="Path to the .loom file")),
-        "sparse": (Optional[bool], Field(default=None, description="Whether to read data as sparse")),
-        "cleanup": (Optional[bool], Field(default=None, description="Clean up invalid entries")),
-        "X_name": (Optional[str], Field(default=None, description="Name to use for X matrix")),
-        "obs_names": (Optional[str], Field(default=None, description="Column to use for observation names")),
-        "var_names": (Optional[str], Field(default=None, description="Column to use for variable names"))
-    }
+class MapAnnData(BaseAPIModel):
+    """Apply mapping functions to elements of AnnData."""
 
-    # Parameters for io.read_mtx
-    tools_params["io.read_mtx"] = {
-        "method_name": (str, Field(default="io.read_mtx", description="NEVER CHANGE")),
-        "filename": (str, Field(default="placeholder.mtx", description="Path to the .mtx file")),
-        "dtype": (Optional[str], Field(default=None, description="Data type for the matrix"))
-    }
+    method_name: str = Field(
+        default="anndata.obs|var['annotation_name'].map",
+        description=(
+            "ALWAYS ALWAYS ALWAYS REPLACE THE anndata BY THE ONE GIVEN BY THE INPUT"
+            "Specifies the AnnData attribute and operation being performed. "
+            "For example, 'obs.map' applies a mapping function or dictionary to the specified column in `adata.obs`. "
+            "This must always include the AnnData component and the `.map` operation. "
+            "Adapt the component (e.g., 'obs', 'var', etc.) to the specific use case."
+        ),
+    )
+    dics: dict | None = Field(default=None, description="Dictionary to map over.")
 
-    # Parameters for io.read_text
-    tools_params["io.read_text"] = {
-        "method_name": (str, Field(default="io.read_text", description="NEVER CHANGE")),
-        "filename": (str, Field(default="placeholder.txt", description="Path to the text file")),
-        "delimiter": (Optional[str], Field(default=None, description="Delimiter used in the file")),
-        "first_column_names": (Optional[bool], Field(default=None, description="Whether the first column contains names"))
-    }
-    def __init__(self, tools_params: dict = tools_params):
-        super().__init__()
-        self.tools_params = tools_params
+
+class ReadH5AD(BaseAPIModel):
+    """Read .h5ad-formatted hdf5 file."""
+
+    method_name: str = Field(default="io.read_h5ad", description="NEVER CHANGE")
+    filename: str = Field(default="dummy.h5ad", description="Path to the .h5ad file")
+    backed: str | None = Field(
+        default=None,
+        description="Mode to access file: None, 'r' for read-only",
+    )
+    as_sparse: str | None = Field(
+        default=None,
+        description="Convert to sparse format: 'csr', 'csc', or None",
+    )
+    as_sparse_fmt: str | None = Field(
+        default=None,
+        description="Sparse format if converting, e.g., 'csr'",
+    )
+    index_unique: str | None = Field(
+        default=None,
+        description="Make index unique by appending suffix if needed",
+    )
+
+
+class ReadZarr(BaseAPIModel):
+    """Read from a hierarchical Zarr array store."""
+
+    method_name: str = Field(default="io.read_zarr", description="NEVER CHANGE")
+    filename: str = Field(
+        default="placeholder.zarr",
+        description="Path or URL to the Zarr store",
+    )
+
+
+class ReadCSV(BaseAPIModel):
+    """Read .csv file."""
+
+    method_name: str = Field(default="io.read_csv", description="NEVER CHANGE")
+    filename: str = Field(
+        default="placeholder.csv",
+        description="Path to the .csv file",
+    )
+    delimiter: str | None = Field(
+        None,
+        description="Delimiter used in the .csv file",
+    )
+    first_column_names: bool | None = Field(
+        None,
+        description="Whether the first column contains names",
+    )
+
+
+class ReadExcel(BaseAPIModel):
+    """Read .xlsx (Excel) file."""
+
+    method_name: str = Field(default="io.read_excel", description="NEVER CHANGE")
+    filename: str = Field(
+        default="placeholder.xlsx",
+        description="Path to the .xlsx file",
+    )
+    sheet: str | None = Field(None, description="Sheet name or index to read from")
+    dtype: str | None = Field(
+        None,
+        description="Data type for the resulting dataframe",
+    )
+
+
+class ReadHDF(BaseAPIModel):
+    """Read .h5 (hdf5) file."""
+
+    method_name: str = Field(default="io.read_hdf", description="NEVER CHANGE")
+    filename: str = Field(default="placeholder.h5", description="Path to the .h5 file")
+    key: str | None = Field(None, description="Group key within the .h5 file")
+
+
+class ReadLoom(BaseAPIModel):
+    """Read .loom-formatted hdf5 file."""
+
+    method_name: str = Field(default="io.read_loom", description="NEVER CHANGE")
+    filename: str = Field(
+        default="placeholder.loom",
+        description="Path to the .loom file",
+    )
+    sparse: bool | None = Field(None, description="Whether to read data as sparse")
+    cleanup: bool | None = Field(None, description="Clean up invalid entries")
+    X_name: str | None = Field(None, description="Name to use for X matrix")
+    obs_names: str | None = Field(
+        None,
+        description="Column to use for observation names",
+    )
+    var_names: str | None = Field(
+        None,
+        description="Column to use for variable names",
+    )
+
+
+class ReadMTX(BaseAPIModel):
+    """Read .mtx file."""
+
+    method_name: str = Field(default="io.read_mtx", description="NEVER CHANGE")
+    filename: str = Field(
+        default="placeholder.mtx",
+        description="Path to the .mtx file",
+    )
+    dtype: str | None = Field(None, description="Data type for the matrix")
+
+
+class ReadText(BaseAPIModel):
+    """Read .txt, .tab, .data (text) file."""
+
+    method_name: str = Field(default="io.read_text", description="NEVER CHANGE")
+    filename: str = Field(
+        default="placeholder.txt",
+        description="Path to the text file",
+    )
+    delimiter: str | None = Field(None, description="Delimiter used in the file")
+    first_column_names: bool | None = Field(
+        None,
+        description="Whether the first column contains names",
+    )
 
 
 class AnnDataIOQueryBuilder(BaseQueryBuilder):
@@ -186,7 +247,7 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
             A Callable object that can execute the query.
 
         """
-        runnable = conversation.chat.bind_tools(query_parameters)
+        runnable = conversation.chat.bind_tools(query_parameters, tool_choice="required")
         return runnable | PydanticToolsParser(tools=query_parameters)
 
     def parameterise_query(
@@ -213,12 +274,27 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
             AnnDataIOQuery: the parameterised query object (Pydantic model)
 
         """
-        tool_maker = Tools()
-        tools = tool_maker.make_pydantic_tools()
+        tools = [
+            ReadCSV,
+            ReadExcel,
+            ReadH5AD,
+            ReadHDF,
+            ReadLoom,
+            ReadMTX,
+            ReadText,
+            ReadZarr,
+            ConcatenateAnnData,
+            MapAnnData,
+        ]
         runnable = self.create_runnable(
-            conversation=conversation, query_parameters=tools
+            conversation=conversation,
+            query_parameters=tools,
         )
+        query = [
+            ("system", ANNDATA_IO_QUERY_PROMPT),
+            ("human", f"{question}"),
+        ]
         anndata_io_call_obj = runnable.invoke(
-            question,
+            query,
         )
         return anndata_io_call_obj

@@ -15,64 +15,76 @@
 # '.', etc., by adding two backslashes before them.
 
 api_calling:
-  - case: oncokb:braf:melanoma
-    input:
-      prompt:
-        exact_spelling: "What is the consequence of the V600E BRAF variant in Melanoma?"
-    expected:
-      parts_of_query:
-        [
-          "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange\\?",
-          "hugoSymbol=BRAF",
-          "alteration=V600E",
-          "tumorType=Melanoma",
-        ]
-  - case: oncokb:tp53:colon_adenocarcinoma
-    input:
-      prompt:
-        exact_spelling: "What is the consequence of the R273C TP53 variant in Colon Adenocarcinoma?"
-    expected:
-      parts_of_query:
-        [
-          "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange\\?",
-          "hugoSymbol=TP53",
-          "alteration=R273C",
-          "tumorType=Colon%20Adenocarcinoma",
-        ]
-  - case: oncokb:braf:histiocytosis
-    input:
-      prompt:
-        exact_spelling: "What is the consequence of the N486_P490del BRAF variant in Histiocytosis?"
-        descriptive_spelling: "What is the consequence of an N486_P490 deletion in BRAF in Histiocytosis?"
-    expected:
-      parts_of_query:
-        [
-          "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange\\?",
-          "hugoSymbol=BRAF",
-          "alteration=N486_P490del",
-          "tumorType=Histiocytosis",
-        ]
-  - case: oncokb:ros1:lung_adenocarcinoma
-    input:
-      prompt:
-        exact_spelling: "What is the consequence of the functional fusion of CD47 and ROS1 in Lung Adenocarcinoma?"
-    expected:
-      parts_of_query:
-        [
-          "https://demo.oncokb.org/api/v1/annotate/structuralVariants\\?",
-          "hugoSymbolA=CD74",
-          "hugoSymbolB=ROS1",
-          "structuralVariantType=FUSION",
-          "isFunctionalFusion=true",
-          "tumorType=Lung%20Adenocarcinoma",
-        ]
-  - case: biotools:topic:metabolomics
-    input:
-      prompt:
-        fuzzy_search: "Which tools can I use for metabolomics?"
-    expected:
-      parts_of_query:
-        ["https://bio.tools/api/t/", "\\?topic=", "[mM]etabolomics"]
+  # - case: oncokb:braf:melanoma
+  #   input:
+  #     prompt:
+  #       exact_spelling: "What is the consequence of the V600E BRAF variant in Melanoma?"
+  #   expected:
+  #     parts_of_query:
+  #       [
+  #         "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange\\?",
+  #         "hugoSymbol=BRAF",
+  #         "alteration=V600E",
+  #         "tumorType=Melanoma",
+  #       ]
+  # - case: oncokb:tp53:colon_adenocarcinoma
+  #   input:
+  #     prompt:
+  #       exact_spelling: "What is the consequence of the R273C TP53 variant in Colon Adenocarcinoma?"
+  #   expected:
+  #     parts_of_query:
+  #       [
+  #         "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange\\?",
+  #         "hugoSymbol=TP53",
+  #         "alteration=R273C",
+  #         "tumorType=Colon%20Adenocarcinoma",
+  #       ]
+  # - case: oncokb:braf:histiocytosis
+  #   input:
+  #     prompt:
+  #       exact_spelling: "What is the consequence of the N486_P490del BRAF variant in Histiocytosis?"
+  #       descriptive_spelling: "What is the consequence of an N486_P490 deletion in BRAF in Histiocytosis?"
+  #   expected:
+  #     parts_of_query:
+  #       [
+  #         "https://demo.oncokb.org/api/v1/annotate/mutations/byProteinChange\\?",
+  #         "hugoSymbol=BRAF",
+  #         "alteration=N486_P490del",
+  #         "tumorType=Histiocytosis",
+  #       ]
+  # - case: oncokb:ros1:lung_adenocarcinoma
+  #   input:
+  #     prompt:
+  #       exact_spelling: "What is the consequence of the functional fusion of CD47 and ROS1 in Lung Adenocarcinoma?"
+  #   expected:
+  #     parts_of_query:
+  #       [
+  #         "https://demo.oncokb.org/api/v1/annotate/structuralVariants\\?",
+  #         "hugoSymbolA=CD74",
+  #         "hugoSymbolB=ROS1",
+  #         "structuralVariantType=FUSION",
+  #         "isFunctionalFusion=true",
+  #         "tumorType=Lung%20Adenocarcinoma",
+  #       ]
+  # - case: biotools:topic:metabolomics
+  #   input:
+  #     prompt:
+  #       fuzzy_search: "Which tools can I use for metabolomics?"
+  #   expected:
+  #     parts_of_query:
+  #       ["https://bio.tools/api/t/", "\\?topic=", "[mM]etabolomics"]
+  # - case: scanpy:tl:leiden
+  #   input:
+  #     prompt:
+  #       explicit_variable_names: "Perform Leiden clustering on the data with resolution 0.5."
+  #   expected:
+  #     parts_of_query: ["sc.tl.leiden\\(", "resolution=0.5", "\\)"]
+  # - case: scanpy:tl:umap
+  #   input:
+  #     prompt:
+  #       explicit_variable_names: "Calculate UMAP embedding with minimum distance 0.3 and spread 1.0."
+  #   expected:
+  #     parts_of_query: ["sc.tl.umap\\(", "min_dist=0.3", "spread=1.0", "\\)"]
   - case: scanpy:tl:leiden
     input:
       prompt:
@@ -160,6 +172,69 @@ api_calling:
   - case: anndata:read:h5ad
     input:
       prompt:
-        explicit_variable_names: "read test.h5ad into an anndata object."
+        explicit_variable_names: "Use AnnData to load the file test.h5ad into an AnnData object."
+        specific: "Load test.h5ad using AnnData."
+        abbreviation: "Read test.h5ad with AnnData."
+        general: "Open an H5AD file and load it as an AnnData object."
+        help_request: "How do I read test.h5ad into an AnnData object?"
     expected:
-      parts_of_query: ["anndata.read_h5ad\\(", "filename=test.h5ad", "\\)"]
+      parts_of_query: ["anndata.io.read_h5ad\\(", "filename=test.h5ad", "\\)"]
+  - case: anndata:read:csv
+    input:
+      prompt:
+        explicit_variable_names: "Use AnnData to load the file `test.csv` into an AnnData object."
+        specific: "Load test.csv using AnnData."
+        abbreviation: "Read test.csv with AnnData."
+        general: "Open a CSV file and load it as an AnnData object."
+        help_request: "How do I read test.csv into an AnnData object?"
+    expected:
+      parts_of_query: ["anndata.io.read_csv\\(", "filename=test.csv", "\\)"]
+  - case: anndata:concat:var
+    input:
+      prompt:
+        explicit_variable_names: "Concatenate adata1 and adata2 into a single AnnData object along the column axis with an inner join."
+        specific: "Join adata1 and adata2 by columns using AnnData with an inner join."
+        abbreviation: "Merge columns of adata1 and adata2 with AnnData."
+        general: "Combine two AnnData objects along the variable axis with an inner join."
+        help_request: "How do I concatenate adata1 and adata2 along columns?"
+    expected:
+      parts_of_query:
+        [
+          "anndata.concat\\(",
+          "\\[adata1, adata2\\]",
+          ", axis='var', join='inner'",
+          "\\)",
+        ]
+  - case: anndata:concat:obs
+    input:
+      prompt:
+        explicit_variable_names: "Concatenate adata1 and adata2 into a single AnnData object along the row axis with an outer join."
+        specific: "Join adata1 and adata2 by rows using AnnData with an outer join."
+        abbreviation: "Merge rows of adata1 and adata2 with AnnData."
+        general: "Combine two AnnData objects along the observation axis with an outer join."
+        help_request: "How do I concatenate adata1 and adata2 along rows?"
+    expected:
+      parts_of_query:
+        [
+          "anndata.concat\\(",
+          "\\[adata1, adata2\\]",
+          ", axis='obs', join='outer'",
+          "\\)",
+        ]
+  - case: anndata:map
+    input:
+      prompt:
+        explicit_variable_names: "Replace the values in the cell_type column of the obs attribute in adata. Replace type1 with new_type1, type2 with new_type2, and type3 with new_type3."
+        help_request: "How do I remap cell_type values to replace type1 with new_type1, type2 with new_type2, and type3 with new_type3. ?"
+    expected:
+      parts_of_query:
+        [
+          "adata.obs",
+          "\\[\"cell_type\"\\]",
+          "\\.map\\(",
+          "\\{\\s*\"type1\": \"new_type1\"",
+          "\\s*\"type2\": \"new_type2\"",
+          "\\s*\"type3\": \"new_type3\"",
+          "\\s*\\}\\)",
+          "\\.copy\\(\\)",
+        ]

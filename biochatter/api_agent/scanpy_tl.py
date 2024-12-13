@@ -2,11 +2,12 @@
 
 from collections.abc import Callable
 from types import ModuleType
-from typing import TYPE_CHECKING
 
 from langchain_core.output_parsers import PydanticToolsParser
 
-from .abc import BaseQueryBuilder, BaseAPIModel
+from biochatter.llm_connect import Conversation
+
+from .abc import BaseAPIModel, BaseQueryBuilder
 from .generate_pydantic_classes_from_module import generate_pydantic_classes
 from biochatter.llm_connect import Conversation
 
@@ -61,6 +62,7 @@ Compute densities on embeddings.
    tl.sim
 """
 
+
 class ScanpyTlQueryBuilder(BaseQueryBuilder):
     """A class for building an ScanpyTlQuery object."""
 
@@ -69,8 +71,7 @@ class ScanpyTlQueryBuilder(BaseQueryBuilder):
         query_parameters: list["BaseAPIModel"],
         conversation: Conversation,
     ) -> Callable:
-
-        runnable = conversation.chat.bind_tools(query_parameters, tool_choice = "required")
+        runnable = conversation.chat.bind_tools(query_parameters, tool_choice="required")
         return runnable | PydanticToolsParser(tools=query_parameters)
 
     def parameterise_query(
@@ -104,7 +105,8 @@ class ScanpyTlQueryBuilder(BaseQueryBuilder):
             tools = generate_pydantic_classes(module)
 
         runnable = self.create_runnable(
-            conversation=conversation, query_parameters=tools,
+            conversation=conversation,
+            query_parameters=tools,
         )
 
         query = [

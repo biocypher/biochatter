@@ -164,7 +164,8 @@ class BaseAPIModel(BaseModel):
     """
 
     uuid: str | None = Field(
-        None, description="Unique identifier for the model instance"
+        None,
+        description="Unique identifier for the model instance",
     )
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
