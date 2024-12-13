@@ -8,22 +8,21 @@
 # 4. Write the anndata object to [xxx] format -> built-in anndata api
 
 from collections.abc import Callable
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Optional
 
 from langchain_core.output_parsers import PydanticToolsParser
 
 # from langchain_core.pydantic_v1 import BaseModel, Field
 from biochatter.llm_connect import Conversation
 
-from biochatter.api_agent.abc import BaseAPIModel, BaseQueryBuilder, BaseTools
+from .abc import BaseAPIModel, BaseQueryBuilder
 
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
 
 
-from typing import Optional
-# Careful as this is not the same as the langchain_core.pydantic_v1
-from langchain_core.pydantic_v1 import BaseModel, Field, create_model
+from pydantic import BaseModel, Field
+from biochatter.api_agent.abc import BaseTools
 
 ANNDATA_IO_QUERY_PROMPT = """
 You are a world class algorithm, computational biologist with world leading knowledge
@@ -34,63 +33,10 @@ You will be asked to provide code to answer a specific questions involving the a
 NEVER return a code snippet or code itself, instead you have to return a structured output format.
 You will have to create a structured output formats containing method:argument fields.
 
-Here are the possible questions you might be asked:
-<question: output> TBD
-<question: output> TBD
-<question: output> TBD
-
-BASED ON THE DOCUMENTATION below:
-### 1. Reading AnnData Native Formats
-- **HDF5 (.h5ad):**
-  `io.read_h5ad(filename[, backed, as_sparse, ...])`
-  - Reads `.h5ad`-formatted HDF5 file.
-
-- **Zarr:**
-  `io.read_zarr(store)`
-  - Reads from a hierarchical Zarr array store.
-
-### 2. Reading Specific Portions of AnnData
-- **Individual Elements (e.g., obs, varm, etc.):**
-  `io.read_elem(elem)`
-  - Reads an individual element from a store.
-
-- **Backed Mode-Compatible Sparse Dataset:**
-  `io.sparse_dataset(group)`
-  - Generates a sparse dataset class compatible with backed mode.
-
-### 3. Reading Non-Native Formats
-#### 3.1 General Tips
-- Non-native formats may not represent all aspects of AnnData objects.
-- Assembling the AnnData object manually from individual parts may be more successful.
-
-#### 3.2 Supported Formats
-- **CSV:**
-  `io.read_csv(filename[, delimiter, ...])`
-  - Reads `.csv` file.
-
-- **Excel (.xlsx):**
-  `io.read_excel(filename, sheet[, dtype])`
-  - Reads `.xlsx` (Excel) file.
-
-- **HDF5 (.h5):**
-  `io.read_hdf(filename, key)`
-  - Reads `.h5` (HDF5) file.
-
-- **Loom:**
-  `io.read_loom(filename, *[, sparse, cleanup, ...])`
-  - Reads `.loom`-formatted HDF5 file.
-
-- **Matrix Market (.mtx):**
-  `io.read_mtx(filename[, dtype])`
-  - Reads `.mtx` file.
-
-- **Text (.txt, .tab, .data):**
-  `io.read_text(filename[, delimiter, ...])`
-  - Reads `.txt`, `.tab`, or `.data` text files.
-
-- **UMI Tools Matrix:**
-  `io.read_umi_tools(filename[, dtype])`
-  - Reads a gzipped condensed count matrix from UMI Tools.
+You will be asked to read in an anndata object from any anndata api supported format OR
+to concatenate the anndata objects.
+FOR THE MapAnnData, BE SURE TO ALWAYS USE THE variable of the anndata GIVEN IN THE INPUT, REPLACE IT IN THE method_name
+Use the tools available:
 """
 class Tools(BaseTools):
     tools_params = {}
@@ -191,7 +137,7 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
             A Callable object that can execute the query.
 
         """
-        runnable = conversation.chat.bind_tools(query_parameters)
+        runnable = conversation.chat.bind_tools(query_parameters, tool_choice="required")
         return runnable | PydanticToolsParser(tools=query_parameters)
 
     def parameterise_query(
@@ -221,9 +167,14 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
         tool_maker = Tools()
         tools = tool_maker.make_pydantic_tools()
         runnable = self.create_runnable(
-            conversation=conversation, query_parameters=tools
+            conversation=conversation,
+            query_parameters=tools,
         )
+        query = [
+            ("system", ANNDATA_IO_QUERY_PROMPT),
+            ("human", f"{question}"),
+        ]
         anndata_io_call_obj = runnable.invoke(
-            question,
+            query,
         )
         return anndata_io_call_obj
