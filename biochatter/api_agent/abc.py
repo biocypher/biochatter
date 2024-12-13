@@ -169,11 +169,22 @@ class BaseAPIModel(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
 class BaseTools:
-    """Abstract base class for tools."""
-
-    def make_pydantic_tools(self) -> list[BaseAPIModel]:
-        """Create a list of pydantic tools from a dictionary of parameters."""
+    """Abstract base class for tools. 
+    
+    You make a inherit a class from this BaseTools class. You define the tools_dict and tools_descriptions in the child class
+    and set them as attributes. Then you can call the make_pydantic_tools method to create the pydantic tools.
+    See anndata_agent or scanpy_pl agent for examples.
+    """
+    
+    def make_pydantic_tools(self) -> list[BaseAPIModel]	:
         tools = []
-        for func_name, tool_params in self.tools_params.items():
-            tools.append(create_model(func_name, **tool_params, __base__=BaseAPIModel))
+        tools_params = self.tools_params
+        tools_descriptions = self.tools_descriptions
+        # validate that keys are equal in tools_params and tools_descriptions
+        if not set(tools_params.keys()) == set(tools_descriptions.keys()):
+            raise ValueError("Keys in tools_params and tools_descriptions must be equal")
+        for tool_name in tools_descriptions.keys():
+            parameters = tools_params[tool_name]
+            tool_description = tools_descriptions[tool_name]
+            tools.append(create_model(tool_name, __doc__=tool_description, **parameters, __base__=BaseAPIModel))
         return tools

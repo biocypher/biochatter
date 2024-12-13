@@ -131,14 +131,16 @@ pl.sim
 Plot results of simulation.
 """
 
-class ScanpyPlTools(BaseTools):
+class ScanpyPlToolsReduced(BaseTools):
     """A class containing parameters for Scanpy plotting functions."""
     
     tools_params = {}
+    tools_descriptions = {}
 
-    # Parameters for sc.pl.scatter
-    tools_params["sc.pl.scatter"] = {
-        "method_name": (str, Field(default="sc.pl.scatter", description="The name of the method to call")),
+    # Parameters for scatter
+    tool_name = "scatter"
+    tools_descriptions[tool_name] = "Scatter plot along observations or variables axes. Available in the scanpy.pl module"
+    tools_params[tool_name] = {
         "adata": (str, Field(description="Annotated data matrix")),
         "x": (Optional[str], Field(default=None, description="x coordinate")),
         "y": (Optional[str], Field(default=None, description="y coordinate")),
@@ -148,17 +150,19 @@ class ScanpyPlTools(BaseTools):
         "basis": (Optional[str], Field(default=None, description="String that denotes a plotting tool that computed coordinates"))
     }
 
-    # Parameters for sc.pl.pca
-    tools_params["sc.pl.pca"] = {
-        "method_name": (str, Field(default="sc.pl.pca", description="The name of the method to call")),
+    # Parameters for pca
+    tool_name = "pca"
+    tools_descriptions[tool_name] = "Scatter plot in PCA coordinates. Available in the scanpy.pl module"
+    tools_params[tool_name] = {
         "adata": (str, Field(..., description="Annotated data matrix")),
         "color": (Optional[str | list[str]], Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
         "color_map": (Optional[str], Field(default=None, description="String denoting matplotlib color map"))
     }
 
-    # Parameters for sc.pl.tsne
-    tools_params["sc.pl.tsne"] = {
-        "question_uuid": (Optional[str], Field(default=None, description="Unique identifier for the question")),
+    # Parameters for tsne
+    tool_name = "tsne"
+    tools_descriptions[tool_name] = "Scatter plot in tSNE basis. Available in the scanpy.pl module"
+    tools_params[tool_name] = {
         "adata": (str, Field(..., description="Annotated data matrix")),
         "color": (Optional[str | list[str]], Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
         "gene_symbols": (Optional[str], Field(default=None, description="Column name in `.var` DataFrame that stores gene symbols")),
@@ -168,9 +172,10 @@ class ScanpyPlTools(BaseTools):
         "vcenter": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="Center of the color scale, useful for diverging colormaps"))
     }
 
-    # Parameters for sc.pl.umap
-    tools_params["sc.pl.umap"] = {
-        "question_uuid": (Optional[str], Field(default=None, description="Unique identifier for the question")),
+    # Parameters for umap
+    tool_name = "umap"
+    tools_descriptions[tool_name] = "Scatter plot in UMAP basis. Available in the scanpy.pl module"
+    tools_params[tool_name] = {
         "adata": (str, Field(..., description="Annotated data matrix")),
         "color": (Optional[str | list[str]], Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
         "gene_symbols": (Optional[str], Field(default=None, description="Column name in `.var` DataFrame that stores gene symbols")),
@@ -180,9 +185,10 @@ class ScanpyPlTools(BaseTools):
         "vcenter": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="Center of the color scale, useful for diverging colormaps"))
     }
 
-    # Parameters for sc.pl.draw_graph
-    tools_params["sc.pl.draw_graph"] = {
-        "question_uuid": (Optional[str], Field(default=None, description="Unique identifier for the question")),
+    # Parameters for draw_graph
+    tool_name = "draw_graph"
+    tools_descriptions[tool_name] = "Scatter plot in graph-drawing basis. Available in the scanpy.pl module"
+    tools_params[tool_name] = {
         "adata": (str, Field(..., description="Annotated data matrix")),
         "color": (Optional[str | list[str]], Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
         "gene_symbols": (Optional[str], Field(default=None, description="Column name in `.var` DataFrame that stores gene symbols")),
@@ -193,9 +199,10 @@ class ScanpyPlTools(BaseTools):
         "vcenter": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="The value representing the center of the color scale"))
     }
 
-    # Parameters for sc.pl.spatial
-    tools_params["sc.pl.spatial"] = {
-        "question_uuid": (Optional[str], Field(default=None, description="Unique identifier for the question")),
+    # Parameters for spatial
+    tool_name = "spatial"
+    tools_descriptions[tool_name] = "Spatial plot for visualization of spatial transcriptomics data. Available in the scanpy.pl module"
+    tools_params[tool_name] = {
         "adata": (str, Field(..., description="Annotated data matrix")),
         "color": (Optional[str | list[str]], Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
         "gene_symbols": (Optional[str], Field(default=None, description="Column name in `.var` DataFrame that stores gene symbols")),
@@ -210,9 +217,10 @@ class ScanpyPlTools(BaseTools):
         "vcenter": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="The value representing the center of the color scale"))
     }
 
-    def __init__(self):
+    def __init__(self, tools_params: dict = tools_params, tools_descriptions: dict = tools_descriptions):
         """Initialize the tools by creating Pydantic models from the parameters."""
-        self.tools = self.make_pydantic_tools()
+        self.tools_params = tools_params
+        self.tools_descriptions = tools_descriptions
 
 class ScanpyPlQueryBuilder(BaseQueryBuilder):
     """A class for building a ScanpyPl query object."""
@@ -266,7 +274,7 @@ class ScanpyPlQueryBuilder(BaseQueryBuilder):
             ScanpyPlQuery: the parameterised query object (Pydantic model)
 
         """
-        tool_maker = ScanpyPlTools()
+        tool_maker = ScanpyPlToolsReduced()
         tools = tool_maker.make_pydantic_tools()
         runnable = self.create_runnable(conversation=conversation, query_parameters=tools)
         return runnable.invoke(question)

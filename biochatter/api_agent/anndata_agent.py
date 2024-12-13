@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 
 from typing import Optional
 # Careful as this is not the same as the langchain_core.pydantic_v1
-from pydantic import BaseModel, Field, create_model
+from langchain_core.pydantic_v1 import BaseModel, Field, create_model
 
 ANNDATA_IO_QUERY_PROMPT = """
 You are a world class algorithm, computational biologist with world leading knowledge
@@ -94,46 +94,50 @@ BASED ON THE DOCUMENTATION below:
 """
 class Tools(BaseTools):
     tools_params = {}
-    tools_params["io.read_h5ad"] = {
+    tools_descriptions = {}
+    
+    tool_name = "read_h5ad"
+    tools_descriptions[tool_name] = "Function to read h5ad files. Available in the anndata.io module"
+    tools_params[tool_name] = {
         "filename": (str, Field(default="dummy.h5ad", description="Path to the .h5ad file")),
         "backed": (Optional[str], Field(default=None, description="Mode to access file: None, 'r' for read-only")),
         "as_sparse": (Optional[str], Field(default=None, description="Convert to sparse format: 'csr', 'csc', or None")),
         "as_sparse_fmt": (Optional[str], Field(default=None, description="Sparse format if converting, e.g., 'csr'")),
         "index_unique": (Optional[str], Field(default=None, description="Make index unique by appending suffix if needed"))
-        }
+    }
 
-    # Parameters for io.read_zarr
-    tools_params["io.read_zarr"] = {
-        "method_name": (str, Field(default="io.read_zarr", description="NEVER CHANGE")),
+    tool_name = "read_zarr" 
+    tools_descriptions[tool_name] = "Function to read Zarr stores. Available in the anndata.io module"
+    tools_params[tool_name] = {
         "filename": (str, Field(default="placeholder.zarr", description="Path or URL to the Zarr store"))
     }
 
-    # Parameters for io.read_csv
-    tools_params["io.read_csv"] = {
-        "method_name": (str, Field(default="io.read_csv", description="NEVER CHANGE")),
+    tool_name = "read_csv"
+    tools_descriptions[tool_name] = "Function to read CSV files. Available in the anndata.io module"
+    tools_params[tool_name] = {
         "filename": (str, Field(default="placeholder.csv", description="Path to the .csv file")),
         "delimiter": (Optional[str], Field(default=None, description="Delimiter used in the .csv file")),
         "first_column_names": (Optional[bool], Field(default=None, description="Whether the first column contains names"))
     }
 
-    # Parameters for io.read_excel
-    tools_params["io.read_excel"] = {
-        "method_name": (str, Field(default="io.read_excel", description="NEVER CHANGE")),
+    tool_name = "read_excel"
+    tools_descriptions[tool_name] = "Function to read Excel files. Available in the anndata.io module"
+    tools_params[tool_name] = {
         "filename": (str, Field(default="placeholder.xlsx", description="Path to the .xlsx file")),
         "sheet": (Optional[str], Field(default=None, description="Sheet name or index to read from")),
         "dtype": (Optional[str], Field(default=None, description="Data type for the resulting dataframe"))
     }
 
-    # Parameters for io.read_hdf
-    tools_params["io.read_hdf"] = {
-        "method_name": (str, Field(default="io.read_hdf", description="NEVER CHANGE")),
+    tool_name = "read_hdf"
+    tools_descriptions[tool_name] = "Function to read HDF5 files. Available in the anndata.io module"
+    tools_params[tool_name] = {
         "filename": (str, Field(default="placeholder.h5", description="Path to the .h5 file")),
         "key": (Optional[str], Field(default=None, description="Group key within the .h5 file"))
     }
 
-    # Parameters for io.read_loom
-    tools_params["io.read_loom"] = {
-        "method_name": (str, Field(default="io.read_loom", description="NEVER CHANGE")),
+    tool_name = "read_loom"
+    tools_descriptions[tool_name] = "Function to read Loom files. Available in the anndata.io module"
+    tools_params[tool_name] = {
         "filename": (str, Field(default="placeholder.loom", description="Path to the .loom file")),
         "sparse": (Optional[bool], Field(default=None, description="Whether to read data as sparse")),
         "cleanup": (Optional[bool], Field(default=None, description="Clean up invalid entries")),
@@ -142,23 +146,24 @@ class Tools(BaseTools):
         "var_names": (Optional[str], Field(default=None, description="Column to use for variable names"))
     }
 
-    # Parameters for io.read_mtx
-    tools_params["io.read_mtx"] = {
-        "method_name": (str, Field(default="io.read_mtx", description="NEVER CHANGE")),
+    tool_name = "read_mtx"
+    tools_descriptions[tool_name] = "Function to read Matrix Market files. Available in the anndata.io module"
+    tools_params[tool_name] = {
         "filename": (str, Field(default="placeholder.mtx", description="Path to the .mtx file")),
         "dtype": (Optional[str], Field(default=None, description="Data type for the matrix"))
     }
 
-    # Parameters for io.read_text
-    tools_params["io.read_text"] = {
-        "method_name": (str, Field(default="io.read_text", description="NEVER CHANGE")),
+    tool_name = "read_text"
+    tools_descriptions[tool_name] = "Function to read text files. Available in the anndata.io module"
+    tools_params[tool_name] = {
         "filename": (str, Field(default="placeholder.txt", description="Path to the text file")),
         "delimiter": (Optional[str], Field(default=None, description="Delimiter used in the file")),
         "first_column_names": (Optional[bool], Field(default=None, description="Whether the first column contains names"))
     }
-    def __init__(self, tools_params: dict = tools_params):
+    def __init__(self, tools_params: dict = tools_params, tools_descriptions: dict = tools_descriptions):
         super().__init__()
         self.tools_params = tools_params
+        self.tools_descriptions = tools_descriptions
 
 
 class AnnDataIOQueryBuilder(BaseQueryBuilder):
