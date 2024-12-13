@@ -3,7 +3,7 @@
 from urllib.parse import urlencode
 
 from .abc import BaseAPIModel, BaseModel
-from .anndata_agent import MapAnnData
+
 
 
 def format_as_rest_call(model: BaseModel) -> str:
@@ -35,10 +35,12 @@ def format_as_python_call(model: BaseAPIModel) -> str:
         String representation of the Python method call
 
     """
-    params = model.dict(exclude_none=True)
-    method_name = params.pop("method_name", None)
+    model_class = model.model_json_schema()
+    params = model_class["properties"]
+    method_name = model_class["title"]
     params.pop("question_uuid", None)
-    if isinstance(model, MapAnnData):
+    # Before it was specifically for map anndata function
+    if "dics" in params.keys():
         param_str = params.pop("dics", {})
     else:
         param_str = ", ".join(f"{k}={v!r}" for k, v in params.items())
