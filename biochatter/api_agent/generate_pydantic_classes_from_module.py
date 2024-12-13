@@ -117,6 +117,7 @@ def generate_pydantic_classes(module: ModuleType) -> list[type[BaseAPIModel]]:
             fields[field_name] = (annotation, Field(**field_kwargs))
 
         # Create the Pydantic model
+
         tl_parameters_model = create_model(
             name,
             **fields,
@@ -124,10 +125,3 @@ def generate_pydantic_classes(module: ModuleType) -> list[type[BaseAPIModel]]:
             )
         classes_list.append(tl_parameters_model)
     return classes_list
-
-
-# Example usage:
-#import scanpy as sc
-#generated_classes = generate_pydantic_classes(sc.tl)
-#for func in generated_classes:  
-#print(func.model_json_schema())
