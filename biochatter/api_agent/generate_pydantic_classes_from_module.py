@@ -64,7 +64,7 @@ def generate_pydantic_classes(module: ModuleType) -> list[type[BaseAPIModel]]:
         doc = inspect.getdoc(func) or ""
         parsed_doc = parse(doc)
         doc_params = {p.arg_name: p.description or "No description available." for p in parsed_doc.params}
-
+        function_description = parsed_doc.description or "No description"
         sig = inspect.signature(func)
         fields = {}
 
@@ -117,11 +117,16 @@ def generate_pydantic_classes(module: ModuleType) -> list[type[BaseAPIModel]]:
             fields[field_name] = (annotation, Field(**field_kwargs))
 
         # Create the Pydantic model
-
-        tl_parameters_model = create_model(
+        parameters_model = create_model(
             name,
-            **fields,
-            __base__=BaseAPIModel
-            )
-        classes_list.append(tl_parameters_model)
+            __doc__=function_description,
+            __base__=BaseAPIModel,
+            **fields
+        )
+        classes_list.append(parameters_model)
     return classes_list
+
+#Example usage
+import scanpy as sc
+
+generate_pydantic_classes(sc.tl)
