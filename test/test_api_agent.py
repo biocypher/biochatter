@@ -13,7 +13,8 @@ from biochatter.api_agent.abc import (
     BaseQueryBuilder,
 )
 
-from biochatter.api_agent.anndata_agent import AnnDataIOQueryBuilder, ANNDATA_IO_QUERY_PROMPT
+
+from biochatter.api_agent.anndata_agent_agent import AnnDataIOQueryBuilder, ANNDATA_IO_QUERY_PROMPT
 from biochatter.api_agent.scanpy_pp_reduced import ScanpyPpQueryBuilder
 
 from biochatter.api_agent.api_agent import APIAgent
@@ -617,6 +618,7 @@ class TestScanpyPpQueryBuilder:
     def mock_create_runnable(self):
         with patch(
             "biochatter.api_agent.scanpy_pp_reduced.ScanpyPpQueryBuilder.create_runnable",
+            "biochatter.api_agent.anndata_agent.AnnDataIOQueryBuilder.create_runnable",
         ) as mock:
             mock_runnable = MagicMock()
             mock.return_value = mock_runnable
@@ -707,3 +709,4 @@ class TestScanpyTlQueryBuilder:
         # Assert
         mock_create_runnable.invoke.assert_called_once_with(expected_input)
         assert result == mock_query_obj
+

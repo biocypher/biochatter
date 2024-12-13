@@ -9,6 +9,8 @@ from biochatter.llm_connect import Conversation
 
 from .abc import BaseAPIModel, BaseQueryBuilder
 from .generate_pydantic_classes_from_module import generate_pydantic_classes
+from biochatter.llm_connect import Conversation
+
 
 SCANPY_QUERY_PROMPT = """
 
