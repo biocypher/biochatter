@@ -12,6 +12,7 @@ except ImportError:
 
 import json
 import logging
+from typing import Callable
 import urllib.parse
 from abc import ABC, abstractmethod
 
@@ -1298,6 +1299,7 @@ class GptConversation(Conversation):
         correct: bool = False,
         split_correction: bool = False,
         base_url: str = None,
+        update_token_usage: Callable=None,
     ):
         """Connect to OpenAI's GPT API and set up a conversation with the user.
         Also initialise a second conversational agent to provide corrections to
@@ -1326,6 +1328,8 @@ class GptConversation(Conversation):
         self.base_url = base_url
         self.ca_model_name = "gpt-3.5-turbo"
         # TODO make accessible by drop-down
+
+        self._update_token_usage = update_token_usage
 
     def set_api_key(self, api_key: str, user: str) -> bool:
         """Set the API key for the OpenAI API. If the key is valid, initialise the
@@ -1462,6 +1466,9 @@ class GptConversation(Conversation):
                 {f"{k}:{model}": v for k, v in token_usage.items()},
             )
 
+        if not self._update_token_usage is None:
+            self._update_token_usage(self.user, model, token_usage)
+
 
 class AzureGptConversation(GptConversation):
     def __init__(
@@ -1553,7 +1560,8 @@ class AzureGptConversation(GptConversation):
 
     def _update_usage_stats(self, model: str, token_usage: dict):
         """We do not track usage stats for Azure."""
-        return
+        if self._update_token_usage is not None:
+            self._update_token_usage(self.user, model, token_usage)
 
 
 class BloomConversation(Conversation):
