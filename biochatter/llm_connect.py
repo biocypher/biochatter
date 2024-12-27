@@ -1516,7 +1516,7 @@ class AzureGptConversation(GptConversation):
         self.base_url = base_url
         self.deployment_name = deployment_name
 
-    def set_api_key(self, api_key: str) -> bool:
+    def set_api_key(self, api_key: str, user: str = "Azure Community") -> bool:
         """Set the API key for the Azure API.
 
         If the key is valid, initialise the conversational agent. No user stats
@@ -1552,7 +1552,8 @@ class AzureGptConversation(GptConversation):
             )
 
             test = self.chat.generate([[HumanMessage(content="Hello")]])
-
+            self.user = user
+            
             return True
 
         except openai._exceptions.AuthenticationError:
