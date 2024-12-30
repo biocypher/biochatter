@@ -1299,7 +1299,7 @@ class GptConversation(Conversation):
         correct: bool = False,
         split_correction: bool = False,
         base_url: str = None,
-        update_token_usage: Callable=None,
+        update_token_usage: Callable | None = None,
     ):
         """Connect to OpenAI's GPT API and set up a conversation with the user.
         Also initialise a second conversational agent to provide corrections to
@@ -1480,6 +1480,7 @@ class AzureGptConversation(GptConversation):
         split_correction: bool = False,
         version: str | None = None,
         base_url: str | None = None,
+        update_token_usage: Callable | None = None,
     ):
         """Connect to Azure's GPT API and set up a conversation with the user.
 
@@ -1510,6 +1511,7 @@ class AzureGptConversation(GptConversation):
             prompts=prompts,
             correct=correct,
             split_correction=split_correction,
+            update_token_usage=update_token_usage,
         )
 
         self.version = version
@@ -1560,7 +1562,6 @@ class AzureGptConversation(GptConversation):
             return False
 
     def _update_usage_stats(self, model: str, token_usage: dict):
-        """We do not track usage stats for Azure."""
         if self._update_token_usage is not None:
             self._update_token_usage(self.user, model, token_usage)
 
