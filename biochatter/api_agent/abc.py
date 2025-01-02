@@ -190,18 +190,18 @@ class BaseTools:
         """Create parameterisable Pydantic models for the tool call.
 
         Creates a list of Pydantic models for the tool call, based on the
-        `tools_params` and `tools_descriptions` attributes.
+        `tool_params` and `tool_descriptions` attributes.
         """
         tools = []
-        tools_params = self.tools_params
-        tools_descriptions = self.tools_descriptions
-        # validate that keys are equal in tools_params and tools_descriptions
-        if set(tools_params) != set(tools_descriptions):
+        tool_params = self.tool_params
+        tool_descriptions = self.tool_descriptions
+        # validate that keys are equal in tool_params and tool_descriptions
+        if set(tool_params) != set(tool_descriptions):
             msg = "Keys in tools_params and tools_descriptions must be equal"
             raise ValueError(msg)
-        for tool_name in tools_descriptions:
-            parameters = tools_params[tool_name]
-            tool_description = tools_descriptions[tool_name]
+        for tool_name in tool_descriptions:
+            parameters = tool_params[tool_name]
+            tool_description = tool_descriptions[tool_name]
             tools.append(
                 create_model(
                     tool_name, __doc__=tool_description, **parameters, __base__=BaseAPIModel,
