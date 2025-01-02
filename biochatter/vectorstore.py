@@ -1,3 +1,10 @@
+"""Module for handling document embedding, storage and retrieval.
+
+This module provides classes for splitting documents into chunks, embedding them
+using various LLM providers (OpenAI, Xinference, Ollama), storing them in vector
+databases, and retrieving relevant passages through similarity search.
+"""
+
 import fitz  # this is PyMuPDF (PyPI pymupdf package, not fitz)
 import openai
 from langchain.schema import Document
@@ -15,6 +22,15 @@ from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
 
 
 class DocumentEmbedder:
+    """Handle retrieval-augmented generation (RAG) functionality of BioChatter.
+
+    This class is responsible for:
+    - Splitting text documents into manageable chunks
+    - Embedding these chunks using various LLM providers
+    - Storing embeddings in vector databases
+    - Performing similarity searches for retrieval
+    """
+
     def __init__(
         self,
         used: bool = False,
@@ -33,10 +49,7 @@ class DocumentEmbedder:
         embeddings: OpenAIEmbeddings | XinferenceEmbeddings | OllamaEmbeddings | AzureOpenAIEmbeddings | None = None,
         documentids_workspace: list[str] | None = None,
     ) -> None:
-        """Class that handles the retrieval-augmented generation (RAG) functionality
-        of BioChatter. It splits text into chunks, embeds them, and stores them in
-        a vector database. It can then be used to do similarity search on the
-        database.
+        r"""Initialize the DocumentEmbedder with the specified configuration.
 
         Args:
         ----
@@ -49,19 +62,20 @@ class DocumentEmbedder:
             chunk_size (int, optional): size of chunks to split text into.
                 Defaults to 1000.
 
-            chunk_overlap (int, optional): overlap between chunks. Defaults to 0.
+            chunk_overlap (int, optional): overlap between chunks.
+                Defaults to 0.
 
             split_by_characters (bool, optional): whether to split by characters
                 or tokens. Defaults to True.
 
-            separators (Optional[list], optional): list of separators to use when
-                splitting by characters. Defaults to [" ", ",", "\n"].
+            separators (Optional[list], optional): list of separators to use
+                when splitting by characters. Defaults to [" ", ",", "\n"].
 
             n_results (int, optional): number of results to return from
                 similarity search. Defaults to 3.
 
-            model (Optional[str], optional): name of model to use for embeddings.
-                Defaults to 'text-embedding-ada-002'.
+            model (Optional[str], optional): name of model to use for
+                embeddings. Defaults to 'text-embedding-ada-002'.
 
             vector_db_vendor (Optional[str], optional): name of vector database
                 to use. Defaults to Milvus.
@@ -74,10 +88,11 @@ class DocumentEmbedder:
             embeddings (Optional[OpenAIEmbeddings | XinferenceEmbeddings],
                 optional): Embeddings object to use. Defaults to OpenAI.
 
-            documentids_workspace (Optional[List[str]], optional): a list of document IDs
-                that defines the scope within which rag operations (remove, similarity search,
-                and get all) occur. Defaults to None, which means the operations will be
-                performed across all documents in the database.
+            documentids_workspace (Optional[List[str]], optional): a list of
+                document IDs that defines the scope within which RAG operations
+                (remove, similarity search, and get all) occur. Defaults to
+                None, which means the operations will be performed across all
+                documents in the database.
 
         """
         self.used = used
@@ -93,7 +108,7 @@ class DocumentEmbedder:
         if base_url:
             openai.api_base = base_url
 
-        self.embeddings = embeddings 
+        self.embeddings = embeddings
 
         # connection arguments
         self.connection_args = connection_args or {
@@ -110,11 +125,19 @@ class DocumentEmbedder:
         self.database_host = None
         self._init_database_host()
 
-    def _set_embeddings(self, embeddings):
+    def _set_embeddings(
+        self,
+        embeddings: (
+            OpenAIEmbeddings
+            | XinferenceEmbeddings
+            | OllamaEmbeddings
+            | AzureOpenAIEmbeddings
+        ),
+    ) -> None:
         print("setting embedder")
         self.embeddings = embeddings
 
-    def _init_database_host(self):
+    def _init_database_host(self) -> None:
         if self.vector_db_vendor == "milvus":
             self.database_host = VectorDatabaseAgentMilvus(
                 embedding_func=self.embeddings,
@@ -125,13 +148,16 @@ class DocumentEmbedder:
         else:
             raise NotImplementedError(self.vector_db_vendor)
 
-    def set_chunk_siue(self, chunk_size: int) -> None:
+    def set_chunk_size(self, chunk_size: int) -> None:
+        """Set the chunk size for the text splitter."""
         self.chunk_size = chunk_size
 
     def set_chunk_overlap(self, chunk_overlap: int) -> None:
+        """Set the chunk overlap for the text splitter."""
         self.chunk_overlap = chunk_overlap
 
     def set_separators(self, separators: list) -> None:
+        """Set the separators for the text splitter."""
         self.separators = separators
 
     def _characters_splitter(self) -> RecursiveCharacterTextSplitter:
@@ -152,48 +178,55 @@ class DocumentEmbedder:
                 chunk_overlap=self.chunk_overlap,
                 separators=self.separators,
             )
-        else:
-            return RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-                encoding_name="",
-                model_name=(DEFAULT_OPENAI_MODEL if not self.model_name else self.model_name),
-                chunk_size=self.chunk_size,
-                chunk_overlap=self.chunk_overlap,
-                separators=self.separators,
-            )
+
+        return RecursiveCharacterTextSplitter.from_tiktoken_encoder(
+            encoding_name="",
+            model_name=(DEFAULT_OPENAI_MODEL if not self.model_name else self.model_name),
+            chunk_size=self.chunk_size,
+            chunk_overlap=self.chunk_overlap,
+            separators=self.separators,
+        )
 
     def _text_splitter(self) -> RecursiveCharacterTextSplitter:
         return self._characters_splitter() if self.split_by_characters else self._tokens_splitter()
 
     def save_document(self, doc: list[Document]) -> str:
-        """This function saves document to the vector database
-        Args:
-            doc List[Document]: document content, read with DocumentReader load_document(),
-                or document_from_pdf(), document_from_txt()
+        """Save a list of documents to the vector database.
 
-        Returns
-        -------
-            str: document id, which can be used to remove an uploaded document with remove_document()
+        Args:
+            doc (List[Document]): document content, read with `DocumentReader`
+                functions `load_document()`, `document_from_pdf()`, or
+                `document_from_txt()`
+
+        Returns:
+            str: document id, which can be used to remove an uploaded document
+                with `remove_document()`
 
         """
         splitted = self._split_document(doc)
         return self._store_embeddings(splitted)
 
     def _split_document(self, document: list[Document]) -> list[Document]:
+        """Split a document into chunks."""
         text_splitter = self._text_splitter()
         return text_splitter.split_documents(document)
 
     def _store_embeddings(self, doc: list[Document]) -> str:
+        """Store embeddings for a list of documents."""
         return self.database_host.store_embeddings(documents=doc)
 
     def connect(self) -> None:
+        """Connect to the vector database."""
         self.database_host.connect()
 
     def get_all_documents(self) -> list[dict]:
+        """Get all documents from the vector database."""
         return self.database_host.get_all_documents(
             doc_ids=self.documentids_workspace,
         )
 
     def remove_document(self, doc_id: str) -> None:
+        """Remove a document from the vector database."""
         return self.database_host.remove_document(
             doc_id,
             self.documentids_workspace,
@@ -201,6 +234,8 @@ class DocumentEmbedder:
 
 
 class XinferenceDocumentEmbedder(DocumentEmbedder):
+    """Extension of the DocumentEmbedder class to Xinference."""
+
     def __init__(
         self,
         used: bool = False,
@@ -216,9 +251,8 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
         metadata_collection_name: str | None = None,
         base_url: str | None = None,
         documentids_workspace: list[str] | None = None,
-    ):
-        """Extension of the DocumentEmbedder class that uses Xinference for
-        embeddings.
+    ) -> None:
+        """Initialize with the specified configuration.
 
         Args:
         ----
@@ -229,35 +263,36 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
             chunk_overlap (int, optional): overlap between chunks.
 
             split_by_characters (bool, optional): whether to split by characters
-            or tokens.
+                or tokens.
 
             separators (Optional[list], optional): list of separators to use when
-            splitting by characters.
+                splitting by characters.
 
             n_results (int, optional): number of results to return from
-            similarity search.
+                similarity search.
 
             model (Optional[str], optional): name of model to use for embeddings.
-            Can be "auto" to use the first available model.
+                Can be "auto" to use the first available model.
 
             vector_db_vendor (Optional[str], optional): name of vector database
-            to use.
+                to use.
 
             connection_args (Optional[dict], optional): arguments to pass to
-            vector database connection.
+                vector database connection.
 
             embedding_collection_name (Optional[str], optional): name of
-            collection to store embeddings in.
+                collection to store embeddings in.
 
             metadata_collection_name (Optional[str], optional): name of
-            collection to store metadata in.
+                collection to store metadata in.
 
             base_url (Optional[str], optional): base url of Xinference API.
 
-            documentids_workspace (Optional[List[str]], optional): a list of document IDs
-            that defines the scope within which rag operations (remove, similarity search,
-            and get all) occur. Defaults to None, which means the operations will be
-            performed across all documents in the database.
+            documentids_workspace (Optional[List[str]], optional): a list of
+                document IDs that defines the scope within which RAG operations
+                (remove, similarity search, and get all) occur. Defaults to
+                None, which means the operations will be performed across all
+                documents in the database.
 
         """
         from xinference.client import Client
@@ -293,20 +328,24 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
         )
 
     def load_models(self) -> None:
-        """Get all models that are currently available on the Xinference server and
-        write them to `self.models`.
+        """Get all models that are currently available.
+
+        Connect to the Xinference server and write the running models to
+        `self.models`.
         """
-        for id, model in self.client.list_models().items():
-            model["id"] = id
+        for _id, model in self.client.list_models().items():
+            model["id"] = _id
             self.models[model["model_name"]] = model
 
-    def list_models_by_type(self, type: str) -> list[str]:
-        """Return all models of a certain type that are currently available on the
-        Xinference server.
+    def list_models_by_type(self, model_type: str) -> list[str]:
+        """Return all models of a certain type.
+
+        Connect to the Xinference server and return all models of a certain
+        type.
 
         Args:
         ----
-            type (str): type of model to list (e.g. "embedding", "chat")
+            model_type (str): type of model to list (e.g. "embedding", "chat")
 
         Returns:
         -------
@@ -316,14 +355,16 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
         names = []
         for name, model in self.models.items():
             if "model_ability" in model:
-                if type in model["model_ability"]:
+                if model_type in model["model_ability"]:
                     names.append(name)
-            elif model["model_type"] == type:
+            elif model["model_type"] == model_type:
                 names.append(name)
         return names
 
 
 class OllamaDocumentEmbedder(DocumentEmbedder):
+    """Extension of the DocumentEmbedder class to Ollama."""
+
     def __init__(
         self,
         used: bool = False,
@@ -339,9 +380,8 @@ class OllamaDocumentEmbedder(DocumentEmbedder):
         metadata_collection_name: str | None = None,
         base_url: str | None = None,
         documentids_workspace: list[str] | None = None,
-    ):
-        """Extension of the DocumentEmbedder class that uses Ollama for
-        embeddings.
+    ) -> None:
+        """Initialize with the specified configuration.
 
         Args:
         ----
@@ -352,35 +392,36 @@ class OllamaDocumentEmbedder(DocumentEmbedder):
             chunk_overlap (int, optional): overlap between chunks.
 
             split_by_characters (bool, optional): whether to split by characters
-            or tokens.
+                or tokens.
 
-            separators (Optional[list], optional): list of separators to use when
-            splitting by characters.
+            separators (Optional[list], optional): list of separators to use
+                when splitting by characters.
 
             n_results (int, optional): number of results to return from
-            similarity search.
+                similarity search.
 
-            model (Optional[str], optional): name of model to use for embeddings.
-            Can be "auto" to use the first available model.
+            model (Optional[str], optional): name of model to use for
+                embeddings. Can be "auto" to use the first available model.
 
             vector_db_vendor (Optional[str], optional): name of vector database
-            to use.
+                to use.
 
             connection_args (Optional[dict], optional): arguments to pass to
-            vector database connection.
+                vector database connection.
 
             embedding_collection_name (Optional[str], optional): name of
-            collection to store embeddings in.
+                collection to store embeddings in.
 
             metadata_collection_name (Optional[str], optional): name of
-            collection to store metadata in.
+                collection to store metadata in.
 
             base_url (Optional[str], optional): base url of Xinference API.
 
-            documentids_workspace (Optional[List[str]], optional): a list of document IDs
-            that defines the scope within which rag operations (remove, similarity search,
-            and get all) occur. Defaults to None, which means the operations will be
-            performed across all documents in the database.
+            documentids_workspace (Optional[List[str]], optional): a list of
+                document IDs that defines the scope within which RAG operations
+                (remove, similarity search, and get all) occur. Defaults to
+                None, which means the operations will be performed across all
+                documents in the database.
 
         """
         from langchain_community.embeddings import OllamaEmbeddings
@@ -411,8 +452,10 @@ class OllamaDocumentEmbedder(DocumentEmbedder):
 
 class DocumentReader:
     def load_document(self, path: str) -> list[Document]:
-        """Loads a document from a path; accepts txt and pdf files. Txt files are
-        loaded as-is, pdf files are converted to text using fitz.
+        """Load a document from a path; accept txt and pdf files.
+
+        Txt files are loaded as-is, pdf files are converted to text using
+        `fitz`.
 
         Args:
         ----
@@ -422,12 +465,16 @@ class DocumentReader:
         -------
             List[Document]: list of documents
 
+        Raises:
+        ------
+            ValueError: If file extension is not supported
+
         """
         if path.endswith(".txt"):
             loader = TextLoader(path)
             return loader.load()
 
-        elif path.endswith(".pdf"):
+        if path.endswith(".pdf"):
             doc = fitz.open(path)
             text = ""
             for page in doc:
@@ -443,9 +490,14 @@ class DocumentReader:
                 ),
             ]
 
+        err_msg = f"Unsupported file extension in {path}. File must be .txt or .pdf"
+        raise ValueError(err_msg)
+
     def document_from_pdf(self, pdf: bytes) -> list[Document]:
-        """Receive a byte representation of a pdf file and return a list of Documents
-        with metadata.
+        """Return a list of Documents from a pdf file byte representation.
+
+        Receive a byte representation of a pdf file and return a list of
+        Documents with metadata.
 
         Args:
         ----
@@ -472,8 +524,10 @@ class DocumentReader:
         ]
 
     def document_from_txt(self, txt: bytes) -> list[Document]:
-        """Receive a byte representation of a txt file and return a list of Documents
-        with metadata.
+        """Return a list of Documents from a txt file byte representation.
+
+        Receive a byte representation of a txt file and return a list of
+        Documents with metadata.
 
         Args:
         ----
