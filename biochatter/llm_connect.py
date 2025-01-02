@@ -1657,7 +1657,7 @@ class AzureGptConversation(GptConversation):
                 temperature=0,
             )
 
-            _ = self.chat.generate([[HumanMessage(content="Hello")]])
+            self.chat.generate([[HumanMessage(content="Hello")]])
             self.user = user
 
             return True
