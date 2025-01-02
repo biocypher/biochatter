@@ -1,5 +1,6 @@
 from pydantic.v1 import BaseModel
 from biochatter.api_agent.formatters import format_as_rest_call, format_as_python_call
+from biochatter.api_agent.abc import BaseAPIModel
 
 class TestParams(BaseModel):
     """Test parameter model for REST calls."""
@@ -10,7 +11,7 @@ class TestParams(BaseModel):
     param2: int | None = None
     question_uuid: str | None = None
 
-class TestMethodParams(BaseModel):
+class TestMethodParams(BaseAPIModel):
     """Test parameter model for Python method_name calls."""
 
     method_name: str
