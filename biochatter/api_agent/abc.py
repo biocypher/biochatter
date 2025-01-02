@@ -6,11 +6,13 @@ API interactions and result processing.
 
 from abc import ABC, abstractmethod
 from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 from langchain_core.prompts import ChatPromptTemplate
-from pydantic import BaseModel, Field, create_model, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, create_model
 
-from biochatter.llm_connect import Conversation
+if TYPE_CHECKING:
+    from biochatter.llm_connect import Conversation
 
 
 class BaseQueryBuilder(ABC):
@@ -104,7 +106,7 @@ class BaseFetcher(ABC):
         self,
         query_models: list[BaseModel],
         retries: int | None = 3,
-    ):
+    ) -> list[BaseModel]:
         """Fetch results by submitting a query.
 
         Can implement a multi-step procedure if submitting and fetching are
@@ -115,6 +117,12 @@ class BaseFetcher(ABC):
         ----
             query_models: list of Pydantic models describing the parameterised
                 queries
+
+            retries: The number of times to retry the query if it fails.
+
+        Returns:
+        -------
+            A list of Pydantic models containing the results of the queries.
 
         """
 
@@ -160,32 +168,43 @@ class BaseInterpreter(ABC):
 class BaseAPIModel(BaseModel):
     """A base class for all API models.
 
-    Includes default fields `question_uuid`
+    Includes default fields `question_uuid` and `model_config`.
     """
 
-    uuid: str | None = Field(
-        None,
-        description="Unique identifier for the model instance",
+    question_uuid: str | None = Field(
+        None, description="Unique identifier for the question asked to the LLM",
     )
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
 class BaseTools:
-    """Abstract base class for tools. 
-    
-    You make a inherit a class from this BaseTools class. You define the tools_dict and tools_descriptions in the child class
-    and set them as attributes. Then you can call the make_pydantic_tools method to create the pydantic tools.
-    See anndata_agent or scanpy_pl agent for examples.
+    """Abstract base class for tools.
+
+    To build a class to parameterise a tool call, inherit a class from this
+    BaseTools class. You define the `tools_dict` and `tools_descriptions` in
+    the child class and set them as attributes. Then you can call the
+    `make_pydantic_tools` method to create the parameterisable Pydantic models
+    for the tool call. See `anndata_agent` or `scanpy_pl` agent for examples.
     """
-    
-    def make_pydantic_tools(self) -> list[BaseAPIModel]	:
+
+    def make_pydantic_tools(self) -> list[BaseAPIModel]:
+        """Create parameterisable Pydantic models for the tool call.
+
+        Creates a list of Pydantic models for the tool call, based on the
+        `tools_params` and `tools_descriptions` attributes.
+        """
         tools = []
         tools_params = self.tools_params
         tools_descriptions = self.tools_descriptions
         # validate that keys are equal in tools_params and tools_descriptions
-        if not set(tools_params.keys()) == set(tools_descriptions.keys()):
-            raise ValueError("Keys in tools_params and tools_descriptions must be equal")
-        for tool_name in tools_descriptions.keys():
+        if set(tools_params) != set(tools_descriptions):
+            msg = "Keys in tools_params and tools_descriptions must be equal"
+            raise ValueError(msg)
+        for tool_name in tools_descriptions:
             parameters = tools_params[tool_name]
             tool_description = tools_descriptions[tool_name]
-            tools.append(create_model(tool_name, __doc__=tool_description, **parameters, __base__=BaseAPIModel))
+            tools.append(
+                create_model(
+                    tool_name, __doc__=tool_description, **parameters, __base__=BaseAPIModel,
+                ),
+            )
         return tools
