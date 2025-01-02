@@ -1,3 +1,4 @@
+# ruff: noqa: E501
 """Module for interacting with the `scanpy` API for plotting (`pl`)."""
 
 from collections.abc import Callable
