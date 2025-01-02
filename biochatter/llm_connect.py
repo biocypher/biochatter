@@ -1,20 +1,20 @@
-# LLM connectivity
-# connect to API
-# keep track of message history
-# query API
-# correct response
-# update usage stats
+"""Module for managing connections to LLM providers and handling conversations.
+
+This module provides classes for connecting to different LLM APIs (OpenAI,
+Anthropic, Ollama, etc.) and managing conversations with them, including message
+history, context injection, and response correction capabilities.
+"""
+
+import json
+import logging
+import urllib.parse
+from abc import ABC, abstractmethod
+from typing import Callable  # noqa: UP035
 
 try:
     import streamlit as st
 except ImportError:
     st = None
-
-import json
-import logging
-from typing import Callable
-import urllib.parse
-from abc import ABC, abstractmethod
 
 import anthropic
 import nltk
