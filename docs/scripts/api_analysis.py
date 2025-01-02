@@ -95,18 +95,17 @@ def plot_model_family_comparison(results: pd.DataFrame) -> None:
 def plot_benchmark_comparison(results: pd.DataFrame) -> None:
     """Create violin plot comparing benchmark types."""
     sns.set_theme(style="whitegrid")
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(6, 4))
     
     sns.violinplot(
         x="benchmark_type",
         y="accuracy",
         data=results,
+        hue="benchmark_type",
         cut=0  # Don't extend beyond observed data
     )
     
     plt.title("Performance Comparison Across API Calling Benchmarks")
-    plt.xlabel("Benchmark Type")
-    plt.ylabel("Accuracy")
     plt.xticks(rotation=45)
     
     plt.savefig(
