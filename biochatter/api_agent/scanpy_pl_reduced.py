@@ -1,15 +1,15 @@
 """Module for interacting with the `scanpy` API for plotting (`pl`)."""
 
-import uuid
 from collections.abc import Callable
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any, ClassVar
+
 from langchain_core.output_parsers import PydanticToolsParser
 from pydantic import BaseModel, Field
 
+from .abc import BaseAPIModel, BaseQueryBuilder, BaseTools
+
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
-
-from .abc import BaseAPIModel, BaseQueryBuilder, BaseTools
 
 SCANPY_PL_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats.
@@ -131,94 +131,100 @@ pl.sim
 Plot results of simulation.
 """
 
+TOOL_CONFIGS = {
+    "scatter": {
+        "description": "Scatter plot along observations or variables axes. Available in the scanpy.pl module",
+        "parameters": {
+            "adata": (str, Field(description="Annotated data matrix")),
+            "x": (str | None, Field(default=None, description="x coordinate")),
+            "y": (str | None, Field(default=None, description="y coordinate")),
+            "color": (str | tuple[float, ...] | list[str | tuple[float, ...]] | None, Field(default=None, description="Keys for annotations of observations/cells or variables/genes, or a hex color specification")),
+            "use_raw": (bool | None, Field(default=None, description="Whether to use raw attribute of adata. Defaults to True if .raw is present")),
+            "layers": (str | list[str] | None, Field(default=None, description="Layer(s) to use from adata's layers attribute")),
+            "basis": (str | None, Field(default=None, description="String that denotes a plotting tool that computed coordinates")),
+        },
+    },
+    "pca": {
+        "description": "Scatter plot in PCA coordinates. Available in the scanpy.pl module",
+        "parameters": {
+            "adata": (str, Field(..., description="Annotated data matrix")),
+            "color": (str | list[str] | None, Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
+            "color_map": (str | None, Field(default=None, description="String denoting matplotlib color map")),
+        },
+    },
+    "tsne": {
+        "description": "Scatter plot in tSNE basis. Available in the scanpy.pl module",
+        "parameters": {
+            "adata": (str, Field(..., description="Annotated data matrix")),
+            "color": (str | list[str] | None, Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
+            "gene_symbols": (str | None, Field(default=None, description="Column name in `.var` DataFrame that stores gene symbols")),
+            "groups": (str | None, Field(default=None, description="Restrict to specific categories in categorical observation annotation")),
+            "vmin": (str | float | Any | list[str | float | Any] | None, Field(default=None, description="Lower limit of the color scale")),
+            "vmax": (str | float | Any | list[str | float | Any] | None, Field(default=None, description="Upper limit of the color scale")),
+            "vcenter": (str | float | Any | list[str | float | Any] | None, Field(default=None, description="Center of the color scale, useful for diverging colormaps")),
+        },
+    },
+    "umap": {
+        "description": "Scatter plot in UMAP basis. Available in the scanpy.pl module",
+        "parameters": {
+            "adata": (str, Field(..., description="Annotated data matrix")),
+            "color": (str | list[str] | None, Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
+            "gene_symbols": (str | None, Field(default=None, description="Column name in `.var` DataFrame that stores gene symbols")),
+            "layer": (str | None, Field(default=None, description="Name of the AnnData object layer to plot")),
+            "vmin": (str | float | Any | list[str | float | Any] | None, Field(default=None, description="Lower limit of the color scale")),
+            "vmax": (str | float | Any | list[str | float | Any] | None, Field(default=None, description="Upper limit of the color scale")),
+            "vcenter": (str | float | Any | list[str | float | Any] | None, Field(default=None, description="Center of the color scale, useful for diverging colormaps")),
+        },
+    },
+    "draw_graph": {
+        "description": "Scatter plot in graph-drawing basis. Available in the scanpy.pl module",
+        "parameters": {
+            "adata": (str, Field(..., description="Annotated data matrix")),
+            "color": (str | list[str] | None, Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
+            "gene_symbols": (str | None, Field(default=None, description="Column name in `.var` DataFrame that stores gene symbols")),
+            "color_map": (str | Any | None, Field(default=None, description="Color map to use for continuous variables")),
+            "palette": (str | list[str] | Any | None, Field(default=None, description="Colors to use for plotting categorical annotation groups")),
+            "vmin": (str | float | Any | list[str | float | Any] | None, Field(default=None, description="The value representing the lower limit of the color scale")),
+            "vmax": (str | float | Any | list[str | float | Any] | None, Field(default=None, description="The value representing the upper limit of the color scale")),
+            "vcenter": (str | float | Any | list[str | float | Any] | None, Field(default=None, description="The value representing the center of the color scale")),
+        },
+    },
+    "spatial": {
+        "description": "Spatial plot for visualization of spatial transcriptomics data. Available in the scanpy.pl module",
+        "parameters": {
+            "adata": (str, Field(..., description="Annotated data matrix")),
+            "color": (str | list[str] | None, Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
+            "gene_symbols": (str | None, Field(default=None, description="Column name in `.var` DataFrame that stores gene symbols")),
+            "layer": (str | None, Field(default=None, description="Name of the AnnData object layer to plot")),
+            "library_id": (str | None, Field(default=None, description="Library ID for Visium data, e.g., key in `adata.uns['spatial']`")),
+            "img_key": (str | None, Field(default=None, description="Key for image data, used to get `img` and `scale_factor` from 'images' and 'scalefactors' entries for this library")),
+            "img": (Any | None, Field(default=None, description="Image data to plot, overrides `img_key`")),
+            "scale_factor": (float | None, Field(default=None, description="Scaling factor used to map from coordinate space to pixel space")),
+            "spot_size": (float | None, Field(default=None, description="Diameter of spot (in coordinate space) for each point")),
+            "vmin": (str | float | Any | list[str | float | Any] | None, Field(default=None, description="The value representing the lower limit of the color scale")),
+            "vmax": (str | float | Any | list[str | float | Any] | None, Field(default=None, description="The value representing the upper limit of the color scale")),
+            "vcenter": (str | float | Any | list[str | float | Any] | None, Field(default=None, description="The value representing the center of the color scale")),
+        },
+    },
+}
+
 class ScanpyPlToolsReduced(BaseTools):
-    """A class containing parameters for Scanpy plotting functions."""
-    
-    tools_params = {}
-    tools_descriptions = {}
+    """A class containing a reduced set of parameters for Scanpy plotting.
 
-    # Parameters for scatter
-    tool_name = "scatter"
-    tools_descriptions[tool_name] = "Scatter plot along observations or variables axes. Available in the scanpy.pl module"
-    tools_params[tool_name] = {
-        "adata": (str, Field(description="Annotated data matrix")),
-        "x": (Optional[str], Field(default=None, description="x coordinate")),
-        "y": (Optional[str], Field(default=None, description="y coordinate")),
-        "color": (Optional[str | tuple[float, ...] | list[str | tuple[float, ...]]], Field(default=None, description="Keys for annotations of observations/cells or variables/genes, or a hex color specification")),
-        "use_raw": (Optional[bool], Field(default=None, description="Whether to use raw attribute of adata. Defaults to True if .raw is present")),
-        "layers": (Optional[str | list[str]], Field(default=None, description="Layer(s) to use from adata's layers attribute")),
-        "basis": (Optional[str], Field(default=None, description="String that denotes a plotting tool that computed coordinates"))
+    This class is a reduced set of parameters for Scanpy plotting. It is used
+    to create a runnable object for executing queries.
+
+    """
+
+    tools_params: ClassVar[dict] = {
+        tool_name: TOOL_CONFIGS[tool_name]["parameters"] for tool_name in TOOL_CONFIGS
+    }
+    tools_descriptions: ClassVar[dict] = {
+        tool_name: TOOL_CONFIGS[tool_name]["description"] for tool_name in TOOL_CONFIGS
     }
 
-    # Parameters for pca
-    tool_name = "pca"
-    tools_descriptions[tool_name] = "Scatter plot in PCA coordinates. Available in the scanpy.pl module"
-    tools_params[tool_name] = {
-        "adata": (str, Field(..., description="Annotated data matrix")),
-        "color": (Optional[str | list[str]], Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
-        "color_map": (Optional[str], Field(default=None, description="String denoting matplotlib color map"))
-    }
-
-    # Parameters for tsne
-    tool_name = "tsne"
-    tools_descriptions[tool_name] = "Scatter plot in tSNE basis. Available in the scanpy.pl module"
-    tools_params[tool_name] = {
-        "adata": (str, Field(..., description="Annotated data matrix")),
-        "color": (Optional[str | list[str]], Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
-        "gene_symbols": (Optional[str], Field(default=None, description="Column name in `.var` DataFrame that stores gene symbols")),
-        "groups": (Optional[str], Field(default=None, description="Restrict to specific categories in categorical observation annotation")),
-        "vmin": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="Lower limit of the color scale")),
-        "vmax": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="Upper limit of the color scale")),
-        "vcenter": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="Center of the color scale, useful for diverging colormaps"))
-    }
-
-    # Parameters for umap
-    tool_name = "umap"
-    tools_descriptions[tool_name] = "Scatter plot in UMAP basis. Available in the scanpy.pl module"
-    tools_params[tool_name] = {
-        "adata": (str, Field(..., description="Annotated data matrix")),
-        "color": (Optional[str | list[str]], Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
-        "gene_symbols": (Optional[str], Field(default=None, description="Column name in `.var` DataFrame that stores gene symbols")),
-        "layer": (Optional[str], Field(default=None, description="Name of the AnnData object layer to plot")),
-        "vmin": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="Lower limit of the color scale")),
-        "vmax": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="Upper limit of the color scale")),
-        "vcenter": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="Center of the color scale, useful for diverging colormaps"))
-    }
-
-    # Parameters for draw_graph
-    tool_name = "draw_graph"
-    tools_descriptions[tool_name] = "Scatter plot in graph-drawing basis. Available in the scanpy.pl module"
-    tools_params[tool_name] = {
-        "adata": (str, Field(..., description="Annotated data matrix")),
-        "color": (Optional[str | list[str]], Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
-        "gene_symbols": (Optional[str], Field(default=None, description="Column name in `.var` DataFrame that stores gene symbols")),
-        "color_map": (Optional[str | Any], Field(default=None, description="Color map to use for continuous variables")),
-        "palette": (Optional[str | list[str] | Any], Field(default=None, description="Colors to use for plotting categorical annotation groups")),
-        "vmin": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="The value representing the lower limit of the color scale")),
-        "vmax": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="The value representing the upper limit of the color scale")),
-        "vcenter": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="The value representing the center of the color scale"))
-    }
-
-    # Parameters for spatial
-    tool_name = "spatial"
-    tools_descriptions[tool_name] = "Spatial plot for visualization of spatial transcriptomics data. Available in the scanpy.pl module"
-    tools_params[tool_name] = {
-        "adata": (str, Field(..., description="Annotated data matrix")),
-        "color": (Optional[str | list[str]], Field(default=None, description="Keys for annotations of observations/cells or variables/genes")),
-        "gene_symbols": (Optional[str], Field(default=None, description="Column name in `.var` DataFrame that stores gene symbols")),
-        "layer": (Optional[str], Field(default=None, description="Name of the AnnData object layer to plot")),
-        "library_id": (Optional[str], Field(default=None, description="Library ID for Visium data, e.g., key in `adata.uns['spatial']`")),
-        "img_key": (Optional[str], Field(default=None, description="Key for image data, used to get `img` and `scale_factor` from 'images' and 'scalefactors' entries for this library")),
-        "img": (Optional[Any], Field(default=None, description="Image data to plot, overrides `img_key`")),
-        "scale_factor": (Optional[float], Field(default=None, description="Scaling factor used to map from coordinate space to pixel space")),
-        "spot_size": (Optional[float], Field(default=None, description="Diameter of spot (in coordinate space) for each point")),
-        "vmin": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="The value representing the lower limit of the color scale")),
-        "vmax": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="The value representing the upper limit of the color scale")),
-        "vcenter": (Optional[str | float | Any | list[str | float | Any]], Field(default=None, description="The value representing the center of the color scale"))
-    }
-
-    def __init__(self, tools_params: dict = tools_params, tools_descriptions: dict = tools_descriptions):
-        """Initialize the tools by creating Pydantic models from the parameters."""
+    def __init__(self, tools_params: dict = tools_params, tools_descriptions: dict = tools_descriptions) -> None:
+        """Initialize tools by creating Pydantic models from the parameters."""
         self.tools_params = tools_params
         self.tools_descriptions = tools_descriptions
 
@@ -255,7 +261,7 @@ class ScanpyPlQueryBuilder(BaseQueryBuilder):
         question: str,
         conversation: "Conversation",
     ) -> list["BaseModel"]:
-        """Generate a AnnDataIOQuery object.
+        """Generate a ScanpyPlQuery object.
 
         Generates the object based on the given question, prompt, and
         BioChatter conversation. Uses a Pydantic model to define the API fields.
