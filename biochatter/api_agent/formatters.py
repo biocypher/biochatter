@@ -5,7 +5,6 @@ from urllib.parse import urlencode
 from .abc import BaseAPIModel, BaseModel
 
 
-
 def format_as_rest_call(model: BaseModel) -> str:
     """Convert a parameter model (BaseModel) into a REST API call string.
 
@@ -40,9 +39,6 @@ def format_as_python_call(model: BaseAPIModel) -> str:
     method_name = model_class["title"]
     params.pop("question_uuid", None)
     # Before it was specifically for map anndata function
-    if "dics" in params.keys():
-        param_str = params.pop("dics", {})
-    else:
-        param_str = ", ".join(f"{k}={v!r}" for k, v in params.items())
+    param_str = params.pop("dics", {}) if "dics" in params else ", ".join(f"{k}={v!r}" for k, v in params.items())
 
     return f"{method_name}({param_str})"
