@@ -5,10 +5,8 @@ from types import ModuleType
 
 from langchain_core.output_parsers import PydanticToolsParser
 
-from biochatter.llm_connect import Conversation
-
-from .abc import BaseAPIModel, BaseQueryBuilder
-from .generate_pydantic_classes_from_module import generate_pydantic_classes
+from biochatter.api_agent.abc import BaseAPIModel, BaseQueryBuilder
+from biochatter.api_agent.generate_pydantic_classes_from_module import generate_pydantic_classes
 from biochatter.llm_connect import Conversation
 
 
@@ -79,25 +77,26 @@ class ScanpyTlQueryBuilder(BaseQueryBuilder):
         question: str,
         conversation: "Conversation",
         module: ModuleType,
-        generated_classes=None,  # Allow external injection of classes for testing purposes
-    ):
-        """Generate an ScanpyTLQuery object.
+        generated_classes: list[BaseAPIModel] | None = None,  # Allow external injection of classes for testing purposes
+    ) -> ScanpyTlQueryParameters:
+        """Generate a ScanpyTlQuery object.
 
-        Generate a ScanpyTLQuery object based on the given question, prompt, and
+        Generate a ScanpyTlQuery object based on the given question, prompt, and
         BioChatter conversation. Uses a Pydantic model to define the API fields.
-        Using langchains .bind_tools method to allow the LLM to parameterise the
-        function call, based on the functions available in thescanpy.tl module.
+        Using langchain's `bind_tools` method to allow the LLM to parameterise
+        the function call, based on the functions available in the `scanpy.tl`
+        module.
 
         Args:
         ----
             question (str): The question to be answered.
 
             conversation: The conversation object used for parameterising the
-                BioToolsQuery.
+                ScanpyTlQuery.
 
         Returns:
         -------
-            BioToolsQueryParameters: the parameterised query object (Pydantic
+            ScanpyTlQueryParameters: the parameterised query object (Pydantic
                 model)
 
         """
