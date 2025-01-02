@@ -6,11 +6,13 @@ API interactions and result processing.
 
 from abc import ABC, abstractmethod
 from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 from langchain_core.prompts import ChatPromptTemplate
-from pydantic import BaseModel, Field, create_model, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, create_model
 
-from biochatter.llm_connect import Conversation
+if TYPE_CHECKING:
+    from biochatter.llm_connect import Conversation
 
 
 class BaseQueryBuilder(ABC):
@@ -104,7 +106,7 @@ class BaseFetcher(ABC):
         self,
         query_models: list[BaseModel],
         retries: int | None = 3,
-    ):
+    ) -> list[BaseModel]:
         """Fetch results by submitting a query.
 
         Can implement a multi-step procedure if submitting and fetching are
@@ -115,6 +117,12 @@ class BaseFetcher(ABC):
         ----
             query_models: list of Pydantic models describing the parameterised
                 queries
+
+            retries: The number of times to retry the query if it fails.
+
+        Returns:
+        -------
+            A list of Pydantic models containing the results of the queries.
 
         """
 
@@ -160,20 +168,43 @@ class BaseInterpreter(ABC):
 class BaseAPIModel(BaseModel):
     """A base class for all API models.
 
-    Includes default fields `uuid` and `method_name`.
+    Includes default fields `question_uuid` and `model_config`.
     """
 
-    uuid: str | None = Field(
-        None,
-        description="Unique identifier for the model instance",
+    question_uuid: str | None = Field(
+        None, description="Unique identifier for the question asked to the LLM",
     )
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-class BaseTools():
-    """Abstract base class for tools."""
+class BaseTools:
+    """Abstract base class for tools.
+
+    To build a class to parameterise a tool call, inherit a class from this
+    BaseTools class. You define the `tools_dict` and `tools_descriptions` in
+    the child class and set them as attributes. Then you can call the
+    `make_pydantic_tools` method to create the parameterisable Pydantic models
+    for the tool call. See `anndata_agent` or `scanpy_pl` agent for examples.
+    """
+
     def make_pydantic_tools(self) -> list[BaseAPIModel]:
-        """Uses pydantics create_model to create a list of pydantic tools from a dictionary of parameters"""
+        """Create parameterisable Pydantic models for the tool call.
+
+        Creates a list of Pydantic models for the tool call, based on the
+        `tool_params` and `tool_descriptions` attributes.
+        """
         tools = []
-        for func_name, tool_params in self.tools_params.items():
-            tools.append(create_model(func_name, **tool_params, __base__=BaseAPIModel))
+        tool_params = self.tool_params
+        tool_descriptions = self.tool_descriptions
+        # validate that keys are equal in tool_params and tool_descriptions
+        if set(tool_params) != set(tool_descriptions):
+            msg = "Keys in tools_params and tools_descriptions must be equal"
+            raise ValueError(msg)
+        for tool_name in tool_descriptions:
+            parameters = tool_params[tool_name]
+            tool_description = tool_descriptions[tool_name]
+            tools.append(
+                create_model(
+                    tool_name, __doc__=tool_description, **parameters, __base__=BaseAPIModel,
+                ),
+            )
         return tools

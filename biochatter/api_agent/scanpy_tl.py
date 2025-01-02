@@ -78,7 +78,7 @@ class ScanpyTlQueryBuilder(BaseQueryBuilder):
         conversation: "Conversation",
         module: ModuleType,
         generated_classes: list[BaseAPIModel] | None = None,  # Allow external injection of classes for testing purposes
-    ) -> ScanpyTlQueryParameters:
+    ) -> list[BaseAPIModel]:
         """Generate a ScanpyTlQuery object.
 
         Generate a ScanpyTlQuery object based on the given question, prompt, and
@@ -96,8 +96,8 @@ class ScanpyTlQueryBuilder(BaseQueryBuilder):
 
         Returns:
         -------
-            ScanpyTlQueryParameters: the parameterised query object (Pydantic
-                model)
+            list[BaseAPIModel]: the list of parameterised query objects
+                (Pydantic models)
 
         """
         if generated_classes is None:

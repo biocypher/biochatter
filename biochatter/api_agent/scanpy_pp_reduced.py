@@ -84,8 +84,12 @@ This prompt guides the user to query the scanpy.pp module for preprocessing task
 
 class ScanpyPpFuncs(BaseTools):
     tools_params = {}
+    tools_descriptions = {}
 
-    tools_params["filter_cells"] = {
+    # Parameters for sc.pp.filter_cells
+    tool_name = "filter_cells"
+    tools_descriptions[tool_name] = "Filters cells based on the minimum and maximum number of counts or genes. Available in the scanpy.pp module"
+    tools_params[tool_name] = {
         "data": (str, Field(..., description="The (annotated) data matrix.")),
         "min_counts": (Optional[int], Field(None, description="Minimum counts per cell.")),
         "min_genes": (Optional[int], Field(None, description="Minimum genes expressed in a cell.")),
@@ -94,7 +98,10 @@ class ScanpyPpFuncs(BaseTools):
         "inplace": (bool, Field(True, description="Whether to modify the data in place."))
     }
 
-    tools_params["filter_genes"] = {
+    # Parameters for sc.pp.filter_genes
+    tool_name = "filter_genes"
+    tools_descriptions[tool_name] = "Filters genes based on the minimum and maximum number of counts or cells. Available in the scanpy.pp module"
+    tools_params[tool_name] = {
         "data": (str, Field(..., description="The (annotated) data matrix.")),
         "min_counts": (Optional[int], Field(None, description="Minimum counts per gene.")),
         "min_cells": (Optional[int], Field(None, description="Minimum number of cells expressing the gene.")),
@@ -102,8 +109,10 @@ class ScanpyPpFuncs(BaseTools):
         "max_cells": (Optional[int], Field(None, description="Maximum number of cells expressing the gene.")),
         "inplace": (bool, Field(True, description="Whether to modify the data in place."))
     }
-
-    tools_params["highly_variable_genes"] = {
+    # Parameters for sc.pp.highly_variable_genes
+    tool_name = "highly_variable_genes"
+    tools_descriptions[tool_name] = "Identifies and selects highly variable genes based on mean and dispersion criteria. Available in the scanpy.pp module"
+    tools_params[tool_name] = {
         "adata": (str, Field(..., description="Annotated data matrix.")),
         "n_top_genes": (Optional[int], Field(None, description="Number of highly-variable genes to keep.")),
         "min_mean": (float, Field(0.0125, description="Minimum mean expression for highly-variable genes.")),
@@ -111,15 +120,20 @@ class ScanpyPpFuncs(BaseTools):
         "flavor": (str, Field('seurat', description="Method for identifying highly-variable genes.")),
         "inplace": (bool, Field(True, description="Whether to place metrics in .var or return them."))
     }
-
-    tools_params["log1p"] = {
+    
+    # Parameters for sc.pp.log1p
+    tool_name = "log1p"
+    tools_descriptions[tool_name] = "Logarithmize the data matrix by computing log(data + 1). Available in the scanpy.pp module"
+    tools_params[tool_name] = {
         "data": (str, Field(..., description="The data matrix.")),
-        "base": (Optional[float], Field(None, description="Base of the logarithm.")),
-        "copy": (bool, Field(False, description="If True, return a copy_param of the data.")),
+        "base": (Optional[float], Field(None, description="Base of the logarithm.")), 
+        "copy": (bool, Field(False, description="If True, return a copy of the data.")),
         "chunked": (Optional[bool], Field(None, description="Process data in chunks."))
     }
-
-    tools_params["pca"] = {
+    # Parameters for sc.pp.pca
+    tool_name = "pca"
+    tools_descriptions[tool_name] = "Principal component analysis. Available in the scanpy.pp module"
+    tools_params[tool_name] = {
         "data": (str, Field(..., description="The (annotated) data matrix.")),
         "n_comps": (Optional[int], Field(None, description="Number of principal components to compute.")),
         "layer": (Optional[str], Field(None, description="Element of layers to use for PCA.")),
@@ -128,58 +142,86 @@ class ScanpyPpFuncs(BaseTools):
         "copy": (bool, Field(False, description="If True, return a copy_param of the data."))
     }
 
-    tools_params["normalize_total"] = {
+    # Parameters for sc.pp.normalize_total
+    tool_name = "normalize_total"
+    tools_descriptions[tool_name] = "Normalize counts per cell. Available in the scanpy.pp module"
+    tools_params[tool_name] = {
         "adata": (str, Field(..., description="The annotated data matrix.")),
         "target_sum": (Optional[float], Field(None, description="Target sum after normalization.")),
         "exclude_highly_expressed": (bool, Field(False, description="Whether to exclude highly expressed genes.")),
         "inplace": (bool, Field(True, description="Whether to update adata or return normalized data."))
     }
 
-    tools_params["regress_out"] = {
+    # Parameters for sc.pp.regress_out
+    tool_name = "regress_out"
+    tools_descriptions[tool_name] = "Regress out unwanted sources of variation. Available in the scanpy.pp module"
+    tools_params[tool_name] = {
         "adata": (str, Field(..., description="The annotated data matrix.")),
         "keys": (Union[str, Collection[str]], Field(..., description="Keys for regression.")),
-        "copy": (bool, Field(False, description="If True, return a copy_param of the data."))
+        "copy": (bool, Field(False, description="If True, return a copy of the data."))
     }
 
-    tools_params["scale"] = {
+    # Parameters for sc.pp.scale
+    tool_name = "scale"
+    tools_descriptions[tool_name] = "Scale data to unit variance and zero mean. Available in the scanpy.pp module"
+    tools_params[tool_name] = {
         "data": (str, Field(..., description="The data matrix.")),
         "zero_center": (bool, Field(True, description="Whether to zero-center the data.")),
         "copy": (bool, Field(False, description="Whether to perform operation inplace."))
     }
 
-    tools_params["subsample"] = {
+    # Parameters for sc.pp.subsample
+    tool_name = "subsample"
+    tools_descriptions[tool_name] = "Subsample to a fraction of the number of observations. Available in the scanpy.pp module"
+    tools_params[tool_name] = {
         "data": (str, Field(..., description="The data matrix.")),
         "fraction": (Optional[float], Field(None, description="Fraction of observations to subsample.")),
         "n_obs": (Optional[int], Field(None, description="Number of observations to subsample.")),
         "copy": (bool, Field(False, description="If True, return a copy_param of the data."))
     }
 
-    tools_params["downsample_counts"] = {
+    # Parameters for sc.pp.downsample_counts
+    tool_name = "downsample_counts"
+    tools_descriptions[tool_name] = "Downsample counts per cell. Available in the scanpy.pp module"
+    tools_params[tool_name] = {
         "adata": (str, Field(..., description="The annotated data matrix.")),
         "counts_per_cell": (Optional[Union[int, str]], Field(None, description="Target total counts per cell.")),
         "replace": (bool, Field(False, description="Whether to sample with replacement.")),
         "copy": (bool, Field(False, description="If True, return a copy_param of the data."))
     }
 
-    tools_params["combat"] = {
+    # Parameters for sc.pp.combat
+    tool_name = "combat"
+    tools_descriptions[tool_name] = "Remove batch effects using the ComBat method. Available in the scanpy.pp module"
+    tools_params[tool_name] = {
         "adata": (str, Field(..., description="The annotated data matrix.")),
         "key": (str, Field('batch', description="Key for batch effect removal.")),
         "inplace": (bool, Field(True, description="Whether to replace the data inplace."))
     }
 
-    tools_params["scrublet"] = {
+    # Parameters for sc.pp.scrublet
+    tool_name = "scrublet"
+    tools_descriptions[tool_name] = "Simulate and detect doublets in the dataset. Available in the scanpy.pp module"
+    tools_params[tool_name] = {
         "adata": (str, Field(..., description="Annotated data matrix.")),
         "sim_doublet_ratio": (float, Field(2.0, description="Number of doublets to simulate.")),
         "threshold": (Optional[float], Field(None, description="Doublet score threshold.")),
         "copy": (bool, Field(False, description="If True, return a copy_param of the data."))
     }
 
-    tools_params["scrublet_simulate_doublets"] = {
+    # Parameters for sc.pp.scrublet_simulate_doublets
+    tool_name = "scrublet_simulate_doublets"
+    tools_descriptions[tool_name] = "Simulate doublets in the dataset. Available in the scanpy.pp module"
+    tools_params[tool_name] = {
         "adata": (str, Field(..., description="Annotated data matrix.")),
         "sim_doublet_ratio": (float, Field(2.0, description="Number of doublets to simulate.")),
         "random_seed": (int, Field(0, description="Random seed for reproducibility."))
     }
-    tools_params["calculate_qc_metrics"] = {
+
+    # Parameters for sc.pp.calculate_qc_metrics
+    tool_name = "calculate_qc_metrics"
+    tools_descriptions[tool_name] = "Compute quality control metrics. Available in the scanpy.pp module"
+    tools_params[tool_name] = {
         "adata": (str, Field(..., description="The annotated data matrix.")),
         "expr_type": (str, Field('counts', description="Name of kind of values in X.")),
         "var_type": (str, Field('genes', description="The kind of thing the variables are.")),
@@ -195,7 +237,10 @@ class ScanpyPpFuncs(BaseTools):
         "log1p": (bool, Field(True, description="Set to False to skip computing log1p transformed annotations."))
     }
 
-    tools_params["recipe_zheng17"] = {
+    # Parameters for sc.pp.recipe_zheng17
+    tool_name = "recipe_zheng17"
+    tools_descriptions[tool_name] = "Recipe for preprocessing as of Zheng et al. (2017). Available in the scanpy.pp module"
+    tools_params[tool_name] = {
         "adata": (str, Field(..., description="The annotated data matrix.")),
         "n_top_genes": (int, Field(1000, description="Number of genes to keep.")),
         "log": (bool, Field(True, description="Take logarithm of the data.")),
@@ -203,7 +248,10 @@ class ScanpyPpFuncs(BaseTools):
         "copy": (bool, Field(False, description="Return a copy of adata instead of updating it."))
     }
 
-    tools_params["recipe_weinreb17"] = {
+    # Parameters for sc.pp.recipe_weinreb17
+    tool_name = "recipe_weinreb17"
+    tools_descriptions[tool_name] = "Recipe for preprocessing as of Weinreb et al. (2017). Available in the scanpy.pp module"
+    tools_params[tool_name] = {
         "adata": (str, Field(..., description="The annotated data matrix.")),
         "log": (bool, Field(True, description="Logarithmize the data?")),
         "mean_threshold": (float, Field(0.01, description="Mean expression threshold for gene selection.")),
@@ -214,16 +262,20 @@ class ScanpyPpFuncs(BaseTools):
         "copy": (bool, Field(False, description="Return a copy if true, otherwise modifies the original adata object."))
     }
 
-    tools_params["recipe_seurat"] = {
+    # Parameters for sc.pp.recipe_seurat
+    tool_name = "recipe_seurat"
+    tools_descriptions[tool_name] = "Recipe for preprocessing with the Seurat flavor. Available in the scanpy.pp module"
+    tools_params[tool_name] = {
         "adata": (str, Field(..., description="The annotated data matrix.")),
         "log": (bool, Field(True, description="Logarithmize the data?")),
         "plot": (bool, Field(False, description="Show a plot of the gene dispersion vs. mean relation.")),
         "copy": (bool, Field(False, description="Return a copy if true, otherwise modifies the original adata object."))
     }
 
-    def __init__(self, tools_params: dict = tools_params):
-        super().__init__()
+    def __init__(self, tools_params: dict = tools_params, tools_descriptions: dict = tools_descriptions):
+        """Initialize the tools by creating Pydantic models from the parameters."""
         self.tools_params = tools_params
+        self.tools_descriptions = tools_descriptions
 
 class ScanpyPpQueryBuilder(BaseQueryBuilder):
     """A class for building a ScanpyPp query object."""
