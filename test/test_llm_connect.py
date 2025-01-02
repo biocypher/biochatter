@@ -95,7 +95,7 @@ def test_unknown_message_type():
         split_correction=False,
     )
     convo.messages.append(None)
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         convo.get_msg_json()
 
 
