@@ -217,17 +217,17 @@ class ScanpyPlToolsReduced(BaseTools):
 
     """
 
-    tools_params: ClassVar[dict] = {
+    tool_params: ClassVar[dict] = {
         tool_name: TOOL_CONFIGS[tool_name]["parameters"] for tool_name in TOOL_CONFIGS
     }
-    tools_descriptions: ClassVar[dict] = {
+    tool_descriptions: ClassVar[dict] = {
         tool_name: TOOL_CONFIGS[tool_name]["description"] for tool_name in TOOL_CONFIGS
     }
 
-    def __init__(self, tools_params: dict = tools_params, tools_descriptions: dict = tools_descriptions) -> None:
+    def __init__(self, tool_params: dict = tool_params, tool_descriptions: dict = tool_descriptions) -> None:
         """Initialize tools by creating Pydantic models from the parameters."""
-        self.tools_params = tools_params
-        self.tools_descriptions = tools_descriptions
+        self.tool_params = tool_params
+        self.tool_descriptions = tool_descriptions
 
 class ScanpyPlQueryBuilder(BaseQueryBuilder):
     """A class for building a ScanpyPl query object."""
