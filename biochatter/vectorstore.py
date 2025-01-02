@@ -265,14 +265,14 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
             split_by_characters (bool, optional): whether to split by characters
                 or tokens.
 
-            separators (Optional[list], optional): list of separators to use when
-                splitting by characters.
+            separators (Optional[list], optional): list of separators to use
+                when splitting by characters.
 
             n_results (int, optional): number of results to return from
                 similarity search.
 
-            model (Optional[str], optional): name of model to use for embeddings.
-                Can be "auto" to use the first available model.
+            model (Optional[str], optional): name of model to use for
+                embeddings. Can be "auto" to use the first available model.
 
             vector_db_vendor (Optional[str], optional): name of vector database
                 to use.
@@ -451,6 +451,8 @@ class OllamaDocumentEmbedder(DocumentEmbedder):
 
 
 class DocumentReader:
+    """Class for reading documents from various sources."""
+
     def load_document(self, path: str) -> list[Document]:
         """Load a document from a path; accept txt and pdf files.
 
