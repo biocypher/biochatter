@@ -2,7 +2,6 @@ import scanpy as sc
 
 from biochatter.api_agent.generate_pydantic_classes_from_module import generate_pydantic_classes
 
-
 def test_generate_pydantic_classes():
     # Generate the Pydantic classes
     generated_classes = generate_pydantic_classes(sc.tl)
@@ -35,8 +34,9 @@ def test_generate_pydantic_classes_umap():
 
     # Check parameters from umap function
     properties = umap_function.schema()["properties"]
-    assert len(properties) == 15  # 15 parameters are expected
+    assert len(properties) == 16  # noqa: PLR2004
     assert set(properties.keys()) == {
+        "question_uuid",
         "gamma",
         "method",
         "alpha",
@@ -45,7 +45,7 @@ def test_generate_pydantic_classes_umap():
         "adata",
         "init_pos",
         "neighbors_key",
-        "copy",
+        "copy_param",
         "negative_sample_rate",
         "min_dist",
         "maxiter",
