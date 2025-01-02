@@ -29,12 +29,8 @@ class DocumentEmbedder:
         connection_args: dict | None = None,
         embedding_collection_name: str | None = None,
         metadata_collection_name: str | None = None,
-        api_key: str | None = None,
-        is_azure: bool | None = False,
-        azure_deployment: str | None = None,
-        azure_endpoint: str | None = None,
         base_url: str | None = None,
-        embeddings: OpenAIEmbeddings | XinferenceEmbeddings | OllamaEmbeddings | None = None,
+        embeddings: OpenAIEmbeddings | XinferenceEmbeddings | OllamaEmbeddings | AzureOpenAIEmbeddings | None = None,
         documentids_workspace: list[str] | None = None,
     ) -> None:
         """Class that handles the retrieval-augmented generation (RAG) functionality
@@ -73,8 +69,6 @@ class DocumentEmbedder:
             connection_args (Optional[dict], optional): arguments to pass to
                 vector database connection. Defaults to None.
 
-            api_key (Optional[str], optional): OpenAI API key. Defaults to None.
-
             base_url (Optional[str], optional): base url of OpenAI API.
 
             embeddings (Optional[OpenAIEmbeddings | XinferenceEmbeddings],
@@ -84,12 +78,6 @@ class DocumentEmbedder:
                 that defines the scope within which rag operations (remove, similarity search,
                 and get all) occur. Defaults to None, which means the operations will be
                 performed across all documents in the database.
-
-            is_azure (Optional[bool], optional): if we are using Azure
-            azure_deployment (Optional[str], optional): Azure embeddings model deployment,
-                should work with azure_endpoint when is_azure is True
-            azure_endpoint (Optional[str], optional): Azure endpoint, should work with
-                azure_deployment when is_azure is True
 
         """
         self.used = used
@@ -105,21 +93,7 @@ class DocumentEmbedder:
         if base_url:
             openai.api_base = base_url
 
-        if embeddings:
-            self.embeddings = embeddings
-        elif not self.online:
-            self.embeddings = (
-                OpenAIEmbeddings(openai_api_key=api_key, model=model)
-                if not is_azure
-                else AzureOpenAIEmbeddings(
-                    api_key=api_key,
-                    azure_deployment=azure_deployment,
-                    azure_endpoint=azure_endpoint,
-                    model=model,
-                )
-            )
-        else:
-            self.embeddings = None
+        self.embeddings = embeddings 
 
         # connection arguments
         self.connection_args = connection_args or {
@@ -240,7 +214,6 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
         connection_args: dict | None = None,
         embedding_collection_name: str | None = None,
         metadata_collection_name: str | None = None,
-        api_key: str | None = "none",
         base_url: str | None = None,
         documentids_workspace: list[str] | None = None,
     ):
@@ -279,8 +252,6 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
             metadata_collection_name (Optional[str], optional): name of
             collection to store metadata in.
 
-            api_key (Optional[str], optional): Xinference API key.
-
             base_url (Optional[str], optional): base url of Xinference API.
 
             documentids_workspace (Optional[List[str]], optional): a list of document IDs
@@ -313,7 +284,6 @@ class XinferenceDocumentEmbedder(DocumentEmbedder):
             connection_args=connection_args,
             embedding_collection_name=embedding_collection_name,
             metadata_collection_name=metadata_collection_name,
-            api_key=api_key,
             base_url=base_url,
             embeddings=XinferenceEmbeddings(
                 server_url=base_url,
@@ -367,7 +337,6 @@ class OllamaDocumentEmbedder(DocumentEmbedder):
         connection_args: dict | None = None,
         embedding_collection_name: str | None = None,
         metadata_collection_name: str | None = None,
-        api_key: str | None = "none",
         base_url: str | None = None,
         documentids_workspace: list[str] | None = None,
     ):
@@ -406,8 +375,6 @@ class OllamaDocumentEmbedder(DocumentEmbedder):
             metadata_collection_name (Optional[str], optional): name of
             collection to store metadata in.
 
-            api_key (Optional[str], optional): Xinference API key.
-
             base_url (Optional[str], optional): base url of Xinference API.
 
             documentids_workspace (Optional[List[str]], optional): a list of document IDs
@@ -433,7 +400,6 @@ class OllamaDocumentEmbedder(DocumentEmbedder):
             connection_args=connection_args,
             embedding_collection_name=embedding_collection_name,
             metadata_collection_name=metadata_collection_name,
-            api_key=api_key,
             base_url=base_url,
             embeddings=OllamaEmbeddings(
                 base_url=base_url,
