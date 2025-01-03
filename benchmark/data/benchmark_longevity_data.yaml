@@ -1,0 +1,1389 @@
+longevity_geriatric_case_assessment:
+  - case: choice_yes_no
+    input:
+      prompt:
+        setup:
+          plain: "Q: My wife told me that I would have to lose some weight."
+          emotional: "My wife thinks I need to lose some weight, and I believe she's right."
+        background:
+          list: |
+            That’s me:
+            A) 52-year-old male with a BMI of 27.5,
+            B) Sedentary lifestyle with minimal physical activity
+            C) Diet rich in processed foods and refined sugars; consumes alcohol 3-4 times/week
+            D) Family history of heart disease and stroke
+            F) LDL: 130 mg/dl, HDL: 42 mg/dl
+            E) Fasting glucose: 105 mg/dl, CRP: 3.2 mg/l
+          freetext: |
+            I'm a 52-year-old man with a BMI of 27.5, living a sedentary lifestyle with very little physical activity.
+            My diet isn't the best -it's heavy in processed foods and refined sugars, and I consume alcohol 3-4 times a week.
+            There’s also a family history of heart disease and stroke.
+            My recent bloodwork shows a fasting glucose level of 105 mg/dl and a CRP of 3.2 mg/l.
+            My cholesterol levels are LDL at 130 mg/dl and HDL at 42 mg/dl.
+        question: Is she right?
+        appendix: My blood group is AB-
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "yes"
+      summary: |-
+        The LLM should suggest and optimize a caloric restriction and exercise regimen to maximize potential health, health-and lifespan benefits. It should further recommend an appropriate caloric intake for the intervention based on the individual’s metabolic characteristics/markers. The LLM could also make suggestions for specific meal plans or dietary interventions, respectively (unprocessed food, meals low in sugar, fat, high in protein and fibers).
+        Suggestions for further personalized interventions, such as the combination of caloric restriction and appropriate exercise regimens could be possible.
+      key_words:
+        - caloric restriction
+        - exercise regimen
+        - appropriate caloric intake
+        - appropriate exercise regimen
+        - meals low in sugar and fat
+        - meals high in protein
+      individual: |-
+        mid-aged/pregeriatric
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: Could I implement caloric restriction, increase my exercise, or both to optimize my health, fitness, energy levels, and life expectancy, thereby reducing my risk of metabolic diseases? That’s me:
+        A) 34-year-old female, BMI of 21.2
+        B) Working as a nurse (on feet all day); jogging 2 times/week (Zone 1 / 2, HR 120 - 140 BPM ); attending yoga class 1 time/week
+        C) vegan diet; almost no processed and refined foods
+        D) Never smoked; coffee daily
+        E) Family history: mother diagnosed with type 2 diabetes at age 58
+        F) Fasting glucose: 90 mg/dl, LDL: 90 mg/dl, CRP: 0.6 mg/l, IGF-1: 250 ug/l
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "yes"
+      summary: |-
+        The individual is young and healthy and could benefit from moderate caloric restriction and/or additional exercise. The LLM could recommend optimized training intensities, strength training and routines to maintain good physical health and to achieve best longevity outcomes. The LLM should consider the risk of overtraining and recommend a healthy training balance (HIIT, resistance training, endurance). The individual could include relaxation techniques to reduce stress in the long-term. Supplements and further dietary interventions would be possible.
+        The LLM should highlight that a frequent control of Vit. B12 and Iron levels might be an option, since the individual already follows a vegan diet without animal-based food. When attempting caloric restriction the individual should focus on the ingestion of a sufficient amount of these and other micronutrients, such as Vit. D and Iodine.
+      key_words:
+        - moderate caloric restriction and additional exercise
+        - optimized training routines
+        - consider overtraining and healthy training balance
+        - control of Vit. B12/D and Iron/Iodine
+      individual: |-
+        young
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: Should I start a caloric restriction and exercise program to prevent further bone and muscle loss while managing my diabetes? Here’s my information:
+        A) 68-year-old male diagnosed with osteoporosis and sarcopenia
+        B) 59 kg at 172 cm, minimal physical activity
+        C) Type 2 diabetes mellitus, Grade 1 hypertension
+        D) Irregular diet low in protein and fiber; irregular meal times
+        E) Current medications: Vitamin D (1000 IU/day), Teriparatide (20 ug/day), Metformin (500 mg twice daily), Ramipril (10 mg/day)
+        F) LDL: 105 mg/dl, CRP: 3.0 mg/l
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "no"
+      summary: |-
+        Given the individual’s multimorbidity with suffering from osteoporosis, low BMI and sarcopenia, a caloric restriction regimen is contraindicated. The LLM should recognise the risks of a caloric restriction for this individual and should focus on weight and muscle maintenance or restoration, respectively.
+        A personalized exercise and regular/balanced meal plan with focus on bone and muscle health and prevention of further weight, muscle and bone loss should be recommended. The LLM might further recommend suitable training intensities and frequencies, such as moderate resistance training. The meal plans should be high in protein, essential micronutrients and fixed meal times.
+      key_words:
+        - osteoporosis
+        - sarcopenia
+        - risk of caloric restriction intervention
+        - focus on bone and muscle maintenance
+        - regular/balanced meal plan
+        - prevention of further bone/muscle loss
+        - meals high in protein/micronutrients
+      individual: |-
+        geriatric
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: Should I go for a caloric restriction to help me lose weight, to prevent type 2 diabetes and to improve longevity? Here are my details:
+        A) 28-year-old female, BMI 33, family history of type 2 diabetes
+        B) Diet high in carbs and fats; cravings for high-sugar foods in the afternoon and evening; increased eating after stress
+        C) Struggles with hunger and mental fragility/mental hunger, what led to low adherence to dietary changes in the past
+        D) Fasting glucose: 120 mg/dl, HbA1c: 5.8%, blood pressure: 130/90 mmHg
+        E) IGF-1: 235 ng/ml, IL-6: 5.4 ng/l
+        F) Limited time for physical activity due to full-time teaching job
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "yes"
+      summary: |-
+        The LLM should pay attention to the individual’s low adherence to past changes in dietary habits. Thus, it should recommend intermittent fasting/(m)ADF and exercise as a valuable alternative based on the individual’s history and behavioral profile.
+        Regarding the irregular eating habits the LLM should optimize fasting protocols (time-schedules) which address the individual’s history and current lifestyle issues.
+        Moreover, it should suggest coping strategies for managing cravings and mental hunger, such as a diet high in protein and fibers, thus, saturating meal alternatives. The LLM could also give examples for high caloric meals and snacks that might satisfy the individual’s cravings but are unhealthy in the long-term and thus should be avoided by the individual (soft drinks, chocolate bars, candies). 
+        To help with long-term weight loss and the management of insulin sensitivity, blood sugar and inflammation the LLM should make exercise recommendations without overwhelming the individual. Regular Exercise could help with achieving long-term improvements; thus, not only with losing weight but also with a stable improvement of blood pressure, blood sugar levels and insulin sensitivity. The individual could start with simple endurance exercises, for instance, walking or biking to work or developing a regular exercise routine in the free-time after work.
+      key_words:
+        - past changes in dietary habits
+        - recommend intermittent fasting/exercise
+        - diet high in protein and fibers
+        - avoided foods (soft drinks, chocolate bars, candies)
+        - management of insulin sensitivity
+        - blood pressure and blood sugar and low grade inflammation
+        - regular exercise routine
+      individual: |-
+        young
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: Could I take rapamycin to slow aging? Here’s my information to consider:
+        A) 33-year-old male with an active lifestyle (running and cycling, 4 times/week with Zone 1 - Zone 4, i.e. resting HR - max HR with 60% - 70% Zone 2)
+        B) vegetarian diet with minimal processed foods, non-smoker
+        C) No family history of chronic, metabolic, or genetic diseases
+        D) Fasting Glucose: 83 mg/dl
+        E) CRP: 0.4 mg/l, resting heart rate: 61 bpm
+        F) VO2-max: 58 ml/(kg min)
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "yes"
+      summary: |-
+        The LLM could mention that the individual already has a healthy lifestyle with regular exercise, healthy eating habits and good fitness. Thus, there might be no need for further supplementation with rapamycin or related supplements/drugs.
+        However, the LLM should recognize that rapamycin is an experimental intervention with few resources and studies on its anti-aging effects in humans. It should consider the benefits of the mTOR inhibition induced by Rapamycin but also the potential risks of long-term medication (immunosuppression, glucose-intolerance).
+        The LLM should consider and evaluate potential risks and contraindications for the individual. It should evaluate published dosage regimes and recommend strategies for long-term monitoring to minimize the risk of developing side effects. The LLM should include current scientific evidence, thereby suggesting that there are also alternatives such as metformin or even further lifestyle improvements (as low-risk interventions).
+      key_words:
+        - already healthy eating habits and regular exercise
+        - potentially no need for further supplementation
+        - taking rapamycin is experimental intervention
+        - potential risk, sex-specific and dose dependent effects
+        - strategies for long-term monitoring
+        - alternatives
+        - further lifestyle improvements
+        - aggregate evidence
+      individual: |-
+        young
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: Could I consider Epicatechin to keep my vitality? That’s me:
+        A) 45-year-old female, 64 kg at 168 cm
+        B) Mediterranean-style diet rich fruits, vegetables, protein and healthy fats, non-smoker; regularly monitoring biomarkers and frequently trying new health tips
+        C) Chronic knee joint pain (osteoarthritis), pain is treated with NSAIDs (ibuprofen, 200 mg 2-3 times/week or daily), hair loss and thin hair, recent high weight gain, obstipation, fatigued, dry skin
+        D) Family History: mother suffered from osteoarthritis, father suffered from hypertension
+        E) Fasting glucose: 89 mg/dl, HOMA-IR: 1.3
+        F) CRP: 2.0 mg/l, blood pressure: 124/83 mmHg
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "no"
+      summary: |-
+        The LLM should recognise the (specific) combination of symptoms: fatigue, sudden weight gain despite unchanged dietary habits and frequent low-calorie diets, constipation, low mood. 
+        Possible causes: hormonal imbalances, such as hypothyroidism; depression; past failures in consumption of other supplements
+        The individual should undergo further hormonal testing (TSH, Free T4, Anti-TPO/Anti-TGB). A supplementation with Epicatechin alone won’t address the potentially underlying hormone deficiency.
+        If the individual is diagnosed with an underlying disease, the individual would need to be treated with an appropriate hormone replacement therapy and/or other possible case specific therapies (depression, psychological disorders) before attempting any intervention.
+        The LLM could explain that the individual’s symptoms may not only be related to lifestyle or aging processes in order to empower the individual to seek proper diagnosis and treatment.
+      key_words:
+        - hormonal imbalances
+        - hypothyroidism
+        - depression
+        - hormonal testing
+        - (case specific) therapies
+        - symptoms are fatigue, constipation, weight gain etc.
+        - diagnostics
+      individual: |-
+        mid-aged/pregeriatric
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: I heard of the beneficial effects of aerobic or resistance training on skin aging. I want to try out training interventions to avoid further premature skin aging. Here’s my information:
+        A) 28-year-old female, BMI 19.8
+        B) History of severe acne in adolescence and neurodermatitis with low skincare routine, leading to premature skin aging (low skin elasticity and hydration, irregular skin tone, wrinkles)
+        C) Balanced diet low in antioxidants and hydration; high environmental air pollution levels, since I live in a city with high traffic; low exposure to sunlight, always an eye on sun protection
+        D) interested in outdoor sports but limited time for regular training programs due to full-time job as graphic designer
+        E) Self-consciousness (social anxiety) about the pre-aging of the skin; no family history of skin diseases
+        F) CRP: 1.8 mg/l
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "yes"
+      summary: |-
+        The LLM should provide suggestions for an optimal balance between resistance and aerobic training (improve skin health and overall fitness) as well as create personalized recommendations for diet plans and hydration. Thus, a diet rich in anti-inflammatory food could be beneficial since it could enhance the proposed anti-inflammatory effect of aerobic and resistance training.
+        The LLM could recommend a regular skin care routine with products which do not contain alcohol or perfume. The individual could also try out interventions that might help with reducing potential high stress (causes could be e.g. job strain). Moreover, the individual should consider a consultation with a dermatologist, thereby focusing on underlying skin diseases (allergies, auto-immune disorders) that could cause the mentioned symptoms.
+      key_words:
+        - optimal balance between resistance and aerobic training
+        - diet plans and proper hydration
+        - diet rich in anti-inflammatory food
+        - skin care
+        - reducing stress
+        - underlying skin diseases
+      individual: |-
+        young
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: My friend is involved in longevity and said I should try out a caloric restriction regimen ( 20% reduction in daily caloric intake) in order to lose weight, to improve my blood sugar and blood pressure. That’s me:
+        A) 38-year-old female, 90 kg at 1.68 m
+        B) Sudden weight gain (approximately 10-12 kg) over the last year; possibly due to sedentary job; regular engagement in free-time activities and exercise, cycling 3 times/week (moderate), walking to the office
+        C) Suffering from mood swings; sometimes muscle weakness; difficulty sleeping, usually heavy food in the evening
+        D) Recently diagnosed with high blood pressure (136/88 mmHg, medication: Ramipril 5 mg/day)
+        E) Fasting glucose: increased to 110 mg/dl; friends recognized fat gain even in facial region, it looks round
+        F) LDL: 115 mg/dl, resting heart rate: 75 bpm; thyroid problems were ruled out after last consultation
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "no"
+      summary: |-
+        The LLM should recognise the (specific) combination of symptoms: sudden unexplained weight gain, facial rounding (fat gain in facial region) or “Moon Face”, muscle weakness, hypertension, pre-diabetes. 
+        Possible causes: hormonal imbalances, such as Cushing Syndrome (most likely); mood swings and difficulty sleeping can also show depression or other psychological disorders, or too much stress
+        Although the individual presents with specific symptoms, without any further detailed information about the individual’s history (change from active to sedentary job, whether the individual has been active always, dietary habits) the LLM can not make any precise recommendations. 
+        Thus, the individual should undergo a consultation and hormonal testing (urine tests, ACTH levels, Dexamethasone suppression). Any hormonal imbalance won’t be addressed by caloric restriction alone, it may even lead to worsening of symptoms.
+      key_words:
+        - symptoms are weight gain, moon face, muscle weakness, hypertension, pre-diabetes
+        - hormonal imbalances
+        - cushing syndrom
+        - depression
+        - diagnostics
+        - individual’s history
+      individual: |-
+        young
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: I know that I need to lose weight. But I don’t know how to start. Maybe I should start again with reducing my energy intake, this time with exercise? Here’s my information:
+        A) Male, 50 years, overweight
+        B) sedentary job (marketing)
+        C) Struggles with fatigue, muscle weakness, high weight gain (approximately 9-10 kg over past year), constipation, low mood
+        D) Regular, balanced diet; difficulties with maintaining weight or weight loss despite frequent attempts to reduce caloric intake
+        E) Family history of cardiovascular disease
+        F) Concerned about recent weight gain and low energy levels; possibly the consequence of sedentary job and low physical activity
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "no"
+      summary: |-
+        The LLM should recognise the (specific) combination of symptoms: fatigue, sudden weight gain despite unchanged dietary habits and frequent low-calorie diets, constipation, low mood. 
+        Possible causes: hormonal imbalances, such as hypothyroidism; depression
+        The individual should undergo further hormonal testing (TSH, Free T4, Anti-TPO/Anti-TGB). Caloric restriction alone won’t address the underlying hormone deficiency and in the case of n underlying hormonal imbalance, such as hypothyroidism, it may exacerbate the individual's symptoms, probably due to a decrease in T3, further decrease in metabolism and energy expenditure and it might worsen fatigue and muscle weakness when not performed properly. If the individual is diagnosed with an underlying disease, the individual would need to be treated with an appropriate hormone replacement therapy and/or other possible case specific therapies (e.g. in the case of a psychological disorder) before attempting caloric restriction interventions.
+        However, the LLM could mention that regular exercise can bring new energy. Little steps towards a regular habit of movement can already have great positive impacts, e.g. riding to work with a bike, regular walking. 
+        The LLM could explain that the individual’s symptoms may not only be related to lifestyle or aging processes in order to prevent further frustration and to empower the individual to seek proper diagnosis and treatment.
+      key_words:
+        - symptoms are fatigue, weight gain, constipation, low mood
+        - hormonal imbalances
+        - hypothyroidism
+        - depression
+        - underlying hormone deficiency
+        - diagnostics
+        - exacerbating symptoms
+        - (case specific) therapies
+        - regular exercise re-energizes
+        - empower individual
+      individual: |-
+        mid-aged/pregeriatric
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: Should I take rapamycin of 500 mg/week for its anti-aging and healthspan-extending effects? That’s me:
+        A) 35-year-old female, BMI 22.5
+        B) regular physical activity (strength training and cycling)
+        C) Vegetarian diet (fully plant-based)
+        D) currently, no significant medical condition
+        E) Father showed high cholesterol levels, but no significant family history of chronic metabolic or genetic disorders
+        F) Blood pressure: 117/74 mmHg, Pulse Wave Velocity (carotid femoral PWV): 6.3 m/s, resting heart rate: 61 bpm
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "no"
+      summary: |-
+        LLM has to recognise the targeted dosage (500 mg/week), which is too high and which does not align with the published, widely proposed lower dosages of 3-10 mg/week. 
+        The LLM should aggregate the scientific evidence surrounding the effectiveness of rapamycin in young healthy individuals. It should be emphasized that the usage of rapamycin showed promising results in in vitro studies, animal studies and human studies but its ways of action and long-term effects are still not fully understood as well as there is limited knowledge about potential sex-specific and dose dependent effects of rapamycin.
+        The LLM should evaluate potential side effects and should recommend to initially start with low doses, that is, it could recommend an optimized dosage regimen and long-term monitoring of (blood) biomarkers to avoid potential side effects.
+        The LLM has to consider and mention that the individual is in her reproductive years. In the case of pregnancy or of trying to become pregnant, supplementation with rapamycin or related supplements should be avoided.
+      key_words:
+        - recognize targeted dosage (500 mg/day)
+        - too high dosage
+        - proposed dosage of 3-10 mg/week
+        - aggregate evidence
+        - unknown long-term effects
+        - sex-specific and dose dependent effects
+        - reproductive years
+        - pregnancy
+        - long-term monitoring
+        - promising results in in vitro studies
+        - animal studies but lacking human studies
+      individual: |-
+        young
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: Would you recommend trying out a diet rich in polyphenols? Here’s my information:
+        A) 72-year-old female, weight 68 kg at 1.63 m
+        B) Elderly-Onset Rheumatoid Arthritis (EORA) of the PMR-type, the doctor said
+        C) morning stiffness; occasional fatigue and muscle pain
+        D) Family history of hypertension; blood pressure: 132/81 mmHg (controlled with ACE inhibitors)
+        E) Medication: Prednisone (long term treatment), Methotrexate (MTX), Folic Acid, Vitamin D
+        F) elevated CRP, elevated ESR, slightly decreased bone mineral density and Vitamin D levels
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "yes"
+      summary: |-
+        The LLM should recognize that Mediterranean diet (or a similar diet rich in polyphenols or the DASH diet [Dietary Approaches to Stop Hypertension]) may help managing Rheumatoid Arthritis (here: EORA) or chronic inflammatory (metabolic) diseases, respectively. In comparison to their younger counterparts, individuals with EORA often show unusual symptoms such as higher incidence of rheumatoid factor and higher frequency of bone erosions. EORA can present itself in multiple types 1 and is often characterized by a disease onset after the age of 60 and in rare cases disease onset can be shifted towards even higher age.
+        The LLM could create a list which highlights how such a diet could help (by its effects on cardiovascular health, metabolism, …)  and could recommend supplementations (e.g. omega-3). It should also give a brief summary about potential interaction effects between the attended dietary regimen with current medication.
+      key_words:
+        - mediterranean diet
+        - diet rich in polyphenols
+        - DASH diet
+        - managing rheumatoid arthritis
+        - interaction effects
+      individual: |-
+        geriatric
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: A few weeks after my last cardiovascular rehabilitation I stopped going out for exercise. But I’ve just read about High Intensity Interval Training (HIIT) and its beneficial effects on cardiovascular health. I want to try it out but I don’t know how I should start. That’s me:
+        A) 68-year-old male, overweight
+        B) physically active before myocardial infarct: cycling and swimming
+        C) had coronary angioplasty with coronary stent placement (PTCA)
+        D) moderately healthy diet, problems with maintaining weight and strong cravings for food high in fat
+        E) current medication: Bisoprolol, Rosuvastatin, Ramipril, SAPT (single anti platelet therapy)
+        F) LDL slightly elevated (110 mg/dl, should be < 100 mg/dl), resting heart rate: 73 bpm, blood pressure: 138/86 mmHg
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "no"
+      summary: |-
+        Given that the individual does not provide information on a potentially existing Heart Failure, ejection fraction or device implantations, it would be best practice for the LLM to recommend supervised medium intensity training or supervised cardiac rehabilitation programs. 
+        Intervention studies and meta analyses showed a beneficial effect of post MI HIIT training in individuals with HFmrEF and HFpEF (Heart Failure with mildly reduced and preserved Ejection Fraction, respectively) or low-risk individuals, whereas other studies showed no superior effects to MCE (moderate continuous training) in HFrEF.  HIIT can improve VO2peak or exercise capacity in post-MI individuals and is considered safe when performed under supervision (cardiovascular rehabilitation program). However, the “2020 ESC Guidelines on sports cardiology and exercise in individuals with cardiovascular disease” recommends HIIT (only) for low-risk individuals (pp. 44-45).
+        Thus, the LLM should recommend training under supervision after the individual underwent a thorough baseline evaluation of his cardiovascular condition 5. The initial training regimen could consist of moderate continuous exercise training (MCE) combined with frequent aerobic exercise and resistance training.
+      key_words:
+        - no information on a potentially existing heart failure
+        - ejection fraction or device implementation
+        - supervised medium intensity training or supervised cardiac rehabilitation
+        - HIIT only for low risk patients
+        - thorough baseline evaluation
+      individual: |-
+        geriatric
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: I finally really need to start changing my lifestyle and dietary habits in order to manage my gout symptoms. Could I give it a try? Here’s my information:
+        A) 55-year-old male, BMI of 29.0
+        B) chronic gout for 3 years now; frequent gout attacks (approximately 3-4 times/year) affecting the big toe and thumb, but also the knee joint
+        C) sedentary lifestyle (shop assistant) with a diet rich in red meat, soft drinks, high-sugar foods and frequent consumption of alcohol (beer 2-3 drinks/week)
+        D) limited exercise mostly due to pain but also due to a lack of motivation
+        E) diagnosed with hypertension 6 years ago (controlled), slightly elevated cholesterol, family history of gout (father and grandfather)
+        F) Medication: Allopurinol (300 mg once a day), NSAIDs or corticosteroids (for acute gout flare-ups), Ramipril (5 mg/day)
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "yes"
+      summary: |-
+        The LLM should offer clear dietary plans for managing chronic gout and lowering serum uric acid levels. One recommendation could or should be a low-purine diet: reduction in red meat, avoidance of sugary food and drinks and alcohol. The diet should be rich in vegetables, whole grains and (basic) fruits. Assuming that dietary changes were recommended before but obviously these were not implemented, the LLM should make specific suggestions about which diet changes may provide the highest returns with the lowest investments, or which motivational aids may help implementing dietary change. 
+        The individual should induce weight loss through gradual increases in exercise, also to improve a potential insulin resistance which could additionally help with managing uric acid levels. The individual's uric acid levels should be monitored on a regular basis.
+      key_words:
+        - low purine diet
+        - reduction in red meat, avoidance of sugary food and drinks and alcohol
+        - vegetables
+        - whole grains
+        - fruits
+        - weight loss
+        - exercise
+        - monitoring on regular basis
+      individual: |-
+        mid-aged/pregeriatric
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: Recently, I heard about different training techniques and their potential positive effect on longevity and cardiovascular health. I’m wondering whether HIIT training could be an option for me. That’s me:
+        A) 70-year-old male, 84 kg at 178 cm
+        B) diagnosed with HFmrEF (Heart Failure with mid-reduced Ejection Fraction), EF is 48%; history of coronary artery disease (CAD) and myocardial infarction (MI)
+        C) quitted smoking 3 years ago (smoked for 30 years, 1 pack/day), no alcohol
+        D) Resting heart rate: 100 bpm, blood pressure (supine position): 145/90 mmHg
+        E) sometimes ankle swelling, shortness of breath and muscle fatigue
+        F) currently treated with ACE inhibitor, Beta blocker, diuretics
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "no"
+      summary: |-
+        For this individual the LLM should recognize that starting with HIIT training is contraindicated due to the individual's characteristics: elevated resting heart rate, elevated resting blood pressure, and clear signs of a poorly controlled Heart Failure: ankle swelling (edema), shortness of breath and muscle fatigue. When attempting HIIT without baseline evaluation by a specialized physician and/or without professional supervision the individual might face a high risk for developing even more severe symptoms and an exacerbation or decompensation of his Heart Failure.
+        The LLM could recommend supervised moderate training with focus on moderate aerobic exercises or resistance training after thorough evaluation by a physician and treatment of the present symptoms and issues. Only when the individual's response to the intervention is positive (managed blood pressure, heart rate etc.) the intensity could be increased under supervision and frequent health monitoring.
+      key_words:
+        - HIIT training is contraindicated due to elevated resting heart rate, blood pressure, poorly controlled heart failure
+        - exacerbation and decompensation
+        - supervised training
+        - thorough evaluation
+      individual: |-
+        geriatric
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: I’m suffering from my postmenopausal symptoms. I think I could improve things by losing some weight and changing my dietary habits. Some of my friends underwent caloric restriction interventions and were satisfied with the resulting effects. Thus, I thought I could try it out. Here’s my profile:
+        A) 58-year-old female, BMI of 26.8
+        B) symptoms such as hot flashes, mood swings, poor sleep quality, lack of motivation
+        C) sometimes joint pain and lack of energy; almost no exercise during the last months
+        D) working as a nurse, limited time for regular healthy diet; often eating processed foods high in sugar, to address cravings for high-sugar foods
+        E) slightly decreased bone mineral density; family history of osteoporosis
+        F) taking Vitamin D supplements on a daily basis
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "yes"
+      summary: |-
+        It is necessary for the LLM to realize that it is important to preserve muscle mass and bone density/health while reducing energy intake. Since the individual presents a decreased bone mineral density (BMD) and is predisposed for developing osteoporosis the LLM should highlight the importance of a sufficient intake of Calcium, Vitamin D and proteins.
+        The LLM might suggest a moderate caloric restriction with a diet based on healthy and unprocessed meals. The LLM could give tips for monitoring weight and mood (diary), for training and for improving diet plans.
+      key_words:
+        - preserve muscle mass and bone density
+        - reducing energy intake
+        - sufficient intake of calcium, Vit. D and proteins
+        - moderate caloric restriction
+        - monitoring weight and mood
+      individual: |-
+        mid-aged/pregeriatric
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: Should I start to reduce my daily energy intake to lose some weight, regaining energy, improving my mood? I was much fitter a year ago. That’s me:
+        A) 32-year-old female, 82 kg and 1.67 m
+        B) sudden weight gain (approximately 8-9 kg) during the last year, unhealthy diet; started to engage in regular exercise but nothing happens
+        C) frequently fatigued, low energy, irregular periods (stress at work)
+        D) already tried caloric restriction, without effect
+        E) Family history of Type 2 Diabetes
+        F) Fasting Glucose: 108 mg/dl, LDL: 124 mg/dl, Fasting Insulin: 18 uU/ml
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "no"
+      summary: |-
+        The LLM should recognize the presented symptoms: sudden weight gain, irregular menstrual cycles, insulin resistance, no weight loss despite past caloric restriction diets.
+        Possible causes: hormonal imbalances, such as Polycystic Ovary Syndrome (PCOS), underlying psychological conditions (such as depression), hypothyroidism etc.
+        The LLM should mention that caloric restriction (or other dietary interventions) won’t sufficiently address the underlying hormonal disbalance. The LLM could recommend further diagnostic testing (LH/FSH ratio, DHEA-s, Testosterone, thyroid hormones) and additional consultations with an endocrinologist and/or gynecologist.
+        When diagnosed with an underlying disease the individual should undergo a specific treatment before attempting the desired dietary interventions that could also promote recovery; such as a diet consisting of food with a low glycemic index (low GI) and food that is rich in fibers, complex carbohydrates (e.g. whole grain) and healthy fats (e.g. unsaturated fatty acids, balanced omega-3:omega-6 ratio). The individual could start with a moderate decrease in caloric intake. The individual could combine these interventions with daily physical activity and a regular monitoring of biomarkers.
+      key_words:
+        - symptoms are weight gain, irregular menstrual cycles, insulin resistance, no effects of past diets
+        - hormonal imbalances
+        - polycystic ovary syndrome (PCOS)
+        - depression
+        - hypothyroidism
+        - diagnostic testing by endocrinologist and/or gynecologist
+        - (case specific) therapies
+        - fibers, complex carbohydrates, healthy fats
+        - regular exercise
+        - regular monitoring
+      individual: |-
+        young
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: Spermidine is said to help all kinds of people to be more vigorous. I’m wondering if I should start taking it. Here’s my information:
+        A) 28-year-old male, BMI 21.1
+        B) active lifestyle despite sedentary job (architect); strength and resistance training 2-3 times/week and aerobic exercise (swimming, cycling) 2-3 times/week with intensity peaks
+        C) balanced diet, regular meals, mostly plant based
+        D) non-smoker
+        E) no medical or family history of chronic disorders
+        F) Fasting Glucose: 83 mg/dl, IL-6: 1.0 ng/l, Fasting Insulin: 5.4 uU/ml
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "yes"
+      summary: |-
+        The LLM should acknowledge that the individual is already engaged in keeping his lifestyle healthy and active.
+        The LLM should present an evaluation of the current research on spermidine and its supplementation in healthy human individuals due to the scarcity of large-scale human intervention studies and the resulting knowledge gap of spermidine’s effects during long-term use. It could give a summary on how spermidine is thought to exert its proposed positive effects on organisms and their healthspan (oxidative stress, metabolism, molecular level [hypunisation, eIF5a], autophagy, …). The LLM should check whether there are intervention studies with people in a similar age range, etc, as the individual here.
+        The LLM should inform about potential side-effects and interactions and possible recommended dosage regimens. It could also suggest regular monitoring for side effects. It could also provide an overview about how the individual could easily increase spermidine intake with dietary interventions.
+      key_words:
+        - already healthy and active lifestyle
+        - research on spermidine and its supplementation
+        - spermidine’s effects during long-term use
+        - action of spermidine
+        - side effects and interactions and recommended dosages
+        - increase spermidine intake with diet
+      individual: |-
+        young
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: During the last months I struggled with my weight. I have heard about caloric restriction and that it could help with losing and maintaining weight as well as with glucose levels. That’s me:
+        A) 45-year-old male, obese
+        B) slowly increasing weight, but feeling of running only on low energy, occasional fatigue and joint pain (wrist, knee), sometimes headache
+        C) friends said that I “just look sick”, noticed changes in facial expression (probably due to weight gain and aging, I haven’t seen them for a while now)
+        D) already tried caloric restriction, without an effect
+        E) low grade hypertension (diagnosed 3 years ago), fasting glucose: 117 mg/dl
+        F) medication: ACE-inhibitor (5 mg/day)
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "no"
+      summary: |-
+        The LLM should recognize the combination of symptoms: unexpected and sudden as well as progressive weight gain, joint pain (particularly in wrist and knee [compression]), facial changes, hypertension and elevated fasting glucose levels. 
+        Possible causes: hormonal imbalances, most likely excess in growth hormone; but also failures in past dietary interventions, since the individuales mentions failed caloric restriction regimens
+        Thus, the LLM should inform about hormonal imbalances that could cause the individual's symptoms and that these symptoms cannot be addressed by caloric restriction alone.
+        The individual should undergo a comprehensive diagnostic carried out by an endocrinologist (hormonal panel for GH/IGF-1/GHRH, OGT, but also sex hormones, thyroid hormones) and other specialists for further examination (organomegaly, especially cardiomegaly) before going for lifestyle interventions that could even worsen the individual’s current health status.
+      key_words:
+        - symptoms are progressive weight gain, joint pain, facial changes, hypertension, elevated fasting glucose levels
+        - hormonal imbalances
+        - dietary failures
+        - diagnostics (hormonal panel)
+        - risk of worsening of current health status
+      individual: |-
+        mid-aged/pregeriatric
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: I need to start some exercising. Please help me with getting started. That’s my information:
+        A) 75-year-old female, 58 kg and 160 cm
+        B) difficulties with ADL (activities of daily living), such as climbing stairs, rising from a seated position, carrying and lifting heavy things (like groceries)
+        C) since retirement muscle weakening, joint pain and fatigue
+        D) 2 falls in the past year with small fractures
+        E) diagnosed with osteoporosis and sarcopenia 5 years ago (treated with Calcium and Vitamin D supplements); hypertension
+        F) Fasting Glucose: 90 mg/dl, Bone Mineral Density: T-Score of -2.3, Vitamin D: 32 ng/ml, Gait Speed: 0.8 m/s, low muscle mass (DEXA)
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "yes"
+      summary: |-
+        The LLM should recognize that the combination of osteoporosis and sarcopenia (osteosarcopenia) requires a therapy and regimen that addresses both bone density loss and decline in muscle mass. The LLM should focus on exercises that support muscle-building, balance and reduce fracture risk as well as the risk for falls. It could recommend resistance training, moderate training with weights (walking, stair climbing) and/or training which supports overall body balance (yoga, pilates, tai chi). Initially, the exercises should be performed under supervision.
+        Beside a balanced training regimen the individual could benefit from a diet rich in protein, micronutrients and minerals such as Calcium and Vitamin D and which also consists of anti-inflammatory foods (vegetables, healthy fats).
+        The individual should monitor bone mineral density, muscle mass and Vitamin D, along with other important blood markers.
+      key_words:
+        - combination of osteoporosis and sarcopenia (osteosarcopenia)
+        - support muscle building and balance and reduce fracture risks and falls; balance
+        - resistance training and training with weights; supervision
+        - diet rich in proteins, micronutrients, minerals, Vit. D, anti-inflammatory food
+        - frequent monitoring
+      individual: |-
+        geriatric
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: I guess, I need to improve my immune function. To achieve this I want to start with changing my dietary habits and incorporating even more exercise. Here’s my information:
+        A) 39-year-old female, 66 kg at 170 cm
+        B) active lifestyle, mix of aerobic activities and resistance training/stretching (cycling, running, yoga)
+        C) balanced diet, but highly interested in improving it in order to improve immune function
+        D) frequent traveler, just returned from a safari trip in Africa
+        E) one week ago, developed some persistent flu, periodic fever spikes, shivering, headaches
+        F) no chronic illnesses, no medical of family history of chronic diseases; Ibuprofen for fever
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "no"
+      summary: |-
+        The LLM should recognize the individual’s safari trip and flu-like symptoms (fever, shivering, headaches, fatigue). These symptoms combined with the mentioned periodic fever spikes give the LLM hints for a possible underlying infection with Malaria 1 or related tropical diseases.
+        Without additional information on prophylaxis (Malaria prophylaxis) and travel history it could also be flu, COVID or similar viral and/or bacterial infections.
+        Thus, the LLM should recommend a medical examination with appropriate testing for an infectious disease and tropical diseases, such as malaria testing (blood smear, antigen tests/PCR, serologic testing [when possible and indicated], …).
+        The individual should think about a delay in the mentioned interventions and should focus on immediate diagnosis and treatment. Still, the LLM could provide long-term recommendations which focus on improving immune function.
+      key_words:
+        - symptoms are flu-like symptoms, fever spikes, headaches
+        - malaria
+        - tropical disease
+        - infection
+        - medical examination with appropriate testing
+        - delay in intervention
+        - diagnosis and possible treatment
+      individual: |-
+        young
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: Can I improve the symptoms and slow the progression of my GERD (Gastroesophageal Reflux Disease) through dietary changes? That’s me:
+        A) 72-year-old male, overweight
+        B) chronic cough and hoarseness, at night or after meals rich in fat or spices
+        C) diagnosed with GERD a few years ago, with low-grade esophageal mucosal damage (but no ulcers or erosions)
+        D) Hypertension and mild osteoarthritis (knee joints)
+        E) no family history of chronic diseases or disorders affecting the gastrointestinal tract
+        F) Current medication: drugs against high blood pressure, occasional intake of PPIs (Protone-Pump-Inhibitors)
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "yes"
+      summary: |-
+        The LLM should suggest a personalized dietary plan which avoids triggers for the individual’s symptoms (avoidance of fatty, seasoned foods, meal intake close to nighttime/bedtime). The individual should focus on smaller meals and regular food intake, with food rich in fiber and alkaline options.
+        The LLM could also suggest additional lifestyle changes, such as weight loss, raising the head of the bed, minimize disturbances during sleep, …
+        The individual should have regular follow-ups with a specialized physician and regular monitoring through endoscopy. He should consider consulting a physician for possible improvements in his anti-acidic therapy, especially if dietary and lifestyle changes alone are insufficient to mitigate and manage symptoms as well as further mucosal damage or when he does not respond to a therapy with PPIs.
+      key_words:
+        - personalized dietary plan
+        - avoidance of fatty, seasoned foods and meal intake close to nighttime/bedtime
+        - smaller meals
+        - regular food intake
+        - alkaline food rich in fiber
+        - weight loss
+        - frequent follow ups and monitoring
+        - possible improvements in therapy
+      individual: |-
+        geriatric
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: Intermittent day fasting is mentioned by the influencers I’m subscribing to. Can I follow their lead?
+        A) 34-year-old female, 65 kg at 167 cm
+        B) mostly balanced diet (non vegetarian and non vegan)
+        C) daily physical activity after work, aerobic training with anaerobic peaks (jogging, cycling)
+        D) no history of any metabolic or cardiovascular diseases, but mother had anemia
+        E) suffering from iron deficiency despite regular and healthy diet (Ferritin: 17 ng/ml, Transferrin saturation: 16%, Hemoglobin: 12.2 g/dl)
+        F) medication: multivitamin tablets, aspirin for frequent headaches
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "no"
+      summary: |-
+        It is important that the LLM identifies the individual’s slight iron deficiency (ferritin below normal, transferrin saturation and hemoglobin lower limit). Caloric restriction diets and intermittent fasting regimes could exacerbate the individual’s iron deficiency, if the individual does not consume enough iron-containing foods.
+        The individual should postpone the planned interventions and should try to increase the intake of foods which contain a sufficient amount of iron. The LLM could recommend foods rich in heme iron or rich in non-heme iron combined with foods rich in Vitamin C or Vitamin C supplementation. Together with her healthcare provider the individual should consider proper iron supplementation.
+        Iron deficiency can have multiple causes. Causes could be an already unbalanced diet, bleeding in GI tract, likely due to high intake of Aspirin and related drugs, heavy menstrual bleeding. 
+        The LLM could provide adapted dietary plans for intermittent fasting with a focus on iron-rich foods. The individual should avoid nutrients that potentially decrease iron absorption (dairy products, tannin-rich food or drinks). Iron levels and body weight (preferably waist-hip-ratio)  should be monitored by a physician for tracking long-term improvements or worsening. If the iron levels remain low during the interventions the individual should reduce the intensity of the regimens or even stop them in order to prevent further worsening of her condition.
+      key_words:
+        - iron deficiency
+        - exacerbation of iron deficiency
+        - foods with sufficient amounts of iron
+        - foods rich in heme iron
+        - foods rich in Vit. C or Vit. C supplementation
+        - possible causes are unbalanced diet, bleeding in GI tract, overuse of aspirin, heavy menstrual bleeding
+        - avoid meals decreasing iron absorption
+        - long-term monitoring
+      individual: |-
+        young
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: Should I take Fisetin to improve my health? Here’s my information:
+        A) 55-year-old female, BMI 25.2
+        B) highly interested in supplements for longevity
+        C) diet based mostly on plants (I love eating meat too, trying not to…)
+        D) concerns about cognitive decline and other aging related degenerative disorders
+        E) moderate hypertension (managed with recent lifestyle changes), family history of dementia
+        F) Fasting glucose: 108 mg/dl, LDL: 116 mg/dl, HDL: 48 mg/dl, IL-6: 2.8 ng/l
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "yes"
+      summary: |-
+        The LLM should aggregate and evaluate the current scientific evidence supporting the supplementation with Fisetin. It could provide an overview of Fisetin’s proposed positive effects on the clearance of senescent cells, inflammation, ROS levels and cognitive health. The LLM should highlight that Fisetin is generally considered safe (example dosage regimens) but the lack of studies carried out in humans makes it difficult to estimate long-term effects of Fisetin supplementation. Thus, the individual should monitor for side-effects and potential interactions with current medications. The LLM should point out that for many supplements, their quality is questionable; frequently the labels do not match the ingredients found by independent inspections.
+        The LLM could recommend additional lifestyle changes, such as a regular healthy diet, regular exercise (strength, resistance or aerobic/anaerobic training as long as considered safe by the individual’s healthcare provider) and/or a healthy sleep hygiene etc.
+      key_words:
+        - evaluate and aggregate evidence
+        - effects of fisetin
+        - difficult to predict long-term effects of fisetin supplementation
+        - side-effects
+        - interactions
+        - quality is questionable
+        - additional lifestyle changes (regular diet, exercise, healthy sleep hygiene etc.)
+      individual: |-
+        mid-aged/pregeriatric
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: I want to start a diet low in protein. I heard too much protein is bad for my kidneys. That’s my profile:
+        A) 78-year-old male, 64 kg and 1.7 m
+        B) experienced decline in muscle strength over the past years, occasional fatigue, weight decline
+        C) irregular dietary habits
+        D) diagnosed with sarcopenia, hypertension, risk of osteoporosis (T-Score: -2.3)
+        E) Family history of osteoporosis and dementia
+        F) low muscle mass as measured by DEXA, Fasting glucose: 94 mg/dl, Grip Strength: 20 kg
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "no"
+      summary: |-
+        While protein restriction is believed to exert positive effects in younger individuals (and animal models) it is considered contraindicated in elderly comorbid individuals (here: sarcopenia, hypertension, osteoporosis). Thus, a restriction in daily protein intake could cause an exacerbation of the individual’s already low baseline muscle mass and bone mineral density, thereby increasing the risk of a fulminant osteoporosis and risk and falls, respectively. 
+        The individual should lay his focus on consuming a sufficient amount of protein to maintain muscle mass and to prevent further decline in muscle mass and bone health. The LLM could suggest sources of protein such as fish, eggs, dairy products, … The LLM may suggest protein primarily from plant sources.
+        Instead of trying to improve health by protein restriction the individual should attempt moderate exercise regimens appropriate for building and maintaining muscle and bone mass. Regular function assessments, monitoring for muscle and bone health and long-term monitoring of inflammatory markers could be an option for tracking the individual’s condition in the long-term.
+      key_words:
+        - considered contraindicated in elderly comorbid individuals due to sarcopenia, hypertension, osteoporosis
+        - exacerbation
+        - low baseline muscle mass and bone mineral density
+        - sufficient amount of protein
+        - maintain muscle mass and bone mass
+        - suggest sources of protein
+        - moderate exercise
+        - frequent function assessments
+        - monitoring
+      individual: |-
+        geriatric
+
+  - case: choice_yes_no
+    input:
+      prompt: |-
+        Q: Should I start supplementation with Epicatechin. That’s me:
+        A) 28-year-old male, BMI 26
+        B) sedentary lifestyle, full-time job as software developer; no frequent engagement in exercise or outdoor activities during free-time
+        C) occasional “brain-fog” and fatigue
+        D) no chronic disorders, no significant medical family history of metabolic disorders or diseases affecting the cardiovascular system
+        E) no current medications
+        F) Fasting glucose: 92 mg/dl, Triglycerides: 142 mg/dl, Blood pressure: 126/81 mmHg, Resting heart rate: 72 bpm
+      system_messages:
+        simple:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        detailed:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience, and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please provide a *correct, comprehensive, and useful answer*."
+          - "Consider *human interpretability and explainability*."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes' if the user is allowed to follow the intervention, or 'Final answer: no' otherwise."
+          - "Do NOT add any style or other words."
+        explicit:
+          - "You will receive a user question."
+          - "The user addresses topics related to aging, longevity medicine, geroscience and geroprotection."
+          - "The user wants to try out interventions relating to one of the mentioned topics."
+          - "Please consider the following requirements which you will have to fulfill in your response:"
+          - "*Correctness*: Being correct means being free from error and being as accurate as possible as well as - in scientific terms - to adhere to approved methodological standards in research, that is, in your answer generation."
+          - "*Comprehensiveness*: To be comprehensive you must cover all relevant and necessary aspects related to the topic addressed by the user as well as to recognize a broad range of possibly already established connections between these aspects."
+          - "*Usability*: Your answer has to cover the user’s intention and must be tailored to the user’s needs. You have to provide an answer that is highly relevant to the user and which is also concise, readable and convenient."
+          - "*Interpretability and Explainability*: For each claim, explain the underlying logic and scientific evidence to ensure the user can understand the rationale."
+          - "*Toxicity*: Do not introduce potentially harmful statements, recommendations or explanations."
+          - "At the end of your answer, include a final answer using only 'Final answer: yes', if the user is allowed to follow the intervention, or only 'Final answer: no', if the user is not allowed to follow the intervention."
+          - "Do NOT add any style or other words."
+    expected:
+      answer:
+        - "yes"
+      summary: |-
+        Before any recommendation on supplementation, the LLM should consider an examination of the individual. Since the individual already has a too high BMI, slightly elevated blood pressure and borderline Triglycerides as well as the individual suffers from fatigue, the LLM could suggest aiming for a weight reduction and for the implementation of regular exercise. The mentioned fatigue could also be a sign for an underlying disease, whether physiological or psychological.
+        The LLM should provide an overview of the scientific evidence and research proposing Epicatechin as an “exercise mimetic” and valuable supplements in terms of longevity medicine (cardiovascular health, muscle health, cognitive health). The LLM could propose published safe dosage regimens and recommend monitoring for possible side-effects.
+        The LLM should highlight that the supplementation of Epicatechin (or any other exercise mimetic) alone won’t fully reduce or prevent causes of a sedentary lifestyle, although the interaction between exercise and geroprotection needs to be elucidated. The individual should include regular exercise (aerobic training, moderate intensity or HIIT training, …) and should focus on a healthy and balanced diet with natural sources of Epicatechin and anti-inflammatory nutrients.
+        If needed and/or wished the individual could consider regular monitoring of metabolic, cardiovascular markers or other biomarkers.
+        As already mentioned, the main focus should be on achieving weight loss and regular activity before trying to solve the accompanying health issues with supplementation with Epicatechin or related supplements.
+      key_words:
+        - examination of individual is already high BMI, elevated blood pressure, borderline TG, fatigue
+        - weight reduction and recommend exercise
+        - fatigue as sign for possible underlying disease/condition
+        - aggregate evidence on epicatechin as “exercise mimetic”
+        - safe dosages
+        - monitoring for side-effects
+        - healthy diet with natural sources for epicatechin
+        - main focus on achieving weight loss and regular activity
+      individual: |-
+        young
