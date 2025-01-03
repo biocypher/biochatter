@@ -557,6 +557,11 @@ def pytest_generate_tests(metafunc):
             "test_data_medical_exam",
             data["medical_exam"],
         )
+    if "test_data_longevity" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "test_data_longevity",
+            data["longevity"],
+        )
 
 
 @pytest.fixture()
