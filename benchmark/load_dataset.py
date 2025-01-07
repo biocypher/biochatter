@@ -238,7 +238,8 @@ def _expand_longevity_test_cases(data_dict: dict) -> dict:
                 new_case["input"]["prompt"][key] = prompt_dict[key][value]
 
             new_case["input"]["prompt"] = " ".join(str(v) for v in new_case["input"]["prompt"].values())
-
+            new_case["input"]["prompt"] = new_case["input"]["prompt"].strip()
+            
             expanded_test_list.append(new_case)
 
     return expanded_test_list

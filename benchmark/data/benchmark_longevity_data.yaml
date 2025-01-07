@@ -4,7 +4,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: My wife told me that I would have to lose some weight."
-          emotional: "My wife thinks I need to lose some weight, and I believe she's right."
+          emotional: "Q: My wife thinks I need to lose some weight, and I believe she's right."
         background:
           list: |
             That’s me:
@@ -21,7 +21,9 @@ longevity_geriatric_case_assessment:
             My recent bloodwork shows a fasting glucose level of 105 mg/dl and a CRP of 3.2 mg/l.
             My cholesterol levels are LDL at 130 mg/dl and HDL at 42 mg/dl.
         question: Is she right?
-        appendix: My blood group is AB-
+        appendices: 
+          appendix: My blood group is AB-
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -67,14 +69,31 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: Could I implement caloric restriction, increase my exercise, or both to optimize my health, fitness, energy levels, and life expectancy, thereby reducing my risk of metabolic diseases? That’s me:
-        A) 34-year-old female, BMI of 21.2
-        B) Working as a nurse (on feet all day); jogging 2 times/week (Zone 1 / 2, HR 120 - 140 BPM ); attending yoga class 1 time/week
-        C) vegan diet; almost no processed and refined foods
-        D) Never smoked; coffee daily
-        E) Family history: mother diagnosed with type 2 diabetes at age 58
-        F) Fasting glucose: 90 mg/dl, LDL: 90 mg/dl, CRP: 0.6 mg/l, IGF-1: 250 ug/l
+      prompt:
+        setup:
+          plain: "Q: I think I should implement caloric restriction, increase my exercise, or both to optimize my health, fitness, energy levels, and life expectancy, thereby reducing my risk of metabolic diseases."
+          emotional: "Q: I could try out caloric restriction or to increase my exercise level, or maybe I would like to try out both for optimizing my health, fitness, energy level and life expectancy. Maybe this helps me with reducing my risk of metabolic diseases."
+        background:
+          list: |
+            That’s me:
+            A) 34-year-old female, BMI of 21.2
+            B) Working as a nurse (on feet all day); jogging 2 times/week (Zone 1 / 2, HR 120 - 140 BPM ); attending yoga class 1 time/week
+            C) vegan diet; almost no processed and refined foods
+            D) Never smoked; coffee daily
+            E) Family history: mother diagnosed with type 2 diabetes at age 58
+            F) Fasting glucose: 90 mg/dl, LDL: 90 mg/dl, CRP: 0.6 mg/l, IGF-1: 250 ug/l
+          freetext: |
+            I’d like to share my profile for advice. I’m a 34-years-old female with a BMI of 21.2, working as a nurse. 
+            I’m on feet all day and trying to live an active lifestyle with jogging 2 times/week (Zone 1 / 2, HR 120 - 140 BPM). 
+            Furthermore, I’m attending yoga classes once a week. I’m vegan, with almost no processed and refined foods. 
+            I never smoked but I drink coffee every day. My mother suffered of type 2 diabetes. 
+            She was diagnosed at age 58. 
+            My recent bloodwork shows a fasting blood glucose level of 90 mg/dl, a CRP level of 0.6 mg/l and an IGF of 250 ug/l. 
+            My cholesterol level is LDL at 90 mg/dl.
+        question: Could I do it?
+        appendices:
+          appendix: I have been myopic and wearing glasses since I was 4.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -118,14 +137,31 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: Should I start a caloric restriction and exercise program to prevent further bone and muscle loss while managing my diabetes? Here’s my information:
-        A) 68-year-old male diagnosed with osteoporosis and sarcopenia
-        B) 59 kg at 172 cm, minimal physical activity
-        C) Type 2 diabetes mellitus, Grade 1 hypertension
-        D) Irregular diet low in protein and fiber; irregular meal times
-        E) Current medications: Vitamin D (1000 IU/day), Teriparatide (20 ug/day), Metformin (500 mg twice daily), Ramipril (10 mg/day)
-        F) LDL: 105 mg/dl, CRP: 3.0 mg/l
+      prompt:
+        setup:
+          plain: "Q: I should start a caloric restriction and exercise program to prevent further bone and muscle loss while managing my diabetes."
+          emotional: "Q: I suspect, I should start to restrict my daily calorie intake (caloric restriction) and start an exercise program to prevent further bone and muscle loss while managing my diabetes."
+        background:
+          list: |
+            Here’s my information:
+            A) 68-year-old male diagnosed with osteoporosis and sarcopenia
+            B) 59 kg at 172 cm, minimal physical activity
+            C) Type 2 diabetes mellitus, Grade 1 hypertension
+            D) Irregular diet low in protein and fiber; irregular meal times
+            E) Current medications: Vitamin D (1000 IU/day), Teriparatide (20 ug/day), Metformin (500 mg twice daily), Ramipril (10 mg/day)
+            F) LDL: 105 mg/dl, CRP: 3.0 mg/l
+          freetext: |
+            I’m not sure and want to share my profile to get advice. I’m a 68-year-old male suffering from osteoporosis and sarcopenia. 
+            My weight is 59 kg (height: 172 cm). I’m living a lifestyle with minimal physical activity. 
+            Additionally, I’m suffering from Type 2 diabetes mellitus and Grade 1 hypertension. 
+            My diet is low in protein and fiber, with irregular meal times. 
+            I have to take Vitamin D (1000 IU/day). 
+            Teriparatide (20 ug/day), Metformin (500 mg, 2 times/day) and Ramipril (10 mg/day). 
+            My recent bloodwork shows a cholesterol level LDL at 105 mg/dl and CRP at 3.0 mg/l.
+        question: Would you agree with my plans?
+        appendices:
+          appendix: I had a colonoscopy at age 56 with no major findings.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -172,14 +208,31 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: Should I go for a caloric restriction to help me lose weight, to prevent type 2 diabetes and to improve longevity? Here are my details:
-        A) 28-year-old female, BMI 33, family history of type 2 diabetes
-        B) Diet high in carbs and fats; cravings for high-sugar foods in the afternoon and evening; increased eating after stress
-        C) Struggles with hunger and mental fragility/mental hunger, what led to low adherence to dietary changes in the past
-        D) Fasting glucose: 120 mg/dl, HbA1c: 5.8%, blood pressure: 130/90 mmHg
-        E) IGF-1: 235 ng/ml, IL-6: 5.4 ng/l
-        F) Limited time for physical activity due to full-time teaching job
+      prompt:
+        setup:
+          plain: "Q: I want to go for a caloric restriction to help me lose weight, to prevent type 2 diabetes and to improve longevity."
+          emotional: "Q: I want to prevent type 2 diabetes and I’d like to improve my longevity as well as to lose weight. I want to try a caloric restriction diet."
+        background:
+          list: | 
+            Here are my details:
+            A) 28-year-old female, BMI 33, family history of type 2 diabetes
+            B) Diet high in carbs and fats; cravings for high-sugar foods in the afternoon and evening; increased eating after stress
+            C) Struggles with hunger and mental fragility/mental hunger, what led to low adherence to dietary changes in the past
+            D) Fasting glucose: 120 mg/dl, HbA1c: 5.8%, blood pressure: 130/90 mmHg
+            E) IGF-1: 235 ng/ml, IL-6: 5.4 ng/l
+            F) Limited time for physical activity due to full-time teaching job
+          freetext: |
+            I’m a 28-year-old female with a BMI of 33. I have a family history of type 2 diabetes. 
+            My diet is high in carbs and fat. I have cravings for high-sugar foods in the afternoon and evening. 
+            Moreover, I eat a lot more after stress. I’m also struggling with mental fragility and mental hunger. 
+            This led to low adherence to my attempts to change my diet in the past. 
+            My recent bloodwork shows a fasting blood glucose level at 120 mg/dl, HbA1C at 5.8%. 
+            My blood pressure is 130/90 mmHg. My IGF-1 is at 235 ng/ml and IL-6 is 5.4 ng/l. 
+            Unfortunately, I have only limited time for physical activity due to full-time teaching job.
+        question: What do you think, should I do it?
+        appendices:
+          appendix: I have no known food allergies.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -228,14 +281,31 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: Could I take rapamycin to slow aging? Here’s my information to consider:
-        A) 33-year-old male with an active lifestyle (running and cycling, 4 times/week with Zone 1 - Zone 4, i.e. resting HR - max HR with 60% - 70% Zone 2)
-        B) vegetarian diet with minimal processed foods, non-smoker
-        C) No family history of chronic, metabolic, or genetic diseases
-        D) Fasting Glucose: 83 mg/dl
-        E) CRP: 0.4 mg/l, resting heart rate: 61 bpm
-        F) VO2-max: 58 ml/(kg min)
+      prompt:
+        setup:
+          plain: "Q: I'm interested in longevity science. I decided, that I want to slow aging processes. I'd like to take rapamycin."
+          emotional: "Q: I'm interested in longevity science and medicine and heard about the beneficial effects of rapamycin regarding the deceleration of aging processes. I'd like to take it."
+        background:
+          list: |
+            Here’s my information to consider:
+            A) 33-year-old male with an active lifestyle (running and cycling, 4 times/week with Zone 1 - Zone 4, i.e. resting HR - max HR with 60% - 70% Zone 2)
+            B) vegetarian diet with minimal processed foods, non-smoker
+            C) No family history of chronic, metabolic, or genetic diseases
+            D) Fasting Glucose: 83 mg/dl
+            E) CRP: 0.4 mg/l, resting heart rate: 61 bpm
+            F) VO2-max: 58 ml/(kg min)
+          freetext: |
+            I’m 33 years old (female). I love being active. 
+            I go running and cycling, at least 4 times/week in Zone 1 – Zone 4, ranging from min HR to max HR. 
+            I spent 60 – 70% of training time in Zone 2. 
+            My diet is vegetarian and low in processed foods. 
+            I’m a non-smoker. My family doesn’t show a history of chronic, metabolic or genetic diseases. 
+            Here are my recent blood markers, resting heart rate and my training stats: fasting glucose at 83 mg/dl, 
+            CRP at 0.4 mg/l, resting heart rate at 61 bpm, VO2-max is 58 ml/(kg min).
+        question: Could I do it?
+        appendices:
+          appendix: I visit the dermatologist twice a year for routine checks.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -284,14 +354,34 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: Could I consider Epicatechin to keep my vitality? That’s me:
-        A) 45-year-old female, 64 kg at 168 cm
-        B) Mediterranean-style diet rich fruits, vegetables, protein and healthy fats, non-smoker; regularly monitoring biomarkers and frequently trying new health tips
-        C) Chronic knee joint pain (osteoarthritis), pain is treated with NSAIDs (ibuprofen, 200 mg 2-3 times/week or daily), hair loss and thin hair, recent high weight gain, obstipation, fatigued, dry skin
-        D) Family History: mother suffered from osteoarthritis, father suffered from hypertension
-        E) Fasting glucose: 89 mg/dl, HOMA-IR: 1.3
-        F) CRP: 2.0 mg/l, blood pressure: 124/83 mmHg
+      prompt:
+        setup:
+          plain: "Q: I want to supplement with Epicatechin to keep my vitality." 
+          emotional: "Q: I think, I'm ready to try something new. I would like to take Epicatechin to keep my vitality."
+        background:
+          list: |
+            That’s me:
+            A) 45-year-old female, 64 kg at 168 cm
+            B) Mediterranean-style diet rich fruits, vegetables, protein and healthy fats, non-smoker; regularly monitoring biomarkers and frequently trying new health tips
+            C) Chronic knee joint pain (osteoarthritis), pain is treated with NSAIDs (ibuprofen, 200 mg 2-3 times/week or daily), hair loss and thin hair, recent high weight gain, obstipation, fatigued, dry skin
+            D) Family History: mother suffered from osteoarthritis, father suffered from hypertension
+            E) Fasting glucose: 89 mg/dl, HOMA-IR: 1.3
+            F) CRP: 2.0 mg/l, blood pressure: 124/83 mmHg
+          freetext: |
+            I’m a 45-year-old female with a body weight of 64 kg at a height of 168 cm. 
+            I’m following a Mediterranean-style diet, which is rich in fruits, vegetables, protein and healthy fats. 
+            I never smoked and my biomarkers are monitored regularly. 
+            Additionally, I’m trying out new health tips frequently. 
+            I’m suffering from chronic knee joint pain (osteoarthritis). 
+            I take NSAIDS, including ibuprofen 200 mg 2-3 times/week, to overcome the pain. 
+            Moreover, I’m struggling with hair loss and thin hair, recent high weight gain, obstipation, fatigue and dry skin. 
+            My mother had osteoarthritis as well, my father suffered from hypertension. 
+            The last examination of my bloodwork showed: blood fasting glucose at 89 mg/dl, HOMA-IR at 1.3, CRP at 2.0 mg/dl. 
+            My blood pressure is 124/83 mmHg.
+        question: Could I consider Epicatechin to keep my vitality?
+        appendices:
+          appendix: There were no abnormal findings in a urine test done 2 years ago.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -341,14 +431,33 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: I heard of the beneficial effects of aerobic or resistance training on skin aging. I want to try out training interventions to avoid further premature skin aging. Here’s my information:
-        A) 28-year-old female, BMI 19.8
-        B) History of severe acne in adolescence and neurodermatitis with low skincare routine, leading to premature skin aging (low skin elasticity and hydration, irregular skin tone, wrinkles)
-        C) Balanced diet low in antioxidants and hydration; high environmental air pollution levels, since I live in a city with high traffic; low exposure to sunlight, always an eye on sun protection
-        D) interested in outdoor sports but limited time for regular training programs due to full-time job as graphic designer
-        E) Self-consciousness (social anxiety) about the pre-aging of the skin; no family history of skin diseases
-        F) CRP: 1.8 mg/l
+      prompt:
+        setup:
+          plain: "Q: I heard of the beneficial effects of aerobic or resistance training on skin aging. I want to try out training interventions to avoid further premature skin aging."
+          emotional: "Q: Someone told me about the beneficial effects aerobic or resistance training could have on skin aging. Since this might help me with further premature aging of my skin, I want to try it out."
+        background:
+          list: |
+            Here’s my information:
+            A) 28-year-old female, BMI 19.8
+            B) History of severe acne in adolescence and neurodermatitis with low skincare routine, leading to premature skin aging (low skin elasticity and hydration, irregular skin tone, wrinkles)
+            C) Balanced diet low in antioxidants and hydration; high environmental air pollution levels, since I live in a city with high traffic; low exposure to sunlight, always an eye on sun protection
+            D) interested in outdoor sports but limited time for regular training programs due to full-time job as graphic designer
+            E) Self-consciousness (social anxiety) about the pre-aging of the skin; no family history of skin diseases
+            F) CRP: 1.8 mg/l
+          freetext: |
+            I’m 28 years old (female). My BMI is 19.8. 
+            I had to cope with severe acne in adolescence and neurodermatitis with low skincare routine, which ultimately led 
+            to premature skin aging. It is accompanied by low skin elasticity and hydration, irregular skin tone and wrinkles. 
+            All in all, I’m following a balanced diet that is low in antioxidants and hydration. 
+            I live in an environment with high air pollution levels due to high traffic. 
+            I have low exposure to sunlight, since I have to keep an eye on sun protection. 
+            Actually, I’m interested in outdoor sports but I have only limited time for regular training. 
+            I’m struggling with self-consciousness (social anxiety) about the pre-aging of my skin. 
+            To be honest, there is no sign of any skin disease in my family history. My CRP is at 1.8 mg/l.
+        question: Could I try it out? What do you think?
+        appendices:
+          appendix: My mother is Rh-negative, but there were no complications at birth.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -394,14 +503,36 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: My friend is involved in longevity and said I should try out a caloric restriction regimen ( 20% reduction in daily caloric intake) in order to lose weight, to improve my blood sugar and blood pressure. That’s me:
-        A) 38-year-old female, 90 kg at 1.68 m
-        B) Sudden weight gain (approximately 10-12 kg) over the last year; possibly due to sedentary job; regular engagement in free-time activities and exercise, cycling 3 times/week (moderate), walking to the office
-        C) Suffering from mood swings; sometimes muscle weakness; difficulty sleeping, usually heavy food in the evening
-        D) Recently diagnosed with high blood pressure (136/88 mmHg, medication: Ramipril 5 mg/day)
-        E) Fasting glucose: increased to 110 mg/dl; friends recognized fat gain even in facial region, it looks round
-        F) LDL: 115 mg/dl, resting heart rate: 75 bpm; thyroid problems were ruled out after last consultation
+      prompt:
+        setup:
+          plain: "Q: My friend is involved in longevity and said I should try out a caloric restriction regimen (20% reduction in daily caloric intake) in order to lose weight, to improve my blood sugar and blood pressure. "
+          emotional: "Q: My friend suggested I should try out a caloric restriction regimen with a 20% reduction in daily caloric intake, to lose weight, to decrease my blood sugar and blood pressure."
+        background:
+          list: |
+            That’s me:
+            A) 38-year-old female, 90 kg at 1.68 m
+            B) Sudden weight gain (approximately 10-12 kg) over the last year; possibly due to sedentary job; regular engagement in free-time activities and exercise, cycling 3 times/week (moderate), walking to the office
+            C) Suffering from mood swings; sometimes muscle weakness; difficulty sleeping, usually heavy food in the evening
+            D) Recently diagnosed with high blood pressure (136/88 mmHg, medication: Ramipril 5 mg/day)
+            E) Fasting glucose: increased to 110 mg/dl; friends recognized fat gain even in facial region, it looks round
+            F) LDL: 115 mg/dl, resting heart rate: 75 bpm; thyroid problems were ruled out after last consultation
+          freetext: |
+            I’m 38 years old (female). My bodyweight is 90 kg and my body height is 1.68 m. 
+            My weight increased suddenly over the last year, with a weight gain of approximately 10-12 kg. 
+            Possibly, this is caused by my sedentary job. 
+            But I’m regularly engaged in free-time activities and exercise. 
+            I love cycling (3 times/week, moderate) or walking to my office. 
+            I also have mood swings and sometimes I’m suffering from muscle weakness. 
+            I have difficulties with sleeping. 
+            Usually, I consume heavy food in the evening. 
+            Recently, I was diagnosed with high blood pressure. 
+            My blood pressure is at 136/88 mmHg and is treated with Ramipril (5 mg/day). 
+            My fasting glucose is increased to 110 mg/dl. According to my friends, I also gained fat in my facial region. 
+            It looks round. My LDL is at 115 mg/dl, resting heart rate: 75 bpm. Thyroid problems were ruled out.
+        question: Would it be possible for me to try it out?
+        appendices:
+          appendix: I broke my leg during a biking tour 4 years ago.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -449,14 +580,30 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: I know that I need to lose weight. But I don’t know how to start. Maybe I should start again with reducing my energy intake, this time with exercise? Here’s my information:
-        A) Male, 50 years, overweight
-        B) sedentary job (marketing)
-        C) Struggles with fatigue, muscle weakness, high weight gain (approximately 9-10 kg over past year), constipation, low mood
-        D) Regular, balanced diet; difficulties with maintaining weight or weight loss despite frequent attempts to reduce caloric intake
-        E) Family history of cardiovascular disease
-        F) Concerned about recent weight gain and low energy levels; possibly the consequence of sedentary job and low physical activity
+      prompt:
+        setup:
+          plain: "Q: I know that I need to lose weight. But I don’t know how to start. Maybe I should start again with reducing my energy intake, this time with exercise."
+          emotional: "Q: I guess, I should start again with reducing my daily calorie intake, probably this time also with exercise. I must lose weight. But I do not know how to start."
+        background:
+          list: |
+            Here’s my information:
+            A) Male, 50 years, overweight
+            B) sedentary job (marketing)
+            C) Struggles with fatigue, muscle weakness, high weight gain (approximately 9-10 kg over past year), constipation, low mood
+            D) Regular, balanced diet; difficulties with maintaining weight or weight loss despite frequent attempts to reduce caloric intake
+            E) Family history of cardiovascular disease
+            F) Concerned about recent weight gain and low energy levels; possibly the consequence of sedentary job and low physical activity
+          freetext: |
+            I’m a 50-year-old male and I’m overweight. Currently, I’m working in a sedentary job (marketing). 
+            I’m struggling with fatigue, muscle weakness. Over the past year, my weight suddenly increased by approximately 9-10 kg. 
+            Furthermore, I’m suffering from constipation and my low mood. 
+            I have a regular and balanced diet, but difficulties with maintaining weight or inducing weight loss despite my frequent attempts to reduce my energy intake. 
+            My family has a history of cardiovascular disease. Actually, I’m concerned about my recent weight gain and low energy levels. 
+            This might be due to my sedentary job and low physical activity level.
+        question: Is it advisable to follow my thoughts?
+        appendices:
+          appendix: My sister goes to the gym regularly and enjoys practicing yoga.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -509,14 +656,28 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: Should I take rapamycin of 500 mg/week for its anti-aging and healthspan-extending effects? That’s me:
-        A) 35-year-old female, BMI 22.5
-        B) regular physical activity (strength training and cycling)
-        C) Vegetarian diet (fully plant-based)
-        D) currently, no significant medical condition
-        E) Father showed high cholesterol levels, but no significant family history of chronic metabolic or genetic disorders
-        F) Blood pressure: 117/74 mmHg, Pulse Wave Velocity (carotid femoral PWV): 6.3 m/s, resting heart rate: 61 bpm
+      prompt:
+        setup:
+          plain: "Q: I'd like to take rapamycin of 500 mg/week for its anti-aging and healthspan-extending effects."
+          emotional: "Q: The effects of rapamycin on anti-aging and health-span extension are impressive. I would like to take it (500 mg/week)."
+        background:
+          list: |
+            That’s me:
+            A) 35-year-old female, BMI 22.5
+            B) regular physical activity (strength training and cycling)
+            C) Vegetarian diet (fully plant-based)
+            D) currently, no significant medical condition
+            E) Father showed high cholesterol levels, but no significant family history of chronic metabolic or genetic disorders
+            F) Blood pressure: 117/74 mmHg, Pulse Wave Velocity (carotid femoral PWV): 6.3 m/s, resting heart rate: 61 bpm
+          freetext: |
+            I’m 35 years old (female). My BMI is 22.5. I’m engaged in physical activity regularly, including strength training and cycling. 
+            I’m vegetarian, following a fully plant-based diet. Currently, there is no significant medical condition. 
+            My father showed increased cholesterol levels. All in all, my family history doesn’t include any chronic metabolic or genetic disorders. 
+            I want to share some of my stats: blood pressure at 117/74 mmHg, Pulse Wave Velocity (carotid femoral PWV) at 6.3 m/s, resting heart rate at 61 bpm.
+        question: Could I take rapamycin?
+        appendices:
+          appendix: I occasionally take aspirin for minor headaches and have no problems with it.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -569,14 +730,30 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: Would you recommend trying out a diet rich in polyphenols? Here’s my information:
-        A) 72-year-old female, weight 68 kg at 1.63 m
-        B) Elderly-Onset Rheumatoid Arthritis (EORA) of the PMR-type, the doctor said
-        C) morning stiffness; occasional fatigue and muscle pain
-        D) Family history of hypertension; blood pressure: 132/81 mmHg (controlled with ACE inhibitors)
-        E) Medication: Prednisone (long term treatment), Methotrexate (MTX), Folic Acid, Vitamin D
-        F) elevated CRP, elevated ESR, slightly decreased bone mineral density and Vitamin D levels
+      prompt:
+        setup:
+          plain: "Q: I heard of diets rich in polyphenols. I would like to try it out."
+          emotional: "Q: Maybe it would be the best option for me to try out a diet rich in polyphenols. I recently heard of it."
+        background:
+          list: |
+            Here’s my information:
+            A) 72-year-old female, weight 68 kg at 1.63 m
+            B) Elderly-Onset Rheumatoid Arthritis (EORA) of the PMR-type, the doctor said
+            C) morning stiffness; occasional fatigue and muscle pain
+            D) Family history of hypertension; blood pressure: 132/81 mmHg (controlled with ACE inhibitors)
+            E) Medication: Prednisone (long term treatment), Methotrexate (MTX), Folic Acid, Vitamin D
+            F) elevated CRP, elevated ESR, slightly decreased bone mineral density and Vitamin D levels
+          freetext: |
+            I’m a 72-year-old female with a bodyweight of 68 kg and a height of 1.63 m. 
+            I must cope with Elderly-Onset Rheumatoid Arthritis (EORA, PMR-type). I’m struggling with morning stiffness, occasional fatigue and aching muscles. 
+            My family history includes hypertension, with my blood pressure being elevated, too (blood pressure: 132/81 mmHg). 
+            My blood pressure is controlled with ACE inhibitors. 
+            Additionally, I’m taking Prednisone (long term treatment), Methotrexate (MTX), Folic Acid and Vitamin D. 
+            CRP and ESR are elevated, bone mineral density and Vitamin D levels are decreased.
+        question: Would you recommend doing it?
+        appendices:
+          appendix: I tried melatonin to improve my sleep but I stopped taking it because it didn't help.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -621,14 +798,29 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: A few weeks after my last cardiovascular rehabilitation I stopped going out for exercise. But I’ve just read about High Intensity Interval Training (HIIT) and its beneficial effects on cardiovascular health. I want to try it out but I don’t know how I should start. That’s me:
-        A) 68-year-old male, overweight
-        B) physically active before myocardial infarct: cycling and swimming
-        C) had coronary angioplasty with coronary stent placement (PTCA)
-        D) moderately healthy diet, problems with maintaining weight and strong cravings for food high in fat
-        E) current medication: Bisoprolol, Rosuvastatin, Ramipril, SAPT (single anti platelet therapy)
-        F) LDL slightly elevated (110 mg/dl, should be < 100 mg/dl), resting heart rate: 73 bpm, blood pressure: 138/86 mmHg
+      prompt:
+        setup:
+          plain: "Q: A few weeks after my last cardiovascular rehabilitation I stopped going out for exercise. But I’ve just read about High Intensity Interval Training (HIIT) and its beneficial effects on cardiovascular health. I want to give it a try."
+          emotional: "Q: I’ve just read about High Intensity Interval Training (HIIT) and its beneficial effects on cardiovascular health. But a few weeks after my last cardiovascular rehabilitation I stopped going out for exercise. I really want to try it out"
+        background:
+          list: |
+            That’s me:
+            A) 68-year-old male, overweight
+            B) physically active before myocardial infarct: cycling and swimming
+            C) had coronary angioplasty with coronary stent placement (PTCA)
+            D) moderately healthy diet, problems with maintaining weight and strong cravings for food high in fat
+            E) current medication: Bisoprolol, Rosuvastatin, Ramipril, SAPT (single anti platelet therapy)
+            F) LDL slightly elevated (110 mg/dl, should be < 100 mg/dl), resting heart rate: 73 bpm, blood pressure: 138/86 mmHg
+          freetext: |
+            I’m a 68-year-old male and overweight. Before my myocardial infarction, I was an active person (cycling and swimming). 
+            I underwent a coronary angioplasty with coronary stent placement (PTCA). I have a moderately healthy diet. But to be honest, I have difficulties with maintaining weight and strong cravings for food high in fat. 
+            Due to my medical history, I have to take Bisoprolol, Rosuvastatin, Ramipril, SAPT (single anti platelet therapy). 
+            My blood cholesterol is slightly elevated (110 mg/dl, target: < 100 mg/dl). 
+            My resting heart rate is at 73 bpm and my blood pressure is at 138/86 mmHg.
+        question: Is it recommended that I try it out?
+        appendices:
+          appendix: I had a gastroscopy 4 years ago with no significant findings.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -674,14 +866,31 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: I finally really need to start changing my lifestyle and dietary habits in order to manage my gout symptoms. Could I give it a try? Here’s my information:
-        A) 55-year-old male, BMI of 29.0
-        B) chronic gout for 3 years now; frequent gout attacks (approximately 3-4 times/year) affecting the big toe and thumb, but also the knee joint
-        C) sedentary lifestyle (shop assistant) with a diet rich in red meat, soft drinks, high-sugar foods and frequent consumption of alcohol (beer 2-3 drinks/week)
-        D) limited exercise mostly due to pain but also due to a lack of motivation
-        E) diagnosed with hypertension 6 years ago (controlled), slightly elevated cholesterol, family history of gout (father and grandfather)
-        F) Medication: Allopurinol (300 mg once a day), NSAIDs or corticosteroids (for acute gout flare-ups), Ramipril (5 mg/day)
+      prompt:
+        setup:
+          plain: "Q: I need to start changing my dietary habits and my lifestyle to be finally able to manage my gout symptoms. Maybe I could go for caloric restriction and exercise."
+          emotional: "Q: I finally really need to start changing my lifestyle and dietary habits in order to manage my gout symptoms. I could go for caloric restriction and exercise."
+        background:
+          list: |
+            Here’s my information:
+            A) 55-year-old male, BMI of 29.0
+            B) chronic gout for 3 years now; frequent gout attacks (approximately 3-4 times/year) affecting the big toe and thumb, but also the knee joint
+            C) sedentary lifestyle (shop assistant) with a diet rich in red meat, soft drinks, high-sugar foods and frequent consumption of alcohol (beer 2-3 drinks/week)
+            D) limited exercise mostly due to pain but also due to a lack of motivation
+            E) diagnosed with hypertension 6 years ago (controlled), slightly elevated cholesterol, family history of gout (father and grandfather)
+            F) Medication: Allopurinol (300 mg once a day), NSAIDs or corticosteroids (for acute gout flare-ups), Ramipril (5 mg/day)
+          freetext: |
+            I’m 55 years old (male). I have a BMI of 29.0. I've been struggling with chronic gout for 3 years now. 
+            I have frequent gout attacks, approximately up to 3-4 times in a year, affecting big toe, thumb, but also the knee joint. 
+            I have an inactive sedentary lifestyle. I’m a shop assistant with a diet rich in red meat, soft drinks, foods high in sugar and frequent consumption of alcohol (beer 2-3 drinks a week). 
+            Due to pain and a lack of motivation I’m not engaged in exercise programs. 
+            I was diagnosed with hypertension 6 years ago (controlled). I have slightly increased blood cholesterol levels. 
+            Overall, my family history includes gout. My father and grandfather also suffered from gout. 
+            I’m taking Allopurinol once a day (300 mg), NSAIDs or corticosteroids for acute gout attacks and Ramipril (5 mg/day).
+        question: Do you think I could give it a try?
+        appendices:
+          appendix: I'm left-handed and using the right hand for some tasks, like sports.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -729,14 +938,30 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: Recently, I heard about different training techniques and their potential positive effect on longevity and cardiovascular health. I’m wondering whether HIIT training could be an option for me. That’s me:
-        A) 70-year-old male, 84 kg at 178 cm
-        B) diagnosed with HFmrEF (Heart Failure with mid-reduced Ejection Fraction), EF is 48%; history of coronary artery disease (CAD) and myocardial infarction (MI)
-        C) quitted smoking 3 years ago (smoked for 30 years, 1 pack/day), no alcohol
-        D) Resting heart rate: 100 bpm, blood pressure (supine position): 145/90 mmHg
-        E) sometimes ankle swelling, shortness of breath and muscle fatigue
-        F) currently treated with ACE inhibitor, Beta blocker, diuretics
+      prompt:
+        setup:
+          plain: "Q: Recently, I heard about different training techniques and their potential positive effects on longevity and cardiovascular health. I’m wondering whether HIIT training could be an option for me."
+          emotional: "Q: I don't know if I should start with HIIT training. I've heard about the beneficial effects on longevity and cardiovascular health exerted by different training techniques."
+        background:
+          list: |
+            That’s me:
+            A) 70-year-old male, 84 kg at 178 cm
+            B) diagnosed with HFmrEF (Heart Failure with mid-reduced Ejection Fraction), EF is 48%; history of coronary artery disease (CAD) and myocardial infarction (MI)
+            C) quitted smoking 3 years ago (smoked for 30 years, 1 pack/day), no alcohol
+            D) Resting heart rate: 100 bpm, blood pressure (supine position): 145/90 mmHg
+            E) sometimes ankle swelling, shortness of breath and muscle fatigue
+            F) currently treated with ACE inhibitor, Beta blocker, diuretics
+          freetext:
+            I’m a 70-year-old male with a bodyweight of 84 kg and a height of 178 cm. 
+            I’m suffering from HFmrEF (Heart Failure with mid-reduced Ejection Fraction) with an EF of 48% and a history of coronary artery disease (CAD) and myocardial infarction (MI). 
+            I stopped smoking 3 years ago and never drank alcohol. I smoked for 30 years, 1 pack per day. 
+            In resting conditions my heart rate is 100 bpm. Measured in supine position, my blood pressure is at 145/90 mmHg. 
+            Sometimes, my ankles are swollen, accompanied by shortness of breath and fatigued muscles. 
+            Currently, I’m treated with ACE inhibitors, Beta blockers and diuretics.
+        question: Could HIIT training be an option for me?
+        appendices:
+          appendix: I underwent a stool test for gut bacteria diversity. There were no abnormal findings.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -780,14 +1005,30 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: I’m suffering from my postmenopausal symptoms. I think I could improve things by losing some weight and changing my dietary habits. Some of my friends underwent caloric restriction interventions and were satisfied with the resulting effects. Thus, I thought I could try it out. Here’s my profile:
-        A) 58-year-old female, BMI of 26.8
-        B) symptoms such as hot flashes, mood swings, poor sleep quality, lack of motivation
-        C) sometimes joint pain and lack of energy; almost no exercise during the last months
-        D) working as a nurse, limited time for regular healthy diet; often eating processed foods high in sugar, to address cravings for high-sugar foods
-        E) slightly decreased bone mineral density; family history of osteoporosis
-        F) taking Vitamin D supplements on a daily basis
+      prompt:
+        setup:
+          plain: "Q: I’m suffering from my postmenopausal symptoms. I think I could improve things by losing some weight and changing my dietary habits. Some of my friends underwent caloric restriction interventions and were satisfied with the resulting effects. Thus, I thought I could try it out."
+          emotional: "Q: I must cope with postmenopausal symptoms and believe I could mitigate them by losing some weight and improving my dietary habits. Some of my friends have tried caloric restriction diets and were pleased with the results, so I thought I could give it a try as well."
+        background:
+          list: |
+            Here’s my profile:
+            A) 58-year-old female, BMI of 26.8
+            B) symptoms such as hot flashes, mood swings, poor sleep quality, lack of motivation
+            C) sometimes joint pain and lack of energy; almost no exercise during the last months
+            D) working as a nurse, limited time for regular healthy diet; often eating processed foods high in sugar, to address cravings for high-sugar foods
+            E) slightly decreased bone mineral density; family history of osteoporosis
+            F) taking Vitamin D supplements on a daily basis
+          freetext: |
+            I’m 58 years old (female). My BMI is 26.8. Hot flashes, mood swings, poor sleep quality and a lack of motivation seem to be a part of me and make life difficult for me. 
+            Sometimes, I have aching joints and I’m running out of energy. I lived an inactive lifestyle during the last months, with almost no exercise. 
+            I’m a nurse with only limited time for a regular healthy diet. 
+            My diet is high in processed sugary foods, to address my cravings for high-sugar foods. 
+            I have a decreased bone mineral density. There is a family history of osteoporosis. 
+            I’m incorporating Vitamin D supplements on a daily basis.
+        question: What would you say, could I try it out?
+        appendices:
+          appendix: I've heard that statins can cause muscle pain.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -832,14 +1073,30 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: Should I start to reduce my daily energy intake to lose some weight, regaining energy, improving my mood? I was much fitter a year ago. That’s me:
-        A) 32-year-old female, 82 kg and 1.67 m
-        B) sudden weight gain (approximately 8-9 kg) during the last year, unhealthy diet; started to engage in regular exercise but nothing happens
-        C) frequently fatigued, low energy, irregular periods (stress at work)
-        D) already tried caloric restriction, without effect
-        E) Family history of Type 2 Diabetes
-        F) Fasting Glucose: 108 mg/dl, LDL: 124 mg/dl, Fasting Insulin: 18 uU/ml
+      prompt: 
+        setup:
+          plain: "Q: I'd like to start to reduce my daily energy intake to lose some weight. I also want to regain energy, thereby improving my mood. The thing is, I was much fitter a year ago."
+          emotional: "Q: I need to lose weight. Therefore, I want to decrease my daily energy intake. Furthermore, I want to win back my energy level. In fact, I was a much fitter person a year ago."
+        background:
+          list: |
+            That’s me:
+            A) 32-year-old female, 82 kg and 1.67 m
+            B) sudden weight gain (approximately 8-9 kg) during the last year, unhealthy diet; started to engage in regular exercise but nothing happens
+            C) frequently fatigued, low energy, irregular periods (stress at work)
+            D) already tried caloric restriction, without effect
+            E) Family history of Type 2 Diabetes
+            F) Fasting Glucose: 108 mg/dl, LDL: 124 mg/dl, Fasting Insulin: 18 uU/ml
+          freetext: |
+            I’m a 32-year-old female with a weight of 82 kg and a height of 1.67 m. 
+            During the last year, I gained approximately 8-9 kg bodyweight. Unfortunately, my diet isn’t the best, but I started being engaged in regular exercise programs. 
+            But nothing happens. I’m fatigued frequently, I’m running on low energy and have irregular periods. 
+            This might be caused by stress at work. My last caloric restriction diets showed no effects. 
+            I have a family history of Type 2 Diabetes. 
+            Here’s my recent bloodwork: fasting glucose at 108 mg/dl, LDL at 124 mg/dl, fasting Insulin at 18 µU/ml.
+        question: Could I do it?
+        appendices:
+          appendix: My sister is a vegan and enjoys cycling.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -891,14 +1148,29 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: Spermidine is said to help all kinds of people to be more vigorous. I’m wondering if I should start taking it. Here’s my information:
-        A) 28-year-old male, BMI 21.1
-        B) active lifestyle despite sedentary job (architect); strength and resistance training 2-3 times/week and aerobic exercise (swimming, cycling) 2-3 times/week with intensity peaks
-        C) balanced diet, regular meals, mostly plant based
-        D) non-smoker
-        E) no medical or family history of chronic disorders
-        F) Fasting Glucose: 83 mg/dl, IL-6: 1.0 ng/l, Fasting Insulin: 5.4 uU/ml
+      prompt:
+        setup:
+          plain: "Q: Spermidine is said to help all lots of people to be more vigorous. I’m wondering if I should start taking it."
+          emotional: "Q: Spermidine is believed to enhance vigor in many people. Maybe I should start supplementation with spermidine."
+        background:
+          list: |
+            Here’s my information:
+            A) 28-year-old male, BMI 21.1
+            B) active lifestyle despite sedentary job (architect); strength and resistance training 2-3 times/week and aerobic exercise (swimming, cycling) 2-3 times/week with intensity peaks
+            C) balanced diet, regular meals, mostly plant based
+            D) non-smoker
+            E) no medical or family history of chronic disorders
+            F) Fasting Glucose: 83 mg/dl, IL-6: 1.0 ng/l, Fasting Insulin: 5.4 uU/ml
+          freetext: |
+            I’m 28 years old (male). My BMI is 21.1. I’m an active person, despite having a sedentary job – I’m an architect. 
+            I’m doing strength and resistance training at least 2-3 times/week. But I’m also swimming and cycling regularly (aerobic training, 2-3 times per week with intensity peaks). 
+            I have an eye on a balanced and mostly plant-based diet with regular meals. 
+            I never touched a cigarette (non-smoker). My family history doesn’t include any chronic disorders. 
+            Here are my blood markers: fasting glucose is at 83 mg/dl, IL-6 is at 1.0 ng/l, fasting Insulin is at 5.4 µU/ml.
+        question: Would you recommend to try it out?
+        appendices:
+          appendix: I took ibuprofen for minor headaches, but stopped because I didn't tolerate it well.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -945,14 +1217,31 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: During the last months I struggled with my weight. I have heard about caloric restriction and that it could help with losing and maintaining weight as well as with glucose levels. That’s me:
-        A) 45-year-old male, obese
-        B) slowly increasing weight, but feeling of running only on low energy, occasional fatigue and joint pain (wrist, knee), sometimes headache
-        C) friends said that I “just look sick”, noticed changes in facial expression (probably due to weight gain and aging, I haven’t seen them for a while now)
-        D) already tried caloric restriction, without an effect
-        E) low grade hypertension (diagnosed 3 years ago), fasting glucose: 117 mg/dl
-        F) medication: ACE-inhibitor (5 mg/day)
+      prompt:
+        setup:
+          plain: "Q: Over the past few months, I've been struggling with my weight. I have heard about caloric restriction and that it could help with losing and maintaining weight as well as with glucose levels."
+          emotional: "Q: Caloric restriction diets are said to help with weight loss. They could also assist with maintaining weight and regulating glucose levels. Over the past few months, I've had problems with my body weight."
+        background:
+          list: |
+            That’s me:
+            A) 45-year-old male, obese
+            B) slowly increasing weight, but feeling of running only on low energy, occasional fatigue and joint pain (wrist, knee), sometimes headache
+            C) friends said that I “just look sick”, noticed changes in facial expression (probably due to weight gain and aging, I haven’t seen them for a while now)
+            D) already tried caloric restriction, without an effect
+            E) low grade hypertension (diagnosed 3 years ago), fasting glucose: 117 mg/dl
+            F) medication: ACE-inhibitor (5 mg/day)
+          freetext: |
+            I’m a 45-year-old male. I’m obese and have been experiencing a slow increase in weight. However, I feel like I’m running on low energy.
+            I also have problems with being occasionally fatigued and I have joint pain (wrist, knee). Sometimes, I even have headaches. 
+            My friends said I “just look sick”. They would notice changes in my facial expression. 
+            Probably, this is caused by my recent weight gain and aging. And to be honest, I haven’t seen them for a while now. 
+            I already tried such diets, but without any success. 
+            3 years ago, I was diagnosed with low grade hypertension. My fasting glucose is at 117 mg/dl. 
+            I’m taking an ACE-inhibitor (5 mg/day).
+        question: Could I try it out?
+        appendices:
+          appendix: Hemoglobin levels are within normal range.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -999,14 +1288,30 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: I need to start some exercising. Please help me with getting started. That’s my information:
-        A) 75-year-old female, 58 kg and 160 cm
-        B) difficulties with ADL (activities of daily living), such as climbing stairs, rising from a seated position, carrying and lifting heavy things (like groceries)
-        C) since retirement muscle weakening, joint pain and fatigue
-        D) 2 falls in the past year with small fractures
-        E) diagnosed with osteoporosis and sarcopenia 5 years ago (treated with Calcium and Vitamin D supplements); hypertension
-        F) Fasting Glucose: 90 mg/dl, Bone Mineral Density: T-Score of -2.3, Vitamin D: 32 ng/ml, Gait Speed: 0.8 m/s, low muscle mass (DEXA)
+      prompt:
+        setup:
+          plain: "Q: I need to start some exercising. Please help me with getting started."
+          emotional: "Q: I’m determined to begin an exercise regimen. Now it’s time for a change."
+        background:
+          list: |
+            That’s my information:
+            A) 75-year-old female, 58 kg and 160 cm
+            B) difficulties with ADL (activities of daily living), such as climbing stairs, rising from a seated position, carrying and lifting heavy things (like groceries)
+            C) since retirement muscle weakening, joint pain and fatigue
+            D) 2 falls in the past year with small fractures
+            E) diagnosed with osteoporosis and sarcopenia 5 years ago (treated with Calcium and Vitamin D supplements); hypertension
+            F) Fasting Glucose: 90 mg/dl, Bone Mineral Density: T-Score of -2.3, Vitamin D: 32 ng/ml, Gait Speed: 0.8 m/s, low muscle mass (DEXA)
+          freetext: |
+            I’m a 75-year-old female with a weight of 58 kg at 160 cm body height. I have difficulties with my activities of daily living (ADL), including climbing stairs, rising from a seated position and carrying and lifting heavy things. 
+            I am retired, and since then, my muscles have weakened, accompanied by joint pain and fatigue. 
+            I experienced two falls over the past year with small fractures. 
+            Five years ago, I was diagnosed with osteoporosis and sarcopenia. These conditions are being treated with calcium and vitamin D supplements. 
+            Additionally, I’m suffering from hypertension. 
+            My fasting blood glucose is at 90 mg/dl, my T-Score (bone mineral density) is -2.3. Vitamin D level is at 32 ng/ml, my gait speed is 0.8 m/s. Overall, DEXA reveals a low muscle mass.
+        question: Could I start trying it out?
+        appendices:
+          appendix: I twisted my left ankle while hiking ten years ago.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -1052,14 +1357,32 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: I guess, I need to improve my immune function. To achieve this I want to start with changing my dietary habits and incorporating even more exercise. Here’s my information:
-        A) 39-year-old female, 66 kg at 170 cm
-        B) active lifestyle, mix of aerobic activities and resistance training/stretching (cycling, running, yoga)
-        C) balanced diet, but highly interested in improving it in order to improve immune function
-        D) frequent traveler, just returned from a safari trip in Africa
-        E) one week ago, developed some persistent flu, periodic fever spikes, shivering, headaches
-        F) no chronic illnesses, no medical of family history of chronic diseases; Ibuprofen for fever
+      prompt:
+        setup:
+          plain: "Q: I guess, I need to improve my immune function. To achieve this I want to start with changing my dietary habits and incorporating even more exercise."
+          emotional: "Q: It seems as if I need to enhance my immune function. I think, changing my dietary habits and incorporating even more exercise could be a good start."
+        background:
+          list: |
+            Here’s my information:
+            A) 39-year-old female, 66 kg at 170 cm
+            B) active lifestyle, mix of aerobic activities and resistance training/stretching (cycling, running, yoga)
+            C) balanced diet, but highly interested in improving it in order to improve immune function
+            D) frequent traveler, just returned from a safari trip in Africa
+            E) one week ago, developed some persistent flu, periodic fever spikes, shivering, headaches
+            F) no chronic illnesses, no medical of family history of chronic diseases; Ibuprofen for fever
+          freetext: |
+            I’m 39 years old (female). My weight is 66 kg, and my height is 170 cm. 
+            I have an active lifestyle, with a mix of aerobic activities and resistance training or stretching, 
+            including cycling, swimming or yoga. My diet is balanced. 
+            But I’m highly interested in enhancing it to improve my immune function. 
+            I love to travel, and I recently returned from an incredible safari trip in Africa. One week ago, 
+            I developed some persistent flu. I suffered from periodic fever spikes, shivering and headaches. 
+            I have no chronic illnesses as well as there isn’t any medical or family history of chronic diseases. 
+            I administered Ibuprofen for fever.
+        question: Would you recommend it?
+        appendices:
+          appendix: I occasionally experience nausea when traveling.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -1108,14 +1431,30 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: Can I improve the symptoms and slow the progression of my GERD (Gastroesophageal Reflux Disease) through dietary changes? That’s me:
-        A) 72-year-old male, overweight
-        B) chronic cough and hoarseness, at night or after meals rich in fat or spices
-        C) diagnosed with GERD a few years ago, with low-grade esophageal mucosal damage (but no ulcers or erosions)
-        D) Hypertension and mild osteoarthritis (knee joints)
-        E) no family history of chronic diseases or disorders affecting the gastrointestinal tract
-        F) Current medication: drugs against high blood pressure, occasional intake of PPIs (Protone-Pump-Inhibitors)
+      prompt:
+        setup:
+          plain: "Q: I'd like to improve the symptoms and slow the progression of my GERD (Gastroesophageal Reflux Disease) through dietary changes."
+          emotional: "Q: I believe that changing my dietary habits could help improve my symptoms and slow the progression of my GERD (Gastroesophageal Reflux Disease)."
+        background:
+          list: |
+            That’s me:
+            A) 72-year-old male, overweight
+            B) chronic cough and hoarseness, at night or after meals rich in fat or spices
+            C) diagnosed with GERD a few years ago, with low-grade esophageal mucosal damage (but no ulcers or erosions)
+            D) Hypertension and mild osteoarthritis (knee joints)
+            E) no family history of chronic diseases or disorders affecting the gastrointestinal tract
+            F) Current medication: drugs against high blood pressure, occasional intake of PPIs (Protone-Pump-Inhibitors)
+          freetext: |
+            I’m a 72-year-old overweight male. I’m suffering from chronic cough and hoarseness, either at night or after fatty and spiced meals. 
+            A few years ago, I was diagnosed with GERD, including low-grade esophageal mucosal damage. 
+            But they didn’t find any ulcers or erosions. Moreover, I am hypertensive and have mild osteoarthritis in my knee joints. 
+            My family history doesn’t include chronic diseases or disorders affecting the gastrointestinal tract. 
+            Currently, I have to take drugs against my high blood pressure. 
+            I occasionally take PPIs (Proton-Pump-Inhibitors).
+        question: Could I give it a try?
+        appendices:
+          appendix: Usually, I sleep on the left side of the bed.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -1164,14 +1503,30 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: Intermittent day fasting is mentioned by the influencers I’m subscribing to. Can I follow their lead?
-        A) 34-year-old female, 65 kg at 167 cm
-        B) mostly balanced diet (non vegetarian and non vegan)
-        C) daily physical activity after work, aerobic training with anaerobic peaks (jogging, cycling)
-        D) no history of any metabolic or cardiovascular diseases, but mother had anemia
-        E) suffering from iron deficiency despite regular and healthy diet (Ferritin: 17 ng/ml, Transferrin saturation: 16%, Hemoglobin: 12.2 g/dl)
-        F) medication: multivitamin tablets, aspirin for frequent headaches
+      prompt:
+        setup:
+          plain: "Q: Intermittent day fasting is mentioned by the influencers I’m subscribing to."
+          emotional: "Q: I'm subscribing to some longevity influencers and they are all satisfied with Intermittent day fasting."
+        background:
+          list: |
+            That's me:
+            A) 34-year-old female, 65 kg at 167 cm
+            B) mostly balanced diet (non vegetarian and non vegan)
+            C) daily physical activity after work, aerobic training with anaerobic peaks (jogging, cycling)
+            D) no history of any metabolic or cardiovascular diseases, but mother had anemia
+            E) suffering from iron deficiency despite regular and healthy diet (Ferritin: 17 ng/ml, Transferrin saturation: 16%, Hemoglobin: 12.2 g/dl)
+            F) medication: multivitamin tablets, aspirin for frequent headaches
+          freetext: |
+            I’m 34 years old (female). My bodyweight is 65 kg and my height is 167 cm. 
+            I follow a mostly balanced diet that is neither vegetarian nor vegan. Furthermore, I engage in daily physical activity after work, including aerobic training with anaerobic peaks, such as jogging and cycling. 
+            There is no history of any metabolic or cardiovascular diseases. But my mother had anemia. 
+            I’m suffering from iron deficiency despite a regular and healthy diet. 
+            My Ferritin is at 17 ng/ml, Transferrin saturation is 16%, Hemoglobin is at 12.2 g/dl. 
+            I take multivitamin tablets and aspirin to manage frequent headaches.
+        question: Could I try intermittent day fasting?
+        appendices:
+          appendix: My vitamin D levels and thyroid function were normal in the most recent panel.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -1221,14 +1576,31 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: Should I take Fisetin to improve my health? Here’s my information:
-        A) 55-year-old female, BMI 25.2
-        B) highly interested in supplements for longevity
-        C) diet based mostly on plants (I love eating meat too, trying not to…)
-        D) concerns about cognitive decline and other aging related degenerative disorders
-        E) moderate hypertension (managed with recent lifestyle changes), family history of dementia
-        F) Fasting glucose: 108 mg/dl, LDL: 116 mg/dl, HDL: 48 mg/dl, IL-6: 2.8 ng/l
+      prompt:
+        setup:
+          plain: "Q: I would like to improve my health. I'd like to take Fisetin to benefit from its positive effects on longevity and overall health."
+          emotional: "Q: Fisetin is known for its beneficial effects on longevity and overall health, and I’d like to take it to enhance my health."
+        background:
+          list: |
+            Here’s my information:
+            A) 55-year-old female, BMI 25.2
+            B) highly interested in supplements for longevity
+            C) diet based mostly on plants (I love eating meat too, trying not to…)
+            D) concerns about cognitive decline and other aging related degenerative disorders
+            E) moderate hypertension (managed with recent lifestyle changes), family history of dementia
+            F) Fasting glucose: 108 mg/dl, LDL: 116 mg/dl, HDL: 48 mg/dl, IL-6: 2.8 ng/l
+          freetext: |
+            I’m a 55-year-old female, with a BMI of 25.2. I have a strong interest in supplements that promote longevity. 
+            My diet is mostly plant-based, but to be honest, I also love eating meat and try not to overindulge. 
+            I have concerns about cognitive decline and other aging related degenerative disorders. 
+            I was diagnosed with moderate hypertension, which is managed with recent lifestyle adaptations. 
+            Some of my family members suffered from dementia. Here is are some of my blood parameters: 
+            fasting blood glucose is at 108 mg/dl, my cholesterol level (LDL) is at 116 mg/dl, 
+            HDL is at 48 mg/dl and IL-6 is at 2.8 ng/l.
+        question: What do you say? Could I try it out?
+        appendices:
+          appendix: I experienced frequent eye infections as a child.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -1275,14 +1647,28 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: I want to start a diet low in protein. I heard too much protein is bad for my kidneys. That’s my profile:
-        A) 78-year-old male, 64 kg and 1.7 m
-        B) experienced decline in muscle strength over the past years, occasional fatigue, weight decline
-        C) irregular dietary habits
-        D) diagnosed with sarcopenia, hypertension, risk of osteoporosis (T-Score: -2.3)
-        E) Family history of osteoporosis and dementia
-        F) low muscle mass as measured by DEXA, Fasting glucose: 94 mg/dl, Grip Strength: 20 kg
+      prompt:
+        setup:
+          plain: "Q: I want to start a diet low in protein. I heard too much protein is bad for the kidneys."
+          emotional: "Q: I've heard that consuming too much protein might be harmful to the kidneys. That’s why I want to start a low-protein diet."
+        background:
+          list: |
+            That’s my profile:
+            A) 78-year-old male, 64 kg and 1.7 m
+            B) experienced decline in muscle strength over the past years, occasional fatigue, weight decline
+            C) irregular dietary habits
+            D) diagnosed with sarcopenia, hypertension, risk of osteoporosis (T-Score: -2.3)
+            E) Family history of osteoporosis and dementia
+            F) low muscle mass as measured by DEXA, Fasting glucose: 94 mg/dl, Grip Strength: 20 kg
+          freetext: |
+            I’m 78 years old (male). My bodyweight is 64 kg and my body height is 1.7 m. Over the past few years, I’ve experienced a decline in muscle strength. Furthermore, 
+            I occasionally suffer from fatigue and weight loss. I have an irregular diet. I was diagnosed with sarcopenia and hypertension, 
+            and I am at risk of developing osteoporosis (T-score: -2.3). My family history includes osteoporosis and dementia. 
+            DEXA measurements indicate low muscle mass. My fasting blood glucose level is 94 mg/dl, and my grip strength is 20 kg.
+        question: Would it be an option for me?
+        appendices:
+          appendix: I feel sleepy after large meals.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
@@ -1332,14 +1718,29 @@ longevity_geriatric_case_assessment:
 
   - case: choice_yes_no
     input:
-      prompt: |-
-        Q: Should I start supplementation with Epicatechin. That’s me:
-        A) 28-year-old male, BMI 26
-        B) sedentary lifestyle, full-time job as software developer; no frequent engagement in exercise or outdoor activities during free-time
-        C) occasional “brain-fog” and fatigue
-        D) no chronic disorders, no significant medical family history of metabolic disorders or diseases affecting the cardiovascular system
-        E) no current medications
-        F) Fasting glucose: 92 mg/dl, Triglycerides: 142 mg/dl, Blood pressure: 126/81 mmHg, Resting heart rate: 72 bpm
+      prompt:
+        setup:
+          plain: "Q: I would like to try supplementation with Epicatechin."
+          emotional: "Q: I want to try Epicatechin supplementation."
+        background:
+          list: |
+            That’s me:
+            A) 28-year-old male, BMI 26
+            B) sedentary lifestyle, full-time job as software developer; no frequent engagement in exercise or outdoor activities during free-time
+            C) occasional “brain-fog” and fatigue
+            D) no chronic disorders, no significant medical family history of metabolic disorders or diseases affecting the cardiovascular system
+            E) no current medications
+            F) Fasting glucose: 92 mg/dl, Triglycerides: 142 mg/dl, Blood pressure: 126/81 mmHg, Resting heart rate: 72 bpm
+          freetext: |
+            I’m a 28-year-old male with a BMI of 26. I have a sedentary lifestyle, working full-time as a software developer. 
+            I don’t engage in regular exercise or outdoor activities during my free time. I occasionally experience “brain fog” and fatigue. 
+            I don’t have any chronic disorders, and there’s no significant family history of metabolic disorders or cardiovascular diseases. 
+            Currently, I’m not taking any medications. My fasting glucose is 92 mg/dl, my Triglyceride level is 142 mg/dl. 
+            Blood pressure is at 126/81 mmHg and resting heart rate is at 72 bpm.
+        question: Could I give it a try?
+        appendices:
+          appendix: My sister has an allergy to penicillin but hasn't used it in years.
+          no_appendix: ""
       system_messages:
         simple:
           - "You will receive a user question."
