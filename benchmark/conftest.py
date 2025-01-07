@@ -1,4 +1,5 @@
 import os
+import re
 
 import numpy as np
 import pandas as pd
@@ -29,8 +30,8 @@ OPENAI_MODEL_NAMES = [
     # "gpt-4-0125-preview",
     # "gpt-4-turbo-2024-04-09",
     # "gpt-4o-2024-05-13",
-    "gpt-4o-2024-08-06",
-    # "gpt-4o-mini-2024-07-18",
+    # "gpt-4o-2024-08-06",
+    "gpt-4o-mini-2024-07-18",
 ]
 
 ANTHROPIC_MODEL_NAMES = [
@@ -347,6 +348,21 @@ def calculate_bool_vector_score(vector: list[bool]) -> tuple[int, int]:
     max = len(vector)
     return (score, max)
 
+@pytest.fixture
+def multiple_responses(request):
+    def run_multiple_times(test_func, *args, **kwargs):
+        responses = []
+        for _ in range(N_ITERATIONS):
+            response = test_func(*args, **kwargs)
+            cleaned_response = re.sub(r"\n\d*", "", response[0])
+            responses.append(cleaned_response.replace(".. ", ".").replace(":. ", ": ").replace(".", ". ").replace(".  ", ". "))
+        resps = [resp for resp in responses]
+        return (N_ITERATIONS, resps)
+
+    return run_multiple_times
+
+def return_response(response: list):
+    return response
 
 @pytest.fixture()
 def conversation(request, model_name, client):
@@ -557,10 +573,15 @@ def pytest_generate_tests(metafunc):
             "test_data_medical_exam",
             data["medical_exam"],
         )
-    if "test_data_longevity" in metafunc.fixturenames:
+    if "test_data_responses" in metafunc.fixturenames:
         metafunc.parametrize(
-            "test_data_longevity",
-            data["longevity"],
+            "test_data_responses",
+            data["longevity_geriatric_case_assessment"],
+        )
+    if "test_data_responses_rag" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "test_data_responses_rag",
+            data["longevity_geriatric_case_assessment_rag"],
         )
 
 
