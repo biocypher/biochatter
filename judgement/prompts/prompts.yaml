@@ -1,0 +1,45 @@
+prompts:
+  correctness:
+    poitive: correct
+    negative: not correct
+    prompt: |-
+      You will receive instructions on how to proceed with the evaluation and assessment:
+        - First, you receive the patient’s concern (<PATIENT>).
+        - Next, you receive an expert annotated comment about what is expected from the LLM's analysis as well as you receive a key word list with the most important keywords related to the patient's concern (<DATA>).
+        - Then, begin gathering information about this data from your own knowledge (<DATA COLLECTION>).
+        - Use the provided information and the information you gathered to summarize the presented patient (<SUMMARY>).
+        - Then, you receive the analysis of the patient prepared by the other LLM (<PROVIDED ANALYSIS>).
+        - The, you receive the expert annotated ground truth (<GROUND TRUTH>) denoted as either "yes" or "no".
+        - The analysis is {success} if the final answer of the LLM ("Final answer: ..." in <PROVIDED ANALYSIS>) == <GROUND TRUTH> and/or follows <DATA COLLECTION>, <SUMMARY>. 
+        - The analysis is {failure} if the final answer of the LLM ("Final answer: ..." in <PROVIDED ANALYSIS>) != <GROUND TRUTH> and/or does not follow <DATA COLLECTION>, <SUMMARY>. 
+
+        Evaluate the <PROVIDED ANALYSIS> using the ground truth (<GROUND TRUTH>).
+
+        **ONLY return "{success}" or "{failure}" and not the whole answer.**
+
+        <PATIENT> 
+        {prompt}
+
+        <DATA>
+        Expert annotated commentary:
+        {summary}
+
+        Key word list:
+        {keywords}
+
+        <PROVIDED ANALYSIS> 
+        The analysis of the other LLM to be evaluated by you, using the previously provided and collected data:
+
+        {response}
+
+        <DATA COLLECTION> 
+        Independently gather patient-specific data from your own knowledge base. 
+
+        <SUMMARY> 
+        Use all available information from <PATIENT>, <DATA>, and <DATA COLLECTION> to create a summary.
+
+        <GROUND TRUTH>
+        {expected_answer}
+
+        <EVALUATION>
+        Your evaluation. {success} or {failure}. ANSWER ONLY WITH ONE WORD!
