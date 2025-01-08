@@ -222,10 +222,12 @@ def return_or_create_rag_response_file(task: str, model: str):
         results = pd.DataFrame(
             columns=[
                 "model_name",
+                "case_id",
                 "subtask",
+                "individual",
                 "prompt",
                 "response",
-                "used_contexts",
+                "contexts",
                 "expected_answer",
                 "summary",
                 "key_words",
@@ -555,7 +557,9 @@ def write_responses_to_file(
 
 def write_rag_responses_to_file(
     model_name: str,
+    case_id: str,
     subtask: str,
+    individual: str,
     prompt: str,
     responses: list,
     contexts,
@@ -581,9 +585,9 @@ def write_rag_responses_to_file(
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     bc_version = importlib_metadata.version("biochatter")
     new_row = pd.DataFrame(
-        [[model_name, subtask, prompt, responses, contexts, expected_answer, summary, key_words, iterations, md5_hash, now, bc_version]],
-        columns=results.columns,
-    )
+        [[model_name, case_id, subtask, individual, prompt, responses, 
+          contexts, expected_answer, summary, key_words, iterations, md5_hash, now, bc_version]
+    ], columns=results.columns)
     results = pd.concat([results, new_row], ignore_index=True).sort_values(
         by=["model_name", "subtask"]
     )
