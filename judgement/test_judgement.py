@@ -84,17 +84,38 @@ def test_judgement(
     
     scores, max, n_iterations = multiple_testing(run_test)
 
+    if "list" in test_judgement["subtask"]:
+        prompt_type = "list"
+    elif "freetext" in test_judgement["subtask"]:
+        prompt_type = "freetext"
+
+    if ":appendix:" in test_judgement["subtask"]:
+        clause = "appendix"
+    elif "no_appendix" in test_judgement["subtask"]:
+        clause = "no_appendix"
+
+    if "simple" in test_judgement["subtask"]:
+        system_prompt = "simple"
+    elif "detailed" in test_judgement["subtask"]:
+        system_prompt = "detailed"
+    elif "explicit" in test_judgement["subtask"]:
+        system_prompt = "explicit"
+
     write_judgement_to_file(
         judge_model = model_name,
         evaluated_model = test_judgement["model_name"],
         iterations = f"{n_iterations}",
         metric = metric,
+        case_id = test_judgement["case_id"],
         subtask = test_judgement["subtask"],
         individual = test_judgement["individual"],
         md5_hash = test_judgement["md5_hash"],
         prompt = test_judgement["prompt"],
+        system_prompt = system_prompt,
+        prompt_type = prompt_type,
+        is_appendix = clause,
         responses = test_judgement["response"],
         expected_answer = test_judgement["expected_answer"],
-        rating = scores,
+        rating = f"{scores}/{1}",
         path = f"./judgement/model_eval/{test_judgement['model_name']}_{metric}.csv",
     )
