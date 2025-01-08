@@ -1,5 +1,6 @@
 longevity_geriatric_case_assessment:
   - case: choice_yes_no
+    case_id: "1"
     input:
       prompt:
         setup:
@@ -68,6 +69,7 @@ longevity_geriatric_case_assessment:
         mid-aged/pregeriatric
 
   - case: choice_yes_no
+    case_id: "2"
     input:
       prompt:
         setup:
@@ -136,6 +138,7 @@ longevity_geriatric_case_assessment:
         young
 
   - case: choice_yes_no
+    case_id: "3"
     input:
       prompt:
         setup:
@@ -207,6 +210,7 @@ longevity_geriatric_case_assessment:
         geriatric
 
   - case: choice_yes_no
+    case_id: "4"
     input:
       prompt:
         setup:
@@ -280,6 +284,7 @@ longevity_geriatric_case_assessment:
         young
 
   - case: choice_yes_no
+    case_id: "5"
     input:
       prompt:
         setup:
@@ -353,6 +358,7 @@ longevity_geriatric_case_assessment:
         young
 
   - case: choice_yes_no
+    case_id: "6"
     input:
       prompt:
         setup:
@@ -430,6 +436,7 @@ longevity_geriatric_case_assessment:
         mid-aged/pregeriatric
 
   - case: choice_yes_no
+    case_id: "7"
     input:
       prompt:
         setup:
@@ -502,6 +509,7 @@ longevity_geriatric_case_assessment:
         young
 
   - case: choice_yes_no
+    case_id: "8"
     input:
       prompt:
         setup:
@@ -579,6 +587,7 @@ longevity_geriatric_case_assessment:
         young
 
   - case: choice_yes_no
+    case_id: "9"
     input:
       prompt:
         setup:
@@ -655,6 +664,7 @@ longevity_geriatric_case_assessment:
         mid-aged/pregeriatric
 
   - case: choice_yes_no
+    case_id: "10"
     input:
       prompt:
         setup:
@@ -729,6 +739,7 @@ longevity_geriatric_case_assessment:
         young
 
   - case: choice_yes_no
+    case_id: "11"
     input:
       prompt:
         setup:
@@ -797,6 +808,7 @@ longevity_geriatric_case_assessment:
         geriatric
 
   - case: choice_yes_no
+    case_id: "12"
     input:
       prompt:
         setup:
@@ -865,6 +877,7 @@ longevity_geriatric_case_assessment:
         geriatric
 
   - case: choice_yes_no
+    case_id: "13"
     input:
       prompt:
         setup:
@@ -937,6 +950,7 @@ longevity_geriatric_case_assessment:
         mid-aged/pregeriatric
 
   - case: choice_yes_no
+    case_id: "14"
     input:
       prompt:
         setup:
@@ -1004,6 +1018,7 @@ longevity_geriatric_case_assessment:
         geriatric
 
   - case: choice_yes_no
+    case_id: "15"
     input:
       prompt:
         setup:
@@ -1072,6 +1087,7 @@ longevity_geriatric_case_assessment:
         mid-aged/pregeriatric
 
   - case: choice_yes_no
+    case_id: "16"
     input:
       prompt: 
         setup:
@@ -1147,6 +1163,7 @@ longevity_geriatric_case_assessment:
         young
 
   - case: choice_yes_no
+    case_id: "17"
     input:
       prompt:
         setup:
@@ -1216,6 +1233,7 @@ longevity_geriatric_case_assessment:
         young
 
   - case: choice_yes_no
+    case_id: "18"
     input:
       prompt:
         setup:
@@ -1287,6 +1305,7 @@ longevity_geriatric_case_assessment:
         mid-aged/pregeriatric
 
   - case: choice_yes_no
+    case_id: "19"
     input:
       prompt:
         setup:
@@ -1356,6 +1375,7 @@ longevity_geriatric_case_assessment:
         geriatric
 
   - case: choice_yes_no
+    case_id: "20"
     input:
       prompt:
         setup:
@@ -1430,6 +1450,7 @@ longevity_geriatric_case_assessment:
         young
 
   - case: choice_yes_no
+    case_id: "21"
     input:
       prompt:
         setup:
@@ -1502,6 +1523,7 @@ longevity_geriatric_case_assessment:
         geriatric
 
   - case: choice_yes_no
+    case_id: "22"
     input:
       prompt:
         setup:
@@ -1575,6 +1597,7 @@ longevity_geriatric_case_assessment:
         young
 
   - case: choice_yes_no
+    case_id: "23"
     input:
       prompt:
         setup:
@@ -1646,6 +1669,7 @@ longevity_geriatric_case_assessment:
         mid-aged/pregeriatric
 
   - case: choice_yes_no
+    case_id: "24"
     input:
       prompt:
         setup:
@@ -1717,6 +1741,7 @@ longevity_geriatric_case_assessment:
         geriatric
 
   - case: choice_yes_no
+    case_id: "25"
     input:
       prompt:
         setup:
