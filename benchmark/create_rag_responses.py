@@ -66,7 +66,9 @@ def test_longevity_geriatrics_rag(
 
     write_rag_responses_to_file(
         model_name,
+        yaml_data["case_id"],
         yaml_data["case"],
+        yaml_data["expected"]["individual"],
         yaml_data["input"]["prompt"],
         responses,
         yaml_data["contexts"],
