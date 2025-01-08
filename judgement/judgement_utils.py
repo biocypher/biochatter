@@ -125,10 +125,14 @@ def return_or_create_judge_file(judge_model: str, evaluated_model: str, metric: 
             "evaluated_model": [],
             "iterations": [],
             "metric": [],
+            "case_id": [],
             "subtask": [],
             "individual": [],
             "md5_hash": [],
             "prompt": [],
+            "system_prompt": [],
+            "prompt_type": [],
+            "is_appendix": [],
             "responses": [],
             "expected_answer": [],
             "rating": [],
@@ -142,10 +146,14 @@ def write_judgement_to_file(
     evaluated_model: str,
     iterations: str,
     metric: str,
+    case_id: str,
     subtask: str,
     individual: str,
     md5_hash: str,
     prompt: str,
+    system_prompt: str,
+    prompt_type: str,
+    is_appendix: str,
     responses: list,
     expected_answer: str,
     rating: str,
@@ -175,8 +183,8 @@ def write_judgement_to_file(
 
     results = pd.read_csv(path, header = 0)
     new_row = pd.DataFrame([
-        [judge_model, evaluated_model, iterations, metric, subtask,
-         individual, md5_hash, prompt, responses, expected_answer, rating]
+        [judge_model, evaluated_model, iterations, metric, case_id, subtask, individual, 
+         md5_hash, prompt, system_prompt, prompt_type, is_appendix, responses, expected_answer, rating]
     ], columns = results.columns)
 
     results = pd.concat([results, new_row], ignore_index = True).sort_values(
