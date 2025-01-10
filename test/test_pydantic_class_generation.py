@@ -35,8 +35,9 @@ def test_generate_pydantic_classes_umap():
 
     # Check parameters from umap function
     properties = umap_function.schema()["properties"]
-    assert len(properties) == 15  # 15 parameters are expected
+    assert len(properties) == 16
     assert set(properties.keys()) == {
+        "uuid",
         "gamma",
         "method",
         "alpha",
@@ -45,7 +46,7 @@ def test_generate_pydantic_classes_umap():
         "adata",
         "init_pos",
         "neighbors_key",
-        "copy",
+        "copy_param",
         "negative_sample_rate",
         "min_dist",
         "maxiter",
