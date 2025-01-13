@@ -14,11 +14,11 @@ from biochatter.llm_connect import (
 )
 from biochatter.prompts import BioCypherPromptEngine
 
-from .benchmark_utils import benchmark_already_executed
+from .benchmark_utils import benchmark_already_executed, get_judgement_dataset
 from .load_dataset import get_benchmark_dataset
 
 # how often should each benchmark be run?
-N_ITERATIONS = 1
+N_ITERATIONS = 2
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
@@ -30,8 +30,8 @@ OPENAI_MODEL_NAMES = [
     # "gpt-4-0125-preview",
     # "gpt-4-turbo-2024-04-09",
     # "gpt-4o-2024-05-13",
-    # "gpt-4o-2024-08-06",
-    "gpt-4o-mini-2024-07-18",
+    "gpt-4o-2024-08-06",
+    # "gpt-4o-mini-2024-07-18",
 ]
 
 ANTHROPIC_MODEL_NAMES = [
@@ -278,6 +278,16 @@ BENCHMARKED_MODELS.sort()
 # Xinference IP and port
 BENCHMARK_URL = "http://localhost:9997"
 
+OPENAI_JUDGE = [
+    "gpt-4o-mini-2024-07-18",
+]
+
+JUDGES = OPENAI_JUDGE
+
+METRICS = [
+    "correctness",
+    "comprehensiveness",
+]
 
 @pytest.fixture(scope="session")
 def client():
@@ -329,6 +339,28 @@ def pytest_collection_modifyitems(items):
 def model_name(request):
     return request.param
 
+@pytest.fixture(params=JUDGES)
+def judge_name(request):
+    """
+    A Pytest fixture that provides parameterized model names for testing.
+
+    This fixture iterates over the list of models defined in the global `JUDGES` 
+    variable, allowing each test that uses this fixture to be executed with a 
+    different model name.
+
+    Args:
+        request (FixtureRequest): A built-in Pytest object that provides access 
+        to the current parameter (`request.param`).
+
+    Returns:
+        str: A model name from the `JUDGES` list.
+    """
+
+    return request.param
+
+@pytest.fixture(params=METRICS)
+def judge_metric(request):
+    return request.param
 
 @pytest.fixture()
 def multiple_testing(request):
@@ -471,6 +503,15 @@ def prompt_engine(request, model_name, conversation):
 
     return setup_prompt_engine
 
+@pytest.fixture()
+def judge_conversation(model_name):
+    conversation = GptConversation(
+        model_name = model_name,
+        prompts = {},
+        correct = False,
+    )
+    conversation.set_api_key(os.getenv("OPENAI_API_KEY"), user = "benchmark_user")
+    return conversation
 
 @pytest.fixture()
 def evaluation_conversation():
@@ -538,6 +579,18 @@ def result_files():
 
     return result_files
 
+@pytest.fixture
+def test_judge_longevity_responses():
+    """Fixture to dynamically load judgment data."""
+    path = "./benchmark/LLM_as_a_Judge/responses/"
+    if not os.path.exists(path) or not os.listdir(path):
+        pytest.skip(f"No files found in directory: {path}")
+    
+    try:
+        JUDGEMENT_DATA = get_judgement_dataset(path)
+        return JUDGEMENT_DATA["judgement"]
+    except ValueError as e:
+        pytest.fail(f"Failed to load judgment data: {e}")
 
 def pytest_generate_tests(metafunc):
     """Pytest hook function to generate test cases.
@@ -573,15 +626,25 @@ def pytest_generate_tests(metafunc):
             "test_data_medical_exam",
             data["medical_exam"],
         )
-    if "test_data_responses" in metafunc.fixturenames:
+    if "test_create_longevity_responses" in metafunc.fixturenames:
         metafunc.parametrize(
-            "test_data_responses",
+            "test_create_longevity_responses",
             data["longevity_geriatric_case_assessment"],
         )
-    if "test_data_responses_rag" in metafunc.fixturenames:
+    if "test_create_longevity_responses_rag" in metafunc.fixturenames:
         metafunc.parametrize(
-            "test_data_responses_rag",
-            data["longevity_geriatric_case_assessment_rag"],
+            "test_create_longevity_responses_rag",
+            data["longevity_geriatric_case_assessment"],
+        )
+    if "test_create_longevity_responses_simultaneously" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "test_create_longevity_responses_simultaneously",
+            data["longevity_geriatric_case_assessment"],
+        )
+    if "test_create_longevity_responses_rag_simultaneously" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "test_create_longevity_responses_rag_simultaneously",
+            data["longevity_geriatric_case_assessment"],
         )
 
 
