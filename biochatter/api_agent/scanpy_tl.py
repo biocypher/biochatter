@@ -78,11 +78,13 @@ class ScanpyTlQueryBuilder(BaseQueryBuilder):
         conversation: "Conversation",
         module: ModuleType,
         generated_classes: list[BaseAPIModel] | None = None,  # Allow external injection of classes for testing purposes
-    ) -> ScanpyTlQueryParameters:
-        """Generate a ScanpyTlQuery object.
+    ) -> list[BaseAPIModel]:
+        """Parameterise scanpy tool calls.
 
-        Generate a ScanpyTlQuery object based on the given question, prompt, and
-        BioChatter conversation. Uses a Pydantic model to define the API fields.
+        Generate a list of parameterised BaseModel instances based on the given
+        question, prompt, and BioChatter conversation. Uses a Pydantic model
+        to define the API fields.
+
         Using langchain's `bind_tools` method to allow the LLM to parameterise
         the function call, based on the functions available in the `scanpy.tl`
         module.
