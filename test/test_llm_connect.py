@@ -588,3 +588,81 @@ def test_local_image_query_xinference():
         image_url="test/figure_panel.jpg",
     )
     assert isinstance(result, str)
+
+
+def test_chat_attribute_not_initialized():
+    """Test that accessing chat before initialization raises AttributeError."""
+    convo = GptConversation(
+        model_name="gpt-3.5-turbo",
+        prompts={},
+        split_correction=False,
+    )
+
+    with pytest.raises(AttributeError) as exc_info:
+        _ = convo.chat
+
+    assert "Chat attribute not initialized" in str(exc_info.value)
+    assert "Did you call set_api_key()?" in str(exc_info.value)
+
+
+def test_ca_chat_attribute_not_initialized():
+    """Test that accessing ca_chat before initialization raises AttributeError."""
+    convo = GptConversation(
+        model_name="gpt-3.5-turbo",
+        prompts={},
+        split_correction=False,
+    )
+
+    with pytest.raises(AttributeError) as exc_info:
+        _ = convo.ca_chat
+
+    assert "Correcting agent chat attribute not initialized" in str(exc_info.value)
+    assert "Did you call set_api_key()?" in str(exc_info.value)
+
+
+@patch("biochatter.llm_connect.openai.OpenAI")
+def test_chat_attributes_reset_on_auth_error(mock_openai):
+    """Test that chat attributes are reset to None on authentication error."""
+    mock_openai.return_value.models.list.side_effect = openai._exceptions.AuthenticationError(
+        "Invalid API key",
+        response=Mock(),
+        body=None,
+    )
+
+    convo = GptConversation(
+        model_name="gpt-3.5-turbo",
+        prompts={},
+        split_correction=False,
+    )
+
+    # Set API key (which will fail)
+    success = convo.set_api_key(api_key="fake_key")
+    assert not success
+
+    # Verify both chat attributes are None
+    with pytest.raises(AttributeError):
+        _ = convo.chat
+    with pytest.raises(AttributeError):
+        _ = convo.ca_chat
+
+
+@patch("biochatter.llm_connect.openai.OpenAI")
+def test_chat_attributes_set_on_success(mock_openai):
+    """Test that chat attributes are properly set when authentication succeeds."""
+    # Mock successful authentication
+    mock_openai.return_value.models.list.return_value = ["gpt-3.5-turbo"]
+
+    convo = GptConversation(
+        model_name="gpt-3.5-turbo",
+        prompts={},
+        split_correction=False,
+    )
+
+    # Set API key (which will succeed)
+    success = convo.set_api_key(api_key="fake_key")
+
+    assert success
+
+    # Verify both chat attributes are accessible
+    assert convo.chat is not None
+    assert convo.ca_chat is not None

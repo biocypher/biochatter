@@ -16,7 +16,11 @@ conversation = GptConversation(
     model_name="gpt-3.5-turbo",
     prompts={},
 )
+conversation.set_api_key(api_key="sk-...")
 ```
+
+The `set_api_key` method is needed in order to initialise the conversation for
+those models that require an API key (which is true for GPT).
 
 It is possible to supply a dictionary of prompts to the conversation from the
 outset, which is formatted in a way to correspond to the different roles of the
