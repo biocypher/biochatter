@@ -2,7 +2,7 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING
 from langchain_core.output_parsers import PydanticToolsParser
 from biochatter.llm_connect import Conversation
-from .abc import BaseAPIModel, BaseQueryBuilder, BaseTools
+from .agent_abc import BaseAPIModel, BaseQueryBuilder, BaseTools
 from typing import Union, Collection, Optional
 from pydantic import BaseModel, Field
 

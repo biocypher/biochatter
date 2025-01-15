@@ -13,7 +13,7 @@ from langchain_core.pydantic_v1 import BaseModel, Field
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
 
-from .abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
+from .agent_abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
 
 BIOTOOLS_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats. Your task is to use the web API of bio.tools

@@ -5,7 +5,7 @@ from types import ModuleType
 
 from langchain_core.output_parsers import PydanticToolsParser
 
-from biochatter.api_agent.abc import BaseAPIModel, BaseQueryBuilder
+from biochatter.api_agent.agent_abc import BaseAPIModel, BaseQueryBuilder
 from biochatter.api_agent.autogenerate_model import generate_pydantic_classes
 from biochatter.llm_connect import Conversation
 

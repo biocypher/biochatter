@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
 
-from .abc import BaseAPIModel, BaseQueryBuilder
+from .agent_abc import BaseAPIModel, BaseQueryBuilder
 
 SCANPY_PL_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats.

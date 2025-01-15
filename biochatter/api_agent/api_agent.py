@@ -2,7 +2,7 @@ from collections.abc import Callable
 
 from pydantic import BaseModel
 
-from .abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
+from .agent_abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
 
 ### logic
 

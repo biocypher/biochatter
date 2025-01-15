@@ -15,7 +15,7 @@ from langchain_core.output_parsers import PydanticToolsParser
 # from langchain_core.pydantic_v1 import BaseModel, Field
 from biochatter.llm_connect import Conversation
 
-from .abc import BaseAPIModel, BaseQueryBuilder
+from .agent_abc import BaseAPIModel, BaseQueryBuilder
 
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation

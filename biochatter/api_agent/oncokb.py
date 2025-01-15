@@ -9,7 +9,7 @@ from langchain_core.pydantic_v1 import BaseModel, Field
 
 from biochatter.llm_connect import Conversation
 
-from .abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
+from .agent_abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
 
 ONCOKB_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats. Your task is to use OncoKB Web APIs to answer genomic questions.

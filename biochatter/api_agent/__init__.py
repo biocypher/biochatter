@@ -4,7 +4,7 @@ This package provides various API agents for interacting with bioinformatics
 tools and services, including BLAST, OncoKB, BioTools, and Scanpy interfaces.
 """
 
-from .abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
+from .agent_abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
 from .anndata_agent import AnnDataIOQueryBuilder
 from .api_agent import APIAgent
 from .bio_tools import BioToolsFetcher, BioToolsInterpreter, BioToolsQueryBuilder

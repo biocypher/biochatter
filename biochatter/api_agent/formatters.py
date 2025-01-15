@@ -2,7 +2,7 @@
 
 from urllib.parse import urlencode
 
-from .abc import BaseAPIModel, BaseModel
+from .agent_abc import BaseAPIModel, BaseModel
 from .anndata_agent import MapAnnData
 
 

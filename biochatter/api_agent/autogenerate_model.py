@@ -21,7 +21,7 @@ from typing import Any
 
 from docstring_parser import parse
 from langchain_core.pydantic_v1 import Field, create_model
-from biochatter.api_agent.abc import BaseAPIModel
+from biochatter.api_agent.agent_abc import BaseAPIModel
 
 def generate_pydantic_classes(module: ModuleType) -> list[type[BaseAPIModel]]:
     """Generate Pydantic classes for each callable.

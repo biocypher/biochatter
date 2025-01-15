@@ -7,7 +7,7 @@ import pytest
 from langchain_core.output_parsers import PydanticToolsParser
 from pydantic import BaseModel
 
-from biochatter.api_agent.abc import (
+from biochatter.api_agent.agent_abc import (
     BaseFetcher,
     BaseInterpreter,
     BaseQueryBuilder,
