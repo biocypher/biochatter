@@ -165,6 +165,7 @@ class ScanpyPlScatterQueryParameters(BaseModel):
         description="String that denotes a plotting tool that computed coordinates (e.g., 'pca', 'tsne', 'umap').",
     )
 
+
 ### Embeddings
 class ScanpyPlPcaQueryParameters(BaseModel):
     """Parameters for querying the scanpy `pl.pca` API."""
@@ -189,6 +190,7 @@ class ScanpyPlPcaQueryParameters(BaseModel):
         default=None,
         description="String denoting matplotlib color map.",
     )
+
 
 class ScanpyPlTsneQueryParameters(BaseModel):
     """Parameters for querying the Scanpy `pl.tsne` API."""
@@ -230,6 +232,7 @@ class ScanpyPlTsneQueryParameters(BaseModel):
         description="Center of the color scale, useful for diverging colormaps.",
     )
 
+
 class ScanpyPlUmapQueryParameters(BaseModel):
     """Parameters for querying the Scanpy `pl.umap` API."""
 
@@ -269,6 +272,7 @@ class ScanpyPlUmapQueryParameters(BaseModel):
         default=None,
         description="Center of the color scale, useful for diverging colormaps.",
     )
+
 
 class ScanpyPlDrawGraphQueryParameters(BaseModel):
     """Parameters for querying the Scanpy `pl.draw_graph` API."""
@@ -313,6 +317,7 @@ class ScanpyPlDrawGraphQueryParameters(BaseModel):
         default=None,
         description="The value representing the center of the color scale.",
     )
+
 
 class ScanpyPlSpatialQueryParameters(BaseModel):
     """Parameters for querying the Scanpy `pl.spatial` API."""

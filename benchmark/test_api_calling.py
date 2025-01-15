@@ -9,7 +9,6 @@ from biochatter.api_agent import (
     OncoKBQueryBuilder,
     ScanpyPlQueryBuilder,
     ScanpyPlQueryBuilderReduced,
-    GenericQueryBuilder,
     AnnDataIOQueryBuilder,
     format_as_rest_call,
     format_as_python_call,
@@ -136,6 +135,7 @@ def test_python_api_calling(
         yaml_data["hash"],
         get_result_file_path(task),
     )
+
 
 def test_python_api_calling_reduced(
     model_name,

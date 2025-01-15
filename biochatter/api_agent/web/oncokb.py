@@ -1,8 +1,8 @@
 """OncoKB API agent."""
 
+import uuid
 from collections.abc import Callable
 from typing import TYPE_CHECKING
-import uuid
 
 import requests
 from langchain.chains.openai_functions import create_structured_output_runnable

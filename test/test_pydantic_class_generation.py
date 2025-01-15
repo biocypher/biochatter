@@ -4,6 +4,7 @@ from biochatter.api_agent.python.autogenerate_model import generate_pydantic_cla
 
 EXPECTED_UMAP_PARAMS = 16
 
+
 def test_generate_pydantic_classes():
     # Generate the Pydantic classes
     generated_classes = generate_pydantic_classes(module=sc.tl)

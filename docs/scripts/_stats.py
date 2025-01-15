@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
-import seaborn as sns
 import pandas as pd
+import seaborn as sns
 
 from docs.scripts._plotting import melt_and_process
+
 
 def calculate_stats(overview: pd.DataFrame) -> None:
     overview_melted = melt_and_process(overview)
@@ -101,4 +102,3 @@ def calculate_stats(overview: pd.DataFrame) -> None:
         f.write(
             f"Quantisation vs accuracy Pearson correlation p-value: {quant_accuracy_p_value}\n",
         )
-

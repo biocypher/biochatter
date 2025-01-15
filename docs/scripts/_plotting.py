@@ -45,6 +45,7 @@ MODEL_SIZE_ORDER = [
     "6",
 ]
 
+
 def plot_text2cypher() -> None:
     """Plot text2cypher tasks.
 
@@ -262,7 +263,6 @@ def plot_image_caption_confidence():
         bbox_inches="tight",
         dpi=300,
     )
-
 
 
 def plot_accuracy_per_model(overview) -> None:

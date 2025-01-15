@@ -62,7 +62,5 @@ def on_pre_build(config, **kwargs) -> None:
     calculate_stats(overview)
 
 
-
-
 if __name__ == "__main__":
     on_pre_build(None)

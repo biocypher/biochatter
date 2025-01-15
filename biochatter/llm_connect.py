@@ -466,7 +466,7 @@ class Conversation(ABC):
 
     def get_msg_json(self) -> str:
         """Return a JSON representation of the conversation.
- 
+
         Returns a list of dicts of the messages in the conversation in JSON
         format. The keys of the dicts are the roles, the values are the
         messages.
@@ -887,7 +887,7 @@ class XinferenceConversation(Conversation):
         If the model is found, initialise the conversational agent. If the model
         is not found, `get_model` will raise a RuntimeError.
 
-        Returns:
+        Returns
         -------
             bool: True if the model is found, False otherwise.
 

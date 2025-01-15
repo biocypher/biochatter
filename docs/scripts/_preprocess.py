@@ -1,6 +1,8 @@
 import os
-import pandas as pd
+
 import numpy as np
+import pandas as pd
+
 
 def preprocess_results_for_frontend(
     raw_results: pd.DataFrame,
@@ -134,7 +136,6 @@ def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
             f"benchmark/results/processed/extraction_{subtask}.csv",
             index=False,
         )
-
 
 
 def create_overview_table(result_files_path: str, result_file_names: list[str]) -> pd.DataFrame:

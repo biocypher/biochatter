@@ -24,6 +24,7 @@ from langchain_core.pydantic_v1 import Field, create_model
 
 from biochatter.api_agent.base.agent_abc import BaseAPIModel
 
+
 def generate_pydantic_classes(module: ModuleType) -> list[type[BaseAPIModel]]:
     """Generate Pydantic classes for each callable.
 
@@ -123,6 +124,6 @@ def generate_pydantic_classes(module: ModuleType) -> list[type[BaseAPIModel]]:
             name,
             **fields,
             __base__=BaseAPIModel,
-            )
+        )
         classes_list.append(tl_parameters_model)
     return classes_list

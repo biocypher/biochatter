@@ -254,7 +254,7 @@ class ChatOpenAIMock:
         self.chat = None
 
 
-@pytest.fixture()
+@pytest.fixture
 def kgQueryAgent():
     return KGQueryReflexionAgentMock(
         connection_args={"host": "localhost", "port": "7687"},

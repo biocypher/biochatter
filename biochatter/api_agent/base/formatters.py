@@ -10,9 +10,11 @@ def format_as_rest_call(model: BaseModel) -> str:
     """Convert a parameter model (BaseModel) into a REST API call string.
 
     Args:
+    ----
         model: Pydantic model containing API call parameters
 
     Returns:
+    -------
         String representation of the REST API call
 
     """
@@ -29,9 +31,11 @@ def format_as_python_call(model: BaseAPIModel) -> str:
     """Convert a parameter model into a Python method call string.
 
     Args:
+    ----
         model: Pydantic model containing method parameters
 
     Returns:
+    -------
         String representation of the Python method call
 
     """

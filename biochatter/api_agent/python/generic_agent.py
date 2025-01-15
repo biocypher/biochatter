@@ -26,6 +26,7 @@ class GenericQueryBuilder(BaseQueryBuilder):
         """Create a runnable object for the query builder.
 
         Args:
+        ----
             query_parameters: The list of Pydantic classes to be used for the
                 query.
 
@@ -33,6 +34,7 @@ class GenericQueryBuilder(BaseQueryBuilder):
                 query.
 
         Returns:
+        -------
             The runnable object for the query builder.
 
         """

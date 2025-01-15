@@ -197,6 +197,7 @@ class ScanpyPlScatterQueryParameters(BaseModel):
         description="If True or a str, save the figure. String is appended to default filename.",
     )
 
+
 ### Embeddings
 class ScanpyPlPcaQueryParameters(BaseModel):
     """Parameters for querying the scanpy `pl.pca` API."""
@@ -277,6 +278,7 @@ class ScanpyPlPcaQueryParameters(BaseModel):
         default=False,
         description="Annotate the percentage of explained variance.",
     )
+
 
 class ScanpyPlTsneQueryParameters(BaseModel):
     """Parameters for querying the Scanpy `pl.tsne` API."""
@@ -445,6 +447,7 @@ class ScanpyPlTsneQueryParameters(BaseModel):
         default=None,
         description="Additional arguments passed to `matplotlib.pyplot.scatter()`.",
     )
+
 
 class ScanpyPlUmapQueryParameters(BaseModel):
     """Parameters for querying the Scanpy `pl.umap` API."""
@@ -641,6 +644,7 @@ class ScanpyPlUmapQueryParameters(BaseModel):
         default=None,
         description="Additional arguments passed to `matplotlib.pyplot.scatter()`.",
     )
+
 
 class ScanpyPlDrawGraphQueryParameters(BaseModel):
     """Parameters for querying the Scanpy `pl.draw_graph` API."""
