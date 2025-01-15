@@ -1,21 +1,30 @@
-from collections.abc import Callable
-from typing import TYPE_CHECKING
+"""Scanpy Preprocessing (scanpy.pp) Query Builder.
+
+TODO: not sure if the approach below is functional yet.
+"""
+
+from collections.abc import Callable, Collection
+from typing import TYPE_CHECKING, Optional, Union
+
 from langchain_core.output_parsers import PydanticToolsParser
-from biochatter.llm_connect import Conversation
-from .agent_abc import BaseAPIModel, BaseQueryBuilder, BaseTools
-from typing import Union, Collection, Optional
 from pydantic import BaseModel, Field
+
+from biochatter.api_agent.base.agent_abc import (
+    BaseAPIModel,
+    BaseQueryBuilder,
+    BaseTools,
+)
+from biochatter.llm_connect import Conversation
 
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
 
-
-
-
 SCANPY_PL_QUERY_PROMPT = """
 Scanpy Preprocessing (scanpy.pp) Query Guide
 
-You are a world-class algorithm for creating queries in structured formats. Your task is to use the Python API of scanpy to answer questions about the scanpy.pp (preprocessing) module. All function calls should be prefixed with scanpy.pp.. For example, to normalize the data, you should use scanpy.pp.normalize_total.
+You are a world-class algorithm for creating queries in structured formats. Your task is to use the Python API of scanpy
+to answer questions about the scanpy.pp (preprocessing) module. All function calls should be prefixed with `scanpy.pp.`.
+For example, to normalize the data, you should use scanpy.pp.normalize_total.
 
 Use the following documentation to craft queries for preprocessing tasks:
 Preprocessing Functions in scanpy.pp
@@ -76,13 +85,17 @@ General Functions
     pp.projection
     Projects the data into a new space after dimensionality reduction techniques like PCA.
 
-Use the provided documentation to craft precise queries for any preprocessing needs in Scanpy. Ensure that your function call starts with scanpy.pp. and that you include relevant parameters based on the query.
+Use the provided documentation to craft precise queries for any preprocessing needs in Scanpy. Ensure that your function
+call starts with scanpy.pp. and that you include relevant parameters based on the query.
 
-This prompt guides the user to query the scanpy.pp module for preprocessing tasks, assisting with the construction of specific preprocessing operations, such as filtering, normalization, scaling, and more.
+This prompt guides the user to query the scanpy.pp module for preprocessing tasks, assisting with the construction of
+specific preprocessing operations, such as filtering, normalization, scaling, and more.
 """
 
 
 class ScanpyPpFuncs(BaseTools):
+    """Scanpy Preprocessing (scanpy.pp) Query Builder."""
+
     tools_params = {}
 
     tools_params["filter_cells"] = {
@@ -221,7 +234,8 @@ class ScanpyPpFuncs(BaseTools):
         "copy": (bool, Field(False, description="Return a copy if true, otherwise modifies the original adata object."))
     }
 
-    def __init__(self, tools_params: dict = tools_params):
+    def __init__(self, tools_params: dict = tools_params) -> None:
+        """Initialise the ScanpyPpFuncs class."""
         super().__init__()
         self.tools_params = tools_params
 
@@ -282,7 +296,6 @@ class ScanpyPpQueryBuilder(BaseQueryBuilder):
         runnable = self.create_runnable(
             conversation=conversation, query_parameters=tools
         )
-        scanpy_pp_call_obj = runnable.invoke(
+        return runnable.invoke(
             question,
         )
-        return scanpy_pp_call_obj

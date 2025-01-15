@@ -1,3 +1,5 @@
+"""Base API agent module."""
+
 from collections.abc import Callable
 
 from pydantic import BaseModel

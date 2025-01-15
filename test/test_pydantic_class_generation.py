@@ -1,6 +1,8 @@
 import scanpy as sc
 
-from biochatter.api_agent.autogenerate_model import generate_pydantic_classes
+from biochatter.api_agent.python.autogenerate_model import generate_pydantic_classes
+
+EXPECTED_UMAP_PARAMS = 16
 
 def test_generate_pydantic_classes():
     # Generate the Pydantic classes
@@ -34,7 +36,7 @@ def test_generate_pydantic_classes_umap():
 
     # Check parameters from umap function
     properties = umap_function.schema()["properties"]
-    assert len(properties) == 16
+    assert len(properties) == EXPECTED_UMAP_PARAMS
     assert set(properties.keys()) == {
         "uuid",
         "gamma",

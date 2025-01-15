@@ -1,7 +1,11 @@
+"""RAG agent module to select the mode of the RAG agent."""
+
 from collections.abc import Callable
 
 
 class RagAgentModeEnum:
+    """Enum for the mode of the RAG agent."""
+
     VectorStore = "vectorstore"
     KG = "kg"
     API_BLAST = "api_blast"
@@ -121,8 +125,8 @@ class RagAgent:
             self.query_func = self.agent.similarity_search
 
         elif self.mode == RagAgentModeEnum.API_BLAST:
-            from .api_agent.api_agent import APIAgent
-            from .api_agent.blast import (
+            from .api_agent.base.api_agent import APIAgent
+            from .api_agent.web.blast import (
                 BlastFetcher,
                 BlastInterpreter,
                 BlastQueryBuilder,
@@ -136,8 +140,8 @@ class RagAgent:
             )
             self.query_func = self.agent.execute
         elif self.mode == RagAgentModeEnum.API_ONCOKB:
-            from .api_agent.api_agent import APIAgent
-            from .api_agent.oncokb import (
+            from .api_agent.base.api_agent import APIAgent
+            from .api_agent.web.oncokb import (
                 OncoKBFetcher,
                 OncoKBInterpreter,
                 OncoKBQueryBuilder,

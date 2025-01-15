@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
 
-from .agent_abc import BaseAPIModel, BaseQueryBuilder
+from biochatter.api_agent.base.agent_abc import BaseAPIModel, BaseQueryBuilder
 
 SCANPY_PL_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats.
@@ -21,7 +21,7 @@ You should prefix the function calls with `scanpy.pl.`, for instance, for a scat
 Extract information from the following documentation to answer the user's question:
 
 The plotting module scanpy.pl largely parallels the tl.* and a few of the pp.* functions. For most tools and for some
-preprocessing functions, you’ll find a plotting function with the same name.
+preprocessing functions, you will find a plotting function with the same name.
 
 Generic
 pl.scatter
@@ -66,7 +66,8 @@ Plot dispersions or normalized variance versus means for genes.
 pl.scrublet_score_distribution
 Plot histogram of doublet scores for observed transcriptomes and simulated doublets.
 Tools
-Methods that extract and visualize tool-specific annotation in an AnnData object. For any method in module tl, there is a method with the same name in pl.
+Methods that extract and visualize tool-specific annotation in an AnnData object. For any method in module tl, there is
+a method with the same name in pl.
 
 PCA
 
@@ -144,9 +145,9 @@ class ScanpyPlScatterQueryParameters(BaseModel):
         default_factory=lambda: str(uuid.uuid4()),
         description="Unique identifier for the question.",
     )
-    adata: str = Field(description="Annotated data matrix.",)
-    x: str | None = Field(default=None, description="x coordinate.",)
-    y: str | None = Field(default=None, description="y coordinate.",)
+    adata: str = Field(description="Annotated data matrix.")
+    x: str | None = Field(default=None, description="x coordinate.")
+    y: str | None = Field(default=None, description="y coordinate.")
     color: str | tuple[float, ...] | list[str | tuple[float, ...]] | None = Field(
         default=None,
         description="Keys for annotations of observations/cells or variables/genes, or a hex color specification.",
@@ -462,7 +463,7 @@ class ScanpyPlUmapQueryParameters(BaseModel):
     )
     color: str | list[str] | None = Field(
         default=None,
-        description="Keys for annotations of observations/cells or variables/genes."
+        description="Keys for annotations of observations/cells or variables/genes.",
     )
     mask_obs: str | None = Field(
         default=None,
@@ -498,7 +499,7 @@ class ScanpyPlUmapQueryParameters(BaseModel):
     )
     arrows: bool = Field(
         default=False,
-        description="Show arrows (deprecated in favor of `scvelo.pl.velocity_embedding`)."
+        description="Show arrows (deprecated in favor of `scvelo.pl.velocity_embedding`).",
     )
     arrows_kwds: dict[str, Any] | None = Field(
         default=None,
@@ -522,7 +523,7 @@ class ScanpyPlUmapQueryParameters(BaseModel):
     )
     projection: str = Field(
         default="2d",
-        description="Projection of plot ('2d' or '3d')."
+        description="Projection of plot ('2d' or '3d').",
     )
     scale_factor: float | None = Field(
         default=None,
@@ -670,7 +671,10 @@ class ScanpyPlDrawGraphQueryParameters(BaseModel):
     )
     sort_order: bool = Field(
         default=True,
-        description="For continuous annotations used as color parameter, plot data points with higher values on top of others.",
+        description=(
+            "For continuous annotations used as color parameter, "
+            "plot data points with higher values on top of others."
+        ),
     )
     edges: bool = Field(
         default=False,
@@ -855,7 +859,10 @@ class ScanpyPlSpatialQueryParameters(BaseModel):
     )
     img_key: str | None = Field(
         default=None,
-        description="Key for image data, used to get `img` and `scale_factor` from 'images' and 'scalefactors' entries for this library.",
+        description=(
+            "Key for image data, used to get `img` and `scale_factor` from "
+            "'images' and 'scalefactors' entries for this library."
+        ),
     )
     img: Any | None = Field(
         default=None,
@@ -883,7 +890,10 @@ class ScanpyPlSpatialQueryParameters(BaseModel):
     )
     sort_order: bool = Field(
         default=True,
-        description="For continuous annotations used as color parameter, plot data points with higher values on top of others.",
+        description=(
+            "For continuous annotations used as color parameter, plot data points "
+            "with higher values on top of others."
+        ),
     )
     groups: str | list[str] | None = Field(
         default=None,

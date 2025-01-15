@@ -2,8 +2,8 @@
 
 from urllib.parse import urlencode
 
-from .agent_abc import BaseAPIModel, BaseModel
-from .anndata_agent import MapAnnData
+from biochatter.api_agent.base.agent_abc import BaseAPIModel, BaseModel
+from biochatter.api_agent.python.anndata_agent import MapAnnData
 
 
 def format_as_rest_call(model: BaseModel) -> str:

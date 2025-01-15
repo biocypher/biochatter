@@ -1,5 +1,8 @@
-import uuid
+"""OncoKB API agent."""
+
 from collections.abc import Callable
+from typing import TYPE_CHECKING
+import uuid
 
 import requests
 from langchain.chains.openai_functions import create_structured_output_runnable
@@ -7,19 +10,29 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
 
-from biochatter.llm_connect import Conversation
+from biochatter.api_agent.base.agent_abc import (
+    BaseFetcher,
+    BaseInterpreter,
+    BaseQueryBuilder,
+)
 
-from .agent_abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
+if TYPE_CHECKING:
+    from biochatter.llm_connect import Conversation
+
 
 ONCOKB_QUERY_PROMPT = """
-You are a world class algorithm for creating queries in structured formats. Your task is to use OncoKB Web APIs to answer genomic questions.
+You are a world class algorithm for creating queries in structured formats. Your task is to use OncoKB Web APIs to
+answer genomic questions.
 
-For questions about genomic alterations, you can use the OncoKB API by providing the appropriate parameters based on the type of query.
+For questions about genomic alterations, you can use the OncoKB API by providing the appropriate parameters based on the
+type of query.
 
 You have to extract the appropriate information out of the
 Examples:
-1. To annotate mutations by protein change, use the endpoint /annotate/mutations/byProteinChange with parameters like hugoSymbol, alteration, tumorType, etc.
-2. To annotate copy number alterations, use the endpoint /annotate/copyNumberAlterations with parameters like hugoSymbol, copyNameAlterationType, tumorType, etc.
+1. To annotate mutations by protein change, use the endpoint /annotate/mutations/byProteinChange with parameters like
+    hugoSymbol, alteration, tumorType, etc.
+2. To annotate copy number alterations, use the endpoint /annotate/copyNumberAlterations with parameters like
+    hugoSymbol, copyNameAlterationType, tumorType, etc.
 
 Use these formats to generate queries based on the question provided. Below is more information about the OncoKB API:
 OncoKB API Documentation (Summary)

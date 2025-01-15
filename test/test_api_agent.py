@@ -7,18 +7,18 @@ import pytest
 from langchain_core.output_parsers import PydanticToolsParser
 from pydantic import BaseModel
 
-from biochatter.api_agent.agent_abc import (
+from biochatter.api_agent.base.agent_abc import (
     BaseFetcher,
     BaseInterpreter,
     BaseQueryBuilder,
 )
 
 
-from biochatter.api_agent.anndata_agent import AnnDataIOQueryBuilder, ANNDATA_IO_QUERY_PROMPT
-from biochatter.api_agent.scanpy_pp_reduced import ScanpyPpQueryBuilder
+from biochatter.api_agent.python.anndata_agent import AnnDataIOQueryBuilder, ANNDATA_IO_QUERY_PROMPT
+from biochatter.api_agent.python.scanpy_pp_reduced import ScanpyPpQueryBuilder
 
-from biochatter.api_agent.api_agent import APIAgent
-from biochatter.api_agent.blast import (
+from biochatter.api_agent.base.api_agent import APIAgent
+from biochatter.api_agent.web.blast import (
     BLAST_QUERY_PROMPT,
     BLAST_SUMMARY_PROMPT,
     BlastFetcher,
@@ -26,7 +26,7 @@ from biochatter.api_agent.blast import (
     BlastQueryBuilder,
     BlastQueryParameters,
 )
-from biochatter.api_agent.oncokb import (
+from biochatter.api_agent.web.oncokb import (
     ONCOKB_QUERY_PROMPT,
     ONCOKB_SUMMARY_PROMPT,
     OncoKBFetcher,
@@ -34,10 +34,10 @@ from biochatter.api_agent.oncokb import (
     OncoKBQueryBuilder,
     OncoKBQueryParameters,
 )
-from biochatter.api_agent.scanpy_pl import (
+from biochatter.api_agent.python.scanpy_pl_full import (
     ScanpyPlQueryBuilder,
 )
-from biochatter.api_agent.generic_agent import GenericQueryBuilder
+from biochatter.api_agent.python.generic_agent import GenericQueryBuilder
 from biochatter.llm_connect import Conversation, GptConversation
 
 
@@ -188,7 +188,7 @@ class TestAPIAgent:
 
 
 class TestBlastQueryBuilder:
-    @patch("biochatter.api_agent.blast.BlastQueryBuilder.create_runnable")
+    @patch("biochatter.api_agent.web.blast.BlastQueryBuilder.create_runnable")
     def test_create_runnable(self, mock_create_runnable):
         # Arrange
         mock_runnable = MagicMock()
@@ -210,7 +210,7 @@ class TestBlastQueryBuilder:
         )
         assert result == mock_runnable
 
-    @patch("biochatter.api_agent.blast.BlastQueryBuilder.create_runnable")
+    @patch("biochatter.api_agent.web.blast.BlastQueryBuilder.create_runnable")
     @patch("biochatter.llm_connect.GptConversation")
     def test_parameterise_query(self, mock_conversation, mock_create_runnable):
         # Arrange
@@ -246,7 +246,7 @@ class TestBlastQueryBuilder:
 
 
 class TestBlastFetcher:
-    @patch("biochatter.api_agent.blast.BlastFetcher._submit_query")
+    @patch("biochatter.api_agent.web.blast.BlastFetcher._submit_query")
     def test_submit_query(self, mock_submit_query):
         # Arrange
         mock_response = MagicMock()
@@ -262,7 +262,7 @@ class TestBlastFetcher:
         mock_submit_query.assert_called_once_with(query_parameters)
         assert result == mock_response
 
-    @patch("biochatter.api_agent.blast.BlastFetcher.fetch_results")
+    @patch("biochatter.api_agent.web.blast.BlastFetcher.fetch_results")
     def test_fetch_results(self, mock_fetch_results):
         # Arrange
         mock_response = MagicMock()
@@ -361,7 +361,7 @@ class TestBlastInterpreter:
 
 
 class TestOncoKBQueryBuilder:
-    @patch("biochatter.api_agent.oncokb.OncoKBQueryBuilder.create_runnable")
+    @patch("biochatter.api_agent.web.oncokb.OncoKBQueryBuilder.create_runnable")
     def test_create_runnable(self, mock_create_runnable):
         # Arrange
         mock_runnable = MagicMock()
@@ -386,7 +386,7 @@ class TestOncoKBQueryBuilder:
         )
         assert result == mock_runnable
 
-    @patch("biochatter.api_agent.oncokb.OncoKBQueryBuilder.create_runnable")
+    @patch("biochatter.api_agent.web.oncokb.OncoKBQueryBuilder.create_runnable")
     @patch("biochatter.llm_connect.GptConversation")
     def test_parameterise_query(self, mock_conversation, mock_create_runnable):
         # Arrange
@@ -422,7 +422,7 @@ class TestOncoKBQueryBuilder:
 
 
 class TestOncoKBFetcher:
-    @patch("biochatter.api_agent.oncokb.OncoKBFetcher.fetch_results")
+    @patch("biochatter.api_agent.web.oncokb.OncoKBFetcher.fetch_results")
     def test_fetch_results(self, mock_fetch_results):
         # Arrange
         mock_response = MagicMock()
@@ -447,7 +447,7 @@ def mock_conversation():
 
 @pytest.fixture
 def mock_output_parser():
-    with patch("biochatter.api_agent.oncokb.StrOutputParser") as mock:
+    with patch("biochatter.api_agent.web.oncokb.StrOutputParser") as mock:
         mock_parser = MagicMock()
         mock.return_value = mock_parser
         yield mock_parser
@@ -456,7 +456,7 @@ def mock_output_parser():
 @pytest.fixture
 def mock_chain(mock_conversation, mock_output_parser):
     with patch(
-        "biochatter.api_agent.oncokb.ChatPromptTemplate.from_messages",
+        "biochatter.api_agent.web.oncokb.ChatPromptTemplate.from_messages",
     ) as mock_prompt:
         mock_prompt_instance = MagicMock()
         mock_prompt.return_value = mock_prompt_instance
@@ -465,7 +465,7 @@ def mock_chain(mock_conversation, mock_output_parser):
 
 
 class TestOncoKBInterpreter:
-    def test_summarise_results(mock_prompt, mock_conversation, mock_chain):
+    def test_summarise_results(self, mock_conversation, mock_chain):
         # Arrange
         interpreter = OncoKBInterpreter()
         question = "What is the best hit?"
@@ -497,7 +497,7 @@ class TestScanpyPlQueryBuilder:
     @pytest.fixture
     def mock_create_runnable(self):
         with patch(
-            "biochatter.api_agent.scanpy_pl.ScanpyPlQueryBuilder.create_runnable",
+            "biochatter.api_agent.python.scanpy_pl_full.ScanpyPlQueryBuilder.create_runnable",
         ) as mock:
             mock_runnable = MagicMock()
             mock.return_value = mock_runnable
@@ -536,7 +536,7 @@ class TestAnndataIOQueryBuilder:
     @pytest.fixture
     def mock_create_runnable(self):
         with patch(
-            "biochatter.api_agent.anndata_agent.AnnDataIOQueryBuilder.create_runnable",
+            "biochatter.api_agent.python.anndata_agent.AnnDataIOQueryBuilder.create_runnable",
         ) as mock:
             mock_runnable = MagicMock()
             mock.return_value = mock_runnable
@@ -602,7 +602,7 @@ class TestScanpyPpQueryBuilder:
     @pytest.fixture
     def mock_create_runnable(self):
         with patch(
-            "biochatter.api_agent.scanpy_pp_reduced.ScanpyPpQueryBuilder.create_runnable",
+            "biochatter.api_agent.python.scanpy_pp_reduced.ScanpyPpQueryBuilder.create_runnable",
         ) as mock:
             mock_runnable = MagicMock()
             mock.return_value = mock_runnable
@@ -632,7 +632,7 @@ class TestGenericQueryBuilder:
     @pytest.fixture
     def mock_create_runnable(self):
         with patch(
-            "biochatter.api_agent.generic_agent.GenericQueryBuilder.create_runnable",
+            "biochatter.api_agent.python.generic_agent.GenericQueryBuilder.create_runnable",
         ) as mock:
             mock_runnable = MagicMock()
             mock.return_value = mock_runnable

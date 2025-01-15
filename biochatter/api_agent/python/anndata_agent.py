@@ -1,27 +1,16 @@
-# Aim
-# For any question about anndata:
-# return the code to answer the question
-
-# 1. Read in anndata object from any anndata api supported format -> built-in anndata api
-# 2. Concatenate the anndata object -> built-in anndata api
-# 3. Filter the anndata object -> NumPy or SciPy sparse matrix api
-# 4. Write the anndata object to [xxx] format -> built-in anndata api
+"""Module for generating anndata queries using LLM tools."""
 
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any
 
 from langchain_core.output_parsers import PydanticToolsParser
+from pydantic import BaseModel, Field
 
-# from langchain_core.pydantic_v1 import BaseModel, Field
+from biochatter.api_agent.base.agent_abc import BaseAPIModel, BaseQueryBuilder
 from biochatter.llm_connect import Conversation
-
-from .agent_abc import BaseAPIModel, BaseQueryBuilder
 
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
-
-
-from pydantic import BaseModel, Field
 
 ANNDATA_IO_QUERY_PROMPT = """
 You are a world class algorithm, computational biologist with world leading knowledge
@@ -45,7 +34,10 @@ class ConcatenateAnnData(BaseAPIModel):
     method_name: str = Field(default="anndata.concat", description="NEVER CHANGE")
     adatas: list | dict = Field(
         ...,
-        description="The objects to be concatenated. Either a list of AnnData objects or a mapping of keys to AnnData objects.",
+        description=(
+            "The objects to be concatenated. "
+            "Either a list of AnnData objects or a mapping of keys to AnnData objects."
+        ),
     )
     axis: str = Field(
         default="obs",
@@ -57,7 +49,10 @@ class ConcatenateAnnData(BaseAPIModel):
     )
     merge: str | Callable | None = Field(
         default=None,
-        description="How to merge elements not aligned to the concatenated axis. Strategies include 'same', 'unique', 'first', 'only', or a callable function.",
+        description=(
+            "How to merge elements not aligned to the concatenated axis. "
+            "Strategies include 'same', 'unique', 'first', 'only', or a callable function."
+        ),
     )
     uns_merge: str | Callable | None = Field(
         default=None,
@@ -69,7 +64,11 @@ class ConcatenateAnnData(BaseAPIModel):
     )
     keys: list | None = Field(
         default=None,
-        description="Names for each object being concatenated. Used for column values or appended to the index if 'index_unique' is not None. Default is None.",
+        description=(
+            "Names for each object being concatenated. "
+            "Used for column values or appended to the index if 'index_unique' is not None. "
+            "Default is None."
+        ),
     )
     index_unique: str | None = Field(
         default=None,
@@ -294,7 +293,6 @@ class AnnDataIOQueryBuilder(BaseQueryBuilder):
             ("system", ANNDATA_IO_QUERY_PROMPT),
             ("human", f"{question}"),
         ]
-        anndata_io_call_obj = runnable.invoke(
+        return runnable.invoke(
             query,
         )
-        return anndata_io_call_obj

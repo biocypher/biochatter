@@ -5,8 +5,8 @@ from types import ModuleType
 
 from langchain_core.output_parsers import PydanticToolsParser
 
-from biochatter.api_agent.agent_abc import BaseAPIModel, BaseQueryBuilder
-from biochatter.api_agent.autogenerate_model import generate_pydantic_classes
+from biochatter.api_agent.base.agent_abc import BaseAPIModel, BaseQueryBuilder
+from biochatter.api_agent.python.autogenerate_model import generate_pydantic_classes
 from biochatter.llm_connect import Conversation
 
 
@@ -23,6 +23,19 @@ class GenericQueryBuilder(BaseQueryBuilder):
         query_parameters: list["BaseAPIModel"],
         conversation: Conversation,
     ) -> Callable:
+        """Create a runnable object for the query builder.
+
+        Args:
+            query_parameters: The list of Pydantic classes to be used for the
+                query.
+
+            conversation: The conversation object used for parameterising the
+                query.
+
+        Returns:
+            The runnable object for the query builder.
+
+        """
         runnable = conversation.chat.bind_tools(query_parameters, tool_choice="required")
         return runnable | PydanticToolsParser(tools=query_parameters)
 
