@@ -23,10 +23,19 @@ jobs:
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
-      - name: Install dependencies
+          
+      - name: Debug Poetry
         run: |
-          poetry install
-          poetry install -E 'podcast xinference'
+          poetry --version
+          poetry config --list
+          ls -la
+          cat pyproject.toml
+          
+      - name: Clear Poetry cache
+        run: poetry cache clear . --all
+        
+      - name: Install dependencies
+        run: poetry install --all-extras
 
       - name: Run tests and generate coverage report
         run: poetry run coverage run -m pytest test --ignore=./volumes
