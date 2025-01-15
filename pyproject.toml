@@ -89,8 +89,11 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 line-length = 120
-select = ["ALL"]
 target-version = "py310"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["D203", "D213", "COM812", "ISC001"]
 
 [tool.ruff.lint.pycodestyle]
 max-doc-length = 80
@@ -98,3 +101,6 @@ max-doc-length = 80
 [tool.ruff.lint.per-file-ignores]
 "test/*" = ["ANN001", "ANN201", "D100", "D101", "D102", "D103", "D104", "I001", "S101"]
 "benchmark/*" = ["ANN001", "ANN201", "D100", "D101", "D102", "D103", "D104", "I001", "S101"]
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = false
