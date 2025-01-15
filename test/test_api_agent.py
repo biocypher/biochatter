@@ -37,8 +37,59 @@ from biochatter.api_agent.oncokb import (
 from biochatter.api_agent.scanpy_pl import (
     ScanpyPlQueryBuilder,
 )
-from biochatter.api_agent.scanpy_tl import SCANPY_QUERY_PROMPT, ScanpyTlQueryBuilder
+from biochatter.api_agent.generic_agent import GenericQueryBuilder
 from biochatter.llm_connect import Conversation, GptConversation
+
+
+SCANPY_TL_QUERY_PROMPT = """
+
+You are a world class algorithm for creating queries in structured formats. Your
+task is to use the scanpy python package to provide the user with the
+appropriate function call to answer their question. You focus on the scanpy.tl
+module, which has the following overview: Any transformation of the data matrix
+that is not *preprocessing*. In contrast to a *preprocessing* function, a *tool*
+usually adds an easily interpretable annotation to the data matrix, which can
+then be visualized with a corresponding plotting function.
+
+### Embeddings
+
+   pp.pca
+   tl.tsne
+   tl.umap
+   tl.draw_graph
+   tl.diffmap
+
+Compute densities on embeddings.
+
+   tl.embedding_density
+
+### Clustering and trajectory inference
+
+   tl.leiden
+   tl.louvain
+   tl.dendrogram
+   tl.dpt
+   tl.paga
+
+### Data integration
+
+   tl.ingest
+
+### Marker genes
+
+   tl.rank_genes_groups
+   tl.filter_rank_genes_groups
+   tl.marker_gene_overlap
+
+### Gene scores, Cell cycle
+
+   tl.score_genes
+   tl.score_genes_cell_cycle
+
+### Simulations
+
+   tl.sim
+"""
 
 
 def conversation_factory():
@@ -577,11 +628,11 @@ class TestScanpyPpQueryBuilder:
         assert result == mock_query_obj
 
 
-class TestScanpyTlQueryBuilder:
+class TestGenericQueryBuilder:
     @pytest.fixture
     def mock_create_runnable(self):
         with patch(
-            "biochatter.api_agent.scanpy_tl.ScanpyTlQueryBuilder.create_runnable",
+            "biochatter.api_agent.generic_agent.GenericQueryBuilder.create_runnable",
         ) as mock:
             mock_runnable = MagicMock()
             mock.return_value = mock_runnable
@@ -612,7 +663,7 @@ class TestScanpyTlQueryBuilder:
         mock_llm_with_tools.__or__.return_value = mock_chain
 
         # Act
-        builder = ScanpyTlQueryBuilder()
+        builder = GenericQueryBuilder()
         result = builder.create_runnable(
             query_parameters=mock_generated_classes,
             conversation=mock_conversation_instance,
@@ -628,16 +679,21 @@ class TestScanpyTlQueryBuilder:
 
     def test_parameterise_query(self, mock_create_runnable):
         # Arrange
-        query_builder = ScanpyTlQueryBuilder()
+        query_builder = GenericQueryBuilder()
         mock_conversation = MagicMock()
         question = "i want to run PCA on my data"
-        expected_input = [("system", SCANPY_QUERY_PROMPT), ("human", question)]
+        expected_input = [("system", SCANPY_TL_QUERY_PROMPT), ("human", question)]
         mock_query_obj = MagicMock()
         mock_create_runnable.invoke.return_value = mock_query_obj
         module = MagicMock()
 
         # Act
-        result = query_builder.parameterise_query(question, mock_conversation, module)
+        result = query_builder.parameterise_query(
+            question=question,
+            prompt=SCANPY_TL_QUERY_PROMPT,
+            conversation=mock_conversation,
+            module=module,
+        )
 
         # Assert
         mock_create_runnable.invoke.assert_called_once_with(expected_input)

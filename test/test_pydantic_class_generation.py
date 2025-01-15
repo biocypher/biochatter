@@ -1,11 +1,10 @@
 import scanpy as sc
 
-from biochatter.api_agent.generate_pydantic_classes_from_module import generate_pydantic_classes
-
+from biochatter.api_agent.autogenerate_model import generate_pydantic_classes
 
 def test_generate_pydantic_classes():
     # Generate the Pydantic classes
-    generated_classes = generate_pydantic_classes(sc.tl)
+    generated_classes = generate_pydantic_classes(module=sc.tl)
 
     # just verify that pydantic classes were generated
     assert len(generated_classes) > 0
@@ -23,7 +22,7 @@ def test_generate_pydantic_classes():
 
 def test_generate_pydantic_classes_umap():
     # Test a specific function we know should be in sc.tl
-    generated_classes = generate_pydantic_classes(sc.tl)
+    generated_classes = generate_pydantic_classes(module=sc.tl)
 
     # Find the umap function
     umap_function = next(

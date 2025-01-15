@@ -19,7 +19,7 @@ from .oncokb import OncoKBFetcher, OncoKBInterpreter, OncoKBQueryBuilder
 from .scanpy_pl import ScanpyPlQueryBuilder
 from .scanpy_pl_reduced import ScanpyPlQueryBuilder as ScanpyPlQueryBuilderReduced
 from .scanpy_pp_reduced import ScanpyPpQueryBuilder as ScanpyPpQueryBuilderReduced
-from .scanpy_tl import ScanpyTlQueryBuilder
+from .generic_agent import GenericQueryBuilder
 
 __all__ = [
     "APIAgent",
@@ -40,7 +40,7 @@ __all__ = [
     "ScanpyPlQueryBuilder",
     "ScanpyPlQueryBuilderReduced",
     "ScanpyPpQueryBuilderReduced",
-    "ScanpyTlQueryBuilder",
+    "GenericQueryBuilder",
     "format_as_python_call",
     "format_as_rest_call",
 ]

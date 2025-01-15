@@ -9,7 +9,7 @@ from biochatter.api_agent import (
     OncoKBQueryBuilder,
     ScanpyPlQueryBuilder,
     ScanpyPlQueryBuilderReduced,
-    ScanpyTlQueryBuilder,
+    GenericQueryBuilder,
     AnnDataIOQueryBuilder,
     format_as_rest_call,
     format_as_python_call,
@@ -108,8 +108,6 @@ def test_python_api_calling(
             builder = ScanpyPlQueryBuilder()
         elif "anndata" in yaml_data["case"]:
             builder = AnnDataIOQueryBuilder()
-        elif "scanpy:tl" in yaml_data["case"]:
-            builder = ScanpyTlQueryBuilder()
         parameters = builder.parameterise_query(
             question=yaml_data["input"]["prompt"],
             conversation=conversation,
