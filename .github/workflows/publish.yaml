@@ -40,6 +40,8 @@ jobs:
       #----------------------------------------------
       - name: Install dependencies
         uses: biocypher/biocypher/.github/actions/install@main
+        with:
+          PYTHON_VERSION: "3.11"
       #----------------------------------------------
       #             build artifact
       #----------------------------------------------
