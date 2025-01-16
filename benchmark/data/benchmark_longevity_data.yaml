@@ -4,8 +4,8 @@ longevity_geriatric_case_assessment:
     input:
       prompt:
         setup:
-          plain: "Q: My wife told me that I would have to lose some weight."
-          emotional: "Q: I’ve really let myself go a bit over the past few years. I love food and, well, sometimes I just eat too much. My wife thinks I should lose some weight, and yeah, I think she’s right. If only it were as easy as it always looks on TV. I once read something about caloric restriction—it’s supposed to be pretty effective."
+          plain: "Q: My wife told me that I have to lose some weight."
+          emotional: "I’ve really let myself go a bit over the past few years. I love food and, well, sometimes I just eat too much. My wife thinks I should lose some weight, and yeah, I think she’s right. If only it were as easy as it always looks on TV. I once read something about caloric restriction—it’s supposed to be pretty effective."
         background:
           list: |
             That’s me:
@@ -16,8 +16,8 @@ longevity_geriatric_case_assessment:
             F) LDL: 130 mg/dl, HDL: 42 mg/dl
             E) Fasting glucose: 105 mg/dl, CRP: 3.2 mg/l
           freetext: |
-            I’m a 52-year-old guy with a BMI of 27.5. To be honest, I’m not a picture of health. 
-            Yeah, where to start. I’m pretty much sticked to my chair and don’t get much exercise. My diet is not winning any awards – it is heavy on processed foods and sugary stuff. 
+            I’m a 52-year-old guy with a BMI of 27.5. To be honest, I’m not the picture of health. 
+            Yeah, where to start. I’m pretty much stuck to my chair and don’t get much exercise. My diet is not winning any awards – it is heavy on processed foods and sugary stuff. 
             It isn’t exactly helping my case but I drink alcohol 3-4 times a week. Heart disease and stroke kind of run in my family, which concerns me. 
             I got some bloodwork done, and honestly, I don’t know what’s going on – my glucose is 105, my LDL cholesterol is at 130, HDL is 42 and CRP is 3.2.    
         question: Should I give it a try?
@@ -73,7 +73,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: I think I should implement caloric restriction, increase my exercise, or both to optimize my health, fitness, energy levels, and life expectancy, thereby reducing my risk of metabolic diseases."
-          emotional: "Q: I’ve been thinking for a while about improving my fitness and nutrition plan. My friends always say I’m already very active and optimized, but I still see room for improvement. I’m considering trying caloric restriction, increasing my exercise level, or maybe even both. My goal is not only to improve my health and fitness but also to boost my life expectancy. Maybe it will also help lower my risk for metabolic diseases, which is one of my biggest fears."
+          emotional: "I’ve been thinking for a while about improving my fitness and nutrition plan. My friends always say I’m already very active and optimized, but I still see room for improvement. I’m considering trying caloric restriction, increasing my exercise level, or maybe even both. My goal is not only to improve my health and fitness but also to boost my life expectancy. Maybe it will also help lower my risk for metabolic diseases, which is one of my biggest fears."
         background:
           list: |
             That’s me:
@@ -140,7 +140,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: I should start a caloric restriction and exercise program to prevent further bone and muscle loss while managing my diabetes."
-          emotional: "Q: Everything seems to have gone wrong for me. My bone and muscle mass is decreasing, and on top of that, I have to deal with diabetes. I really want to make a change, despite my age. Sure, I’m getting older, but I’m far from too lazy to engage with modern medicine. I actually want to start with caloric restriction and an exercise program. I just want to stop my fitness from declining any further. I’m ready now."
+          emotional: "Everything seems to have gone wrong for me. My bone and muscle mass is decreasing, and on top of that, I have to deal with diabetes. I really want to make a change, despite my age. Sure, I’m getting older, but I’m far from too lazy to engage with modern medicine. I actually want to start with caloric restriction and an exercise program. I just want to stop my fitness from declining any further. I’m ready now."
         background:
           list: |
             Here’s my information:
@@ -210,7 +210,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: I want to go for a caloric restriction to help me lose weight, to prevent type 2 diabetes and to improve longevity."
-          emotional: "Q: I’ve heard a lot about diseases like type 2 diabetes, but I really start to worry when I think about the possibility of getting diabetes myself. Now is definitely the right time to make a change. My main goal is to prevent diabetes and have a positive impact on my longevity, especially by losing weight. To achieve that, I’d like to try a caloric restriction diet."
+          emotional: "I’ve heard a lot about diseases like type 2 diabetes, but I really start to worry when I think about the possibility of getting diabetes myself. Now is definitely the right time to make a change. My main goal is to prevent diabetes and have a positive impact on my longevity, especially by losing weight. To achieve that, I’d like to try a caloric restriction diet."
         background:
           list: | 
             Here are my details:
@@ -281,12 +281,12 @@ longevity_geriatric_case_assessment:
     input:
       prompt:
         setup:
-          plain: "Q: I'm interested in longevity science. I decided, that I want to slow aging processes. I'd like to take rapamycin."
-          emotional: "Q: I’m very interested in longevity science and medicine, and I’d say I’m quite well informed in these areas. I’ve heard several times about Rapamycin and its supposedly very positive effects on slowing down aging processes. While I already have experience with other supplements and drugs, I’ve never tried Rapamycin. That’s something I want and need to change. I want to benefit from its effects as well."
+          plain: "Q: I'm interested in longevity science. I decided that I want to slow aging processes. I'd like to take rapamycin."
+          emotional: "I’m very interested in longevity science and medicine, and I’d say I’m quite well informed in these areas. I’ve heard several times about Rapamycin and its supposedly very positive effects on slowing down aging processes. While I already have experience with other supplements and drugs, I’ve never tried Rapamycin. That’s something I want and need to change. I want to benefit from its effects as well."
         background:
           list: |
             Here’s my information to consider:
-            A) 33-year-old male with an active lifestyle (running and cycling, 4 times/week with Zone 1 - Zone 4, i.e. resting HR - max HR with 60% - 70% Zone 2)
+            A) 33-year-old female with an active lifestyle (running and cycling, 4 times/week with Zone 1 - Zone 4, i.e. resting HR - max HR with 60% - 70% Zone 2)
             B) vegetarian diet with minimal processed foods, non-smoker
             C) No family history of chronic, metabolic, or genetic diseases
             D) Fasting Glucose: 83 mg/dl
@@ -352,7 +352,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: I want to supplement with Epicatechin to keep my vitality." 
-          emotional: "Q: I think it’s time for me to try something new. There are a few things I’d like to optimize. You know, some issues that seem to pop up as I get older. Sometimes I browse the internet or other sources for ways to boost and maintain my vitality. That’s how I came across Epicatechin. It sounded really convincing, and I’d love to give it a try."
+          emotional: "I think it’s time for me to try something new. There are a few things I’d like to optimize. You know, some issues that seem to pop up as I get older. Sometimes I browse the internet or other sources for ways to boost and maintain my vitality. That’s how I came across Epicatechin. It sounded really convincing, and I’d love to give it a try."
         background:
           list: |
             That’s me:
@@ -365,10 +365,8 @@ longevity_geriatric_case_assessment:
           freetext: |
             I’m a 45-year-old woman. Currently, I weigh 64 kg and I’m 168 cm tall. I stick to a Mediterranean-style diet - lots of fruits, veggies, protein, and healthy fats. 
             I’ve never touched a cigarette, and I’m always up for trying out new health tips. I’m taking Ibuprofen against my chronic knee joint pain. 
-            I’m dealing with hair loss, thinning hair, and recent significant weight gain. On top of that, 
-            I’m struggling with constipation, feeling constantly fatigued, and having dry skin. My mother had osteoarthritis and my father suffered from a 
-            too high blood pressure. My fasting glucose is 89 mg/dl, HOMA-IR is 1.3, CRP is 2.0 mg/l, and my blood pressure is 124/83 mmHg.
-            My blood pressure is 124/83 mmHg.
+            I’m dealing with hair loss, thinning hair, and recent significant weight gain. On top of that, I’m struggling with constipation, feeling constantly fatigued, and having dry skin. 
+            My mother had osteoarthritis and my father suffered from high blood pressure. My fasting glucose is 89 mg/dl, HOMA-IR is 1.3, CRP is 2.0 mg/l, and my blood pressure is 124/83 mmHg.
         question: Could I consider Epicatechin to keep my vitality?
         appendices:
           appendix: The urine test I had two years ago was completely fine. No reason to worry! My kidneys seem to be doing great. It wasn’t that long ago, so I can feel reassured.
@@ -426,7 +424,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: I heard of the beneficial effects of aerobic or resistance training on skin aging. I want to try out training interventions to avoid further premature skin aging."
-          emotional: "Q: I’ve been struggling with premature skin aging for a long time, and it really gets to me sometimes. I’d love to not have to think about my skin for once. Someone recently told me about the positive effects that aerobic or resistance training can have on skin health and aging. I’m always looking for ways to improve my skin quality, and this could be an opportunity. I have to give it a try."
+          emotional: "I’ve been struggling with premature skin aging for a long time, and it really gets to me sometimes. I’d love to not have to think about my skin for once. Someone recently told me about the positive effects that aerobic or resistance training can have on skin health and aging. I’m always looking for ways to improve my skin quality, and this could be an opportunity. I have to give it a try."
         background:
           list: |
             Here’s my information:
@@ -497,7 +495,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: My friend is involved in longevity and said I should try out a caloric restriction regimen (20% reduction in daily caloric intake) in order to lose weight, to improve my blood sugar and blood pressure. "
-          emotional: "Q: I’m often out with my friends, and sometimes they have great tips. I’ve always had minor issues with my weight, but recently, it’s gotten worse for some reason. One of my friends is pretty informed about lifestyle interventions and stuff like that. He suggested to try a caloric restriction diet and mentioned something about a 20% reduction? Anyway, it might help me lose weight in the long run and also lower my blood sugar and blood pressure."
+          emotional: "I’m often out with my friends, and sometimes they have great tips. I’ve always had minor issues with my weight, but recently, it’s gotten worse for some reason. One of my friends is pretty informed about lifestyle interventions and stuff like that. He suggested to try a caloric restriction diet and mentioned something about a 20% reduction? Anyway, it might help me lose weight in the long run and also lower my blood sugar and blood pressure."
         background:
           list: |
             That’s me:
@@ -512,7 +510,7 @@ longevity_geriatric_case_assessment:
             I put on approximately 10 – 12 kg. Maybe this has something to do with my sedentary job – I’m glued to my chair most of the day. 
             But I’m working to set things on the right path. I’m engaged in freetime activities and love cycling or walking. But then, 
             I also get mood swings and sometimes feel muscle weakness. I have trouble sleeping, and I usually eat heavy meals in the evening. 
-            My blood pressure rised to 136/88 mmHg. I’m taking a drug against this, but I forgot the name. 
+            My blood pressure rose to 136/88 mmHg. I’m taking a drug against this, but I forgot the name. 
             Blood glucose is 110. Also my face got bigger, my friends say, it looks round. LDL is 115, and my heart rate is 75. 
             There are no thyroid problems.
         question: Would it be possible for me to try it out?
@@ -570,7 +568,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: I know that I need to lose weight. But I don’t know how to start. Maybe I should start again with reducing my energy intake, this time with exercise."
-          emotional: "Q: You know, sometimes I really don’t know what to do anymore. I know I need to lose weight, but honestly, I don’t know where to start. I want to do it, and I’m motivated. Maybe I should just start reducing my daily calorie intake again. This time, probably combined with exercise. That’s probably more effective than just relying on cutting calories alone. I should have figured that out earlier."
+          emotional: "You know, sometimes I really don’t know what to do anymore. I know I need to lose weight, but honestly, I don’t know where to start. I want to do it, and I’m motivated. Maybe I should just start reducing my daily calorie intake again. This time, probably combined with exercise. That’s probably more effective than just relying on cutting calories alone. I should have figured that out earlier."
         background:
           list: |
             Here’s my information:
@@ -646,7 +644,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: I'd like to take rapamycin of 500 mg/week for its anti-aging and healthspan-extending effects."
-          emotional: "Q: I’m young, motivated, and have a wide range of interests, especially in anti-aging and longevity medicine. To be honest, I’ve always been curious and very ambitious—especially when it comes to my health. I think I’ve reached a point where I want to try something new. I already do a lot, but there’s definitely room for improvement. I want to support my journey by incorporating Rapamycin. One reads so much about its positive effects that I feel like I have no choice but to try it—of course, responsibly. That’s why I plan to start cautiously with 500 mg per week and see how my body responds."
+          emotional: "I’m young, motivated, and have a wide range of interests, especially in anti-aging and longevity medicine. To be honest, I’ve always been curious and very ambitious—especially when it comes to my health. I think I’ve reached a point where I want to try something new. I already do a lot, but there’s definitely room for improvement. I want to support my journey by incorporating Rapamycin. One reads so much about its positive effects that I feel like I have no choice but to try it—of course, responsibly. That’s why I plan to start cautiously with 500 mg per week and see how my body responds."
         background:
           list: |
             That’s me:
@@ -722,7 +720,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: I heard of diets rich in polyphenols. I would like to try it out."
-          emotional: "Q: Getting older means constantly having to adapt, especially if you want to keep enjoying life. The physical issues that inevitably creep in with age definitely don’t make it any easier. There’s always something hurting or slowing you down, but that’s just part of it, right? In any case, I’ve read a lot about the positive effects diet can have on health. Considering my body isn’t as fit as it used to be, I’m thinking about trying a polyphenol-rich diet. It’s supposed to have some great effects on inflammatory processes too."
+          emotional: "Getting older means constantly having to adapt, especially if you want to keep enjoying life. The physical issues that inevitably creep in with age definitely don’t make it any easier. There’s always something hurting or slowing you down, but that’s just part of it, right? In any case, I’ve read a lot about the positive effects diet can have on health. Considering my body isn’t as fit as it used to be, I’m thinking about trying a polyphenol-rich diet. It’s supposed to have some great effects on inflammatory processes too."
         background:
           list: |
             Here’s my information:
@@ -790,7 +788,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: A few weeks after my last cardiovascular rehabilitation I stopped going out for exercise. But I’ve just read about High Intensity Interval Training (HIIT) and its beneficial effects on cardiovascular health. I want to give it a try."
-          emotional: "Q: After my last rehab, I haven’t done much exercise. To be honest, I haven’t done anything at all. I know that’s not good, but rest is important too. That doesn’t mean I’m no longer interested in sports—in fact, I’m very interested. Despite my age, I want to become more active again. Exercise, especially combined with varying high intensities, is supposed to have a positive impact on heart health. That’s perfect for me. After the progress I’ve made, it shouldn’t be a problem to pick up the pace now and in future. I’m feeling fitter than ever!"
+          emotional: "After my last rehab, I haven’t done much exercise. To be honest, I haven’t done anything at all. I know that’s not good, but rest is important too. That doesn’t mean I’m no longer interested in sports—in fact, I’m very interested. Despite my age, I want to become more active again. Exercise, especially combined with varying high intensities, is supposed to have a positive impact on heart health. That’s perfect for me. After the progress I’ve made, it shouldn’t be a problem to pick up the pace now and in future. I’m feeling fitter than ever!"
         background:
           list: |
             That’s me:
@@ -858,7 +856,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: I need to start changing my dietary habits and my lifestyle to be finally able to manage my gout symptoms. Maybe I could go for caloric restriction and exercise."
-          emotional: "Q: After years of neglecting my health, it’s time to make a change. My gout sometimes drives me crazy. It could be so simple for me to draw a line and start new. Well, I’m not that old yet. I always struggle to stay consistent, or even to figure out where to start in the first place. But now I’m determined. I’m going to prove it to everyone, including myself. Since diet and physical activity are my biggest challenges, I’ve done some research. I quickly came across a combination of a caloric restriction diet and exercise. That sounds like a great plan."
+          emotional: "After years of neglecting my health, it’s time to make a change. My gout sometimes drives me crazy. It could be so simple for me to draw a line and start new. Well, I’m not that old yet. I always struggle to stay consistent, or even to figure out where to start in the first place. But now I’m determined. I’m going to prove it to everyone, including myself. Since diet and physical activity are my biggest challenges, I’ve done some research. I quickly came across a combination of a caloric restriction diet and exercise. That sounds like a great plan."
         background:
           list: |
             Here’s my information:
@@ -931,7 +929,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: Recently, I heard about different training techniques and their potential positive effects on longevity and cardiovascular health. I’m wondering whether HIIT training could be an option for me."
-          emotional: "Q: My body isn’t what it used to be. Age is just a number, but when your health starts to decline, it becomes a big problem. Looking back, I realize I made some serious mistakes. I should have thought about my, well, rather unhealthy lifestyle back then. It could have saved me from a lot of trouble. But it’s never too late for a fresh start, right? Especially now, with this motivation I have. Back then, people often recommended exercise, even at higher intensities, particularly because of its positive effects on cardiovascular health. There was a specific term for it that I can’t remember anymore. But it doesn’t matter. What’s important is that I’m finally going to listen. Better late than never!"
+          emotional: "My body isn’t what it used to be. Age is just a number, but when your health starts to decline, it becomes a big problem. Looking back, I realize I made some serious mistakes. I should have thought about my, well, rather unhealthy lifestyle back then. It could have saved me from a lot of trouble. But it’s never too late for a fresh start, right? Especially now, with this motivation I have. Back then, people often recommended exercise, even at higher intensities, particularly because of its positive effects on cardiovascular health. There was a specific term for it that I can’t remember anymore. But it doesn’t matter. What’s important is that I’m finally going to listen. Better late than never!"
         background:
           list: |
             That’s me:
@@ -942,14 +940,14 @@ longevity_geriatric_case_assessment:
             E) sometimes ankle swelling, shortness of breath and muscle fatigue
             F) currently treated with ACE inhibitor, Beta blocker, diuretics
           freetext:
-            I’m a 70-year-old guy. I’m 178 cm tall and currently weigh 84 kg. I was diagnosed with some form of heart defect. I believe my ejection fraction is reduced, but it can’t be that bad—I’m still alive, after all. 
-            I’ve dealt with coronary artery disease and a myocardial infarction. It was time to make some changes. I smoked for a long time but quit 3 years ago. 
+            I’m a 70-year-old man. I’m 178 cm tall and currently weigh 84 kg. I was diagnosed with some form of heart defect. I believe my ejection fraction is reduced, but it can’t be that bad—I’m still alive, after all. 
+            I’ve dealt with coronary disease and a heart attack. It was time to make some changes. I smoked for a long time but quit 3 years ago. 
             I’ve also stayed away from alcohol. Sometimes my ankles still feel a bit swollen, or I have trouble catching my breath. 
             My muscles aren’t what they used to be either. But, you just have to make peace with it. My resting heart rate and blood pressure are slightly elevated. 
             I’m taking some drugs against it. 
         question: Could HIIT training be an option for me?
         appendices:
-          appendix: Since I was interested in my gut health, I did a stool test. A healthy gut flora is especially important for overall well-being, particularly if you plan on becoming more active, like I do. Thankfully, there were no significant abnormalities, so I can feel reassured.
+          appendix: Since I was interested in my gut health, I did a stool test. A healthy gut is especially important for overall well-being, particularly if you plan on becoming more active, like I do. Thankfully, there were no significant abnormalities, so I can feel reassured.
           no_appendix: ""
       system_messages:
         simple:
@@ -998,7 +996,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: I’m suffering from my postmenopausal symptoms. I think I could improve things by losing some weight and changing my dietary habits. Some of my friends underwent caloric restriction interventions and were satisfied with the resulting effects. Thus, I thought I could try it out."
-          emotional: "Q: I’m sorry to put it this way, but I feel like I’m experiencing every woman’s nightmare. Back then, I used to laugh when women complained about menopause or postmenopausal symptoms. I just couldn’t, or didn’t want to, understand how hard it could be to deal with. Well, now here I am, dealing with postmenopausal symptoms myself. Lately, I’ve been thinking a lot about what might help. I believe that losing weight and improving my diet could already have a significant positive effect. Some of my friends have raved about caloric restriction diets. Maybe that’s something I should try too."
+          emotional: "I’m sorry to put it this way, but I feel like I’m experiencing every woman’s nightmare. Back then, I used to laugh when women complained about menopause or postmenopausal symptoms. I just couldn’t, or didn’t want to, understand how hard it could be to deal with. Well, now here I am, dealing with postmenopausal symptoms myself. Lately, I’ve been thinking a lot about what might help. I believe that losing weight and improving my diet could already have a significant positive effect. Some of my friends have raved about caloric restriction diets. Maybe that’s something I should try too."
         background:
           list: |
             Here’s my profile:
@@ -1065,7 +1063,7 @@ longevity_geriatric_case_assessment:
       prompt: 
         setup:
           plain: "Q: I'd like to start to reduce my daily energy intake to lose some weight. I also want to regain energy, thereby improving my mood. The thing is, I was much fitter a year ago."
-          emotional: "Q: I don’t know what’s going on. A year ago, I used to be such an active and fit person, but somewhere along the way, I must have lost myself. My weight has gone up, and I’m struggling with low energy. It’s time—time to finally lose weight. I know carrying a bit of extra weight isn’t a problem as long as you feel good, but that’s exactly the issue. I just don’t feel comfortable anymore. If it were just about the weight, no big deal. But everything else? It’s not exactly pleasant. It seems like a good idea to start by reducing my daily calorie intake. One of my main goals, though, is to regain the energy I used to have."
+          emotional: "I don’t know what’s going on. A year ago, I used to be such an active and fit person, but somewhere along the way, I must have lost myself. My weight has gone up, and I’m struggling with low energy. It’s time—time to finally lose weight. I know carrying a bit of extra weight isn’t a problem as long as you feel good, but that’s exactly the issue. I just don’t feel comfortable anymore. If it were just about the weight, no big deal. But everything else? It’s not exactly pleasant. It seems like a good idea to start by reducing my daily calorie intake. One of my main goals, though, is to regain the energy I used to have."
         background:
           list: |
             That’s me:
@@ -1139,7 +1137,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: Spermidine is said to help all lots of people to be more vigorous. I’m wondering if I should start taking it."
-          emotional: "Q: My friends know me as an enthusiast when it comes to longevity medicine and science. I love experimenting and am always trying to optimize my health. Many people say everything is already perfect, but this is about me. I feel like there’s still room for improvement. I’ve reached a point where you have to try new things to keep making progress. Or rather, progress? I just want to make everything a little bit better. I already have experience with supplements and longevity drugs, but I haven’t tried spermidine yet. Spermidine is said to boost the vigor of those who take it, which sounds perfect for me."
+          emotional: "My friends know me as an enthusiast when it comes to longevity medicine and science. I love experimenting and am always trying to optimize my health. Many people say everything is already perfect, but this is about me. I feel like there’s still room for improvement. I’ve reached a point where you have to try new things to keep making progress. Or rather, progress? I just want to make everything a little bit better. I already have experience with supplements and longevity drugs, but I haven’t tried spermidine yet. Spermidine is said to boost the vigor of those who take it, which sounds perfect for me."
         background:
           list: |
             Here’s my information:
@@ -1150,7 +1148,7 @@ longevity_geriatric_case_assessment:
             E) no medical or family history of chronic disorders
             F) Fasting Glucose: 83 mg/dl, IL-6: 1.0 ng/l, Fasting Insulin: 5.4 uU/ml
           freetext: |
-            I’m a 28-year-old young active man. My BMI might be relevant for you: it’s 21.1. My job as an architect often keeps me tied to my desk, but I still try to stay as active as possible. 
+            I’m a 28-year-old active man. My BMI might be relevant for you: it’s 21.1. My job as an architect often keeps me tied to my desk, but I still try to stay as active as possible. 
             After all, staying healthy takes effort, right? I work out 2-3 times a week, trying different activities like strength and resistance training, cycling, or swimming. 
             My diet is very important to me. I try to make sure it’s balanced and mostly plant-based. I’ve never smoked and don’t plan to start. 
             There are no known cases of any illnesses in my family history. 
@@ -1209,7 +1207,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: Over the past few months, I've been struggling with my weight. I have heard about caloric restriction and that it could help with losing and maintaining weight as well as with glucose levels."
-          emotional: "Q: After my last attempts, I want to give it another shot. This time systematically and with a proper plan. I think that’s what I was missing before. It’s about my weight, high blood pressure, and diabetes. I don’t even know how it got to this point, but now I have to make the best of it. Even my friends have noticed that something’s not right with me. I must have changed a lot over the past few years, though I never really noticed it myself. But I’m not clueless. I did some reading and came across several options. Among them, caloric restriction stood out to me the most. It seems to be effective for weight loss. Probably, it might help me to at least maintain my weight and regulate my blood sugar."
+          emotional: "After my last attempts, I want to give it another shot. This time systematically and with a proper plan. I think that’s what I was missing before. It’s about my weight, high blood pressure, and diabetes. I don’t even know how it got to this point, but now I have to make the best of it. Even my friends have noticed that something’s not right with me. I must have changed a lot over the past few years, though I never really noticed it myself. But I’m not clueless. I did some reading and came across several options. Among them, caloric restriction stood out to me the most. It seems to be effective for weight loss. Probably, it might help me to at least maintain my weight and regulate my blood sugar."
         background:
           list: |
             That’s me:
@@ -1278,7 +1276,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: I need to start some exercising. Please help me with getting started."
-          emotional: "Q: My friends think I’m crazy, but I’m determined to start exercising — even at my age. Sure, I already have a few issues, but they’re not going to get any better if I just sit in front of the TV doing nothing. My grandson told me he thinks it’s really cool. It doesn’t have to be much, but I want to do something. Why shouldn’t we be able to make changes, even as we get older? We’re not made of sugar, after all. So, I’m determined to start an exercise regimen."
+          emotional: "My friends think I’m crazy, but I’m determined to start exercising — even at my age. Sure, I already have a few issues, but they’re not going to get any better if I just sit in front of the TV doing nothing. My grandson told me he thinks it’s really cool. It doesn’t have to be much, but I want to do something. Why shouldn’t we be able to make changes, even as we get older? We’re not made of sugar, after all. So, I’m determined to start an exercise regimen."
         background:
           list: |
             That’s my information:
@@ -1346,7 +1344,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: I guess, I need to improve my immune function. To achieve this I want to start with changing my dietary habits and incorporating even more exercise."
-          emotional: "Q: I’m already fairly active, and my diet isn’t too bad either. But it seems there’s still room for improvement, especially when it comes to restoring my immune function. If not now, then when? I just want to do something for my body and its resilience. I think it’s well deserved. And where’s the best place to start? Naturally, with physical activity and nutrition. I’ve noticed many times how important these aspects are and how much they contribute to overall quality of life."
+          emotional: "I’m already fairly active, and my diet isn’t too bad either. But it seems there’s still room for improvement, especially when it comes to restoring my immune function. If not now, then when? I just want to do something for my body and its resilience. I think it’s well deserved. And where’s the best place to start? Naturally, with physical activity and nutrition. I’ve noticed many times how important these aspects are and how much they contribute to overall quality of life."
         background:
           list: |
             Here’s my information:
@@ -1357,7 +1355,7 @@ longevity_geriatric_case_assessment:
             E) one week ago, developed some persistent flu, periodic fever spikes, shivering, headaches
             F) no chronic illnesses, no medical of family history of chronic diseases; Ibuprofen for fever
           freetext: |
-            I’m a 39-year-old woman, weighing 66 kg and being 170 cm tall. Overall, I’d say I’m quite active. I try to mix aerobic activities with resistance training or stretching. 
+            I’m a 39-year-old woman, weighing 66 kg and 170 cm tall. Overall, I’d say I’m quite active. I try to mix aerobic activities with resistance training or stretching. 
             So, cycling and yoga are regular parts of my routine. I think that’s pretty good! My diet is already balanced, but I’m interested in optimizing it even further to strengthen my immune system. 
             I love traveling and just recently returned from an amazing safari trip in Africa. Literally, it was a dream come true.
             About a week ago, I fell ill, probably with a stubborn flu. I’ve been dealing with strange fever spikes, chills, and headaches. 
@@ -1419,7 +1417,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: I'd like to improve the symptoms and slow the progression of my GERD (Gastroesophageal Reflux Disease) through dietary changes."
-          emotional: "Q: To be honest, I never thought reflux disease could be so annoying and exhausting. Sure, maybe I’m partly to blame for my situation, but who really expects something like this? All I ever hear is nutrition, nutrition. I know, I should have taken it seriously a few years ago. Well, it’s better to start now than never give it a try at all. I think changing my diet could help improve the symptoms of my reflux disease and maybe slow its progression. I probably won’t get rid of the condition entirely, but if there’s a way to manage it better, why not give it a shot?."
+          emotional: "To be honest, I never thought reflux disease could be so annoying and exhausting. Sure, maybe I’m partly to blame for my situation, but who really expects something like this? All I ever hear is nutrition, nutrition. I know, I should have taken it seriously a few years ago. Well, it’s better to start now than never give it a try at all. I think changing my diet could help improve the symptoms of my reflux disease and maybe slow its progression. I probably won’t get rid of the condition entirely, but if there’s a way to manage it better, why not give it a shot?."
         background:
           list: |
             That’s me:
@@ -1490,7 +1488,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: Intermittent day fasting is mentioned by the influencers I’m subscribing to."
-          emotional: "Q: I’ve always been really interested in longevity science and medicine. Recently, I’ve discovered a few social media accounts that frequently discuss these topics. You can actually get some great ideas and advice from them. While I enjoy reading, I’m more of a visual person sometimes. It’s nice to just watch a quick video. Of course, I’ve subscribed to several channels to stay up to date. The current trend seems to be intermittent day fasting. Honestly, I’m totally hyped about it. Beyond weight loss, I’m fascinated by how many positive effects this diet is said to have on digestion, mood, and energy etc. I think I want to give it a try."
+          emotional: "I’ve always been really interested in longevity science and medicine. Recently, I’ve discovered a few social media accounts that frequently discuss these topics. You can actually get some great ideas and advice from them. While I enjoy reading, I’m more of a visual person sometimes. It’s nice to just watch a quick video. Of course, I’ve subscribed to several channels to stay up to date. The current trend seems to be intermittent day fasting. Honestly, I’m totally hyped about it. Beyond weight loss, I’m fascinated by how many positive effects this diet is said to have on digestion, mood, and energy etc. I think I want to give it a try."
         background:
           list: |
             That's me:
@@ -1563,7 +1561,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: I would like to improve my health. I'd like to take Fisetin to benefit from its positive effects on longevity and overall health."
-          emotional: "Q: As we age, it becomes increasingly important to think about ways to maintain our health more easily, even if we already live quite well. For me, it’s especially about preserving my health with a focus on living a longer and healthier life. That’s why I’ve been exploring longevity interventions for quite some time now. My focus has been on taking natural supplements. I’ve tried quite a few already and have generally been satisfied with the effects. Of course, it’s important to use these responsibly, which is why I always make sure I’m well-informed. Nobody can pull the wool over my eyes in this area. Now, I want to try Fisetin. It’s known for its positive effects on longevity and overall health, and I simply have to give it a shot."
+          emotional: "As we age, it becomes increasingly important to think about ways to maintain our health more easily, even if we already live quite well. For me, it’s especially about preserving my health with a focus on living a longer and healthier life. That’s why I’ve been exploring longevity interventions for quite some time now. My focus has been on taking natural supplements. I’ve tried quite a few already and have generally been satisfied with the effects. Of course, it’s important to use these responsibly, which is why I always make sure I’m well-informed. Nobody can pull the wool over my eyes in this area. Now, I want to try Fisetin. It’s known for its positive effects on longevity and overall health, and I simply have to give it a shot."
         background:
           list: |
             Here’s my information:
@@ -1632,7 +1630,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: I want to start a diet low in protein. I heard too much protein is bad for the kidneys."
-          emotional: "Q: I think I’m really not as fit as I used to be. Still, I’d love to do something to live well and stay as healthy as possible during this final stretch of my, now quite long, life. My muscles and bones have certainly aged, which makes it all the more important to me that my other organs stay in good shape. These days, people consume quite a lot of protein, which is generally good. But I’ve read here and there that too much protein might not be ideal. I’ve even heard that excess protein can be harmful to the kidneys. My diet is pretty irregular, and I’d like to change that. I want to try following a diet with less protein and see how it feels.."
+          emotional: "I think I’m really not as fit as I used to be. Still, I’d love to do something to live well and stay as healthy as possible during this final stretch of my, now quite long, life. My muscles and bones have certainly aged, which makes it all the more important to me that my other organs stay in good shape. These days, people consume quite a lot of protein, which is generally good. But I’ve read here and there that too much protein might not be ideal. I’ve even heard that excess protein can be harmful to the kidneys. My diet is pretty irregular, and I’d like to change that. I want to try following a diet with less protein and see how it feels.."
         background:
           list: |
             That’s my profile:
@@ -1704,7 +1702,7 @@ longevity_geriatric_case_assessment:
       prompt:
         setup:
           plain: "Q: I would like to try supplementation with Epicatechin."
-          emotional: "Q: I’ve never really been into sports or had much interest in it, but opinions can change over time. I’ve decided it’s time to change my lifestyle. That includes focusing more on topics like health, nutrition, and fitness. I’ve already started by researching strategies that might work for me. Along the way, I came across Epicatechin. What I read sounded very promising. Maybe it will support me on my journey to becoming a healthier and more active version of myself."
+          emotional: "I’ve never really been into sports or had much interest in it, but opinions can change over time. I’ve decided it’s time to change my lifestyle. That includes focusing more on topics like health, nutrition, and fitness. I’ve already started by researching strategies that might work for me. Along the way, I came across Epicatechin. What I read sounded very promising. Maybe it will support me on my journey to becoming a healthier and more active version of myself."
         background:
           list: |
             That’s me:
