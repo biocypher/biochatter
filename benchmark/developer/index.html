@@ -1548,7 +1548,7 @@ data, you need to add the corresponding fixture to the <code>pytest_generate_tes
 function in <code>conftest.py</code>. This function is responsible for loading the test
 data and providing appropriately named fixtures to the test functions. For the
 tests defined above, this equates to:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span> <span class="nf">pytest_generate_tests</span><span class="p">(</span><span class="n">metafunc</span><span class="p">):</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">pytest_generate_tests</span><span class="p">(</span><span class="n">metafunc</span><span class="p">):</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">BENCHMARK_DATASET</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="k">if</span> <span class="s2">&quot;test_data_rag_interpretation&quot;</span> <span class="ow">in</span> <span class="n">metafunc</span><span class="o">.</span><span class="n">fixturenames</span><span class="p">:</span>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>        <span class="n">metafunc</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>

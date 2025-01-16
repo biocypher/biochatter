@@ -1348,13 +1348,16 @@ to account for differences in APIs of the LLMs.</p>
 <h2 id="setting-up-the-conversation">Setting up the conversation</h2>
 <p>To start a conversation, we can initialise the Conversation class (here
 exemplified by GPT):</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">biochatter.llm_connect</span> <span class="kn">import</span> <span class="n">GptConversation</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">biochatter.llm_connect</span><span class="w"> </span><span class="kn">import</span> <span class="n">GptConversation</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">conversation</span> <span class="o">=</span> <span class="n">GptConversation</span><span class="p">(</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;gpt-3.5-turbo&quot;</span><span class="p">,</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">prompts</span><span class="o">=</span><span class="p">{},</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">conversation</span><span class="o">.</span><span class="n">set_api_key</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="s2">&quot;sk-...&quot;</span><span class="p">)</span>
 </span></code></pre></div>
+<p>The <code>set_api_key</code> method is needed in order to initialise the conversation for
+those models that require an API key (which is true for GPT).</p>
 <p>It is possible to supply a dictionary of prompts to the conversation from the
 outset, which is formatted in a way to correspond to the different roles of the
 conversation, i.e., primary and correcting models. Prompts with the
@@ -1389,7 +1392,7 @@ OPENAI_API_KEY=sk-...</code>) by adding it to your shell configuration (e.g., th
 <h2 id="using-anthropic-models-claude">Using Anthropic models (Claude)</h2>
 <p>Similarly, to use an Anthropic model, you need a billable account with Anthropic
 API access, and to set the <code>ANTHROPIC_API_KEY</code> variable in your environment.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span> <span class="nn">biochatter.llm_connect</span> <span class="kn">import</span> <span class="n">AnthropicConversation</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">biochatter.llm_connect</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnthropicConversation</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">conversation</span> <span class="o">=</span> <span class="n">AnthropicConversation</span><span class="p">(</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;claude-3-5-sonnet-20240620&quot;</span><span class="p">,</span>

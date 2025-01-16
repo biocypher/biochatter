@@ -1511,7 +1511,7 @@ possible in the exact same way as with the <a href="../chat/">standard class</a>
 <p>All that remains once Xinference has started your model is to tell BioChatter
 the API endpoint of your deployed model via the <code>base_url</code> parameter of the
 <code>XinferenceConversation</code> class. For instance:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">biochatter.llm_connect</span> <span class="kn">import</span> <span class="n">XinferenceConversation</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">biochatter.llm_connect</span><span class="w"> </span><span class="kn">import</span> <span class="n">XinferenceConversation</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">conversation</span> <span class="o">=</span> <span class="n">XinferenceConversation</span><span class="p">(</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:9997&quot;</span><span class="p">,</span>
@@ -1549,7 +1549,7 @@ to add your own favourite models to the framework. You will see your running
 models in the <code>Running Models</code> tab, once they have started.</p>
 <p>Alternatively, you can deploy (and query) your model via the Xinference Python
 client:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span> <span class="nn">xinference.client</span> <span class="kn">import</span> <span class="n">Client</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">xinference.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="s2">&quot;http://localhost:9997&quot;</span><span class="p">)</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">model_uid</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">launch_model</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;chatglm2&quot;</span><span class="p">)</span>  <span class="c1"># download model from HuggingFace and deploy</span>
@@ -1584,7 +1584,7 @@ connect to the API endpoint and start any
 <a href="https://ollama.com/library">available</a> model. It will be downloaded and
 launched on-demand. You can now configure the <code>OllamaConversation</code> instance
 setting the <code>base_url</code> and <code>model_name</code> parameters. For example:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span> <span class="nn">biochatter.llm_connect</span> <span class="kn">import</span> <span class="n">OllamaConversation</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">biochatter.llm_connect</span><span class="w"> </span><span class="kn">import</span> <span class="n">OllamaConversation</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">conversation</span> <span class="o">=</span> <span class="n">OllamaConversation</span><span class="p">(</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:11434&quot;</span><span class="p">,</span>

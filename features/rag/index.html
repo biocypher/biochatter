@@ -1727,7 +1727,7 @@ handles the entire process. In addition, we can use the <a href="../reflexion-ag
 Agent</a> to iteratively improve a query based on its results.</p>
 <h4 id="setup">Setup</h4>
 <p>We use the <code>BioCypherPromptEngine</code> class to handle the LLM conversation.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">biochatter.prompts</span> <span class="kn">import</span> <span class="n">BioCypherPromptEngine</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">biochatter.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">BioCypherPromptEngine</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">prompt_engine</span> <span class="o">=</span> <span class="n">BioCypherPromptEngine</span><span class="p">(</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">schema_config_or_info_path</span><span class="o">=</span><span class="s2">&quot;test/schema_info.yaml&quot;</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">)</span>
@@ -1796,7 +1796,7 @@ language (e.g., Cypher).</p>
 <code>BioCypherQueryHandler</code> class (<code>query_interaction.py</code>). It takes the query, the
 original question and the KG information so that the interaction is still aware
 of the KG.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span> <span class="nn">biochatter.query_interaction</span> <span class="kn">import</span> <span class="n">BioCypherQueryHandler</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">biochatter.query_interaction</span><span class="w"> </span><span class="kn">import</span> <span class="n">BioCypherQueryHandler</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">query_handler</span> <span class="o">=</span> <span class="n">BioCypherQueryHandler</span><span class="p">(</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">query_lang</span><span class="o">=</span><span class="s2">&quot;Cypher&quot;</span><span class="p">,</span>
@@ -1852,7 +1852,7 @@ alongside it).</p>
     VectorDatabaseAgent -&gt;&gt; User/Primary Agent: return results</code></pre>
 <h3 id="connecting_1">Connecting</h3>
 <p>To connect to a vector DB host, we can use the corresponding class:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span> <span class="nn">biochatter.vectorstore_agent</span> <span class="kn">import</span> <span class="n">VectorDatabaseAgentMilvus</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">biochatter.vectorstore_agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">VectorDatabaseAgentMilvus</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">dbHost</span> <span class="o">=</span> <span class="n">VectorDatabaseAgentMilvus</span><span class="p">(</span>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="n">embedding_func</span><span class="o">=</span><span class="n">OpenAIEmbeddings</span><span class="p">(),</span>
@@ -1868,8 +1868,8 @@ of embedded text (e.g. the title and authors of the paper that was embedded).</p
 <h3 id="embedding-documents">Embedding documents</h3>
 <p>To embed text from documents, we use the LangChain and BioChatter
 functionalities for processing and passing the text to the vector database.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span> <span class="nn">biochatter.vectorstore</span> <span class="kn">import</span> <span class="n">DocumentReader</span><span class="p">()</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kn">from</span> <span class="nn">langchain.text_splitter</span> <span class="kn">import</span> <span class="n">RecursiveCharacterTextSplitter</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">biochatter.vectorstore</span><span class="w"> </span><span class="kn">import</span> <span class="n">DocumentReader</span><span class="p">()</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">langchain.text_splitter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecursiveCharacterTextSplitter</span>
 </span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
 </span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># read and split document at `pdf_path`</span>
 </span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">reader</span> <span class="o">=</span> <span class="n">DocumentReader</span><span class="p">()</span>
