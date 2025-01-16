@@ -12,8 +12,8 @@ def test_generate_pydantic_classes():
     # Test that each generated class has the expected Pydantic model properties
     for cls in generated_classes:
         # Check if it has schema method (indicating it's a Pydantic model)
-        assert hasattr(cls, "schema")
-        schema = cls.schema()
+        assert hasattr(cls, "model_json_schema")
+        schema = cls.model_json_schema()
 
         # Basic schema validation (must contain properties, title, type)
         assert isinstance(schema, dict)
@@ -26,14 +26,14 @@ def test_generate_pydantic_classes_umap():
 
     # Find the umap function
     umap_function = next(
-        (cls for cls in generated_classes if cls.schema()["title"] == "umap"),
+        (cls for cls in generated_classes if cls.model_json_schema()()["title"] == "umap"),
         None,
     )
     # Verify we found the class
     assert umap_function is not None
 
     # Check parameters from umap function
-    properties = umap_function.schema()["properties"]
+    properties = umap_function.model_json_schema()()["properties"]
     assert len(properties) == 16  # noqa: PLR2004
     assert set(properties.keys()) == {
         "question_uuid",

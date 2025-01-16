@@ -193,8 +193,8 @@ class BaseTools:
         `tool_params` and `tool_descriptions` attributes.
         """
         tools = []
-        tool_params = self.tool_params
-        tool_descriptions = self.tool_descriptions
+        tool_params = self.tools_params
+        tool_descriptions = self.tools_descriptions
         # validate that keys are equal in tool_params and tool_descriptions
         if set(tool_params) != set(tool_descriptions):
             msg = "Keys in tools_params and tools_descriptions must be equal"
