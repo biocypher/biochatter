@@ -33,15 +33,11 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Python and Poetry
         uses: biocypher/biocypher/.github/actions/setup@main
-        with:
-          PYTHON_VERSION: "3.11"
       #----------------------------------------------
       #            install dependencies
       #----------------------------------------------
       - name: Install dependencies
         uses: biocypher/biocypher/.github/actions/install@main
-        with:
-          PYTHON_VERSION: "3.11"
       #----------------------------------------------
       #             build artifact
       #----------------------------------------------
