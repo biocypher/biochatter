@@ -18,7 +18,7 @@ from .benchmark_utils import benchmark_already_executed, get_judgement_dataset
 from .load_dataset import get_benchmark_dataset
 
 # how often should each benchmark be run?
-N_ITERATIONS = 2
+N_ITERATIONS = 1
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
@@ -31,7 +31,7 @@ OPENAI_MODEL_NAMES = [
     # "gpt-4-turbo-2024-04-09",
     # "gpt-4o-2024-05-13",
     "gpt-4o-2024-08-06",
-    # "gpt-4o-mini-2024-07-18",
+    "gpt-4o-mini-2024-07-18",
 ]
 
 ANTHROPIC_MODEL_NAMES = [
@@ -279,6 +279,7 @@ BENCHMARKED_MODELS.sort()
 BENCHMARK_URL = "http://localhost:9997"
 
 OPENAI_JUDGE = [
+    "gpt-4o-2024-08-06",
     "gpt-4o-mini-2024-07-18",
 ]
 
@@ -626,25 +627,10 @@ def pytest_generate_tests(metafunc):
             "test_data_medical_exam",
             data["medical_exam"],
         )
-    if "test_create_longevity_responses" in metafunc.fixturenames:
-        metafunc.parametrize(
-            "test_create_longevity_responses",
-            data["longevity_geriatric_case_assessment"],
-        )
-    if "test_create_longevity_responses_rag" in metafunc.fixturenames:
-        metafunc.parametrize(
-            "test_create_longevity_responses_rag",
-            data["longevity_geriatric_case_assessment"],
-        )
     if "test_create_longevity_responses_simultaneously" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_create_longevity_responses_simultaneously",
-            data["longevity_geriatric_case_assessment"],
-        )
-    if "test_create_longevity_responses_rag_simultaneously" in metafunc.fixturenames:
-        metafunc.parametrize(
-            "test_create_longevity_responses_rag_simultaneously",
-            data["longevity_geriatric_case_assessment"],
+            data["longevity_geriatric_case_assessment_example"],
         )
 
 
