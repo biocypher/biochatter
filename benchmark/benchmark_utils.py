@@ -8,11 +8,15 @@ import pandas as pd
 import pytest
 from nltk.corpus import wordnet
 
+from typing import Optional
 
 def benchmark_already_executed(
     model_name: str,
     task: str,
     md5_hash: str,
+    mode: Optional[str] = False,
+    metric: Optional[str] = False,
+    judge_name: Optional[str] = False,
 ) -> bool:
     """Checks if the benchmark task and subtask test case for the model_name have
     already been executed.
@@ -33,14 +37,12 @@ def benchmark_already_executed(
             run, False otherwise
 
     """
-    if "judgement" in task:
-        task_results = return_or_create_judge_file(task, model_name)
-        return False
-    elif "generation_plain" in task:
-        task_results = return_or_create_response_file(task, model_name)
-    elif "generation_rag" in task:
-        task_results = return_or_create_rag_response_file(task, model_name)
-    else:
+    def task_executed(task_results, filters):
+        if task_results.empty:
+            return False
+        return task_results.query(filters).shape[0] > 0
+
+    if mode is False and md5_hash != "?":
         task_results = return_or_create_result_file(task)
 
         # check if failure group csv already exists
@@ -49,18 +51,35 @@ def benchmark_already_executed(
         # check if confidence group csv already exists
         return_or_create_confidence_file(task)
 
-    if task_results.empty:
-        return False
+        return task_executed(
+            task_results = task_results,
+            filters = f"model_name == '{model_name}' and md5_hash == '{md5_hash}'",
+        )
+    elif mode == "response":
+        task_results = return_or_create_response_file(task, model_name)
 
-    run = task_results[(task_results["model_name"] == model_name) & (task_results["md5_hash"] == md5_hash)].shape[0] > 0
+        return task_executed(
+            task_results = task_results,
+            filters = f"model_name == '{model_name}' and md5_hash == '{md5_hash}'",
+        )
+    elif mode == "judge":
+        task_results = return_or_create_judge_file(task, model_name)
 
-    return run
+        return task_executed(
+            task_results = task_results,
+            filters = f"metric == '{metric}' and evaluated_model == '{model_name}' and model_name == '{judge_name}' and md5_hash == '{md5_hash}'",
+        )
+
+    return False
 
 
 def skip_if_already_run(
     model_name: str,
     task: str,
     md5_hash: str,
+    mode: Optional[str] = False,
+    metric: Optional[str] = False,
+    judge_name: Optional[str] = False,
 ) -> None:
     """Helper function to check if the test case is already executed.
 
@@ -75,9 +94,10 @@ def skip_if_already_run(
             dictionary representation of the test case.
 
     """
-    if benchmark_already_executed(model_name, task, md5_hash):
+    if benchmark_already_executed(model_name, task, md5_hash, mode, metric, judge_name):
+        message = f"{mode} mode with {metric}" if mode and metric else "Benchmark"
         pytest.skip(
-            f"Benchmark for {task} with hash {md5_hash} with {model_name} already executed",
+            f"{message} for {task} with hash {md5_hash} with {model_name} already executed",
         )
 
 
@@ -195,7 +215,7 @@ def return_or_create_response_file(task: str, model: str):
                 "model_name",
                 "case_id",
                 "subtask",
-                "individual",
+                "age",
                 "prompt",
                 "response",
                 "expected_answer",
@@ -284,7 +304,8 @@ def get_response_mode_file_path(task: str, model: str) -> str:
     Returns:
         str: The path to the response mode file
     """
-    return f"benchmark/LLM_as_a_Judge/responses/{task}_{model}_response.csv"
+    # return f"benchmark/LLM_as_a_Judge/responses/{task}_{model}_response.csv"
+    return f"benchmark/results/{task}_{model}_response.csv"
 
 def get_rag_response_mode_file_path(task: str, model: str) -> str:
     """
@@ -667,7 +688,7 @@ def return_or_create_judge_file(task: str, evaluated_model: str):
         df: A dataframe.
     """
 
-    path = f"./benchmark/LLM_as_a_Judge/judgement/{task}_{evaluated_model}.csv"
+    path = f"./benchmark/results/{task}.csv"
     try:
         results = pd.read_csv(path)
     except (pd.errors.EmptyDataError, FileNotFoundError):
@@ -678,7 +699,7 @@ def return_or_create_judge_file(task: str, evaluated_model: str):
             "metric": [],
             "case_id": [],
             "subtask": [],
-            "individual": [],
+            "age": [],
             "md5_hash": [],
             "prompt": [],
             "system_prompt": [],

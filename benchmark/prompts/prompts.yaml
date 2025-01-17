@@ -10,12 +10,12 @@ prompts:
           - Use the provided information and the information you gathered to summarize the presented patient (<SUMMARY>).
           - Then, you receive the analysis of the patient prepared by the other LLM (<PROVIDED ANALYSIS>).
           - The, you receive the expert annotated ground truth (<GROUND TRUTH>) denoted as either "yes" or "no".
-          - The analysis is {success} if the final answer of the LLM ("Final answer: ..." in <PROVIDED ANALYSIS>) == <GROUND TRUTH> and/or follows <DATA COLLECTION>, <SUMMARY>. 
-          - The analysis is {failure} if the final answer of the LLM ("Final answer: ..." in <PROVIDED ANALYSIS>) != <GROUND TRUTH> and/or does not follow <DATA COLLECTION>, <SUMMARY>. 
+          - The analysis is correct if the final answer of the LLM ("Final answer: ..." in <PROVIDED ANALYSIS>) == <GROUND TRUTH> and/or follows <DATA COLLECTION>, <SUMMARY>. 
+          - The analysis is not correct if the final answer of the LLM ("Final answer: ..." in <PROVIDED ANALYSIS>) != <GROUND TRUTH> and/or does not follow <DATA COLLECTION>, <SUMMARY>. 
 
           Evaluate the <PROVIDED ANALYSIS> using the ground truth (<GROUND TRUTH>).
 
-          **ONLY return "{success}" or "{failure}" and not the whole answer.**
+          **ONLY return "correct" or "not correct" and not the whole answer.**
 
           <PATIENT> 
           {prompt}
@@ -42,7 +42,7 @@ prompts:
           {expected_answer}
 
           <EVALUATION>
-          Your evaluation. {success} or {failure}. ANSWER ONLY WITH ONE WORD!
+          Your evaluation. correct or not correct. ANSWER ONLY WITH ONE WORD!
     comprehensiveness:
       success: comprehensive
       failure: not comprehensive
@@ -57,13 +57,13 @@ prompts:
           - Use the provided information and the information you gathered to summarize the presented patient (<SUMMARY>).
           - Then, you receive the analysis of the patient prepared by the other LLM (<PROVIDED ANALYSIS>).
           - The, you receive the expert annotated ground truth (<GROUND TRUTH>) denoted as either "yes" or "no".
-          - The analysis is {success} and complete if it addresses all or at least most of the aspects and properties given in <NOTE>, <DATA>, <DATA COLLECTION>, and <SUMMARY>. 
-          - The analysis is {failure} and incomplete if it addresses no or only a few of the aspects and properties given in <NOTE>, <DATA>, <DATA COLLECTION>, and <SUMMARY>.
-          - Rate the analysis as “{success}” if it is {success} and complete. Rate the analysis as “{failure}” if it is {failure} and incomplete.
+          - The analysis is comprehensive and complete if it addresses all or at least most of the aspects and properties given in <NOTE>, <DATA>, <DATA COLLECTION>, and <SUMMARY>. 
+          - The analysis is not comprehensive and incomplete if it addresses no or only a few of the aspects and properties given in <NOTE>, <DATA>, <DATA COLLECTION>, and <SUMMARY>.
+          - Rate the analysis as “comprehensive” if it is comprehensive and complete. Rate the analysis as “not comprehensive” if it is not comprehensive and incomplete.
 
           Evaluate the <PROVIDED ANALYSIS> using the data made available to you and the additional information you gathered.
 
-          **ONLY return "{success}" or "{failure}" and not the whole answer. DO NOT return your <DATA COLLECTION> AND <SUMMARY> or any other aspect.**
+          **ONLY return "comprehensive" or "not comprehensive" and not the whole answer. DO NOT return your <DATA COLLECTION> AND <SUMMARY> or any other aspect.**
 
           <PATIENT> 
           {prompt}
@@ -90,4 +90,4 @@ prompts:
           {expected_answer}
 
           <EVALUATION>
-          Your evaluation. {success} or {failure}. ANSWER ONLY WITH ONE WORD!
+          Your evaluation. comprehensive or not comprehensive. ANSWER ONLY WITH ONE WORD!
