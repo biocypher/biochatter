@@ -51,6 +51,11 @@ def generate_pydantic_classes(module: ModuleType) -> list[type[BaseAPIModel]]:
     - Required parameters (no default) use `...` to indicate that the field is
       required.
 
+    Examples
+    --------
+    >>> import scanpy as sc
+    >>> generated_classes = generate_pydantic_classes(sc.tl)
+
     """
     base_attributes = set(dir(BaseAPIModel))
     classes_list = []
@@ -125,8 +130,3 @@ def generate_pydantic_classes(module: ModuleType) -> list[type[BaseAPIModel]]:
         )
         classes_list.append(parameters_model)
     return classes_list
-
-#Example usage
-import scanpy as sc
-
-generate_pydantic_classes(sc.tl)
