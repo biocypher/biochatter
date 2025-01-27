@@ -18,7 +18,7 @@ from .benchmark_utils import benchmark_already_executed, get_judgement_dataset
 from .load_dataset import get_benchmark_dataset
 
 # how often should each benchmark be run?
-N_ITERATIONS = 1
+N_ITERATIONS = 2
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
@@ -30,8 +30,18 @@ OPENAI_MODEL_NAMES = [
     # "gpt-4-0125-preview",
     # "gpt-4-turbo-2024-04-09",
     # "gpt-4o-2024-05-13",
-    "gpt-4o-2024-08-06",
-    "gpt-4o-mini-2024-07-18",
+    # "gpt-4o-2024-08-06",
+    # "gpt-4o-mini-2024-07-18",
+]
+
+GROQ_MODEL_NAMES = [
+    # "llama-3.3-70b-versatile",
+]
+
+LM_STUDIO_MODEL_NAMES = [
+    # "llama-3.2-1b-instruct",
+    # "llama-3.2-3b-instruct",
+    "qwen2.5-14b-instruct",
 ]
 
 ANTHROPIC_MODEL_NAMES = [
@@ -272,14 +282,14 @@ XINFERENCE_MODEL_NAMES = [
     for quantization in XINFERENCE_MODELS[model_name]["quantization"]
 ]
 
-BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + ANTHROPIC_MODEL_NAMES + XINFERENCE_MODEL_NAMES
+BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + ANTHROPIC_MODEL_NAMES + XINFERENCE_MODEL_NAMES + GROQ_MODEL_NAMES + LM_STUDIO_MODEL_NAMES
 BENCHMARKED_MODELS.sort()
 
 # Xinference IP and port
 BENCHMARK_URL = "http://localhost:9997"
 
 OPENAI_JUDGE = [
-    "gpt-4o-2024-08-06",
+    # "gpt-4o-2024-08-06",
     "gpt-4o-mini-2024-07-18",
 ]
 
@@ -288,6 +298,9 @@ JUDGES = OPENAI_JUDGE
 METRICS = [
     "correctness",
     "comprehensiveness",
+    "usefulness",
+    "interpretability_explainability",
+    "toxicity",
 ]
 
 @pytest.fixture(scope="session")
@@ -432,6 +445,32 @@ def conversation(request, model_name, client):
             os.getenv("ANTHROPIC_API_KEY"),
             user="benchmark_user",
         )
+    
+    elif model_name in GROQ_MODEL_NAMES:
+        print(model_name)
+        conversation = GptConversation(
+            model_name=model_name,
+            prompts={},
+            correct=False,
+            base_url="https://api.groq.com/openai/v1",
+        )
+        conversation.set_api_key(
+            os.getenv("GROQ_API_KEY"),
+            user="benchmark_user",
+        )
+    
+    elif model_name in LM_STUDIO_MODEL_NAMES:
+        print(model_name)
+        conversation = GptConversation(
+            model_name=model_name,
+            prompts={},
+            correct=False,
+            base_url="http://localhost:1234/v1",
+        )
+        conversation.set_api_key(
+            os.getenv("LM_STUDIO_API_KEY"),
+            user="benchmark_user",
+        )
 
     elif model_name in XINFERENCE_MODEL_NAMES:
         (
@@ -505,13 +544,14 @@ def prompt_engine(request, model_name, conversation):
     return setup_prompt_engine
 
 @pytest.fixture()
-def judge_conversation(model_name):
-    conversation = GptConversation(
-        model_name = model_name,
-        prompts = {},
-        correct = False,
-    )
-    conversation.set_api_key(os.getenv("OPENAI_API_KEY"), user = "benchmark_user")
+def judge_conversation(judge_name):
+    if judge_name in OPENAI_JUDGE:
+        conversation = GptConversation(
+            model_name = judge_name,
+            prompts = {},
+            correct = False,
+        )
+        conversation.set_api_key(os.getenv("OPENAI_API_KEY"), user = "benchmark_user")
     return conversation
 
 @pytest.fixture()
@@ -583,7 +623,7 @@ def result_files():
 @pytest.fixture
 def test_judge_longevity_responses():
     """Fixture to dynamically load judgment data."""
-    path = "./benchmark/LLM_as_a_Judge/responses/"
+    path = "./benchmark/results/"
     if not os.path.exists(path) or not os.listdir(path):
         pytest.skip(f"No files found in directory: {path}")
     
