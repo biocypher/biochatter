@@ -330,9 +330,9 @@ class ScanpyPpQueryBuilder(BaseQueryBuilder):
 
         """
         tool_maker = ScanpyPpFuncs()
-        tools = tool_maker.make_pydantic_tools()
+        self.pydantic_tools = tool_maker.make_pydantic_tools()
         runnable = self.create_runnable(
-            conversation=conversation, query_parameters=tools
+            conversation=conversation, query_parameters=self.pydantic_tools
         )
         scanpy_pp_call_obj = runnable.invoke(
             question,
