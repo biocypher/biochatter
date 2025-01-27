@@ -282,6 +282,6 @@ class ScanpyPlQueryBuilder(BaseQueryBuilder):
 
         """
         tool_maker = ScanpyPlToolsReduced()
-        tools = tool_maker.make_pydantic_tools()
-        runnable = self.create_runnable(conversation=conversation, query_parameters=tools)
+        self.pydantic_tools = tool_maker.make_pydantic_tools()
+        runnable = self.create_runnable(conversation=conversation, query_parameters=self.pydantic_tools)
         return runnable.invoke(question)
