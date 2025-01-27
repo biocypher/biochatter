@@ -654,7 +654,7 @@ def list_files(path: str):
 
     files = []
     for file in os.listdir(path):
-        if not file.startswith("."):
+        if not file.startswith(".") and file.endswith("_response.csv"):
             files.append(file)
     return files
 
@@ -821,30 +821,28 @@ def load_judgement_dataset(path: str):
     """
 
     files = list_files(path)
-    if not files:
-        raise ValueError(f"No files found in directory: {path}")
 
     latest_file = [max([f"{path}/{file}" for file in files], key = os.path.getmtime)]
 
     dfs = []
-    for file in latest_file: # or files if each response file should be judged
-        # file_path = os.path.join(path, file)
+    for file in files: # or files if each response file should be judged
+        file_path = os.path.join(path, file)
         try:
-            df = pd.read_csv(file)
+            df = pd.read_csv(file_path)
             dfs.append(df)
         except Exception as err:
             print(f"Error reading {file}: {err}")
             continue
     
-    if len(dfs) > 1:
-        concatenated_dfs = pd.concat(dfs, ignore_index = True)
-    else:
-        concatenated_dfs = dfs[0]
+        if len(dfs) > 1:
+            concatenated_dfs = pd.concat(dfs, ignore_index = True)
+        else:
+            concatenated_dfs = dfs[0]
 
-    result_data = concatenated_dfs.to_dict(orient = "records")
-    data_dict = {
-        "judgement": result_data
-    }
+        result_data = concatenated_dfs.to_dict(orient = "records")
+        data_dict = {
+            "judgement": result_data
+        }
 
     return data_dict
 
