@@ -3,7 +3,7 @@
 from urllib.parse import urlencode
 
 from .abc import BaseAPIModel, BaseModel
-from biochatter.api_agent.python.anndata_agent import MapAnnData
+from biochatter.api_agent.anndata_agent import MapAnnData
 
 def format_as_rest_call(model: BaseModel) -> str:
     """Convert a parameter model (BaseModel) into a REST API call string.
