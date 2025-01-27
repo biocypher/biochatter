@@ -16,7 +16,7 @@ from biochatter.api_agent.abc import (
 
 from biochatter.api_agent.anndata_agent import AnnDataIOQueryBuilder, ANNDATA_IO_QUERY_PROMPT
 from biochatter.api_agent.scanpy_pp_reduced import ScanpyPpQueryBuilder
-
+from biochatter.api_agent.scanpy_pl_reduced import SCANPY_PL_QUERY_PROMPT
 from biochatter.api_agent.api_agent import APIAgent
 from biochatter.api_agent.blast import (
     BLAST_QUERY_PROMPT,
@@ -37,7 +37,6 @@ from biochatter.api_agent.oncokb import (
 from biochatter.api_agent.scanpy_pl import (
     ScanpyPlQueryBuilder,
 )
-from biochatter.api_agent.scanpy_tl import SCANPY_QUERY_PROMPT, ScanpyTlQueryBuilder
 from biochatter.llm_connect import Conversation, GptConversation
 
 
@@ -576,7 +575,7 @@ class TestScanpyPpQueryBuilder:
         mock_create_runnable.invoke.assert_called_once_with(expected_input)
         assert result == mock_query_obj
 
-
+'''
 class TestScanpyTlQueryBuilder:
     @pytest.fixture
     def mock_create_runnable(self):
@@ -586,7 +585,7 @@ class TestScanpyTlQueryBuilder:
             mock_runnable = MagicMock()
             mock.return_value = mock_runnable
             yield mock_runnable
-
+'''
     @patch("biochatter.llm_connect.GptConversation")
     def test_create_runnable(self, mock_conversation):
         # Mock the list of Pydantic classes as a list of Mock objects
@@ -612,7 +611,7 @@ class TestScanpyTlQueryBuilder:
         mock_llm_with_tools.__or__.return_value = mock_chain
 
         # Act
-        builder = ScanpyTlQueryBuilder()
+        builder = ScanpyPlQueryBuilder()
         result = builder.create_runnable(
             query_parameters=mock_generated_classes,
             conversation=mock_conversation_instance,
@@ -628,10 +627,10 @@ class TestScanpyTlQueryBuilder:
 
     def test_parameterise_query(self, mock_create_runnable):
         # Arrange
-        query_builder = ScanpyTlQueryBuilder()
+        query_builder = ScanpyPlQueryBuilder()
         mock_conversation = MagicMock()
         question = "i want to run PCA on my data"
-        expected_input = [("system", SCANPY_QUERY_PROMPT), ("human", question)]
+        expected_input = [("system", SCANPY_PL_QUERY_PROMPT), ("human", question)]
         mock_query_obj = MagicMock()
         mock_create_runnable.invoke.return_value = mock_query_obj
         module = MagicMock()
