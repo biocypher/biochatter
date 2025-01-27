@@ -1595,9 +1595,15 @@ class GptConversation(Conversation):
 
         """
         if self.user == "community":
+            # Only process integer values
+            stats_dict = {
+                f"{k}:{model}": v
+                for k, v in token_usage.items()
+                if isinstance(v, int | float)
+            }
             self.usage_stats.increment(
                 "usage:[date]:[user]",
-                {f"{k}:{model}": v for k, v in token_usage.items()},
+                stats_dict,
             )
 
         if self._update_token_usage is not None:
