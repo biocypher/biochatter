@@ -48,10 +48,11 @@ def test_format_as_rest_call_no_params():
 
 def test_format_as_python_call_with_module():
     params = {}
-    params["sqrt"] = {
-        "param1"="16",
-        "param2"=42,
-    }
+    params = TestMethodParams(
+         method_name="sqrt",
+         param1="16",
+         param2=42,
+     )
     expected = "sqrt(param1='16', param2=42)"
     assert format_as_python_call(params) == expected
 
