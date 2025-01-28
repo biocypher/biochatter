@@ -1,4 +1,5 @@
 import re
+import time
 import inspect
 import ast
 import os
@@ -11,6 +12,7 @@ import pytest
 from biochatter._misc import ensure_iterable
 from .conftest import return_response, calculate_bool_vector_score
 from .benchmark_utils import (
+    benchmark_already_executed,
     skip_if_already_run,
     get_response_mode_file_path,
     write_responses_to_file,
@@ -47,7 +49,7 @@ class TestLongevityResponseAndJudgement:
         # print("setup_method called")
         self.responses = []
         self.data = pd.DataFrame()
-        self.ITERATIONS = 2
+        self.ITERATIONS = 4
     
     @pytest.mark.order(1)
     def test_generate_responses(
@@ -84,11 +86,88 @@ class TestLongevityResponseAndJudgement:
         responses_run = []
         def run_test():
             conversation.reset()
-            [
-                conversation.append_system_message(m)
-                for m in test_data["input"]["system_messages"]
-            ]
-            response, _, _ = conversation.query(test_data["input"]["prompt"])
+            if "rag" in test_data["case"]:
+                pytest.skip(
+                    f"test case {test_data['case']} not supported for {task} benchmark",
+                )
+            else:
+                [
+                    conversation.append_system_message(m)
+                    for m in test_data["input"]["system_messages"]
+                ]
+                response, _, _ = conversation.query(test_data["input"]["prompt"])
+
+            print(test_data["input"]["system_messages"])
+            responses_run.append(response)
+
+            return return_response(responses_run)
+
+        n_iterations, responses = multiple_responses(run_test)
+        self.responses.append(responses)
+
+        write_responses_to_file(
+            model_name,
+            test_data["case_id"],
+            test_data["case"],
+            test_data["expected"]["individual"],
+            test_data["input"]["prompt"],
+            responses,
+            test_data["expected"]["answer"][0],
+            test_data["expected"]["summary"],
+            test_data["expected"]["key_words"],
+            f"{n_iterations}",
+            test_data["hash"],
+            get_response_mode_file_path(task, model_name),
+        )
+        df = pd.read_csv(get_response_mode_file_path(task, model_name))
+        self.data = df
+
+    @pytest.mark.order(2)
+    def test_generate_rag_responses(
+        self,
+        model_name, 
+        conversation,
+        test_create_longevity_responses_simultaneously,
+        multiple_responses,
+    ):
+        """
+        Stage 1: Response Generation
+        --------------------------
+        - Skip if responses exist for (model, task, hash) combo
+        - Generate multiple responses using conversation API
+        - Store responses both in memory and to file
+        - File format: CSV with metadata (model, task, timestamp, etc.)
+        
+        Returns: None (responses stored in self.responses and file)
+        """
+        print("test_generate_responses called")
+        mode = "response"
+
+        test_data = test_create_longevity_responses_simultaneously
+
+        task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
+
+        skip_if_already_run(
+            model_name = model_name, 
+            task = task, 
+            md5_hash = test_data["hash"],
+            mode = mode,
+        )
+
+        responses_run = []
+        def run_test():
+            conversation.reset()
+            if "rag" in test_data["case"]:
+                [
+                    conversation.append_system_message(m.format(contexts = test_data["contexts"]))
+                    for m in test_data["input"]["system_messages"]
+                ]
+                print(test_data["contexts"])
+                response, _, _ = conversation.query(test_data["input"]["prompt"])
+            else:
+                pytest.skip(
+                    f"test case {test_data['case']} not supported for {task} benchmark",
+                )
 
             responses_run.append(response)
 
@@ -114,7 +193,7 @@ class TestLongevityResponseAndJudgement:
         df = pd.read_csv(get_response_mode_file_path(task, model_name))
         self.data = df
         
-    @pytest.mark.order(2)
+    @pytest.mark.order(3)
     def test_judge_responses(
         self,
         judge_conversation, 
@@ -146,23 +225,31 @@ class TestLongevityResponseAndJudgement:
         judge_conversation.append_system_message(system_message)
 
         for data in test_data["judgement"]:
-            skip_if_already_run(
+            if benchmark_already_executed(
                 model_name = data["model_name"], 
                 task = task, 
                 md5_hash = data["md5_hash"],
                 mode = mode,
                 metric = judge_metric,
                 judge_name = judge_name,
-            )
+            ):
+                print("\033[93mskipped\033[0m")
+                continue
+            print(f"\033[92m{judge_name} judges {data['model_name']} in {judge_metric}\033[0m")
+
             all_time_scores = []
             for response in ast.literal_eval(data["response"]):
+
                 params = {
                     "prompt": data["prompt"],
                     "summary": data["summary"],
                     "keywords": data["key_words"],
                     "response": response,
-                    "expected_answer": data["expected_answer"],
                 }
+
+                if judge_metric == "correctness":
+                    params["expected_answer"] = data["expected_answer"]
+
                 prompt, success, failure = self._format_judgment_prompt(
                     metric = judge_metric,
                     path = "./benchmark/prompts/prompts.yaml",
@@ -171,6 +258,7 @@ class TestLongevityResponseAndJudgement:
 
                 scores = []
                 for iter in range(self.ITERATIONS):
+                    judge_conversation.reset() 
                     judgement, _, _ = judge_conversation.query(prompt)
                     
                     if judgement.lower().replace(".", "") == success:
@@ -184,22 +272,7 @@ class TestLongevityResponseAndJudgement:
                 all_time_scores = all_time_scores,
             )
             
-            if "list" in data["subtask"]:
-                prompt_type = "list"
-            elif "freetext" in data["subtask"]:
-                prompt_type = "freetext"
-
-            if ":appendix:" in data["subtask"]:
-                clause = "appendix"
-            elif "no_appendix" in data["subtask"]:
-                clause = "no_appendix"
-
-            if "simple" in data["subtask"]:
-                system_prompt = "simple"
-            elif "detailed" in data["subtask"]:
-                system_prompt = "detailed"
-            elif "explicit" in data["subtask"]:
-                system_prompt = "explicit"
+            _, prompt_type, is_appendix, system_prompt = data["subtask"].rsplit(":", 3)
             
             write_judgement_to_file(
                 judge_model = judge_name,
@@ -213,12 +286,13 @@ class TestLongevityResponseAndJudgement:
                 prompt = data["prompt"],
                 system_prompt = system_prompt,
                 prompt_type = prompt_type,
-                is_appendix = clause,
+                is_appendix = is_appendix,
                 responses = data["response"],
                 expected_answer = data["expected_answer"],
                 rating = f"{score_string}/{1}",
                 path = f"./benchmark/results/{task}.csv", # can be modified for separated file creation (one file for each tested model)
             )
+            time.sleep(0.5)
 
     # Helper methods
     def _list_files(
@@ -238,8 +312,6 @@ class TestLongevityResponseAndJudgement:
     ) -> Dict[str, List[Dict[str, Any]]]:
         """Load responses from file if they exist"""
         files = self._list_files(path = path)
-        print(files)
-
         latest_file = [max([f"{path}/{file}" for file in files], key = os.path.getmtime)]
 
         dfs = []

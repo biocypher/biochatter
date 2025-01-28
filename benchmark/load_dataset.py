@@ -220,7 +220,11 @@ def _expand_multi_instruction(data_dict: dict) -> dict:
 
 def _expand_longevity_test_cases(data_dict: dict) -> dict:
     expanded_test_list = []
-    for test in data_dict:
+
+    message_dict = data_dict[0]["general_system_messages"]
+    rag_message_dict = data_dict[1]["general_system_messages_rag"]
+
+    for test in data_dict[2:]:
         prompt_dict = test["input"]["prompt"]
         if not isinstance(prompt_dict, dict):
             expanded_test_list.append(test)
@@ -240,7 +244,15 @@ def _expand_longevity_test_cases(data_dict: dict) -> dict:
             new_case["input"]["prompt"] = " ".join(str(v) for v in new_case["input"]["prompt"].values())
             new_case["input"]["prompt"] = new_case["input"]["prompt"].strip()
             
-            expanded_test_list.append(new_case)
+            if "rag" in new_case["case"]:
+                messages = rag_message_dict
+            else:
+                messages = message_dict
+
+            for key, value in messages.items():
+                final_case = copy.deepcopy(new_case)
+                final_case["input"]["system_messages"] = {key: value}
+                expanded_test_list.append(final_case)
 
     return expanded_test_list
 
