@@ -1,8 +1,10 @@
+"""Statistical analysis of the results."""
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-from docs.scripts._plotting import melt_and_process
+from ._plotting import melt_and_process
 
 
 def calculate_stats(overview: pd.DataFrame) -> None:

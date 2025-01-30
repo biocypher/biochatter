@@ -20,6 +20,7 @@ def import_local_module(module_name: str) -> None:
         msg = f"Could not load module {module_name}"
         raise ImportError(msg)
     module = module_from_spec(spec)
+    sys.modules[spec.name] = module  # This makes the module available for other imports
     spec.loader.exec_module(module)
     return module
 
