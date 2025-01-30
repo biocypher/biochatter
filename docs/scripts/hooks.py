@@ -7,7 +7,7 @@ import os
 
 import pandas as pd
 
-from _plotting import (
+from ._plotting import (
     plot_accuracy_per_model,
     plot_accuracy_per_quantisation,
     plot_accuracy_per_task,
@@ -21,8 +21,8 @@ from _plotting import (
     plot_text2cypher,
     plot_text2cypher_safety_only,
 )
-from _preprocess import create_overview_table, preprocess_results_for_frontend
-from _stats import calculate_stats
+from ._preprocess import create_overview_table, preprocess_results_for_frontend
+from ._stats import calculate_stats
 
 
 def on_pre_build(config, **kwargs) -> None:
