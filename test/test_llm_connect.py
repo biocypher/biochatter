@@ -640,12 +640,11 @@ def test_chat_attributes_reset_on_auth_error(mock_openai):
     with pytest.raises(AttributeError):
         _ = convo.ca_chat
 
-
 @pytest.mark.skip(reason="Test depends on langchain-openai implementation which needs to be updated")
 @patch("biochatter.llm_connect.openai.OpenAI")
 def test_chat_attributes_set_on_success(mock_openai):
     """Test that chat attributes are properly set when authentication succeeds.
-
+    
     This test is skipped because it depends on the langchain-openai
     implementation which needs to be updated. Fails in CI with:
         __pydantic_self__ = ChatOpenAI()
@@ -680,3 +679,57 @@ def test_chat_attributes_set_on_success(mock_openai):
     # Verify both chat attributes are accessible
     assert convo.chat is not None
     assert convo.ca_chat is not None
+
+
+def test_gpt_update_usage_stats():
+    """Test the _update_usage_stats method in GptConversation."""
+    # Arrange
+    convo = GptConversation(
+        model_name="gpt-3.5-turbo",
+        prompts={},
+        correct=False,
+    )
+ 
+    # Mock the usage_stats object
+    mock_usage_stats = Mock()
+    convo.usage_stats = mock_usage_stats
+    convo.user = "community"  # Set user to enable stats tracking
+
+    # Mock the update_token_usage callback
+    mock_update_callback = Mock()
+    convo._update_token_usage = mock_update_callback
+
+    model = "gpt-3.5-turbo"
+    token_usage = {
+        "prompt_tokens": 50,
+        "completion_tokens": 30,
+        "total_tokens": 80,
+        "non_numeric_field": "should be ignored",
+        "nested_dict": {  # Should be ignored as it's a dictionary
+            "sub_field": 100,
+            "another_field": 200,
+        },
+        "another_field": "also ignored",
+    }
+
+    # Act
+    convo._update_usage_stats(model, token_usage)
+
+    # Assert
+    # Verify increment was called with correct arguments for community stats
+    # Only numeric values at the top level should be included
+    mock_usage_stats.increment.assert_called_once_with(
+        "usage:[date]:[user]",
+        {
+            "prompt_tokens:gpt-3.5-turbo": 50,
+            "completion_tokens:gpt-3.5-turbo": 30,
+            "total_tokens:gpt-3.5-turbo": 80,
+        },
+    )
+
+    # Verify callback was called with complete token_usage including nested dict
+    mock_update_callback.assert_called_once_with(
+        "community",
+        "gpt-3.5-turbo",
+        token_usage,  # Full dictionary including nested values
+    )
