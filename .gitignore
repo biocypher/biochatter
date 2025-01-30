@@ -20,3 +20,4 @@ serve.sh
 .api_results/*
 *.coverage
 scaling_test.py
+coverage.xml
