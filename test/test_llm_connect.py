@@ -1,8 +1,3 @@
-# ruff: noqa: S101  # Use of assert detected
-# ruff: noqa: ANN201  # No docstring in public function
-# ruff: noqa: D103  # Missing docstring in public function
-# ruff: noqa: D100  # Missing docstring in public module
-
 import os
 from unittest.mock import MagicMock, Mock, mock_open, patch
 
@@ -323,7 +318,7 @@ def test_wasm_conversation():
     assert result == test_query + "\nSystem message"
 
 
-@pytest.fixture()
+@pytest.fixture
 def xinference_conversation():
     with patch("xinference.client.Client") as mock_client:
         # Mock the authentication check
@@ -645,11 +640,12 @@ def test_chat_attributes_reset_on_auth_error(mock_openai):
     with pytest.raises(AttributeError):
         _ = convo.ca_chat
 
+
 @pytest.mark.skip(reason="Test depends on langchain-openai implementation which needs to be updated")
 @patch("biochatter.llm_connect.openai.OpenAI")
 def test_chat_attributes_set_on_success(mock_openai):
     """Test that chat attributes are properly set when authentication succeeds.
-    
+
     This test is skipped because it depends on the langchain-openai
     implementation which needs to be updated. Fails in CI with:
         __pydantic_self__ = ChatOpenAI()
@@ -694,7 +690,7 @@ def test_gpt_update_usage_stats():
         prompts={},
         correct=False,
     )
- 
+
     # Mock the usage_stats object
     mock_usage_stats = Mock()
     convo.usage_stats = mock_usage_stats

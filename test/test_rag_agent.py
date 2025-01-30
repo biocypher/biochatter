@@ -150,9 +150,9 @@ def conversation_factory():
     return MagicMock()
 
 
-@patch("biochatter.api_agent.oncokb.OncoKBQueryBuilder")
-@patch("biochatter.api_agent.oncokb.OncoKBFetcher")
-@patch("biochatter.api_agent.oncokb.OncoKBInterpreter")
+@patch("biochatter.api_agent.web.oncokb.OncoKBQueryBuilder")
+@patch("biochatter.api_agent.web.oncokb.OncoKBFetcher")
+@patch("biochatter.api_agent.web.oncokb.OncoKBInterpreter")
 def test_rag_agent_api_oncokb_mode(
     mock_query_builder,
     mock_fetcher,

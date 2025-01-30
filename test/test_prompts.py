@@ -7,7 +7,7 @@ from biochatter.prompts import BioCypherPromptEngine
 ## THIS IS LARGELY BENCHMARK MATERIAL, TO BE MOCKED FOR UNIT TESTING
 
 
-@pytest.fixture()
+@pytest.fixture
 def prompt_engine():
     return BioCypherPromptEngine(
         schema_config_or_info_path="test/test_schema_info.yaml",

@@ -133,7 +133,7 @@ mocked_bc_summary_txt_splitted_texts = [
 ]
 
 
-@pytest.fixture()
+@pytest.fixture
 def dbHost():
     with (
         patch(

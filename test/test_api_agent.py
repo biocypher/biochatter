@@ -4,15 +4,21 @@ from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
+from langchain_core.output_parsers import PydanticToolsParser
 from pydantic import BaseModel
 
-from biochatter.api_agent.abc import (
+from biochatter.api_agent.base.agent_abc import (
     BaseFetcher,
     BaseInterpreter,
     BaseQueryBuilder,
 )
-from biochatter.api_agent.api_agent import APIAgent
-from biochatter.api_agent.blast import (
+
+
+from biochatter.api_agent.python.anndata_agent import AnnDataIOQueryBuilder, ANNDATA_IO_QUERY_PROMPT
+from biochatter.api_agent.python.scanpy_pp_reduced import ScanpyPpQueryBuilder
+
+from biochatter.api_agent.base.api_agent import APIAgent
+from biochatter.api_agent.web.blast import (
     BLAST_QUERY_PROMPT,
     BLAST_SUMMARY_PROMPT,
     BlastFetcher,
@@ -20,7 +26,7 @@ from biochatter.api_agent.blast import (
     BlastQueryBuilder,
     BlastQueryParameters,
 )
-from biochatter.api_agent.oncokb import (
+from biochatter.api_agent.web.oncokb import (
     ONCOKB_QUERY_PROMPT,
     ONCOKB_SUMMARY_PROMPT,
     OncoKBFetcher,
@@ -28,7 +34,62 @@ from biochatter.api_agent.oncokb import (
     OncoKBQueryBuilder,
     OncoKBQueryParameters,
 )
+from biochatter.api_agent.python.scanpy_pl_full import (
+    ScanpyPlQueryBuilder,
+)
+from biochatter.api_agent.python.generic_agent import GenericQueryBuilder
 from biochatter.llm_connect import Conversation, GptConversation
+
+
+SCANPY_TL_QUERY_PROMPT = """
+
+You are a world class algorithm for creating queries in structured formats. Your
+task is to use the scanpy python package to provide the user with the
+appropriate function call to answer their question. You focus on the scanpy.tl
+module, which has the following overview: Any transformation of the data matrix
+that is not *preprocessing*. In contrast to a *preprocessing* function, a *tool*
+usually adds an easily interpretable annotation to the data matrix, which can
+then be visualized with a corresponding plotting function.
+
+### Embeddings
+
+   pp.pca
+   tl.tsne
+   tl.umap
+   tl.draw_graph
+   tl.diffmap
+
+Compute densities on embeddings.
+
+   tl.embedding_density
+
+### Clustering and trajectory inference
+
+   tl.leiden
+   tl.louvain
+   tl.dendrogram
+   tl.dpt
+   tl.paga
+
+### Data integration
+
+   tl.ingest
+
+### Marker genes
+
+   tl.rank_genes_groups
+   tl.filter_rank_genes_groups
+   tl.marker_gene_overlap
+
+### Gene scores, Cell cycle
+
+   tl.score_genes
+   tl.score_genes_cell_cycle
+
+### Simulations
+
+   tl.sim
+"""
 
 
 def conversation_factory():
@@ -53,15 +114,19 @@ class TestQueryBuilder(BaseQueryBuilder):
         self,
         question: str,
         conversation: Conversation,
-    ) -> BaseModel:
-        return "mock_result"
+    ) -> list[BaseModel]:
+        return ["mock_result"]
 
 
 class TestFetcher(BaseFetcher):
     def submit_query(self, request_data):
         return "mock_url"
 
-    def fetch_results(self, question_uuid, query_return, max_attempts=10000):
+    def fetch_results(
+        self,
+        request_data: list[BaseModel],
+        retries: int | None = 3,
+    ) -> str:
         return "mock_results"
 
 
@@ -79,22 +144,22 @@ class MockModel(BaseModel):
     field: str
 
 
-@pytest.fixture()
+@pytest.fixture
 def query_builder():
     return TestQueryBuilder()
 
 
-@pytest.fixture()
+@pytest.fixture
 def fetcher():
     return TestFetcher()
 
 
-@pytest.fixture()
+@pytest.fixture
 def interpreter():
     return TestInterpreter()
 
 
-@pytest.fixture()
+@pytest.fixture
 def test_agent(query_builder, fetcher, interpreter):
     return APIAgent(
         conversation_factory=MagicMock(),
@@ -107,7 +172,7 @@ def test_agent(query_builder, fetcher, interpreter):
 class TestAPIAgent:
     def test_parameterise_query(self, test_agent):
         result = test_agent.parameterise_query("Mock question")
-        assert result == "mock_result"
+        assert result == ["mock_result"]
 
     def test_fetch_results(self, test_agent):
         result = test_agent.fetch_results("mock_query_model")
@@ -123,7 +188,7 @@ class TestAPIAgent:
 
 
 class TestBlastQueryBuilder:
-    @patch("biochatter.api_agent.blast.BlastQueryBuilder.create_runnable")
+    @patch("biochatter.api_agent.web.blast.BlastQueryBuilder.create_runnable")
     def test_create_runnable(self, mock_create_runnable):
         # Arrange
         mock_runnable = MagicMock()
@@ -145,7 +210,7 @@ class TestBlastQueryBuilder:
         )
         assert result == mock_runnable
 
-    @patch("biochatter.api_agent.blast.BlastQueryBuilder.create_runnable")
+    @patch("biochatter.api_agent.web.blast.BlastQueryBuilder.create_runnable")
     @patch("biochatter.llm_connect.GptConversation")
     def test_parameterise_query(self, mock_conversation, mock_create_runnable):
         # Arrange
@@ -174,12 +239,14 @@ class TestBlastQueryBuilder:
         mock_runnable.invoke.assert_called_once_with(
             {"input": f"Answer:\n{question} based on:\n {BLAST_QUERY_PROMPT}"},
         )
-        assert result == mock_blast_query_parameters
-        assert hasattr(result, "question_uuid")
+        assert isinstance(result, list)
+        assert len(result) == 1
+        assert result[0] == mock_blast_query_parameters
+        assert hasattr(result[0], "question_uuid")
 
 
 class TestBlastFetcher:
-    @patch("biochatter.api_agent.blast.BlastFetcher._submit_query")
+    @patch("biochatter.api_agent.web.blast.BlastFetcher._submit_query")
     def test_submit_query(self, mock_submit_query):
         # Arrange
         mock_response = MagicMock()
@@ -195,20 +262,20 @@ class TestBlastFetcher:
         mock_submit_query.assert_called_once_with(query_parameters)
         assert result == mock_response
 
-    @patch("biochatter.api_agent.blast.BlastFetcher._fetch_results")
+    @patch("biochatter.api_agent.web.blast.BlastFetcher.fetch_results")
     def test_fetch_results(self, mock_fetch_results):
         # Arrange
         mock_response = MagicMock()
         mock_fetch_results.return_value = mock_response
 
-        query_id = "test_query_id"
+        query_parameters = [BlastQueryParameters()]
         fetcher = BlastFetcher()
 
         # Act
-        result = fetcher._fetch_results(query_id)
+        result = fetcher.fetch_results(query_parameters)
 
         # Assert
-        mock_fetch_results.assert_called_once_with(query_id)
+        mock_fetch_results.assert_called_once_with([query_parameters[0]])
         assert result == mock_response
 
     @patch("requests.post")
@@ -239,13 +306,13 @@ class TestBlastFetcher:
             fetcher._submit_query(query_parameters)
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_conversation():
     with patch("biochatter.llm_connect.GptConversation") as mock:
         yield mock
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_output_parser():
     with patch("biochatter.api_agent.blast.StrOutputParser") as mock:
         mock_parser = MagicMock()
@@ -253,7 +320,7 @@ def mock_output_parser():
         yield mock_parser
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_chain(mock_conversation, mock_output_parser):
     with patch(
         "biochatter.api_agent.blast.ChatPromptTemplate.from_messages",
@@ -265,7 +332,7 @@ def mock_chain(mock_conversation, mock_output_parser):
 
 
 class TestBlastInterpreter:
-    ###FIX THIS TEST
+    # FIX THIS TEST
     def test_summarise_results(mock_prompt, mock_conversation, mock_chain):
         # Arrange
         interpreter = BlastInterpreter()
@@ -294,7 +361,7 @@ class TestBlastInterpreter:
 
 
 class TestOncoKBQueryBuilder:
-    @patch("biochatter.api_agent.oncokb.OncoKBQueryBuilder.create_runnable")
+    @patch("biochatter.api_agent.web.oncokb.OncoKBQueryBuilder.create_runnable")
     def test_create_runnable(self, mock_create_runnable):
         # Arrange
         mock_runnable = MagicMock()
@@ -319,7 +386,7 @@ class TestOncoKBQueryBuilder:
         )
         assert result == mock_runnable
 
-    @patch("biochatter.api_agent.oncokb.OncoKBQueryBuilder.create_runnable")
+    @patch("biochatter.api_agent.web.oncokb.OncoKBQueryBuilder.create_runnable")
     @patch("biochatter.llm_connect.GptConversation")
     def test_parameterise_query(self, mock_conversation, mock_create_runnable):
         # Arrange
@@ -348,46 +415,48 @@ class TestOncoKBQueryBuilder:
         mock_runnable.invoke.assert_called_once_with(
             {"input": f"Answer:\n{question} based on:\n {ONCOKB_QUERY_PROMPT}"},
         )
-        assert result == mock_oncokb_query_parameters
-        assert hasattr(result, "question_uuid")
+        assert isinstance(result, list)
+        assert len(result) == 1
+        assert result[0] == mock_oncokb_query_parameters
+        assert hasattr(result[0], "question_uuid")
 
 
 class TestOncoKBFetcher:
-    @patch("biochatter.api_agent.oncokb.OncoKBFetcher.fetch_results")
+    @patch("biochatter.api_agent.web.oncokb.OncoKBFetcher.fetch_results")
     def test_fetch_results(self, mock_fetch_results):
         # Arrange
         mock_response = MagicMock()
         mock_fetch_results.return_value = mock_response
 
-        query_id = "test_query_id"
+        query_parameters = [OncoKBQueryParameters(endpoint="test/endpoint")]
         fetcher = OncoKBFetcher()
 
         # Act
-        result = fetcher.fetch_results(query_id)
+        result = fetcher.fetch_results(query_parameters)
 
         # Assert
-        mock_fetch_results.assert_called_once_with(query_id)
+        mock_fetch_results.assert_called_once_with(query_parameters)
         assert result == mock_response
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_conversation():
     with patch("biochatter.llm_connect.GptConversation") as mock:
         yield mock
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_output_parser():
-    with patch("biochatter.api_agent.oncokb.StrOutputParser") as mock:
+    with patch("biochatter.api_agent.web.oncokb.StrOutputParser") as mock:
         mock_parser = MagicMock()
         mock.return_value = mock_parser
         yield mock_parser
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_chain(mock_conversation, mock_output_parser):
     with patch(
-        "biochatter.api_agent.oncokb.ChatPromptTemplate.from_messages",
+        "biochatter.api_agent.web.oncokb.ChatPromptTemplate.from_messages",
     ) as mock_prompt:
         mock_prompt_instance = MagicMock()
         mock_prompt.return_value = mock_prompt_instance
@@ -396,7 +465,7 @@ def mock_chain(mock_conversation, mock_output_parser):
 
 
 class TestOncoKBInterpreter:
-    def test_summarise_results(mock_prompt, mock_conversation, mock_chain):
+    def test_summarise_results(self, mock_conversation, mock_chain):
         # Arrange
         interpreter = OncoKBInterpreter()
         question = "What is the best hit?"
@@ -422,3 +491,210 @@ class TestOncoKBInterpreter:
         mock_chain.invoke.assert_called_once_with(
             {"input": {expected_summary_prompt}},
         )
+
+
+class TestScanpyPlQueryBuilder:
+    @pytest.fixture
+    def mock_create_runnable(self):
+        with patch(
+            "biochatter.api_agent.python.scanpy_pl_full.ScanpyPlQueryBuilder.create_runnable",
+        ) as mock:
+            mock_runnable = MagicMock()
+            mock.return_value = mock_runnable
+            yield mock_runnable
+
+    def test_create_runnable(self):
+        pass
+
+    def test_parameterise_query(self, mock_create_runnable):
+        # Arrange
+        query_builder = ScanpyPlQueryBuilder()
+        mock_conversation = MagicMock()
+        question = "Create a scatter plot of n_genes_by_counts vs total_counts."
+        expected_input = f"{question}"
+
+        mock_query_obj = MagicMock()
+        mock_create_runnable.invoke.return_value = mock_query_obj
+
+        # Act
+        result = query_builder.parameterise_query(question, mock_conversation)
+
+        # Assert
+        mock_create_runnable.invoke.assert_called_once_with(expected_input)
+        assert result == mock_query_obj
+
+
+class TestScanpyPlFetcher:
+    pass
+
+
+class TestScanpyPlInterpreter:
+    pass
+
+
+class TestAnndataIOQueryBuilder:
+    @pytest.fixture
+    def mock_create_runnable(self):
+        with patch(
+            "biochatter.api_agent.python.anndata_agent.AnnDataIOQueryBuilder.create_runnable",
+        ) as mock:
+            mock_runnable = MagicMock()
+            mock.return_value = mock_runnable
+            yield mock_runnable
+
+    @patch("biochatter.llm_connect.GptConversation")
+    def test_create_runnable(self, mock_conversation):
+        # Mock the list of Pydantic classes as a list of Mock objects
+        class MockTool1(BaseModel):
+            param1: str
+
+        class MockTool2(BaseModel):
+            param2: int
+
+        mock_generated_classes = [MockTool1, MockTool2]
+
+        # Mock the conversation object and LLM
+        mock_conversation_instance = mock_conversation.return_value
+        mock_llm = MagicMock()
+        mock_conversation_instance.chat = mock_llm
+
+        # Mock the LLM with tools
+        mock_llm_with_tools = MagicMock()
+        mock_llm.bind_tools.return_value = mock_llm_with_tools
+
+        # Mock the chain
+        mock_chain = MagicMock()
+        mock_llm_with_tools.__or__.return_value = mock_chain
+
+        # Act
+        builder = AnnDataIOQueryBuilder()
+        result = builder.create_runnable(
+            query_parameters=mock_generated_classes,
+            conversation=mock_conversation_instance,
+        )
+
+        # Assert
+        mock_llm.bind_tools.assert_called_once_with(mock_generated_classes, tool_choice="required")
+        mock_llm_with_tools.__or__.assert_called_once_with(
+            PydanticToolsParser(tools=mock_generated_classes),
+        )
+        # Verify the returned chain
+        assert result == mock_chain
+
+    def test_parameterise_query(self, mock_create_runnable):
+        # Arrange
+        query_builder = AnnDataIOQueryBuilder()
+        mock_conversation = MagicMock()
+        question = "read a .h5ad file into an anndata object."
+        expected_input = [("system", ANNDATA_IO_QUERY_PROMPT), ("human", question)]
+        mock_query_obj = MagicMock()
+        mock_create_runnable.invoke.return_value = mock_query_obj
+
+        # Act
+        result = query_builder.parameterise_query(question, mock_conversation)
+
+        # Assert
+        mock_create_runnable.invoke.assert_called_once_with(expected_input)
+        assert result == mock_query_obj
+
+
+class TestScanpyPpQueryBuilder:
+    @pytest.fixture
+    def mock_create_runnable(self):
+        with patch(
+            "biochatter.api_agent.python.scanpy_pp_reduced.ScanpyPpQueryBuilder.create_runnable",
+        ) as mock:
+            mock_runnable = MagicMock()
+            mock.return_value = mock_runnable
+            yield mock_runnable
+
+    def test_create_runnable(self):
+        pass
+
+    def test_parameterise_query(self, mock_create_runnable):
+        # Arrange
+        query_builder = ScanpyPpQueryBuilder()
+        mock_conversation = MagicMock()
+        question = "I want to use scanpy pp to filter cells with at least 200 genes"
+        expected_input = f"{question}"
+        mock_query_obj = MagicMock()
+        mock_create_runnable.invoke.return_value = mock_query_obj
+
+        # Act
+        result = query_builder.parameterise_query(question, mock_conversation)
+
+        # Assert
+        mock_create_runnable.invoke.assert_called_once_with(expected_input)
+        assert result == mock_query_obj
+
+
+class TestGenericQueryBuilder:
+    @pytest.fixture
+    def mock_create_runnable(self):
+        with patch(
+            "biochatter.api_agent.python.generic_agent.GenericQueryBuilder.create_runnable",
+        ) as mock:
+            mock_runnable = MagicMock()
+            mock.return_value = mock_runnable
+            yield mock_runnable
+
+    @patch("biochatter.llm_connect.GptConversation")
+    def test_create_runnable(self, mock_conversation):
+        # Mock the list of Pydantic classes as a list of Mock objects
+        class MockTool1(BaseModel):
+            param1: str
+
+        class MockTool2(BaseModel):
+            param2: int
+
+        mock_generated_classes = [MockTool1, MockTool2]
+
+        # Mock the conversation object and LLM
+        mock_conversation_instance = mock_conversation.return_value
+        mock_llm = MagicMock()
+        mock_conversation_instance.chat = mock_llm
+
+        # Mock the LLM with tools
+        mock_llm_with_tools = MagicMock()
+        mock_llm.bind_tools.return_value = mock_llm_with_tools
+
+        # Mock the chain
+        mock_chain = MagicMock()
+        mock_llm_with_tools.__or__.return_value = mock_chain
+
+        # Act
+        builder = GenericQueryBuilder()
+        result = builder.create_runnable(
+            query_parameters=mock_generated_classes,
+            conversation=mock_conversation_instance,
+        )
+
+        # Assert
+        mock_llm.bind_tools.assert_called_once_with(mock_generated_classes, tool_choice="required")
+        mock_llm_with_tools.__or__.assert_called_once_with(
+            PydanticToolsParser(tools=mock_generated_classes),
+        )
+        # Verify the returned chain
+        assert result == mock_chain
+
+    def test_parameterise_query(self, mock_create_runnable):
+        # Arrange
+        query_builder = GenericQueryBuilder()
+        mock_conversation = MagicMock()
+        question = "i want to run PCA on my data"
+        expected_input = [("system", SCANPY_TL_QUERY_PROMPT), ("human", question)]
+        mock_query_obj = MagicMock()
+        mock_create_runnable.invoke.return_value = mock_query_obj
+        module = MagicMock()
+
+        # Act
+        result = query_builder.parameterise_query(
+            question=question,
+            prompt=SCANPY_TL_QUERY_PROMPT,
+            conversation=mock_conversation,
+            module=module,
+        )
+
+        # Assert
+        mock_create_runnable.invoke.assert_called_once_with(expected_input)
+        assert result == mock_query_obj
