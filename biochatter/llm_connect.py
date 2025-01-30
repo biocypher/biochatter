@@ -887,7 +887,7 @@ class XinferenceConversation(Conversation):
         If the model is found, initialise the conversational agent. If the model
         is not found, `get_model` will raise a RuntimeError.
 
-        Returns:
+        Returns
         -------
             bool: True if the model is found, False otherwise.
 
@@ -1596,11 +1596,7 @@ class GptConversation(Conversation):
         """
         if self.user == "community":
             # Only process integer values
-            stats_dict = {
-                f"{k}:{model}": v
-                for k, v in token_usage.items()
-                if isinstance(v, int | float)
-            }
+            stats_dict = {f"{k}:{model}": v for k, v in token_usage.items() if isinstance(v, int | float)}
             self.usage_stats.increment(
                 "usage:[date]:[user]",
                 stats_dict,
