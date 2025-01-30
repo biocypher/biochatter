@@ -9,7 +9,8 @@ from pathlib import Path
 
 import pandas as pd
 
-from docs.scripts._plotting import (
+# Use relative imports since we're in the scripts directory
+from ._plotting import (
     plot_accuracy_per_model,
     plot_accuracy_per_quantisation,
     plot_accuracy_per_task,
@@ -23,13 +24,16 @@ from docs.scripts._plotting import (
     plot_text2cypher,
     plot_text2cypher_safety_only,
 )
-from docs.scripts._preprocess import create_overview_table, preprocess_results_for_frontend
-from docs.scripts._stats import calculate_stats
+from ._preprocess import create_overview_table, preprocess_results_for_frontend
+from ._stats import calculate_stats
 
-# Add the project root to Python path
+# Add both the scripts directory and project root to Python path
+current_dir = str(Path(__file__).parent)
 project_root = str(Path(__file__).parent.parent.parent)
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
+
+for path in [current_dir, project_root]:
+    if path not in sys.path:
+        sys.path.insert(0, path)
 
 def on_pre_build(config, **kwargs) -> None:
     """Run pre-processing and plotting scripts.
