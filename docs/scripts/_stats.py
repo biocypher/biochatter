@@ -1,10 +1,29 @@
 """Statistical analysis of the results."""
 
+import sys
+from importlib.util import module_from_spec, spec_from_file_location
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-from ._plotting import melt_and_process
+# Import plotting module using full path
+CURRENT_DIR = Path(__file__).parent
+plotting_path = CURRENT_DIR / "_plotting.py"
+
+if "_plotting" not in sys.modules:
+    spec = spec_from_file_location("_plotting", plotting_path)
+    if spec is None or spec.loader is None:
+        msg = "Could not load _plotting module"
+        raise ImportError(msg)
+    plotting = module_from_spec(spec)
+    sys.modules["_plotting"] = plotting
+    spec.loader.exec_module(plotting)
+else:
+    plotting = sys.modules["_plotting"]
+
+melt_and_process = plotting.melt_and_process
 
 
 def calculate_stats(overview: pd.DataFrame) -> None:

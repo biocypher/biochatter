@@ -10,26 +10,34 @@ from pathlib import Path
 
 import pandas as pd
 
+# Get the current directory
+CURRENT_DIR = Path(__file__).parent
 
-# Dynamically import local modules
+# Dynamically import local modules with full paths
 def import_local_module(module_name: str) -> None:
     """Import a local module."""
-    module_path = Path(__file__).parent / f"_{module_name}.py"
+    module_path = CURRENT_DIR / f"_{module_name}.py"
+    module = None
+
+    # If module is already loaded, return it
+    if f"_{module_name}" in sys.modules:
+        return sys.modules[f"_{module_name}"]
+
     spec = spec_from_file_location(f"_{module_name}", module_path)
     if spec is None or spec.loader is None:
         msg = f"Could not load module {module_name}"
         raise ImportError(msg)
     module = module_from_spec(spec)
-    sys.modules[spec.name] = module  # This makes the module available for other imports
+    sys.modules[module.__name__] = module
     spec.loader.exec_module(module)
     return module
 
-# Import the local modules
+# Import the modules
 plotting = import_local_module("plotting")
 preprocess = import_local_module("preprocess")
 stats = import_local_module("stats")
 
-# Extract the needed functions from the modules
+# Extract the needed functions
 plot_accuracy_per_model = plotting.plot_accuracy_per_model
 plot_accuracy_per_quantisation = plotting.plot_accuracy_per_quantisation
 plot_accuracy_per_task = plotting.plot_accuracy_per_task
