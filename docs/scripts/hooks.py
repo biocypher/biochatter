@@ -5,27 +5,47 @@ Preprocessing and plotting scripts are run during documentation build.
 
 import os
 import sys
+from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 
 import pandas as pd
 
-# Use relative imports since we're in the scripts directory
-from ._plotting import (
-    plot_accuracy_per_model,
-    plot_accuracy_per_quantisation,
-    plot_accuracy_per_task,
-    plot_comparison_naive_biochatter,
-    plot_extraction_tasks,
-    plot_image_caption_confidence,
-    plot_medical_exam,
-    plot_rag_tasks,
-    plot_scatter_per_quantisation,
-    plot_task_comparison,
-    plot_text2cypher,
-    plot_text2cypher_safety_only,
-)
-from ._preprocess import create_overview_table, preprocess_results_for_frontend
-from ._stats import calculate_stats
+
+# Dynamically import local modules
+def import_local_module(module_name: str) -> None:
+    """Import a local module."""
+    module_path = Path(__file__).parent / f"_{module_name}.py"
+    spec = spec_from_file_location(f"_{module_name}", module_path)
+    if spec is None or spec.loader is None:
+        msg = f"Could not load module {module_name}"
+        raise ImportError(msg)
+    module = module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+# Import the local modules
+plotting = import_local_module("plotting")
+preprocess = import_local_module("preprocess")
+stats = import_local_module("stats")
+
+# Extract the needed functions from the modules
+plot_accuracy_per_model = plotting.plot_accuracy_per_model
+plot_accuracy_per_quantisation = plotting.plot_accuracy_per_quantisation
+plot_accuracy_per_task = plotting.plot_accuracy_per_task
+plot_comparison_naive_biochatter = plotting.plot_comparison_naive_biochatter
+plot_extraction_tasks = plotting.plot_extraction_tasks
+plot_image_caption_confidence = plotting.plot_image_caption_confidence
+plot_medical_exam = plotting.plot_medical_exam
+plot_rag_tasks = plotting.plot_rag_tasks
+plot_scatter_per_quantisation = plotting.plot_scatter_per_quantisation
+plot_task_comparison = plotting.plot_task_comparison
+plot_text2cypher = plotting.plot_text2cypher
+plot_text2cypher_safety_only = plotting.plot_text2cypher_safety_only
+
+create_overview_table = preprocess.create_overview_table
+preprocess_results_for_frontend = preprocess.preprocess_results_for_frontend
+
+calculate_stats = stats.calculate_stats
 
 # Add both the scripts directory and project root to Python path
 current_dir = str(Path(__file__).parent)
