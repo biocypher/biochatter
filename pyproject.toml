@@ -73,7 +73,6 @@ xinference = ["xinference"]
 pytest = "^7.4.0"
 bump2version = "^1.0.1"
 mkdocs-material = {extras = ["imaging"], version = "^9.5.10"}
-mkdocstrings = {extras = ["python"], version = "^0.24.0"}
 pre-commit = ">=2.17.0"
 mkdocs-table-reader-plugin = "^2.0.3"
 scipy = "^1.12.0"
@@ -83,6 +82,8 @@ coverage-badge = "^1.1.1"
 
 mkdocs-redirects = "^1.2.1"
 scanpy = "^1.10.4"
+mkdocstrings = {version = ">=0.24.0", extras = ["python"]}
+mkdocstrings-python = "1.13.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
