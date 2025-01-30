@@ -28,7 +28,10 @@ jobs:
         run: poetry install --all-extras
 
       - name: Run tests and generate coverage report
-        run: poetry run coverage run -m pytest test --ignore=./volumes
+        run: |
+          poetry run coverage run -m pytest test --ignore=./volumes
+          poetry run coverage report
+          poetry run coverage xml
         shell: bash
 
       - name: Generate coverage badge
