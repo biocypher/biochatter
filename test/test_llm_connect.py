@@ -1,8 +1,3 @@
-# ruff: noqa: S101  # Use of assert detected
-# ruff: noqa: ANN201  # No docstring in public function
-# ruff: noqa: D103  # Missing docstring in public function
-# ruff: noqa: D100  # Missing docstring in public module
-
 import os
 from unittest.mock import MagicMock, Mock, mock_open, patch
 

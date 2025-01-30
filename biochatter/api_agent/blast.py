@@ -163,7 +163,7 @@ class BlastQueryBuilder(BaseQueryBuilder):
         self,
         question: str,
         conversation: "Conversation",
-    ) -> BlastQueryParameters:
+    ) -> list[BlastQueryParameters]:
         """Generate a BlastQuery object.
 
         Generates the object based on the given question, prompt, and
@@ -191,7 +191,7 @@ class BlastQueryBuilder(BaseQueryBuilder):
             {"input": f"Answer:\n{question} based on:\n {BLAST_QUERY_PROMPT}"},
         )
         blast_call_obj.question_uuid = str(uuid.uuid4())
-        return blast_call_obj
+        return [blast_call_obj]
 
 
 class BlastFetcher(BaseFetcher):
@@ -257,9 +257,6 @@ class BlastFetcher(BaseFetcher):
 
         The second function to be called for a BLAST query.
         """
-        ###
-        ###    TO DO: Implement logging for all BLAST queries
-        ###
         base_url = "https://blast.ncbi.nlm.nih.gov/Blast.cgi"
         check_status_params = {
             "CMD": "Get",
@@ -305,7 +302,7 @@ class BlastFetcher(BaseFetcher):
 
     def fetch_results(
         self,
-        query_model: BlastQueryParameters,
+        query_models: list[BlastQueryParameters],
         retries: int = 20,
     ) -> str:
         """Submit request and fetch results from BLAST API.
@@ -314,8 +311,7 @@ class BlastFetcher(BaseFetcher):
 
         Args:
         ----
-            query_model: the Pydantic model of the query
-
+            query_models: list of Pydantic models of the queries
             retries: the number of maximum retries
 
         Returns:
@@ -323,10 +319,12 @@ class BlastFetcher(BaseFetcher):
             str: the result from the BLAST API
 
         """
-        rid = self._submit_query(request_data=query_model)
+        # For now, we only use the first query in the list
+        query = query_models[0]
+        rid = self._submit_query(request_data=query)
         return self._fetch_results(
             rid=rid,
-            question_uuid=query_model.question_uuid,
+            question_uuid=query.question_uuid,
             retries=retries,
         )
 

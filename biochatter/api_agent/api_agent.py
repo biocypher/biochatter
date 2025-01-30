@@ -55,8 +55,8 @@ class APIAgent:
         self.interpreter = interpreter
         self.final_answer = None
 
-    def parameterise_query(self, question: str) -> BaseModel | None:
-        """Use LLM to parameterise a query (a Pydantic model) based on the given
+    def parameterise_query(self, question: str) -> list[BaseModel] | None:
+        """Use LLM to parameterise a query (a list of Pydantic models) based on the given
         question using a BioChatter conversation instance.
         """
         try:
@@ -66,17 +66,17 @@ class APIAgent:
             print(f"Error generating query: {e}")
             return None
 
-    def fetch_results(self, query_model: str) -> str | None:
+    def fetch_results(self, query_models: list[BaseModel]) -> str | None:
         """Fetch the results of the query using the individual API's implementation
         (either single-step or submit-retrieve).
 
         Args:
         ----
-            query_model: the parameterised query Pydantic model
+            query_models: list of parameterised query Pydantic models
 
         """
         try:
-            return self.fetcher.fetch_results(query_model, 100)
+            return self.fetcher.fetch_results(query_models, 100)
         except Exception as e:
             print(f"Error fetching results: {e}")
             return None
@@ -110,8 +110,8 @@ class APIAgent:
         """
         # Generate query
         try:
-            query_model = self.parameterise_query(question)
-            if not query_model:
+            query_models = self.parameterise_query(question)
+            if not query_models:
                 raise ValueError("Failed to generate query.")
         except ValueError as e:
             print(e)
@@ -119,7 +119,7 @@ class APIAgent:
         # Fetch results
         try:
             response_text = self.fetch_results(
-                query_model=query_model,
+                query_models=query_models,
             )
             if not response_text:
                 raise ValueError("Failed to fetch results.")

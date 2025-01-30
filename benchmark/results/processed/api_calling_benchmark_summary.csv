@@ -1,0 +1,3 @@
+benchmark_type,mean,std,min,max,count
+Python API,0.474,0.293,0.0,0.8,367
+Python API (Reduced),0.753,0.046,0.6,0.8,191

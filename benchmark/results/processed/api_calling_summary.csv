@@ -1,0 +1,17 @@
+benchmark_type,model_name,mean,std,min,max,count
+Python API,gpt-3.5-turbo-0125,0.609,0.197,0.25,0.8,46
+Python API,gpt-4-0125-preview,0.508,0.282,0.0,0.8,46
+Python API,gpt-4-0613,0.487,0.282,0.0,0.8,46
+Python API,gpt-4-1106-preview,0.61,0.219,0.0,0.8,45
+Python API,gpt-4-turbo-2024-04-09,0.27,0.293,0.0,0.8,46
+Python API,gpt-4o-2024-08-06,0.363,0.308,0.0,0.8,46
+Python API,gpt-4o-2024-11-20,0.381,0.318,0.0,0.8,46
+Python API,gpt-4o-mini-2024-07-18,0.572,0.239,0.0,0.8,46
+Python API (Reduced),gpt-3.5-turbo-0125,0.758,0.041,0.6,0.8,24
+Python API (Reduced),gpt-4-0125-preview,0.767,0.024,0.75,0.8,24
+Python API (Reduced),gpt-4-0613,0.767,0.024,0.75,0.8,24
+Python API (Reduced),gpt-4-1106-preview,0.765,0.024,0.75,0.8,23
+Python API (Reduced),gpt-4-turbo-2024-04-09,0.761,0.031,0.667,0.8,24
+Python API (Reduced),gpt-4o-2024-08-06,0.742,0.058,0.6,0.8,24
+Python API (Reduced),gpt-4o-2024-11-20,0.733,0.064,0.6,0.8,24
+Python API (Reduced),gpt-4o-mini-2024-07-18,0.733,0.064,0.6,0.8,24
