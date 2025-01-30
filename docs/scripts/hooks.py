@@ -4,10 +4,12 @@ Preprocessing and plotting scripts are run during documentation build.
 """
 
 import os
+import sys
+from pathlib import Path
 
 import pandas as pd
 
-from ._plotting import (
+from docs.scripts._plotting import (
     plot_accuracy_per_model,
     plot_accuracy_per_quantisation,
     plot_accuracy_per_task,
@@ -21,9 +23,13 @@ from ._plotting import (
     plot_text2cypher,
     plot_text2cypher_safety_only,
 )
-from ._preprocess import create_overview_table, preprocess_results_for_frontend
-from ._stats import calculate_stats
+from docs.scripts._preprocess import create_overview_table, preprocess_results_for_frontend
+from docs.scripts._stats import calculate_stats
 
+# Add the project root to Python path
+project_root = str(Path(__file__).parent.parent.parent)
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 
 def on_pre_build(config, **kwargs) -> None:
     """Run pre-processing and plotting scripts.
