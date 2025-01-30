@@ -67,7 +67,8 @@ The API agent module is organized into three main submodules:
 
 ### API Agent
 
-The main class that orchestrates the API interaction process, located in `biochatter.api_agent.base.api_agent`.
+The main class that orchestrates the API interaction process, located in
+`biochatter.api_agent.base.api_agent`.
 
 Key Methods:
 
