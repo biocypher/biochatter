@@ -33,7 +33,7 @@ theme:
     - search.highlight
     - navigation.instant
     - navigation.tabs
-    - navigation.sections
+    - toc.integrate
 
   icon:
     repo: fontawesome/brands/github
@@ -42,6 +42,10 @@ plugins:
   - search
   - mkdocstrings:
       default_handler: python
+      handlers:
+        python:
+          options:
+            heading_level: 3
   - table-reader
   - social
   - redirects:
@@ -97,7 +101,9 @@ nav:
       - LLM Connectivity: api-docs/llm_connect.md
       - Vectorstore Agent: api-docs/vectorstore.md
       - Knowledge Graph Agent: api-docs/kg.md
-      - API Agent: api-docs/api-calling.md
+      - "API Calling: Base Classes": api-docs/api-calling-base.md
+      - "API Calling: Web APIs": api-docs/api-calling-web.md
+      - "API Calling: Python APIs": api-docs/api-calling-python.md
       - Reflexion Agent: api-docs/reflexion.md
       - Podcast: api-docs/podcast.md
 
@@ -130,6 +136,8 @@ markdown_extensions:
   - md_in_html
   - admonition
   - pymdownx.details
+  - toc:
+      toc_depth: 3
 
 extra_javascript:
   - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
