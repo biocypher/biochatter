@@ -261,6 +261,32 @@ also force a rerun of all tests by using the `--run-all` flag:
 poetry run pytest benchmark --run-all
 ```
 
+## Processing benchmark results
+
+The benchmark results are processed to generate visualizations and statistics
+that are displayed in the documentation. This processing used to happen during
+the documentation build but has been moved to a separate workflow for better
+efficiency:
+
+1. The processing script is located at `docs/scripts/hooks.py` and can be run
+directly:
+
+    ```bash
+    python docs/scripts/hooks.py
+    ```
+
+2. The processing is automated through a GitHub Action that runs when:
+
+    - Changes are pushed to the `main` branch that affect benchmark results
+
+    - Pull requests targeting `main` include benchmark result changes
+   
+    - Manual triggers via workflow dispatch in GitHub Actions
+
+This separation means that the heavy processing of benchmark results only
+happens when the results actually change, rather than on every documentation
+build.
+
 ## Running open-source models
 
 To execute the benchmark on any of the open-source models in the test matrix,
