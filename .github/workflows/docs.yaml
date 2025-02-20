@@ -1,9 +1,17 @@
 name: Docs
 
 on:
+  workflow_run:
+    workflows: ["Process Benchmark Results"]
+    types:
+      - completed
+    branches:
+      - main
   push:
     branches:
       - main
+    paths-ignore:
+      - 'benchmark/results/**'  # Don't trigger on benchmark results changes since workflow_run will handle that
 
 permissions:
   contents: write
