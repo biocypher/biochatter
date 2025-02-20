@@ -18,7 +18,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.3">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.5">
     
     
       
@@ -26,7 +26,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.d7758b05.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.8608ea7d.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -870,6 +870,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#processing-benchmark-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Processing benchmark results
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#running-open-source-models" class="md-nav__link">
     <span class="md-ellipsis">
       Running open-source models
@@ -1567,6 +1576,36 @@ changed, the old result is automatically removed from the result files. You can
 also force a rerun of all tests by using the <code>--run-all</code> flag:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>poetry<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>benchmark<span class="w"> </span>--run-all
 </span></code></pre></div>
+<h2 id="processing-benchmark-results">Processing benchmark results</h2>
+<p>The benchmark results are processed to generate visualizations and statistics
+that are displayed in the documentation. This processing used to happen during
+the documentation build but has been moved to a separate workflow for better
+efficiency:</p>
+<ol>
+<li>
+<p>The processing script is located at <code>docs/scripts/hooks.py</code> and can be run
+directly:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>python<span class="w"> </span>docs/scripts/hooks.py
+</span></code></pre></div>
+</li>
+<li>
+<p>The processing is automated through a GitHub Action that runs when:</p>
+<ul>
+<li>
+<p>Changes are pushed to the <code>main</code> branch that affect benchmark results</p>
+</li>
+<li>
+<p>Pull requests targeting <code>main</code> include benchmark result changes</p>
+</li>
+<li>
+<p>Manual triggers via workflow dispatch in GitHub Actions</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>This separation means that the heavy processing of benchmark results only
+happens when the results actually change, rather than on every documentation
+build.</p>
 <h2 id="running-open-source-models">Running open-source models</h2>
 <p>To execute the benchmark on any of the open-source models in the test matrix,
 you need to deploy an <a href="https://inference.readthedocs.io/en/latest/">Xorbits
@@ -1578,8 +1617,8 @@ to the Xinference
 for details.</p>
 <p>When you have deployed the Xinference server, you can point the benchmark
 to the server by setting the <code>BENCHMARK_URL</code> parameter in <code>conftest.py</code>:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Xinference IP and port</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">BENCHMARK_URL</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:9997&quot;</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Xinference IP and port</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">BENCHMARK_URL</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:9997&quot;</span>
 </span></code></pre></div>
 
 

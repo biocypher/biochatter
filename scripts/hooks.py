@@ -64,17 +64,19 @@ for path in [current_dir, project_root]:
     if path not in sys.path:
         sys.path.insert(0, path)
 
-def on_pre_build(config, **kwargs) -> None:
+def on_pre_build() -> None:
     """Run pre-processing and plotting scripts.
 
-    This function is called when building the documentation.
+    This function is no longer called when building the documentation. The hooks
+    are run by a GitHub action (see .github/workflows/benchmark-processing.yml).
+    For local development, the hooks can be run by executing this file directly.
     """
     result_files_path = "benchmark/results/"
 
     result_file_names = [
         f
         for f in os.listdir(result_files_path)
-        if os.path.isfile(os.path.join(result_files_path, f))
+        if (Path(result_files_path) / f).is_file()
         and f.endswith(".csv")
         and "failure_mode" not in f
         and "confidence" not in f
