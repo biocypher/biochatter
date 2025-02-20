@@ -104,4 +104,4 @@ def on_pre_build() -> None:
 
 
 if __name__ == "__main__":
-    on_pre_build(None)
+    on_pre_build()
