@@ -64,7 +64,7 @@ for path in [current_dir, project_root]:
     if path not in sys.path:
         sys.path.insert(0, path)
 
-def on_pre_build(config, **kwargs) -> None:
+def on_pre_build() -> None:
     """Run pre-processing and plotting scripts.
 
     This function is no longer called when building the documentation. The hooks
