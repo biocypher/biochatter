@@ -14,6 +14,9 @@ on:
 jobs:
   process-results:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
 
@@ -32,11 +35,24 @@ jobs:
         run: |
           python docs/scripts/hooks.py
 
-      - name: Commit and push if changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Update benchmark visualizations
+          title: 'chore: update benchmark visualizations'
+          body: |
+            Automated PR to update benchmark visualizations
+            
+            This PR was automatically created by the benchmark processing workflow.
+          branch: update-benchmark-visualizations
+          base: main
+          delete-branch: true
+
+      - name: Enable Pull Request Automerge
+        if: steps.create-pull-request.outputs.pull-request-operation == 'created'
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add docs/
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update benchmark visualizations" && git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:main) 
+          PR_NUMBER=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          gh pr merge --auto --merge "$PR_NUMBER"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
