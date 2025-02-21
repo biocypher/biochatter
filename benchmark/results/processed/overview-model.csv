@@ -3,12 +3,12 @@ claude-3-opus-20240229,Unknown,0.77,0.28
 gpt-3.5-turbo-0125,175,0.77,0.19
 gpt-3.5-turbo-0613,175,0.76,0.21
 claude-3-5-sonnet-20240620,Unknown,0.76,0.28
-llama-3.1-instruct,70,0.73,0.29
 gpt-4-0613,Unknown,0.73,0.17
 gpt-4o-2024-08-06,Unknown,0.73,0.24
+llama-3.1-instruct,70,0.73,0.29
 llama-3.1-instruct,8,0.72,0.28
-gpt-4o-mini-2024-07-18,Unknown,0.69,0.22
 gpt-4-0125-preview,Unknown,0.69,0.26
+gpt-4o-mini-2024-07-18,Unknown,0.69,0.22
 gpt-4-1106-preview,Unknown,0.69,0.06
 gpt-4o-2024-05-13,Unknown,0.68,0.31
 gpt-4-turbo-2024-04-09,Unknown,0.68,0.27
@@ -17,10 +17,10 @@ openhermes-2.5,7,0.6,0.3
 gpt-4o-2024-11-20,Unknown,0.55,0.14
 chatglm3,6,0.44,0.26
 llama-2-chat,70,0.42,0.34
-code-llama-instruct,7,0.4,0.35
 mistral-instruct-v0.2,7,0.4,0.33
-llama-2-chat,13,0.38,0.33
+code-llama-instruct,7,0.4,0.35
 code-llama-instruct,34,0.38,0.35
 code-llama-instruct,13,0.38,0.33
+llama-2-chat,13,0.38,0.33
 mixtral-instruct-v0.1,"46,7",0.34,0.28
 llama-2-chat,7,0.31,0.3
