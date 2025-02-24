@@ -2,114 +2,114 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://biochatter.org/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/api-docs/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/api-docs/api-calling-base/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/api-docs/api-calling-python/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/api-docs/api-calling-web/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/api-docs/kg/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/api-docs/llm_connect/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/api-docs/podcast/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/api-docs/reflexion/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/api-docs/vectorstore/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/benchmark/developer/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/benchmark/overview/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/benchmark/results/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/features/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/features/api/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/features/benchmark/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/features/chat/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/features/open-llm/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/features/podcast/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/features/rag/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/features/reflexion-agent/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/features/wasm/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/vignettes/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/vignettes/custom-bclight-advanced/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/vignettes/custom-bclight-simple/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/vignettes/custom-decider-use-case/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/vignettes/kg/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
     <url>
          <loc>https://biochatter.org/vignettes/rag/</loc>
-         <lastmod>2025-02-21</lastmod>
+         <lastmod>2025-02-24</lastmod>
     </url>
 </urlset>
