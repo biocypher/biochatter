@@ -11,8 +11,8 @@ framework for deploying, testing, and evaluating the diverse models and
 auxiliary technologies that are needed. `biochatter` is a Python package
 implementing a generic backend library for the connection of biomedical
 applications to conversational AI. We describe the framework in [this
-preprint](https://arxiv.org/abs/2305.06488); for a more hands-on experience,
-check out our two web app implementations:
+paper](https://www.nature.com/articles/s41587-024-02534-3); for a more hands-on
+experience, check out our two web app implementations:
 
 <div class="grid cards" markdown>
 
@@ -38,13 +38,11 @@ check out our two web app implementations:
 </div>
 
 BioChatter is part of the [BioCypher](https://github.com/biocypher) ecosystem,
-connecting natively to BioCypher knowledge graphs. The BioChatter paper is being
-written [here](https://github.com/biocypher/biochatter-paper) and the current
-version can be read [here](https://biocypher.github.io/biochatter-paper).
+connecting natively to BioCypher knowledge graphs.
 
 ![BioChatter Overview](images/biochatter_overview.png)
 
-!!! note "Hot Topics"
+!!! tip "Hot Topics"
 
     BioChatter natively extends [BioCypher](https://biocypher.org) knowledge
     graphs. Check there for more information.
@@ -52,7 +50,7 @@ version can be read [here](https://biocypher.github.io/biochatter-paper).
     We have also recently published a perspective on connecting knowledge and
     machine learning to enable causal reasoning in biomedicine, with a
     particular focus on the currently emerging "foundation models." You can read
-    it [here](https://arxiv.org/abs/2401.09558).
+    it [here](https://www.embopress.org/doi/full/10.1038/s44320-024-00041-w).
 
 ## Installation
 
