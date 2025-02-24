@@ -30,7 +30,7 @@ experience, check out our two web app implementations:
     ---
 
     Advanced client-server architecture based on
-    [Flask](https://flask.palletsprojects.com) and
+    [FastAPI](https://fastapi.tiangolo.com) and
     [Next.js](https://nextjs.org).
 
     [:octicons-arrow-right-24: Go To BioChatter Next](https://next.biochatter.org)
