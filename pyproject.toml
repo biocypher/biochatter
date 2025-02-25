@@ -80,11 +80,11 @@ scipy = "^1.12.0"
 shortuuid = "^1.0.13"
 coverage = "^7.6.0"
 coverage-badge = "^1.1.1"
-
 mkdocs-redirects = "^1.2.1"
 scanpy = "^1.10.4"
 mkdocstrings = {version = ">=0.24.0", extras = ["python"]}
 mkdocstrings-python = "1.13.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
