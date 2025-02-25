@@ -20,7 +20,7 @@ nav:
                       - The Living Benchmark: features/benchmark.md
                       - Podcast my Paper: features/podcast.md
                       - LLM in your Browser - WebAssembly: features/wasm.md
-              - Vignettes:
+              - HowTo / FAQ:
                       - Knowledge Graph RAG: vignettes/kg.md
                       - Retrieval-Augmented Generation (RAG): vignettes/rag.md
                       - Customising BioChatter Light - Simple: vignettes/custom-bclight-simple.md
