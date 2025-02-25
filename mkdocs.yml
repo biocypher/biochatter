@@ -98,16 +98,17 @@ nav:
       - Overview: benchmark/overview.md
       - All Results: benchmark/results.md
       - Developer Guide: benchmark/developer.md
-  - API Reference:
-      - Home: api-docs/index.md
-      - LLM Connectivity: api-docs/llm_connect.md
-      - Vectorstore Agent: api-docs/vectorstore.md
-      - Knowledge Graph Agent: api-docs/kg.md
-      - "API Calling: Base Classes": api-docs/api-calling-base.md
-      - "API Calling: Web APIs": api-docs/api-calling-web.md
-      - "API Calling: Python APIs": api-docs/api-calling-python.md
-      - Reflexion Agent: api-docs/reflexion.md
-      - Podcast: api-docs/podcast.md
+  - Reference:
+      - API Documentation:
+          - Home: api-docs/index.md
+          - LLM Connectivity: api-docs/llm_connect.md
+          - Vectorstore Agent: api-docs/vectorstore.md
+          - Knowledge Graph Agent: api-docs/kg.md
+          - "API Calling: Base Classes": api-docs/api-calling-base.md
+          - "API Calling: Web APIs": api-docs/api-calling-web.md
+          - "API Calling: Python APIs": api-docs/api-calling-python.md
+          - Reflexion Agent: api-docs/reflexion.md
+          - Podcast: api-docs/podcast.md
 
 repo_url: https://github.com/biocypher/biochatter
 repo_name: biocypher/biochatter
