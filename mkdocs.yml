@@ -100,7 +100,6 @@ nav:
       - Developer Guide: benchmark/developer.md
   - Reference:
       - API Documentation:
-          - Home: api-docs/index.md
           - LLM Connectivity: api-docs/llm_connect.md
           - Vectorstore Agent: api-docs/vectorstore.md
           - Knowledge Graph Agent: api-docs/kg.md
