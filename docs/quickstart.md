@@ -38,7 +38,7 @@ prompts for model instructions.
 
 ### Advanced Features
 
-1. **Knowledge Graph Connectivity**: Connect to a BioCypher knowledge graph:
+1. **Knowledge Graph Connectivity**: Connect to a [BioCypher](/biocypher) knowledge graph:
 ```python
 from biochatter.prompts import BioCypherPromptEngine
 from biochatter.llm_connect import GptConversation
@@ -110,7 +110,7 @@ The API Agent architecture allows you to:
 - Support multiple API types (REST, Python, etc.)
 
 For more examples of supported APIs and custom implementations, check our [API
-documentation](docs/features/api.md).
+documentation](api-docs/api-calling-base.md).
 
 3. **Vector Database Integration**: For semantic search and RAG capabilities:
 ```python
@@ -148,8 +148,7 @@ This workflow allows:
 - Similarity search and retrieval
 
 For more details on vector database integration, including advanced features and
-configurations, check our [Vector Store
-documentation](docs/features/vectorstore.md).
+configurations, check our [RAG documentation](features/rag.md).
 
 ## Streamlit GUI Developer Profile
 
@@ -181,12 +180,17 @@ For developers building production-grade web applications:
 ### Components
 
 1. **Backend (FastAPI)**:
-   - Use [BioChatter Server](https://github.com/biocypher/biochatter-server) for the REST API
-   - Handles LLM interactions, database connections, and business logic
+
+    - Uses [BioChatter Server](https://github.com/biocypher/biochatter-server)
+    for the REST API
+   
+    - Handles LLM interactions, database connections, and business logic
 
 2. **Frontend (Next.js)**:
-   - Use [BioChatter Next](https://github.com/biocypher/biochatter-next)
-   - Provides a modern, responsive UI
+
+    - Uses [BioChatter Next](https://github.com/biocypher/biochatter-next)
+
+    - Provides a modern, responsive UI
 
 ### Getting Started with Docker
 
