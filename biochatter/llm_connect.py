@@ -24,6 +24,7 @@ from langchain_community.chat_models import ChatOllama
 from langchain_community.llms.huggingface_hub import HuggingFaceHub
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_openai import AzureChatOpenAI, ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 from ._image import encode_image, encode_image_from_url
 from ._stats import get_stats
@@ -39,6 +40,10 @@ OPENAI_MODELS = [
     "gpt-4",
     "gpt-4-32k",
     "gpt-4-1106-preview",  # gpt-4 turbo, 128k tokens
+]
+
+GEMINI_MODELS = [
+    "gemini-2.0-flash",
 ]
 
 HUGGINGFACE_MODELS = ["bigscience/bloom"]
@@ -1791,3 +1796,136 @@ class BloomConversation(Conversation):
 
     def _correct_response(self, msg: str) -> str:
         return "ok"
+
+class GeminiConversation(Conversation):
+    """Conversation class for the Google Gemini model."""
+
+    def __init__(
+        self,
+        model_name: str,
+        prompts: dict,
+        correct: bool = False,
+        split_correction: bool = False,
+    ) -> None:
+        """Connect to Google's Gemini API and set up a conversation with the user.
+
+        Also initialise a second conversational agent to provide corrections to
+        the model output, if necessary.
+
+        Args:
+        ----
+            model_name (str): The name of the model to use.
+
+            prompts (dict): A dictionary of prompts to use for the conversation.
+
+            split_correction (bool): Whether to correct the model output by
+                splitting the output into sentences and correcting each
+                sentence individually.
+
+        """
+        super().__init__(
+            model_name=model_name,
+            prompts=prompts,
+            correct=correct,
+            split_correction=split_correction,
+        )
+
+        self.ca_model_name = "gemini-2.0-flash"
+
+    def set_api_key(self, api_key: str, user: str | None = None) -> bool:
+        """Set the API key for the Google Gemini API.
+
+        If the key is valid, initialise the conversational agent. Optionally set
+        the user for usage statistics.
+
+        Args:
+        ----
+            api_key (str): The API key for the Google Gemini API.
+
+            user (str, optional): The user for usage statistics. If provided and
+                equals "community", will track usage stats.
+
+        Returns:
+        -------
+            bool: True if the API key is valid, False otherwise.
+
+        """
+        self.user = user
+
+        try:
+            self.chat = ChatGoogleGenerativeAI(
+                model=self.model_name,
+                temperature=0,
+                google_api_key=api_key,
+            )
+            self.ca_chat = ChatGoogleGenerativeAI(
+                model=self.ca_model_name,
+                temperature=0,
+                google_api_key=api_key,
+            )
+
+            return True
+
+        except Exception:  # Google Genai doesn't expose specific exception types
+            self._chat = None
+            self._ca_chat = None
+            return False
+
+    def _primary_query(self) -> tuple:
+        """Query the Google Gemini API with the user's message.
+
+        Return the response using the message history (flattery system messages,
+        prior conversation) as context. Correct the response if necessary.
+
+        Returns
+        -------
+            tuple: A tuple containing the response from the Gemini API and
+                the token usage.
+
+        """
+        try:
+            response = self.chat.invoke(self.messages)
+        except Exception as e:
+            return str(e), None
+
+        msg = response.content
+        token_usage = response.usage_metadata['total_tokens']
+
+        self.append_ai_message(msg)
+
+        return msg, token_usage
+
+    def _correct_response(self, msg: str) -> str:
+        """Correct the response from the Gemini API.
+
+        Send the response to a secondary language model. Optionally split the
+        response into single sentences and correct each sentence individually.
+        Update usage stats.
+
+        Args:
+        ----
+            msg (str): The response from the Gemini API.
+
+        Returns:
+        -------
+            str: The corrected response (or OK if no correction necessary).
+
+        """
+        ca_messages = self.ca_messages.copy()
+        ca_messages.append(
+            HumanMessage(
+                content=msg,
+            ),
+        )
+        ca_messages.append(
+            SystemMessage(
+                content="If there is nothing to correct, please respond with just 'OK', and nothing else!",
+            ),
+        )
+
+        response = self.ca_chat.invoke(ca_messages)
+
+        correction = response.content
+        token_usage = response.usage_metadata['total_tokens']
+
+        return correction, token_usage

@@ -78,6 +78,27 @@ conversation = AnthropicConversation(
 )
 ```
 
+## Using Google DeepMind models (Gemini)
+
+To use Google's Gemini models, you need a Google AI Studio API key. Set the 
+`GOOGLE_API_KEY` variable in your environment, or provide it directly when initializing 
+the conversation. 
+
+```python
+from biochatter.llm_connect import GeminiConversation
+
+conversation = GeminiConversation(
+    model_name="gemini-2.0-flash",
+    prompts={},
+)
+
+conversation.set_api_key(api_key="sk-...")
+```
+
+Consider that Gemini models (at the time of writing) offer a free usage 
+tier that could be useful for testing purposes. To get an API key, you can follow the instructions 
+[here](https://ai.google.dev/gemini-api/docs/api-key).
+
 ## Multimodal models - Text and image
 
 We support multimodal queries in models that offer these capabilities after the
