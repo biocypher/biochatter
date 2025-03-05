@@ -214,7 +214,7 @@ def test_gemini_update_usage_stats():
     )
 
 
-# @pytest.mark.skip(reason="Live test for development purposes")
+@pytest.mark.skip(reason="Live test for development purposes")
 def test_append_local_image_gemini():
     convo = GeminiConversation(
         model_name="gemini-2.0-flash",
@@ -241,7 +241,7 @@ def test_append_local_image_gemini():
     assert "yes" in result.lower()
 
 
-# @pytest.mark.skip(reason="Live test for development purposes")
+@pytest.mark.skip(reason="Live test for development purposes")
 def test_local_image_query_gemini():
     convo = GeminiConversation(
         model_name="gemini-2.0-flash",
@@ -262,7 +262,7 @@ def test_local_image_query_gemini():
     assert "yes" in result.lower()
 
 
-# @pytest.mark.skip(reason="Live test for development purposes")
+@pytest.mark.skip(reason="Live test for development purposes")
 def test_append_online_image_gemini():
     convo = GeminiConversation(
         model_name="gemini-2.0-flash",
@@ -281,7 +281,7 @@ def test_append_online_image_gemini():
     assert "transformer" in result.lower()
 
 
-# @pytest.mark.skip(reason="Live test for development purposes")
+@pytest.mark.skip(reason="Live test for development purposes")
 def test_online_image_query_gemini():
     convo = GeminiConversation(
         model_name="gemini-2.0-flash",
