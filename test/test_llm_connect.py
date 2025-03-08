@@ -1,6 +1,7 @@
 import os
 from unittest.mock import MagicMock, Mock, mock_open, patch
-
+from biochatter.llm_connect import UnifiedConversation, HumanMessage, SystemMessage
+from typing import Union
 import openai
 import pytest
 from openai._exceptions import NotFoundError
@@ -734,3 +735,90 @@ def test_gpt_update_usage_stats():
         "gpt-3.5-turbo",
         token_usage,  # Full dictionary including nested values
     )
+
+
+@patch("biochatter.llm_connect.ChatLiteLLM")
+def test_get_litellm_object(mock_chatlite, dummy_api_key="dummy_key"):
+    """
+    Test that for a model name whether or not get_litellm_object
+    calls ChatLiteLLM with the correct parameters.
+    """
+    uc = UnifiedConversation(model_name="gpt-3.5-turbo", prompts={})
+    dummy_instance = MagicMock()
+    mock_chatlite.return_value = dummy_instance
+
+    result = uc.get_litellm_object(dummy_api_key)
+
+    mock_chatlite.assert_called_with(
+        temperature=0,
+        openai_api_key=dummy_api_key,
+        model_name="gpt-3.5-turbo"
+    )
+    assert result == dummy_instance
+    
+@patch("biochatter.llm_connect.ChatLiteLLM")
+def test_get_litellm_object_unsupported_model(mock_chatlite, dummy_api_key="dummy_key"):
+    """
+    Test that an unsupported model name raises a ValueError.
+    """
+    uc = UnifiedConversation(model_name="unknown-model", prompts={})
+    with pytest.raises(ValueError, match="Unsupported model: unknown-model"):
+        uc.get_litellm_object(dummy_api_key)
+    mock_chatlite.assert_not_called()
+    
+@patch.object(UnifiedConversation, "get_litellm_object")
+def test_set_api_key_success(mock_get_llm, dummy_api_key="dummy_key"):
+    """
+    Test that set_api_key assigns chat and ca_chat correctly on success.
+    """
+    dummy_chat_instance = MagicMock()
+    mock_get_llm.return_value = dummy_chat_instance
+
+    uc = UnifiedConversation(model_name="gpt-3.5-turbo", prompts={})
+    result = uc.set_api_key(dummy_api_key, user="test_user")
+
+    assert result is True
+    # The API key should be saved and both chat and ca_chat should be assigned.
+    assert uc.api_key == dummy_api_key
+    assert uc.chat == dummy_chat_instance
+    assert uc.ca_chat == dummy_chat_instance
+    assert uc.user == "test_user"
+
+@patch.object(UnifiedConversation, "get_litellm_object")
+def test_set_api_key_failure(mock_get_llm, dummy_api_key="dummy_key"):
+    """
+    Test that if get_litellm_object throws an exception, set_api_key returns False
+    and does not initialize chat attributes.
+    """
+    mock_get_llm.side_effect = ValueError("Invalid API key")
+    uc = UnifiedConversation(model_name="gpt-3.5-turbo", prompts={})
+    result = uc.set_api_key(dummy_api_key, user="test_user")
+
+    assert result is False
+    with pytest.raises(AttributeError):
+        _ = uc.chat
+    with pytest.raises(AttributeError):
+        _ = uc.ca_chat
+    
+def valid_response(token_usage):
+    return {
+        "generations": [
+            [
+                {
+                    "message": {
+                        "response_metadata": {
+                            "token_usage": token_usage
+                        }
+                    },
+                    "text": "dummy text"
+                }
+            ]
+        ]
+    }
+  
+def test_parse_llm_response_valid():
+    conv = UnifiedConversation(model_name="gpt-3.5-turbo", prompts={})
+    usage = {"prompt_tokens": 50, "completion_tokens": 30, "total_tokens": 80}
+    response = valid_response(usage)
+    result = conv.parse_llm_response(response)
+    assert result == usage
