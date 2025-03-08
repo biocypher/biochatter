@@ -9,7 +9,7 @@ import json
 import logging
 import urllib.parse
 from abc import ABC, abstractmethod
-from typing import Callable  # noqa: UP035
+from typing import Callable, Union  # noqa: UP035
 
 try:
     import streamlit as st
@@ -1811,9 +1811,7 @@ class UnifiedConversation(Conversation):
         ca_messages (list): Messages for the correcting agent.
         api_key (str): API key for the LLM provider.
         user (str): Username for the API, if required.
-        token_limit (int): Token limit for the model being used.
     """
-
     def __init__(
         self,
         model_name: str,

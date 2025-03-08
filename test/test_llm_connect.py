@@ -874,3 +874,167 @@ def test_correct_response_ok():
     assert correction == "OK"
     conv.ca_chat.generate.assert_called_once()
     conv._update_usage_stats.assert_called_once_with("gpt-3.5-turbo-correct", {"prompt_tokens": 5, "completion_tokens": 3})
+
+MOCK_PROMPTS = {
+    "primary_model_prompts": ["Test system prompt"],
+    "correcting_agent_prompts": ["Test correcting agent prompt"],
+    "rag_agent_prompts": ["Test RAG agent prompt", "Test RAG agent prompt with {statements}"],
+    "tool_prompts": {"test_tool": "Test tool prompt with {df}"}
+}
+
+MOCK_MODEL_LIST = ["gpt-4", "gpt-3.5-turbo", "claude-2", "claude-instant-1"]
+
+MOCK_MODELS_BY_PROVIDER = {
+    "openai": ["gpt-4", "gpt-3.5-turbo"],
+    "anthropic": ["claude-2", "claude-instant-1"]
+}
+
+MOCK_MODEL_COST = {
+    "gpt-4": {"max_tokens": 8192, "input_cost_per_token": 0.00003, "output_cost_per_token": 0.00006},
+    "gpt-3.5-turbo": {"max_tokens": 4096, "input_cost_per_token": 0.0000015, "output_cost_per_token": 0.000002},
+    "claude-2": {"max_tokens": 100000, "input_cost_per_token": 0.00001102, "output_cost_per_token": 0.00003268}
+}
+
+# Setup and teardown fixtures
+@pytest.fixture
+def setup_mocks():
+    """Setup all the mocks needed for the tests."""
+    with patch('litellm.model_list', MOCK_MODEL_LIST), \
+         patch('litellm.models_by_provider', MOCK_MODELS_BY_PROVIDER), \
+         patch('litellm.model_cost', MOCK_MODEL_COST):
+        yield
+
+@pytest.fixture
+def conversation(setup_mocks):
+    """Create a mock UnifiedConversation instance."""
+    from biochatter.llm_connect import UnifiedConversation
+
+    conversation = UnifiedConversation(
+        model_name="gpt-4",
+        prompts=MOCK_PROMPTS,
+        correct=True,
+        split_correction=False,
+        use_ragagent_selector=False,
+        update_token_usage=None
+    )
+    
+    conversation._chat = MagicMock()
+    conversation._ca_chat = MagicMock()
+    conversation.ca_model_name = "gpt-4"
+    
+    return conversation
+
+def test_correct_response(conversation):
+    """Test the _correct_response method."""
+    # Arrange
+    test_message = "This is a test message that needs correction."
+    expected_correction = "OK"
+    
+    conversation.ca_messages = [
+        SystemMessage(content="Test correcting agent prompt")
+    ]
+    
+    mock_response = MagicMock()
+    mock_response.generations = [[MagicMock(text=expected_correction)]]
+    conversation.ca_chat.generate.return_value = mock_response
+    
+    conversation.parse_llm_response = MagicMock(return_value={"input_tokens": 10, "output_tokens": 5})
+    
+    conversation._update_usage_stats = MagicMock()
+    
+    result = conversation._correct_response(test_message)
+    
+    assert result == expected_correction
+    conversation.ca_chat.generate.assert_called_once()
+    conversation.parse_llm_response.assert_called_once_with(mock_response)
+    conversation._update_usage_stats.assert_called_once_with(
+        conversation.ca_model_name, 
+        {"input_tokens": 10, "output_tokens": 5}
+    )
+    
+    call_args = conversation.ca_chat.generate.call_args[0][0]
+    assert len(call_args[0]) == 3  
+    assert isinstance(call_args[0][0], SystemMessage)
+    assert isinstance(call_args[0][1], HumanMessage)
+    assert isinstance(call_args[0][2], SystemMessage)
+    assert call_args[0][1].content == test_message
+
+def test_get_model_max_tokens(conversation):
+    """Test the get_model_max_tokens method."""
+    model_name = "gpt-4"
+    expected_max_tokens = 8192
+    
+    result = conversation.get_model_max_tokens(model_name)
+    
+    # Assert
+    assert result == expected_max_tokens
+
+def test_get_model_max_tokens_not_found(conversation):
+    from litellm.exceptions import NotFoundError
+    """Test the get_model_max_tokens method with a model that doesn't exist."""
+    model_name = "nonexistent-model"
+    
+    conversation.get_model_info = MagicMock(side_effect=NotFoundError(
+        message="Model information is not available.",
+        model=model_name,
+        llm_provider="Unknown"
+    ))
+    
+    with pytest.raises(NotFoundError):
+        conversation.get_model_max_tokens(model_name)
+
+def test_get_model_max_tokens_missing_info(conversation):
+    """Test the get_model_max_tokens method with a model that exists but missing max_tokens."""
+    model_name = "gpt-4"
+    
+    conversation.get_model_info = MagicMock(return_value={
+        "input_cost_per_token": 0.00003, 
+        "output_cost_per_token": 0.00006
+    })
+    
+    with pytest.raises(NotFoundError):
+        conversation.get_model_max_tokens(model_name)
+
+def test_get_model_info(conversation):
+    """Test the get_model_info method."""
+    model_name = "gpt-4"
+    expected_info = {
+        "max_tokens": 8192, 
+        "input_cost_per_token": 0.00003, 
+        "output_cost_per_token": 0.00006
+    }
+    
+    result = conversation.get_model_info(model_name)
+    
+    assert result == expected_info
+
+def test_get_model_info_not_found(conversation):
+    """Test the get_model_info method with a model that doesn't exist."""
+    model_name = "nonexistent-model"
+    
+    with pytest.raises(NotFoundError):
+        conversation.get_model_info(model_name)
+
+def test_get_all_model_info(conversation):
+    """Test the get_all_model_info method."""
+    expected_info = MOCK_MODEL_COST
+    
+    result = conversation.get_all_model_info()
+    
+    assert result == expected_info
+
+def test_get_models_by_provider(conversation):
+    """Test the get_models_by_provider method."""
+    expected_models = MOCK_MODELS_BY_PROVIDER
+    
+    result = conversation.get_models_by_provider()
+    
+    assert result == expected_models
+
+def test_get_all_model_list(conversation):
+    """Test the get_all_model_list method."""
+    expected_models = MOCK_MODEL_LIST
+    
+    result = conversation.get_all_model_list()
+    
+    assert result == expected_models
