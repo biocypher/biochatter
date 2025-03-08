@@ -822,3 +822,55 @@ def test_parse_llm_response_valid():
     response = valid_response(usage)
     result = conv.parse_llm_response(response)
     assert result == usage
+
+def test_parse_llm_response_missing_generations():
+    conv = UnifiedConversation(model_name="gpt-3.5-turbo", prompts={})
+    # Missing 'generations' key
+    response = {"not_generations": []}
+    result = conv.parse_llm_response(response)
+    assert result is None
+
+def test_parse_llm_response_incomplete_structure():
+    conv = UnifiedConversation(model_name="gpt-3.5-turbo", prompts={})
+    # generations present but missing nested keys
+    response = {"generations": [[{"no_message": {}}]]}
+    result = conv.parse_llm_response(response)
+    assert result is None
+
+def test_parse_llm_response_none_input():
+    conv = UnifiedConversation(model_name="gpt-3.5-turbo", prompts={})
+    # Passing None should be caught and return None
+    result = conv.parse_llm_response(None)
+    assert result is None
+
+def test_parse_llm_response_wrong_type():
+    conv = UnifiedConversation(model_name="gpt-3.5-turbo", prompts={})
+    # Passing an integer instead of a dict; expect the conversion to fail and return None.
+    result = conv.parse_llm_response(12345)
+    assert result is None
+
+def test_correct_response_ok():
+    """Test _correct_response returns 'OK' when the generated response is OK."""
+    # Arrange
+    conv = UnifiedConversation(model_name="gpt-3.5-turbo", prompts={}, correct=True)
+    conv.ca_messages = []  
+    conv.ca_model_name = "gpt-3.5-turbo-correct"
+    
+    # Dummy generation returning "OK"
+    dummy_generation = MagicMock()
+    dummy_generation.text = "OK"
+    dummy_response = MagicMock()
+    dummy_response.generations = [[dummy_generation]]
+    
+    conv.ca_chat = MagicMock()
+    conv.ca_chat.generate.return_value = dummy_response
+    conv.parse_llm_response = MagicMock(return_value={"prompt_tokens": 5, "completion_tokens": 3})
+    conv._update_usage_stats = MagicMock()
+    
+    # Act
+    correction = conv._correct_response("Some response that needs no correction")
+    
+    # Assert
+    assert correction == "OK"
+    conv.ca_chat.generate.assert_called_once()
+    conv._update_usage_stats.assert_called_once_with("gpt-3.5-turbo-correct", {"prompt_tokens": 5, "completion_tokens": 3})
