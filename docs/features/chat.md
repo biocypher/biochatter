@@ -92,7 +92,7 @@ conversation = GeminiConversation(
     prompts={},
 )
 
-conversation.set_api_key(api_key="sk-...")
+conversation.set_api_key(api_key="AIza...")
 ```
 
 Consider that Gemini models (at the time of writing) offer a free usage tier
