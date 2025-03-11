@@ -1807,8 +1807,9 @@ class GeminiConversation(Conversation):
         correct: bool = False,
         split_correction: bool = False,
     ) -> None:
-        """Connect to Google's Gemini API and set up a conversation with the user.
+        """Initialise the GeminiConversation class.
 
+        Connect to Google's Gemini API and set up a conversation with the user.
         Also initialise a second conversational agent to provide corrections to
         the model output, if necessary.
 
@@ -1817,6 +1818,8 @@ class GeminiConversation(Conversation):
             model_name (str): The name of the model to use.
 
             prompts (dict): A dictionary of prompts to use for the conversation.
+
+            correct (bool): Whether to correct the model output.
 
             split_correction (bool): Whether to correct the model output by
                 splitting the output into sentences and correcting each
