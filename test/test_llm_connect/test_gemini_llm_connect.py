@@ -213,6 +213,18 @@ def test_gemini_update_usage_stats():
         token_usage,
     )
 
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_gemini_default():
+    convo = GeminiConversation(
+        model_name="gemini-2.0-flash",
+        prompts={},
+        correct=False,
+        split_correction=False,
+    )
+    convo.set_api_key(api_key=os.getenv("GOOGLE_API_KEY"))
+
+    result, _, _ = convo.query("What is the capital of France?")
+    result.lower()
 
 @pytest.mark.skip(reason="Live test for development purposes")
 def test_append_local_image_gemini():
