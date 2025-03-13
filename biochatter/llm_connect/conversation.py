@@ -1,0 +1,470 @@
+"""Module for managing connections to LLM providers and handling conversations.
+
+This module provides the general conversation class, which is used to manage
+connections to different LLM APIs (OpenAI, Anthropic, Ollama, etc.) and
+handling conversations with them, including message history, context injection,
+and response correction capabilities.
+"""
+
+import json
+import logging
+import urllib.parse
+from abc import ABC, abstractmethod
+
+import nltk
+
+try:
+    import streamlit as st
+except ImportError:
+    st = None
+
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+
+from biochatter._image import encode_image, encode_image_from_url
+from biochatter.rag_agent import RagAgent
+from biochatter.selector_agent import RagAgentSelector
+
+logger = logging.getLogger(__name__)
+
+
+class Conversation(ABC):
+    """Use this class to set up a connection to an LLM API.
+
+    Can be used to set the user name and API key, append specific messages for
+    system, user, and AI roles (if available), set up the general context as
+    well as manual and tool-based data inputs, and finally to query the API
+    with prompts made by the user.
+
+    The conversation class is expected to have a `messages` attribute to store
+    the conversation, and a `history` attribute, which is a list of messages in
+    a specific format for logging / printing.
+
+    """
+
+    def __init__(
+        self,
+        model_name: str,
+        prompts: dict,
+        correct: bool = False,
+        split_correction: bool = False,
+        use_ragagent_selector: bool = False,
+    ) -> None:
+        super().__init__()
+        self.model_name = model_name
+        self.prompts = prompts
+        self.correct = correct
+        self.split_correction = split_correction
+        self.rag_agents: list[RagAgent] = []
+        self.history = []
+        self.messages = []
+        self.ca_messages = []
+        self.current_statements = []
+        self._use_ragagent_selector = use_ragagent_selector
+        self._chat = None
+        self._ca_chat = None
+
+    @property
+    def chat(self):
+        """Access the chat attribute with error handling."""
+        if self._chat is None:
+            msg = "Chat attribute not initialized. Did you call set_api_key()?"
+            logger.error(msg)
+            raise AttributeError(msg)
+        return self._chat
+
+    @chat.setter
+    def chat(self, value):
+        """Set the chat attribute."""
+        self._chat = value
+
+    @property
+    def ca_chat(self):
+        """Access the correcting agent chat attribute with error handling."""
+        if self._ca_chat is None:
+            msg = "Correcting agent chat attribute not initialized. Did you call set_api_key()?"
+            logger.error(msg)
+            raise AttributeError(msg)
+        return self._ca_chat
+
+    @ca_chat.setter
+    def ca_chat(self, value):
+        """Set the correcting agent chat attribute."""
+        self._ca_chat = value
+
+    @property
+    def use_ragagent_selector(self) -> bool:
+        """Whether to use the ragagent selector."""
+        return self._use_ragagent_selector
+
+    @use_ragagent_selector.setter
+    def use_ragagent_selector(self, val: bool) -> None:
+        """Set the use_ragagent_selector attribute."""
+        self._use_ragagent_selector = val
+
+    def set_user_name(self, user_name: str) -> None:
+        """Set the user name."""
+        self.user_name = user_name
+
+    def set_rag_agent(self, agent: RagAgent) -> None:
+        """Update or insert rag_agent.
+
+        If the rag_agent with the same mode already exists, it will be updated.
+        Otherwise, the new rag_agent will be inserted.
+        """
+        i, _ = self.find_rag_agent(agent.mode)
+        if i < 0:
+            # insert
+            self.rag_agents.append(agent)
+        else:
+            # update
+            self.rag_agents[i] = agent
+
+    def find_rag_agent(self, mode: str) -> tuple[int, RagAgent]:
+        """Find the rag_agent with the given mode."""
+        for i, val in enumerate(self.rag_agents):
+            if val.mode == mode:
+                return i, val
+        return -1, None
+
+    @abstractmethod
+    def set_api_key(self, api_key: str, user: str | None = None) -> None:
+        """Set the API key."""
+
+    def get_prompts(self) -> dict:
+        """Get the prompts."""
+        return self.prompts
+
+    def set_prompts(self, prompts: dict) -> None:
+        """Set the prompts."""
+        self.prompts = prompts
+
+    def append_ai_message(self, message: str) -> None:
+        """Add a message from the AI to the conversation.
+
+        Args:
+        ----
+            message (str): The message from the AI.
+
+        """
+        self.messages.append(
+            AIMessage(
+                content=message,
+            ),
+        )
+
+    def append_system_message(self, message: str) -> None:
+        """Add a system message to the conversation.
+
+        Args:
+        ----
+            message (str): The system message.
+
+        """
+        self.messages.append(
+            SystemMessage(
+                content=message,
+            ),
+        )
+
+    def append_ca_message(self, message: str) -> None:
+        """Add a message to the correcting agent conversation.
+
+        Args:
+        ----
+            message (str): The message to the correcting agent.
+
+        """
+        self.ca_messages.append(
+            SystemMessage(
+                content=message,
+            ),
+        )
+
+    def append_user_message(self, message: str) -> None:
+        """Add a message from the user to the conversation.
+
+        Args:
+        ----
+            message (str): The message from the user.
+
+        """
+        self.messages.append(
+            HumanMessage(
+                content=message,
+            ),
+        )
+
+    def append_image_message(
+        self,
+        message: str,
+        image_url: str,
+        local: bool = False,
+    ) -> None:
+        """Add a user message with an image to the conversation.
+
+        Also checks, in addition to the `local` flag, if the image URL is a
+        local file path. If it is local, the image will be encoded as a base64
+        string to be passed to the LLM.
+
+        Args:
+        ----
+            message (str): The message from the user.
+            image_url (str): The URL of the image.
+            local (bool): Whether the image is local or not. If local, it will
+                be encoded as a base64 string to be passed to the LLM.
+
+        """
+        parsed_url = urllib.parse.urlparse(image_url)
+        if local or not parsed_url.netloc:
+            image_url = f"data:image/jpeg;base64,{encode_image(image_url)}"
+        else:
+            image_url = f"data:image/jpeg;base64,{encode_image_from_url(image_url)}"
+
+        self.messages.append(
+            HumanMessage(
+                content=[
+                    {"type": "text", "text": message},
+                    {"type": "image_url", "image_url": {"url": image_url}},
+                ],
+            ),
+        )
+
+    def setup(self, context: str) -> None:
+        """Set up the conversation with general prompts and a context."""
+        for msg in self.prompts["primary_model_prompts"]:
+            if msg:
+                self.append_system_message(msg)
+
+        for msg in self.prompts["correcting_agent_prompts"]:
+            if msg:
+                self.append_ca_message(msg)
+
+        self.context = context
+        msg = f"The topic of the research is {context}."
+        self.append_system_message(msg)
+
+    def setup_data_input_manual(self, data_input: str) -> None:
+        """Set up the data input manually."""
+        self.data_input = data_input
+        msg = f"The user has given information on the data input: {data_input}."
+        self.append_system_message(msg)
+
+    def setup_data_input_tool(self, df, input_file_name: str) -> None:
+        """Set up the data input tool."""
+        self.data_input_tool = df
+
+        for tool_name in self.prompts["tool_prompts"]:
+            if tool_name in input_file_name:
+                msg = self.prompts["tool_prompts"][tool_name].format(df=df)
+                self.append_system_message(msg)
+
+    def query(
+        self,
+        text: str,
+        image_url: str | None = None,
+    ) -> tuple[str, dict | None, str | None]:
+        """Query the LLM API using the user's query.
+
+        Appends the most recent query to the conversation, optionally injects
+        context from the RAG agent, and runs the primary query method of the
+        child class.
+
+        Args:
+        ----
+            text (str): The user query.
+
+            image_url (str): The URL of an image to include in the conversation.
+                Optional and only supported for models with vision capabilities.
+
+        Returns:
+        -------
+            tuple: A tuple containing the response from the API, the token usage
+                information, and the correction if necessary/desired.
+
+        """
+        if not image_url:
+            self.append_user_message(text)
+        else:
+            self.append_image_message(text, image_url)
+
+        self._inject_context(text)
+
+        msg, token_usage = self._primary_query()
+
+        if not token_usage:
+            # indicates error
+            return (msg, token_usage, None)
+
+        if not self.correct:
+            return (msg, token_usage, None)
+
+        cor_msg = "Correcting (using single sentences) ..." if self.split_correction else "Correcting ..."
+
+        if st:
+            with st.spinner(cor_msg):
+                corrections = self._correct_query(text)
+        else:
+            corrections = self._correct_query(text)
+
+        if not corrections:
+            return (msg, token_usage, None)
+
+        correction = "\n".join(corrections)
+        return (msg, token_usage, correction)
+
+    def _correct_query(self, msg: str) -> list[str]:
+        corrections = []
+        if self.split_correction:
+            nltk.download("punkt")
+            tokenizer = nltk.data.load("tokenizers/punkt/english.pickle")
+            sentences = tokenizer.tokenize(msg)
+            for sentence in sentences:
+                correction = self._correct_response(sentence)
+
+                if str(correction).lower() not in ["ok", "ok."]:
+                    corrections.append(correction)
+        else:
+            correction = self._correct_response(msg)
+
+            if str(correction).lower() not in ["ok", "ok."]:
+                corrections.append(correction)
+
+        return corrections
+
+    @abstractmethod
+    def _primary_query(self, text: str) -> tuple[str, dict | None]:
+        """Run the primary query."""
+
+    @abstractmethod
+    def _correct_response(self, msg: str) -> str:
+        """Correct the response."""
+
+    def _inject_context_by_ragagent_selector(self, text: str) -> list[str]:
+        """Inject the context generated by RagAgentSelector.
+
+        The RagAgentSelector will choose the appropriate rag agent to generate
+        context according to user's question.
+
+        Args:
+        ----
+            text (str): The user query to be used for choosing rag agent
+
+        """
+        rag_agents: list[RagAgent] = [agent for agent in self.rag_agents if agent.use_prompt]
+        decider_agent = RagAgentSelector(
+            rag_agents=rag_agents,
+            conversation_factory=lambda: self,
+        )
+        result = decider_agent.execute(text)
+        if result.tool_result is not None and len(result.tool_result) > 0:
+            return result.tool_result
+        # find rag agent selected
+        rag_agent = next(
+            [agent for agent in rag_agents if agent.mode == result.answer],
+            None,
+        )
+        if rag_agent is None:
+            return None
+        return rag_agent.generate_responses(text)
+
+    def _inject_context(self, text: str) -> None:
+        """Inject the context received from the RAG agent into the prompt.
+
+        The RAG agent will find the most similar n text fragments and add them
+        to the message history object for usage in the next prompt. Uses the
+        document summarisation prompt set to inject the context. The ultimate
+        prompt should include the placeholder for the statements, `{statements}`
+        (used for formatting the string).
+
+        Args:
+        ----
+            text (str): The user query to be used for similarity search.
+
+        """
+        sim_msg = "Performing similarity search to inject fragments ..."
+
+        if st:
+            with st.spinner(sim_msg):
+                statements = []
+                if self.use_ragagent_selector:
+                    statements = self._inject_context_by_ragagent_selector(text)
+                else:
+                    for agent in self.rag_agents:
+                        try:
+                            docs = agent.generate_responses(text)
+                            statements = statements + [doc[0] for doc in docs]
+                        except ValueError as e:
+                            logger.warning(e)
+
+        else:
+            statements = []
+            if self.use_ragagent_selector:
+                statements = self._inject_context_by_ragagent_selector(text)
+            else:
+                for agent in self.rag_agents:
+                    try:
+                        docs = agent.generate_responses(text)
+                        statements = statements + [doc[0] for doc in docs]
+                    except ValueError as e:
+                        logger.warning(e)
+
+        if statements and len(statements) > 0:
+            prompts = self.prompts["rag_agent_prompts"]
+            self.current_statements = statements
+            for i, prompt in enumerate(prompts):
+                # if last prompt, format the statements into the prompt
+                if i == len(prompts) - 1:
+                    self.append_system_message(
+                        prompt.format(statements=statements),
+                    )
+                else:
+                    self.append_system_message(prompt)
+
+    def get_last_injected_context(self) -> list[dict]:
+        """Get a formatted list of the last context.
+
+        Get the last context injected into the conversation. Contains one
+        dictionary for each RAG mode.
+
+        Returns
+        -------
+            List[dict]: A list of dictionaries containing the mode and context
+            for each RAG agent.
+
+        """
+        return [{"mode": agent.mode, "context": agent.last_response} for agent in self.rag_agents]
+
+    def get_msg_json(self) -> str:
+        """Return a JSON representation of the conversation.
+
+        Returns a list of dicts of the messages in the conversation in JSON
+        format. The keys of the dicts are the roles, the values are the
+        messages.
+
+        Returns
+        -------
+            str: A JSON representation of the messages in the conversation.
+
+        """
+        d = []
+        for msg in self.messages:
+            if isinstance(msg, SystemMessage):
+                role = "system"
+            elif isinstance(msg, HumanMessage):
+                role = "user"
+            elif isinstance(msg, AIMessage):
+                role = "ai"
+            else:
+                error_msg = f"Unknown message type: {type(msg)}"
+                raise TypeError(error_msg)
+
+            d.append({role: msg.content})
+
+        return json.dumps(d)
+
+    def reset(self) -> None:
+        """Reset the conversation to the initial state."""
+        self.history = []
+        self.messages = []
+        self.ca_messages = []
+        self.current_statements = []

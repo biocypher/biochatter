@@ -1,0 +1,75 @@
+"""Module defining the available models for the
+LLM connect module and their limitations
+"""
+
+from enum import Enum
+
+
+class OpenAIModels(str, Enum):
+    """Enum for OpenAI models."""
+
+    GPT_35_TURBO = "gpt-3.5-turbo"
+    GPT_35_TURBO_16K = "gpt-3.5-turbo-16k"
+    GPT_35_TURBO_1106 = "gpt-3.5-turbo-1106"  # further updated 3.5-turbo
+    GPT_4 = "gpt-4"
+    GPT_4_32K = "gpt-4-32k"
+    GPT_4_1106_PREVIEW = "gpt-4-1106-preview"  # gpt-4 turbo, 128k tokens
+
+
+class GeminiModels(str, Enum):
+    """Enum for Gemini models."""
+
+    GEMINI_20_FLASH = "gemini-2.0-flash"
+
+
+class HuggingFaceModels(str, Enum):
+    """Enum for HuggingFace models."""
+
+    BLOOM = "bigscience/bloom"
+
+
+class XInferenceModels(str, Enum):
+    """Enum for XInference models."""
+
+    CUSTOM_ENDPOINT = "custom-endpoint"
+
+
+class TokenLimits(Enum):
+    """Enum for token limits of different models.
+
+    Uses a tuple (model_type, token_limit) to ensure unique values while
+    maintaining the token limit information.
+    """
+
+    GPT_35_TURBO = ("gpt-3.5-turbo", 4000)
+    GPT_35_TURBO_16K = ("gpt-3.5-turbo-16k", 16000)
+    GPT_35_TURBO_1106 = ("gpt-3.5-turbo-1106", 16000)
+    GPT_4 = ("gpt-4", 8000)
+    GPT_4_32K = ("gpt-4-32k", 32000)
+    GPT_4_1106_PREVIEW = ("gpt-4-1106-preview", 128000)
+    BLOOM = ("bigscience/bloom", 1000)
+    CUSTOM_ENDPOINT = ("custom-endpoint", 1)
+
+    @property
+    def limit(self):
+        """Return the token limit value."""
+        return self.value[1]
+
+
+# For backward compatibility (even if not sure if this is needed)
+OPENAI_MODELS = [model.value for model in OpenAIModels]
+GEMINI_MODELS = [model.value for model in GeminiModels]
+HUGGINGFACE_MODELS = [model.value for model in HuggingFaceModels]
+XINFERENCE_MODELS = [model.value for model in XInferenceModels]
+
+# For backward compatibility and easy lookup
+TOKEN_LIMITS = {
+    OpenAIModels.GPT_35_TURBO.value: TokenLimits.GPT_35_TURBO.limit,
+    OpenAIModels.GPT_35_TURBO_16K.value: TokenLimits.GPT_35_TURBO_16K.limit,
+    OpenAIModels.GPT_35_TURBO_1106.value: TokenLimits.GPT_35_TURBO_1106.limit,
+    OpenAIModels.GPT_4.value: TokenLimits.GPT_4.limit,
+    OpenAIModels.GPT_4_32K.value: TokenLimits.GPT_4_32K.limit,
+    OpenAIModels.GPT_4_1106_PREVIEW.value: TokenLimits.GPT_4_1106_PREVIEW.limit,
+    HuggingFaceModels.BLOOM.value: TokenLimits.BLOOM.limit,
+    XInferenceModels.CUSTOM_ENDPOINT.value: TokenLimits.CUSTOM_ENDPOINT.limit,
+}
