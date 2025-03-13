@@ -1,3 +1,4 @@
+"""Tests for the Anthropic LLM connect module."""
 import os
 
 import pytest

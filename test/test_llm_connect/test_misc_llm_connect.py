@@ -1,3 +1,4 @@
+"""Tests for the miscellaneous LLM connect module."""
 import os
 from unittest.mock import MagicMock, Mock, mock_open, patch
 

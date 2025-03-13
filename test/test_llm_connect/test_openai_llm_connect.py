@@ -1,3 +1,4 @@
+"""Tests for the OpenAI LLM connect module."""
 import os
 from unittest.mock import Mock, patch
 

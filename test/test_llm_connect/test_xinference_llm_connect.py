@@ -1,3 +1,4 @@
+"""Tests for the Xinference LLM connect module."""
 import os
 from unittest.mock import patch
 

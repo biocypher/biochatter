@@ -1,3 +1,4 @@
+"""Tests for the Gemini LLM connect module."""
 import os
 from unittest.mock import Mock, patch
 
