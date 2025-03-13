@@ -1,11 +1,10 @@
 """Tests for the Anthropic LLM connect module."""
+
 import os
 
 import pytest
 
-from biochatter.llm_connect import (
-    AnthropicConversation,
-)
+from biochatter.llm_connect import AnthropicConversation
 
 
 @pytest.mark.skip(reason="Live test for development purposes")

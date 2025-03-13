@@ -1,13 +1,15 @@
 """Tests for the Gemini LLM connect module."""
+
 import os
 from unittest.mock import Mock, patch
 
 import pytest
 from google.api_core.exceptions import InvalidArgument
 
-from biochatter.llm_connect import (
+from biochatter.llm_connect import GeminiConversation
+
+from langchain_core.messages import (
     AIMessage,
-    GeminiConversation,
     HumanMessage,
     SystemMessage,
 )
@@ -80,7 +82,7 @@ def test_unknown_message_type():
         convo.get_msg_json()
 
 
-@patch("biochatter.llm_connect.ChatGoogleGenerativeAI")
+@patch("biochatter.llm_connect.gemini.ChatGoogleGenerativeAI")
 def test_gemini_catches_authentication_error(mock_gemini):
     mock_gemini.side_effect = InvalidArgument("Invalid API key")
 
@@ -128,7 +130,7 @@ def test_ca_chat_attribute_not_initialized():
     assert "Did you call set_api_key()?" in str(exc_info.value)
 
 
-@patch("biochatter.llm_connect.ChatGoogleGenerativeAI")
+@patch("biochatter.llm_connect.gemini.ChatGoogleGenerativeAI")
 def test_chat_attributes_reset_on_auth_error(mock_gemini):
     """Test that chat attributes are reset to None on authentication error."""
     mock_gemini.side_effect = InvalidArgument("Invalid API key")
@@ -150,7 +152,7 @@ def test_chat_attributes_reset_on_auth_error(mock_gemini):
         _ = convo.ca_chat
 
 
-@patch("biochatter.llm_connect.ChatGoogleGenerativeAI")
+@patch("biochatter.llm_connect.gemini.ChatGoogleGenerativeAI")
 def test_chat_attributes_set_on_success(mock_gemini):
     """Test that chat attributes are properly set when authentication succeeds."""
     # Mock successful authentication
@@ -214,6 +216,7 @@ def test_gemini_update_usage_stats():
         token_usage,
     )
 
+
 @pytest.mark.skip(reason="Live test for development purposes")
 def test_gemini_default():
     convo = GeminiConversation(
@@ -226,6 +229,7 @@ def test_gemini_default():
 
     result, _, _ = convo.query("What is the capital of France?")
     result.lower()
+
 
 @pytest.mark.skip(reason="Live test for development purposes")
 def test_append_local_image_gemini():

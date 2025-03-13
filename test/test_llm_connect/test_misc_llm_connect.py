@@ -1,4 +1,5 @@
 """Tests for the miscellaneous LLM connect module."""
+
 import os
 from unittest.mock import MagicMock, Mock, mock_open, patch
 
@@ -14,15 +15,16 @@ from biochatter._image import (
     process_image,
 )
 from biochatter.llm_connect import (
-    AIMessage,
     OllamaConversation,
     WasmConversation,
 )
 
+from langchain_core.messages import AIMessage
+
 
 def test_ollama_chatting():
     base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-    with patch("biochatter.llm_connect.ChatOllama") as mock_model:
+    with patch("biochatter.llm_connect.ollama.ChatOllama") as mock_model:
         response = AIMessage(
             content="Hello there! It's great to meet you!",
             additional_kwargs={},
@@ -152,7 +154,7 @@ def test_encode_image():
 
 
 def test_encode_image_from_url():
-    with patch("biochatter.llm_connect.urllib.request.urlopen") as mock_urlopen:
+    with patch("biochatter.llm_connect.conversation.urllib.request.urlopen") as mock_urlopen:
         mock_response = MagicMock()
         mock_response.read.return_value = b"image_data"
         mock_urlopen.return_value.__enter__.return_value = mock_response

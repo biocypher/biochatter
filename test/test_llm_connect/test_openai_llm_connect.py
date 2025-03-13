@@ -1,4 +1,5 @@
 """Tests for the OpenAI LLM connect module."""
+
 import os
 from unittest.mock import Mock, patch
 
@@ -6,10 +7,14 @@ import openai
 import pytest
 from openai._exceptions import NotFoundError
 
-from biochatter.llm_connect import (
-    AIMessage,
-    AzureGptConversation,
+from biochatter.llm_connect.openai import (
     GptConversation,
+)
+
+from biochatter.llm_connect.azure import AzureGptConversation
+
+from langchain_core.messages import (
+    AIMessage,
     HumanMessage,
     SystemMessage,
 )
@@ -82,7 +87,7 @@ def test_unknown_message_type():
         convo.get_msg_json()
 
 
-@patch("biochatter.llm_connect.openai.OpenAI")
+@patch("biochatter.llm_connect.openai.openai.OpenAI")
 def test_openai_catches_authentication_error(mock_openai):
     mock_openai.return_value.models.list.side_effect = openai._exceptions.AuthenticationError(
         (
@@ -106,7 +111,7 @@ def test_openai_catches_authentication_error(mock_openai):
     assert not success
 
 
-@patch("biochatter.llm_connect.AzureChatOpenAI")
+@patch("biochatter.llm_connect.azure.AzureChatOpenAI")
 def test_azure_raises_request_error(mock_azure_chat):
     mock_azure_chat.side_effect = NotFoundError(
         message="Resource not found",
@@ -127,7 +132,7 @@ def test_azure_raises_request_error(mock_azure_chat):
         convo.set_api_key("fake_key")
 
 
-@patch("biochatter.llm_connect.AzureChatOpenAI")
+@patch("biochatter.llm_connect.azure.AzureChatOpenAI")
 def test_azure(mock_azure_chat):
     """Test OpenAI Azure endpoint functionality.
 
@@ -262,7 +267,7 @@ def test_ca_chat_attribute_not_initialized():
     assert "Did you call set_api_key()?" in str(exc_info.value)
 
 
-@patch("biochatter.llm_connect.openai.OpenAI")
+@patch("biochatter.llm_connect.openai.openai.OpenAI")
 def test_chat_attributes_reset_on_auth_error(mock_openai):
     """Test that chat attributes are reset to None on authentication error."""
     mock_openai.return_value.models.list.side_effect = openai._exceptions.AuthenticationError(
