@@ -10,6 +10,8 @@ import json
 import logging
 import urllib.parse
 from abc import ABC, abstractmethod
+from collections.abc import Callable
+from typing import Literal
 
 import nltk
 
@@ -18,9 +20,10 @@ try:
 except ImportError:
     st = None
 
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
 
 from biochatter._image import encode_image, encode_image_from_url
+from biochatter.llm_connect.available_models import ToolCallingModels
 from biochatter.rag_agent import RagAgent
 from biochatter.selector_agent import RagAgentSelector
 
@@ -48,6 +51,8 @@ class Conversation(ABC):
         correct: bool = False,
         split_correction: bool = False,
         use_ragagent_selector: bool = False,
+        tools: list[Callable] = None,
+        tool_call_mode: Literal["auto", "text"] = "auto",
     ) -> None:
         super().__init__()
         self.model_name = model_name
@@ -62,6 +67,8 @@ class Conversation(ABC):
         self._use_ragagent_selector = use_ragagent_selector
         self._chat = None
         self._ca_chat = None
+        self.tools = tools
+        self.tool_call_mode = tool_call_mode
 
     @property
     def chat(self):
@@ -137,6 +144,18 @@ class Conversation(ABC):
     def set_prompts(self, prompts: dict) -> None:
         """Set the prompts."""
         self.prompts = prompts
+
+    def bind_tools(self, tools: list[Callable]) -> None:
+        """Bind tools to the chat."""
+        # Check if the model supports tool calling
+        # (exploit the enum class in available_models.py)
+        if self.model_name in {model.value for model in ToolCallingModels}:
+            self.chat = self.chat.bind_tools(tools)
+            self.ca_chat = self.ca_chat.bind_tools(tools)
+
+        else:
+            # If not, fail gracefully
+            raise ValueError(f"Model {self.model_name} does not support tool calling.")
 
     def append_ai_message(self, message: str) -> None:
         """Add a message from the AI to the conversation.
@@ -338,6 +357,77 @@ class Conversation(ABC):
     @abstractmethod
     def _correct_response(self, msg: str) -> str:
         """Correct the response."""
+
+    def _process_tool_calls(self, tool_calls: list[dict], response_content: str) -> str:
+        """Process tool calls from the model response.
+
+        This method handles the processing of tool calls returned by the model.
+        It can either automatically execute the tools and return their results,
+        or format the tool calls as text.
+
+        Args:
+        ----
+            tool_calls: The tool calls from the model response.
+            response_content: The text content of the response (used as fallback).
+
+        Returns:
+        -------
+            str: The processed message, either tool results or formatted tool calls.
+
+        """
+        if not tool_calls:
+            return response_content
+        
+        msg = ""
+
+        if self.tool_call_mode == "auto":
+            for idx,tool_call in enumerate(tool_calls):
+                # Extract tool name and arguments
+                tool_name = tool_call["name"]
+                tool_args = tool_call["args"]
+                tool_call_id = tool_call["id"]
+
+                # Find the matching tool function
+                tool_func = next((t for t in self.tools if t.name == tool_name), None)
+
+                if tool_func:
+                    # Execute the tool
+                    try:
+                        tool_result = tool_func.invoke(tool_args)
+                        # Add the tool result to the conversation
+                        self.messages.append(
+                            ToolMessage(content=str(tool_result), name=tool_name, tool_call_id=tool_call_id)
+                        )
+                        msg += f"{'n\\' if idx > 0 else ''}Tool call ({tool_name}) result: {tool_result!s}"
+                    except Exception as e:
+                        # Handle tool execution errors
+                        error_message = f"Error executing tool {tool_name}: {e!s}"
+                        self.messages.append(
+                            ToolMessage(content=error_message, name=tool_name, tool_call_id=tool_call_id)
+                        )
+                        msg = error_message
+            return msg
+
+
+        if self.tool_call_mode == "text":
+            # Join all tool calls in a text format
+            tool_calls_text = []
+            for tool_call in tool_calls:
+                tool_name = tool_call["name"]
+                tool_args = tool_call["args"]
+                tool_call_id = tool_call["id"]
+                tool_calls_text.append(f"Tool: {tool_name} - Arguments: {tool_args} - Tool call id: {tool_call_id}")
+
+            # Join with line breaks and set as the message
+            msg = "\n".join(tool_calls_text)
+
+            # Append the formatted tool calls as an AI message
+            self.append_ai_message(msg)
+            return msg
+
+        # Invalid tool call mode, log warning and return original content
+        logger.warning(f"Invalid tool call mode: {self.tool_call_mode}. Using original response content.")
+        return response_content
 
     def _inject_context_by_ragagent_selector(self, text: str) -> list[str]:
         """Inject the context generated by RagAgentSelector.

@@ -1,3 +1,6 @@
+from collections.abc import Callable
+from typing import Literal
+
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 
@@ -13,6 +16,8 @@ class GeminiConversation(Conversation):
         prompts: dict,
         correct: bool = False,
         split_correction: bool = False,
+        tools: list[Callable] = None,
+        tool_call_mode: Literal["auto", "text"] = "auto",
     ) -> None:
         """Initialise the GeminiConversation class.
 
@@ -32,12 +37,20 @@ class GeminiConversation(Conversation):
                 splitting the output into sentences and correcting each
                 sentence individually.
 
+            tools (list[Callable]): List of tool functions to use with the model.
+
+            tool_call_mode (str): The mode to use for tool calls.
+                "auto": Automatically call tools.
+                "text": Only return text output of the tool call.
+
         """
         super().__init__(
             model_name=model_name,
             prompts=prompts,
             correct=correct,
             split_correction=split_correction,
+            tools=tools,
+            tool_call_mode=tool_call_mode,
         )
 
         self.ca_model_name = "gemini-2.0-flash"
@@ -74,6 +87,9 @@ class GeminiConversation(Conversation):
                 google_api_key=api_key,
             )
 
+            if self.tools:
+                self.bind_tools(self.tools)
+
             return True
 
         except Exception:  # Google Genai doesn't expose specific exception types
@@ -98,10 +114,14 @@ class GeminiConversation(Conversation):
         except Exception as e:
             return str(e), None
 
-        msg = response.content
-        token_usage = response.usage_metadata["total_tokens"]
+        # Process tool calls if present
+        if response.tool_calls:
+            msg = self._process_tool_calls(response.tool_calls, response.content)
+        else:
+            msg = response.content
+            self.append_ai_message(msg)
 
-        self.append_ai_message(msg)
+        token_usage = response.usage_metadata["total_tokens"]
 
         return msg, token_usage
 
