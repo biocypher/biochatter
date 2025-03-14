@@ -14,6 +14,8 @@ from langchain_core.messages import (
     SystemMessage,
 )
 
+from langchain_core.tools import tool
+
 
 @pytest.fixture(scope="module", autouse=True)
 def manage_test_context():
@@ -313,3 +315,111 @@ def test_online_image_query_gemini():
         image_url="https://upload.wikimedia.org/wikipedia/commons/8/8f/The-Transformer-model-architecture.png",
     )
     assert "transformer" in result.lower()
+
+
+def create_tool_functions():
+    """Create and return the tool functions used in tests."""
+
+    @tool
+    def multiply(first_int: int, second_int: int) -> int:
+        """Multiply two integers together."""
+        return first_int * second_int
+
+    @tool
+    def add(first_int: int, second_int: int) -> int:
+        """Add two integers together."""
+        return first_int + second_int
+
+    return multiply, add
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_tool_message_auto():
+    multiply, _ = create_tool_functions()
+
+    convo = GeminiConversation(
+        model_name="gemini-2.0-flash",
+        prompts={},
+        split_correction=False,
+        tools=[multiply],
+        tool_call_mode="auto",
+    )
+
+    convo.set_api_key(api_key=os.getenv("GOOGLE_API_KEY"), user="test_user")
+
+    convo.query("What is 2 times 2?")
+    assert "4" in convo.messages[-1].content
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_multiple_tool_calls_auto():
+    multiply, add = create_tool_functions()
+
+    convo = GeminiConversation(
+        model_name="gemini-2.0-flash",
+        prompts={},
+        split_correction=False,
+        tools=[multiply, add],
+        tool_call_mode="auto",
+    )
+
+    convo.set_api_key(api_key=os.getenv("GOOGLE_API_KEY"), user="test_user")
+
+    convo.query("What is 2 times 3? and what about 2 plus 3?")
+    assert "6" in convo.messages[-2].content
+    assert "5" in convo.messages[-1].content
+
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_tool_message_text():
+    multiply, _ = create_tool_functions()
+
+    convo = GeminiConversation(
+        model_name="gemini-2.0-flash",
+        prompts={},
+        split_correction=False,
+        tools=[multiply],
+        tool_call_mode="text",
+    )
+
+    convo.set_api_key(api_key=os.getenv("GOOGLE_API_KEY"), user="test_user")
+
+    convo.query("What is 2 times 2?")
+
+    # In text mode, the tool call should be formatted as text rather than executed
+    # Check that the last message contains the tool name and arguments
+    assert "Tool: multiply" in convo.messages[-1].content
+    assert "Arguments:" in convo.messages[-1].content
+    assert "Tool call id:" in convo.messages[-1].content
+
+@pytest.mark.skip(reason="Live test for development purposes")
+def test_multiple_tool_calls_text_mode():
+    multiply, add = create_tool_functions()
+
+    convo = GeminiConversation(
+        model_name="gemini-2.0-flash",
+        prompts={},
+        split_correction=False,
+        tools=[multiply, add],
+        tool_call_mode="text",
+    )
+
+    convo.set_api_key(api_key=os.getenv("GOOGLE_API_KEY"), user="test_user")
+
+    # Query that should trigger multiple tool calls
+    convo.query("What is 2 times 3? and what about 2 plus 3?")
+
+    # In text mode, the tool calls should be formatted as text rather than executed
+    # Check that the last message contains both tool names and their arguments
+    assert "Tool: multiply" in convo.messages[-1].content
+    assert "Tool: add" in convo.messages[-1].content
+
+    # Verify that the arguments are present
+    assert "Arguments:" in convo.messages[-1].content
+
+    # Verify that tool call IDs are included
+    assert "Tool call id:" in convo.messages[-1].content
+
+    # Count the number of tool calls by counting occurrences of "Tool:"
+    tool_call_count = convo.messages[-1].content.count("Tool:")
+    assert tool_call_count >= 2, "Expected at least two tool calls in text mode"
