@@ -10,7 +10,7 @@ authors = [
 repository = "https://github.com/biocypher/biochatter"
 license = "MIT"
 readme = "README.md"
-requires-python = ">=3.11,<3.13"
+requires-python = ">=3.10,<3.13"
 packages = [
     { include = "biochatter" }
 ]
