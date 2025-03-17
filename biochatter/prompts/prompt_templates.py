@@ -12,7 +12,7 @@ PROPERTY_SELECTION_PROMPT = """You have access to a knowledge graph that contain
 
 QUERY_GENERATION_BASE = """Generate a database query in {query_language} that answers the user's question. You can use the following entities: {entities}, relationships: {relationships}, and properties: {properties}."""
 
-QUERY_GENERATION_DIRECTIONS = """Given the following valid combinations of source, relationship, and target: {directions} generate a {query_language} query using one of these combinations."""
+QUERY_GENERATION_DIRECTIONS = """Given the following valid combinations of source, relationship, and target: {directions}, generate a {query_language} query using one of these combinations."""
 
 QUERY_GENERATION_SUFFIX = (
     """Only return the query, without any additional text, symbols or characters --- just the query statement."""

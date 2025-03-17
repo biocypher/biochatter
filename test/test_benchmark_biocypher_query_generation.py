@@ -21,7 +21,7 @@ def prompt_engine(request):
 
 
 def test_entity_selection(prompt_engine):
-    with patch("biochatter.prompts.Conversation") as mock_conversation:
+    with patch("biochatter.llm_connect.conversation.Conversation") as mock_conversation:
         system_msg = "You have access to a knowledge graph that contains these entity types: Protein, Gene, Disease, CellType. Your task is to select the entity types that are relevant to the user's question for subsequent use in a query. Only return the entity types, comma-separated, without any additional text. Do not return entity names, relationships, or properties."
         mock_conversation.return_value.query.return_value = [
             "Gene,Disease",
@@ -47,7 +47,7 @@ def test_entity_selection(prompt_engine):
 def test_relationship_selection(prompt_engine):
     prompt_engine.question = "Which genes are associated with mucoviscidosis?"
     prompt_engine.selected_entities = ["Gene", "Disease"]
-    with patch("biochatter.prompts.Conversation") as mock_conversation:
+    with patch("biochatter.llm_connect.conversation.Conversation") as mock_conversation:
         mock_conversation.return_value.query.return_value = [
             "GeneToPhenotypeAssociation",
             Mock(),
@@ -103,7 +103,7 @@ def test_property_selection(prompt_engine):
     prompt_engine.question = "Which genes are associated with mucoviscidosis?"
     prompt_engine.selected_entities = ["Gene", "Disease"]
     prompt_engine.selected_relationships = ["GeneToPhenotypeAssociation"]
-    with patch("biochatter.prompts.Conversation") as mock_conversation:
+    with patch("biochatter.llm_connect.conversation.Conversation") as mock_conversation:
         resultMsg = """
         {
             "Disease":{
@@ -138,7 +138,7 @@ def test_property_selection(prompt_engine):
 
 
 def test_query_generation(prompt_engine):
-    with patch("biochatter.prompts.GptConversation") as mock_conversation:
+    with patch("biochatter.llm_connect.conversation.Conversation") as mock_conversation:
         resultMsg = """
         MATCH (d:Disease {name: 'mucoviscidosis'})-[:PERTURBED]->(g:Gene)
         RETURN g.name AS AssociatedGenes

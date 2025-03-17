@@ -416,9 +416,9 @@ class BioCypherPromptEngine:
                     for pair in value
                 ]
             )
-            msg += QUERY_GENERATION_DIRECTIONS.format(directions=directions, query_language=query_language)
+            msg += ' ' + QUERY_GENERATION_DIRECTIONS.format(directions=directions, query_language=query_language)
 
-        msg += QUERY_GENERATION_SUFFIX
+        msg += ' ' + QUERY_GENERATION_SUFFIX
         return msg
 
     def _generate_query(
