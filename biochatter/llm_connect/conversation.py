@@ -398,7 +398,9 @@ class Conversation(ABC):
                         self.messages.append(
                             ToolMessage(content=str(tool_result), name=tool_name, tool_call_id=tool_call_id)
                         )
-                        msg += f"{'n\\' if idx > 0 else ''}Tool call ({tool_name}) result: {tool_result!s}"
+                        if idx > 0:
+                            msg += "\n"
+                        msg += f"Tool call ({tool_name}) result: {tool_result!s}"
                     except Exception as e:
                         # Handle tool execution errors
                         error_message = f"Error executing tool {tool_name}: {e!s}"
