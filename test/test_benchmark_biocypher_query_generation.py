@@ -5,10 +5,7 @@ import pytest
 from benchmark.conftest import calculate_bool_vector_score
 from biochatter.prompts import BioCypherPromptEngine
 
-MODEL_NAMES = [
-    "gpt-3.5-turbo-0613",
-    "gpt-4-0613",
-]
+MODEL_NAMES = ["gpt-3.5-turbo-0613", "gpt-4-0613", "gemini-2.0-flash"]
 
 
 @pytest.fixture(scope="module", params=MODEL_NAMES)
