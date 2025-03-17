@@ -1793,7 +1793,7 @@ class BloomConversation(Conversation):
     def _correct_response(self, msg: str) -> str:
         return "ok"
 
-class UnifiedConversation(Conversation):
+class LiteLLMConversation(Conversation):
     """A unified interface for multiple LLM models using LiteLLM.
     
     This class implements the abstract methods from the Conversation parent class
@@ -1872,44 +1872,29 @@ class UnifiedConversation(Conversation):
             max_tokens=self.get_model_max_tokens(model)
         except:
             max_tokens= None
+
+        kwargs={
+            "temperature":0,
+            "max_token": max_tokens,
+            "model_name": model
+        }
         
+        if self.model_name.startswith("gpt-"):
+            api_key_kwarg= "openai_api_key"
+        elif self.model_name.startswith("claude-"):
+            api_key_kwarg= "anthropic_api_key"
+        elif self.model_name.startswith("azure/"):
+            api_key_kwarg= "azure_api_key"
+        elif (self.model_name.startswith("mistral/") or 
+                self.model_name in ["mistral-tiny", "mistral-small", "mistral-medium", "mistral-large-latest"]):
+            api_key_kwarg= "api_key"
+        else:
+            api_key_kwarg= "api_key"
+            
+        kwargs[api_key_kwarg]= api_key
         try:
-            if self.model_name.startswith("gpt-"):
-                return ChatLiteLLM(
-                    temperature=0,
-                    openai_api_key=api_key,
-                    max_token= max_tokens,
-                    model_name=model
-                )
-            elif self.model_name.startswith("claude-"):
-                return ChatLiteLLM(
-                    temperature=0,
-                    anthropic_api_key=api_key,
-                    max_token= max_tokens,
-                    model_name=model
-                )
-            elif self.model_name.startswith("azure/"):
-                return ChatLiteLLM(
-                    temperature=0,
-                    azure_api_key=api_key,
-                    max_token= max_tokens,
-                    model_name=model
-                )
-            elif (self.model_name.startswith("mistral/") or 
-                  self.model_name in ["mistral-tiny", "mistral-small", "mistral-medium", "mistral-large-latest"]):
-                return ChatLiteLLM(
-                    temperature=0,
-                    api_key=api_key,
-                    max_token= max_tokens,
-                    model_name=model
-                )
-            else:
-                return ChatLiteLLM(
-                    temperature=0,
-                    api_key=api_key,
-                    max_token= max_tokens,
-                    model_name=model
-                )
+            return ChatLiteLLM(**kwargs)
+        
         except (litellm.exceptions.AuthenticationError,
                 litellm.exceptions.InvalidRequestError,
                 litellm.exceptions.RateLimitError,
