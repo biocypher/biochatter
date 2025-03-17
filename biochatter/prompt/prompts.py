@@ -1,11 +1,21 @@
+"""BioCypher prompt engine implementation."""
+
 import json
 import os
 from collections.abc import Callable
 
 import yaml
 
-from ._misc import ensure_iterable, sentencecase_to_pascalcase
-from .llm_connect import Conversation, GptConversation
+from .._misc import ensure_iterable, sentencecase_to_pascalcase
+from ..llm_connect import Conversation, GptConversation
+from .prompt_templates import (
+    ENTITY_SELECTION_PROMPT,
+    PROPERTY_SELECTION_PROMPT,
+    QUERY_GENERATION_BASE,
+    QUERY_GENERATION_DIRECTIONS,
+    QUERY_GENERATION_SUFFIX,
+    RELATIONSHIP_SELECTION_PROMPT,
+)
 
 
 class BioCypherPromptEngine:
@@ -124,176 +134,6 @@ class BioCypherPromptEngine:
                 relationship["target"] = [sentencecase_to_pascalcase(t) for t in relationship["target"]]
         return relationship
 
-    def _select_graph_entities_from_question(
-        self,
-        question: str,
-        conversation: Conversation,
-    ) -> str:
-        conversation.reset()
-        success1 = self._select_entities(
-            question=question,
-            conversation=conversation,
-        )
-        if not success1:
-            raise ValueError(
-                "Entity selection failed. Please try again with a different question.",
-            )
-        conversation.reset()
-        success2 = self._select_relationships(conversation=conversation)
-        if not success2:
-            raise ValueError(
-                "Relationship selection failed. Please try again with a different question.",
-            )
-        conversation.reset()
-        success3 = self._select_properties(conversation=conversation)
-        if not success3:
-            raise ValueError(
-                "Property selection failed. Please try again with a different question.",
-            )
-
-    def _generate_query_prompt(
-        self,
-        entities: list,
-        relationships: dict,
-        properties: dict,
-        query_language: str | None = "Cypher",
-    ) -> str:
-        """Generate a prompt for a large language model to generate a database
-        query based on the selected entities, relationships, and properties.
-
-        Args:
-        ----
-            entities: A list of entities that are relevant to the question.
-
-            relationships: A list of relationships that are relevant to the
-                question.
-
-            properties: A dictionary of properties that are relevant to the
-                question.
-
-            query_language: The language of the query to generate.
-
-        Returns:
-        -------
-            A prompt for a large language model to generate a database query.
-
-        """
-        msg = (
-            f"Generate a database query in {query_language} that answers "
-            f"the user's question. "
-            f"You can use the following entities: {entities}, "
-            f"relationships: {list(relationships.keys())}, and "
-            f"properties: {properties}. "
-        )
-
-        for relationship, values in relationships.items():
-            self._expand_pairs(relationship, values)
-
-        if self.rel_directions:
-            msg += "Given the following valid combinations of source, relationship, and target: "
-            for key, value in self.rel_directions.items():
-                for pair in value:
-                    msg += f"'(:{pair[0]})-(:{key})->(:{pair[1]})', "
-            msg += f"generate a {query_language} query using one of these combinations. "
-
-        msg += "Only return the query, without any additional text, symbols or characters --- just the query statement."
-        return msg
-
-    def generate_query_prompt(
-        self,
-        question: str,
-        query_language: str | None = "Cypher",
-    ) -> str:
-        """Generate a prompt for a large language model to generate a database
-        query based on the user's question and class attributes informing about
-        the schema.
-
-        Args:
-        ----
-            question: A user's question.
-
-            query_language: The language of the query to generate.
-
-        Returns:
-        -------
-            A prompt for a large language model to generate a database query.
-
-        """
-        self._select_graph_entities_from_question(
-            question,
-            self.conversation_factory(),
-        )
-        msg = self._generate_query_prompt(
-            self.selected_entities,
-            self.selected_relationship_labels,
-            self.selected_properties,
-            query_language,
-        )
-        return msg
-
-    def generate_query(
-        self,
-        question: str,
-        query_language: str | None = "Cypher",
-    ) -> str:
-        """Wrap entity and property selection and query generation; return the
-        generated query.
-
-        Args:
-        ----
-            question: A user's question.
-
-            query_language: The language of the query to generate.
-
-        Returns:
-        -------
-            A database query that could answer the user's question.
-
-        """
-        self._select_graph_entities_from_question(
-            question,
-            self.conversation_factory(),
-        )
-
-        return self._generate_query(
-            question=question,
-            entities=self.selected_entities,
-            relationships=self.selected_relationship_labels,
-            properties=self.selected_properties,
-            query_language=query_language,
-            conversation=self.conversation_factory(),
-        )
-
-    def _get_conversation(
-        self,
-        model_name: str | None = None,
-    ) -> "Conversation":
-        """Create a conversation object given a model name.
-
-        Args:
-        ----
-            model_name: The name of the model to use for the conversation.
-
-        Returns:
-        -------
-            A BioChatter Conversation object for connecting to the LLM.
-
-        Todo:
-        ----
-            Genericise to models outside of OpenAI.
-
-        """
-        conversation = GptConversation(
-            model_name=model_name or self.model_name,
-            prompts={},
-            correct=False,
-        )
-        conversation.set_api_key(
-            api_key=os.getenv("OPENAI_API_KEY"),
-            user="test_user",
-        )
-        return conversation
-
     def _select_entities(
         self,
         question: str,
@@ -317,21 +157,12 @@ class BioCypherPromptEngine:
         """
         self.question = question
 
-        conversation.append_system_message(
-            "You have access to a knowledge graph that contains "
-            f"these entity types: {', '.join(self.entities)}. Your task is "
-            "to select the entity types that are relevant to the user's question "
-            "for subsequent use in a query. Only return the entity types, "
-            "comma-separated, without any additional text. Do not return "
-            "entity names, relationships, or properties.",
-        )
+        prompt = ENTITY_SELECTION_PROMPT.format(entities=", ".join(self.entities))
+        conversation.append_system_message(prompt)
 
         msg, token_usage, correction = conversation.query(question)
 
         result = msg.split(",") if msg else []
-        # TODO: do we go back and retry if no entities were selected? or ask for
-        # a reason? offer visual selection of entities and relationships by the
-        # user?
 
         if result:
             for entity in result:
@@ -353,13 +184,6 @@ class BioCypherPromptEngine:
         Returns:
         -------
             True if at least one relationship was selected, False otherwise.
-
-        Todo:
-        ----
-            Now we have the problem that we discard all relationships that do
-            not have a source and target, if at least one relationship has a
-            source and target. At least communicate this all-or-nothing
-            behaviour to the user.
 
         """
         if not self.question:
@@ -437,22 +261,14 @@ class BioCypherPromptEngine:
         else:
             rels = json.dumps(self.relationships)
 
-        msg = (
-            "You have access to a knowledge graph that contains "
-            f"these entities: {', '.join(self.selected_entities)}. "
-            "Your task is to select the relationships that are relevant "
-            "to the user's question for subsequent use in a query. Only "
-            "return the relationships without their sources or targets, "
-            "comma-separated, and without any additional text. Here are the "
-            "possible relationships and their source and target entities: "
-            f"{rels}."
+        prompt = RELATIONSHIP_SELECTION_PROMPT.format(
+            selected_entities=", ".join(self.selected_entities), relationships=rels
         )
-
-        conversation.append_system_message(msg)
+        conversation.append_system_message(prompt)
 
         res, token_usage, correction = conversation.query(self.question)
 
-        result = res.split(",") if msg else []
+        result = res.split(",") if res else []
 
         if result:
             for relationship in result:
@@ -500,10 +316,8 @@ class BioCypherPromptEngine:
     @staticmethod
     def _validate_json_str(json_str: str):
         json_str = json_str.strip()
-        if json_str.startswith("```json"):
-            json_str = json_str[7:]
-        if json_str.endswith("```"):
-            json_str = json_str[:-3]
+        json_str = json_str.removeprefix("```json")
+        json_str = json_str.removesuffix("```")
         return json_str.strip()
 
     def _select_properties(self, conversation: "Conversation") -> bool:
@@ -544,20 +358,8 @@ class BioCypherPromptEngine:
                     self.relationships[relationship]["properties"].keys(),
                 )
 
-        msg = (
-            "You have access to a knowledge graph that contains entities and "
-            "relationships. They have the following properties. Entities:"
-            f"{e_props}, Relationships: {r_props}. "
-            "Your task is to select the properties that are relevant to the "
-            "user's question for subsequent use in a query. Only return the "
-            "entities and relationships with their relevant properties in compact "
-            "JSON format, without any additional text. Return the "
-            "entities/relationships as top-level dictionary keys, and their "
-            "properties as dictionary values. "
-            "Do not return properties that are not relevant to the question."
-        )
-
-        conversation.append_system_message(msg)
+        prompt = PROPERTY_SELECTION_PROMPT.format(entity_properties=e_props, relationship_properties=r_props)
+        conversation.append_system_message(prompt)
 
         msg, token_usage, correction = conversation.query(self.question)
         msg = BioCypherPromptEngine._validate_json_str(msg)
@@ -568,6 +370,56 @@ class BioCypherPromptEngine:
             self.selected_properties = {}
 
         return bool(self.selected_properties)
+
+    def _generate_query_prompt(
+        self,
+        entities: list,
+        relationships: dict,
+        properties: dict,
+        query_language: str,
+    ) -> str:
+        """Generate a prompt for a large language model to generate a database
+        query based on the selected entities, relationships, and properties.
+
+        Args:
+        ----
+            entities: A list of entities that are relevant to the question.
+
+            relationships: A list of relationships that are relevant to the
+                question.
+
+            properties: A dictionary of properties that are relevant to the
+                question.
+
+            query_language: The language of the query to generate.
+
+        Returns:
+        -------
+            A prompt for a large language model to generate a database query.
+
+        """
+        msg = QUERY_GENERATION_BASE.format(
+            query_language=query_language,
+            entities=entities,
+            relationships=list(relationships.keys()),
+            properties=properties,
+        )
+
+        for relationship, values in relationships.items():
+            self._expand_pairs(relationship, values)
+
+        if self.rel_directions:
+            directions = ", ".join(
+                [
+                    f"'(:{pair[0]})-(:{key})->(:{pair[1]})'"
+                    for key, value in self.rel_directions.items()
+                    for pair in value
+                ]
+            )
+            msg += QUERY_GENERATION_DIRECTIONS.format(directions=directions, query_language=query_language)
+
+        msg += QUERY_GENERATION_SUFFIX
+        return msg
 
     def _generate_query(
         self,
@@ -639,3 +491,33 @@ class BioCypherPromptEngine:
             self.rel_directions[relationship].append(
                 (values["source"], values["target"]),
             )
+
+    def _get_conversation(
+        self,
+        model_name: str | None = None,
+    ) -> "Conversation":
+        """Create a conversation object given a model name.
+
+        Args:
+        ----
+            model_name: The name of the model to use for the conversation.
+
+        Returns:
+        -------
+            A BioChatter Conversation object for connecting to the LLM.
+
+        Todo:
+        ----
+            Genericise to models outside of OpenAI.
+
+        """
+        conversation = GptConversation(
+            model_name=model_name or self.model_name,
+            prompts={},
+            correct=False,
+        )
+        conversation.set_api_key(
+            api_key=os.getenv("OPENAI_API_KEY"),
+            user="test_user",
+        )
+        return conversation
