@@ -28,39 +28,54 @@ MOCK_MODEL_COST = {
 
 
 @patch("biochatter.llm_connect.ChatLiteLLM")
-def test_get_litellm_object(mock_chatlite, dummy_api_key="dummy_key"):
+def test_get_litellm_object_valid(mock_chatlite):
     """
-    Test that for a model name whether or not get_litellm_object
-    calls ChatLiteLLM with the correct parameters.
+    Test that get_litellm_object calls ChatLiteLLM with the correct parameters
+    for a supported model.
     """
-    uc = LiteLLMConversation(model_name="gpt-3.5-turbo", prompts={})
+    conv = LiteLLMConversation(model_name="gpt-3.5-turbo", prompts={})
     dummy_instance = MagicMock()
     mock_chatlite.return_value = dummy_instance
-
-    result = uc.get_litellm_object(dummy_api_key)
-
+    dummy_api_key = "dummy_key"
+    # Patch get_model_max_tokens to return a dummy token limit.
+    conv.get_model_max_tokens = MagicMock(return_value=4096)
+    result = conv.get_litellm_object(dummy_api_key, "gpt-3.5-turbo")
     mock_chatlite.assert_called_with(
         temperature=0,
         openai_api_key=dummy_api_key,
+        max_token=4096,
         model_name="gpt-3.5-turbo"
     )
     assert result == dummy_instance
-    
+
 @patch("biochatter.llm_connect.ChatLiteLLM")
 def test_get_litellm_object_unsupported_model(mock_chatlite, dummy_api_key="dummy_key"):
     """
-    Test that an unsupported model name raises a ValueError.
+    Test that if get_model_max_tokens fails (simulating an unsupported model), the
+    unsupported model is handled by passing max_token as None and using the fallback
+    ChatLiteLLM initialization (with keyword 'api_key' instead of 'openai_api_key').
     """
     uc = LiteLLMConversation(model_name="unknown-model", prompts={})
-    with pytest.raises(ValueError, match="Unsupported model: unknown-model"):
-        uc.get_litellm_object(dummy_api_key)
-    mock_chatlite.assert_not_called()
+    dummy_instance = MagicMock()
+    mock_chatlite.return_value = dummy_instance
+    uc.get_model_max_tokens = MagicMock(side_effect=ValueError("Unsupported model: unknown-model"))
     
+    result = uc.get_litellm_object(dummy_api_key, "unknown-model")
+    
+    mock_chatlite.assert_called_with(
+        temperature=0,
+        api_key=dummy_api_key,  # Fallback uses "api_key" keyword
+        max_token=None,
+        model_name="unknown-model"
+    )
+    assert result == dummy_instance
+
 @patch.object(LiteLLMConversation, "get_litellm_object")
-def test_set_api_key_success(mock_get_llm, dummy_api_key="dummy_key"):
+def test_set_api_key_success(mock_get_llm):
     """
     Test that set_api_key assigns chat and ca_chat correctly on success.
     """
+    dummy_api_key = "dummy_key"
     dummy_chat_instance = MagicMock()
     mock_get_llm.return_value = dummy_chat_instance
 
@@ -68,8 +83,9 @@ def test_set_api_key_success(mock_get_llm, dummy_api_key="dummy_key"):
     result = uc.set_api_key(dummy_api_key, user="test_user")
 
     assert result is True
-    # The API key should be saved and both chat and ca_chat should be assigned.
-    assert uc.api_key == dummy_api_key
+    mock_get_llm.assert_any_call(dummy_api_key, uc.model_name)
+    mock_get_llm.assert_any_call(dummy_api_key, uc.ca_model_name)
+
     assert uc.chat == dummy_chat_instance
     assert uc.ca_chat == dummy_chat_instance
     assert uc.user == "test_user"
