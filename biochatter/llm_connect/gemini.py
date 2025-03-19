@@ -3,6 +3,7 @@ from typing import Literal
 
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
+from pydantic import BaseModel
 
 from biochatter.llm_connect.conversation import Conversation
 
@@ -97,7 +98,7 @@ class GeminiConversation(Conversation):
             self._ca_chat = None
             return False
 
-    def _primary_query(self) -> tuple:
+    def _primary_query(self, structured_output: BaseModel | None = None) -> tuple:
         """Query the Google Gemini API with the user's message.
 
         Return the response using the message history (flattery system messages,
@@ -110,18 +111,30 @@ class GeminiConversation(Conversation):
 
         """
         try:
-            response = self.chat.invoke(self.messages)
+            if structured_output:
+                # structured output, differently from tool calling is used only for one message
+                structured_chat = self.chat.with_structured_output(structured_output)
+                response = structured_chat.invoke(
+                    self.messages
+                ).model_dump_json()  # invoke with structure and convert to json
+            else:
+                response = self.chat.invoke(self.messages)
+
         except Exception as e:
             return str(e), None
 
         # Process tool calls if present
-        if response.tool_calls:
+        if hasattr(response, "tool_calls") and response.tool_calls:
             msg = self._process_tool_calls(response.tool_calls, response.content)
         else:
-            msg = response.content
+            msg = response if type(response) is str else response.content
             self.append_ai_message(msg)
 
-        token_usage = response.usage_metadata["total_tokens"]
+        token_usage = (
+            response.usage_metadata["total_tokens"]
+            if hasattr(response, "usage_metadata")
+            else None  # case in which we used structured output
+        )
 
         return msg, token_usage
 
