@@ -149,7 +149,7 @@ class Conversation(ABC):
         """Bind tools to the chat."""
         # Check if the model supports tool calling
         # (exploit the enum class in available_models.py)
-        if self.model_name in {model.value for model in ToolCallingModels}:
+        if self.model_name in TOOL_CALLING_MODELS:
             self.chat = self.chat.bind_tools(tools)
             self.ca_chat = self.ca_chat.bind_tools(tools)
 
