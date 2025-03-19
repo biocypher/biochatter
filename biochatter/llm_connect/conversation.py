@@ -12,7 +12,7 @@ import urllib.parse
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from typing import Literal
-
+from pydantic import BaseModel
 import nltk
 
 try:
@@ -23,7 +23,7 @@ except ImportError:
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
 
 from biochatter._image import encode_image, encode_image_from_url
-from biochatter.llm_connect.available_models import ToolCallingModels
+from biochatter.llm_connect.available_models import TOOL_CALLING_MODELS, STRUCTURED_OUTPUT_MODELS
 from biochatter.rag_agent import RagAgent
 from biochatter.selector_agent import RagAgentSelector
 
@@ -281,6 +281,7 @@ class Conversation(ABC):
         self,
         text: str,
         image_url: str | None = None,
+        structured_output: BaseModel | None = None,
     ) -> tuple[str, dict | None, str | None]:
         """Query the LLM API using the user's query.
 
@@ -295,6 +296,8 @@ class Conversation(ABC):
             image_url (str): The URL of an image to include in the conversation.
                 Optional and only supported for models with vision capabilities.
 
+            structured_model (BaseModel): A pydantic model for structured output.
+
         Returns:
         -------
             tuple: A tuple containing the response from the API, the token usage
@@ -308,7 +311,10 @@ class Conversation(ABC):
 
         self._inject_context(text)
 
-        msg, token_usage = self._primary_query()
+        if self.model_name in STRUCTURED_OUTPUT_MODELS and structured_output:
+            msg, token_usage = self._primary_query(structured_output)
+        else:
+            msg, token_usage = self._primary_query()
 
         if not token_usage:
             # indicates error
