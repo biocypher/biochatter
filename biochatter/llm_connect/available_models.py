@@ -14,6 +14,7 @@ class OpenAIModels(str, Enum):
     GPT_4 = "gpt-4"
     GPT_4_32K = "gpt-4-32k"
     GPT_4_1106_PREVIEW = "gpt-4-1106-preview"  # gpt-4 turbo, 128k tokens
+    GPT_4o = "gpt-4o"
 
 
 class GeminiModels(str, Enum):
@@ -47,6 +48,7 @@ class TokenLimits(Enum):
     GPT_4 = ("gpt-4", 8000)
     GPT_4_32K = ("gpt-4-32k", 32000)
     GPT_4_1106_PREVIEW = ("gpt-4-1106-preview", 128000)
+    GPT_4o = ("gpt-4o", 32000)
     BLOOM = ("bigscience/bloom", 1000)
     CUSTOM_ENDPOINT = ("custom-endpoint", 1)
 
@@ -55,6 +57,21 @@ class TokenLimits(Enum):
         """Return the token limit value."""
         return self.value[1]
 
+# Define a list of models that support tool calling
+TOOL_CALLING_MODELS = frozenset(
+    [
+        GeminiModels.GEMINI_20_FLASH.value,
+        #TODO: OpenAIModels.GPT_4o.value,
+    ]
+)
+
+# Define a list of models that support structured output
+STRUCTURED_OUTPUT_MODELS = frozenset(
+    [
+        GeminiModels.GEMINI_20_FLASH.value,
+        #TODO: OpenAIModels.GPT_4o.value,
+    ]
+)
 
 # For backward compatibility (even if not sure if this is needed)
 OPENAI_MODELS = [model.value for model in OpenAIModels]
