@@ -8,6 +8,7 @@ import yaml
 
 from .._misc import ensure_iterable, sentencecase_to_pascalcase
 from ..llm_connect import Conversation, GptConversation
+from ..llm_connect.available_models import STRUCTURED_OUTPUT_MODELS
 from .prompt_templates import (
     ENTITY_SELECTION_PROMPT,
     PROPERTY_SELECTION_PROMPT,
@@ -16,6 +17,7 @@ from .prompt_templates import (
     QUERY_GENERATION_SUFFIX,
     RELATIONSHIP_SELECTION_PROMPT,
 )
+from .structured_prompts import list_output_model
 
 
 class BioCypherPromptEngine:
@@ -346,18 +348,29 @@ class BioCypherPromptEngine:
 
         self.question = question
 
+        # TODO: we could differentiate the prompt based on the model
+        # (tool calling and non-tool calling)
         prompt = ENTITY_SELECTION_PROMPT.format(entities=", ".join(self.entities))
         self.conversation.append_system_message(prompt)
 
-        msg, token_usage, correction = conversation.query(question)
+        if self.conversation.model_name in STRUCTURED_OUTPUT_MODELS:
+            # if the model supports structured output, use it
+            msg, token_usage, correction = self.conversation.query(
+                question, structured_output=list_output_model(self.entities)
+            )
+            # read the the json output
+            result = json.loads(msg)["result"]
+            self.selected_entities = result
+        else:
+            # otherwise, process manually
+            msg, token_usage, correction = self.conversation.query(question)
+            result = msg.split(",") if msg else []
 
-        result = msg.split(",") if msg else []
-
-        if result:
-            for entity in result:
-                entity = entity.strip()
-                if entity in self.entities:
-                    self.selected_entities.append(entity)
+            if result:
+                for entity in result:
+                    entity = entity.strip()
+                    if entity in self.entities:
+                        self.selected_entities.append(entity)
 
         return (len(result) > 0, self.conversation) if return_conversation else len(result) > 0
 
@@ -409,11 +422,16 @@ class BioCypherPromptEngine:
         rels = {}
         source_and_target_present = False
         for key, value in self.relationships.items():
-            if "source" in value and "target" in value:
+            if (
+                "source" in value and "target" in value
+            ):  # keep only relationships with source and target (so the one representing edges)
                 # if source or target is a list, expand to single pairs
                 source = ensure_iterable(value["source"])
                 target = ensure_iterable(value["target"])
                 pairs = []
+                # this double cycle is done because source and target can be
+                # lists with multiple elements
+                # Ex rel GeneDisease association:  disease -> gene,protein
                 for s in source:
                     for t in target:
                         pairs.append(
@@ -460,6 +478,7 @@ class BioCypherPromptEngine:
 
             selected_rels = []
             for key, value in rels.items():
+            # key name relation, value list of pairs (source,target)
                 if not value:
                     continue
 
@@ -598,6 +617,7 @@ class BioCypherPromptEngine:
         conversation.append_system_message(prompt)
 
         msg, token_usage, correction = conversation.query(self.question)
+        # TODO: also here replace with structured output
         msg = BioCypherPromptEngine._validate_json_str(msg)
 
         try:
@@ -684,33 +704,3 @@ class BioCypherPromptEngine:
             self.rel_directions[relationship].append(
                 (values["source"], values["target"]),
             )
-
-    def _get_conversation(
-        self,
-        model_name: str | None = None,
-    ) -> "Conversation":
-        """Create a conversation object given a model name.
-
-        Args:
-        ----
-            model_name: The name of the model to use for the conversation.
-
-        Returns:
-        -------
-            A BioChatter Conversation object for connecting to the LLM.
-
-        Todo:
-        ----
-            Genericise to models outside of OpenAI.
-
-        """
-        conversation = GptConversation(
-            model_name=model_name or self.model_name,
-            prompts={},
-            correct=False,
-        )
-        conversation.set_api_key(
-            api_key=os.getenv("OPENAI_API_KEY"),
-            user="test_user",
-        )
-        return conversation
