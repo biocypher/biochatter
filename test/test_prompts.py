@@ -76,6 +76,7 @@ def test_relationship_selection(prompt_engine):
         mock_conversation.return_value.append_system_message = mock_append_system_messages
         success = prompt_engine._select_relationships(
             conversation=mock_conversation.return_value,
+            restart_conversation=False,
         )
         assert success
         mock_append_system_messages.assert_called_once_with(
@@ -120,6 +121,7 @@ def test_relationship_selection_with_incomplete_entities(prompt_engine):
         mock_conversation.return_value.append_system_message = mock_append_system_messages
         success = prompt_engine._select_relationships(
             conversation=mock_conversation.return_value,
+            restart_conversation=False,
         )
         assert success
         mock_append_system_messages.assert_called_once_with(
@@ -157,6 +159,7 @@ def test_relationship_selection_does_not_create_none_entities(prompt_engine):
         mock_conversation.return_value.append_system_message = mock_append_system_messages
         success = prompt_engine._select_relationships(
             conversation=mock_conversation.return_value,
+            restart_conversation=False,
         )
         assert success
         assert None not in prompt_engine.selected_entities
@@ -201,6 +204,7 @@ def test_property_selection(prompt_engine):
         mock_conversation.return_value.append_system_message = mock_append_system_messages
         success = prompt_engine._select_properties(
             conversation=mock_conversation.return_value,
+            restart_conversation=False,
         )
         assert success
         mock_append_system_messages.assert_called_once_with(
