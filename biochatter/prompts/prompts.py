@@ -495,9 +495,19 @@ class BioCypherPromptEngine:
         )
         conversation.append_system_message(prompt)
 
-        res, token_usage, correction = conversation.query(self.question)
+        if self.conversation.model_name in STRUCTURED_OUTPUT_MODELS:
+            # if the model supports structured output, use it
+            msg, token_usage, correction = self.conversation.query(
+                prompt, structured_output=list_output_model(self.relationships)
+            )
+            # read the the json output
+            result = json.loads(msg)["result"]
 
-        result = res.split(",") if res else []
+        else:
+            # otherwise, process manually
+            msg, token_usage, correction = self.conversation.query(prompt)
+
+            result = msg.split(",") if msg else []
 
         if result:
             for relationship in result:
