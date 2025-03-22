@@ -9,6 +9,13 @@ import yaml
 from .._misc import ensure_iterable, sentencecase_to_pascalcase
 from ..llm_connect import Conversation, GptConversation
 from ..llm_connect.available_models import STRUCTURED_OUTPUT_MODELS
+from .constrained_generation import (
+    STRUCT_ENTITY_SELECTION_PROMPT,
+    STRUCT_RELATIONSHIP_SELECTION_PROMPT,
+    STRUCT_PROPERTY_SELECTION_PROMPT,
+    list_selection,
+    dictionary_selection,
+)
 from .prompt_templates import (
     ENTITY_SELECTION_PROMPT,
     PROPERTY_SELECTION_PROMPT,
@@ -27,6 +34,7 @@ class BioCypherPromptEngine:
         schema_config_or_info_dict: dict | None = None,
         model_name: str = "gpt-3.5-turbo",
         conversation_factory: Callable | None = None,
+        constrained_generation: bool = False,
     ) -> None:
         """Given a biocypher schema configuration, extract the entities and
         relationships, and for each extract their mode of representation (node
@@ -54,7 +62,11 @@ class BioCypherPromptEngine:
                 used (creating an OpenAI conversation with the specified model,
                 see `_get_conversation_factory`).
 
+            constrained_generation: Whether to use constrained generation.
+
         """
+        self.constrained_generation = constrained_generation
+
         if not schema_config_or_info_path and not schema_config_or_info_dict:
             raise ValueError(
                 "Please provide the schema configuration or schema info as a path to a file or as a dictionary.",
@@ -350,10 +362,23 @@ class BioCypherPromptEngine:
 
         # TODO: we could differentiate the prompt based on the model
         # (tool calling and non-tool calling)
-        prompt = ENTITY_SELECTION_PROMPT.format(entities=", ".join(self.entities))
-        self.conversation.append_system_message(prompt)
+        if self.constrained_generation:
+            prompt = STRUCT_ENTITY_SELECTION_PROMPT.format(entities=", ".join(self.entities))
+        else:
+            prompt = ENTITY_SELECTION_PROMPT.format(entities=", ".join(self.entities))
+            self.conversation.append_system_message(prompt)
 
-        if self.conversation.model_name in STRUCTURED_OUTPUT_MODELS:
+        if self.constrained_generation:
+            self.conversation += list_selection(self.question, prompt, self.entities, "entities")
+            result = [
+                self.conversation["selected_entities_" + str(i)]
+                for i in range(int(self.conversation["number_of_entities"]))
+            ]
+            # reset the conversation
+            self.conversation._state.prompt = ""
+            self.selected_entities = result.copy()
+
+        elif self.conversation.model_name in STRUCTURED_OUTPUT_MODELS:
             # if the model supports structured output, use it
             msg, token_usage, correction = self.conversation.query(
                 question, structured_output=list_output_model(self.entities)
@@ -487,15 +512,32 @@ class BioCypherPromptEngine:
                         selected_rels.append((key, pair))
 
             rels = json.dumps(selected_rels)
+            rels_var = selected_rels
         else:
             rels = json.dumps(self.relationships)
+            rels_var = self.relationships
 
-        prompt = RELATIONSHIP_SELECTION_PROMPT.format(
-            selected_entities=", ".join(self.selected_entities), relationships=rels
-        )
-        conversation.append_system_message(prompt)
+        if self.constrained_generation:
+            prompt = STRUCT_RELATIONSHIP_SELECTION_PROMPT.format(
+                selected_entities=", ".join(self.selected_entities), relationships=rels
+            )
+        else:
+            prompt = RELATIONSHIP_SELECTION_PROMPT.format(
+                selected_entities=", ".join(self.selected_entities), relationships=rels
+            )
+            conversation.append_system_message(prompt)
 
-        if self.conversation.model_name in STRUCTURED_OUTPUT_MODELS:
+        if self.constrained_generation:
+            self.conversation += list_selection(self.question, prompt, [r[0] for r in rels_var], "relationships")
+            result = [
+                self.conversation["selected_relationships_" + str(i)]
+                for i in range(int(self.conversation["number_of_relationships"]))
+            ]
+            result = list(set(result))
+            # reset the conversation
+            self.conversation._state.prompt = ""
+
+        elif self.conversation.model_name in STRUCTURED_OUTPUT_MODELS:
             # if the model supports structured output, use it
             msg, token_usage, correction = self.conversation.query(
                 prompt, structured_output=list_output_model(self.relationships)
@@ -623,17 +665,34 @@ class BioCypherPromptEngine:
                     self.relationships[relationship]["properties"].keys(),
                 )
 
-        prompt = PROPERTY_SELECTION_PROMPT.format(entity_properties=e_props, relationship_properties=r_props)
-        conversation.append_system_message(prompt)
+        # TODO: structured output here is not working properly, some additional
+        # if self.conversation.model_name in STRUCTURED_OUTPUT_MODELS:
+        #    prompt = PROPERTY_SELECTION_PROMPT_STRUCTURED.format(
+        #        entity_properties=e_props, relationship_properties=r_props
+        #    )
+        #    conversation.append_system_message(prompt)
+        #    msg, token_usage, correction = self.conversation.query(
+        #        self.question, structured_output=dictionary_output_model_simplified(e_props, r_props)
+        #    )
+        # else:
 
-        msg, token_usage, correction = conversation.query(self.question)
-        # TODO: also here replace with structured output
-        msg = BioCypherPromptEngine._validate_json_str(msg)
+        if self.constrained_generation:
+            prompt = STRUCT_PROPERTY_SELECTION_PROMPT.format(entity_properties=e_props, relationship_properties=r_props)
+            container = {}
+            self.conversation += dictionary_selection(self.question, prompt, e_props, r_props,container)
+            self.selected_properties = container
+        else:
 
-        try:
-            self.selected_properties = json.loads(msg) if msg else {}
-        except json.decoder.JSONDecodeError:
-            self.selected_properties = {}
+            prompt = PROPERTY_SELECTION_PROMPT.format(entity_properties=e_props, relationship_properties=r_props)
+            conversation.append_system_message(prompt)
+            msg, token_usage, correction = self.conversation.query(prompt)
+
+            msg = BioCypherPromptEngine._validate_json_str(msg)
+
+            try:
+                self.selected_properties = json.loads(msg) if msg else {}
+            except json.decoder.JSONDecodeError:
+                self.selected_properties = {}
 
         return (
             (len(self.selected_properties) > 0, conversation)
