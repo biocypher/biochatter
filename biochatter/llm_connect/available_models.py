@@ -23,6 +23,19 @@ class GeminiModels(str, Enum):
     GEMINI_20_FLASH = "gemini-2.0-flash"
 
 
+class MistralModels(str, Enum):
+    """Enum for Mistral models."""
+
+    MISTRAL_LARGE_LATEST = "mistral-large-latest"
+
+
+class AnthropicModels(str, Enum):
+    """Enum for Anthropic models."""
+
+    CLAUDE_3_7_SONNET_LATEST = "claude-3-7-sonnet-latest"
+    CLAUDE_3_5_HAIKU_LATEST = "claude-3-5-haiku-latest"
+
+
 class HuggingFaceModels(str, Enum):
     """Enum for HuggingFace models."""
 
@@ -57,11 +70,16 @@ class TokenLimits(Enum):
         """Return the token limit value."""
         return self.value[1]
 
+
 # Define a list of models that support tool calling
 TOOL_CALLING_MODELS = frozenset(
     [
         GeminiModels.GEMINI_20_FLASH.value,
-        #TODO: OpenAIModels.GPT_4o.value,
+        OpenAIModels.GPT_4o.value,
+        MistralModels.MISTRAL_LARGE_LATEST.value,
+        AnthropicModels.CLAUDE_3_7_SONNET_LATEST.value,
+        AnthropicModels.CLAUDE_3_5_HAIKU_LATEST.value,
+        # TODO: OpenAIModels.GPT_4o.value,
     ]
 )
 
@@ -69,7 +87,8 @@ TOOL_CALLING_MODELS = frozenset(
 STRUCTURED_OUTPUT_MODELS = frozenset(
     [
         GeminiModels.GEMINI_20_FLASH.value,
-        #TODO: OpenAIModels.GPT_4o.value,
+        OpenAIModels.GPT_4o.value,
+        # TODO: OpenAIModels.GPT_4o.value,
     ]
 )
 
