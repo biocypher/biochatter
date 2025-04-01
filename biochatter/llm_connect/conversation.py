@@ -379,6 +379,7 @@ class Conversation(ABC):
 
         """
         starting_tools = self.tools if self.tools else []
+        in_chat_tools = in_chat_tools if in_chat_tools else []
         available_tools = starting_tools + in_chat_tools
 
         if not tool_calls:
