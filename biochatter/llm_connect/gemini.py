@@ -87,8 +87,9 @@ class GeminiConversation(Conversation):
                 google_api_key=api_key,
             )
 
+            # if binding happens here, tools will be available for all messages
             if self.tools:
-                self.bind_tools(self.tools)
+                self.chat, self.ca_chat = self.bind_tools(self.tools)
 
             return True
 
@@ -97,26 +98,35 @@ class GeminiConversation(Conversation):
             self._ca_chat = None
             return False
 
-    def _primary_query(self) -> tuple:
+    def _primary_query(self, tools: list[Callable] | None = None) -> tuple:
         """Query the Google Gemini API with the user's message.
 
         Return the response using the message history (flattery system messages,
         prior conversation) as context. Correct the response if necessary.
 
-        Returns
+        Args:
+        ----
+            tools (list[Callable]): The tools to use for the query. Tools
+            passed at this step are used only for this message and not stored
+            as part of the conversation object.
+
+        Returns:
         -------
             tuple: A tuple containing the response from the Gemini API and
                 the token usage.
 
         """
+        #bind tools to the chat if provided in the query
+        chat = self.chat.bind_tools(tools) if tools else self.chat
+
         try:
-            response = self.chat.invoke(self.messages)
+            response = chat.invoke(self.messages)
         except Exception as e:
             return str(e), None
 
         # Process tool calls if present
         if response.tool_calls:
-            msg = self._process_tool_calls(response.tool_calls, response.content)
+            msg = self._process_tool_calls(response.tool_calls, tools, response.content)
         else:
             msg = response.content
             self.append_ai_message(msg)

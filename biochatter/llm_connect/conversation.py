@@ -23,7 +23,7 @@ except ImportError:
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
 
 from biochatter._image import encode_image, encode_image_from_url
-from biochatter.llm_connect.available_models import ToolCallingModels
+from biochatter.llm_connect.available_models import TOOL_CALLING_MODELS
 from biochatter.rag_agent import RagAgent
 from biochatter.selector_agent import RagAgentSelector
 
@@ -150,12 +150,10 @@ class Conversation(ABC):
         # Check if the model supports tool calling
         # (exploit the enum class in available_models.py)
         if self.model_name in TOOL_CALLING_MODELS:
-            self.chat = self.chat.bind_tools(tools)
-            self.ca_chat = self.ca_chat.bind_tools(tools)
+            return self.chat.bind_tools(tools), self.ca_chat.bind_tools(tools)
 
-        else:
-            # If not, fail gracefully
-            raise ValueError(f"Model {self.model_name} does not support tool calling.")
+        # If not, fail gracefully
+        raise ValueError(f"Model {self.model_name} does not support tool calling.")
 
     def append_ai_message(self, message: str) -> None:
         """Add a message from the AI to the conversation.
@@ -281,6 +279,7 @@ class Conversation(ABC):
         self,
         text: str,
         image_url: str | None = None,
+        tools: list[Callable] | None = None,
     ) -> tuple[str, dict | None, str | None]:
         """Query the LLM API using the user's query.
 
@@ -295,6 +294,8 @@ class Conversation(ABC):
             image_url (str): The URL of an image to include in the conversation.
                 Optional and only supported for models with vision capabilities.
 
+            tools (list[Callable]): The tools to use for the query.
+
         Returns:
         -------
             tuple: A tuple containing the response from the API, the token usage
@@ -308,7 +309,8 @@ class Conversation(ABC):
 
         self._inject_context(text)
 
-        msg, token_usage = self._primary_query()
+        # tools passed at this step are used only for this message
+        msg, token_usage = self._primary_query(tools)
 
         if not token_usage:
             # indicates error
@@ -358,7 +360,7 @@ class Conversation(ABC):
     def _correct_response(self, msg: str) -> str:
         """Correct the response."""
 
-    def _process_tool_calls(self, tool_calls: list[dict], response_content: str) -> str:
+    def _process_tool_calls(self, tool_calls: list[dict], in_chat_tools: list[Callable], response_content: str) -> str:
         """Process tool calls from the model response.
 
         This method handles the processing of tool calls returned by the model.
@@ -369,26 +371,30 @@ class Conversation(ABC):
         ----
             tool_calls: The tool calls from the model response.
             response_content: The text content of the response (used as fallback).
+            in_chat_tools: The tools available in the chat.
 
         Returns:
         -------
             str: The processed message, either tool results or formatted tool calls.
 
         """
+        starting_tools = self.tools if self.tools else []
+        available_tools = starting_tools + in_chat_tools
+
         if not tool_calls:
             return response_content
-        
+
         msg = ""
 
         if self.tool_call_mode == "auto":
-            for idx,tool_call in enumerate(tool_calls):
+            for idx, tool_call in enumerate(tool_calls):
                 # Extract tool name and arguments
                 tool_name = tool_call["name"]
                 tool_args = tool_call["args"]
                 tool_call_id = tool_call["id"]
 
                 # Find the matching tool function
-                tool_func = next((t for t in self.tools if t.name == tool_name), None)
+                tool_func = next((t for t in available_tools if t.name == tool_name), None)
 
                 if tool_func:
                     # Execute the tool
@@ -409,7 +415,6 @@ class Conversation(ABC):
                         )
                         msg = error_message
             return msg
-
 
         if self.tool_call_mode == "text":
             # Join all tool calls in a text format
