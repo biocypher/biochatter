@@ -5,7 +5,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 from biochatter.llm_connect.conversation import Conversation
-
+from biochatter.llm_connect.available_models import TOOL_CALLING_MODELS
 
 class GeminiConversation(Conversation):
     """Conversation class for the Google Gemini model."""
@@ -89,7 +89,7 @@ class GeminiConversation(Conversation):
 
             # if binding happens here, tools will be available for all messages
             if self.tools:
-                self.chat, self.ca_chat = self.bind_tools(self.tools)
+                self.bind_tools(self.tools)
 
             return True
 
@@ -116,8 +116,8 @@ class GeminiConversation(Conversation):
                 the token usage.
 
         """
-        #bind tools to the chat if provided in the query
-        chat = self.chat.bind_tools(tools) if tools else self.chat
+        # bind tools to the chat if provided in the query
+        chat = self.chat.bind_tools(tools) if (tools and self.model_name in TOOL_CALLING_MODELS) else self.chat
 
         try:
             response = chat.invoke(self.messages)

@@ -149,11 +149,15 @@ class Conversation(ABC):
         """Bind tools to the chat."""
         # Check if the model supports tool calling
         # (exploit the enum class in available_models.py)
-        if self.model_name in TOOL_CALLING_MODELS:
-            return self.chat.bind_tools(tools), self.ca_chat.bind_tools(tools)
+        if self.model_name in TOOL_CALLING_MODELS and self.ca_chat:
+            self.chat = self.chat.bind_tools(tools)
+            self.ca_chat = self.ca_chat.bind_tools(tools)
+
+        elif self.model_name in TOOL_CALLING_MODELS:
+            self.chat = self.chat.bind_tools(tools)
 
         # If not, fail gracefully
-        raise ValueError(f"Model {self.model_name} does not support tool calling.")
+        # raise ValueError(f"Model {self.model_name} does not support tool calling.")
 
     def append_ai_message(self, message: str) -> None:
         """Add a message from the AI to the conversation.
