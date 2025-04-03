@@ -192,7 +192,6 @@ class Conversation(ABC):
                 "additional_instructions": additional_instructions if additional_instructions else "",
             }
         )
-        print(new_message.messages[0].content)
         return new_message.messages[0]
 
     def bind_tools(self, tools: list[Callable], additional_instructions: str = None) -> None:
@@ -205,6 +204,9 @@ class Conversation(ABC):
 
         elif self.model_name in TOOL_CALLING_MODELS:
             self.chat = self.chat.bind_tools(tools)
+
+        # elif self.model_name not in TOOL_CALLING_MODELS:
+        #    self.tools_prompt = self._create_tool_prompt(tools, additional_instructions)
 
         # If not, fail gracefully
         # raise ValueError(f"Model {self.model_name} does not support tool calling.")
@@ -387,6 +389,64 @@ class Conversation(ABC):
         correction = "\n".join(corrections)
         return (msg, token_usage, correction)
 
+    async def aquery(
+        self,
+        text: str,
+        image_url: str | None = None,
+        tools: list[Callable] | None = None,
+    ) -> tuple[str, dict | None, str | None]:
+        """Query the LLM API using the user's query.
+
+        Appends the most recent query to the conversation, optionally injects
+        context from the RAG agent, and runs the primary query method of the
+        child class.
+
+        Args:
+        ----
+            text (str): The user query.
+
+            image_url (str): The URL of an image to include in the conversation.
+                Optional and only supported for models with vision capabilities.
+
+            tools (list[Callable]): The tools to use for the query.
+
+        Returns:
+        -------
+            tuple: A tuple containing the response from the API, the token usage
+                information, and the correction if necessary/desired.
+
+        """
+        if not image_url:
+            self.append_user_message(text)
+        else:
+            self.append_image_message(text, image_url)
+
+        self._inject_context(text)
+
+        # tools passed at this step are used only for this message
+        msg, token_usage = await self._primary_query_async(tools)
+
+        if not token_usage:
+            # indicates error
+            return (msg, token_usage, None)
+
+        if not self.correct:
+            return (msg, token_usage, None)
+
+        cor_msg = "Correcting (using single sentences) ..." if self.split_correction else "Correcting ..."
+
+        if st:
+            with st.spinner(cor_msg):
+                corrections = self._correct_query(text)
+        else:
+            corrections = self._correct_query(text)
+
+        if not corrections:
+            return (msg, token_usage, None)
+
+        correction = "\n".join(corrections)
+        return (msg, token_usage, correction)
+
     def _correct_query(self, msg: str) -> list[str]:
         corrections = []
         if self.split_correction:
@@ -413,6 +473,36 @@ class Conversation(ABC):
     @abstractmethod
     def _correct_response(self, msg: str) -> str:
         """Correct the response."""
+
+    async def _async_porcess_manual_tool_call(self, tool_call: list[dict], available_tools: list[Callable]) -> str:
+        """Process manual tool calls from the model response.
+
+        This method handles the processing of tool calls for models that don't natively
+        support tool calling. It takes the parsed JSON response and executes the
+        appropriate tool.
+
+        Args:
+        ----
+            tool_call (list[dict]): The parsed tool call information from the model response.
+            available_tools (list[Callable]): The tools available for execution.
+
+        Returns:
+        -------
+            str: The processed message containing the tool name, arguments, and result.
+
+        """
+        tool_name = tool_call["tool_name"]
+        tool_func = next((t for t in available_tools if t.name == tool_name), None)
+
+        del tool_call["tool_name"]
+
+        tool_result = await tool_func.ainvoke(tool_call)
+
+        msg = f"Tool: {tool_name}\nArguments: {tool_call}\nTool result: {tool_result}"
+
+        self.append_ai_message(msg)
+
+        return msg
 
     def _porcess_manual_tool_call(self, tool_call: list[dict], available_tools: list[Callable]) -> str:
         """Process manual tool calls from the model response.
@@ -443,6 +533,81 @@ class Conversation(ABC):
         self.append_ai_message(msg)
 
         return msg
+
+    async def _async_process_tool_calls(
+        self, tool_calls: list[dict], available_tools: list[Callable], response_content: str
+    ) -> str:
+        """Process tool calls from the model response.
+
+        This method handles the processing of tool calls returned by the model.
+        It can either automatically execute the tools and return their results,
+        or format the tool calls as text.
+
+        Args:
+        ----
+            tool_calls: The tool calls from the model response.
+            response_content: The text content of the response (used as fallback).
+            available_tools: The tools available in the chat.
+
+        Returns:
+        -------
+            str: The processed message, either tool results or formatted tool calls.
+
+        """
+        if not tool_calls:
+            return response_content
+
+        msg = ""
+
+        if self.tool_call_mode == "auto":
+            for idx, tool_call in enumerate(tool_calls):
+                # Extract tool name and arguments
+                tool_name = tool_call["name"]
+                tool_args = tool_call["args"]
+                tool_call_id = tool_call["id"]
+
+                # Find the matching tool function
+                tool_func = next((t for t in available_tools if t.name == tool_name), None)
+
+                if tool_func:
+                    # Execute the tool
+                    try:
+                        tool_result = tool_func.ainvoke(tool_args)
+                        # Add the tool result to the conversation
+                        self.messages.append(
+                            ToolMessage(content=str(tool_result), name=tool_name, tool_call_id=tool_call_id)
+                        )
+                        if idx > 0:
+                            msg += "\n"
+                        msg += f"Tool call ({tool_name}) result: {tool_result!s}"
+                    except Exception as e:
+                        # Handle tool execution errors
+                        error_message = f"Error executing tool {tool_name}: {e!s}"
+                        self.messages.append(
+                            ToolMessage(content=error_message, name=tool_name, tool_call_id=tool_call_id)
+                        )
+                        msg = error_message
+            return msg
+
+        if self.tool_call_mode == "text":
+            # Join all tool calls in a text format
+            tool_calls_text = []
+            for tool_call in tool_calls:
+                tool_name = tool_call["name"]
+                tool_args = tool_call["args"]
+                tool_call_id = tool_call["id"]
+                tool_calls_text.append(f"Tool: {tool_name} - Arguments: {tool_args} - Tool call id: {tool_call_id}")
+
+            # Join with line breaks and set as the message
+            msg = "\n".join(tool_calls_text)
+
+            # Append the formatted tool calls as an AI message
+            self.append_ai_message(msg)
+            return msg
+
+        # Invalid tool call mode, log warning and return original content
+        logger.warning(f"Invalid tool call mode: {self.tool_call_mode}. Using original response content.")
+        return response_content
 
     def _process_tool_calls(
         self, tool_calls: list[dict], available_tools: list[Callable], response_content: str

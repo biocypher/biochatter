@@ -1,9 +1,9 @@
+import json
 from collections.abc import Callable
 from typing import Literal
 
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, SystemMessage
-import json
 
 from biochatter.llm_connect.available_models import TOOL_CALLING_MODELS
 from biochatter.llm_connect.conversation import Conversation
@@ -21,6 +21,7 @@ class LangChainConversation(Conversation):
         split_correction: bool = False,
         tools: list[Callable] = None,
         tool_call_mode: Literal["auto", "text"] = "auto",
+        async_mode: bool = False,
     ) -> None:
         """Initialise the LangChainConversation class.
 
@@ -31,22 +32,17 @@ class LangChainConversation(Conversation):
         Args:
         ----
             model_name (str): The name of the model to use.
-
             model_provider (str): The provider of the model to use.
-
             prompts (dict): A dictionary of prompts to use for the conversation.
-
             correct (bool): Whether to correct the model output.
-
             split_correction (bool): Whether to correct the model output by
                 splitting the output into sentences and correcting each
                 sentence individually.
-
             tools (list[Callable]): List of tool functions to use with the model.
-
             tool_call_mode (str): The mode to use for tool calls.
                 "auto": Automatically call tools.
                 "text": Only return text output of the tool call.
+            async_mode (bool): Whether to run in async mode. Defaults to False.
 
         """
         super().__init__(
@@ -60,6 +56,7 @@ class LangChainConversation(Conversation):
 
         self.model_name = model_name
         self.model_provider = model_provider
+        self.async_mode = async_mode
 
     # TODO: the name of this method is overloaded, since the api key is loaded
     # from the environment variables and not as an argument
@@ -107,25 +104,7 @@ class LangChainConversation(Conversation):
             return False
 
     def _primary_query(self, tools: list[Callable] | None = None) -> tuple:
-        """Query the Google Gemini API with the user's message.
-
-        Return the response using the message history (flattery system messages,
-        prior conversation) as context. Correct the response if necessary.
-
-        Args:
-        ----
-            tools (list[Callable]): The tools to use for the query. Tools
-            passed at this step are used only for this message and not stored
-            as part of the conversation object.
-
-        Returns:
-        -------
-            tuple: A tuple containing the response from the Gemini API and
-                the token usage.
-
-        """
-        # bind tools to the chat if provided in the query
-        # here we are using the bind_tools method from the langchain chat model
+        """Run the primary query in sync mode."""
         starting_tools = self.tools if self.tools else []
         in_chat_tools = tools if tools else []
         available_tools = starting_tools + in_chat_tools
@@ -147,10 +126,45 @@ class LangChainConversation(Conversation):
             msg = self._process_tool_calls(response.tool_calls, available_tools, response.content)
         # case where the model does not support tool calling and we need manual processing
         elif self.model_name not in TOOL_CALLING_MODELS and self.tools_prompt:
-            msg = response.content.replace('"""','').replace("json","").replace("`","").replace("\n","").strip()
+            msg = response.content.replace('"""', "").replace("json", "").replace("`", "").replace("\n", "").strip()
             msg = json.loads(msg)
-            msg = self._porcess_manual_tool_call(msg,available_tools)
-            #self.append_ai_message(msg)
+            msg = self._porcess_manual_tool_call(msg, available_tools)
+            # self.append_ai_message(msg)
+        else:
+            msg = response.content
+            self.append_ai_message(msg)
+
+        token_usage = response.usage_metadata["total_tokens"]
+
+        return msg, token_usage
+
+    async def _primary_query_async(self, tools: list[Callable] | None = None) -> tuple:
+        """Run the primary query in async mode."""
+        starting_tools = self.tools if self.tools else []
+        in_chat_tools = tools if tools else []
+        available_tools = starting_tools + in_chat_tools
+
+        if self.model_name in TOOL_CALLING_MODELS:
+            chat = self.chat.bind_tools(available_tools)
+        elif self.model_name not in TOOL_CALLING_MODELS and len(available_tools) > 0:
+            self.tools_prompt = self._create_tool_prompt(available_tools)
+            self.messages[-1] = self.tools_prompt
+            chat = self.chat
+
+        try:
+            response = chat.invoke(self.messages)
+        except Exception as e:
+            return str(e), None
+
+        # Process tool calls if present (model supports tool calling)
+        if response.tool_calls:
+            msg = self._process_tool_calls(response.tool_calls, available_tools, response.content)
+        # case where the model does not support tool calling and we need manual processing
+        elif self.model_name not in TOOL_CALLING_MODELS and self.tools_prompt:
+            msg = response.content.replace('"""', "").replace("json", "").replace("`", "").replace("\n", "").strip()
+            msg = json.loads(msg)
+            msg = await self._async_porcess_manual_tool_call(msg, available_tools)
+            # self.append_ai_message(msg)
         else:
             msg = response.content
             self.append_ai_message(msg)
