@@ -21,6 +21,7 @@ except ImportError:
     st = None
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
+from langchain_core.prompts import ChatPromptTemplate
 
 from biochatter._image import encode_image, encode_image_from_url
 from biochatter.llm_connect.available_models import TOOL_CALLING_MODELS
@@ -28,6 +29,26 @@ from biochatter.rag_agent import RagAgent
 from biochatter.selector_agent import RagAgentSelector
 
 logger = logging.getLogger(__name__)
+
+TOOL_USAGE_PROMPT = """
+<general_instructions>
+You are a helpful assistant that can use tools to help the user.
+You will need to return only a json formatted response that can than be used to parametrize the call to a function to answer the user's question.
+The json should only contain have as key the name of the arguments and as value the value of the argument plus a key "tool_name" with the name of the tool.
+</general_instructions>
+
+<user_question>
+{user_question}
+</user_question>
+
+<tools>
+{tools}
+</tools>
+
+<additional_instructions>
+{additional_instructions}
+</additional_instructions>
+"""
 
 
 class Conversation(ABC):
@@ -69,6 +90,7 @@ class Conversation(ABC):
         self._ca_chat = None
         self.tools = tools
         self.tool_call_mode = tool_call_mode
+        self.tools_prompt = None
 
     @property
     def chat(self):
@@ -145,7 +167,35 @@ class Conversation(ABC):
         """Set the prompts."""
         self.prompts = prompts
 
-    def bind_tools(self, tools: list[Callable]) -> None:
+    def _tool_formatter(self, tools: list[Callable], mcp: bool = False) -> str:
+        """Format the tools. Only for model not supporting tool calling."""
+        tools_description = ""
+
+        for idx, tool in enumerate(tools):
+            tools_description += f"<tool_{idx}>\n"
+            tools_description += f"Tool name: {tool.name}\n"
+            if mcp:
+                tools_description += f"Tool call schema:\n {tool.tool_call_schema}\n"
+            else:
+                tools_description += f"Tool call schema:\n {tool.args}\n"
+            tools_description += f"</tool_{idx}>\n"
+        return tools_description
+
+    def _create_tool_prompt(self, tools: list[Callable], additional_instructions: str = None, mcp: bool = False) -> str:
+        """Create the tool prompt. Only for model not supporting tool calling."""
+        prompt_template = ChatPromptTemplate.from_template(TOOL_USAGE_PROMPT)
+        tools_description = self._tool_formatter(tools, mcp=mcp)
+        new_message = prompt_template.invoke(
+            {
+                "user_question": self.messages[-1].content,
+                "tools": tools_description,
+                "additional_instructions": additional_instructions if additional_instructions else "",
+            }
+        )
+        print(new_message.messages[0].content)
+        return new_message.messages[0]
+
+    def bind_tools(self, tools: list[Callable], additional_instructions: str = None) -> None:
         """Bind tools to the chat."""
         # Check if the model supports tool calling
         # (exploit the enum class in available_models.py)
@@ -364,7 +414,39 @@ class Conversation(ABC):
     def _correct_response(self, msg: str) -> str:
         """Correct the response."""
 
-    def _process_tool_calls(self, tool_calls: list[dict], in_chat_tools: list[Callable], response_content: str) -> str:
+    def _porcess_manual_tool_call(self, tool_call: list[dict], available_tools: list[Callable]) -> str:
+        """Process manual tool calls from the model response.
+
+        This method handles the processing of tool calls for models that don't natively
+        support tool calling. It takes the parsed JSON response and executes the
+        appropriate tool.
+
+        Args:
+        ----
+            tool_call (list[dict]): The parsed tool call information from the model response.
+            available_tools (list[Callable]): The tools available for execution.
+
+        Returns:
+        -------
+            str: The processed message containing the tool name, arguments, and result.
+
+        """
+        tool_name = tool_call["tool_name"]
+        tool_func = next((t for t in available_tools if t.name == tool_name), None)
+
+        del tool_call["tool_name"]
+
+        tool_result = tool_func.invoke(tool_call)
+
+        msg = f"Tool: {tool_name}\nArguments: {tool_call}\nTool result: {tool_result}"
+
+        self.append_ai_message(msg)
+
+        return msg
+
+    def _process_tool_calls(
+        self, tool_calls: list[dict], available_tools: list[Callable], response_content: str
+    ) -> str:
         """Process tool calls from the model response.
 
         This method handles the processing of tool calls returned by the model.
@@ -375,17 +457,13 @@ class Conversation(ABC):
         ----
             tool_calls: The tool calls from the model response.
             response_content: The text content of the response (used as fallback).
-            in_chat_tools: The tools available in the chat.
+            available_tools: The tools available in the chat.
 
         Returns:
         -------
             str: The processed message, either tool results or formatted tool calls.
 
         """
-        starting_tools = self.tools if self.tools else []
-        in_chat_tools = in_chat_tools if in_chat_tools else []
-        available_tools = starting_tools + in_chat_tools
-
         if not tool_calls:
             return response_content
 

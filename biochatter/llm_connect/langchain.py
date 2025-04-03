@@ -3,6 +3,7 @@ from typing import Literal
 
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, SystemMessage
+import json
 
 from biochatter.llm_connect.available_models import TOOL_CALLING_MODELS
 from biochatter.llm_connect.conversation import Conversation
@@ -125,16 +126,31 @@ class LangChainConversation(Conversation):
         """
         # bind tools to the chat if provided in the query
         # here we are using the bind_tools method from the langchain chat model
-        chat = self.chat.bind_tools(tools) if (tools and self.model_name in TOOL_CALLING_MODELS) else self.chat
+        starting_tools = self.tools if self.tools else []
+        in_chat_tools = tools if tools else []
+        available_tools = starting_tools + in_chat_tools
+
+        if self.model_name in TOOL_CALLING_MODELS:
+            chat = self.chat.bind_tools(available_tools)
+        elif self.model_name not in TOOL_CALLING_MODELS and len(available_tools) > 0:
+            self.tools_prompt = self._create_tool_prompt(available_tools)
+            self.messages[-1] = self.tools_prompt
+            chat = self.chat
 
         try:
             response = chat.invoke(self.messages)
         except Exception as e:
             return str(e), None
 
-        # Process tool calls if present
+        # Process tool calls if present (model supports tool calling)
         if response.tool_calls:
-            msg = self._process_tool_calls(response.tool_calls, tools, response.content)
+            msg = self._process_tool_calls(response.tool_calls, available_tools, response.content)
+        # case where the model does not support tool calling and we need manual processing
+        elif self.model_name not in TOOL_CALLING_MODELS and self.tools_prompt:
+            msg = response.content.replace('"""','').replace("json","").replace("`","").replace("\n","").strip()
+            msg = json.loads(msg)
+            msg = self._porcess_manual_tool_call(msg,available_tools)
+            #self.append_ai_message(msg)
         else:
             msg = response.content
             self.append_ai_message(msg)
