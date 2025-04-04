@@ -103,7 +103,7 @@ class LangChainConversation(Conversation):
             self._ca_chat = None
             return False
 
-    def _primary_query(self, tools: list[Callable] | None = None) -> tuple:
+    def _primary_query(self, tools: list[Callable] | None = None, explain_tool_result: bool = False) -> tuple:
         """Run the primary query in sync mode."""
         starting_tools = self.tools if self.tools else []
         in_chat_tools = tools if tools else []
@@ -123,12 +123,21 @@ class LangChainConversation(Conversation):
 
         # Process tool calls if present (model supports tool calling)
         if response.tool_calls:
-            msg = self._process_tool_calls(response.tool_calls, available_tools, response.content)
+            msg = self._process_tool_calls(
+                tool_calls=response.tool_calls,
+                available_tools=available_tools,
+                response_content=response.content,
+                explain_tool_result=explain_tool_result,
+            )
         # case where the model does not support tool calling and we need manual processing
         elif self.model_name not in TOOL_CALLING_MODELS and self.tools_prompt:
             msg = response.content.replace('"""', "").replace("json", "").replace("`", "").replace("\n", "").strip()
             msg = json.loads(msg)
-            msg = self._porcess_manual_tool_call(msg, available_tools)
+            msg = self._porcess_manual_tool_call(
+                tool_call=msg,
+                available_tools=available_tools,
+                explain_tool_result=explain_tool_result,
+            )
             # self.append_ai_message(msg)
         else:
             msg = response.content
@@ -138,7 +147,13 @@ class LangChainConversation(Conversation):
 
         return msg, token_usage
 
-    async def _primary_query_async(self, tools: list[Callable] | None = None) -> tuple:
+    async def _primary_query_async(
+        self,
+        tools: list[Callable] | None = None,
+        explain_tool_result: bool = False,
+        general_instructions_tool_interpretation: str | None = None,
+        additional_instructions_tool_interpretation: str | None = None,
+    ) -> tuple:
         """Run the primary query in async mode."""
         starting_tools = self.tools if self.tools else []
         in_chat_tools = tools if tools else []
@@ -158,12 +173,21 @@ class LangChainConversation(Conversation):
 
         # Process tool calls if present (model supports tool calling)
         if response.tool_calls:
-            msg = self._process_tool_calls(response.tool_calls, available_tools, response.content)
+            msg = await self._async_process_tool_calls(
+                tool_calls=response.tool_calls,
+                available_tools=available_tools,
+                response_content=response.content,
+                explain_tool_result=explain_tool_result,
+            )
         # case where the model does not support tool calling and we need manual processing
         elif self.model_name not in TOOL_CALLING_MODELS and self.tools_prompt:
             msg = response.content.replace('"""', "").replace("json", "").replace("`", "").replace("\n", "").strip()
             msg = json.loads(msg)
-            msg = await self._async_porcess_manual_tool_call(msg, available_tools)
+            msg = await self._async_porcess_manual_tool_call(
+                tool_call=msg,
+                available_tools=available_tools,
+                explain_tool_result=explain_tool_result,
+            )
             # self.append_ai_message(msg)
         else:
             msg = response.content

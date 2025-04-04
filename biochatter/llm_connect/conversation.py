@@ -50,6 +50,35 @@ The json should only contain have as key the name of the arguments and as value 
 </additional_instructions>
 """
 
+GENERAL_TOOL_RESULT_INTERPRETATION_PROMPT = """
+You are a helpful assistant that interprets the results of tool calls to answer user questions.
+Your task is to analyze the tool's output and provide a clear, detailed explanation that directly addresses the user's original question.
+Focus on extracting the most relevant information from the tool result and presenting it in a user-friendly way."""
+
+ADDITIONAL_TOOL_RESULT_INTERPRETATION_PROMPT = """
+Based on the tool result above, provide a helpful response to the original question.
+Make sure your explanation is accurate and based solely on the information provided by the tool.
+If the tool result doesn't fully answer the question, acknowledge the limitations and explain what information is available.
+"""
+
+TOOL_RESULT_INTERPRETATION_PROMPT = """
+<general_instructions>
+{general_instructions}
+</general_instructions>
+
+<original_question>
+{original_question}
+</original_question>
+
+<tool_result>
+{tool_result}
+</tool_result>
+
+<additional_instructions>
+{additional_instructions}
+</additional_instructions>
+"""
+
 
 class Conversation(ABC):
     """Use this class to set up a connection to an LLM API.
@@ -336,6 +365,9 @@ class Conversation(ABC):
         text: str,
         image_url: str | None = None,
         tools: list[Callable] | None = None,
+        explain_tool_result: bool = False,
+        general_instructions_tool_interpretation: str | None = None,
+        additional_instructions_tool_interpretation: str | None = None,
     ) -> tuple[str, dict | None, str | None]:
         """Query the LLM API using the user's query.
 
@@ -352,12 +384,35 @@ class Conversation(ABC):
 
             tools (list[Callable]): The tools to use for the query.
 
+            explain_tool_result (bool): Whether to explain the tool result.
+
+            general_instructions_tool_interpretation (str): The general
+                instructions for the tool interpretation.
+                Overrides the default prompt in `GENERAL_TOOL_RESULT_INTERPRETATION_PROMPT`.
+
+            additional_instructions_tool_interpretation (str): The additional
+                instructions for the tool interpretation.
+                Overrides the default prompt in `ADDITIONAL_TOOL_RESULT_INTERPRETATION_PROMPT`.
+
         Returns:
         -------
             tuple: A tuple containing the response from the API, the token usage
                 information, and the correction if necessary/desired.
 
         """
+        # save the last human prompt that may be used for answer enhancement
+        self.last_human_prompt = text
+
+        # override the default prompts if other provided
+        self.general_instructions_tool_interpretation = (
+            general_instructions_tool_interpretation
+            if general_instructions_tool_interpretation
+            else GENERAL_TOOL_RESULT_INTERPRETATION_PROMPT
+        )
+        self.additional_instructions_tool_interpretation = (
+            additional_instructions_tool_interpretation
+            if additional_instructions_tool_interpretation else ADDITIONAL_TOOL_RESULT_INTERPRETATION_PROMPT
+        )
         if not image_url:
             self.append_user_message(text)
         else:
@@ -366,7 +421,7 @@ class Conversation(ABC):
         self._inject_context(text)
 
         # tools passed at this step are used only for this message
-        msg, token_usage = self._primary_query(tools)
+        msg, token_usage = self._primary_query(tools, explain_tool_result)
 
         if not token_usage:
             # indicates error
@@ -394,8 +449,11 @@ class Conversation(ABC):
         text: str,
         image_url: str | None = None,
         tools: list[Callable] | None = None,
+        explain_tool_result: bool = False,
+        general_instructions_tool_interpretation: str | None = None,
+        additional_instructions_tool_interpretation: str | None = None,
     ) -> tuple[str, dict | None, str | None]:
-        """Query the LLM API using the user's query.
+        """Asynchronous query the LLM API using the user's query.
 
         Appends the most recent query to the conversation, optionally injects
         context from the RAG agent, and runs the primary query method of the
@@ -410,12 +468,36 @@ class Conversation(ABC):
 
             tools (list[Callable]): The tools to use for the query.
 
+            explain_tool_result (bool): Whether to explain the tool result.
+
+            general_instructions_tool_interpretation (str): The general
+                instructions for the tool interpretation.
+                Overrides the default prompt in `GENERAL_TOOL_RESULT_INTERPRETATION_PROMPT`.
+
+            additional_instructions_tool_interpretation (str): The additional
+                instructions for the tool interpretation.
+                Overrides the default prompt in `ADDITIONAL_TOOL_RESULT_INTERPRETATION_PROMPT`.
+
         Returns:
         -------
             tuple: A tuple containing the response from the API, the token usage
                 information, and the correction if necessary/desired.
 
         """
+        # save the last human prompt that may be used for answer enhancement
+        self.last_human_prompt = text
+
+        # override the default prompts if other provided
+        self.general_instructions_tool_interpretation = (
+            general_instructions_tool_interpretation
+            if general_instructions_tool_interpretation
+            else GENERAL_TOOL_RESULT_INTERPRETATION_PROMPT
+        )
+        self.additional_instructions_tool_interpretation = (
+            additional_instructions_tool_interpretation
+            if additional_instructions_tool_interpretation
+            else ADDITIONAL_TOOL_RESULT_INTERPRETATION_PROMPT
+        )
         if not image_url:
             self.append_user_message(text)
         else:
@@ -424,7 +506,12 @@ class Conversation(ABC):
         self._inject_context(text)
 
         # tools passed at this step are used only for this message
-        msg, token_usage = await self._primary_query_async(tools)
+        msg, token_usage = await self._primary_query_async(
+            tools,
+            explain_tool_result,
+            general_instructions_tool_interpretation,
+            additional_instructions_tool_interpretation,
+        )
 
         if not token_usage:
             # indicates error
@@ -474,7 +561,9 @@ class Conversation(ABC):
     def _correct_response(self, msg: str) -> str:
         """Correct the response."""
 
-    async def _async_porcess_manual_tool_call(self, tool_call: list[dict], available_tools: list[Callable]) -> str:
+    async def _async_porcess_manual_tool_call(
+        self, tool_call: list[dict], available_tools: list[Callable], explain_tool_result: bool = False
+    ) -> str:
         """Process manual tool calls from the model response.
 
         This method handles the processing of tool calls for models that don't natively
@@ -485,6 +574,7 @@ class Conversation(ABC):
         ----
             tool_call (list[dict]): The parsed tool call information from the model response.
             available_tools (list[Callable]): The tools available for execution.
+            explain_tool_result (bool): Whether to explain the tool result.
 
         Returns:
         -------
@@ -497,14 +587,29 @@ class Conversation(ABC):
         del tool_call["tool_name"]
 
         tool_result = await tool_func.ainvoke(tool_call)
-
         msg = f"Tool: {tool_name}\nArguments: {tool_call}\nTool result: {tool_result}"
+
+        if explain_tool_result:
+            tool_result_interpretation = self.chat.invoke(
+                TOOL_RESULT_INTERPRETATION_PROMPT.format(
+                    original_question=self.last_human_prompt,
+                    tool_result=tool_result,
+                    general_instructions=GENERAL_TOOL_RESULT_INTERPRETATION_PROMPT,
+                    additional_instructions=ADDITIONAL_TOOL_RESULT_INTERPRETATION_PROMPT,
+                )
+            )
+            msg += f"\nTool result interpretation: {tool_result_interpretation.content}"
 
         self.append_ai_message(msg)
 
         return msg
 
-    def _porcess_manual_tool_call(self, tool_call: list[dict], available_tools: list[Callable]) -> str:
+    def _porcess_manual_tool_call(
+        self,
+        tool_call: list[dict],
+        available_tools: list[Callable],
+        explain_tool_result: bool = False,
+    ) -> str:
         """Process manual tool calls from the model response.
 
         This method handles the processing of tool calls for models that don't natively
@@ -515,6 +620,7 @@ class Conversation(ABC):
         ----
             tool_call (list[dict]): The parsed tool call information from the model response.
             available_tools (list[Callable]): The tools available for execution.
+            explain_tool_result (bool): Whether to explain the tool result.
 
         Returns:
         -------
@@ -527,15 +633,29 @@ class Conversation(ABC):
         del tool_call["tool_name"]
 
         tool_result = tool_func.invoke(tool_call)
-
         msg = f"Tool: {tool_name}\nArguments: {tool_call}\nTool result: {tool_result}"
+
+        if explain_tool_result:
+            tool_result_interpretation = self.chat.invoke(
+                TOOL_RESULT_INTERPRETATION_PROMPT.format(
+                    original_question=self.last_human_prompt,
+                    tool_result=tool_result,
+                    general_instructions=GENERAL_TOOL_RESULT_INTERPRETATION_PROMPT,
+                    additional_instructions=ADDITIONAL_TOOL_RESULT_INTERPRETATION_PROMPT,
+                )
+            )
+            msg += f"\nTool result interpretation: {tool_result_interpretation.content}"
 
         self.append_ai_message(msg)
 
         return msg
 
     async def _async_process_tool_calls(
-        self, tool_calls: list[dict], available_tools: list[Callable], response_content: str
+        self,
+        tool_calls: list[dict],
+        available_tools: list[Callable],
+        response_content: str,
+        explain_tool_result: bool = False,
     ) -> str:
         """Process tool calls from the model response.
 
@@ -548,6 +668,7 @@ class Conversation(ABC):
             tool_calls: The tool calls from the model response.
             response_content: The text content of the response (used as fallback).
             available_tools: The tools available in the chat.
+            explain_tool_result (bool): Whether to explain the tool result.
 
         Returns:
         -------
@@ -556,6 +677,8 @@ class Conversation(ABC):
         """
         if not tool_calls:
             return response_content
+        
+        print('-----------------------------------here')
 
         msg = ""
 
@@ -572,7 +695,7 @@ class Conversation(ABC):
                 if tool_func:
                     # Execute the tool
                     try:
-                        tool_result = tool_func.ainvoke(tool_args)
+                        tool_result = await tool_func.ainvoke(tool_args)
                         # Add the tool result to the conversation
                         self.messages.append(
                             ToolMessage(content=str(tool_result), name=tool_name, tool_call_id=tool_call_id)
@@ -580,6 +703,18 @@ class Conversation(ABC):
                         if idx > 0:
                             msg += "\n"
                         msg += f"Tool call ({tool_name}) result: {tool_result!s}"
+
+                        if explain_tool_result:
+                            tool_result_interpretation = self.chat.invoke(
+                                TOOL_RESULT_INTERPRETATION_PROMPT.format(
+                                    original_question=self.last_human_prompt,
+                                    tool_result=tool_result,
+                                    general_instructions=self.general_instructions_tool_interpretation,
+                                    additional_instructions=self.additional_instructions_tool_interpretation,
+                                )
+                            )
+                            self.append_ai_message(tool_result_interpretation.content)
+                            msg += f"\nTool result interpretation: {tool_result_interpretation.content}"
                     except Exception as e:
                         # Handle tool execution errors
                         error_message = f"Error executing tool {tool_name}: {e!s}"
@@ -610,7 +745,11 @@ class Conversation(ABC):
         return response_content
 
     def _process_tool_calls(
-        self, tool_calls: list[dict], available_tools: list[Callable], response_content: str
+        self,
+        tool_calls: list[dict],
+        available_tools: list[Callable],
+        response_content: str,
+        explain_tool_result: bool = False,
     ) -> str:
         """Process tool calls from the model response.
 
@@ -623,6 +762,7 @@ class Conversation(ABC):
             tool_calls: The tool calls from the model response.
             response_content: The text content of the response (used as fallback).
             available_tools: The tools available in the chat.
+            explain_tool_result (bool): Whether to explain the tool result.
 
         Returns:
         -------
@@ -652,9 +792,23 @@ class Conversation(ABC):
                         self.messages.append(
                             ToolMessage(content=str(tool_result), name=tool_name, tool_call_id=tool_call_id)
                         )
+
                         if idx > 0:
                             msg += "\n"
                         msg += f"Tool call ({tool_name}) result: {tool_result!s}"
+
+                        if explain_tool_result:
+                            tool_result_interpretation = self.chat.invoke(
+                                TOOL_RESULT_INTERPRETATION_PROMPT.format(
+                                    original_question=self.last_human_prompt,
+                                    tool_result=tool_result,
+                                    general_instructions=self.general_instructions_tool_interpretation,
+                                    additional_instructions=self.additional_instructions_tool_interpretation,
+                                )
+                            )
+                            self.append_ai_message(tool_result_interpretation.content)
+                            msg += f"\nTool result interpretation: {tool_result_interpretation.content}"
+
                     except Exception as e:
                         # Handle tool execution errors
                         error_message = f"Error executing tool {tool_name}: {e!s}"
