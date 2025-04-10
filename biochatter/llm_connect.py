@@ -24,6 +24,7 @@ from langchain_community.chat_models import ChatOllama, ChatLiteLLM
 from langchain_community.llms.huggingface_hub import HuggingFaceHub
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_openai import AzureChatOpenAI, ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 import litellm
 
 from ._image import encode_image, encode_image_from_url
@@ -40,6 +41,10 @@ OPENAI_MODELS = [
     "gpt-4",
     "gpt-4-32k",
     "gpt-4-1106-preview",  # gpt-4 turbo, 128k tokens
+]
+
+GEMINI_MODELS = [
+    "gemini-2.0-flash",
 ]
 
 HUGGINGFACE_MODELS = ["bigscience/bloom"]
@@ -1792,6 +1797,142 @@ class BloomConversation(Conversation):
 
     def _correct_response(self, msg: str) -> str:
         return "ok"
+      
+class GeminiConversation(Conversation):
+     """Conversation class for the Google Gemini model."""
+ 
+     def __init__(
+         self,
+         model_name: str,
+         prompts: dict,
+         correct: bool = False,
+         split_correction: bool = False,
+     ) -> None:
+         """Initialise the GeminiConversation class.
+ 
+         Connect to Google's Gemini API and set up a conversation with the user.
+         Also initialise a second conversational agent to provide corrections to
+         the model output, if necessary.
+ 
+         Args:
+         ----
+             model_name (str): The name of the model to use.
+ 
+             prompts (dict): A dictionary of prompts to use for the conversation.
+ 
+             correct (bool): Whether to correct the model output.
+ 
+             split_correction (bool): Whether to correct the model output by
+                 splitting the output into sentences and correcting each
+                 sentence individually.
+ 
+         """
+         super().__init__(
+             model_name=model_name,
+             prompts=prompts,
+             correct=correct,
+             split_correction=split_correction,
+         )
+ 
+         self.ca_model_name = "gemini-2.0-flash"
+ 
+     def set_api_key(self, api_key: str, user: str | None = None) -> bool:
+         """Set the API key for the Google Gemini API.
+ 
+         If the key is valid, initialise the conversational agent. Optionally set
+         the user for usage statistics.
+ 
+         Args:
+         ----
+             api_key (str): The API key for the Google Gemini API.
+ 
+             user (str, optional): The user for usage statistics. If provided and
+                 equals "community", will track usage stats.
+ 
+         Returns:
+         -------
+             bool: True if the API key is valid, False otherwise.
+ 
+         """
+         self.user = user
+ 
+         try:
+             self.chat = ChatGoogleGenerativeAI(
+                 model=self.model_name,
+                 temperature=0,
+                 google_api_key=api_key,
+             )
+             self.ca_chat = ChatGoogleGenerativeAI(
+                 model=self.ca_model_name,
+                 temperature=0,
+                 google_api_key=api_key,
+             )
+ 
+             return True
+ 
+         except Exception:  # Google Genai doesn't expose specific exception types
+             self._chat = None
+             self._ca_chat = None
+             return False
+ 
+     def _primary_query(self) -> tuple:
+         """Query the Google Gemini API with the user's message.
+ 
+         Return the response using the message history (flattery system messages,
+         prior conversation) as context. Correct the response if necessary.
+ 
+         Returns
+         -------
+             tuple: A tuple containing the response from the Gemini API and
+                 the token usage.
+ 
+         """
+         try:
+             response = self.chat.invoke(self.messages)
+         except Exception as e:
+             return str(e), None
+ 
+         msg = response.content
+         token_usage = response.usage_metadata['total_tokens']
+ 
+         self.append_ai_message(msg)
+ 
+         return msg, token_usage
+ 
+     def _correct_response(self, msg: str) -> str:
+         """Correct the response from the Gemini API.
+ 
+         Send the response to a secondary language model. Optionally split the
+         response into single sentences and correct each sentence individually.
+         Update usage stats.
+ 
+         Args:
+         ----
+             msg (str): The response from the Gemini API.
+ 
+         Returns:
+         -------
+             str: The corrected response (or OK if no correction necessary).
+ 
+         """
+         ca_messages = self.ca_messages.copy()
+         ca_messages.append(
+             HumanMessage(
+                 content=msg,
+             ),
+         )
+         ca_messages.append(
+             SystemMessage(
+                 content="If there is nothing to correct, please respond with just 'OK', and nothing else!",
+             ),
+         )
+ 
+         response = self.ca_chat.invoke(ca_messages)
+ 
+         correction = response.content
+         token_usage = response.usage_metadata['total_tokens']
+ 
+         return correction, token_usage
 
 class LiteLLMConversation(Conversation):
     """A unified interface for multiple LLM models using LiteLLM.
@@ -1842,7 +1983,7 @@ class LiteLLMConversation(Conversation):
         self.user = None
         self.ca_model_name=model_name
         self._update_token_usage=update_token_usage
-        
+
     def get_litellm_object(self, api_key: str, model: str) -> ChatLiteLLM:
         """Get a LiteLLM object for the specified model and API key.
         
@@ -1867,7 +2008,7 @@ class LiteLLMConversation(Conversation):
         """
         if api_key is None:
             raise ValueError("API key must not be None")
-        
+
         try:
             max_tokens=self.get_model_max_tokens(model)
         except:
@@ -1878,7 +2019,7 @@ class LiteLLMConversation(Conversation):
             "max_token": max_tokens,
             "model_name": model
         }
-        
+
         if self.model_name.startswith("gpt-"):
             api_key_kwarg= "openai_api_key"
         elif self.model_name.startswith("claude-"):
@@ -1890,11 +2031,11 @@ class LiteLLMConversation(Conversation):
             api_key_kwarg= "api_key"
         else:
             api_key_kwarg= "api_key"
-            
+
         kwargs[api_key_kwarg]= api_key
         try:
             return ChatLiteLLM(**kwargs)
-        
+
         except (litellm.exceptions.AuthenticationError,
                 litellm.exceptions.InvalidRequestError,
                 litellm.exceptions.RateLimitError,
@@ -1906,7 +2047,7 @@ class LiteLLMConversation(Conversation):
             raise api_setup_error
         except Exception as e:
             raise e        
-        
+
     def set_api_key(self, api_key: str, user: Union[str, None] = None) -> bool:
         """Set the API key for the LLM provider.
         
@@ -1925,10 +2066,10 @@ class LiteLLMConversation(Conversation):
         try:
             if self.model_name is None:
                 raise ValueError("Primary Model name is not set.")
-            
+
             if self.ca_model_name is None:
                 raise ValueError("Correction Model name is not set.")
-            
+
             self.chat=self.get_litellm_object(api_key,self.model_name)
             if self.chat is None:
                 raise TypeError("Failed to intialize primary agent chat object.")
@@ -1936,7 +2077,7 @@ class LiteLLMConversation(Conversation):
             self.ca_chat=self.get_litellm_object(api_key,self.ca_model_name)
             if self.ca_chat is None:
                 raise TypeError("Failed to intialize correcting agent chat object.")
-            
+
             self.user=user
             if user == "community":
                 self.usage_stats = get_stats(user=user)
@@ -1950,7 +2091,7 @@ class LiteLLMConversation(Conversation):
             self.chat = None
             self.ca_chat = None
             return False
-    
+
     def json_serializable(self,obj):
         """Convert non-serializable objects to serializable format."""
         if obj is None:
@@ -1963,31 +2104,31 @@ class LiteLLMConversation(Conversation):
             return str(obj)
         except:
             return repr(obj)
-        
+
     def parse_llm_response(self,response) -> dict | None:
         """Parse the response from the LLM."""
         try:
             full_json = json.loads(json.dumps(response, default=self.json_serializable))
-            
+
             if not full_json.get('generations'):
                 return None
-                
+
             generations = full_json['generations']
             if not generations or not generations[0]:
                 return None
-                
+
             first_generation = generations[0][0]
             if not first_generation or not first_generation.get('message'):
                 return None
-                
+
             message = first_generation['message']
             if not message.get('response_metadata'):
                 return None
-                
+
             response_metadata = message['response_metadata']
             if not response_metadata.get('token_usage'):
                 return None
-                
+
             return response_metadata['token_usage']
 
         except (KeyError, IndexError, TypeError, json.JSONDecodeError) as e:
@@ -2029,7 +2170,7 @@ class LiteLLMConversation(Conversation):
             return e, None
         except Exception as e:
             return e, None
-        
+
         msg = response.generations[0][0].text
         token_usage = self.parse_llm_response(response)
 
@@ -2038,7 +2179,7 @@ class LiteLLMConversation(Conversation):
         self._update_usage_stats(self.model_name,token_usage)
 
         return msg, token_usage
-    
+
     def _correct_response(self, msg: str) -> str:
         """Correct the response from the LLM.
         
@@ -2085,19 +2226,19 @@ class LiteLLMConversation(Conversation):
 
         if self._update_token_usage is not None:
             self._update_token_usage(self.user, model, token_usage)    
-    
+
     def get_all_model_list(self) -> list:
         """Get a list of all available models."""
         return litellm.model_list
-    
+
     def get_models_by_provider(self):
         """Get a dictionary of models grouped by their provider."""
         return litellm.models_by_provider
-    
+
     def get_all_model_info(self) -> dict:
         """Get information about all available models."""
         return litellm.model_cost
-    
+
     def get_model_info(self, model: str) -> dict:
         """Get information about a specific model.
         
