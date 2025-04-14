@@ -55,6 +55,14 @@ class DummyConversation(Conversation):
         pass
 
 
+class ToolForFormat:
+    def __init__(self, name, description, tool_call_schema, args):
+        self.name = name
+        self.description = description
+        self.tool_call_schema = tool_call_schema
+        self.args = args
+
+
 @pytest.fixture
 def mock_tools():
     tool1 = MockTool("tool1", result="result1")
@@ -119,7 +127,7 @@ def test_invalid_mode(dummy_conv, mock_tools):
 
 def test_auto_mode_explain_tool_result_success(dummy_conv, mock_tools):
     # Patch chat.invoke to return a mock with .content
-    dummy_conv.chat.invoke.return_value = MagicMock(content='This is an interpretation.')
+    dummy_conv.chat.invoke.return_value = MagicMock(content="This is an interpretation.")
     tool_calls = [
         {"name": "tool1", "args": {"x": 1}, "id": "id1"},
     ]
@@ -127,9 +135,7 @@ def test_auto_mode_explain_tool_result_success(dummy_conv, mock_tools):
     assert "Tool call (tool1) result: result1" in msg
     assert "Tool result interpretation: This is an interpretation." in msg
     # Should append the interpretation as an AI message
-    assert any(
-        isinstance(m, AIMessage) and "This is an interpretation." in m.content for m in dummy_conv.messages
-    )
+    assert any(isinstance(m, AIMessage) and "This is an interpretation." in m.content for m in dummy_conv.messages)
 
 
 def test_auto_mode_explain_tool_result_exception(dummy_conv, mock_tools):
@@ -142,3 +148,115 @@ def test_auto_mode_explain_tool_result_exception(dummy_conv, mock_tools):
     assert "Error executing tool tool3" in msg
     # chat.invoke should not be called
     dummy_conv.chat.invoke.assert_not_called()
+
+
+def test_tool_formatter_non_mcp(dummy_conv):
+    tools = [
+        ToolForFormat(
+            name="toolA",
+            description="descA",
+            tool_call_schema="schemaA",
+            args="argsA",
+        ),
+        ToolForFormat(
+            name="toolB",
+            description="descB",
+            tool_call_schema="schemaB",
+            args="argsB",
+        ),
+    ]
+    formatted = dummy_conv._tool_formatter(tools, mcp=False)
+    assert "<tool_0>" in formatted
+    assert "Tool name: toolA" in formatted
+    assert "Tool description: descA" in formatted
+    assert "Tool call schema:\n argsA" in formatted
+    assert "<tool_1>" in formatted
+    assert "Tool name: toolB" in formatted
+    assert "Tool description: descB" in formatted
+    assert "Tool call schema:\n argsB" in formatted
+
+
+def test_tool_formatter_mcp(dummy_conv):
+    tools = [
+        ToolForFormat(
+            name="toolA",
+            description="descA",
+            tool_call_schema="schemaA",
+            args="argsA",
+        )
+    ]
+    formatted = dummy_conv._tool_formatter(tools, mcp=True)
+    assert "Tool call schema:\n schemaA" in formatted
+    assert "argsA" not in formatted  # Should use tool_call_schema, not args
+
+
+def test_create_tool_prompt(dummy_conv):
+    # Add a user message to messages, as _create_tool_prompt expects it
+    dummy_conv.messages.append(MagicMock(content="What is the capital of France?"))
+    tools = [
+        ToolForFormat(
+            name="toolA",
+            description="descA",
+            tool_call_schema="schemaA",
+            args="argsA",
+        )
+    ]
+    prompt_msg = dummy_conv._create_tool_prompt(tools, additional_instructions="Extra instructions", mcp=False)
+    # prompt_msg is a SystemMessage or similar with .content
+    content = prompt_msg.content if hasattr(prompt_msg, "content") else str(prompt_msg)
+    assert "What is the capital of France?" in content
+    assert "Tool name: toolA" in content
+    assert "Tool description: descA" in content
+    assert "Tool call schema:" in content
+    assert "Extra instructions" in content
+
+
+def test_porcess_manual_tool_call_non_mcp(dummy_conv):
+    tool = MockTool("tool1", result="sync_result")
+    tool.description = "desc"
+    tool.tool_call_schema = "schema"
+    tool.args = "args"
+    tool_call = {"tool_name": "tool1", "param": 42}
+    msg = dummy_conv._porcess_manual_tool_call(tool_call.copy(), [tool], explain_tool_result=False)
+    assert "Tool: tool1" in msg
+    assert "Arguments: {'param': 42}" in msg
+    assert "Tool result: sync_result" in msg
+    tool.invoke.assert_called_once_with({"param": 42})
+    tool.ainvoke.assert_not_called()
+
+
+def test_porcess_manual_tool_call_mcp(dummy_conv, monkeypatch):
+    dummy_conv.mcp = True
+    tool = MockTool("tool1", result="async_result")
+    tool.description = "desc"
+    tool.tool_call_schema = "schema"
+    tool.args = "args"
+    tool_call = {"tool_name": "tool1", "param": 99}
+
+    # Patch asyncio.get_running_loop and run_until_complete
+    class DummyLoop:
+        def run_until_complete(self, coro):
+            # Actually run the coroutine
+            import asyncio
+
+            return asyncio.get_event_loop().run_until_complete(coro)
+
+    monkeypatch.setattr("asyncio.get_running_loop", lambda: DummyLoop())
+    msg = dummy_conv._porcess_manual_tool_call(tool_call.copy(), [tool], explain_tool_result=False)
+    assert "Tool: tool1" in msg
+    assert "Arguments: {'param': 99}" in msg
+    assert "Tool result: async_result" in msg
+    tool.ainvoke.assert_called_once_with({"param": 99})
+    tool.invoke.assert_not_called()
+
+
+def test_porcess_manual_tool_call_explain_tool_result(dummy_conv):
+    tool = MockTool("tool1", result="sync_result")
+    tool.description = "desc"
+    tool.tool_call_schema = "schema"
+    tool.args = "args"
+    tool_call = {"tool_name": "tool1", "param": 42}
+    dummy_conv.chat.invoke.return_value = MagicMock(content="Interpreted result.")
+    msg = dummy_conv._porcess_manual_tool_call(tool_call.copy(), [tool], explain_tool_result=True)
+    assert "Tool result interpretation: Interpreted result." in msg
+    assert any("Interpreted result." in m.content for m in dummy_conv.messages if hasattr(m, "content"))
