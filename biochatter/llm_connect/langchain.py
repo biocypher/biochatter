@@ -118,6 +118,8 @@ class LangChainConversation(Conversation):
             self.tools_prompt = self._create_tool_prompt(available_tools)
             self.messages[-1] = self.tools_prompt
             chat = self.chat
+        elif len(available_tools) == 0:
+            chat = self.chat
 
         try:
             response = chat.invoke(self.messages)
