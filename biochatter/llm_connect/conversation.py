@@ -483,49 +483,6 @@ class Conversation(ABC):
     def _correct_response(self, msg: str) -> str:
         """Correct the response."""
 
-    async def _async_porcess_manual_tool_call(
-        self, tool_call: list[dict], available_tools: list[Callable], explain_tool_result: bool = False
-    ) -> str:
-        """Process manual tool calls from the model response.
-
-        This method handles the processing of tool calls for models that don't natively
-        support tool calling. It takes the parsed JSON response and executes the
-        appropriate tool.
-
-        Args:
-        ----
-            tool_call (list[dict]): The parsed tool call information from the model response.
-            available_tools (list[Callable]): The tools available for execution.
-            explain_tool_result (bool): Whether to explain the tool result.
-
-        Returns:
-        -------
-            str: The processed message containing the tool name, arguments, and result.
-
-        """
-        tool_name = tool_call["tool_name"]
-        tool_func = next((t for t in available_tools if t.name == tool_name), None)
-
-        del tool_call["tool_name"]
-
-        tool_result = await tool_func.ainvoke(tool_call)
-        msg = f"Tool: {tool_name}\nArguments: {tool_call}\nTool result: {tool_result}"
-
-        if explain_tool_result:
-            tool_result_interpretation = self.chat.invoke(
-                TOOL_RESULT_INTERPRETATION_PROMPT.format(
-                    original_question=self.last_human_prompt,
-                    tool_result=tool_result,
-                    general_instructions=GENERAL_TOOL_RESULT_INTERPRETATION_PROMPT,
-                    additional_instructions=ADDITIONAL_TOOL_RESULT_INTERPRETATION_PROMPT,
-                )
-            )
-            msg += f"\nTool result interpretation: {tool_result_interpretation.content}"
-
-        self.append_ai_message(msg)
-
-        return msg
-
     def _porcess_manual_tool_call(
         self,
         tool_call: list[dict],
@@ -552,9 +509,17 @@ class Conversation(ABC):
         tool_name = tool_call["tool_name"]
         tool_func = next((t for t in available_tools if t.name == tool_name), None)
 
+        # Remove the tool name from the tool call in order to invoke the tool
+        # This is beacause tool_name is not a valid argument for the tool
         del tool_call["tool_name"]
 
-        tool_result = tool_func.invoke(tool_call)
+        # Execute the tool based on whether we're in async context or not
+        if self.mcp:
+            loop = asyncio.get_running_loop()
+            tool_result = loop.run_until_complete(tool_func.ainvoke(tool_call))
+        else:
+            tool_result = tool_func.invoke(tool_call)
+
         msg = f"Tool: {tool_name}\nArguments: {tool_call}\nTool result: {tool_result}"
 
         if explain_tool_result:
@@ -562,8 +527,8 @@ class Conversation(ABC):
                 TOOL_RESULT_INTERPRETATION_PROMPT.format(
                     original_question=self.last_human_prompt,
                     tool_result=tool_result,
-                    general_instructions=GENERAL_TOOL_RESULT_INTERPRETATION_PROMPT,
-                    additional_instructions=ADDITIONAL_TOOL_RESULT_INTERPRETATION_PROMPT,
+                    general_instructions=self.general_instructions_tool_interpretation,
+                    additional_instructions=self.additional_instructions_tool_interpretation,
                 )
             )
             msg += f"\nTool result interpretation: {tool_result_interpretation.content}"
