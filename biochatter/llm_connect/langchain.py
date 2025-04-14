@@ -115,7 +115,10 @@ class LangChainConversation(Conversation):
         if self.model_name in TOOL_CALLING_MODELS:
             chat = self.chat.bind_tools(available_tools)
         elif self.model_name not in TOOL_CALLING_MODELS and len(available_tools) > 0:
-            self.tools_prompt = self._create_tool_prompt(available_tools)
+            self.tools_prompt = self._create_tool_prompt(
+                tools=available_tools,
+                additional_instructions=self.additional_tools_instructions,
+            )
             self.messages[-1] = self.tools_prompt
             chat = self.chat
         elif len(available_tools) == 0:

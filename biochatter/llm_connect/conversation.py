@@ -48,9 +48,9 @@ The json should only contain have as key the name of the arguments and as value 
 {tools}
 </tools>
 
-<additional_instructions>
-{additional_instructions}
-</additional_instructions>
+<additional_tools_instructions>
+{additional_tools_instructions}
+</additional_tools_instructions>
 """
 
 GENERAL_TOOL_RESULT_INTERPRETATION_PROMPT = """
@@ -107,6 +107,7 @@ class Conversation(ABC):
         tools: list[Callable] = None,
         tool_call_mode: Literal["auto", "text"] = "auto",
         mcp: bool = False,
+        additional_tools_instructions: str = None,
     ) -> None:
         super().__init__()
         self.model_name = model_name
@@ -125,6 +126,7 @@ class Conversation(ABC):
         self.tool_call_mode = tool_call_mode
         self.tools_prompt = None
         self.mcp = mcp
+        self.additional_tools_instructions = additional_tools_instructions if additional_tools_instructions else ""
 
     @property
     def chat(self):
@@ -208,6 +210,7 @@ class Conversation(ABC):
         for idx, tool in enumerate(tools):
             tools_description += f"<tool_{idx}>\n"
             tools_description += f"Tool name: {tool.name}\n"
+            tools_description += f"Tool description: {tool.description}\n"
             if mcp:
                 tools_description += f"Tool call schema:\n {tool.tool_call_schema}\n"
             else:
@@ -371,6 +374,7 @@ class Conversation(ABC):
         image_url: str | None = None,
         tools: list[Callable] | None = None,
         explain_tool_result: bool = False,
+        additional_tools_instructions: str | None = None,
         general_instructions_tool_interpretation: str | None = None,
         additional_instructions_tool_interpretation: str | None = None,
         mcp: bool = False,
@@ -391,6 +395,9 @@ class Conversation(ABC):
             tools (list[Callable]): The tools to use for the query.
 
             explain_tool_result (bool): Whether to explain the tool result.
+
+            additional_instructions (str): The additional instructions for the query.
+                Mainly used for tools that do not support tool calling.
 
             general_instructions_tool_interpretation (str): The general
                 instructions for the tool interpretation.
@@ -413,6 +420,10 @@ class Conversation(ABC):
 
         # save the last human prompt that may be used for answer enhancement
         self.last_human_prompt = text
+
+        # if additional_tools_instructions are provided, save them
+        if additional_tools_instructions:
+            self.additional_tools_instructions = additional_tools_instructions
 
         # override the default prompts if other provided
         self.general_instructions_tool_interpretation = (
