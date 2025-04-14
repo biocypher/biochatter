@@ -85,13 +85,13 @@ class LangChainConversation(Conversation):
 
         try:
             self.chat = init_chat_model(
-                model=f"{self.model_provider}:{self.model_name}",
-                # provider=self.model_provider,
+                model=self.model_name,
+                model_provider=self.model_provider,
                 temperature=0,
             )
             self.ca_chat = init_chat_model(
-                model=f"{self.model_provider}:{self.model_name}",
-                # provider=self.model_provider,
+                model=self.model_name,
+                model_provider=self.model_provider,
                 temperature=0,
             )
 
