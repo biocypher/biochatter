@@ -300,6 +300,61 @@ async with stdio_client(server_params) as (read, write):
 ## Tool calling for non-native models
 
 For models that do not natively support tool calling, BioChatter provides
-a simple workaround. The tool call is parameterized within the prompt, and the tool
-is then invoked via the API. This approach ensures that you can still use tools even if
-the selected model lacks native tool-calling functionality.
+a simple workaround by automatically generating a prompt that leverages tools
+signatures and descriptions describing to the model how to use the tools.
+
+The interface for calling the tool is the same as in the native case and works
+also for MCP tools. Sometimes, it might be necessary to provide additional information
+to the model in the prompt to help it correctly use the tools. This can be done in
+two ways:
+
+#### 1. by providing additional instructions in the class constructor
+
+```python
+#initialize the conversation
+convo = LangChainConversation(
+    model_provider="ollama", 
+    model_name="gemma3:27b",
+    prompts={},
+    tools=#[your tool list here],
+    additional_tools_instructions="...Here your additional instructions..."
+)
+
+#set the API key
+convo.set_api_key()
+
+#define the question
+question = "...Here your question..."
+
+#run the conversation
+convo.query(question,)
+```
+
+#### 2. by providing additional instructions in the `query` method
+
+```python
+#initialize the conversation
+convo = LangChainConversation(
+    model_provider="ollama", 
+    model_name="gemma3:27b",
+    prompts={},
+    tools=#[your tool list here]
+)
+
+#set the API key
+convo.set_api_key()
+
+#define the question
+question = "...Here your question..."
+
+#run the conversation
+convo.query(question,additional_tools_instructions="...Here your additional instructions...")
+```
+
+Note that by specifying additional instructions in the `query` method you will override
+any instructions provided in the class constructor. 
+
+
+**Remark:** Given that this is a simple workaround, sometimes it might not be sufficient to add
+additional instructions in the prompt to get the model to correctly use the tools. In this case,
+we suggest to look at [Ad Hoc API calling](api.md) as a more robust solution.
