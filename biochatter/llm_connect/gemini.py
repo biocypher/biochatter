@@ -152,14 +152,16 @@ class GeminiConversation(Conversation):
 
         """
         ca_messages = self.ca_messages.copy()
-        ca_messages.append(
-            HumanMessage(
-                content=msg,
-            ),
-        )
+
         ca_messages.append(
             SystemMessage(
                 content="If there is nothing to correct, please respond with just 'OK', and nothing else!",
+            ),
+        )
+
+        ca_messages.append(
+            HumanMessage(
+                content=msg,
             ),
         )
 
