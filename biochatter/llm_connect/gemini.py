@@ -168,4 +168,4 @@ class GeminiConversation(Conversation):
         correction = response.content
         token_usage = response.usage_metadata["total_tokens"]
 
-        return correction, token_usage
+        return correction
