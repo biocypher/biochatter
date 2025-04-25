@@ -254,6 +254,7 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 from langchain_mcp_adapters.tools import load_mcp_tools
 from pathlib import Path
+import sys
 
 #patch event loop if running in a notebook
 if 'ipykernel' in sys.modules:
