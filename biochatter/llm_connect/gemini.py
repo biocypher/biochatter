@@ -4,8 +4,9 @@ from typing import Literal
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-from biochatter.llm_connect.conversation import Conversation
 from biochatter.llm_connect.available_models import TOOL_CALLING_MODELS
+from biochatter.llm_connect.conversation import Conversation
+
 
 class GeminiConversation(Conversation):
     """Conversation class for the Google Gemini model."""
