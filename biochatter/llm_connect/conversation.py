@@ -10,6 +10,7 @@ import json
 import logging
 import urllib.parse
 from abc import ABC, abstractmethod
+from collections import deque
 from collections.abc import Callable
 from typing import Literal
 
@@ -118,6 +119,7 @@ class Conversation(ABC):
         self.history = []
         self.messages = []
         self.ca_messages = []
+        self.tool_calls = deque()
         self.current_statements = []
         self._use_ragagent_selector = use_ragagent_selector
         self._chat = None
@@ -231,7 +233,7 @@ class Conversation(ABC):
         )
         return new_message.messages[0]
 
-    def bind_tools(self, tools: list[Callable], additional_instructions: str = None) -> None:
+    def bind_tools(self, tools: list[Callable]) -> None:
         """Bind tools to the chat."""
         # Check if the model supports tool calling
         # (exploit the enum class in available_models.py)
@@ -378,6 +380,7 @@ class Conversation(ABC):
         general_instructions_tool_interpretation: str | None = None,
         additional_instructions_tool_interpretation: str | None = None,
         mcp: bool = False,
+        return_tool_calls_as_ai_message: bool = False,
     ) -> tuple[str, dict | None, str | None]:
         """Query the LLM API using the user's query.
 
@@ -408,6 +411,8 @@ class Conversation(ABC):
                 Overrides the default prompt in `ADDITIONAL_TOOL_RESULT_INTERPRETATION_PROMPT`.
 
             mcp (bool): If you want to use MCP mode, this should be set to True.
+
+            return_tool_calls_as_ai_message (bool): If you want to return the tool calls as an AI message, this should be set to True.
 
         Returns:
         -------
@@ -444,7 +449,7 @@ class Conversation(ABC):
         self._inject_context(text)
 
         # tools passed at this step are used only for this message
-        msg, token_usage = self._primary_query(tools, explain_tool_result)
+        msg, token_usage = self._primary_query(tools, explain_tool_result, return_tool_calls_as_ai_message)
 
         if not token_usage:
             # indicates error
@@ -554,6 +559,7 @@ class Conversation(ABC):
         available_tools: list[Callable],
         response_content: str,
         explain_tool_result: bool = False,
+        return_tool_calls_as_ai_message: bool = False,
     ) -> str:
         """Process tool calls from the model response.
 
@@ -567,6 +573,7 @@ class Conversation(ABC):
             response_content: The text content of the response (used as fallback).
             available_tools: The tools available in the chat.
             explain_tool_result (bool): Whether to explain the tool result.
+            return_tool_calls_as_ai_message (bool): If you want to return the tool calls as an AI message, this should be set to True.
 
         Returns:
         -------
@@ -597,9 +604,13 @@ class Conversation(ABC):
                         else:
                             tool_result = tool_func.invoke(tool_args)
                         # Add the tool result to the conversation
-                        self.messages.append(
-                            ToolMessage(content=str(tool_result), name=tool_name, tool_call_id=tool_call_id)
-                        )
+                        if return_tool_calls_as_ai_message:
+                            self.append_ai_message(f"Tool call ({tool_name}) \nResult: {tool_result!s}")
+                            self.tool_calls.append({"name": tool_name, "args": tool_args, "id": tool_call_id})
+                        else:
+                            self.messages.append(
+                                ToolMessage(content=str(tool_result), name=tool_name, tool_call_id=tool_call_id)
+                            )
 
                         if idx > 0:
                             msg += "\n"

@@ -106,7 +106,7 @@ class LangChainConversation(Conversation):
             self._ca_chat = None
             return False
 
-    def _primary_query(self, tools: list[Callable] | None = None, explain_tool_result: bool = False) -> tuple:
+    def _primary_query(self, tools: list[Callable] | None = None, explain_tool_result: bool = False, return_tool_calls_as_ai_message: bool = False) -> tuple:
         """Run the primary query in sync mode."""
         starting_tools = self.tools if self.tools else []
         in_chat_tools = tools if tools else []
@@ -136,6 +136,7 @@ class LangChainConversation(Conversation):
                 available_tools=available_tools,
                 response_content=response.content,
                 explain_tool_result=explain_tool_result,
+                return_tool_calls_as_ai_message=return_tool_calls_as_ai_message,
             )
         # case where the model does not support tool calling and we need manual processing
         elif self.model_name not in TOOL_CALLING_MODELS and self.tools_prompt:
