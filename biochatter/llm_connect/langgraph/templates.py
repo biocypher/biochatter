@@ -32,17 +32,18 @@ ACTOR_SYSTEM_PROMPT = (
     "Current time: {time}\n\n"
     "1. {first_instruction}\n"
     "2. Reflect and critique your answer. Be severe to maximize improvement.\n"
-    "3. After the reflection, **list 1-3 search queries on pubmed separately** for researching improvements. "
+    "3. After the reflection, **list 1-3 thoughts that can be addresed with the available tools** for researching improvements. "
     "Do not include them inside the reflection.\n"
+    "\n<available_tools>\n{tools_description}\n</available_tools>\n"
 )
 
-def get_actor_prompt_template(first_instruction: str) -> ChatPromptTemplate:
+def get_actor_prompt_template(first_instruction: str, tools_description: str) -> ChatPromptTemplate:
     """Return a ChatPromptTemplate for the actor agent with a given instruction."""
     return ChatPromptTemplate.from_messages(
         [
             (
                 "system",
-                ACTOR_SYSTEM_PROMPT.format(first_instruction=first_instruction, time="{time}"),
+                ACTOR_SYSTEM_PROMPT.format(first_instruction=first_instruction, time="{time}", tools_description=tools_description),
             ),
             MessagesPlaceholder(variable_name="messages"),
             ("system", "Answer the user's question above using the required format."),
@@ -68,10 +69,6 @@ TOOL_FORMULATOR_PROMPT: ChatPromptTemplate = ChatPromptTemplate.from_messages(
 
 # === Pre-configured Templates ===
 
-FIRST_RESPONDER_PROMPT_TEMPLATE: ChatPromptTemplate = get_actor_prompt_template(FIRST_INSTRUCTION)
-REVISOR_PROMPT_TEMPLATE: ChatPromptTemplate = get_actor_prompt_template(REVISE_INSTRUCTIONS)
-
-
 # === Pydantic Models ===
 
 class Reflection(BaseModel):
@@ -81,6 +78,9 @@ class Reflection(BaseModel):
 class AnswerQuestion(BaseModel):
     """Answer the question."""
 
+    tool_plan: str = Field(
+        description="A plan for using the available tools to answer the question. If you need to use multiple tools, list them in the order you will use them"
+    )
     answer: str = Field(
         description="A detailed answer to the question (don't surpass 4000 words)")
     search_queries: list[str] = Field(
@@ -89,9 +89,9 @@ class AnswerQuestion(BaseModel):
     reflection: Reflection = Field(
         description="Your reflection on the initial answer.")
 
-class ReviseAnswer(AnswerQuestion):
-    """Revise your original answer to your question."""
+#class ReviseAnswer(AnswerQuestion):
+#    """Revise your original answer to your question."""
 
-    references: list[str] = Field(
-        description="Citations motivating your updated answer."
-    )
+#    references: list[str] = Field(
+#        description="Citations motivating your updated answer. Use citations only when citing from queried resources through tools."
+#    )
