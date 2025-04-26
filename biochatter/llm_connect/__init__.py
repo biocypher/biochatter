@@ -5,6 +5,7 @@ from biochatter.llm_connect.azure import AzureGptConversation
 from biochatter.llm_connect.conversation import Conversation
 from biochatter.llm_connect.gemini import GeminiConversation
 from biochatter.llm_connect.langchain import LangChainConversation
+from biochatter.llm_connect.langgraph import LangGraphConversation
 from biochatter.llm_connect.misc import BloomConversation, WasmConversation
 from biochatter.llm_connect.ollama import OllamaConversation
 from biochatter.llm_connect.openai import GptConversation
@@ -18,6 +19,7 @@ __all__ = [
     "GeminiConversation",
     "GptConversation",
     "LangChainConversation",
+    "LangGraphConversation",
     "OllamaConversation",
     "WasmConversation",
     "XinferenceConversation",
