@@ -244,7 +244,7 @@ def _expand_longevity_test_cases(data_dict: dict) -> dict:
             new_case["input"]["prompt"] = " ".join(str(v) for v in new_case["input"]["prompt"].values())
             new_case["input"]["prompt"] = new_case["input"]["prompt"].strip()
             
-            if "rag" in new_case["case"]:
+            if "rag:" in new_case["case"]:
                 messages = rag_message_dict
             else:
                 messages = message_dict
