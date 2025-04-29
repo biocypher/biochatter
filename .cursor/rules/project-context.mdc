@@ -1,0 +1,27 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Description of the project
+BioChatter is a community-driven Python library that connects biomedical applications to conversational AI, making it easy to leverage generative AI models in the biomedical domain.
+
+# Key Features that the library is supposed to have
+Generic backend for biomedical AI applications
+Seamless integration with multiple LLM providers
+Native connection to BioCypher knowledge graphs
+Extensive testing and evaluation framework
+Living benchmark of specific biomedical applications
+
+# Recommendations
+- When you create a function always add type hints and a meaningful docstring;
+- The project will then be linted by Ruff, so keep this in mind;
+- Always try to provide modularized, clean and readable code;
+- Try to rely as much as possible on LangGraph and LangChain libraries that should help you get most of the work done;
+- If I'm adding a new feature suggest me how can i write unit tests in order to verify that it is working as intended;
+
+# Where is what
+- The main library is contained in ./biochatter
+- Tests are contained in ./test
+- Docs are contained in ./docs
