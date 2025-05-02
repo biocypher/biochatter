@@ -1,5 +1,10 @@
-"""Module defining the available models for the
-LLM connect module and their limitations
+"""Module defining the available models for the LLM connect module.
+
+This module defines the available models for the LLM connect module and their
+token limits.
+
+The models are defined as an Enum, which allows for easy lookup of the model
+token limits.
 """
 
 from enum import Enum
