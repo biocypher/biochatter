@@ -26,9 +26,9 @@ class LangChainConversation(Conversation):
     ) -> None:
         """Initialise the LangChainConversation class.
 
-        Connect to a generic LangChain model and set up a conversation with the user.
-        Also initialise a second conversational agent to provide corrections to
-        the model output, if necessary.
+        Connect to a generic LangChain model and set up a conversation with the
+        user. Also initialise a second conversational agent to provide
+        corrections to the model output, if necessary.
 
         Args:
         ----
@@ -39,7 +39,8 @@ class LangChainConversation(Conversation):
             split_correction (bool): Whether to correct the model output by
                 splitting the output into sentences and correcting each
                 sentence individually.
-            tools (list[Callable]): List of tool functions to use with the model.
+            tools (list[Callable]): List of tool functions to use with the
+                model.
             tool_call_mode (str): The mode to use for tool calls.
                 "auto": Automatically call tools.
                 "text": Only return text output of the tool call.
@@ -106,7 +107,12 @@ class LangChainConversation(Conversation):
             self._ca_chat = None
             return False
 
-    def _primary_query(self, tools: list[Callable] | None = None, explain_tool_result: bool = False, return_tool_calls_as_ai_message: bool = False) -> tuple:
+    def _primary_query(
+        self,
+        tools: list[Callable] | None = None,
+        explain_tool_result: bool = False,
+        return_tool_calls_as_ai_message: bool = False,
+    ) -> tuple:
         """Run the primary query in sync mode."""
         starting_tools = self.tools if self.tools else []
         in_chat_tools = tools if tools else []
