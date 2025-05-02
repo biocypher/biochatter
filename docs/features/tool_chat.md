@@ -2,25 +2,33 @@
 
 ## Overview
 
-In addition to [Ad Hoc API calling](api.md), BioChatter provides a framework for in-chat 
-tool calling. This lets you integrate external tools directly into conversations with
-the LLM, enabling functionality beyond the model's built-in capabilities. Typical uses include:
+In addition to [Ad Hoc API calling](api.md), BioChatter provides a framework for
+in-chat tool calling. This lets you integrate external tools directly into
+conversations with the LLM, enabling functionality beyond the model's built-in
+capabilities. Typical uses include:
 
 - Performing complex calculations  
 - Accessing external databases or APIs  
 - Executing custom scripts or code  
 
-Many commercial LLMs (e.g., OpenAI, Anthropic, Google, Mistral) support tool calling natively. 
-Through [ollama](https://ollama.com/), BioChatter also supports a variety of open-source models that are natively capable
-of tool calling (e.g. [mistral 7b](https://ollama.com/library/mistral), 
-[mistral-small3.1](https://ollama.com/library/mistral-small3.1), [qwen2.5](https://ollama.com/library/qwen2.5),
+Many commercial LLMs (e.g., OpenAI, Anthropic, Google, Mistral) support tool
+calling natively.  Through [ollama](https://ollama.com/), BioChatter also
+supports a variety of open-source models that are natively capable of tool
+calling (e.g. [mistral 7b](https://ollama.com/library/mistral), 
+[mistral-small3.1](https://ollama.com/library/mistral-small3.1),
+[qwen2.5](https://ollama.com/library/qwen2.5),
 [cogito](https://ollama.com/library/cogito)).
 
-For models without native tool calling, BioChatter provides a fallback by parameterizing the tool call in the prompt and then calling the tool via its own API. [See below](#tool-calling-for-non-native-models) for more details.
+For models without native tool calling, BioChatter provides a fallback by
+parameterizing the tool call in the prompt and then calling the tool via its own
+API. [See below](#tool-calling-for-non-native-models) for more details.
 
 ## Defining a tool
 
-BioChatter uses the [LangChain](https://python.langchain.com/docs/concepts/tools/) framework to define and manage tools. You can create a new tool by decorating a function with the `@tool` decorator, for example:
+BioChatter uses the
+[LangChain](https://python.langchain.com/docs/concepts/tools/) framework to
+define and manage tools. You can create a new tool by decorating a function with
+the `@tool` decorator, for example:
 
 ```python
 from langchain_core.tools import tool
@@ -36,11 +44,17 @@ def add(a: int, b: int) -> int:
    return a + b
 ```
 
-LangChain exposes the tool's description and signature to the model, allowing the LLM to understand and use the tool within a chat session. For more information on customizing tools, see the [LangChain documentation](https://python.langchain.com/docs/how_to/custom_tools/).
+LangChain exposes the tool's description and signature to the model, allowing
+the LLM to understand and use the tool within a chat session. For more
+information on customizing tools, see the [LangChain
+documentation](https://python.langchain.com/docs/how_to/custom_tools/).
 
 ## Passing a tool to the Chat
 
-BioChatter’s `LangChainConversation` class implements in-chat tool calling. Internally, it uses LangChain’s `init_chat_model` function (see [documentation](https://python.langchain.com/api_reference/langchain/chat_models/langchain.chat_models.base.init_chat_model.html)), allowing a consistent interface for loading various LLM providers and models.  
+BioChatter’s `LangChainConversation` class implements in-chat tool calling.
+Internally, it uses LangChain’s `init_chat_model` function (see
+[documentation](https://python.langchain.com/api_reference/langchain/chat_models/langchain.chat_models.base.init_chat_model.html)),
+allowing a consistent interface for loading various LLM providers and models.  
 
 You can make tools available to the model in two ways:
 
@@ -106,10 +120,12 @@ Tools passed in this way are available only for **the current query**.
 
 When starting a conversation, you can specify one of two tool-calling modes:
 
-- `"auto"`: If the model returns a tool call (or multiple tool calls), the tool(s) is/are 
-  automatically executed, and the result is added to the conversation history as a `ToolMessage`.  
-- `"text"`: If the model returns a tool call, the arguments for the tool are returned as text 
-  and stored in the conversation history as an `AIMessage`.
+- `"auto"`: If the model returns a tool call (or multiple tool calls), the
+tool(s) is/are automatically executed, and the result is added to the
+conversation history as a `ToolMessage`.  
+
+- `"text"`: If the model returns a tool call, the arguments for the tool are
+returned as text and stored in the conversation history as an `AIMessage`.
 
 By default, the tool calling mode is `"auto"`.
 
@@ -133,13 +149,15 @@ convo = LangChainConversation(
 
 ## Automatic tool call interpretation
 
-BioChatter also allows you to interpret a tool’s output automatically by specifying 
-`explain_tool_result=True` when you query the model. This is particularly helpful when:
+BioChatter also allows you to interpret a tool’s output automatically by
+specifying `explain_tool_result=True` when you query the model. This is
+particularly helpful when:
 
 - The tool call returns large or complex data that you want summarized.
 - The tool provides context (e.g., RAG) that should inform the final answer.
 
-For example, consider the following tool that performs enrichment analysis on a list of genes:
+For example, consider the following tool that performs enrichment analysis on a
+list of genes:
 
 ```python
 #import the needed libraries
@@ -174,7 +192,8 @@ def enrichr_query(gene_list: list[str]):
     return df_results
 ```
 
-After defining the tool, you can enable automatic interpretation in the conversation:
+After defining the tool, you can enable automatic interpretation in the
+conversation:
 
 ```python
 #initialize the conversation
@@ -197,7 +216,9 @@ convo.query(question, tools=[enrichr_query], explain_tool_result=True)
 print(convo.messages[-1].content)
 ```
 
-By default, the model attempts to interpret any tool output it receives when you set `explain_tool_result=True`. You can further customize its interpretation by passing dedicated prompts through the `query` method:
+By default, the model attempts to interpret any tool output it receives when you
+set `explain_tool_result=True`. You can further customize its interpretation by
+passing dedicated prompts through the `query` method:
 
 ```python
 general_instructions_tool_interpretation = "Your tool interpretation here..."
@@ -213,7 +234,8 @@ convo.query(
 )
 ```
 
-If you wish to inspect the defaults for these prompts, you can print them from the conversation object:
+If you wish to inspect the defaults for these prompts, you can print them from
+the conversation object:
 
 ```python
 print(convo.general_instructions_tool_interpretation)
@@ -222,7 +244,10 @@ print(convo.additional_instructions_tool_interpretation)
 
 ## MCP tools
 
-BioChatter supports the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction) for tool calling through the `langchain_mcp_adapters` library. Below is a simple example of defining an MCP server and integrating its tools into your chat.
+BioChatter supports the [Model Context Protocol
+(MCP)](https://modelcontextprotocol.io/introduction) for tool calling through
+the `langchain_mcp_adapters` library. Below is a simple example of defining an
+MCP server and integrating its tools into your chat.
 
 First, define the MCP server using the `FastMCP` class:
 
@@ -246,7 +271,9 @@ if __name__ == "__main__":
     mcp.run(transport="stdio")
 ```
 
-Next, run the MCP server and provide the tools to the model. This involves asynchronous operations, so the code uses `async with` statements and `await` keywords:
+Next, run the MCP server and provide the tools to the model. This involves
+asynchronous operations, so the code uses `async with` statements and `await`
+keywords:
 
 ```python
 # import the needed libraries
@@ -300,14 +327,14 @@ async with stdio_client(server_params) as (read, write):
 
 ## Tool calling for non-native models
 
-For models that do not natively support tool calling, BioChatter provides
-a simple workaround by automatically generating a prompt that leverages tools
+For models that do not natively support tool calling, BioChatter provides a
+simple workaround by automatically generating a prompt that leverages tools
 signatures and descriptions describing to the model how to use the tools.
 
 The interface for calling the tool is the same as in the native case and works
-also for MCP tools. Sometimes, it might be necessary to provide additional information
-to the model in the prompt to help it correctly use the tools. This can be done in
-two ways:
+also for MCP tools. Sometimes, it might be necessary to provide additional
+information to the model in the prompt to help it correctly use the tools. This
+can be done in two ways:
 
 #### 1. by providing additional instructions in the class constructor
 
@@ -351,11 +378,10 @@ question = "...Here your question..."
 #run the conversation
 convo.query(question,additional_tools_instructions="...Here your additional instructions...")
 ```
+Note that by specifying additional instructions in the `query` method you will
+override any instructions provided in the class constructor. 
 
-Note that by specifying additional instructions in the `query` method you will override
-any instructions provided in the class constructor. 
-
-
-**Remark:** Given that this is a simple workaround, sometimes it might not be sufficient to add
-additional instructions in the prompt to get the model to correctly use the tools. In this case,
-we suggest to look at [Ad Hoc API calling](api.md) as a more robust solution.
+**Remark:** Given that this is a simple workaround, sometimes it might not be
+sufficient to add additional instructions in the prompt to get the model to
+correctly use the tools. In this case, we suggest to look at [Ad Hoc API
+calling](api.md) as a more robust solution.
