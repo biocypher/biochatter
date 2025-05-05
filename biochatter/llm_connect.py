@@ -94,8 +94,6 @@ class Conversation(ABC):
         self._ca_chat = None
 
     @property
-<<<<<<< HEAD
-=======
     def chat(self):
         """Access the chat attribute with error handling."""
         if self._chat is None:
@@ -124,7 +122,6 @@ class Conversation(ABC):
         self._ca_chat = value
 
     @property
->>>>>>> 227871c9fe3f6144ee44891e55c6d9874531670e
     def use_ragagent_selector(self) -> bool:
         """Whether to use the ragagent selector."""
         return self._use_ragagent_selector
@@ -469,11 +466,6 @@ class Conversation(ABC):
 
     def get_msg_json(self) -> str:
         """Return a JSON representation of the conversation.
-<<<<<<< HEAD
- 
-=======
-
->>>>>>> 227871c9fe3f6144ee44891e55c6d9874531670e
         Returns a list of dicts of the messages in the conversation in JSON
         format. The keys of the dicts are the roles, the values are the
         messages.
@@ -1217,19 +1209,11 @@ class AnthropicConversation(Conversation):
         self.ca_model_name = "claude-3-5-sonnet-20240620"
         # TODO make accessible by drop-down
 
-<<<<<<< HEAD
-    def set_api_key(self, api_key: str, user: str) -> bool:
-        """Set the API key for the Anthropic API.
-
-        If the key is valid, initialise the conversational agent. Set the user
-        for usage statistics.
-=======
     def set_api_key(self, api_key: str, user: str | None = None) -> bool:
         """Set the API key for the Anthropic API.
 
         If the key is valid, initialise the conversational agent. Optionally set
         the user for usage statistics.
->>>>>>> 227871c9fe3f6144ee44891e55c6d9874531670e
 
         Args:
         ----
@@ -1471,19 +1455,11 @@ class GptConversation(Conversation):
 
         self._update_token_usage = update_token_usage
 
-<<<<<<< HEAD
-    def set_api_key(self, api_key: str, user: str) -> bool:
-        """Set the API key for the OpenAI API.
-
-        If the key is valid, initialise the conversational agent. Set the user
-        for usage statistics.
-=======
     def set_api_key(self, api_key: str, user: str | None = None) -> bool:
         """Set the API key for the OpenAI API.
 
         If the key is valid, initialise the conversational agent. Optionally set
         the user for usage statistics.
->>>>>>> 227871c9fe3f6144ee44891e55c6d9874531670e
 
         Args:
         ----
@@ -1682,11 +1658,7 @@ class AzureGptConversation(GptConversation):
         self.base_url = base_url
         self.deployment_name = deployment_name
 
-<<<<<<< HEAD
-    def set_api_key(self, api_key: str, user: str = "Azure Community") -> bool:
-=======
     def set_api_key(self, api_key: str, user: str | None = None) -> bool:
->>>>>>> 227871c9fe3f6144ee44891e55c6d9874531670e
         """Set the API key for the Azure API.
 
         If the key is valid, initialise the conversational agent. No user stats
@@ -1696,11 +1668,7 @@ class AzureGptConversation(GptConversation):
         ----
             api_key (str): The API key for the Azure API.
 
-<<<<<<< HEAD
-            user (str): The user for usage statistics.
-=======
             user (str, optional): The user for usage statistics.
->>>>>>> 227871c9fe3f6144ee44891e55c6d9874531670e
 
         Returns:
         -------
@@ -1726,11 +1694,7 @@ class AzureGptConversation(GptConversation):
             )
 
             self.chat.generate([[HumanMessage(content="Hello")]])
-<<<<<<< HEAD
-            self.user = user
-=======
             self.user = user if user is not None else "Azure Community"
->>>>>>> 227871c9fe3f6144ee44891e55c6d9874531670e
 
             return True
 
