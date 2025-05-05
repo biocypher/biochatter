@@ -127,12 +127,16 @@ class DocumentEmbedder:
 
     def _set_embeddings(
         self,
+<<<<<<< HEAD
         embeddings: (
             OpenAIEmbeddings
             | XinferenceEmbeddings
             | OllamaEmbeddings
             | AzureOpenAIEmbeddings
         ),
+=======
+        embeddings: (OpenAIEmbeddings | XinferenceEmbeddings | OllamaEmbeddings | AzureOpenAIEmbeddings),
+>>>>>>> 227871c9fe3f6144ee44891e55c6d9874531670e
     ) -> None:
         print("setting embedder")
         self.embeddings = embeddings
@@ -194,11 +198,19 @@ class DocumentEmbedder:
         """Save a list of documents to the vector database.
 
         Args:
+<<<<<<< HEAD
+=======
+        ----
+>>>>>>> 227871c9fe3f6144ee44891e55c6d9874531670e
             doc (List[Document]): document content, read with `DocumentReader`
                 functions `load_document()`, `document_from_pdf()`, or
                 `document_from_txt()`
 
         Returns:
+<<<<<<< HEAD
+=======
+        -------
+>>>>>>> 227871c9fe3f6144ee44891e55c6d9874531670e
             str: document id, which can be used to remove an uploaded document
                 with `remove_document()`
 

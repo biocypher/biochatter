@@ -13,7 +13,11 @@ from langchain_core.pydantic_v1 import BaseModel, Field
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
 
-from .abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
+from biochatter.api_agent.base.agent_abc import (
+    BaseFetcher,
+    BaseInterpreter,
+    BaseQueryBuilder,
+)
 
 BIOTOOLS_QUERY_PROMPT = """
 You are a world class algorithm for creating queries in structured formats. Your task is to use the web API of bio.tools
@@ -520,7 +524,7 @@ class BioToolsQueryBuilder(BaseQueryBuilder):
         self,
         question: str,
         conversation: "Conversation",
-    ) -> BioToolsQueryParameters:
+    ) -> list[BioToolsQueryParameters]:
         """Generate an BioToolsQuery object.
 
         Generate a BioToolsQuery object based on the given question, prompt,
@@ -551,7 +555,7 @@ class BioToolsQueryBuilder(BaseQueryBuilder):
             },
         )
         oncokb_call_obj.question_uuid = str(uuid.uuid4())
-        return oncokb_call_obj
+        return [oncokb_call_obj]
 
 
 class BioToolsFetcher(BaseFetcher):
@@ -576,7 +580,7 @@ class BioToolsFetcher(BaseFetcher):
 
     def fetch_results(
         self,
-        request_data: BioToolsQueryParameters,
+        request_data: list[BioToolsQueryParameters],
         retries: int | None = 3,  # noqa: ARG002
     ) -> str:
         """Submit the BioTools query and fetch the results directly.
@@ -586,8 +590,8 @@ class BioToolsFetcher(BaseFetcher):
 
         Args:
         ----
-            request_data: BioToolsQuery object (Pydantic model) containing the
-                BioTools query parameters.
+            request_data: List of BioToolsQuery objects (Pydantic models)
+                containing the BioTools query parameters.
 
             retries: The number of retries to fetch the results.
 
@@ -596,8 +600,11 @@ class BioToolsFetcher(BaseFetcher):
             str: The results of the BioTools query.
 
         """
+        # For now, we only use the first query in the list
+        query = request_data[0]
+
         # Submit the query and get the URL
-        params = request_data.dict(exclude_unset=True)
+        params = query.dict(exclude_unset=True)
         endpoint = params.pop("endpoint")
         params.pop("question_uuid")
         full_url = f"{self.base_url}/{endpoint}"

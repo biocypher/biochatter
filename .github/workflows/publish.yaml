@@ -18,7 +18,7 @@ jobs:
     # needs: call-tests_and_code_quality
     runs-on: ubuntu-latest
     env:
-      PYTHON_VERSION: 3.9
+      PYTHON_VERSION: 3.11
     # environment:
     #  name: release
     #  url: https://upload.pypi.org/legacy/

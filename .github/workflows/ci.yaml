@@ -22,19 +22,21 @@ jobs:
 
       - name: Install Poetry
         run: |
-          curl -sSL https://install.python-poetry.org | python3 -
+          curl -sSL https://install.python-poetry.org | POETRY_VERSION=1.7.1 python3 -
+          
       - name: Install dependencies
-        run: |
-          poetry install
-          poetry install -E 'podcast xinference'
+        run: poetry install --all-extras
 
       - name: Run tests and generate coverage report
-        run: poetry run coverage run -m pytest test --ignore=./volumes
+        run: |
+          poetry run pytest --cov=biochatter --cov-report=xml test --ignore=./volumes
+          poetry run coverage report
         shell: bash
 
       - name: Generate coverage badge
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.base_ref == 'refs/heads/main' && github.event.pull_request.merged == true)
-        run: poetry run coverage-badge -f -o docs/coverage/coverage.svg
+        run: |
+          poetry run coverage-badge -f -o docs/coverage/coverage.svg
         shell: bash
 
       - name: Commit changes
