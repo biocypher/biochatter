@@ -1,6 +1,6 @@
 [project]
 name = "biochatter"
-version = "0.9.0"
+version = "0.9.1"
 description = "Backend library for conversational AI in biomedicine"
 authors = [
     {name = "Sebastian Lobentanzer", email = "sebastian.lobentanzer@gmail.com"},
