@@ -7910,4 +7910,4 @@ xinference = ["xinference"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.13"
-content-hash = "de6bae29a515300ffe44485b8307728a446d493e08dbeac5e6728eac5d2ac965"
+content-hash = "9b828b4b7a9b20d07dc98e14e22b6ba3721d029a577772966f7950017636099b"
