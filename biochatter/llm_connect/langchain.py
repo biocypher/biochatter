@@ -4,8 +4,9 @@ from typing import Literal
 
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, SystemMessage
+from pydantic import BaseModel
 
-from biochatter.llm_connect.available_models import TOOL_CALLING_MODELS
+from biochatter.llm_connect.available_models import STRUCTURED_OUTPUT_MODELS, TOOL_CALLING_MODELS
 from biochatter.llm_connect.conversation import Conversation
 
 
@@ -106,13 +107,44 @@ class LangChainConversation(Conversation):
             self._ca_chat = None
             return False
 
-    def _primary_query(self, tools: list[Callable] | None = None, explain_tool_result: bool = False, return_tool_calls_as_ai_message: bool = False) -> tuple:
-        """Run the primary query in sync mode."""
+    def _primary_query(
+        self,
+        tools: list[Callable] | None = None,
+        explain_tool_result: bool = False,
+        return_tool_calls_as_ai_message: bool = False,
+        structured_model: BaseModel | None = None,
+        wrap_structured_output: bool = False,
+    ) -> tuple:
+        """Run the primary query.
+
+        Args:
+        ----
+            tools (list[Callable], optional): Additional tools to use for this specific query.
+            explain_tool_result (bool, optional): Whether to explain the tool result.
+            return_tool_calls_as_ai_message (bool, optional): Whether to return tool calls as an AI message.
+            structured_model (BaseModel, optional): The structured output model to use.
+            wrap_structured_output (bool, optional): Whether to wrap the structured output in JSON quotes.
+
+        Returns:
+        -------
+            tuple: A tuple containing the response message and token usage information.
+
+        """
         starting_tools = self.tools if self.tools else []
         in_chat_tools = tools if tools else []
         available_tools = starting_tools + in_chat_tools
 
-        if self.model_name in TOOL_CALLING_MODELS:
+        if structured_model and len(available_tools) > 0:
+            raise ValueError("Structured output and tools cannot be used together at the moment.")
+
+        if self.model_name in STRUCTURED_OUTPUT_MODELS and structured_model:
+            chat = self.chat.with_structured_output(structured_model)
+        elif (
+            self.model_name in STRUCTURED_OUTPUT_MODELS and not structured_model
+        ):  # TODO: here we could hack to force the model to return a structured output
+            raise ValueError("Structured output model is required when using structured output.")
+
+        if self.model_name in TOOL_CALLING_MODELS and not structured_model:
             chat = self.chat.bind_tools(available_tools)
         elif self.model_name not in TOOL_CALLING_MODELS and len(available_tools) > 0:
             self.tools_prompt = self._create_tool_prompt(
@@ -121,7 +153,7 @@ class LangChainConversation(Conversation):
             )
             self.messages[-1] = self.tools_prompt
             chat = self.chat
-        elif len(available_tools) == 0:
+        elif len(available_tools) == 0 and not structured_model:
             chat = self.chat
 
         try:
@@ -130,7 +162,7 @@ class LangChainConversation(Conversation):
             return str(e), None
 
         # Process tool calls if present (model supports tool calling)
-        if response.tool_calls:
+        if hasattr(response, "tool_calls"):
             msg = self._process_tool_calls(
                 tool_calls=response.tool_calls,
                 available_tools=available_tools,
@@ -149,10 +181,16 @@ class LangChainConversation(Conversation):
             )
             # self.append_ai_message(msg)
         else:
-            msg = response.content
-            self.append_ai_message(msg)
+            if isinstance(response, BaseModel):
+                msg = response.model_dump_json()
+                if wrap_structured_output:
+                    msg = "```json\n" + msg + "\n```"
+                token_usage = None
 
-        token_usage = response.usage_metadata["total_tokens"]
+            else:
+                msg = response.content
+                token_usage = response.usage_metadata["total_tokens"]
+            self.append_ai_message(msg)
 
         return msg, token_usage
 
