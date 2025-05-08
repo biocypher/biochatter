@@ -221,6 +221,7 @@ def return_or_create_response_file(task: str, model: str):
                 "expected_answer",
                 "summary",
                 "key_words",
+                "type",
                 "iterations",
                 "md5_hash",
                 "datetime",
@@ -553,6 +554,7 @@ def write_responses_to_file(
     expected_answer: str,
     summary: str,
     key_words: list,
+    type: str,
     iterations: str,
     md5_hash: str,
     file_path: str,
@@ -572,7 +574,7 @@ def write_responses_to_file(
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     bc_version = importlib_metadata.version("biochatter")
     new_row = pd.DataFrame(
-        [[model_name, case_id, subtask, individual, prompt, responses, expected_answer, summary, key_words, iterations, md5_hash, now, bc_version]],
+        [[model_name, case_id, subtask, individual, prompt, responses, expected_answer, summary, key_words, type, iterations, md5_hash, now, bc_version]],
         columns=results.columns,
     )
     results = pd.concat([results, new_row], ignore_index=True).sort_values(
@@ -704,10 +706,13 @@ def return_or_create_judge_file(task: str, evaluated_model: str):
             "prompt": [],
             "system_prompt": [],
             "prompt_type": [],
-            "is_appendix": [],
+            "is_distractor": [],
+            "type": [],
             "responses": [],
             "expected_answer": [],
             "rating": [],
+            "datetime": [],
+            "biochatter_version": [],
         }
         results = pd.DataFrame(results)
         results.to_csv(path, index = False)
@@ -725,7 +730,8 @@ def write_judgement_to_file(
     prompt: str,
     system_prompt: str,
     prompt_type: str,
-    is_appendix: str,
+    is_distractor: str,
+    type_: str,
     responses: list,
     expected_answer: str,
     rating: str,
@@ -754,9 +760,12 @@ def write_judgement_to_file(
     """
 
     results = pd.read_csv(path, header = 0)
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    bc_version = importlib_metadata.version("biochatter")
     new_row = pd.DataFrame([
         [judge_model, evaluated_model, iterations, metric, case_id, subtask, individual, 
-         md5_hash, prompt, system_prompt, prompt_type, is_appendix, responses, expected_answer, rating]
+         md5_hash, prompt, system_prompt, prompt_type, is_distractor, type_, responses, expected_answer, rating,
+         now, bc_version]
     ], columns = results.columns)
 
     results = pd.concat([results, new_row], ignore_index = True).sort_values(

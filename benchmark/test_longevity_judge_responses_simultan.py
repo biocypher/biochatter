@@ -49,7 +49,7 @@ class TestLongevityResponseAndJudgement:
         # print("setup_method called")
         self.responses = []
         self.data = pd.DataFrame()
-        self.ITERATIONS = 4
+        self.ITERATIONS = 2
     
     @pytest.mark.order(1)
     def test_generate_responses(
@@ -86,7 +86,7 @@ class TestLongevityResponseAndJudgement:
         responses_run = []
         def run_test():
             conversation.reset()
-            if "rag" in test_data["case"]:
+            if "rag:" in test_data["case"]:
                 pytest.skip(
                     f"test case {test_data['case']} not supported for {task} benchmark",
                 )
@@ -96,8 +96,8 @@ class TestLongevityResponseAndJudgement:
                     for m in test_data["input"]["system_messages"]
                 ]
                 response, _, _ = conversation.query(test_data["input"]["prompt"])
+                print(response)
 
-            print(test_data["input"]["system_messages"])
             responses_run.append(response)
 
             return return_response(responses_run)
@@ -115,6 +115,7 @@ class TestLongevityResponseAndJudgement:
             test_data["expected"]["answer"][0],
             test_data["expected"]["summary"],
             test_data["expected"]["key_words"],
+            test_data["type"],
             f"{n_iterations}",
             test_data["hash"],
             get_response_mode_file_path(task, model_name),
@@ -157,13 +158,14 @@ class TestLongevityResponseAndJudgement:
         responses_run = []
         def run_test():
             conversation.reset()
-            if "rag" in test_data["case"]:
+            if test_data["case"].startswith("rag:"):
                 [
                     conversation.append_system_message(m.format(contexts = test_data["contexts"]))
                     for m in test_data["input"]["system_messages"]
                 ]
                 print(test_data["contexts"])
                 response, _, _ = conversation.query(test_data["input"]["prompt"])
+                print(response)
             else:
                 pytest.skip(
                     f"test case {test_data['case']} not supported for {task} benchmark",
@@ -186,6 +188,7 @@ class TestLongevityResponseAndJudgement:
             test_data["expected"]["answer"][0],
             test_data["expected"]["summary"],
             test_data["expected"]["key_words"],
+            test_data["type"],
             f"{n_iterations}",
             test_data["hash"],
             get_response_mode_file_path(task, model_name),
@@ -212,7 +215,7 @@ class TestLongevityResponseAndJudgement:
         
         Returns: None (judgments written to file)
         """
-        # print("test_judge_responses called")
+        print("test_judge_responses called")
         mode = "judge"
 
         if self.data.empty:
@@ -221,7 +224,7 @@ class TestLongevityResponseAndJudgement:
 
         task = f"{inspect.currentframe().f_code.co_name.replace('test_', '')}"
 
-        system_message = "As a research assistant, your task is to assess the processing of a scientific question and the transmitted answer as carried out by another LLM."
+        system_message = "As a medical assistant, your task is to assess the  answering of a health-related query by an individual, where the answering is carried out by another LLM."
         judge_conversation.append_system_message(system_message)
 
         for data in test_data["judgement"]:
@@ -235,7 +238,7 @@ class TestLongevityResponseAndJudgement:
             ):
                 print("\033[93mskipped\033[0m")
                 continue
-            print(f"\033[92m{judge_name} judges {data['model_name']} in {judge_metric}\033[0m")
+            print(f"\033[92m{judge_name} judges {data['model_name']} in {judge_metric} for {data['subtask']}\033[0m")
 
             all_time_scores = []
             for response in ast.literal_eval(data["response"]):
@@ -247,8 +250,8 @@ class TestLongevityResponseAndJudgement:
                     "response": response,
                 }
 
-                if judge_metric == "correctness":
-                    params["expected_answer"] = data["expected_answer"]
+                # if judge_metric == "correctness":
+                #     params["expected_answer"] = data["expected_answer"]
 
                 prompt, success, failure = self._format_judgment_prompt(
                     metric = judge_metric,
@@ -260,6 +263,8 @@ class TestLongevityResponseAndJudgement:
                 for iter in range(self.ITERATIONS):
                     judge_conversation.reset() 
                     judgement, _, _ = judge_conversation.query(prompt)
+                    # print(prompt)
+                    print(judgement)
                     
                     if judgement.lower().replace(".", "") == success:
                         scores.append(True)
@@ -272,7 +277,7 @@ class TestLongevityResponseAndJudgement:
                 all_time_scores = all_time_scores,
             )
             
-            _, prompt_type, is_appendix, system_prompt = data["subtask"].rsplit(":", 3)
+            _, prompt_type, is_distractor, system_prompt = data["subtask"].rsplit(":", 3)
             
             write_judgement_to_file(
                 judge_model = judge_name,
@@ -286,7 +291,8 @@ class TestLongevityResponseAndJudgement:
                 prompt = data["prompt"],
                 system_prompt = system_prompt,
                 prompt_type = prompt_type,
-                is_appendix = is_appendix,
+                is_distractor = is_distractor,
+                type_ = data["type"],
                 responses = data["response"],
                 expected_answer = data["expected_answer"],
                 rating = f"{score_string}/{1}",
@@ -312,7 +318,7 @@ class TestLongevityResponseAndJudgement:
     ) -> Dict[str, List[Dict[str, Any]]]:
         """Load responses from file if they exist"""
         files = self._list_files(path = path)
-        latest_file = [max([f"{path}/{file}" for file in files], key = os.path.getmtime)]
+        # latest_file = [max([f"{path}/{file}" for file in files], key = os.path.getmtime)]
 
         dfs = []
         for file in files: # or files if each response file should be judged

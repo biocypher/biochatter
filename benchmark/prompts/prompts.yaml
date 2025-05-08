@@ -42,9 +42,6 @@ prompts:
 
           {response}
 
-          <GROUND TRUTH>
-          {expected_answer}
-
           <EVALUATION>
           Your evaluation. correct or not correct. ANSWER ONLY WITH ONE WORD!
     comprehensiveness:

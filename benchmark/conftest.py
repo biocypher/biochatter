@@ -18,7 +18,7 @@ from .benchmark_utils import benchmark_already_executed, get_judgement_dataset
 from .load_dataset import get_benchmark_dataset
 
 # how often should each benchmark be run?
-N_ITERATIONS = 2
+N_ITERATIONS = 4
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
@@ -32,6 +32,7 @@ OPENAI_MODEL_NAMES = [
     # "gpt-4o-2024-05-13",
     # "gpt-4o-2024-08-06",
     # "gpt-4o-mini-2024-07-18",
+    # "o3-mini",
 ]
 
 GROQ_MODEL_NAMES = [
@@ -289,18 +290,19 @@ BENCHMARKED_MODELS.sort()
 BENCHMARK_URL = "http://localhost:9997"
 
 OPENAI_JUDGE = [
-    # "gpt-4o-2024-08-06",
-    "gpt-4o-mini-2024-07-18",
+    "gpt-4o-2024-11-20",
+    # "gpt-4o-mini-2024-07-18",
+    # "o3-mini",
 ]
 
 JUDGES = OPENAI_JUDGE
 
 METRICS = [
     "correctness",
-    "comprehensiveness",
-    "usefulness",
-    "interpretability_explainability",
-    "toxicity",
+    # "comprehensiveness",
+    # "usefulness",
+    # "interpretability_explainability",
+    # "toxicity",
 ]
 
 @pytest.fixture(scope="session")
@@ -670,7 +672,7 @@ def pytest_generate_tests(metafunc):
     if "test_create_longevity_responses_simultaneously" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_create_longevity_responses_simultaneously",
-            data["longevity_geriatric_case_assessment_example"],
+            data["longevity_geriatric_case_assessment"],
         )
 
 
