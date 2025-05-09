@@ -159,7 +159,7 @@ For developers who want to create a user-friendly web interface quickly:
 1. Set up debugging environment using `streamlit run app.py`
 1. Modify the app components to introduce your desired functionality (refer to the [customisation vignette](vignettes/custom-bclight-advanced.md) for more details)
 
-### Runnig via the docker image
+### Running via the docker image
 
 We provide a Docker image for BioChatter Light, and we are always happy for
 contributions. If you have an idea for a generally useful feature or panel,
