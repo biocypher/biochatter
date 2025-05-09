@@ -70,37 +70,44 @@ site_url: https://biochatter.org/
 
 nav:
   - Home: index.md
-  - Features:
-      - Home: features/index.md
-      - Basic Usage - Chat: features/chat.md
-      - Retrieval-Augmented Generation: features/rag.md
-      - API Calling: features/api.md
-      - Reflexion via LangGraph: features/reflexion-agent.md
-      - Open-source and Local LLMs: features/open-llm.md
-      - LLM in your Browser - WebAssembly: features/wasm.md
-      - The Living Benchmark: features/benchmark.md
-      - Podcast my Paper: features/podcast.md
+  - About:
+      - Project: about/project.md
+      - Design Philosophy: about/design-philosophy.md
+      - Use Cases: about/use-cases.md
+  - Get Started:
+      - Installation: installation.md
+      - Quickstart: quickstart.md
+  - Learn:
+      - Tutorials:
+          - Basic Usage - Chat: features/chat.md
+          - Multimodal Models: features/multimodal.md
+          - Retrieval-Augmented Generation: features/rag.md
+          - API Calling: features/api.md
+          - Reflexion via LangGraph: features/reflexion-agent.md
+          - Open-source and Local LLMs: features/open-llm.md
+          - The Living Benchmark: features/benchmark.md
+          - Podcast my Paper: features/podcast.md
+          - LLM in your Browser - WebAssembly: features/wasm.md
+      - HowTo / FAQ:
+          - Knowledge Graph RAG: vignettes/kg.md
+          - Retrieval-Augmented Generation (RAG): vignettes/rag.md
+          - Customising BioChatter Light - Simple: vignettes/custom-bclight-simple.md
+          - Customising BioChatter Light - Advanced: vignettes/custom-bclight-advanced.md
+          - Customising BioChatter Light and Next - Cancer Genetics Use Case: vignettes/custom-decider-use-case.md
   - Benchmark:
       - Overview: benchmark/overview.md
       - All Results: benchmark/results.md
       - Developer Guide: benchmark/developer.md
-  - Vignettes:
-      - Home: vignettes/index.md
-      - Knowledge Graph RAG: vignettes/kg.md
-      - Retrieval-Augmented Generation (RAG): vignettes/rag.md
-      - Customising BioChatter Light - Simple: vignettes/custom-bclight-simple.md
-      - Customising BioChatter Light - Advanced: vignettes/custom-bclight-advanced.md
-      - Customising BioChatter Light and Next - Cancer Genetics Use Case: vignettes/custom-decider-use-case.md
-  - API Reference:
-      - Home: api-docs/index.md
-      - LLM Connectivity: api-docs/llm_connect.md
-      - Vectorstore Agent: api-docs/vectorstore.md
-      - Knowledge Graph Agent: api-docs/kg.md
-      - "API Calling: Base Classes": api-docs/api-calling-base.md
-      - "API Calling: Web APIs": api-docs/api-calling-web.md
-      - "API Calling: Python APIs": api-docs/api-calling-python.md
-      - Reflexion Agent: api-docs/reflexion.md
-      - Podcast: api-docs/podcast.md
+  - Reference:
+      - API Documentation:
+          - LLM Connectivity: api-docs/llm_connect.md
+          - Vectorstore Agent: api-docs/vectorstore.md
+          - Knowledge Graph Agent: api-docs/kg.md
+          - "API Calling: Base Classes": api-docs/api-calling-base.md
+          - "API Calling: Web APIs": api-docs/api-calling-web.md
+          - "API Calling: Python APIs": api-docs/api-calling-python.md
+          - Reflexion Agent: api-docs/reflexion.md
+          - Podcast: api-docs/podcast.md
 
 repo_url: https://github.com/biocypher/biochatter
 repo_name: biocypher/biochatter

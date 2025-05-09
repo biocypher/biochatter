@@ -5,6 +5,11 @@ listening to any document in podcast style.  The functionality can be accessed
 through the podcast API or by running the script
 `scripts/podcast_single_document.py`.
 
+!!! note
+    This feature is currently not under active development. In particular, due
+    to the more recent involvement of large corporations in similar technologies
+    (e.g., Google's NotebookLM), we are currently not prioritising this feature.
+
 ## API access
 
 The podcast API is available through the `podcast` module.
