@@ -5,7 +5,23 @@
          <lastmod>2025-05-09</lastmod>
     </url>
     <url>
-         <loc>https://biochatter.org/api-docs/</loc>
+         <loc>https://biochatter.org/installation/</loc>
+         <lastmod>2025-05-09</lastmod>
+    </url>
+    <url>
+         <loc>https://biochatter.org/quickstart/</loc>
+         <lastmod>2025-05-09</lastmod>
+    </url>
+    <url>
+         <loc>https://biochatter.org/about/design-philosophy/</loc>
+         <lastmod>2025-05-09</lastmod>
+    </url>
+    <url>
+         <loc>https://biochatter.org/about/project/</loc>
+         <lastmod>2025-05-09</lastmod>
+    </url>
+    <url>
+         <loc>https://biochatter.org/about/use-cases/</loc>
          <lastmod>2025-05-09</lastmod>
     </url>
     <url>
@@ -53,10 +69,6 @@
          <lastmod>2025-05-09</lastmod>
     </url>
     <url>
-         <loc>https://biochatter.org/features/</loc>
-         <lastmod>2025-05-09</lastmod>
-    </url>
-    <url>
          <loc>https://biochatter.org/features/api/</loc>
          <lastmod>2025-05-09</lastmod>
     </url>
@@ -66,6 +78,10 @@
     </url>
     <url>
          <loc>https://biochatter.org/features/chat/</loc>
+         <lastmod>2025-05-09</lastmod>
+    </url>
+    <url>
+         <loc>https://biochatter.org/features/multimodal/</loc>
          <lastmod>2025-05-09</lastmod>
     </url>
     <url>
@@ -86,10 +102,6 @@
     </url>
     <url>
          <loc>https://biochatter.org/features/wasm/</loc>
-         <lastmod>2025-05-09</lastmod>
-    </url>
-    <url>
-         <loc>https://biochatter.org/vignettes/</loc>
          <lastmod>2025-05-09</lastmod>
     </url>
     <url>
