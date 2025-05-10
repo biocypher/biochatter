@@ -28,9 +28,9 @@ class LangChainConversation(Conversation):
     ) -> None:
         """Initialise the LangChainConversation class.
 
-        Connect to a generic LangChain model and set up a conversation with the user.
-        Also initialise a second conversational agent to provide corrections to
-        the model output, if necessary.
+        Connect to a generic LangChain model and set up a conversation with the
+        user. Also initialise a second conversational agent to provide
+        corrections to the model output, if necessary.
 
         Args:
         ----
@@ -41,7 +41,8 @@ class LangChainConversation(Conversation):
             split_correction (bool): Whether to correct the model output by
                 splitting the output into sentences and correcting each
                 sentence individually.
-            tools (list[Callable]): List of tool functions to use with the model.
+            tools (list[Callable]): List of tool functions to use with the
+                model.
             tool_call_mode (str): The mode to use for tool calls.
                 "auto": Automatically call tools.
                 "text": Only return text output of the tool call.
@@ -133,7 +134,7 @@ class LangChainConversation(Conversation):
         """
         token_usage = None  # Initialize token_usage
         msg = None  # Initialize msg
-
+        
         starting_tools = self.tools if self.tools else []
         in_chat_tools = tools if tools else []
         available_tools = starting_tools + in_chat_tools
@@ -145,7 +146,7 @@ class LangChainConversation(Conversation):
             chat = self.chat.with_structured_output(structured_model)
         elif (
             structured_model and self.model_name not in STRUCTURED_OUTPUT_MODELS
-        ):  # TODO: here we could hack to force the model to return a structured output
+        ):  
             # add to the end of the prompt an instruction to return a structured output
             chat = self.chat
             self.messages[-1].content = (
