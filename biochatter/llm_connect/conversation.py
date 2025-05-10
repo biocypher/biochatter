@@ -15,6 +15,7 @@ from collections.abc import Callable
 from typing import Literal
 
 import nltk
+from pydantic import BaseModel
 
 try:
     import streamlit as st
@@ -374,6 +375,8 @@ class Conversation(ABC):
         self,
         text: str,
         image_url: str | None = None,
+        structured_model: BaseModel | None = None,
+        wrap_structured_output: bool = False,
         tools: list[Callable] | None = None,
         explain_tool_result: bool = False,
         additional_tools_instructions: str | None = None,
@@ -394,6 +397,10 @@ class Conversation(ABC):
 
             image_url (str): The URL of an image to include in the conversation.
                 Optional and only supported for models with vision capabilities.
+
+            structured_model (BaseModel): The structured output model to use for the query.
+
+            wrap_structured_output (bool): Whether to wrap the structured output in JSON quotes.
 
             tools (list[Callable]): The tools to use for the query.
 
@@ -449,7 +456,13 @@ class Conversation(ABC):
         self._inject_context(text)
 
         # tools passed at this step are used only for this message
-        msg, token_usage = self._primary_query(tools, explain_tool_result, return_tool_calls_as_ai_message)
+        msg, token_usage = self._primary_query(
+            tools=tools,
+            explain_tool_result=explain_tool_result,
+            return_tool_calls_as_ai_message=return_tool_calls_as_ai_message,
+            structured_model=structured_model,
+            wrap_structured_output=wrap_structured_output,
+        )
 
         if not token_usage:
             # indicates error
@@ -499,7 +512,7 @@ class Conversation(ABC):
     def _correct_response(self, msg: str) -> str:
         """Correct the response."""
 
-    def _porcess_manual_tool_call(
+    def _process_manual_tool_call(
         self,
         tool_call: list[dict],
         available_tools: list[Callable],

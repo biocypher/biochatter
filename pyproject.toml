@@ -25,6 +25,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Bio-Informatics"
 ]
 dynamic = ["dependencies"]
+dependencies = ["litellm (>=1.68.2,<2.0.0)"]
 
 [tool.poetry.dependencies]
 langchain = ">=0.3.20,<0.4.0"
@@ -73,6 +74,7 @@ scanpy = "^1.11.0"
 mkdocstrings = "^0.29.0"
 mkdocstrings-python = "^1.16.5"
 cairosvg = "^2.7.1"
+ruff = "^0.11.8"
 
 [tool.poetry.group.examples.dependencies]
 gseapy = "^1.1.8"
