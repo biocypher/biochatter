@@ -103,6 +103,8 @@ When `wrap_structured_output=True`, BioChatter explicitly asks the non-native mo
     from pydantic import BaseModel, Field
     from langchain_core.tools import tool
     from typing import List, Dict, Any, Optional
+    import json
+    from pprint import pprint
 
     # --- Step 1: Define the Tools ---
 
@@ -196,57 +198,35 @@ When `wrap_structured_output=True`, BioChatter explicitly asks the non-native mo
     # --- Step 4: Sequential Queries ---
 
     # 4.1. Query to find ChEMBL ID
-    drug_to_search = "aspirin"
-    print(f"Query 1: Finding ChEMBL ID for {drug_to_search}...")
-    # convo.query(f"What is the ChEMBL ID for the drug '{drug_to_search}'?", tools=[get_chembl_id])
-    # print(f"Assistant: {convo.messages[-1].content}")
-    # Assume convo.messages[-1].content now contains something like: "Tool call (get_chembl_id) result: CHEMBL25"
-    # In a real scenario, you'd parse this to extract "CHEMBL25"
-    # For this example, let's simulate the ID was found:
-    simulated_chembl_id = "CHEMBL25" # Replace with actual parsing if running live
+    drug_name = "imatinib"
+    convo.query(f'Get the ChEMBL ID for the drug "{drug_name}"',tools=[get_chembl_id])
 
-    # 4.2. Query to find putative targets using the ChEMBL ID
-    print(f"\nQuery 2: Getting mechanisms of action for {simulated_chembl_id}...")
-    # convo.query(f"Get the mechanisms of action for {simulated_chembl_id}", tools=[get_mechanisms_of_action])
-    # print(f"Assistant: {convo.messages[-1].content}")
-    # The last message would now contain the complex JSON from OpenTargets.
+    # 4.2. Get the mechanisms of action and targets
+    convo.query(f'Now get its mechanisms of action and targets',tools=[get_mechanisms_of_action])
 
-    # 4.3. Query to return the information in a structured format
-    # The LLM will need to look at the conversation history, which includes:
-    # - The initial question about the drug name.
-    # - The result of the get_chembl_id tool call.
-    # - The result of the get_mechanisms_of_action tool call.
-    prompt_for_structured_output = (
-        f"Based on our conversation about the drug '{drug_to_search}' (which we found to be {simulated_chembl_id}), "
-        f"please extract its ChEMBL ID, and list its mechanisms of action and associated targets. "
-        f"Structure this information according to the DrugTargetsOutput model. "
-        f"If no specific targets are listed for a mechanism, provide an empty list for 'targets'."
+    # 4.3. Get the structured output
+    results =convo.query(
+        "Return all the gathered information in a structured format", # Using the gene question from above
+        structured_model=DrugTargetsOutput,
     )
-    print(f"\nQuery 3: Structuring the output...")
-    # convo.query(prompt_for_structured_output, structured_model=DrugTargetsOutput)
+    
+    # --- Step 5: Parse the structured output ---
+    # Convert the JSON string to a Python dictionary
+    drug_data = json.loads(results[0])
 
-    # Access and use the structured output
-    # if convo.messages[-1].type == "ai": # Or check message type as appropriate
-    #     structured_response_json = convo.messages[-1].content
-    #     print(f"\nStructured Output:\n{structured_response_json}")
-    #     # You can then parse this JSON string back into your Pydantic model
-    #     import json
-    #     try:
-    #         drug_data = DrugTargetsOutput(**json.loads(structured_response_json))
-    #         print(f"\nParsed Pydantic Model:")
-    #         print(f"Queried Drug: {drug_data.drug_name_queried}")
-    #         print(f"ChEMBL ID: {drug_data.chembl_id_found}")
-    #         for mech in drug_data.mechanisms_and_targets:
-    #             print(f"  Mechanism: {mech.mechanism_of_action}")
-    #             print(f"  Target Name: {mech.target_name}")
-    #             for tgt in mech.targets:
-    #                 print(f"    Symbol: {tgt.approved_symbol}, ID: {tgt.target_id}")
-    #         if drug_data.error_message:
-    #             print(f"Error recorded: {drug_data.error_message}")
-    #     except json.JSONDecodeError:
-    #         print("Error: Could not parse the structured output JSON.")
-    # else:
-    #     print("Error: Expected last message to be AI structured output.")
+    # Print the structured information
+    print(f"Drug Name: {drug_data['drug_name_queried']}")
+    print(f"ChEMBL ID: {drug_data['chembl_id_found']}")
+    print("\nMechanisms of Action and Targets:")
+    for i, mechanism in enumerate(drug_data['mechanisms_and_targets'], 1):
+        print(f"\n{i}. Mechanism: {mechanism['mechanism_of_action']}")
+        print(f"   Target: {mechanism['target_name']}")
+        print("   Associated Targets:")
+        for target in mechanism['targets']:
+            print(f"     - {target['approved_symbol']} (ID: {target['target_id']})")
+
+    if drug_data['error_message']:
+        print(f"\nError: {drug_data['error_message']}")
     ```
 
     In this multi-step approach:
