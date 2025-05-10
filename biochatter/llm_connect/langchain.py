@@ -131,6 +131,9 @@ class LangChainConversation(Conversation):
             tuple: A tuple containing the response message and token usage information.
 
         """
+        token_usage = None  # Initialize token_usage
+        msg = None  # Initialize msg
+
         starting_tools = self.tools if self.tools else []
         in_chat_tools = tools if tools else []
         available_tools = starting_tools + in_chat_tools
