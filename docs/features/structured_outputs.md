@@ -73,20 +73,6 @@ if my_gene_info.chromosome_location:
 
 If the LLM natively supports structured outputs (e.g., newer OpenAI, Google models), the `AIMessage` content will typically be a JSON string representation of your Pydantic model. You can then parse this string to get an instance of your model.
 
-## The `wrap_structured_output` Parameter
-
-For models that do not natively support structured output, BioChatter tries to instruct the model to generate the output in the correct JSON format. The `wrap_structured_output` parameter in the `query` method can be helpful in these cases:
-
-```python
-convo.query(
-    question, # Using the gene question from above
-    structured_model=GeneInfo,
-    wrap_structured_output=True # Defaults to False
-)
-```
-
-When `wrap_structured_output=True`, BioChatter explicitly asks the non-native model to wrap its JSON output in \`\`\`json ... \`\`\` tags. This can sometimes improve the reliability of parsing the JSON from the model's text response. For natively supported models, this parameter might add the wrapping around an already correct JSON string.
-
 ## Current Limitations
 
 -   **No Simultaneous Tools and Structured Output**: Currently, you cannot use tools (as described in `tool_chat.md`) and request structured output by passing both `tools` and `structured_model` arguments in the **same** `query()` call. An attempt to do so will raise a `ValueError`.
@@ -392,7 +378,7 @@ When `wrap_structured_output=True`, BioChatter explicitly asks the non-native mo
         model_name="gemini-2.0-flash",  # Replace with your model e.g. "gpt-4-turbo-preview"
         prompts={} # Using default prompts
     )
-    
+
     # Set API key (read from environment variables)
     convo.set_api_key()
 
