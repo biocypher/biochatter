@@ -512,7 +512,7 @@ class Conversation(ABC):
     def _correct_response(self, msg: str) -> str:
         """Correct the response."""
 
-    def _porcess_manual_tool_call(
+    def _process_manual_tool_call(
         self,
         tool_call: list[dict],
         available_tools: list[Callable],
