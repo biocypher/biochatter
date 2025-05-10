@@ -187,13 +187,23 @@ class LangChainConversation(Conversation):
                 )
             # case where the model does not support tool calling natively, called a tool and we need manual processing
             elif self.model_name not in TOOL_CALLING_MODELS and self.tools_prompt:
-                msg = response.content.replace('"""', "").replace("json", "").replace("`", "").replace("\n", "").strip()
-                msg = json.loads(msg)
-                msg = self._porcess_manual_tool_call(
-                    tool_call=msg,
-                    available_tools=available_tools,
-                    explain_tool_result=explain_tool_result,
+                cleaned_content = (
+                    response.content.replace('"""', "").replace("json", "").replace("`", "").replace("\n", "").strip()
                 )
+                try:
+                    tool_call_data = json.loads(cleaned_content)
+                    msg = self._process_manual_tool_call(
+                        tool_call=tool_call_data,
+                        available_tools=available_tools,
+                        explain_tool_result=explain_tool_result,
+                    )
+                    # token_usage remains None (from line 176) as per successful tool call path logic
+                except json.JSONDecodeError:
+                    # If JSON parsing fails, the model didn't return a valid tool call.
+                    # Treat as a regular message from the LLM.
+                    msg = response.content  # Use original content
+                    # Update token_usage, similar to 'no tool calls' or 'manual structured output' paths
+                    token_usage = response.usage_metadata.get("total_tokens") if response.usage_metadata else None
             # case where the model does not support structured output but the user has provided a structured model
             elif self.model_name not in STRUCTURED_OUTPUT_MODELS and structured_model:
                 # check that the output conforms to the structured model
