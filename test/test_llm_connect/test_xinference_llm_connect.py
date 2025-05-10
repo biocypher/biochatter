@@ -1,13 +1,16 @@
+"""Tests for the Xinference LLM connect module."""
+
 import os
 from unittest.mock import patch
 
 import pytest
 
-from biochatter.llm_connect import (
+from biochatter.llm_connect.xinference import XinferenceConversation
+
+from langchain_core.messages import (
     AIMessage,
     HumanMessage,
     SystemMessage,
-    XinferenceConversation,
 )
 
 xinference_models = {

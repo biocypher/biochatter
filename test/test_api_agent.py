@@ -38,7 +38,8 @@ from biochatter.api_agent.python.scanpy_pl_full import (
     ScanpyPlQueryBuilder,
 )
 from biochatter.api_agent.python.generic_agent import GenericQueryBuilder
-from biochatter.llm_connect import Conversation, GptConversation
+from biochatter.llm_connect.conversation import Conversation
+from biochatter.llm_connect.openai import GptConversation
 
 
 SCANPY_TL_QUERY_PROMPT = """
