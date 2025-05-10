@@ -140,9 +140,20 @@ class LangChainConversation(Conversation):
         if self.model_name in STRUCTURED_OUTPUT_MODELS and structured_model:
             chat = self.chat.with_structured_output(structured_model)
         elif (
-            self.model_name in STRUCTURED_OUTPUT_MODELS and not structured_model
+            structured_model and self.model_name not in STRUCTURED_OUTPUT_MODELS
         ):  # TODO: here we could hack to force the model to return a structured output
-            raise ValueError("Structured output model is required when using structured output.")
+            # add to the end of the prompt an instruction to return a structured output
+            chat = self.chat
+            self.messages[-1].content = (
+                self.messages[-1].content
+                + "\n\nPlease return a structured output following this schema: "
+                + str(structured_model.model_json_schema())
+                + (
+                    " Just return the JSON object wrapped in ```json tags and nothing else."
+                    if wrap_structured_output
+                    else " Just return the JSON object and nothing else."
+                )
+            )
 
         if self.model_name in TOOL_CALLING_MODELS and not structured_model:
             chat = self.chat.bind_tools(available_tools)
@@ -161,36 +172,47 @@ class LangChainConversation(Conversation):
         except Exception as e:
             return str(e), None
 
-        # Process tool calls if present (model supports tool calling)
+        # Structured output don't have tool calls attribute
         if hasattr(response, "tool_calls"):
-            msg = self._process_tool_calls(
-                tool_calls=response.tool_calls,
-                available_tools=available_tools,
-                response_content=response.content,
-                explain_tool_result=explain_tool_result,
-                return_tool_calls_as_ai_message=return_tool_calls_as_ai_message,
-            )
-        # case where the model does not support tool calling and we need manual processing
-        elif self.model_name not in TOOL_CALLING_MODELS and self.tools_prompt:
-            msg = response.content.replace('"""', "").replace("json", "").replace("`", "").replace("\n", "").strip()
-            msg = json.loads(msg)
-            msg = self._porcess_manual_tool_call(
-                tool_call=msg,
-                available_tools=available_tools,
-                explain_tool_result=explain_tool_result,
-            )
-            # self.append_ai_message(msg)
-        else:
-            if isinstance(response, BaseModel):
-                msg = response.model_dump_json()
-                if wrap_structured_output:
-                    msg = "```json\n" + msg + "\n```"
-                token_usage = None
+            # case in which the model called tools
+            if len(response.tool_calls) > 0:
+                msg = self._process_tool_calls(
+                    tool_calls=response.tool_calls,
+                    available_tools=available_tools,
+                    response_content=response.content,
+                    explain_tool_result=explain_tool_result,
+                    return_tool_calls_as_ai_message=return_tool_calls_as_ai_message,
+                )
+            # case where the model does not support tool calling natively, called a tool and we need manual processing
+            elif self.model_name not in TOOL_CALLING_MODELS and self.tools_prompt:
+                msg = response.content.replace('"""', "").replace("json", "").replace("`", "").replace("\n", "").strip()
+                msg = json.loads(msg)
+                msg = self._porcess_manual_tool_call(
+                    tool_call=msg,
+                    available_tools=available_tools,
+                    explain_tool_result=explain_tool_result,
+                )
+            # case where the model does not support structured output but the user has provided a structured model
+            elif self.model_name not in STRUCTURED_OUTPUT_MODELS and structured_model:
+                # check that the output conforms to the structured model
+                pydantic_manual_validator(response.content, structured_model)
+                msg = response.content
+                token_usage = response.usage_metadata["total_tokens"]
 
+            # no tool calls
             else:
                 msg = response.content
                 token_usage = response.usage_metadata["total_tokens"]
-            self.append_ai_message(msg)
+
+        # even if there are no tool calls, the standard langchain output has a tool_calls attribute
+        # therefore, this case only happens when the returned ouput from the invoke is a structured output
+        else:
+            msg = response.model_dump_json()
+            if wrap_structured_output:
+                msg = "```json\n" + msg + "\n```"
+            token_usage = None
+
+        self.append_ai_message(msg)
 
         return msg, token_usage
 
