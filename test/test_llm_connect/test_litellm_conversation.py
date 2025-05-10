@@ -24,7 +24,7 @@ MOCK_MODEL_COST = {
 }
 
 
-@patch("biochatter.llm_connect.ChatLiteLLM")
+@patch("biochatter.llm_connect.llmlite.ChatLiteLLM")
 def test_get_litellm_object_valid(mock_chatlite):
     """Test that get_litellm_object calls ChatLiteLLM with the correct parameters
     for a supported model.
@@ -42,7 +42,7 @@ def test_get_litellm_object_valid(mock_chatlite):
     assert result == dummy_instance
 
 
-@patch("biochatter.llm_connect.ChatLiteLLM")
+@patch("biochatter.llm_connect.llmlite.ChatLiteLLM")
 def test_get_litellm_object_unsupported_model(mock_chatlite, dummy_api_key="dummy_key"):
     """Test that if get_model_max_tokens fails (simulating an unsupported model), the
     unsupported model is handled by passing max_token as None and using the fallback
