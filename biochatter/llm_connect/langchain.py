@@ -6,6 +6,7 @@ from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel
 
+from biochatter._misc import pydantic_manual_validator
 from biochatter.llm_connect.available_models import STRUCTURED_OUTPUT_MODELS, TOOL_CALLING_MODELS
 from biochatter.llm_connect.conversation import Conversation
 
