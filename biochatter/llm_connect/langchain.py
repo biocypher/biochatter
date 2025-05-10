@@ -175,6 +175,7 @@ class LangChainConversation(Conversation):
 
         # Structured output don't have tool calls attribute
         if hasattr(response, "tool_calls"):
+            token_usage = None
             # case in which the model called tools
             if len(response.tool_calls) > 0:
                 msg = self._process_tool_calls(
