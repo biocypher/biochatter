@@ -1,4 +1,4 @@
-"""Module defining the available models for the LLM connect module.
+"""Define the available models for the LLM connect module.
 
 This module defines the available models for the LLM connect module and their
 token limits.
