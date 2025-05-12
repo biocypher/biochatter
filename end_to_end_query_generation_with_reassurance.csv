@@ -1,0 +1,4 @@
+model_name,subtask,score,relevance_score,iterations,md5_hash,datetime,biochatter_version
+gpt-3.5-turbo-0125,simple2,4.0/4,8,1,ec2f1b39b5ef150b5f9873f124223c67,2024-05-27 13:21:17,0.4.9
+gpt-3.5-turbo-0613,simple2,3.0/4,10,1,ec2f1b39b5ef150b5f9873f124223c67,2024-05-27 13:22:24,0.4.9
+gpt-4-0613,simple2,4.0/4,10,1,ec2f1b39b5ef150b5f9873f124223c67,2024-05-27 13:32:06,0.4.9
