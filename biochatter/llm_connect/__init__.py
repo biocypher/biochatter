@@ -1,4 +1,4 @@
-"""Init of the LLM connect module."""
+"""Module to handle connections to different LLM providers."""
 
 from biochatter.llm_connect.anthropic import AnthropicConversation
 from biochatter.llm_connect.azure import AzureGptConversation
