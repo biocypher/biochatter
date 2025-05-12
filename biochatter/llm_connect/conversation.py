@@ -1,4 +1,4 @@
-"""Module for managing connections to LLM providers and handling conversations.
+"""Manage connections to LLM providers and handle conversations.
 
 This module provides the general conversation class, which is used to manage
 connections to different LLM APIs (OpenAI, Anthropic, Ollama, etc.) and
