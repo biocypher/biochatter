@@ -207,7 +207,7 @@ convo = LangChainConversation(
 convo.set_api_key()
 
 #define the question
-question = "What biological processes are regulated by TP53, BRCA1, BRCA2, PTEN, EGFR, MYC, CDK2, CDK4, CCND1, RB1?"
+question = "Which biological processes are regulated by TP53, BRCA1, BRCA2, PTEN, EGFR, MYC, CDK2, CDK4, CCND1, RB1?"
 
 #run the conversation
 convo.query(question, tools=[enrichr_query], explain_tool_result=True)
