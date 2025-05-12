@@ -2,13 +2,23 @@
 
 ## Overview
 
-BioChatter enables you to receive responses from the LLM in a predefined structure, rather than just plain text. This is particularly useful when you need the model's output to conform to a specific schema, making it easier to parse and use in downstream tasks. This is achieved by providing a Pydantic model to the conversation.
+BioChatter can return responses from the LLM in a predefined structure,
+rather than just plain text. This is particularly useful when you need the
+model's output to conform to a specific schema, making it easier to parse and
+use in downstream tasks. This is achieved by providing a Pydantic model to the
+conversation.
 
-Many modern LLMs (especially those from providers like OpenAI, Google, Anthropic) can natively generate outputs that conform to a provided schema. For models that do not natively support structured output, BioChatter attempts to guide the model by appending instructions to the prompt, asking it to generate a JSON object matching the schema.
+Many modern LLMs (especially those from providers like OpenAI, Google,
+Anthropic) can natively generate outputs that conform to a provided schema. For
+models that do not natively support structured output, BioChatter attempts to
+guide the model by appending instructions to the prompt, asking it to generate a
+JSON object matching the schema.
 
 ## Defining a Structure (Pydantic Model)
 
-To define the desired output structure, you use Pydantic's `BaseModel`. This allows you to specify fields, types, and even validation rules for the data you expect from the LLM.
+To define the desired output structure, you use Pydantic's `BaseModel`. This
+allows you to specify fields, types, and even validation rules for the data you
+expect from the LLM.
 
 Here's an example of a Pydantic model for gene information:
 
@@ -22,13 +32,18 @@ class GeneInfo(BaseModel):
     chromosome_location: str | None = None # Optional field
 ```
 
-This `GeneInfo` model tells the LLM to provide information about a gene, including its `gene_symbol` (string), `full_name` (string), a `summary` of its function (string), and an optional `chromosome_location` (string).
+This `GeneInfo` model tells the LLM to provide information about a gene,
+including its `gene_symbol` (string), `full_name` (string), a `summary` of its
+function (string), and an optional `chromosome_location` (string).
 
 ## Requesting Structured Output
 
-You can request structured output by passing your Pydantic model to the `structured_model` parameter in the `query` method of the `LangChainConversation` class.
+You can request structured output by passing your Pydantic model to the
+`structured_model` parameter in the `query` method of the
+`LangChainConversation` class.
 
-Here's how you can set up a conversation and request a structured response for gene information:
+Here's how you can set up a conversation and request a structured response for
+gene information:
 
 ```python
 from biochatter.llm_connect import LangChainConversation
@@ -71,13 +86,22 @@ if my_gene_info.chromosome_location:
     print(f"Location: {my_gene_info.chromosome_location}")
 ```
 
-If the LLM natively supports structured outputs (e.g., newer OpenAI, Google models), the `AIMessage` content will typically be a JSON string representation of your Pydantic model. You can then parse this string to get an instance of your model.
+If the LLM natively supports structured outputs (e.g., newer OpenAI, Google
+models), the `AIMessage` content will typically be a JSON string representation
+of your Pydantic model. You can then parse this string to get an instance of
+your model.
 
 ## Current Limitations
 
--   **No Simultaneous Tools and Structured Output**: Currently, you cannot use tools (as described in `tool_chat.md`) and request structured output by passing both `tools` and `structured_model` arguments in the **same** `query()` call. An attempt to do so will raise a `ValueError`.
+-   **No Simultaneous Tools and Structured Output**: Currently, you cannot use
+tools (as described in `tool_chat.md`) and request structured output by passing
+both `tools` and `structured_model` arguments in the **same** `query()` call. An
+attempt to do so will raise a `ValueError`.
 
--   **Sequential Use is Possible**: However, you *can* use tools and structured outputs sequentially. This is a powerful pattern where initial queries can use tools to fetch or compute data, and subsequent queries can process and structure this data using Pydantic models.
+-   **Sequential Use is Possible**: However, you *can* use tools and structured
+outputs sequentially. This is a powerful pattern where initial queries can use
+tools to fetch or compute data, and subsequent queries can process and structure
+this data using Pydantic models.
 
     Here's a more detailed biological example:
 
