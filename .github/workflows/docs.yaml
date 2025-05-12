@@ -1,9 +1,17 @@
 name: Docs
 
 on:
+  workflow_run:
+    workflows: ["Process Benchmark Results"]
+    types:
+      - completed
+    branches:
+      - main
   push:
     branches:
       - main
+    paths-ignore:
+      - 'benchmark/results/**'  # Don't trigger on benchmark results changes since workflow_run will handle that
 
 permissions:
   contents: write
@@ -23,7 +31,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.x
+          python-version: "3.11"
 
       - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
 

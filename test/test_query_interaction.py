@@ -105,7 +105,7 @@ _kg_selected = {
 }
 
 
-@pytest.fixture()
+@pytest.fixture
 def query_handler_basic():
     query = "MATCH (d:Disease {name: 'mucoviscidosis'})-[:PERTURBED]->(g:Gene) RETURN g.name AS AssociatedGenes"
     query_lang = "Cypher"
@@ -113,7 +113,7 @@ def query_handler_basic():
     return BioCypherQueryHandler(query, query_lang, _kg_selected, question)
 
 
-@pytest.fixture()
+@pytest.fixture
 def query_handler_with_kg():
     query = "MATCH (d:Disease {name: 'mucoviscidosis'})-[:PERTURBED]->(g:Gene) RETURN g.name AS AssociatedGenes"
     query_lang = "Cypher"
@@ -121,7 +121,7 @@ def query_handler_with_kg():
     return BioCypherQueryHandler(query, query_lang, _kg_selected, question, _kg)
 
 
-@pytest.fixture()
+@pytest.fixture
 def query_with_limit_handler():
     query = (
         "MATCH (d:Disease {name: 'mucoviscidosis'})-[:PERTURBED]->(g:Gene) RETURN g.name AS AssociatedGenes LIMIT 25"

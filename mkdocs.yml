@@ -8,23 +8,18 @@ theme:
     code: Roboto Mono
 
   palette:
-    # Palette toggle for dark mode
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
+    - scheme: default
       primary: blue grey
-      accent: indigo
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
-
-    # Palette toggle for light mode
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
-      primary: indigo
-      accent: blue
+      accent: light blue
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
+    - scheme: slate
+      primary: blue grey
+      accent: light blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
 
   features:
     - content.code.copy
@@ -33,7 +28,7 @@ theme:
     - search.highlight
     - navigation.instant
     - navigation.tabs
-    - navigation.sections
+    - toc.integrate
 
   icon:
     repo: fontawesome/brands/github
@@ -42,6 +37,10 @@ plugins:
   - search
   - mkdocstrings:
       default_handler: python
+      handlers:
+        python:
+          options:
+            heading_level: 3
   - table-reader
   - social
   - redirects:
@@ -60,7 +59,7 @@ plugins:
         "llm_connect-reference.md": "api-docs/llm_connect.md"
         "vectorstore-reference.md": "api-docs/vectorstore.md"
         "kg-reference.md": "api-docs/kg.md"
-        "api-reference.md": "api-docs/api-calling.md"
+        "api-reference.md": "api-docs/api-calling-base.md"
         "reflexion-reference.md": "api-docs/reflexion.md"
         "podcast-reference.md": "api-docs/podcast.md"
         "benchmark.md": "benchmark/overview.md"
@@ -71,35 +70,44 @@ site_url: https://biochatter.org/
 
 nav:
   - Home: index.md
-  - Features:
-      - Home: features/index.md
-      - Basic Usage - Chat: features/chat.md
-      - Retrieval-Augmented Generation: features/rag.md
-      - API Calling: features/api.md
-      - Reflexion via LangGraph: features/reflexion-agent.md
-      - Open-source and Local LLMs: features/open-llm.md
-      - LLM in your Browser - WebAssembly: features/wasm.md
-      - The Living Benchmark: features/benchmark.md
-      - Podcast my Paper: features/podcast.md
+  - About:
+      - Project: about/project.md
+      - Design Philosophy: about/design-philosophy.md
+      - Use Cases: about/use-cases.md
+  - Get Started:
+      - Installation: installation.md
+      - Quickstart: quickstart.md
+  - Learn:
+      - Tutorials:
+          - Basic Usage - Chat: features/chat.md
+          - Multimodal Models: features/multimodal.md
+          - Retrieval-Augmented Generation: features/rag.md
+          - API Calling: features/api.md
+          - Reflexion via LangGraph: features/reflexion-agent.md
+          - Open-source and Local LLMs: features/open-llm.md
+          - The Living Benchmark: features/benchmark.md
+          - Podcast my Paper: features/podcast.md
+          - LLM in your Browser - WebAssembly: features/wasm.md
+      - HowTo / FAQ:
+          - Knowledge Graph RAG: vignettes/kg.md
+          - Retrieval-Augmented Generation (RAG): vignettes/rag.md
+          - Customising BioChatter Light - Simple: vignettes/custom-bclight-simple.md
+          - Customising BioChatter Light - Advanced: vignettes/custom-bclight-advanced.md
+          - Customising BioChatter Light and Next - Cancer Genetics Use Case: vignettes/custom-decider-use-case.md
   - Benchmark:
       - Overview: benchmark/overview.md
       - All Results: benchmark/results.md
       - Developer Guide: benchmark/developer.md
-  - Vignettes:
-      - Home: vignettes/index.md
-      - Knowledge Graph RAG: vignettes/kg.md
-      - Retrieval-Augmented Generation (RAG): vignettes/rag.md
-      - Customising BioChatter Light - Simple: vignettes/custom-bclight-simple.md
-      - Customising BioChatter Light - Advanced: vignettes/custom-bclight-advanced.md
-      - Customising BioChatter Light and Next - Cancer Genetics Use Case: vignettes/custom-decider-use-case.md
-  - API Reference:
-      - Home: api-docs/index.md
-      - LLM Connectivity: api-docs/llm_connect.md
-      - Vectorstore Agent: api-docs/vectorstore.md
-      - Knowledge Graph Agent: api-docs/kg.md
-      - API Agent: api-docs/api-calling.md
-      - Reflexion Agent: api-docs/reflexion.md
-      - Podcast: api-docs/podcast.md
+  - Reference:
+      - API Documentation:
+          - LLM Connectivity: api-docs/llm_connect.md
+          - Vectorstore Agent: api-docs/vectorstore.md
+          - Knowledge Graph Agent: api-docs/kg.md
+          - "API Calling: Base Classes": api-docs/api-calling-base.md
+          - "API Calling: Web APIs": api-docs/api-calling-web.md
+          - "API Calling: Python APIs": api-docs/api-calling-python.md
+          - Reflexion Agent: api-docs/reflexion.md
+          - Podcast: api-docs/podcast.md
 
 repo_url: https://github.com/biocypher/biochatter
 repo_name: biocypher/biochatter
@@ -130,10 +138,9 @@ markdown_extensions:
   - md_in_html
   - admonition
   - pymdownx.details
+  - toc:
+      toc_depth: 3
 
 extra_javascript:
   - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
   - scripts/tablesort.js
-
-hooks:
-  - docs/scripts/hooks.py

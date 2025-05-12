@@ -24,7 +24,7 @@ from .benchmark_utils import (
 
 
 # Load the data
-@pytest.fixture()
+@pytest.fixture
 def data_list():
     data_path = "benchmark/data/source_data_clip"
     return [

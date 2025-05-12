@@ -90,6 +90,36 @@ class Conversation(ABC):
         self.ca_messages = []
         self.current_statements = []
         self._use_ragagent_selector = use_ragagent_selector
+        self._chat = None
+        self._ca_chat = None
+
+    @property
+    def chat(self):
+        """Access the chat attribute with error handling."""
+        if self._chat is None:
+            msg = "Chat attribute not initialized. Did you call set_api_key()?"
+            logger.error(msg)
+            raise AttributeError(msg)
+        return self._chat
+
+    @chat.setter
+    def chat(self, value):
+        """Set the chat attribute."""
+        self._chat = value
+
+    @property
+    def ca_chat(self):
+        """Access the correcting agent chat attribute with error handling."""
+        if self._ca_chat is None:
+            msg = "Correcting agent chat attribute not initialized. Did you call set_api_key()?"
+            logger.error(msg)
+            raise AttributeError(msg)
+        return self._ca_chat
+
+    @ca_chat.setter
+    def ca_chat(self, value):
+        """Set the correcting agent chat attribute."""
+        self._ca_chat = value
 
     @property
     def use_ragagent_selector(self) -> bool:
@@ -436,7 +466,7 @@ class Conversation(ABC):
 
     def get_msg_json(self) -> str:
         """Return a JSON representation of the conversation.
- 
+
         Returns a list of dicts of the messages in the conversation in JSON
         format. The keys of the dicts are the roles, the values are the
         messages.
@@ -877,7 +907,8 @@ class XinferenceConversation(Conversation):
             return True
 
         except RuntimeError:
-            # TODO handle error, log?
+            self._chat = None
+            self._ca_chat = None
             return False
 
     def list_models_by_type(self, model_type: str) -> list[str]:
@@ -1179,17 +1210,18 @@ class AnthropicConversation(Conversation):
         self.ca_model_name = "claude-3-5-sonnet-20240620"
         # TODO make accessible by drop-down
 
-    def set_api_key(self, api_key: str, user: str) -> bool:
+    def set_api_key(self, api_key: str, user: str | None = None) -> bool:
         """Set the API key for the Anthropic API.
 
-        If the key is valid, initialise the conversational agent. Set the user
-        for usage statistics.
+        If the key is valid, initialise the conversational agent. Optionally set
+        the user for usage statistics.
 
         Args:
         ----
             api_key (str): The API key for the Anthropic API.
 
-            user (str): The user for usage statistics.
+            user (str, optional): The user for usage statistics. If provided and
+                equals "community", will track usage stats.
 
         Returns:
         -------
@@ -1219,6 +1251,8 @@ class AnthropicConversation(Conversation):
             return True
 
         except anthropic._exceptions.AuthenticationError:
+            self._chat = None
+            self._ca_chat = None
             return False
 
     def _primary_query(self) -> tuple:
@@ -1422,17 +1456,18 @@ class GptConversation(Conversation):
 
         self._update_token_usage = update_token_usage
 
-    def set_api_key(self, api_key: str, user: str) -> bool:
+    def set_api_key(self, api_key: str, user: str | None = None) -> bool:
         """Set the API key for the OpenAI API.
 
-        If the key is valid, initialise the conversational agent. Set the user
-        for usage statistics.
+        If the key is valid, initialise the conversational agent. Optionally set
+        the user for usage statistics.
 
         Args:
         ----
             api_key (str): The API key for the OpenAI API.
 
-            user (str): The user for usage statistics.
+            user (str, optional): The user for usage statistics. If provided and
+                equals "community", will track usage stats.
 
         Returns:
         -------
@@ -1465,6 +1500,8 @@ class GptConversation(Conversation):
             return True
 
         except openai._exceptions.AuthenticationError:
+            self._chat = None
+            self._ca_chat = None
             return False
 
     def _primary_query(self) -> tuple:
@@ -1558,9 +1595,11 @@ class GptConversation(Conversation):
 
         """
         if self.user == "community":
+            # Only process integer values
+            stats_dict = {f"{k}:{model}": v for k, v in token_usage.items() if isinstance(v, int | float)}
             self.usage_stats.increment(
                 "usage:[date]:[user]",
-                {f"{k}:{model}": v for k, v in token_usage.items()},
+                stats_dict,
             )
 
         if self._update_token_usage is not None:
@@ -1620,7 +1659,7 @@ class AzureGptConversation(GptConversation):
         self.base_url = base_url
         self.deployment_name = deployment_name
 
-    def set_api_key(self, api_key: str, user: str = "Azure Community") -> bool:
+    def set_api_key(self, api_key: str, user: str | None = None) -> bool:
         """Set the API key for the Azure API.
 
         If the key is valid, initialise the conversational agent. No user stats
@@ -1630,7 +1669,7 @@ class AzureGptConversation(GptConversation):
         ----
             api_key (str): The API key for the Azure API.
 
-            user (str): The user for usage statistics.
+            user (str, optional): The user for usage statistics.
 
         Returns:
         -------
@@ -1646,8 +1685,6 @@ class AzureGptConversation(GptConversation):
                 openai_api_key=api_key,
                 temperature=0,
             )
-            # TODO this is the same model as the primary one; refactor to be
-            # able to use any model for correction
             self.ca_chat = AzureChatOpenAI(
                 deployment_name=self.deployment_name,
                 model_name=self.model_name,
@@ -1658,11 +1695,13 @@ class AzureGptConversation(GptConversation):
             )
 
             self.chat.generate([[HumanMessage(content="Hello")]])
-            self.user = user
+            self.user = user if user is not None else "Azure Community"
 
             return True
 
         except openai._exceptions.AuthenticationError:
+            self._chat = None
+            self._ca_chat = None
             return False
 
     def _update_usage_stats(self, model: str, token_usage: dict) -> None:

@@ -1,7 +1,6 @@
 Model name,Size,Version,Quantisation,Median Accuracy,SD
-gpt-3.5-turbo-0125,175,,,0.79,0.2
-gpt-4o-2024-08-06,Unknown,,,0.78,0.24
 claude-3-opus-20240229,Unknown,,,0.77,0.28
+gpt-3.5-turbo-0125,175,,,0.77,0.19
 claude-3-5-sonnet-20240620,Unknown,,,0.76,0.28
 gpt-3.5-turbo-0613,175,,,0.76,0.21
 llama-3.1-instruct,8,ggufv2,Q6_K,0.74,0.28
@@ -9,13 +8,15 @@ llama-3.1-instruct,70,ggufv2,IQ2_M,0.74,0.29
 llama-3.1-instruct,8,ggufv2,Q5_K_M,0.74,0.28
 gpt-4-0613,Unknown,,,0.73,0.17
 llama-3.1-instruct,70,ggufv2,IQ4_XS,0.73,0.29
+gpt-4o-2024-08-06,Unknown,,,0.73,0.24
 llama-3.1-instruct,8,ggufv2,Q8_0,0.72,0.3
-gpt-4-turbo-2024-04-09,Unknown,,,0.71,0.26
 llama-3.1-instruct,8,ggufv2,Q3_K_L,0.71,0.28
 llama-3.1-instruct,8,ggufv2,Q4_K_M,0.7,0.26
 llama-3.1-instruct,8,ggufv2,IQ4_XS,0.69,0.28
-gpt-4-0125-preview,Unknown,,,0.69,0.27
-gpt-4o-mini-2024-07-18,Unknown,,,0.69,0.23
+gpt-4-1106-preview,Unknown,,,0.69,0.06
+gpt-4-0125-preview,Unknown,,,0.69,0.26
+gpt-4o-mini-2024-07-18,Unknown,,,0.69,0.22
+gpt-4-turbo-2024-04-09,Unknown,,,0.68,0.27
 gpt-4o-2024-05-13,Unknown,,,0.68,0.31
 llama-3.1-instruct,70,ggufv2,Q3_K_S,0.67,0.28
 llama-3-instruct,8,ggufv2,Q8_0,0.65,0.35
@@ -27,6 +28,7 @@ openhermes-2.5,7,ggufv2,Q5_K_M,0.6,0.29
 openhermes-2.5,7,ggufv2,Q8_0,0.6,0.3
 openhermes-2.5,7,ggufv2,Q4_K_M,0.6,0.3
 openhermes-2.5,7,ggufv2,Q3_K_M,0.56,0.3
+gpt-4o-2024-11-20,Unknown,,,0.55,0.14
 code-llama-instruct,34,ggufv2,Q2_K,0.5,0.33
 openhermes-2.5,7,ggufv2,Q2_K,0.5,0.28
 code-llama-instruct,7,ggufv2,Q3_K_M,0.49,0.31
