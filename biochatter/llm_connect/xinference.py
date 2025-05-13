@@ -120,7 +120,7 @@ class XinferenceConversation(Conversation):
                     self.ca_messages[i].content += f"\n{message}"
                     break
 
-    def _primary_query(self) -> tuple:
+    def _primary_query(self, **kwargs) -> tuple:
         """Query the Xinference client API.
 
         Use the user's message and return the response using the message history

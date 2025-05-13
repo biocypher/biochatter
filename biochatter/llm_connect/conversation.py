@@ -376,14 +376,15 @@ class Conversation(ABC):
         text: str,
         image_url: str | None = None,
         structured_model: BaseModel | None = None,
-        wrap_structured_output: bool = False,
+        wrap_structured_output: bool | None = None,
         tools: list[Callable] | None = None,
-        explain_tool_result: bool = False,
+        explain_tool_result: bool | None = None,
         additional_tools_instructions: str | None = None,
         general_instructions_tool_interpretation: str | None = None,
         additional_instructions_tool_interpretation: str | None = None,
-        mcp: bool = False,
-        return_tool_calls_as_ai_message: bool = False,
+        mcp: bool | None = None,
+        return_tool_calls_as_ai_message: bool | None = None,
+        **kwargs,
     ) -> tuple[str, dict | None, str | None]:
         """Query the LLM API using the user's query.
 
@@ -420,6 +421,8 @@ class Conversation(ABC):
             mcp (bool): If you want to use MCP mode, this should be set to True.
 
             return_tool_calls_as_ai_message (bool): If you want to return the tool calls as an AI message, this should be set to True.
+
+            **kwargs: Additional keyword arguments.
 
         Returns:
         -------
