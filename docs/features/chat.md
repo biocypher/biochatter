@@ -47,13 +47,16 @@ flattery component (e.g. 'You are an assistant to a researcher ...'), the model
 can be queried using the `query` function.
 
 ```python
-msg, token_usage, correction = conversation.query('Question here')
+query_result = conversation.query('Question here')
+print(query_result.response)
+print(query_result.token_usage)
+print(query_result.correction)
 ```
 
 Note that a query will automatically append a user message to the message
 history, so there is no need to call `append_user_message()` again. The query
-function returns the actual answer of the model (`msg`), the token usage
-statistics reported by the API (`token_usage`), and an optional `correction`
+function returns a `QueryResult` object containing the actual answer of the model (`query_result.response`),
+the token usage statistics reported by the API (`query_result.token_usage`), and an optional `query_result.correction`
 that contains the opinion of the corrective agent.
 
 ## Using OpenAI models
@@ -114,7 +117,7 @@ conversation.append_image_message(
 )
 
 # Or: Query with image included
-msg, token_usage, correction = conversation.query(
+query_result = conversation.query(
     "What's in this image?",
     image_url="https://example.com/image.jpg"
 )
@@ -139,7 +142,7 @@ netloc of the image URL. If the netloc is empty, we assume that the image is
 local and read it as a base64-encoded string:
 
 ```python
-msg, token_usage, correction = conversation.query(
+query_result = conversation.query(
     "What's in this image?",
     image_url="my/local/image.jpg"
 )

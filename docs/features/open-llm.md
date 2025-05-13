@@ -40,7 +40,7 @@ conversation = XinferenceConversation(
     prompts={},
     correct=False,
 )
-response, token_usage, correction = conversation.query("Hello world!")
+query_result = conversation.query("Hello world!")
 ```
 
 ### Deploying locally via Docker
@@ -132,7 +132,7 @@ conversation = OllamaConversation(
     model_name='llama3',
     correct=False,
 )
-response, token_usage, correction = conversation.query("Hello world!")
+query_result = conversation.query("Hello world!")
 ```
 
 ### Deploying locally via Docker
