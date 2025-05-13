@@ -99,7 +99,7 @@ class GeminiConversation(Conversation):
             self._ca_chat = None
             return False
 
-    def _primary_query(self, tools: list[Callable] | None = None) -> tuple:
+    def _primary_query(self, tools: list[Callable] | None = None, **kwargs) -> tuple:
         """Query the Google Gemini API with the user's message.
 
         Return the response using the message history (flattery system messages,
@@ -110,6 +110,8 @@ class GeminiConversation(Conversation):
             tools (list[Callable]): The tools to use for the query. Tools
             passed at this step are used only for this message and not stored
             as part of the conversation object.
+
+            **kwargs: Additional keyword arguments.
 
         Returns:
         -------

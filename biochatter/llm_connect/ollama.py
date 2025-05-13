@@ -129,7 +129,7 @@ class OllamaConversation(Conversation):
                     self.ca_messages[i].content += f"\n{message}"
                     break
 
-    def _primary_query(self) -> tuple:
+    def _primary_query(self, **kwargs) -> tuple:
         """Query the Ollama client API with the user's message.
 
         Return the response using the message history (flattery system messages,
