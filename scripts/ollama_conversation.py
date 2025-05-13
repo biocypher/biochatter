@@ -11,7 +11,7 @@ convo = OllamaConversation(
     split_correction=False,
 )
 
-response, token_usage, correction = convo.query("Hello world!")
+query_result = convo.query("Hello world!")
 
-print(response)
-print(token_usage)
+print(query_result.response)
+print(query_result.token_usage)
