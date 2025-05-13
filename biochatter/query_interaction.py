@@ -82,7 +82,10 @@ class BioCypherQueryHandler:
 
         conversation.append_system_message(msg)
 
-        out_msg, token_usage, correction = conversation.query(self.query)
+        query_result = conversation.query(self.query)
+        out_msg = query_result.response
+        # token_usage = query_result.token_usage
+        # correction = query_result.correction
 
         return out_msg
 
@@ -135,6 +138,9 @@ class BioCypherQueryHandler:
 
         conversation.append_system_message(msg)
 
-        out_msg, token_usage, correction = conversation.query(update_request)
+        query_result = conversation.query(update_request)
+        out_msg = query_result.response
+        # token_usage = query_result.token_usage
+        # correction = query_result.correction
 
         return out_msg

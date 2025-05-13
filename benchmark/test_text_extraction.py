@@ -45,7 +45,9 @@ def test_sourcedata_info_extraction(
             f"## ANSWER FORMAT: {yaml_data['input']['format']}"
         )
 
-        response, _, _ = conversation.query(user_query)
+        query_result = conversation.query(user_query)
+        response = query_result.response
+
         rouge_score = calculate_rouge_score(
             response,
             yaml_data["expected"]["answer"],

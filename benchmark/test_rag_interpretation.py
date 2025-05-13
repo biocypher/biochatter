@@ -31,7 +31,8 @@ def test_explicit_relevance_of_single_fragments(
     def run_test():
         conversation.reset()  # needs to be reset for each test
         [conversation.append_system_message(m) for m in yaml_data["input"]["system_messages"]]
-        response, _, _ = conversation.query(yaml_data["input"]["prompt"])
+        query_result = conversation.query(yaml_data["input"]["prompt"])
+        response = query_result.response
 
         # lower case, remove punctuation
         response = (response.lower().replace(".", "").replace("?", "").replace("!", "")).strip()
@@ -76,7 +77,8 @@ def test_implicit_relevance_of_multiple_fragments(
     def run_test():
         conversation.reset()  # needs to be reset for each test
         [conversation.append_system_message(m) for m in yaml_data["input"]["system_messages"]]
-        response, _, _ = conversation.query(yaml_data["input"]["prompt"])
+        query_result = conversation.query(yaml_data["input"]["prompt"])
+        response = query_result.response
 
         msg = (
             "You will receive a statement as an answer to this question: "
@@ -89,7 +91,8 @@ def test_implicit_relevance_of_multiple_fragments(
         # evaluator LLM
         evaluation_conversation.append_system_message(msg)
 
-        eval, _, _ = evaluation_conversation.query(response)
+        eval_query_result = evaluation_conversation.query(response)
+        eval = eval_query_result.response
 
         # lower case, remove punctuation
         eval = (eval.lower().replace(".", "").replace("?", "").replace("!", "")).strip()

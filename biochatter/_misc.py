@@ -3,13 +3,13 @@
 
 import json
 import re
-from pydantic import BaseModel
 from collections.abc import Generator, ItemsView, Iterable, KeysView, Mapping, ValuesView
 from typing import (
     Any,
 )
 
 import stringcase
+from pydantic import BaseModel
 
 __all__ = ["LIST_LIKE", "SIMPLE_TYPES", "ensure_iterable", "to_list"]
 
@@ -121,7 +121,7 @@ def sentencecase_to_pascalcase(s: str) -> str:
         string in PascalCase form
 
     """
-    return re.sub(r"(?:^| )([a-zA-Z])", lambda match: match.group(1).upper(), s)
+    return "".join(word.capitalize() for word in s.split())
 
 
 def to_lower_sentence_case(s: str) -> str:

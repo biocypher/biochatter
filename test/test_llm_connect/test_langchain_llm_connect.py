@@ -120,8 +120,8 @@ def test_langchain_default(model_provider, model_name):
     )
     convo.set_api_key()
 
-    result, _, _ = convo.query("What is the capital of France?")
-    result.lower()
+    query_result = convo.query("What is the capital of France?")
+    query_result.response.lower()
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
@@ -149,8 +149,8 @@ def test_append_local_image_gemini(model_provider, model_name):
         local=True,
     )
 
-    result, _, _ = convo.query("Is the description accurate?")
-    assert "yes" in result.lower()
+    query_result = convo.query("Is the description accurate?")
+    assert "yes" in query_result.response.lower()
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
@@ -169,11 +169,11 @@ def test_local_image_query_gemini(model_provider, model_name):
         "You are an editorial assistant to a journal in biomedical science.",
     )
 
-    result, _, _ = convo.query(
+    query_result = convo.query(
         "Does this text describe the attached image: Live confocal imaging of liver stage P. berghei expressing UIS4-mCherry and cytoplasmic GFP reveals different morphologies of the LS-TVN: elongated membrane clusters (left), vesicles in the host cell cytoplasm (center), and a thin tubule protruding from the PVM (right). Live imaging was performed 20?h after infection of hepatoma cells. Features are marked with white arrowheads.",
         image_url="figure_panel.jpg",
     )
-    assert "yes" in result.lower()
+    assert "yes" in query_result.response.lower()
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
@@ -193,8 +193,8 @@ def test_append_online_image_gemini(model_provider, model_name):
         image_url="https://upload.wikimedia.org/wikipedia/commons/8/8f/The-Transformer-model-architecture.png",
     )
 
-    result, _, _ = convo.query("What does this picture show?")
-    assert "transformer" in result.lower()
+    query_result = convo.query("What does this picture show?")
+    assert "transformer" in query_result.response.lower()
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
@@ -209,11 +209,11 @@ def test_online_image_query_gemini(model_provider, model_name):
     )
     convo.set_api_key()
 
-    result, _, _ = convo.query(
+    query_result = convo.query(
         "What does this picture show?",
         image_url="https://upload.wikimedia.org/wikipedia/commons/8/8f/The-Transformer-model-architecture.png",
     )
-    assert "transformer" in result.lower()
+    assert "transformer" in query_result.response.lower()
 
 
 def create_tool_functions():

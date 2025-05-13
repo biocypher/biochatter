@@ -12,6 +12,7 @@ import urllib.parse
 from abc import ABC, abstractmethod
 from collections import deque
 from collections.abc import Callable
+from dataclasses import dataclass
 from typing import Literal
 
 import nltk
@@ -83,6 +84,17 @@ TOOL_RESULT_INTERPRETATION_PROMPT = """
 {additional_instructions}
 </additional_instructions>
 """
+
+
+@dataclass
+class QueryResult:
+    """A class to store the result of a query"""
+
+    query: str
+    response: str | None = None
+    correction: str | None = None
+    token_usage: int | None = None
+    error: bool | None = None
 
 
 class Conversation(ABC):
@@ -471,10 +483,10 @@ class Conversation(ABC):
 
         if not token_usage:
             # indicates error
-            return (msg, token_usage, None)
+            return QueryResult(query=text, response=msg, token_usage=token_usage, error=True)
 
         if not self.correct:
-            return (msg, token_usage, None)
+            return QueryResult(query=text, response=msg, token_usage=token_usage, error=False)
 
         cor_msg = "Correcting (using single sentences) ..." if self.split_correction else "Correcting ..."
 
@@ -485,10 +497,10 @@ class Conversation(ABC):
             corrections = self._correct_query(text)
 
         if not corrections:
-            return (msg, token_usage, None)
+            return QueryResult(query=text, response=msg, token_usage=token_usage, correction=None, error=False)
 
         correction = "\n".join(corrections)
-        return (msg, token_usage, correction)
+        return QueryResult(query=text, response=msg, token_usage=token_usage, correction=correction, error=False)
 
     def _correct_query(self, msg: str) -> list[str]:
         corrections = []

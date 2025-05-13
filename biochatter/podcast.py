@@ -115,14 +115,17 @@ class Podcaster:
         )
         c_first.set_api_key(api_key=os.getenv("OPENAI_API_KEY"), user="podcast")
         c_first.append_system_message(FIRST_PROMPT)
-        msg, token_usage, correction = c_first.query(text)
+        query_result = c_first.query(text)
+        msg = query_result.response
+        # token_usage = query_result.token_usage
+        # correction = query_result.correction
+
         # split at authors ('Authors:' or '\nAuthors:')
         if "Authors:" in msg:
             title = msg.split("Title:")[1].split("Authors:")[0].strip()
             authors = msg.split("Authors:")[1].strip()
             return f"{title}, by {authors}, podcasted by biochatter."
-        else:
-            return "A podcast by biochatter."
+        return "A podcast by biochatter."
 
     def _process_section(self, text: str, summarise: bool = False) -> str:
         """Processes a section of the document. Summarises if summarise is True,
@@ -150,7 +153,10 @@ class Podcaster:
             c.append_system_message(SUMMARISE_PROMPT)
         else:
             c.append_system_message(PROCESS_PROMPT)
-        msg, token_usage, correction = c.query(text)
+        query_result = c.query(text)
+        msg = query_result.response
+        # token_usage = query_result.token_usage
+        # correction = query_result.correction
         return msg
 
     def _process_sections(
@@ -272,7 +278,7 @@ class Podcaster:
                     input=section,
                 )
                 # Insert the integer suffix just before the .mp3 extension
-                section_path = path.rsplit(".", 1)[0] + f"_{i+1}.mp3"
+                section_path = path.rsplit(".", 1)[0] + f"_{i + 1}.mp3"
                 response.stream_to_file(section_path)
 
     def podcast_to_text(self):

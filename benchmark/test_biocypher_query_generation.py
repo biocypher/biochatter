@@ -43,7 +43,8 @@ def test_naive_query_generation_using_schema(
             "Only return the query, nothing else.",
         )
 
-        query, _, _ = conversation.query(yaml_data["input"]["prompt"])
+        query_result = conversation.query(yaml_data["input"]["prompt"])
+        query = query_result.response
 
         score = []
         for expected_part_of_query in yaml_data["expected"]["parts_of_query"]:
