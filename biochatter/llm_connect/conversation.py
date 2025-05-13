@@ -221,7 +221,9 @@ class Conversation(ABC):
             tools_description += f"</tool_{idx}>\n"
         return tools_description
 
-    def _create_tool_prompt(self, tools: list[Callable], additional_instructions: str = None, mcp: bool = False) -> str:
+    def _create_tool_prompt(
+        self, tools: list[Callable], additional_tools_instructions: str = None, mcp: bool = False
+    ) -> str:
         """Create the tool prompt. Only for model not supporting tool calling."""
         prompt_template = ChatPromptTemplate.from_template(TOOL_USAGE_PROMPT)
         tools_description = self._tool_formatter(tools, mcp=mcp)
@@ -229,7 +231,7 @@ class Conversation(ABC):
             {
                 "user_question": self.messages[-1].content,
                 "tools": tools_description,
-                "additional_instructions": additional_instructions if additional_instructions else "",
+                "additional_tools_instructions": additional_tools_instructions if additional_tools_instructions else "",
             }
         )
         return new_message.messages[0]
@@ -407,7 +409,7 @@ class Conversation(ABC):
 
             explain_tool_result (bool): Whether to explain the tool result.
 
-            additional_instructions (str): The additional instructions for the query.
+            additional_tools_instructions (str): The additional instructions for the query.
                 Mainly used for tools that do not support tool calling.
 
             general_instructions_tool_interpretation (str): The general
