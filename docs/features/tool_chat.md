@@ -116,6 +116,89 @@ convo.query(question, tools=tools) #<------
 
 Tools passed in this way are available only for **the current query**.
 
+## MCP tools
+
+BioChatter supports the [Model Context Protocol
+(MCP)](https://modelcontextprotocol.io/introduction) for tool calling through
+the `langchain_mcp_adapters` library. Below is a simple example of defining an
+MCP server and integrating its tools into your chat.
+
+First, define the MCP server using the `FastMCP` class:
+
+```python title="math_server.py"
+# math_server.py
+from mcp.server.fastmcp import FastMCP
+
+mcp = FastMCP("Math")
+
+@mcp.tool()
+def add(a: int, b: int) -> int:
+    """Add two numbers"""
+    return a + b
+
+@mcp.tool()
+def multiply(a: int, b: int) -> int:
+    """Multiply two numbers"""
+    return a * b
+
+if __name__ == "__main__":
+    mcp.run(transport="stdio")
+```
+
+Next, run the MCP server and provide the tools to the model. This involves
+asynchronous operations, so the code uses `async with` statements and `await`
+keywords:
+
+```python
+# import the needed libraries
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
+from langchain_mcp_adapters.tools import load_mcp_tools
+from pathlib import Path
+import sys
+
+#patch event loop if running in a notebook
+if 'ipykernel' in sys.modules:
+    import nest_asyncio
+    nest_asyncio.apply()
+
+# define the path to the math_server.py file
+server_path = Path('your_path_here')
+
+# define the server parameters
+server_params = StdioServerParameters(
+    command="python",
+    args=[server_path/"math_server.py"]
+)
+
+async with stdio_client(server_params) as (read, write):
+    async with ClientSession(read, write) as session:
+        
+        # Initialize the connection
+        await session.initialize()
+
+        # define the question
+        question = "What is 2 times 2?"
+
+        # Get tools
+        tools = await load_mcp_tools(session)
+
+        # define the conversation
+        convo = LangChainConversation(
+            model_provider="google_genai", 
+            model_name="gemini-2.0-flash",
+            prompts={},
+            tools=tools,
+            mcp=True
+        )
+
+        # set the API key
+        convo.set_api_key()
+
+        # invoke the model
+        convo.query(question)
+```
+
 ## Tool calling modalities
 
 When starting a conversation, you can specify one of two tool-calling modes:
@@ -240,89 +323,6 @@ the conversation object:
 ```python
 print(convo.general_instructions_tool_interpretation)
 print(convo.additional_instructions_tool_interpretation)
-```
-
-## MCP tools
-
-BioChatter supports the [Model Context Protocol
-(MCP)](https://modelcontextprotocol.io/introduction) for tool calling through
-the `langchain_mcp_adapters` library. Below is a simple example of defining an
-MCP server and integrating its tools into your chat.
-
-First, define the MCP server using the `FastMCP` class:
-
-```python title="math_server.py"
-# math_server.py
-from mcp.server.fastmcp import FastMCP
-
-mcp = FastMCP("Math")
-
-@mcp.tool()
-def add(a: int, b: int) -> int:
-    """Add two numbers"""
-    return a + b
-
-@mcp.tool()
-def multiply(a: int, b: int) -> int:
-    """Multiply two numbers"""
-    return a * b
-
-if __name__ == "__main__":
-    mcp.run(transport="stdio")
-```
-
-Next, run the MCP server and provide the tools to the model. This involves
-asynchronous operations, so the code uses `async with` statements and `await`
-keywords:
-
-```python
-# import the needed libraries
-from mcp import ClientSession, StdioServerParameters
-from mcp.client.stdio import stdio_client
-from langchain_mcp_adapters.tools import load_mcp_tools
-from pathlib import Path
-import sys
-
-#patch event loop if running in a notebook
-if 'ipykernel' in sys.modules:
-    import nest_asyncio
-    nest_asyncio.apply()
-
-# define the path to the math_server.py file
-server_path = Path('your_path_here')
-
-# define the server parameters
-server_params = StdioServerParameters(
-    command="python",
-    args=[server_path/"math_server.py"]
-)
-
-async with stdio_client(server_params) as (read, write):
-    async with ClientSession(read, write) as session:
-        
-        # Initialize the connection
-        await session.initialize()
-
-        # define the question
-        question = "What is 2 times 2?"
-
-        # Get tools
-        tools = await load_mcp_tools(session)
-
-        # define the conversation
-        convo = LangChainConversation(
-            model_provider="google_genai", 
-            model_name="gemini-2.0-flash",
-            prompts={},
-            tools=tools,
-            mcp=True
-        )
-
-        # set the API key
-        convo.set_api_key()
-
-        # invoke the model
-        convo.query(question)
 ```
 
 ## Tool calling for non-native models
