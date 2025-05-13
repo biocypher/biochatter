@@ -57,8 +57,8 @@ def test_ollama_chatting():
             prompts={},
             correct=False,
         )
-        (msg, token_usage, correction) = convo.query("Hello, world!")
-        assert token_usage > 0
+        query_result = convo.query("Hello, world!")
+        assert query_result.token_usage > 0
 
 
 def test_wasm_conversation():
@@ -84,8 +84,8 @@ def test_wasm_conversation():
 
     # Test the query method
     test_query = "Hello, world!"
-    result, _, _ = wasm_convo.query(test_query)
-    assert result == test_query  # assuming the messages list is initially empty
+    query_result = wasm_convo.query(test_query)
+    assert query_result.response == test_query  # assuming the messages list is initially empty
 
     # Test the _primary_query method, add another message to the messages list
     wasm_convo.append_system_message("System message")

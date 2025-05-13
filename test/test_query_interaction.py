@@ -4,6 +4,7 @@ from unittest.mock import Mock, patch
 import pytest
 
 from biochatter.query_interaction import BioCypherQueryHandler
+from biochatter.llm_connect.conversation import QueryResult
 
 _kg = {
     "entities": {
@@ -137,7 +138,9 @@ def test_explain(query_handler, request):
     with patch("biochatter.query_interaction.GptConversation") as mock_gptconv:
         resultMsg = "**Some explanation**"
 
-        mock_gptconv.return_value.query.return_value = [resultMsg, Mock(), None]
+        mock_gptconv.return_value.query.return_value = QueryResult(
+            query=query_handler.query, response=resultMsg, token_usage=Mock(), correction=None, error=False
+        )
         mock_append_system_messages = Mock()
         mock_gptconv.return_value.append_system_message = mock_append_system_messages
         explanation = query_handler.explain_query()
@@ -198,7 +201,9 @@ def update_limit(query_handler, update_request):
             "MATCH (d:Disease {name: 'mucoviscidosis'})-[:PERTURBED]->(g:Gene) "
             "RETURN g.name AS AssociatedGenes LIMIT 10"
         )
-        mock_gptconv.return_value.query.return_value = [resultMsg, Mock(), None]
+        mock_gptconv.return_value.query.return_value = QueryResult(
+            query=update_request, response=resultMsg, token_usage=Mock(), correction=None, error=False
+        )
         mock_append_system_messages = Mock()
         mock_gptconv.return_value.append_system_message = mock_append_system_messages
         updated_query = query_handler.update_query(update_request)
@@ -218,7 +223,9 @@ def test_update_sorting(query_handler, request):
             "MATCH (d:Disease {name: 'mucoviscidosis'})-[:PERTURBED]->(g:Gene) "
             "RETURN g.name AS AssociatedGenes\nORDER BY g.name ASC"
         )
-        mock_gptconv.return_value.query.return_value = [resultMsg, Mock(), None]
+        mock_gptconv.return_value.query.return_value = QueryResult(
+            query=update_request, response=resultMsg, token_usage=Mock(), correction=None, error=False
+        )
         mock_append_system_messages = Mock()
         mock_gptconv.return_value.append_system_message = mock_append_system_messages
         updated_query = query_handler.update_query(update_request)

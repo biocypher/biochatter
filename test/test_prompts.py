@@ -3,6 +3,7 @@ from unittest.mock import Mock, patch
 import pytest
 
 from biochatter.prompts import BioCypherPromptEngine
+from biochatter.llm_connect.conversation import QueryResult
 
 ## THIS IS LARGELY BENCHMARK MATERIAL, TO BE MOCKED FOR UNIT TESTING
 
@@ -47,15 +48,14 @@ def test_entity_selection(prompt_engine):
     """
     with patch("biochatter.prompts.Conversation") as mock_conversation:
         system_msg = "You have access to a knowledge graph that contains these entity types: Protein, Gene, Disease, CellType. Your task is to select the entity types that are relevant to the user's question for subsequent use in a query. Only return the entity types, comma-separated, without any additional text. Do not return entity names, relationships, or properties."
-        mock_conversation.return_value.query.return_value = [
-            "Gene,Disease",
-            Mock(),
-            None,
-        ]
+        question_for_mock = "Which genes are associated with mucoviscidosis?"
+        mock_conversation.return_value.query.return_value = QueryResult(
+            query=question_for_mock, response="Gene,Disease", token_usage=Mock(), correction=None, error=False
+        )
         mock_append_system_message = Mock()
         mock_conversation.return_value.append_system_message = mock_append_system_message
         success = prompt_engine._select_entities(
-            question="Which genes are associated with mucoviscidosis?",
+            question=question_for_mock,
             conversation=mock_conversation.return_value,
         )
         mock_append_system_message.assert_called_once_with(system_msg)
@@ -67,11 +67,13 @@ def test_relationship_selection(prompt_engine):
     prompt_engine.question = "Which genes are associated with mucoviscidosis?"
     prompt_engine.selected_entities = ["Gene", "Disease"]
     with patch("biochatter.prompts.Conversation") as mock_conversation:
-        mock_conversation.return_value.query.return_value = [
-            "GeneToPhenotypeAssociation",
-            Mock(),
-            None,
-        ]
+        mock_conversation.return_value.query.return_value = QueryResult(
+            query=prompt_engine.question,
+            response="GeneToPhenotypeAssociation",
+            token_usage=Mock(),
+            correction=None,
+            error=False,
+        )
         mock_append_system_messages = Mock()
         mock_conversation.return_value.append_system_message = mock_append_system_messages
         success = prompt_engine._select_relationships(
@@ -111,11 +113,13 @@ def test_relationship_selection_with_incomplete_entities(prompt_engine):
     prompt_engine.question = "Which genes are associated with mucoviscidosis?"
     prompt_engine.selected_entities = ["Disease"]
     with patch("biochatter.prompts.Conversation") as mock_conversation:
-        mock_conversation.return_value.query.return_value = [
-            "GeneToDiseaseAssociation",
-            Mock(),
-            None,
-        ]
+        mock_conversation.return_value.query.return_value = QueryResult(
+            query=prompt_engine.question,
+            response="GeneToDiseaseAssociation",
+            token_usage=Mock(),
+            correction=None,
+            error=False,
+        )
         mock_append_system_messages = Mock()
         mock_conversation.return_value.append_system_message = mock_append_system_messages
         success = prompt_engine._select_relationships(
@@ -148,11 +152,13 @@ def test_relationship_selection_does_not_create_none_entities(prompt_engine):
     prompt_engine.question = "Which proteins interact post-translationally?"
     prompt_engine.selected_entities = ["Protein"]
     with patch("biochatter.prompts.Conversation") as mock_conversation:
-        mock_conversation.return_value.query.return_value = [
-            "PostTranslationalInteraction",
-            Mock(),
-            None,
-        ]
+        mock_conversation.return_value.query.return_value = QueryResult(
+            query=prompt_engine.question,
+            response="PostTranslationalInteraction",
+            token_usage=Mock(),
+            correction=None,
+            error=False,
+        )
         mock_append_system_messages = Mock()
         mock_conversation.return_value.append_system_message = mock_append_system_messages
         success = prompt_engine._select_relationships(
@@ -192,11 +198,12 @@ def test_property_selection(prompt_engine):
                 "evidence":null
             }
         }"""
-        mock_conversation.return_value.query.return_value = [
-            resultMsg,
-            Mock(),
-            None,
-        ]
+        mock_conversation.return_value.query.return_value = QueryResult(
+            query="Which genes are associated with mucoviscidosis?",
+            response=resultMsg,
+            token_usage=Mock(),
+            correction=None,
+        )
         mock_append_system_messages = Mock()
         mock_conversation.return_value.append_system_message = mock_append_system_messages
         success = prompt_engine._select_properties(
@@ -236,11 +243,12 @@ def test_cypher_query_generation(prompt_engine):
         MATCH (d:Disease {name: 'mucoviscidosis'})-[:PERTURBED]->(g:Gene)
         RETURN g.name AS AssociatedGenes
         """
-        mock_conversation.return_value.query.return_value = [
-            resultMsg,
-            Mock(),
-            None,
-        ]
+        mock_conversation.return_value.query.return_value = QueryResult(
+            query="Which genes are associated with mucoviscidosis?",
+            response=resultMsg,
+            token_usage=Mock(),
+            correction=None,
+        )
         mock_append_system_messages = Mock()
         mock_conversation.return_value.append_system_message = mock_append_system_messages
         query = prompt_engine._generate_query(
@@ -296,11 +304,12 @@ def test_sql_query_generation(prompt_engine):
         JOIN Disease d ON gd.disease_id = d.id
         WHERE d.name = 'mucoviscidosis';
         """
-        mock_conversation.return_value.query.return_value = [
-            resultMsg,
-            Mock(),
-            None,
-        ]
+        mock_conversation.return_value.query.return_value = QueryResult(
+            query="Which genes are associated with mucoviscidosis?",
+            response=resultMsg,
+            token_usage=Mock(),
+            correction=None,
+        )
         mock_append_system_messages = Mock()
         mock_conversation.return_value.append_system_message = mock_append_system_messages
         query = prompt_engine._generate_query(

@@ -4,6 +4,7 @@ import pytest
 
 from benchmark.conftest import calculate_bool_vector_score
 from biochatter.prompts import BioCypherPromptEngine
+from biochatter.llm_connect.conversation import QueryResult
 
 MODEL_NAMES = [
     "gpt-3.5-turbo-0613",
@@ -23,15 +24,14 @@ def prompt_engine(request):
 def test_entity_selection(prompt_engine):
     with patch("biochatter.prompts.Conversation") as mock_conversation:
         system_msg = "You have access to a knowledge graph that contains these entity types: Protein, Gene, Disease, CellType. Your task is to select the entity types that are relevant to the user's question for subsequent use in a query. Only return the entity types, comma-separated, without any additional text. Do not return entity names, relationships, or properties."
-        mock_conversation.return_value.query.return_value = [
-            "Gene,Disease",
-            Mock(),
-            None,
-        ]
+        question_arg = "Which genes are associated with mucoviscidosis?"
+        mock_conversation.return_value.query.return_value = QueryResult(
+            query=question_arg, response="Gene,Disease", token_usage=Mock(), correction=None, error=False
+        )
         mock_append_system_messages = Mock()
         mock_conversation.return_value.append_system_message = mock_append_system_messages
         success = prompt_engine._select_entities(
-            question="Which genes are associated with mucoviscidosis?",
+            question=question_arg,
             conversation=mock_conversation.return_value,
         )
         assert success
@@ -48,11 +48,13 @@ def test_relationship_selection(prompt_engine):
     prompt_engine.question = "Which genes are associated with mucoviscidosis?"
     prompt_engine.selected_entities = ["Gene", "Disease"]
     with patch("biochatter.prompts.Conversation") as mock_conversation:
-        mock_conversation.return_value.query.return_value = [
-            "GeneToPhenotypeAssociation",
-            Mock(),
-            None,
-        ]
+        mock_conversation.return_value.query.return_value = QueryResult(
+            query=prompt_engine.question,
+            response="GeneToPhenotypeAssociation",
+            token_usage=Mock(),
+            correction=None,
+            error=False,
+        )
         mock_append_system_messages = Mock()
         mock_conversation.return_value.append_system_message = mock_append_system_messages
         success = prompt_engine._select_relationships(
@@ -115,11 +117,9 @@ def test_property_selection(prompt_engine):
                 "evidence":null
             }
         }"""
-        mock_conversation.return_value.query.return_value = [
-            resultMsg,
-            Mock(),
-            None,
-        ]
+        mock_conversation.return_value.query.return_value = QueryResult(
+            query=prompt_engine.question, response=resultMsg, token_usage=Mock(), correction=None, error=False
+        )
         mock_append_system_messages = Mock()
         mock_conversation.return_value.append_system_message = mock_append_system_messages
         success = prompt_engine._select_properties(
@@ -143,15 +143,14 @@ def test_query_generation(prompt_engine):
         MATCH (d:Disease {name: 'mucoviscidosis'})-[:PERTURBED]->(g:Gene)
         RETURN g.name AS AssociatedGenes
         """
-        mock_conversation.return_value.query.return_value = [
-            resultMsg,
-            Mock(),
-            None,
-        ]
+        question_arg = "Which genes are associated with mucoviscidosis?"
+        mock_conversation.return_value.query.return_value = QueryResult(
+            query=question_arg, response=resultMsg, token_usage=Mock(), correction=None, error=False
+        )
         mock_append_system_messages = Mock()
         mock_conversation.return_value.append_system_message = mock_append_system_messages
         query = prompt_engine._generate_query(
-            question="Which genes are associated with mucoviscidosis?",
+            question=question_arg,
             entities=["Gene", "Disease"],
             relationships={
                 "PERTURBED": {
