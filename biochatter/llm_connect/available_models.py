@@ -69,6 +69,7 @@ class TokenLimits(Enum):
     GPT_4o = ("gpt-4o", 32000)
     BLOOM = ("bigscience/bloom", 1000)
     CUSTOM_ENDPOINT = ("custom-endpoint", 1)
+    GEMINI_20_FLASH = ("gemini-2.0-flash", 1000000)
 
     @property
     def limit(self):
@@ -113,4 +114,5 @@ TOKEN_LIMITS = {
     OpenAIModels.GPT_4_1106_PREVIEW.value: TokenLimits.GPT_4_1106_PREVIEW.limit,
     HuggingFaceModels.BLOOM.value: TokenLimits.BLOOM.limit,
     XInferenceModels.CUSTOM_ENDPOINT.value: TokenLimits.CUSTOM_ENDPOINT.limit,
+    GeminiModels.GEMINI_20_FLASH.value: TokenLimits.GEMINI_20_FLASH.limit,
 }
