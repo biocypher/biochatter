@@ -88,12 +88,14 @@ def test_multimodal_answer(
             image_path = os.path.join(f2, f2.split("/")[-1] + ".jpg")
 
             # Ask the model to determine whether the caption belongs to the figure
-            response, _, _ = conversation.query(
+            query_result = conversation.query(
                 f"Does this caption describe the figure in the image? {caption}"
                 "Answer with 'yes' or 'no' and give a confidence score between 0 and 10. "
                 "Answer in the format 'yes, 8' or 'no, 2'.",
                 image_url=image_path,
             )
+
+            response = query_result.response
 
             # Remove full stop from response
             response = response.replace(".", "")

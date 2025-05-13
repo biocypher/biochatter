@@ -50,7 +50,8 @@ def test_medical_exam(
         # Define the system prompt
         [conversation.append_system_message(m) for m in yaml_data["input"]["system_messages"]]
         # Define the user prompt
-        response, _, _ = conversation.query(yaml_data["input"]["prompt"])
+        query_result = conversation.query(yaml_data["input"]["prompt"])
+        response = query_result.response
 
         # Set response to lower case and remove punctuation
         response = (response.lower().replace(".", "").replace("?", "").replace("!", "")).strip()
