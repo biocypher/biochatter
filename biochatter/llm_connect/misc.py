@@ -1,7 +1,7 @@
 from langchain_community.llms.huggingface_hub import HuggingFaceHub
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
-from biochatter.llm_connect.conversation import Conversation
+from biochatter.llm_connect.conversation import Conversation, QueryResult
 
 
 class WasmConversation(Conversation):
@@ -32,7 +32,7 @@ class WasmConversation(Conversation):
             split_correction=split_correction,
         )
 
-    def query(self, text: str) -> tuple:
+    def query(self, text: str) -> QueryResult:
         """Return the entire message history as a single string.
 
         This is the message that is sent to the wasm model.
@@ -43,15 +43,20 @@ class WasmConversation(Conversation):
 
         Returns:
         -------
-            tuple: A tuple containing the message history as a single string,
-                and `None` for the second and third elements of the tuple.
+            QueryResult: A QueryResult object with the response, token usage, and correction.
+            and whether an error occurred.
 
         """
         self.append_user_message(text)
 
         self._inject_context(text)
 
-        return (self._primary_query(), None, None)
+        return QueryResult(
+            query=text,
+            response=self._primary_query(),
+            token_usage=None,
+            correction=None,
+        )
 
     def _primary_query(self):
         """Concatenate all messages in the conversation.

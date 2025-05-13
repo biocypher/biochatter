@@ -326,7 +326,10 @@ class BioCypherPromptEngine:
             "entity names, relationships, or properties.",
         )
 
-        msg, token_usage, correction = conversation.query(question)
+        query_result = conversation.query(question)
+        msg = query_result.response
+        # token_usage = query_result.token_usage
+        # correction = query_result.correction
 
         result = msg.split(",") if msg else []
         # TODO: do we go back and retry if no entities were selected? or ask for
@@ -450,9 +453,12 @@ class BioCypherPromptEngine:
 
         conversation.append_system_message(msg)
 
-        res, token_usage, correction = conversation.query(self.question)
+        query_result = conversation.query(self.question)
+        res = query_result.response
+        # token_usage = query_result.token_usage
+        # correction = query_result.correction
 
-        result = res.split(",") if msg else []
+        result = res.split(",") if res else []
 
         if result:
             for relationship in result:
@@ -500,10 +506,8 @@ class BioCypherPromptEngine:
     @staticmethod
     def _validate_json_str(json_str: str):
         json_str = json_str.strip()
-        if json_str.startswith("```json"):
-            json_str = json_str[7:]
-        if json_str.endswith("```"):
-            json_str = json_str[:-3]
+        json_str = json_str.removeprefix("```json")
+        json_str = json_str.removesuffix("```")
         return json_str.strip()
 
     def _select_properties(self, conversation: "Conversation") -> bool:
@@ -559,7 +563,11 @@ class BioCypherPromptEngine:
 
         conversation.append_system_message(msg)
 
-        msg, token_usage, correction = conversation.query(self.question)
+        query_result = conversation.query(self.question)
+        msg = query_result.response
+        # token_usage = query_result.token_usage
+        # correction = query_result.correction
+
         msg = BioCypherPromptEngine._validate_json_str(msg)
 
         try:
@@ -612,7 +620,10 @@ class BioCypherPromptEngine:
 
         conversation.append_system_message(msg)
 
-        out_msg, token_usage, correction = conversation.query(question)
+        query_result = conversation.query(question)
+        out_msg = query_result.response
+        # token_usage = query_result.token_usage
+        # correction = query_result.correction
 
         return out_msg.strip()
 
