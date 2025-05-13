@@ -201,7 +201,7 @@ def test_create_tool_prompt(dummy_conv):
             args="argsA",
         )
     ]
-    prompt_msg = dummy_conv._create_tool_prompt(tools, additional_instructions="Extra instructions", mcp=False)
+    prompt_msg = dummy_conv._create_tool_prompt(tools, additional_tools_instructions="Extra instructions", mcp=False)
     # prompt_msg is a SystemMessage or similar with .content
     content = prompt_msg.content if hasattr(prompt_msg, "content") else str(prompt_msg)
     assert "What is the capital of France?" in content
@@ -217,7 +217,7 @@ def test_porcess_manual_tool_call_non_mcp(dummy_conv):
     tool.tool_call_schema = "schema"
     tool.args = "args"
     tool_call = {"tool_name": "tool1", "param": 42}
-    msg = dummy_conv._porcess_manual_tool_call(tool_call.copy(), [tool], explain_tool_result=False)
+    msg = dummy_conv._process_manual_tool_call(tool_call.copy(), [tool], explain_tool_result=False)
     assert "Tool: tool1" in msg
     assert "Arguments: {'param': 42}" in msg
     assert "Tool result: sync_result" in msg
@@ -242,7 +242,7 @@ def test_porcess_manual_tool_call_mcp(dummy_conv, monkeypatch):
             return asyncio.get_event_loop().run_until_complete(coro)
 
     monkeypatch.setattr("asyncio.get_running_loop", lambda: DummyLoop())
-    msg = dummy_conv._porcess_manual_tool_call(tool_call.copy(), [tool], explain_tool_result=False)
+    msg = dummy_conv._process_manual_tool_call(tool_call.copy(), [tool], explain_tool_result=False)
     assert "Tool: tool1" in msg
     assert "Arguments: {'param': 99}" in msg
     assert "Tool result: async_result" in msg
@@ -257,6 +257,6 @@ def test_porcess_manual_tool_call_explain_tool_result(dummy_conv):
     tool.args = "args"
     tool_call = {"tool_name": "tool1", "param": 42}
     dummy_conv.chat.invoke.return_value = MagicMock(content="Interpreted result.")
-    msg = dummy_conv._porcess_manual_tool_call(tool_call.copy(), [tool], explain_tool_result=True)
+    msg = dummy_conv._process_manual_tool_call(tool_call.copy(), [tool], explain_tool_result=True)
     assert "Tool result interpretation: Interpreted result." in msg
     assert any("Interpreted result." in m.content for m in dummy_conv.messages if hasattr(m, "content"))
