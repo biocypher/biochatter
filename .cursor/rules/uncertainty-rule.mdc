@@ -1,8 +1,0 @@
----
-description: 
-globs: 
-alwaysApply: false
----
-
-# Uncertainty rule
-If you are uncertain about something I ask you, formulate some question and come back at me to ask clarifications before setting off to generate code;

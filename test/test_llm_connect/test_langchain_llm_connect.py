@@ -1,12 +1,9 @@
-"""Tests for the Gemini LLM connect module."""
-
-import os
-from unittest.mock import Mock, patch
+"""Tests for the LangChain LLM connect module."""
 
 import pytest
-from google.api_core.exceptions import InvalidArgument
 
-from biochatter.llm_connect import GeminiConversation
+from biochatter.llm_connect import LangChainConversation
+
 
 from langchain_core.messages import (
     AIMessage,
@@ -17,41 +14,30 @@ from langchain_core.messages import (
 from langchain_core.tools import tool
 
 
-@pytest.fixture(scope="module", autouse=True)
-def manage_test_context():
-    import dotenv
-    import os
-    import pathlib
-
-    # Get the directory containing this script
-    script_dir = pathlib.Path(__file__).parent.parent.absolute()
-
-    # Change working directory to the script directory
-    original_dir = os.getcwd()
-    os.chdir(script_dir)
-
-    # Load environment variables
-    dotenv.load_dotenv()
-
-    # Yield to allow tests to run
-    yield
-
-    # Restore original working directory after tests
-    os.chdir(original_dir)
+MODEL_PARAMS = [
+    ("google_genai", "gemini-2.0-flash"),
+    ("openai", "gpt-4o"),
+    ("mistralai", "mistral-large-latest"),
+    ("anthropic", "claude-3-7-sonnet-latest"),
+]
 
 
-def test_empty_messages():
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+@pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
+def test_empty_messages(model_provider, model_name):
+    convo = LangChainConversation(
+        model_provider=model_provider,
+        model_name=model_name,
         prompts={},
         split_correction=False,
     )
     assert convo.get_msg_json() == "[]"
 
 
-def test_single_message():
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+@pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
+def test_single_message(model_provider, model_name):
+    convo = LangChainConversation(
+        model_provider=model_provider,
+        model_name=model_name,
         prompts={},
         split_correction=False,
     )
@@ -59,9 +45,11 @@ def test_single_message():
     assert convo.get_msg_json() == '[{"system": "Hello, world!"}]'
 
 
-def test_multiple_messages():
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+@pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
+def test_multiple_messages(model_provider, model_name):
+    convo = LangChainConversation(
+        model_provider=model_provider,
+        model_name=model_name,
         prompts={},
         split_correction=False,
     )
@@ -73,9 +61,11 @@ def test_multiple_messages():
     )
 
 
-def test_unknown_message_type():
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+@pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
+def test_unknown_message_type(model_provider, model_name):
+    convo = LangChainConversation(
+        model_provider=model_provider,
+        model_name=model_name,
         prompts={},
         split_correction=False,
     )
@@ -84,28 +74,12 @@ def test_unknown_message_type():
         convo.get_msg_json()
 
 
-@patch("biochatter.llm_connect.gemini.ChatGoogleGenerativeAI")
-def test_gemini_catches_authentication_error(mock_gemini):
-    mock_gemini.side_effect = InvalidArgument("Invalid API key")
-
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
-        prompts={},
-        split_correction=False,
-    )
-
-    success = convo.set_api_key(
-        api_key="fake_key",
-        user="test_user",
-    )
-
-    assert not success
-
-
-def test_chat_attribute_not_initialized():
+@pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
+def test_chat_attribute_not_initialized(model_provider, model_name):
     """Test that accessing chat before initialization raises AttributeError."""
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+    convo = LangChainConversation(
+        model_provider=model_provider,
+        model_name=model_name,
         prompts={},
         split_correction=False,
     )
@@ -117,10 +91,12 @@ def test_chat_attribute_not_initialized():
     assert "Did you call set_api_key()?" in str(exc_info.value)
 
 
-def test_ca_chat_attribute_not_initialized():
+@pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
+def test_ca_chat_attribute_not_initialized(model_provider, model_name):
     """Test that accessing ca_chat before initialization raises AttributeError."""
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+    convo = LangChainConversation(
+        model_provider=model_provider,
+        model_name=model_name,
         prompts={},
         split_correction=False,
     )
@@ -132,116 +108,33 @@ def test_ca_chat_attribute_not_initialized():
     assert "Did you call set_api_key()?" in str(exc_info.value)
 
 
-@patch("biochatter.llm_connect.gemini.ChatGoogleGenerativeAI")
-def test_chat_attributes_reset_on_auth_error(mock_gemini):
-    """Test that chat attributes are reset to None on authentication error."""
-    mock_gemini.side_effect = InvalidArgument("Invalid API key")
-
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
-        prompts={},
-        split_correction=False,
-    )
-
-    # Set API key (which will fail)
-    success = convo.set_api_key(api_key="fake_key")
-    assert not success
-
-    # Verify both chat attributes are None
-    with pytest.raises(AttributeError):
-        _ = convo.chat
-    with pytest.raises(AttributeError):
-        _ = convo.ca_chat
-
-
-@patch("biochatter.llm_connect.gemini.ChatGoogleGenerativeAI")
-def test_chat_attributes_set_on_success(mock_gemini):
-    """Test that chat attributes are properly set when authentication succeeds."""
-    # Mock successful authentication
-    mock_gemini.return_value = Mock()
-
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
-        prompts={},
-        split_correction=False,
-    )
-
-    # Set API key (which will succeed)
-    success = convo.set_api_key(api_key="fake_key")
-    assert success
-
-    # Verify both chat attributes are accessible
-    assert convo.chat is not None
-    assert convo.ca_chat is not None
-
-
-@pytest.mark.skip(reason="Not yet implemented community usage for Gemini")
-def test_gemini_update_usage_stats():
-    """Test the _update_usage_stats method in GeminiConversation."""
-    # Arrange
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
-        prompts={},
-        correct=False,
-    )
-
-    # Mock the usage_stats object
-    mock_usage_stats = Mock()
-    convo.usage_stats = mock_usage_stats
-    convo.user = "community"  # Set user to enable stats tracking
-
-    # Mock the update_token_usage callback
-    mock_update_callback = Mock()
-    convo._update_token_usage = mock_update_callback
-
-    model = "gemini-2.0-flash"
-    token_usage = {
-        "total_tokens": 80,
-    }
-
-    # Act
-    convo._update_usage_stats(model, token_usage)
-
-    # Assert
-    # Verify increment was called with correct arguments for community stats
-    mock_usage_stats.increment.assert_called_once_with(
-        "usage:[date]:[user]",
-        {
-            "total_tokens:gemini-2.0-flash": 80,
-        },
-    )
-
-    # Verify callback was called with complete token_usage
-    mock_update_callback.assert_called_once_with(
-        "community",
-        "gemini-2.0-flash",
-        token_usage,
-    )
-
-
 @pytest.mark.skip(reason="Live test for development purposes")
-def test_gemini_default():
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+@pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
+def test_langchain_default(model_provider, model_name):
+    convo = LangChainConversation(
+        model_provider=model_provider,
+        model_name=model_name,
         prompts={},
         correct=False,
         split_correction=False,
     )
-    convo.set_api_key(api_key=os.getenv("GOOGLE_API_KEY"))
+    convo.set_api_key()
 
     result, _, _ = convo.query("What is the capital of France?")
     result.lower()
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
-def test_append_local_image_gemini():
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+@pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
+def test_append_local_image_gemini(model_provider, model_name):
+    convo = LangChainConversation(
+        model_provider=model_provider,
+        model_name=model_name,
         prompts={},
         correct=False,
         split_correction=False,
     )
-    convo.set_api_key(api_key=os.getenv("GOOGLE_API_KEY"), user="test_user")
+    convo.set_api_key()
 
     convo.append_system_message(
         "You are an editorial assistant to a journal in biomedical science.",
@@ -261,14 +154,16 @@ def test_append_local_image_gemini():
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
-def test_local_image_query_gemini():
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+@pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
+def test_local_image_query_gemini(model_provider, model_name):
+    convo = LangChainConversation(
+        model_provider=model_provider,
+        model_name=model_name,
         prompts={},
         correct=False,
         split_correction=False,
     )
-    convo.set_api_key(api_key=os.getenv("GOOGLE_API_KEY"), user="test_user")
+    convo.set_api_key()
 
     convo.append_system_message(
         "You are an editorial assistant to a journal in biomedical science.",
@@ -282,14 +177,16 @@ def test_local_image_query_gemini():
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
-def test_append_online_image_gemini():
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+@pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
+def test_append_online_image_gemini(model_provider, model_name):
+    convo = LangChainConversation(
+        model_provider=model_provider,
+        model_name=model_name,
         prompts={},
         correct=False,
         split_correction=False,
     )
-    convo.set_api_key(api_key=os.getenv("GOOGLE_API_KEY"), user="test_user")
+    convo.set_api_key()
 
     convo.append_image_message(
         "This is a picture from the internet.",
@@ -301,14 +198,16 @@ def test_append_online_image_gemini():
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
-def test_online_image_query_gemini():
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+@pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
+def test_online_image_query_gemini(model_provider, model_name):
+    convo = LangChainConversation(
+        model_provider=model_provider,
+        model_name=model_name,
         prompts={},
         correct=False,
         split_correction=False,
     )
-    convo.set_api_key(api_key=os.getenv("GOOGLE_API_KEY"), user="test_user")
+    convo.set_api_key()
 
     result, _, _ = convo.query(
         "What does this picture show?",
@@ -334,36 +233,40 @@ def create_tool_functions():
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
-def test_tool_message_auto():
+@pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
+def test_tool_message_auto(model_provider, model_name):
     multiply, _ = create_tool_functions()
 
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+    convo = LangChainConversation(
+        model_provider=model_provider,
+        model_name=model_name,
         prompts={},
         split_correction=False,
         tools=[multiply],
         tool_call_mode="auto",
     )
 
-    convo.set_api_key(api_key=os.getenv("GOOGLE_API_KEY"), user="test_user")
+    convo.set_api_key()
 
     convo.query("What is 2 times 2?")
     assert "4" in convo.messages[-1].content
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
-def test_multiple_tool_calls_auto():
+@pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
+def test_multiple_tool_calls_auto(model_provider, model_name):
     multiply, add = create_tool_functions()
 
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+    convo = LangChainConversation(
+        model_provider=model_provider,
+        model_name=model_name,
         prompts={},
         split_correction=False,
         tools=[multiply, add],
         tool_call_mode="auto",
     )
 
-    convo.set_api_key(api_key=os.getenv("GOOGLE_API_KEY"), user="test_user")
+    convo.set_api_key()
 
     convo.query("What is 2 times 3? and what about 2 plus 3?")
     assert "6" in convo.messages[-2].content
@@ -371,33 +274,37 @@ def test_multiple_tool_calls_auto():
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
-def test_tool_auto_message_passed_to_query():
+@pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
+def test_tool_auto_message_passed_to_query(model_provider, model_name):
     multiply, _ = create_tool_functions()
 
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+    convo = LangChainConversation(
+        model_provider=model_provider,
+        model_name=model_name,
         prompts={},
     )
 
-    convo.set_api_key(api_key=os.getenv("GOOGLE_API_KEY"), user="test_user")
+    convo.set_api_key()
 
     convo.query("What is 2 times 3?", tools=[multiply])
     assert "6" in convo.messages[-1].content
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
-def test_tool_message_text():
+@pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
+def test_tool_message_text(model_provider, model_name):
     multiply, _ = create_tool_functions()
 
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+    convo = LangChainConversation(
+        model_provider=model_provider,
+        model_name=model_name,
         prompts={},
         split_correction=False,
         tools=[multiply],
         tool_call_mode="text",
     )
 
-    convo.set_api_key(api_key=os.getenv("GOOGLE_API_KEY"), user="test_user")
+    convo.set_api_key()
 
     convo.query("What is 2 times 2?")
 
@@ -409,18 +316,20 @@ def test_tool_message_text():
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
-def test_multiple_tool_calls_text_mode():
+@pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
+def test_multiple_tool_calls_text_mode(model_provider, model_name):
     multiply, add = create_tool_functions()
 
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+    convo = LangChainConversation(
+        model_provider=model_provider,
+        model_name=model_name,
         prompts={},
         split_correction=False,
         tools=[multiply, add],
         tool_call_mode="text",
     )
 
-    convo.set_api_key(api_key=os.getenv("GOOGLE_API_KEY"), user="test_user")
+    convo.set_api_key()
 
     # Query that should trigger multiple tool calls
     convo.query("What is 2 times 3? and what about 2 plus 3?")
@@ -442,16 +351,18 @@ def test_multiple_tool_calls_text_mode():
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
-def test_tool_text_message_passed_to_query():
+@pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
+def test_tool_text_message_passed_to_query(model_provider, model_name):
     multiply, _ = create_tool_functions()
 
-    convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+    convo = LangChainConversation(
+        model_provider=model_provider,
+        model_name=model_name,
         prompts={},
         tool_call_mode="text",
     )
 
-    convo.set_api_key(api_key=os.getenv("GOOGLE_API_KEY"), user="test_user")
+    convo.set_api_key()
 
     convo.query("What is 2 times 3?", tools=[multiply])
     assert "Tool: multiply" in convo.messages[-1].content
