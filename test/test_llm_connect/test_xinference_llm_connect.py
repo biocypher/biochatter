@@ -83,8 +83,8 @@ def test_xinference_chatting():
             prompts={},
             correct=False,
         )
-        (msg, token_usage, correction) = convo.query("Hello, world!")
-        assert token_usage["completion_tokens"] > 0
+        query_result = convo.query("Hello, world!")
+        assert query_result.token_usage['total_tokens'] > 0
 
 
 @pytest.fixture
@@ -175,8 +175,8 @@ def test_local_image_query_xinference():
     )
     assert convo.set_api_key()
 
-    result, _, _ = convo.query(
+    query_result = convo.query(
         "Does this text describe the attached image: Live confocal imaging of liver stage P. berghei expressing UIS4-mCherry and cytoplasmic GFP reveals different morphologies of the LS-TVN: elongated membrane clusters (left), vesicles in the host cell cytoplasm (center), and a thin tubule protruding from the PVM (right). Live imaging was performed 20?h after infection of hepatoma cells. Features are marked with white arrowheads.",
         image_url="test/figure_panel.jpg",
     )
-    assert isinstance(result, str)
+    assert isinstance(query_result.response, str)
