@@ -1,0 +1,19 @@
+[run]
+source = biochatter
+omit = 
+    */tests/*
+    */__init__.py
+    */setup.py
+    biochatter/podcast.py
+    biochatter/api_agent/python/scanpy_pp_full.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    pass 
+
+[xml]
+output = coverage.xml

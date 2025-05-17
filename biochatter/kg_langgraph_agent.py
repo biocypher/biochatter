@@ -135,7 +135,7 @@ class KGQueryReflexionAgent(ReflexionAgent):
                 ),
                 MessagesPlaceholder(variable_name="messages"),
                 (
-                    "system",
+                    "human",
                     (
                         "Note: 1. Only generate query according to the user's question above.\n"
                         "2. Please limit the results to a maximum of 30 items"

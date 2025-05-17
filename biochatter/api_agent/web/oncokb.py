@@ -1,5 +1,8 @@
+"""OncoKB API agent."""
+
 import uuid
 from collections.abc import Callable
+from typing import TYPE_CHECKING
 
 import requests
 from langchain.chains.openai_functions import create_structured_output_runnable
@@ -7,19 +10,29 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
 
-from biochatter.llm_connect import Conversation
+from biochatter.api_agent.base.agent_abc import (
+    BaseFetcher,
+    BaseInterpreter,
+    BaseQueryBuilder,
+)
 
-from .abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
+if TYPE_CHECKING:
+    from biochatter.llm_connect import Conversation
+
 
 ONCOKB_QUERY_PROMPT = """
-You are a world class algorithm for creating queries in structured formats. Your task is to use OncoKB Web APIs to answer genomic questions.
+You are a world class algorithm for creating queries in structured formats. Your task is to use OncoKB Web APIs to
+answer genomic questions.
 
-For questions about genomic alterations, you can use the OncoKB API by providing the appropriate parameters based on the type of query.
+For questions about genomic alterations, you can use the OncoKB API by providing the appropriate parameters based on the
+type of query.
 
 You have to extract the appropriate information out of the
 Examples:
-1. To annotate mutations by protein change, use the endpoint /annotate/mutations/byProteinChange with parameters like hugoSymbol, alteration, tumorType, etc.
-2. To annotate copy number alterations, use the endpoint /annotate/copyNumberAlterations with parameters like hugoSymbol, copyNameAlterationType, tumorType, etc.
+1. To annotate mutations by protein change, use the endpoint /annotate/mutations/byProteinChange with parameters like
+    hugoSymbol, alteration, tumorType, etc.
+2. To annotate copy number alterations, use the endpoint /annotate/copyNumberAlterations with parameters like
+    hugoSymbol, copyNameAlterationType, tumorType, etc.
 
 Use these formats to generate queries based on the question provided. Below is more information about the OncoKB API:
 OncoKB API Documentation (Summary)
@@ -222,11 +235,13 @@ class OncoKBQueryBuilder(BaseQueryBuilder):
         self,
         question: str,
         conversation: "Conversation",
-    ) -> OncoKBQueryParameters:
-        """Generates an OncoKBQuery object based on the given question, prompt, and
-        BioChatter conversation. Uses a Pydantic model to define the API fields.
-        Creates a runnable that can be invoked on LLMs that are qualified to
-        parameterise functions.
+    ) -> list[OncoKBQueryParameters]:
+        """Generate an OncoKBQuery object.
+
+        Generate based on the given question, prompt, and BioChatter
+        conversation. Uses a Pydantic model to define the API fields. Creates a
+        runnable that can be invoked on LLMs that are qualified to parameterise
+        functions.
 
         Args:
         ----
@@ -248,12 +263,13 @@ class OncoKBQueryBuilder(BaseQueryBuilder):
             {"input": f"Answer:\n{question} based on:\n {ONCOKB_QUERY_PROMPT}"},
         )
         oncokb_call_obj.question_uuid = str(uuid.uuid4())
-        return oncokb_call_obj
+        return [oncokb_call_obj]
 
 
 class OncoKBFetcher(BaseFetcher):
-    """A class for retrieving API results from OncoKB given a parameterized
-    OncoKBQuery.
+    """A class for retrieving API results.
+
+    Retrieve from OncoKB given a parameterized OncoKBQuery.
     """
 
     def __init__(self, api_token="demo"):
@@ -265,25 +281,31 @@ class OncoKBFetcher(BaseFetcher):
 
     def fetch_results(
         self,
-        request_data: OncoKBQueryParameters,
+        request_data: list[OncoKBQueryParameters],
         retries: int | None = 3,
     ) -> str:
-        """Function to submit the OncoKB query and fetch the results directly.
+        """Submit the OncoKB query and fetch the results directly.
+
         No multi-step procedure, thus no wrapping of submission and retrieval in
         this case.
 
         Args:
         ----
-            request_data: OncoKBQuery object (Pydantic model) containing the
-                OncoKB query parameters.
+            request_data: List of OncoKBQuery objects (Pydantic models)
+                containing the OncoKB query parameters.
+
+            retries: The number of retries to fetch the results.
 
         Returns:
         -------
             str: The results of the OncoKB query.
 
         """
+        # For now, we only use the first query in the list
+        query = request_data[0]
+
         # Submit the query and get the URL
-        params = request_data.dict(exclude_unset=True)
+        params = query.dict(exclude_unset=True)
         endpoint = params.pop("endpoint")
         params.pop("question_uuid")
         full_url = f"{self.base_url}/{endpoint}"
@@ -304,7 +326,7 @@ class OncoKBInterpreter(BaseInterpreter):
         conversation_factory: Callable,
         response_text: str,
     ) -> str:
-        """Function to extract the answer from the BLAST results.
+        """Extract the answer from the BLAST results.
 
         Args:
         ----

@@ -1,4 +1,3 @@
-
 # API Calling
 
 ## Overview
@@ -32,8 +31,8 @@ information. Here's a minimal working example:
 
 ```python
 from biochatter.llm_connect import GptConversation
-from biochatter.api_agent.api_agent import APIAgent
-from biochatter.api_agent.oncokb import OncoKBQueryBuilder, OncoKBFetcher, OncoKBInterpreter
+from biochatter.api_agent.base.api_agent import APIAgent
+from biochatter.api_agent.web.oncokb import OncoKBQueryBuilder, OncoKBFetcher, OncoKBInterpreter
 
 # Set up a conversation factory (you might need to adjust this based on your setup)
 def conversation_factory():
@@ -60,9 +59,16 @@ generation, API interaction, and result interpretation.
 
 ## Core components
 
+The API agent module is organized into three main submodules:
+
+- `base`: Contains core abstractions and base classes
+- `web`: Implementations for web-based APIs (e.g., OncoKB, BLAST)
+- `python`: Implementations for Python package APIs (e.g., Scanpy)
+
 ### API Agent
 
-The main class that orchestrates the API interaction process.
+The main class that orchestrates the API interaction process, located in
+`biochatter.api_agent.base.api_agent`.
 
 Key Methods:
 
@@ -99,7 +105,11 @@ better IDE support.
 - Serialization: The Pydantic model can easily be serialized to and deserialized
 from JSON, facilitating data transfer.
 
-### BaseQueryBuilder
+### Base Classes
+
+Located in `biochatter.api_agent.base.agent_abc`:
+
+#### BaseQueryBuilder
 
 Abstract base class for creating query builders specific to different APIs.
 
@@ -111,7 +121,7 @@ Callable`: Creates runnable object for executing queries.
 - `parameterise_query(question: str, conversation: Conversation) -> BaseModel`:
 Generates a parameterized query object based on the input question.
 
-### BaseFetcher
+#### BaseFetcher
 
 An abstract base class for implementing API-specific data fetching logic.
 
@@ -120,7 +130,7 @@ Key Method:
 - `fetch_results(query_model)`: Submits the query to the API and retrieves the
 results.
 
-### BaseInterpreter
+#### BaseInterpreter
 
 An abstract base class for implementing API-specific response interpretation
 logic.
@@ -136,7 +146,7 @@ response_text: str) -> str`: Summarizes and interprets the API response.
 
 Create specific implementations of QueryParameters, BaseQueryBuilder,
 BaseFetcher, and BaseInterpreter for your target API and design prompts.
-Instantiate an APIAgent with these components.  Use the execute method of
+Instantiate an APIAgent with these components. Use the execute method of
 APIAgent to process questions and interact with the API.
 
 #### 1. Specific QueryParameters
@@ -144,7 +154,6 @@ APIAgent to process questions and interact with the API.
 For each field in your API call a Pydantic field is created. The description
 must be clear and concise to be understandable by a LLM so that it will fill the
 field with the appropriate arguments.
-
 
 ```python
 from pydantic import BaseModel, Field
@@ -155,6 +164,7 @@ class NewAPIQueryParameters(BaseModel):
     param2: int = Field(default=0, description="Description of param2")
     # Add more parameters as needed
 ```
+
 #### 2. Prompt design
 
 ##### QUERY_PROMPT: instructions for structured output to write NewAPI call.
@@ -172,6 +182,7 @@ You are a world class algorithm for creating queries in structured formats. Your
 
 API DOCUMENTATION AND EXAMPLES"""
 ```
+
 ##### SUMMARY_PROMPT: Instructions on how to interpret and answer user questions based on retrieved information
 
 Follow prompt design below, replace NewAPI accordingly. If results are not
@@ -191,7 +202,7 @@ Here is the information relevant to the question found on NewAPI:\n\
 Create a class that inherits from BaseQueryBuilder:
 
 ```python
-from biochatter.api_agent.abc import BaseQueryBuilder
+from biochatter.api_agent.base.agent_abc import BaseQueryBuilder
 
 class NewAPIQueryBuilder(BaseQueryBuilder):
     def create_runnable(self,
@@ -218,7 +229,6 @@ class NewAPIQueryBuilder(BaseQueryBuilder):
         )
        NewAPI_call_obj.question_uuid = str(uuid.uuid4())
         return NewAPI_call_obj
-
 ```
 
 #### 4. Implement Fetcher
@@ -240,7 +250,7 @@ NOTE: if the response is too large for your LLM context window you may have to
 reduce its size in some way.
 
 ```python
-from biochatter.api_agent.abc import BaseFetcher
+from biochatter.api_agent.base.agent_abc import BaseFetcher
 
 class NewAPIFetcher(BaseFetcher):
         def __init__(self,):
@@ -255,7 +265,6 @@ class NewAPIFetcher(BaseFetcher):
     ) -> str:
     #implement your logic here
     return results_response.text
-
 ```
 
 #### 5. Implement Interpreter
@@ -263,7 +272,7 @@ Create a class that inherits from BaseInterpreter and adapt the system prompt to
 NewAPI.
 
 ```python
-from biochatter.api_agent.abc import BaseInterpreter
+from biochatter.api_agent.base.agent_abc import BaseInterpreter
 
 class NewAPIInterpreter(BaseInterpreter):
     def summarise_results(self,
@@ -295,7 +304,7 @@ class NewAPIInterpreter(BaseInterpreter):
 Once you have implemented all components, you can use them with the APIAgent:
 
 ```python
-from biochatter.api_agent.api_agent import APIAgent
+from biochatter.api_agent.base.api_agent import APIAgent
 
 new_api_agent = APIAgent(
     conversation_factory=your_conversation_factory,

@@ -159,7 +159,7 @@ a database language.
 ```python
 query = prompt_engine.generate_query(
     question="Which genes are associated with mucoviscidosis?",
-    database_language="Cypher",
+    query_language="Cypher",
 )
 ```
 
