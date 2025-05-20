@@ -84,6 +84,7 @@ mkdocs-redirects = "^1.2.1"
 scanpy = "^1.10.4"
 mkdocstrings = {version = ">=0.24.0", extras = ["python"]}
 mkdocstrings-python = "1.13.0"
+mike = "^2.1.3"
 
 [build-system]
 requires = ["poetry-core"]
