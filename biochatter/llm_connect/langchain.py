@@ -167,6 +167,9 @@ class LangChainConversation(Conversation):
                 tools=available_tools,
                 additional_instructions=self.additional_tools_instructions,
             )
+            if not self.messages:
+                msg = "No messages available in the conversation"
+                raise ValueError(msg)
             self.messages[-1] = self.tools_prompt
             chat = self.chat
         elif len(available_tools) == 0 and not structured_model:

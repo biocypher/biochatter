@@ -241,8 +241,8 @@ class XinferenceConversation(Conversation):
 
         # if the last message is an image message, add the image to the history
         if is_image_message:
-            history[-1]["content"] = [
-                {"type": "text", "text": history[-1]["content"]},
+            history[-1].content = [
+                {"type": "text", "text": history[-1].content},
                 {
                     "type": "image_url",
                     "image_url": {
