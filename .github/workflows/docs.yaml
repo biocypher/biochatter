@@ -51,11 +51,10 @@ jobs:
         run: |
           # Extract version from pyproject.toml or use a default version
           VERSION=$(poetry version -s || echo "latest")
-          # Debug: Show git status and remote info
-          git status
-          git remote -v
-          git branch -a
-          # Deploy the docs with mike using force push
-          poetry run mike deploy --push --update-aliases --force $VERSION latest
+          # Initialize gh-pages branch if it doesn't exist
+          git fetch origin gh-pages || git checkout --orphan gh-pages
+          git checkout main
+          # Deploy the docs with mike
+          poetry run mike deploy --push --update-aliases $VERSION latest
           # Set the latest version as default
           poetry run mike set-default --push latest
