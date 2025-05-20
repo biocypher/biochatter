@@ -43,19 +43,17 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.x
-      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
-      - uses: actions/cache@v4
-        with:
-          key: mkdocs-material-${{ env.cache_id }}
-          path: .cache
-          restore-keys: |
-            mkdocs-material-
-
       - name: Build documentation
         run: poetry run mkdocs build
+
+      - name: Setup gh-pages branch
+        run: |
+          # Fetch the gh-pages branch
+          git fetch origin gh-pages:gh-pages || true
+          # Create gh-pages if it doesn't exist
+          git checkout gh-pages || git checkout --orphan gh-pages
+          # Switch back to the original branch
+          git checkout -
 
       - name: Deploy documentation with mike
         run: |
