@@ -23,8 +23,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Fetch all history and branches
 
       - name: Configure Git Credentials
         run: |
@@ -50,10 +48,6 @@ jobs:
         run: |
           # Extract version from pyproject.toml or use a default version
           VERSION=$(poetry version -s || echo "latest")
-          # Initialize gh-pages branch if it doesn't exist
-          git fetch origin gh-pages || git checkout --orphan gh-pages
-          # Switch back to the current branch (which should be the tag)
-          git checkout -
           # Deploy the docs with mike
           poetry run mike deploy --push --update-aliases $VERSION latest
           # Set the latest version as default
