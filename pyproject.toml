@@ -105,5 +105,18 @@ max-doc-length = 80
 "test/*" = ["ANN001", "ANN201", "D100", "D101", "D102", "D103", "D104", "I001", "S101"]
 "benchmark/*" = ["ANN001", "ANN201", "D100", "D101", "D102", "D103", "D104", "I001", "S101"]
 
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning:builtins:",
+    "ignore::DeprecationWarning:swigvarlink:",
+    "ignore::DeprecationWarning:",
+    "ignore::UserWarning:"
+]
+addopts = "-p no:warnings"
+testpaths = ["test", "benchmark"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = false
