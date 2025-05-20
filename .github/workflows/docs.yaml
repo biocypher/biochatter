@@ -1,17 +1,20 @@
 name: Docs
 
 on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags
+    branches:
+      - main
+    paths-ignore:
+      - 'benchmark/results/**'  # Don't trigger on benchmark results changes
+  workflow_dispatch:  # Allow manual triggers
   workflow_run:
     workflows: ["Process Benchmark Results"]
     types:
       - completed
     branches:
       - main
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - 'benchmark/results/**'  # Don't trigger on benchmark results changes since workflow_run will handle that
 
 permissions:
   contents: write
@@ -29,39 +32,48 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            venv-${{ runner.os }}-
+
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
 
       - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
 
       - name: Restore cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: mkdocs-material-${{ env.cache_id }}
           path: .cache
           restore-keys: |
             mkdocs-material-
 
-      - name: Packages
-        run: pip install mkdocs-material[imaging] mkdocstrings[python] pandas mkdocs-table-reader-plugin seaborn matplotlib scipy colorcet mkdocs-redirects
+      - name: Build documentation
+        run: poetry run mkdocs build
 
-      - name: Build
-        run: mkdocs build
-
-      - name: Commit files
+      - name: Deploy documentation with mike
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          touch site/.nojekyll
-          echo 'biochatter.org' > site/CNAME
-          git add -f site/
-          git commit -m "Update autodoc" -a
-
-      - name: Deploy
-        uses: s0/git-publish-subdir-action@develop
-        env:
-          REPO: self
-          BRANCH: gh-pages
-          FOLDER: site
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Extract version from pyproject.toml or use a default version
+          VERSION=$(poetry version -s || echo "latest")
+          # Deploy the docs with mike
+          poetry run mike deploy --push --update-aliases $VERSION latest
+          # Set the latest version as default
+          poetry run mike set-default --push latest
