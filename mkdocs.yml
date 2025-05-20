@@ -43,6 +43,7 @@ plugins:
             heading_level: 3
   - table-reader
   - social
+  - mike
   - redirects:
       redirect_maps:
         "vignette-custom-bclight-simple.md": "vignettes/custom-bclight-simple.md"
@@ -140,6 +141,10 @@ markdown_extensions:
   - pymdownx.details
   - toc:
       toc_depth: 3
+
+extra:
+  version:
+    provider: mike
 
 extra_javascript:
   - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
