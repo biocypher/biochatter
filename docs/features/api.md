@@ -2,10 +2,13 @@
 
 ## Overview
 
-BioChatter provides access to biological databases through chat via the API
+BioChatter provides access to biological databases through chat via a custom API
 Agent. It is designed to interact with various external APIs and provides a
 structured approach to generating queries, fetching results, and interpreting
-the responses from different API services.
+the responses from different API services. In comparison to the tool binding
+approach via MCPs ([In Chat Tool Calling](features/tool_chat.md)), the API
+agent approach allows for more flexibility and in-depth manipulation of the
+bindings, queries and responses.
 
 ```mermaid
 sequenceDiagram

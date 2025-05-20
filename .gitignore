@@ -21,3 +21,5 @@ serve.sh
 *.coverage
 scaling_test.py
 coverage.xml
+libcairo*
+notebooks/*
