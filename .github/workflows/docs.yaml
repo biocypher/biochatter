@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - 'v*'  # Trigger on version tags
-    branches:
-      - main
     paths-ignore:
       - 'benchmark/results/**'  # Don't trigger on benchmark results changes
   workflow_dispatch:  # Allow manual triggers
