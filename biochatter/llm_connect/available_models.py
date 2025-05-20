@@ -94,7 +94,6 @@ TOOL_CALLING_MODELS = frozenset(
         MistralModels.MISTRAL_LARGE_LATEST.value,
         AnthropicModels.CLAUDE_3_7_SONNET_LATEST.value,
         AnthropicModels.CLAUDE_3_5_HAIKU_LATEST.value,
-        # TODO: OpenAIModels.GPT_4o.value,
     ]
 )
 
@@ -106,7 +105,6 @@ STRUCTURED_OUTPUT_MODELS = frozenset(
         OpenAIModels.GPT_4o.value,
         OpenAIModels.GPT_41.value,
         OpenAIModels.GPT_41_mini.value,
-        # TODO: OpenAIModels.GPT_4o.value,
     ]
 )
 
