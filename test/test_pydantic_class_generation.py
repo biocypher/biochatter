@@ -51,6 +51,7 @@ def test_generate_pydantic_classes_umap():
         "copy_param",
         "negative_sample_rate",
         "min_dist",
+        "key_added",
         "maxiter",
         "spread",
         "b",
