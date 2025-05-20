@@ -20,12 +20,15 @@ class OpenAIModels(str, Enum):
     GPT_4_32K = "gpt-4-32k"
     GPT_4_1106_PREVIEW = "gpt-4-1106-preview"  # gpt-4 turbo, 128k tokens
     GPT_4o = "gpt-4o"
+    GPT_41 = "gpt-4.1"
+    GPT_41_mini = "gpt-4.1-mini"
 
 
 class GeminiModels(str, Enum):
     """Enum for Gemini models."""
 
     GEMINI_20_FLASH = "gemini-2.0-flash"
+    GEMINI_25_FLASH = "gemini-2.5-flash-preview-04-17"
 
 
 class MistralModels(str, Enum):
@@ -67,9 +70,12 @@ class TokenLimits(Enum):
     GPT_4_32K = ("gpt-4-32k", 32000)
     GPT_4_1106_PREVIEW = ("gpt-4-1106-preview", 128000)
     GPT_4o = ("gpt-4o", 32000)
+    GPT_41 = ("gpt-4.1", 1048576)
+    GPT_41_mini = ("gpt-4.1-mini", 1048576)
     BLOOM = ("bigscience/bloom", 1000)
     CUSTOM_ENDPOINT = ("custom-endpoint", 1)
     GEMINI_20_FLASH = ("gemini-2.0-flash", 1000000)
+    GEMINI_25_FLASH = ("gemini-2.5-flash-preview-04-17", 1048576)
 
     @property
     def limit(self):
@@ -81,7 +87,10 @@ class TokenLimits(Enum):
 TOOL_CALLING_MODELS = frozenset(
     [
         GeminiModels.GEMINI_20_FLASH.value,
+        GeminiModels.GEMINI_25_FLASH.value,
         OpenAIModels.GPT_4o.value,
+        OpenAIModels.GPT_41.value,
+        OpenAIModels.GPT_41_mini.value,
         MistralModels.MISTRAL_LARGE_LATEST.value,
         AnthropicModels.CLAUDE_3_7_SONNET_LATEST.value,
         AnthropicModels.CLAUDE_3_5_HAIKU_LATEST.value,
@@ -93,7 +102,10 @@ TOOL_CALLING_MODELS = frozenset(
 STRUCTURED_OUTPUT_MODELS = frozenset(
     [
         GeminiModels.GEMINI_20_FLASH.value,
+        GeminiModels.GEMINI_25_FLASH.value,
         OpenAIModels.GPT_4o.value,
+        OpenAIModels.GPT_41.value,
+        OpenAIModels.GPT_41_mini.value,
         # TODO: OpenAIModels.GPT_4o.value,
     ]
 )
@@ -115,4 +127,7 @@ TOKEN_LIMITS = {
     HuggingFaceModels.BLOOM.value: TokenLimits.BLOOM.limit,
     XInferenceModels.CUSTOM_ENDPOINT.value: TokenLimits.CUSTOM_ENDPOINT.limit,
     GeminiModels.GEMINI_20_FLASH.value: TokenLimits.GEMINI_20_FLASH.limit,
+    GeminiModels.GEMINI_25_FLASH.value: TokenLimits.GEMINI_25_FLASH.limit,
+    OpenAIModels.GPT_41.value: TokenLimits.GPT_41.limit,
+    OpenAIModels.GPT_41_mini.value: TokenLimits.GPT_41_mini.limit,
 }
