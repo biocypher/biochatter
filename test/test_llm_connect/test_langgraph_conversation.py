@@ -109,7 +109,7 @@ class TestLangGraphConversation:
 
     @patch("biochatter.llm_connect.langgraph_conversation.init_chat_model")
     def test_direct_response_path(self, mock_init):
-        """Test the direct response path (no planning)."""
+        """Test the direct response path (no tools)."""
         # Mock LLM
         mock_llm = MagicMock()
         mock_init.return_value = mock_llm
@@ -124,7 +124,6 @@ class TestLangGraphConversation:
 
         # Set up call sequence
         mock_llm.invoke.side_effect = [router_response, final_response]
-        mock_llm.bind_tools.return_value = mock_llm
 
         convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai", tools=[add, echo])
 
@@ -132,6 +131,66 @@ class TestLangGraphConversation:
 
         assert result == "The capital of France is Paris."
         assert mock_llm.invoke.call_count == 2  # Router + final response
+        # Verify bind_tools was not called for direct response
+        mock_llm.bind_tools.assert_not_called()
+
+    @patch("biochatter.llm_connect.langgraph_conversation.init_chat_model")
+    def test_tool_response_path(self, mock_init):
+        """Test the tool response path (single tool usage)."""
+        # Mock LLM
+        mock_llm = MagicMock()
+        mock_llm_with_tools = MagicMock()
+        mock_init.return_value = mock_llm
+
+        # Mock router response (TOOL)
+        router_response = MagicMock()
+        router_response.content = "TOOL"
+
+        # Mock final response
+        final_response = MagicMock()
+        final_response.content = "The sum is 8"
+
+        # Set up call sequence
+        mock_llm.invoke.side_effect = [router_response]
+        mock_llm.bind_tools.return_value = mock_llm_with_tools
+        mock_llm_with_tools.invoke.return_value = final_response
+
+        convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai", tools=[add, echo])
+
+        result = convo.invoke("Add 5 and 3")
+
+        assert result == "The sum is 8"
+        assert mock_llm.invoke.call_count == 1  # Only router call
+        # Verify bind_tools was called for tool response
+        mock_llm.bind_tools.assert_called_once_with([add, echo])
+        mock_llm_with_tools.invoke.assert_called_once()
+
+    @patch("biochatter.llm_connect.langgraph_conversation.init_chat_model")
+    def test_tool_response_path_no_tools(self, mock_init):
+        """Test the tool response path fallback when no tools available."""
+        # Mock LLM
+        mock_llm = MagicMock()
+        mock_init.return_value = mock_llm
+
+        # Mock router response (TOOL)
+        router_response = MagicMock()
+        router_response.content = "TOOL"
+
+        # Mock final response
+        final_response = MagicMock()
+        final_response.content = "I cannot perform calculations without tools."
+
+        # Set up call sequence
+        mock_llm.invoke.side_effect = [router_response, final_response]
+
+        convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai")  # No tools
+
+        result = convo.invoke("Add 5 and 3")
+
+        assert result == "I cannot perform calculations without tools."
+        assert mock_llm.invoke.call_count == 2  # Router + fallback response
+        # Verify bind_tools was not called since no tools available
+        mock_llm.bind_tools.assert_not_called()
 
     @patch("biochatter.llm_connect.langgraph_conversation.init_chat_model")
     def test_planned_execution_path(self, mock_init):
@@ -171,7 +230,6 @@ class TestLangGraphConversation:
         final_response.content = "Echo: Hello World"
 
         mock_llm.invoke.side_effect = [router_response, final_response]
-        mock_llm.bind_tools.return_value = mock_llm
 
         convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai")
 
@@ -184,6 +242,41 @@ class TestLangGraphConversation:
         # Tools should be restored after invocation
         assert len(convo.tools) == 0
         assert result == "Echo: Hello World"
+        # Verify bind_tools was not called for direct response even with ad-hoc tools
+        mock_llm.bind_tools.assert_not_called()
+
+    @patch("biochatter.llm_connect.langgraph_conversation.init_chat_model")
+    def test_tool_response_with_adhoc_tools(self, mock_init):
+        """Test tool response with ad-hoc tools."""
+        mock_llm = MagicMock()
+        mock_llm_with_tools = MagicMock()
+        mock_init.return_value = mock_llm
+
+        # Mock tool response
+        router_response = MagicMock()
+        router_response.content = "TOOL"
+
+        final_response = MagicMock()
+        final_response.content = "Echo: Hello World"
+
+        mock_llm.invoke.side_effect = [router_response]
+        mock_llm.bind_tools.return_value = mock_llm_with_tools
+        mock_llm_with_tools.invoke.return_value = final_response
+
+        convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai")
+
+        # Initially no tools
+        assert len(convo.tools) == 0
+
+        # Invoke with ad-hoc tools
+        result = convo.invoke("Echo hello world", tools=[echo])
+
+        # Tools should be restored after invocation
+        assert len(convo.tools) == 0
+        assert result == "Echo: Hello World"
+        # Verify bind_tools was called with ad-hoc tools
+        mock_llm.bind_tools.assert_called_once_with([echo])
+        mock_llm_with_tools.invoke.assert_called_once()
 
     @patch("biochatter.llm_connect.langgraph_conversation.init_chat_model")
     def test_parse_plan(self, mock_init):

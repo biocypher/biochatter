@@ -189,15 +189,22 @@ class LangGraphConversation:
         user_query = last_message.content if hasattr(last_message, "content") else str(last_message)
 
         # Create routing prompt
-        routing_prompt = f"""Decide if the last user message can be answered directly or requires multiple tool calls.
+        routing_prompt = f"""Decide how to handle the user message based on these three options:
 
 User message: {user_query}
 
-Output exactly "DIRECT" if it can be answered directly, or a numbered plan if multiple tool calls are needed.
+The tools available are:
+{self._get_tools_description(self.tools)}
+
+Output exactly one of:
+- "DIRECT" if it can be answered directly without any tools
+- "TOOL" if it can be answered with a single tool call (prefer using tools over direct response when possible)
+- A numbered plan if multiple tool calls are needed
 
 For example:
-- If asking "What is the capital of France?" → output "DIRECT"
-- If asking "Compare protein sequences A and B, then analyze their structure" → output:
+- "What is the capital of France?" → output "DIRECT"
+- "Search for information about protein folding" → output "TOOL"
+- "Compare protein sequences A and B, then analyze their structure" → output:
   1. Retrieve protein sequence A
   2. Retrieve protein sequence B
   3. Compare sequences
@@ -210,9 +217,12 @@ For example:
 
         response_content = response.content if hasattr(response, "content") else str(response)
 
-        # Determine if direct response or planning is needed
-        if response_content.strip().upper() == "DIRECT":
+        # Determine the execution path
+        response_clean = response_content.strip().upper()
+        if response_clean == "DIRECT":
             return {"plan": None}
+        if response_clean == "TOOL":
+            return {"plan": "TOOL"}
         return {"plan": response_content.strip()}
 
     def _maybe_execute(self, state: ConversationState) -> dict[str, Any]:
@@ -234,13 +244,17 @@ For example:
         new_intermediate_steps = list(state["intermediate_steps"])
 
         if state["plan"] is None:
-            # Direct response path - bind tools and respond directly
+            # Direct response path - respond directly without tools
+            response = self.llm.invoke(state["messages"])
+            new_messages.append(response)
+        elif state["plan"] == "TOOL":
+            # Direct response with tool usage - bind tools and let LLM decide
             if available_tools:
                 llm_with_tools = self.llm.bind_tools(available_tools)
                 response = llm_with_tools.invoke(state["messages"])
             else:
+                # Fallback to direct response if no tools available
                 response = self.llm.invoke(state["messages"])
-
             new_messages.append(response)
         else:
             # Planned execution path - execute each step in the plan
@@ -292,6 +306,29 @@ For example:
         steps = re.split(r"\d+\.", plan)
         # Filter out empty strings and strip whitespace
         return [step.strip() for step in steps if step.strip()]
+
+    def _get_tools_description(self, tools: list[BaseTool]) -> str:
+        """Get a formatted description of available tools.
+
+        Args:
+        ----
+            tools: List of available tools
+
+        Returns:
+        -------
+            Formatted string with tool names and descriptions
+
+        """
+        if not tools:
+            return "No tools available."
+
+        tool_descriptions = []
+        for tool in tools:
+            tool_name = tool.name
+            tool_desc = getattr(tool, "description", "No description available.")
+            tool_descriptions.append(f"- {tool_name}: {tool_desc}")
+
+        return "\n".join(tool_descriptions)
 
     def _resolve_tool_for_step(
         self, step: str, available_tools: Sequence[BaseTool]
