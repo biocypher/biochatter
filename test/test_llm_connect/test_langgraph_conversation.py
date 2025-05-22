@@ -2,7 +2,7 @@
 
 from unittest.mock import MagicMock, patch
 
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.tools import tool
 
 from biochatter.llm_connect.langgraph_conversation import LangGraphConversation, ConversationState
@@ -146,21 +146,30 @@ class TestLangGraphConversation:
         router_response = MagicMock()
         router_response.content = "TOOL"
 
-        # Mock final response
-        final_response = MagicMock()
-        final_response.content = "The sum is 8"
+        # Mock AI response with tool calls
+        ai_response_with_tools = AIMessage(
+            content="I'll add 5 and 3 for you.",
+            tool_calls=[
+                {"name": "add", "args": {"first_int": 5, "second_int": 3}, "id": "call_123", "type": "tool_call"}
+            ],
+        )
+
+        # Mock reasoning response
+        reasoning_response = MagicMock()
+        reasoning_response.content = "The sum is 8"
 
         # Set up call sequence
-        mock_llm.invoke.side_effect = [router_response]
+        mock_llm.invoke.side_effect = [router_response, reasoning_response]
         mock_llm.bind_tools.return_value = mock_llm_with_tools
-        mock_llm_with_tools.invoke.return_value = final_response
+        mock_llm_with_tools.invoke.return_value = ai_response_with_tools
 
         convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai", tools=[add, echo])
 
         result = convo.invoke("Add 5 and 3")
 
         assert result == "The sum is 8"
-        assert mock_llm.invoke.call_count == 1  # Only router call
+        # Router + reasoning calls
+        assert mock_llm.invoke.call_count == 2
         # Verify bind_tools was called for tool response
         mock_llm.bind_tools.assert_called_once_with([add, echo])
         mock_llm_with_tools.invoke.assert_called_once()
@@ -176,19 +185,19 @@ class TestLangGraphConversation:
         router_response = MagicMock()
         router_response.content = "TOOL"
 
-        # Mock final response
-        final_response = MagicMock()
-        final_response.content = "I cannot perform calculations without tools."
+        # Mock AI response without tool calls (since no tools available)
+        ai_response_no_tools = AIMessage(content="I cannot perform calculations without tools.")
 
         # Set up call sequence
-        mock_llm.invoke.side_effect = [router_response, final_response]
+        mock_llm.invoke.side_effect = [router_response, ai_response_no_tools]
 
         convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai")  # No tools
 
         result = convo.invoke("Add 5 and 3")
 
         assert result == "I cannot perform calculations without tools."
-        assert mock_llm.invoke.call_count == 2  # Router + fallback response
+        # Router + direct response (no tool calls, so goes to END)
+        assert mock_llm.invoke.call_count == 2
         # Verify bind_tools was not called since no tools available
         mock_llm.bind_tools.assert_not_called()
 
@@ -197,24 +206,36 @@ class TestLangGraphConversation:
         """Test the planned execution path with tool calls."""
         # Mock LLM
         mock_llm = MagicMock()
+        mock_llm_with_tools = MagicMock()
         mock_init.return_value = mock_llm
 
         # Mock router response (plan)
         router_response = MagicMock()
         router_response.content = "1. Add 5 and 3\n2. Echo the result"
 
-        # Mock final synthesis response
-        final_response = MagicMock()
-        final_response.content = "Based on the calculations, 5 + 3 = 8, and echoing gives: Echo: 8"
+        # Mock AI response with tool calls for the first step
+        ai_response_with_tools = AIMessage(
+            content="I'll execute the first step: Add 5 and 3",
+            tool_calls=[
+                {"name": "add", "args": {"first_int": 5, "second_int": 3}, "id": "call_123", "type": "tool_call"}
+            ],
+        )
 
-        mock_llm.invoke.side_effect = [router_response, final_response]
+        # Mock reasoning response
+        reasoning_response = MagicMock()
+        reasoning_response.content = "Based on the calculations, 5 + 3 = 8"
+
+        mock_llm.invoke.side_effect = [router_response, reasoning_response]
+        mock_llm.bind_tools.return_value = mock_llm_with_tools
+        mock_llm_with_tools.invoke.return_value = ai_response_with_tools
 
         convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai", tools=[add, echo])
 
         result = convo.invoke("Add 5 and 3, then echo the result")
 
-        assert "Echo: 8" in result or "8" in result
-        assert mock_llm.invoke.call_count == 2  # Router + synthesis
+        assert "8" in result
+        # Router + reasoning calls
+        assert mock_llm.invoke.call_count == 2
 
     @patch("biochatter.llm_connect.langgraph_conversation.init_chat_model")
     def test_invoke_with_adhoc_tools(self, mock_init):
@@ -256,12 +277,19 @@ class TestLangGraphConversation:
         router_response = MagicMock()
         router_response.content = "TOOL"
 
-        final_response = MagicMock()
-        final_response.content = "Echo: Hello World"
+        # Mock AI response with tool calls
+        ai_response_with_tools = AIMessage(
+            content="I'll echo your message.",
+            tool_calls=[{"name": "echo", "args": {"text": "hello world"}, "id": "call_456", "type": "tool_call"}],
+        )
 
-        mock_llm.invoke.side_effect = [router_response]
+        # Mock reasoning response
+        reasoning_response = MagicMock()
+        reasoning_response.content = "Echo: Hello World"
+
+        mock_llm.invoke.side_effect = [router_response, reasoning_response]
         mock_llm.bind_tools.return_value = mock_llm_with_tools
-        mock_llm_with_tools.invoke.return_value = final_response
+        mock_llm_with_tools.invoke.return_value = ai_response_with_tools
 
         convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai")
 
@@ -297,52 +325,6 @@ class TestLangGraphConversation:
         # Test empty plan
         assert convo._parse_plan("") == []
         assert convo._parse_plan(None) == []
-
-    @patch("biochatter.llm_connect.langgraph_conversation.init_chat_model")
-    def test_resolve_tool_for_step(self, mock_init):
-        """Test tool resolution for plan steps."""
-        mock_init.return_value = MagicMock()
-
-        convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai")
-
-        tools = [add, echo]
-
-        # Test successful tool resolution
-        tool_name, tool_args = convo._resolve_tool_for_step("Add two numbers", tools)
-        assert tool_name == "add"
-        assert tool_args == {"input": "Add two numbers"}
-
-        # Test echo tool resolution
-        tool_name, tool_args = convo._resolve_tool_for_step("Echo something", tools)
-        assert tool_name == "echo"
-        assert tool_args == {"input": "Echo something"}
-
-        # Test no matching tool
-        tool_name, tool_args = convo._resolve_tool_for_step("Unknown operation", tools)
-        assert tool_name is None
-        assert tool_args is None
-
-        # Test with no tools available
-        tool_name, tool_args = convo._resolve_tool_for_step("Any step", [])
-        assert tool_name is None
-        assert tool_args is None
-
-    @patch("biochatter.llm_connect.langgraph_conversation.init_chat_model")
-    def test_create_synthesis_prompt(self, mock_init):
-        """Test synthesis prompt creation."""
-        mock_init.return_value = MagicMock()
-
-        convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai")
-
-        original_query = "Calculate 5 + 3 and echo the result"
-        intermediate_steps = [("add", 8), ("echo", "Echo: 8")]
-
-        prompt = convo._create_synthesis_prompt(original_query, intermediate_steps)
-
-        assert "Calculate 5 + 3 and echo the result" in prompt
-        assert "- add: 8" in prompt
-        assert "- echo: Echo: 8" in prompt
-        assert "synthesize" in prompt.lower()
 
     @patch("biochatter.llm_connect.langgraph_conversation.init_chat_model")
     def test_no_response_generated(self, mock_init):

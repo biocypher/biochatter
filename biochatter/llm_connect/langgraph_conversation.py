@@ -9,11 +9,13 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import TYPE_CHECKING, Any, TypedDict
+from typing import TYPE_CHECKING, Annotated, Any, TypedDict
 
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.graph import END, START, StateGraph
+from langgraph.prebuilt import ToolNode
+import operator
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
@@ -35,7 +37,7 @@ class ConversationState(TypedDict):
 
     """
 
-    messages: list[BaseMessage]
+    messages: Annotated[list[BaseMessage], operator.add]
     plan: str | None
     intermediate_steps: list[tuple[str, Any]]
 
@@ -115,6 +117,8 @@ class LangGraphConversation:
         # Temporarily add ad-hoc tools
         if tools:
             self.tools.extend(tools)
+            # Rebuild graph with new tools
+            self.graph = self._build_graph()
 
         try:
             # Initialize conversation state
@@ -144,6 +148,9 @@ class LangGraphConversation:
         finally:
             # Restore original tools
             self.tools = original_tools
+            # Rebuild graph with restored tools if we had ad-hoc tools
+            if tools:
+                self.graph = self._build_graph()
 
     def _build_graph(self) -> StateGraph:
         """Build the LangGraph state graph.
@@ -158,12 +165,39 @@ class LangGraphConversation:
 
         # Add nodes
         workflow.add_node("router", self._route_or_plan)
-        workflow.add_node("execute", self._maybe_execute)
+        workflow.add_node("direct_response", self._direct_response)
+        workflow.add_node("llm_with_tools", self._llm_with_tools)
+
+        # Create ToolNode with current tools
+        if self.tools:
+            workflow.add_node("tools", ToolNode(self.tools))
+        else:
+            # Create empty ToolNode if no tools available
+            workflow.add_node("tools", ToolNode([]))
+
+        workflow.add_node("reason_about_tools", self._reason_about_tools)
 
         # Add edges
         workflow.add_edge(START, "router")
-        workflow.add_edge("router", "execute")
-        workflow.add_edge("execute", END)
+
+        # Conditional edges from router
+        workflow.add_conditional_edges(
+            "router",
+            self._route_decision,
+            {
+                "direct": "direct_response",
+                "tool": "llm_with_tools",
+                "plan": "llm_with_tools",  # Handle plan similarly to tool
+            },
+        )
+
+        workflow.add_edge("direct_response", END)
+
+        # Conditional edges from llm_with_tools
+        workflow.add_conditional_edges("llm_with_tools", self._should_call_tools, {"tools": "tools", "end": END})
+
+        workflow.add_edge("tools", "reason_about_tools")
+        workflow.add_edge("reason_about_tools", END)
 
         # Compile with optional checkpointer
         if self.checkpointer:
@@ -225,8 +259,8 @@ For example:
             return {"plan": "TOOL"}
         return {"plan": response_content.strip()}
 
-    def _maybe_execute(self, state: ConversationState) -> dict[str, Any]:
-        """Handle either direct response or planned execution.
+    def _route_decision(self, state: ConversationState) -> str:
+        """Determine the routing decision based on the plan.
 
         Args:
         ----
@@ -234,58 +268,108 @@ For example:
 
         Returns:
         -------
-            Updated state with final response
+            Route decision: "direct", "tool", or "plan"
 
         """
-        # Use the tools stored on the instance
-        available_tools = self.tools
-
-        new_messages = list(state["messages"])
-        new_intermediate_steps = list(state["intermediate_steps"])
-
         if state["plan"] is None:
-            # Direct response path - respond directly without tools
-            response = self.llm.invoke(state["messages"])
-            new_messages.append(response)
-        elif state["plan"] == "TOOL":
-            # Direct response with tool usage - bind tools and let LLM decide
-            if available_tools:
-                llm_with_tools = self.llm.bind_tools(available_tools)
-                response = llm_with_tools.invoke(state["messages"])
-            else:
-                # Fallback to direct response if no tools available
-                response = self.llm.invoke(state["messages"])
-            new_messages.append(response)
-        else:
-            # Planned execution path - execute each step in the plan
+            return "direct"
+        if state["plan"] == "TOOL":
+            return "tool"
+        return "plan"
+
+    def _direct_response(self, state: ConversationState) -> dict[str, Any]:
+        """Handle direct response without tools.
+
+        Args:
+        ----
+            state: Current conversation state
+
+        Returns:
+        -------
+            Updated state with direct response
+
+        """
+        response = self.llm.invoke(state["messages"])
+        return {"messages": [response]}
+
+    def _llm_with_tools(self, state: ConversationState) -> dict[str, Any]:
+        """Generate response with tools available for calling.
+
+        Args:
+        ----
+            state: Current conversation state
+
+        Returns:
+        -------
+            Updated state with LLM response (potentially with tool calls)
+
+        """
+        if state["plan"] and state["plan"] != "TOOL":
+            # Handle planned execution
             plan_steps = self._parse_plan(state["plan"])
+            if plan_steps:
+                # Create a message asking the LLM to execute the first step
+                plan_message = HumanMessage(
+                    content=f"Please execute this step: {plan_steps[0]}. Use the available tools if needed."
+                )
+                messages = state["messages"] + [plan_message]
+            else:
+                messages = state["messages"]
+        else:
+            # Handle direct tool usage
+            messages = state["messages"]
 
-            for step in plan_steps:
-                # Find appropriate tool for this step
-                tool_name, tool_args = self._resolve_tool_for_step(step, available_tools)
+        if self.tools:
+            llm_with_tools = self.llm.bind_tools(self.tools)
+            response = llm_with_tools.invoke(messages)
+        else:
+            response = self.llm.invoke(messages)
 
-                if tool_name and tool_args is not None:
-                    # Execute the tool
-                    tool = next((t for t in available_tools if t.name == tool_name), None)
-                    if tool:
-                        try:
-                            result = tool.invoke(tool_args)
-                            new_intermediate_steps.append((tool_name, result))
-                        except Exception as e:  # noqa: BLE001
-                            logger.warning("Tool execution failed for %s: %s", tool_name, e)
-                            new_intermediate_steps.append((tool_name, f"Error: {e}"))
+        return {"messages": [response]}
 
-            # Synthesize final answer using all intermediate results
-            synthesis_prompt = self._create_synthesis_prompt(
-                original_query=state["messages"][0].content if state["messages"] else "",
-                intermediate_steps=new_intermediate_steps,
-            )
+    def _should_call_tools(self, state: ConversationState) -> str:
+        """Determine if tools should be called based on the last message.
 
-            synthesis_message = HumanMessage(content=synthesis_prompt)
-            final_response = self.llm.invoke([synthesis_message])
-            new_messages.append(final_response)
+        Args:
+        ----
+            state: Current conversation state
 
-        return {"messages": new_messages, "intermediate_steps": new_intermediate_steps}
+        Returns:
+        -------
+            "tools" if tools should be called, "end" otherwise
+
+        """
+        if not state["messages"]:
+            return "end"
+
+        last_message = state["messages"][-1]
+        if hasattr(last_message, "tool_calls") and last_message.tool_calls:
+            return "tools"
+
+        return "end"
+
+    def _reason_about_tools(self, state: ConversationState) -> dict[str, Any]:
+        """Generate reasoning about tool results.
+
+        Args:
+        ----
+            state: Current conversation state
+
+        Returns:
+        -------
+            Updated state with reasoning response
+
+        """
+        # The ToolNode will have added ToolMessage(s) to the messages
+        # Now we ask the LLM to reason about the results
+        reasoning_prompt = HumanMessage(
+            content="Based on the tool results above, please provide a comprehensive response to the original question."
+        )
+
+        messages_with_prompt = state["messages"] + [reasoning_prompt]
+        response = self.llm.invoke(messages_with_prompt)
+
+        return {"messages": [response]}
 
     def _parse_plan(self, plan: str) -> list[str]:
         """Parse a numbered plan into individual steps.
@@ -329,60 +413,3 @@ For example:
             tool_descriptions.append(f"- {tool_name}: {tool_desc}")
 
         return "\n".join(tool_descriptions)
-
-    def _resolve_tool_for_step(
-        self, step: str, available_tools: Sequence[BaseTool]
-    ) -> tuple[str | None, dict[str, Any] | None]:
-        """Resolve which tool and arguments to use for a given step.
-
-        Args:
-        ----
-            step: Description of the step to execute
-            available_tools: Available tools to choose from
-
-        Returns:
-        -------
-            Tuple of (tool_name, tool_arguments) or (None, None) if no tool
-            found
-
-        """
-        if not available_tools:
-            return None, None
-
-        # Simple heuristic: use first tool that might be relevant
-        # In a real implementation, this could be more sophisticated
-        for tool in available_tools:
-            tool_name = tool.name.lower()
-            step_lower = step.lower()
-
-            # Basic keyword matching - check if tool name is in the step
-            if tool_name in step_lower:
-                # Return basic arguments - more sophisticated in practice
-                return tool.name, {"input": step}
-
-        return None, None
-
-    def _create_synthesis_prompt(self, original_query: str, intermediate_steps: list[tuple[str, Any]]) -> str:
-        """Create a prompt for synthesizing the final answer from intermediate
-        results.
-
-        Args:
-        ----
-            original_query: The original user query
-            intermediate_steps: List of (tool_name, result) tuples
-
-        Returns:
-        -------
-            Synthesis prompt string
-
-        """
-        steps_text = "\n".join([f"- {tool_name}: {result}" for tool_name, result in intermediate_steps])
-
-        return f"""Based on the following intermediate results, provide a comprehensive answer to the original question.
-
-Original question: {original_query}
-
-Intermediate results:
-{steps_text}
-
-Please synthesize this information into a clear, helpful response that directly addresses the original question."""
