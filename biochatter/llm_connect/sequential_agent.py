@@ -385,7 +385,7 @@ class SequentialAgent:
         """Plan the next steps or update existing plan.
 
         Handles three scenarios:
-        1. Initial planning: No plan exists or all steps are done
+        1. Initial planning: No plan exists
         2. Replanning: Some steps are done, need to replan remaining work
         3. Continue existing: Plan exists with only pending steps
         """
@@ -397,22 +397,22 @@ class SequentialAgent:
         )
         available_tools = [tool.name for tool in self.tools] if self.tools else "None"
 
-        # Case 1: Initial planning (no plan or all steps done)
-        if not state["plan"] or all(step["status"] == "done" for step in state["plan"]):
+        # Case 1: Initial planning (no plan exists)
+        if not state["plan"]:
             return self._create_initial_plan(user_query, available_tools)
 
-            # Case 2: Replanning scenario (only if explicitly requested by a revision or if there are completed steps with insights)
+        # Case 1.5: All steps completed - do nothing, let controller end the process
+        if all(step["status"] == "done" for step in state["plan"]):
+            return {}
+
+        # Case 2: Replanning scenario (only if explicitly requested by a revision or if there are completed steps with insights)
         completed_steps = [step for step in state["plan"] if step["status"] == "done"]
         pending_steps = [step for step in state["plan"] if step["status"] == "pending"]
 
         # Check if replanning is needed based on:
         # 1. Explicit request from revision (needs_replanning flag)
         # 2. Completed steps with revisions (insights gained)
-        should_replan = state.get("needs_replanning", False) or (
-            completed_steps
-            and pending_steps
-            and any(step.get("revisions") and len(step["revisions"]) > 0 for step in completed_steps)
-        )
+        should_replan = state.get("needs_replanning", False)
 
         if should_replan and completed_steps and pending_steps:
             result = self._replan_remaining_steps(user_query, available_tools, completed_steps, pending_steps)

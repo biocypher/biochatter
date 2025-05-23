@@ -194,7 +194,7 @@ class TestSequentialAgent:
 
     @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
     def test_planner_skips_when_all_done(self, mock_init):
-        """Test planner skips when all steps are done."""
+        """Test planner returns empty dict when all steps are done (fixes infinite loop)."""
         mock_llm = MagicMock()
         mock_init.return_value = mock_llm
 
@@ -205,17 +205,12 @@ class TestSequentialAgent:
             "plan": [{"task": "Task 1", "expected": "Result 1", "tool": None, "status": "done"}],
         }
 
-        # Should trigger fresh planning since all steps are done
-        plan_json = json.dumps([{"task": "New task", "expected": "New result", "tool": None, "status": "pending"}])
-
-        planning_response = AIMessage(content=plan_json)
-        mock_llm.invoke.return_value = planning_response
-
         result = agent._planner(state)
 
-        assert "plan" in result
-        assert len(result["plan"]) == 1
-        assert result["plan"][0]["task"] == "New task"
+        # Should return empty dict to allow controller to end the process
+        assert result == {}
+        # Verify LLM is not called since no new plan should be created
+        mock_llm.invoke.assert_not_called()
 
     @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
     def test_executor_direct_llm_execution(self, mock_init):
@@ -544,7 +539,7 @@ class TestSequentialAgent:
 
     @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
     def test_planner_replanning_scenario(self, mock_init):
-        """Test planner handles replanning when some steps are done and some pending."""
+        """Test planner handles replanning when needs_replanning flag is set."""
         mock_llm = MagicMock()
         mock_init.return_value = mock_llm
 
@@ -572,6 +567,7 @@ class TestSequentialAgent:
         agent = SequentialAgent(model_name="gpt-4", model_provider="openai", tools=[search])
 
         # State with mixed completed and pending steps (replanning scenario)
+        # IMPORTANT: needs_replanning flag must be set for replanning to occur
         state: AgentState = {
             "messages": [HumanMessage(content="Analyze this complex dataset")],
             "plan": [
@@ -598,6 +594,7 @@ class TestSequentialAgent:
                 },
             ],
             "current_query": "Analyze this complex dataset",
+            "needs_replanning": True,  # This flag is now required for replanning
         }
 
         result = agent._planner(state)
@@ -667,6 +664,7 @@ class TestSequentialAgent:
                 {"task": "Pending step", "expected": "To do", "tool": None, "status": "pending", "revisions": []},
             ],
             "current_query": "Same query",
+            "needs_replanning": True,  # This flag is now required for replanning
         }
 
         result = agent._planner(replanning_state)
@@ -679,6 +677,38 @@ class TestSequentialAgent:
         assert "replanning assistant" in call_args
         assert "<completed_work>" in call_args
         assert "<insights>" in call_args
+
+    @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
+    def test_planner_no_replanning_without_flag(self, mock_init):
+        """Test that planner does NOT replan when needs_replanning flag is False, even with revisions."""
+        mock_llm = MagicMock()
+        mock_init.return_value = mock_llm
+
+        agent = SequentialAgent(model_name="gpt-4", model_provider="openai")
+
+        # State with completed steps that have revisions but no needs_replanning flag
+        no_replan_state: AgentState = {
+            "messages": [HumanMessage(content="Query")],
+            "plan": [
+                {
+                    "task": "Completed step",
+                    "expected": "Done",
+                    "tool": None,
+                    "status": "done",
+                    "revisions": ["Some insight gained", "Another revision"],
+                },
+                {"task": "Pending step", "expected": "To do", "tool": None, "status": "pending", "revisions": []},
+            ],
+            "current_query": "Query",
+            "needs_replanning": False,  # Explicitly set to False
+        }
+
+        result = agent._planner(no_replan_state)
+
+        # Should return empty dict (no replanning triggered)
+        assert result == {}
+        # LLM should not be called since no replanning needed
+        assert not mock_llm.invoke.called
 
     @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
     def test_planner_continue_existing_plan(self, mock_init):
