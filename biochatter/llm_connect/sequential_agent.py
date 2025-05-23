@@ -55,12 +55,14 @@ class AgentState(TypedDict):
     ----------
         messages: Running transcript of the conversation and tool traces
         plan: Mutable list of steps to execute
+        needs_replanning: Flag indicating if replanning was requested by a revision
 
     """
 
     messages: Annotated[list[AnyMessage], add_messages]
     plan: list[Step] | None
     current_query: str | None
+    needs_replanning: bool | None
 
 
 class SequentialAgent:
@@ -140,6 +142,7 @@ class SequentialAgent:
                 "messages": [HumanMessage(content=query)],
                 "plan": [],
                 "current_query": query,
+                "needs_replanning": False,
             }
         else:
             initial_state = state
@@ -339,7 +342,7 @@ class SequentialAgent:
         # Check if we need to rethink the plan based on revision recommendations
         if isinstance(revisions, dict) and revisions.get("change_plan", False):
             # Use Command to redirect to planner for replanning
-            return Command(goto="planner", update={"messages": messages_to_add, "plan": plan})
+            return Command(goto="planner", update={"messages": messages_to_add, "plan": plan, "needs_replanning": True})
 
         return {"messages": messages_to_add, "plan": plan}
 
@@ -398,12 +401,24 @@ class SequentialAgent:
         if not state["plan"] or all(step["status"] == "done" for step in state["plan"]):
             return self._create_initial_plan(user_query, available_tools)
 
-        # Case 2: Replanning scenario (some steps done, some pending)
+            # Case 2: Replanning scenario (only if explicitly requested by a revision or if there are completed steps with insights)
         completed_steps = [step for step in state["plan"] if step["status"] == "done"]
         pending_steps = [step for step in state["plan"] if step["status"] == "pending"]
 
-        if completed_steps and pending_steps:
-            return self._replan_remaining_steps(user_query, available_tools, completed_steps, pending_steps)
+        # Check if replanning is needed based on:
+        # 1. Explicit request from revision (needs_replanning flag)
+        # 2. Completed steps with revisions (insights gained)
+        should_replan = state.get("needs_replanning", False) or (
+            completed_steps
+            and pending_steps
+            and any(step.get("revisions") and len(step["revisions"]) > 0 for step in completed_steps)
+        )
+
+        if should_replan and completed_steps and pending_steps:
+            result = self._replan_remaining_steps(user_query, available_tools, completed_steps, pending_steps)
+            # Reset the replanning flag after replanning
+            result["needs_replanning"] = False
+            return result
 
         # Case 3: Continue existing plan (only pending steps remain)
         return {}
