@@ -18,6 +18,7 @@ from langchain_core.runnables import Runnable
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode
+from langgraph.types import Command
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
@@ -127,25 +128,36 @@ class SequentialAgent:
     def _planner(self, state: AgentState) -> dict[str, Any]:
         """Plan the next steps or update existing plan.
 
-        If state.plan is empty or every step is done, produce a fresh ordered
-        plan. If some steps remain, optionally update the remaining portion
-        of the plan.
+        Handles three scenarios:
+        1. Initial planning: No plan exists or all steps are done
+        2. Replanning: Some steps are done, need to replan remaining work
+        3. Continue existing: Plan exists with only pending steps
         """
-        # Check if we need a fresh plan
+        messages = state["messages"]
+        user_query = (
+            state.get("current_query")
+            if state.get("current_query")
+            else next((msg.content for msg in reversed(messages) if isinstance(msg, HumanMessage)), "")
+        )
+        available_tools = [tool.name for tool in self.tools] if self.tools else "None"
+
+        # Case 1: Initial planning (no plan or all steps done)
         if not state["plan"] or all(step["status"] == "done" for step in state["plan"]):
-            # Create a fresh plan for the user query
-            messages = state["messages"]
+            return self._create_initial_plan(user_query, available_tools)
 
-            # Get the user query from the current query or the last human message
-            user_query = (
-                state.get("current_query")
-                if state.get("current_query")
-                else next((msg.content for msg in reversed(messages) if isinstance(msg, HumanMessage)), "")
-            )
+        # Case 2: Replanning scenario (some steps done, some pending)
+        completed_steps = [step for step in state["plan"] if step["status"] == "done"]
+        pending_steps = [step for step in state["plan"] if step["status"] == "pending"]
 
-            available_tools = [tool.name for tool in self.tools] if self.tools else "None"
+        if completed_steps and pending_steps:
+            return self._replan_remaining_steps(user_query, available_tools, completed_steps, pending_steps)
 
-            plan_prompt = f"""
+        # Case 3: Continue existing plan (only pending steps remain)
+        return {}
+
+    def _create_initial_plan(self, user_query: str, available_tools: str) -> dict[str, Any]:
+        """Create a fresh initial plan for the user query."""
+        plan_prompt = f"""
 You are a helpful planning assistant. Given the following user query, create a 
 detailed step-by-step plan to accomplish the task.
 
@@ -177,47 +189,119 @@ Return your plan as a JSON list of steps in the following format:
 Only return the JSON, no additional text.
 """
 
-            response = self.llm.invoke([HumanMessage(content=plan_prompt)])
+        response = self.llm.invoke([HumanMessage(content=plan_prompt)])
+        return self._parse_and_validate_plan(response, user_query)
 
-            try:
-                plan_text = response.content.strip()
-                # Extract JSON from response if it's wrapped in other text
-                if plan_text.startswith("```"):
-                    plan_text = plan_text.split("```")[1]
-                    plan_text = plan_text.removeprefix("json")
-                plan_text = plan_text.strip()
-                new_plan = json.loads(plan_text)
+    def _replan_remaining_steps(
+        self, user_query: str, available_tools: str, completed_steps: list[Step], pending_steps: list[Step]
+    ) -> dict[str, Any]:
+        """Replan the remaining steps based on completed work and revisions."""
+        # Summarize completed work and key insights
+        completed_summary = []
+        key_revisions = []
 
-                # Validate plan structure
-                validated_plan = []
-                for step_data in new_plan:
-                    step: Step = {
-                        "task": str(step_data.get("task", "")),
-                        "expected": str(step_data.get("expected", "")),
-                        "tool": step_data.get("tool") if step_data.get("tool") != "null" else None,
-                        "status": "pending",
-                    }
-                    validated_plan.append(step)
+        for step in completed_steps:
+            completed_summary.append(f"✓ {step['task']} (Expected: {step['expected']})")
+            if step.get("revisions") and isinstance(step["revisions"], list):
+                key_revisions.extend(step["revisions"])
 
-            except (json.JSONDecodeError, KeyError) as e:
-                logger.warning("Failed to parse plan: %s", e)
-                # Fallback to a simple single-step plan
-                validated_plan = [
-                    {
-                        "task": f"Address the user query: {user_query}",
-                        "expected": "A comprehensive response to the user's question",
-                        "tool": None,
-                        "status": "pending",
-                    }
-                ]
+        completed_work = "\n".join(completed_summary) if completed_summary else "None completed yet"
+        insights = (
+            "\n".join([f"- {revision}" for revision in key_revisions]) if key_revisions else "No specific insights yet"
+        )
+
+        # Current pending steps for context
+        remaining_work = "\n".join([f"• {step['task']} (Expected: {step['expected']})" for step in pending_steps])
+
+        replan_prompt = f"""
+You are a replanning assistant. Based on completed work and insights gained, 
+create a revised plan for the remaining tasks.
+
+ORIGINAL QUERY: {user_query}
+
+WORK COMPLETED SO FAR:
+{completed_work}
+
+KEY INSIGHTS AND REVISIONS FROM COMPLETED WORK:
+{insights}
+
+CURRENTLY PLANNED REMAINING WORK:
+{remaining_work}
+
+Available Tools: {available_tools}
+
+Based on the insights from completed work, create a NEW plan for the remaining tasks.
+The new plan should:
+1. Take into account lessons learned from completed steps
+2. Address any issues identified in the revisions
+3. Be more effective than the original remaining plan
+4. Complete the original user query successfully
+
+Return your revised plan as a JSON list of steps in the following format:
+[
+    {{
+        "task": "description of task",
+        "expected": "what you expect to achieve", 
+        "tool": "tool_name_or_null",
+        "status": "pending"
+    }}
+]
+
+Only return the JSON, no additional text.
+"""
+
+        response = self.llm.invoke([HumanMessage(content=replan_prompt)])
+        replanned_steps = self._parse_and_validate_plan(response, user_query, is_replan=True)
+
+        # Combine completed steps with new replanned steps
+        if "plan" in replanned_steps:
+            full_plan = completed_steps + replanned_steps["plan"]
+            return {"plan": full_plan}
+
+        # Fallback: keep existing plan if replanning fails
+        return {}
+
+    def _parse_and_validate_plan(self, response, user_query: str, is_replan: bool = False) -> dict[str, Any]:
+        """Parse and validate the LLM's plan response."""
+        try:
+            plan_text = response.content.strip()
+            # Extract JSON from response if it's wrapped in other text
+            if plan_text.startswith("```"):
+                plan_text = plan_text.split("```")[1]
+                plan_text = plan_text.removeprefix("json")
+            plan_text = plan_text.strip()
+            new_plan = json.loads(plan_text)
+
+            # Validate plan structure
+            validated_plan = []
+            for step_data in new_plan:
+                step: Step = {
+                    "task": str(step_data.get("task", "")),
+                    "expected": str(step_data.get("expected", "")),
+                    "tool": step_data.get("tool") if step_data.get("tool") != "null" else None,
+                    "status": "pending",
+                    "revisions": [],
+                }
+                validated_plan.append(step)
 
             return {"plan": validated_plan}
 
-        # Optionally update remaining steps based on new information
-        # For now, just keep the existing plan
-        return {}
+        except (json.JSONDecodeError, KeyError) as e:
+            logger.warning("Failed to parse %s: %s", "replan" if is_replan else "plan", e)
+            # Fallback to a simple single-step plan
+            action = "replan and address" if is_replan else "address"
+            validated_plan = [
+                {
+                    "task": f"Re-evaluate and {action} the user query: {user_query}",
+                    "expected": "A comprehensive response addressing the user's question",
+                    "tool": None,
+                    "status": "pending",
+                    "revisions": [],
+                }
+            ]
+            return {"plan": validated_plan}
 
-    def _executor(self, state: AgentState) -> dict[str, Any]:
+    def _executor(self, state: AgentState) -> dict[str, Any] | Command[Literal["planner"]]:
         """Execute the next pending step.
 
         Pop the next pending step and either call tool_node or call LLM
@@ -263,6 +347,15 @@ Only return the JSON, no additional text.
         if current_step["tool"]:
             tool_info = f"\nSUGGESTED TOOL: {current_step['tool']} - Use this tool if appropriate for the task."
 
+        # Include previous revisions if they exist
+        revisions_info = ""
+        revisions_list = []
+        for k in range(next_step_index):
+            existing_revisions = state["plan"][k].get("revisions", [])[0]
+            revisions_list.append(existing_revisions)
+        revisions_list = "\n".join([f"- {revision}" for revision in revisions_list])
+        revisions_info = f"\n\nPREVIOUS REVISIONS FOR THIS STEP:\n{revisions_list}"
+
         task_prompt = f"""
 You are executing a specific step in a larger plan to address the original question.
 
@@ -273,7 +366,7 @@ COMPLETED STEPS SO FAR:
 
 CURRENT STEP TO EXECUTE:
 Task: {current_step["task"]}
-Expected Outcome: {current_step["expected"]}{tool_info}
+Expected Outcome: {current_step["expected"]}{tool_info}{revisions_info}
 
 Based on the original question, progress made so far, and the conversation context, provide a focused response for this specific step that builds upon previous work.
 """
@@ -402,6 +495,11 @@ Only return the JSON, no additional text.
             # Keep existing revisions if no new ones
             combined_revisions = existing_revisions if isinstance(existing_revisions, list) else []
         plan[next_step_index] = {**current_step, "status": "done", "revisions": combined_revisions}
+
+        # Check if we need to rethink the plan based on revision recommendations
+        if isinstance(revisions, dict) and revisions.get("change_plan", False):
+            # Use Command to redirect to planner for replanning
+            return Command(goto="planner", update={"messages": messages_to_add, "plan": plan})
 
         return {"messages": messages_to_add, "plan": plan}
 

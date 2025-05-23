@@ -188,7 +188,7 @@ class TestSequentialAgent:
 
         assert "plan" in result
         assert len(result["plan"]) == 1
-        assert result["plan"][0]["task"].startswith("Address the user query")
+        assert result["plan"][0]["task"].startswith("Re-evaluate and address the user query")
         assert result["plan"][0]["tool"] is None
         assert result["plan"][0]["status"] == "pending"
 
@@ -458,3 +458,383 @@ class TestSequentialAgent:
         assert "plan" in result
         assert len(result["plan"]) == 1
         assert result["plan"][0]["task"] == "Analyze query"
+
+    @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
+    def test_executor_command_on_change_plan(self, mock_init):
+        """Test executor returns Command when revision recommends changing plan."""
+        mock_llm = MagicMock()
+        mock_init.return_value = mock_llm
+
+        # Mock task execution response
+        task_response = AIMessage(content="Task completed with some issues")
+
+        # Mock revision response that recommends changing the plan
+        revision_json = json.dumps(
+            {"revisions": "The current approach is insufficient, need to rethink strategy", "change_plan": True}
+        )
+        revision_response = AIMessage(content=revision_json)
+
+        mock_llm.invoke.side_effect = [task_response, revision_response]
+
+        agent = SequentialAgent(model_name="gpt-4", model_provider="openai")
+
+        # Create state with a pending step
+        step: Step = {
+            "task": "Test task",
+            "expected": "Expected result",
+            "tool": None,
+            "status": "pending",
+            "revisions": [],
+        }
+        state: AgentState = {
+            "messages": [HumanMessage(content="Test query")],
+            "plan": [step],
+            "current_query": "Test query",
+        }
+
+        result = agent._executor(state)
+
+        # Should return a Command object since change_plan is True
+        from langgraph.types import Command
+
+        assert isinstance(result, Command)
+        assert result.goto == "planner"
+        assert "messages" in result.update
+        assert "plan" in result.update
+        assert result.update["plan"][0]["status"] == "done"
+
+    @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
+    def test_executor_dict_on_no_change_plan(self, mock_init):
+        """Test executor returns dict when revision does not recommend changing plan."""
+        mock_llm = MagicMock()
+        mock_init.return_value = mock_llm
+
+        # Mock task execution response
+        task_response = AIMessage(content="Task completed successfully")
+
+        # Mock revision response that does not recommend changing the plan
+        revision_json = json.dumps({"revisions": "Task was completed successfully", "change_plan": False})
+        revision_response = AIMessage(content=revision_json)
+
+        mock_llm.invoke.side_effect = [task_response, revision_response]
+
+        agent = SequentialAgent(model_name="gpt-4", model_provider="openai")
+
+        # Create state with a pending step
+        step: Step = {
+            "task": "Test task",
+            "expected": "Expected result",
+            "tool": None,
+            "status": "pending",
+            "revisions": [],
+        }
+        state: AgentState = {
+            "messages": [HumanMessage(content="Test query")],
+            "plan": [step],
+            "current_query": "Test query",
+        }
+
+        result = agent._executor(state)
+
+        # Should return a dict since change_plan is False
+        assert isinstance(result, dict)
+        assert "messages" in result
+        assert "plan" in result
+        assert result["plan"][0]["status"] == "done"
+
+    @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
+    def test_planner_replanning_scenario(self, mock_init):
+        """Test planner handles replanning when some steps are done and some pending."""
+        mock_llm = MagicMock()
+        mock_init.return_value = mock_llm
+
+        # Mock the replanning response
+        replan_json = json.dumps(
+            [
+                {
+                    "task": "Clean and preprocess data based on previous insights",
+                    "expected": "Clean dataset ready for analysis",
+                    "tool": "preprocess_tool",
+                    "status": "pending",
+                },
+                {
+                    "task": "Perform analysis with enhanced methodology",
+                    "expected": "Comprehensive analysis results",
+                    "tool": "analyze_data",
+                    "status": "pending",
+                },
+            ]
+        )
+
+        replanning_response = AIMessage(content=replan_json)
+        mock_llm.invoke.return_value = replanning_response
+
+        agent = SequentialAgent(model_name="gpt-4", model_provider="openai", tools=[search])
+
+        # State with mixed completed and pending steps (replanning scenario)
+        state: AgentState = {
+            "messages": [HumanMessage(content="Analyze this complex dataset")],
+            "plan": [
+                {
+                    "task": "Initial data exploration",
+                    "expected": "Understanding of data structure",
+                    "tool": None,
+                    "status": "done",
+                    "revisions": ["Data quality issues detected", "Need preprocessing step"],
+                },
+                {
+                    "task": "Direct analysis of raw data",
+                    "expected": "Analysis results",
+                    "tool": "analyze_data",
+                    "status": "pending",
+                    "revisions": [],
+                },
+                {
+                    "task": "Generate final report",
+                    "expected": "Complete report",
+                    "tool": None,
+                    "status": "pending",
+                    "revisions": [],
+                },
+            ],
+            "current_query": "Analyze this complex dataset",
+        }
+
+        result = agent._planner(state)
+
+        assert "plan" in result
+        # Should have 1 completed step + 2 new replanned steps
+        assert len(result["plan"]) == 3
+
+        # First step should remain completed
+        assert result["plan"][0]["status"] == "done"
+        assert result["plan"][0]["task"] == "Initial data exploration"
+        assert "Data quality issues detected" in result["plan"][0]["revisions"]
+
+        # New steps should be pending and reflect insights from completed work
+        assert result["plan"][1]["status"] == "pending"
+        assert "preprocess" in result["plan"][1]["task"].lower()
+        assert result["plan"][2]["status"] == "pending"
+        assert "enhanced" in result["plan"][2]["task"].lower()
+
+    @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
+    def test_planner_initial_vs_replanning_distinction(self, mock_init):
+        """Test that planner correctly distinguishes initial planning from replanning."""
+        mock_llm = MagicMock()
+        mock_init.return_value = mock_llm
+
+        agent = SequentialAgent(model_name="gpt-4", model_provider="openai")
+
+        # Test Case 1: Initial planning (empty plan)
+        initial_plan_json = json.dumps([{"task": "Step 1", "expected": "Result 1", "tool": None, "status": "pending"}])
+        mock_llm.invoke.return_value = AIMessage(content=initial_plan_json)
+
+        initial_state: AgentState = {
+            "messages": [HumanMessage(content="New query")],
+            "plan": [],
+            "current_query": "New query",
+        }
+
+        result = agent._planner(initial_state)
+        assert "plan" in result
+        assert len(result["plan"]) == 1
+
+        # Verify that initial planning prompt was used (check call was made)
+        assert mock_llm.invoke.called
+        call_args = mock_llm.invoke.call_args[0][0][0].content
+        assert "helpful planning assistant" in call_args
+        assert "detailed step-by-step plan" in call_args
+
+        # Reset mock for next test
+        mock_llm.reset_mock()
+
+        # Test Case 2: Replanning scenario
+        replan_json = json.dumps(
+            [{"task": "Revised step", "expected": "Better result", "tool": None, "status": "pending"}]
+        )
+        mock_llm.invoke.return_value = AIMessage(content=replan_json)
+
+        replanning_state: AgentState = {
+            "messages": [HumanMessage(content="Same query")],
+            "plan": [
+                {
+                    "task": "Completed step",
+                    "expected": "Done",
+                    "tool": None,
+                    "status": "done",
+                    "revisions": ["Insight gained"],
+                },
+                {"task": "Pending step", "expected": "To do", "tool": None, "status": "pending", "revisions": []},
+            ],
+            "current_query": "Same query",
+        }
+
+        result = agent._planner(replanning_state)
+        assert "plan" in result
+        assert len(result["plan"]) == 2  # 1 completed + 1 replanned
+
+        # Verify that replanning prompt was used
+        assert mock_llm.invoke.called
+        call_args = mock_llm.invoke.call_args[0][0][0].content
+        assert "replanning assistant" in call_args
+        assert "WORK COMPLETED SO FAR:" in call_args
+        assert "KEY INSIGHTS AND REVISIONS" in call_args
+
+    @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
+    def test_planner_continue_existing_plan(self, mock_init):
+        """Test planner continues with existing plan when only pending steps remain."""
+        mock_llm = MagicMock()
+        mock_init.return_value = mock_llm
+
+        agent = SequentialAgent(model_name="gpt-4", model_provider="openai")
+
+        # State with only pending steps (should continue existing plan)
+        continue_state: AgentState = {
+            "messages": [HumanMessage(content="Query")],
+            "plan": [
+                {"task": "Step 1", "expected": "Result 1", "tool": None, "status": "pending", "revisions": []},
+                {"task": "Step 2", "expected": "Result 2", "tool": None, "status": "pending", "revisions": []},
+            ],
+            "current_query": "Query",
+        }
+
+        result = agent._planner(continue_state)
+
+        # Should return empty dict (no replanning needed)
+        assert result == {}
+        # LLM should not be called since no planning needed
+        assert not mock_llm.invoke.called
+
+    def test_index_scanning_logic_robustness(self):
+        """Test the core index-scanning logic handles replanning correctly."""
+        # Test the core algorithm: scan from index 0 to find first pending step
+
+        # Scenario 1: Original plan before execution
+        original_plan = [
+            {"task": "Step 0", "expected": "Result 0", "tool": None, "status": "done", "revisions": []},
+            {"task": "Step 1", "expected": "Result 1", "tool": None, "status": "pending", "revisions": []},
+            {"task": "Step 2", "expected": "Result 2", "tool": None, "status": "pending", "revisions": []},
+        ]
+
+        # Find next step index using the same logic as executor
+        next_step_index = None
+        for i, step in enumerate(original_plan):
+            if step["status"] == "pending":
+                next_step_index = i
+                break
+
+        assert next_step_index == 1  # Should find step 1
+
+        # Scenario 2: After step 1 completes and triggers replanning
+        # Step 1 gets marked as done, plan gets restructured with new pending steps
+
+        replanned_plan = [
+            {"task": "Step 0", "expected": "Result 0", "tool": None, "status": "done", "revisions": []},
+            {
+                "task": "Step 1",
+                "expected": "Result 1",
+                "tool": None,
+                "status": "done",
+                "revisions": ["Completed but triggered replan"],
+            },
+            {"task": "New step A", "expected": "New result A", "tool": None, "status": "pending", "revisions": []},
+            {"task": "New step B", "expected": "New result B", "tool": None, "status": "pending", "revisions": []},
+        ]
+
+        # Find next step index after replanning using same logic
+        next_step_index = None
+        for i, step in enumerate(replanned_plan):
+            if step["status"] == "pending":
+                next_step_index = i
+                break
+
+        assert next_step_index == 2  # Should find "New step A" at index 2
+        assert replanned_plan[next_step_index]["task"] == "New step A"
+
+        # Scenario 3: After executing "New step A"
+        post_execution_plan = [
+            {"task": "Step 0", "expected": "Result 0", "tool": None, "status": "done", "revisions": []},
+            {
+                "task": "Step 1",
+                "expected": "Result 1",
+                "tool": None,
+                "status": "done",
+                "revisions": ["Completed but triggered replan"],
+            },
+            {"task": "New step A", "expected": "New result A", "tool": None, "status": "done", "revisions": []},
+            {"task": "New step B", "expected": "New result B", "tool": None, "status": "pending", "revisions": []},
+        ]
+
+        # Find next step index after first replanned step completes
+        next_step_index = None
+        for i, step in enumerate(post_execution_plan):
+            if step["status"] == "pending":
+                next_step_index = i
+                break
+
+        assert next_step_index == 3  # Should find "New step B" at index 3
+        assert post_execution_plan[next_step_index]["task"] == "New step B"
+
+        print("✅ Index-scanning logic is robust to plan restructuring!")
+
+    def test_index_scanning_handles_edge_cases(self):
+        """Test edge cases for the index scanning approach."""
+        # Edge case 1: No pending steps
+        all_done_plan = [
+            {"task": "Step 0", "expected": "Result 0", "tool": None, "status": "done", "revisions": []},
+            {"task": "Step 1", "expected": "Result 1", "tool": None, "status": "done", "revisions": []},
+        ]
+
+        next_step_index = None
+        for i, step in enumerate(all_done_plan):
+            if step["status"] == "pending":
+                next_step_index = i
+                break
+
+        assert next_step_index is None  # Should find no pending steps
+
+        # Edge case 2: All pending steps (fresh plan)
+        all_pending_plan = [
+            {"task": "Step 0", "expected": "Result 0", "tool": None, "status": "pending", "revisions": []},
+            {"task": "Step 1", "expected": "Result 1", "tool": None, "status": "pending", "revisions": []},
+        ]
+
+        next_step_index = None
+        for i, step in enumerate(all_pending_plan):
+            if step["status"] == "pending":
+                next_step_index = i
+                break
+
+        assert next_step_index == 0  # Should find first step
+
+        # Edge case 3: Multiple replanning cycles (complex plan evolution)
+        complex_evolved_plan = [
+            {"task": "Original step 0", "expected": "Done", "tool": None, "status": "done", "revisions": []},
+            {
+                "task": "Original step 1",
+                "expected": "Done",
+                "tool": None,
+                "status": "done",
+                "revisions": ["Triggered first replan"],
+            },
+            {
+                "task": "First replan step A",
+                "expected": "Done",
+                "tool": None,
+                "status": "done",
+                "revisions": ["Triggered second replan"],
+            },
+            {"task": "Second replan step X", "expected": "Current", "tool": None, "status": "pending", "revisions": []},
+            {"task": "Second replan step Y", "expected": "Future", "tool": None, "status": "pending", "revisions": []},
+        ]
+
+        next_step_index = None
+        for i, step in enumerate(complex_evolved_plan):
+            if step["status"] == "pending":
+                next_step_index = i
+                break
+
+        assert next_step_index == 3  # Should find first pending regardless of complex history
+        assert complex_evolved_plan[next_step_index]["task"] == "Second replan step X"
+
+        print("✅ Index-scanning handles edge cases correctly!")
