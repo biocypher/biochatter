@@ -15,6 +15,7 @@ from typing import TYPE_CHECKING, Annotated, Any, Literal, TypedDict
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.checkpoint.memory import MemorySaver
+from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.prebuilt import ToolNode
 
@@ -62,6 +63,7 @@ class LangGraphConversation:
         thread_id: int = 0,
         config: dict | None = None,
         checkpointer_type: Literal["memory", "sqlite"] = "memory",
+        sqlite_db_path: str | None = None,
         llm_kwargs: Mapping | None = None,
     ) -> None:
         """Initialize the LangGraphConversation.
@@ -74,7 +76,8 @@ class LangGraphConversation:
             save_history: Whether to save history
             thread_id: Default thread ID to use if not provided
             config: Optional configuration mapping
-            checkpointer_type: Type of checkpointer to use
+            checkpointer_type: Type of checkpointer to use ('memory' or 'sqlite')
+            sqlite_db_path: Path to SQLite database file (only used when checkpointer_type='sqlite')
             llm_kwargs: Optional additional keyword arguments for LLM
                 initialization
 
@@ -82,28 +85,80 @@ class LangGraphConversation:
         self.model_name = model_name
         self.model_provider = model_provider
         self.tools = list(tools) if tools else []
+        self.checkpointer_type = checkpointer_type
+        self.sqlite_db_path = sqlite_db_path
 
-        # case in which no config but save_history is True
-        if save_history and config is None:
-            config = {"configurable": {"thread_id": thread_id}}
-            self.memory = MemorySaver()
-        elif save_history and config is not None:
-            # check if thread_id is in config
-            assert "thread_id" in config["configurable"], "thread_id must be in config if save_history is True"
-            self.memory = MemorySaver()
-        elif not save_history:
-            config = {}
-            self.memory = None
-        else:
-            raise ValueError("Invalid configuration")
-
-        self.config = config or {}
+        # Setup memory and config using auxiliary method
+        self.config, self.memory = self._setup_memory_management(
+            save_history=save_history,
+            thread_id=thread_id,
+            config=config,
+            checkpointer_type=checkpointer_type,
+            sqlite_db_path=sqlite_db_path,
+        )
 
         # Initialize the LLM using langchain's init_chat_model
         self.llm = init_chat_model(model=model_name, model_provider=model_provider, **(llm_kwargs or {}))
 
         # Build the graph immediately
         self.graph = self._build_graph()
+
+    def _setup_memory_management(
+        self,
+        save_history: bool,
+        thread_id: int,
+        config: dict | None,
+        checkpointer_type: Literal["memory", "sqlite"],
+        sqlite_db_path: str | None,
+    ) -> tuple[dict, MemorySaver | SqliteSaver | None]:
+        """Setup memory management configuration and checkpointer.
+
+        Args:
+        ----
+            save_history: Whether to save conversation history
+            thread_id: Default thread ID to use if not provided
+            config: Optional configuration mapping
+            checkpointer_type: Type of checkpointer to use
+            sqlite_db_path: Path to SQLite database file
+
+        Returns:
+        -------
+            Tuple of (config_dict, memory_checkpointer)
+
+        Raises:
+        ------
+            ValueError: If configuration is invalid
+
+        """
+        if not save_history:
+            return {}, None
+
+        # Setup config with thread_id
+        if config is None:
+            config = {"configurable": {"thread_id": thread_id}}
+        # Validate that thread_id is in config
+        elif "configurable" not in config or "thread_id" not in config["configurable"]:
+            raise ValueError("thread_id must be in config['configurable'] when save_history is True")
+
+        # Create appropriate checkpointer based on type
+        if checkpointer_type == "memory":
+            memory = MemorySaver()
+        elif checkpointer_type == "sqlite":
+            if sqlite_db_path is None:
+                # Use default path if none provided
+                sqlite_db_path = "conversation_checkpoints.db"
+
+            # For SQLite, we need to enter the context manager and store the active saver
+            sqlite_context = SqliteSaver.from_conn_string(sqlite_db_path)
+            memory = sqlite_context.__enter__()
+            # Store the context manager so we can properly clean it up if needed
+            self._sqlite_context = sqlite_context
+            # Update the instance variable with the actual path used
+            self.sqlite_db_path = sqlite_db_path
+        else:
+            raise ValueError(f"Unsupported checkpointer_type: {checkpointer_type}")
+
+        return config, memory
 
     def bind_tools(self, tools: Sequence[BaseTool]) -> None:
         """Extend the persistent tool list with additional tools.
@@ -449,8 +504,35 @@ For example:
         if not hasattr(self, "memory") or self.memory is None:
             raise ValueError("No checkpointer configured. Cannot reset conversation memory.")
 
-        # Create a new MemorySaver instance
-        self.memory = MemorySaver()
+        # Clean up existing SQLite context if it exists
+        self._cleanup_sqlite_context()
+
+        # Extract current thread_id from config for reuse
+        current_thread_id = self.config.get("configurable", {}).get("thread_id", 0)
+
+        # Create a new checkpointer using the auxiliary method
+        self.config, self.memory = self._setup_memory_management(
+            save_history=True,  # We know save_history is True if we have memory
+            thread_id=current_thread_id,
+            config=None,  # Let the method create new config
+            checkpointer_type=self.checkpointer_type,
+            sqlite_db_path=self.sqlite_db_path,
+        )
 
         # Rebuild the graph with the new checkpointer
         self.graph = self._build_graph()
+
+    def _cleanup_sqlite_context(self) -> None:
+        """Clean up the SQLite context manager if it exists."""
+        if hasattr(self, "_sqlite_context") and self._sqlite_context is not None:
+            try:
+                self._sqlite_context.__exit__(None, None, None)
+            except Exception:
+                # Ignore cleanup errors
+                pass
+            finally:
+                self._sqlite_context = None
+
+    def __del__(self) -> None:
+        """Cleanup when the conversation is destroyed."""
+        self._cleanup_sqlite_context()
