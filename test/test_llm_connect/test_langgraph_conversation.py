@@ -58,9 +58,10 @@ class TestLangGraphConversation:
             assert convo.model_name == "gpt-4o"
             assert convo.model_provider == "openai"
             assert convo.tools == []
-            assert convo.config == {}
-            assert convo.checkpointer is None
+            assert convo.config == {"configurable": {"thread_id": 0}}  # Default config with thread_id
+            assert convo.memory is not None  # Memory should be created by default
             assert convo.llm == mock_llm
+            assert hasattr(convo, "sequential_agent")  # Check sequential agent exists
 
             mock_init.assert_called_once_with(model="gpt-4o", model_provider="openai")
 
@@ -125,7 +126,9 @@ class TestLangGraphConversation:
         # Set up call sequence
         mock_llm.invoke.side_effect = [router_response, final_response]
 
-        convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai", tools=[add, echo])
+        convo = LangGraphConversation(
+            model_name="gpt-4o", model_provider="openai", tools=[add, echo], save_history=False
+        )
 
         result = convo.invoke("What is the capital of France?")
 
@@ -163,7 +166,9 @@ class TestLangGraphConversation:
         mock_llm.bind_tools.return_value = mock_llm_with_tools
         mock_llm_with_tools.invoke.return_value = ai_response_with_tools
 
-        convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai", tools=[add, echo])
+        convo = LangGraphConversation(
+            model_name="gpt-4o", model_provider="openai", tools=[add, echo], save_history=False
+        )
 
         result = convo.invoke("Add 5 and 3")
 
@@ -191,7 +196,7 @@ class TestLangGraphConversation:
         # Set up call sequence
         mock_llm.invoke.side_effect = [router_response, ai_response_no_tools]
 
-        convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai")  # No tools
+        convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai", save_history=False)  # No tools
 
         result = convo.invoke("Add 5 and 3")
 
@@ -202,40 +207,88 @@ class TestLangGraphConversation:
         mock_llm.bind_tools.assert_not_called()
 
     @patch("biochatter.llm_connect.langgraph_conversation.init_chat_model")
-    def test_planned_execution_path(self, mock_init):
-        """Test the planned execution path with tool calls."""
+    def test_sequential_execution_path(self, mock_init):
+        """Test the sequential execution path with the SequentialAgent."""
         # Mock LLM
         mock_llm = MagicMock()
-        mock_llm_with_tools = MagicMock()
         mock_init.return_value = mock_llm
 
         # Mock router response (plan)
         router_response = MagicMock()
         router_response.content = "1. Add 5 and 3\n2. Echo the result"
 
-        # Mock AI response with tool calls for the first step
-        ai_response_with_tools = AIMessage(
-            content="I'll execute the first step: Add 5 and 3",
-            tool_calls=[
-                {"name": "add", "args": {"first_int": 5, "second_int": 3}, "id": "call_123", "type": "tool_call"}
-            ],
+        mock_llm.invoke.side_effect = [router_response]
+
+        convo = LangGraphConversation(
+            model_name="gpt-4o", model_provider="openai", tools=[add, echo], save_history=False
         )
 
-        # Mock reasoning response
-        reasoning_response = MagicMock()
-        reasoning_response.content = "Based on the calculations, 5 + 3 = 8"
+        # Mock the sequential agent's invoke method
+        mock_agent_result = {
+            "messages": [
+                HumanMessage(content="Add 5 and 3, then echo the result"),
+                AIMessage(content="I'll help you with that calculation and echo."),
+                AIMessage(content="The result is 8, and echoing: 8"),
+            ],
+            "plan": [
+                {"task": "Add 5 and 3", "expected": "Sum result", "tool": "add", "status": "done"},
+                {"task": "Echo the result", "expected": "Echoed output", "tool": "echo", "status": "done"},
+            ],
+        }
 
-        mock_llm.invoke.side_effect = [router_response, reasoning_response]
-        mock_llm.bind_tools.return_value = mock_llm_with_tools
-        mock_llm_with_tools.invoke.return_value = ai_response_with_tools
-
-        convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai", tools=[add, echo])
+        convo.sequential_agent.invoke = MagicMock(return_value=mock_agent_result)
 
         result = convo.invoke("Add 5 and 3, then echo the result")
 
+        # Should get the final message from the sequential agent
         assert "8" in result
-        # Router + reasoning calls
-        assert mock_llm.invoke.call_count == 2
+        # Router call + sequential agent execution
+        assert mock_llm.invoke.call_count == 1  # Only router call
+        # Verify sequential agent was called
+        convo.sequential_agent.invoke.assert_called_once_with("Add 5 and 3, then echo the result")
+
+    @patch("biochatter.llm_connect.langgraph_conversation.init_chat_model")
+    def test_planned_execution_path(self, mock_init):
+        """Test the planned execution path uses the sequential agent."""
+        # Mock LLM
+        mock_llm = MagicMock()
+        mock_init.return_value = mock_llm
+
+        # Mock router response (plan)
+        router_response = MagicMock()
+        router_response.content = "1. Add 5 and 3\n2. Echo the result"
+
+        mock_llm.invoke.side_effect = [router_response]
+
+        convo = LangGraphConversation(
+            model_name="gpt-4o", model_provider="openai", tools=[add, echo], save_history=False
+        )
+
+        # Mock the sequential agent's invoke method
+        mock_agent_result = {
+            "messages": [
+                HumanMessage(content="Add 5 and 3, then echo the result"),
+                AIMessage(content="I'll execute step 1: Add 5 and 3"),
+                AIMessage(content="The result is 8"),
+                AIMessage(content="I'll execute step 2: Echo the result"),
+                AIMessage(content="Echo: 8"),
+            ],
+            "plan": [
+                {"task": "Add 5 and 3", "expected": "Sum result", "tool": "add", "status": "done"},
+                {"task": "Echo the result", "expected": "Echoed output", "tool": "echo", "status": "done"},
+            ],
+        }
+
+        convo.sequential_agent.invoke = MagicMock(return_value=mock_agent_result)
+
+        result = convo.invoke("Add 5 and 3, then echo the result")
+
+        # Should get the final message from the sequential agent
+        assert "8" in result
+        # Only router call since sequential agent handles the execution
+        assert mock_llm.invoke.call_count == 1
+        # Verify sequential agent was called
+        convo.sequential_agent.invoke.assert_called_once_with("Add 5 and 3, then echo the result")
 
     @patch("biochatter.llm_connect.langgraph_conversation.init_chat_model")
     def test_invoke_with_adhoc_tools(self, mock_init):
@@ -252,7 +305,7 @@ class TestLangGraphConversation:
 
         mock_llm.invoke.side_effect = [router_response, final_response]
 
-        convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai")
+        convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai", save_history=False)
 
         # Initially no tools
         assert len(convo.tools) == 0
@@ -291,7 +344,7 @@ class TestLangGraphConversation:
         mock_llm.bind_tools.return_value = mock_llm_with_tools
         mock_llm_with_tools.invoke.return_value = ai_response_with_tools
 
-        convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai")
+        convo = LangGraphConversation(model_name="gpt-4o", model_provider="openai", save_history=False)
 
         # Initially no tools
         assert len(convo.tools) == 0

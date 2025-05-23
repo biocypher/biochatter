@@ -19,6 +19,8 @@ from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.prebuilt import ToolNode
 
+from biochatter.llm_connect.sequential_agent import SequentialAgent
+
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
 
@@ -100,6 +102,11 @@ class LangGraphConversation:
         # Initialize the LLM using langchain's init_chat_model
         self.llm = init_chat_model(model=model_name, model_provider=model_provider, **(llm_kwargs or {}))
 
+        # Initialize the SequentialAgent for planned execution
+        self.sequential_agent = SequentialAgent(
+            model_name=model_name, model_provider=model_provider, tools=self.tools, llm_kwargs=llm_kwargs
+        )
+
         # Build the graph immediately
         self.graph = self._build_graph()
 
@@ -136,9 +143,11 @@ class LangGraphConversation:
         # Setup config with thread_id
         if config is None:
             config = {"configurable": {"thread_id": thread_id}}
-        # Validate that thread_id is in config
-        elif "configurable" not in config or "thread_id" not in config["configurable"]:
-            raise ValueError("thread_id must be in config['configurable'] when save_history is True")
+        # Ensure thread_id is in config
+        elif "configurable" not in config:
+            config["configurable"] = {"thread_id": thread_id}
+        elif "thread_id" not in config["configurable"]:
+            config["configurable"]["thread_id"] = thread_id
 
         # Create appropriate checkpointer based on type
         if checkpointer_type == "memory":
@@ -169,6 +178,8 @@ class LangGraphConversation:
 
         """
         self.tools.extend(tools)
+        # Update the sequential agent with new tools
+        self.sequential_agent.bind_tools(tools)
         # Rebuild the graph to incorporate new tools
         self.graph = self._build_graph()
 
@@ -191,6 +202,8 @@ class LangGraphConversation:
         # Temporarily add ad-hoc tools
         if tools:
             self.tools.extend(tools)
+            # Update sequential agent with new tools
+            self.sequential_agent.bind_tools(tools)
             # Rebuild graph with new tools
             self.graph = self._build_graph()
 
@@ -222,8 +235,13 @@ class LangGraphConversation:
         finally:
             # Restore original tools
             self.tools = original_tools
-            # Rebuild graph with restored tools if we had ad-hoc tools
+            # Restore sequential agent tools if we had ad-hoc tools
             if tools:
+                # Reset sequential agent to original tools
+                self.sequential_agent = SequentialAgent(
+                    model_name=self.model_name, model_provider=self.model_provider, tools=self.tools, llm_kwargs={}
+                )
+                # Rebuild graph with restored tools
                 self.graph = self._build_graph()
 
     def _build_graph(self) -> StateGraph:
@@ -241,6 +259,7 @@ class LangGraphConversation:
         workflow.add_node("router", self._route_or_plan)
         workflow.add_node("direct_response", self._direct_response)
         workflow.add_node("llm_with_tools", self._llm_with_tools)
+        workflow.add_node("sequential_execution", self._sequential_execution)
 
         # Create ToolNode with current tools
         if self.tools:
@@ -261,11 +280,12 @@ class LangGraphConversation:
             {
                 "direct": "direct_response",
                 "tool": "llm_with_tools",
-                "plan": "llm_with_tools",  # Handle plan similarly to tool
+                "plan": "sequential_execution",  # Route to sequential execution for plans
             },
         )
 
         workflow.add_edge("direct_response", END)
+        workflow.add_edge("sequential_execution", END)
 
         # Conditional edges from llm_with_tools
         workflow.add_conditional_edges("llm_with_tools", self._should_call_tools, {"tools": "tools", "end": END})
@@ -277,6 +297,43 @@ class LangGraphConversation:
         if self.memory:
             return workflow.compile(checkpointer=self.memory)
         return workflow.compile()
+
+    def _sequential_execution(self, state: ConversationState) -> dict[str, Any]:
+        """Execute sequential planning using the SequentialAgent.
+
+        Args:
+        ----
+            state: Current conversation state
+
+        Returns:
+        -------
+            Updated state with sequential execution results
+
+        """
+        if not state["messages"]:
+            return {"messages": []}
+
+        # Get the user query from the last human message
+        last_message = state["messages"][-1]
+        user_query = last_message.content if hasattr(last_message, "content") else str(last_message)
+
+        # Use the sequential agent to process the query
+        try:
+            agent_result = self.sequential_agent.invoke(user_query)
+
+            # Extract the final response from the agent result
+            if agent_result["messages"]:
+                # Get all messages except the original human message (since it's already in state)
+                new_messages = agent_result["messages"][1:]  # Skip the original HumanMessage
+                return {"messages": new_messages}
+            # Fallback response
+            fallback_message = BaseMessage(content="I was unable to complete the planned execution.", type="ai")
+            return {"messages": [fallback_message]}
+
+        except Exception as e:
+            logger.error("Sequential execution failed: %s", e)
+            error_message = BaseMessage(content=f"I encountered an error during planned execution: {e}", type="ai")
+            return {"messages": [error_message]}
 
     def _route_or_plan(self, state: ConversationState) -> dict[str, Any]:
         """Router/planner node that decides between direct response and planning.
@@ -307,16 +364,12 @@ The tools available are:
 Output exactly one of:
 - "DIRECT" if it can be answered directly without any tools
 - "TOOL" if it can be answered with a single tool call (prefer using tools over direct response when possible)
-- A numbered plan if multiple tool calls are needed
+- "PLAN" if it can be answered with a multi-step plan
 
 For example:
 - "What is the capital of France?" → output "DIRECT"
 - "Search for information about protein folding" → output "TOOL"
-- "Compare protein sequences A and B, then analyze their structure" → output:
-  1. Retrieve protein sequence A
-  2. Retrieve protein sequence B
-  3. Compare sequences
-  4. Analyze structural implications
+- "Compare protein sequences A and B, then analyze their structure" → output "PLAN"
 """
 
         # Get routing decision from LLM
@@ -331,6 +384,8 @@ For example:
             return {"plan": None}
         if response_clean == "TOOL":
             return {"plan": "TOOL"}
+        if response_clean == "PLAN":
+            return {"plan": "PLAN"}
         return {"plan": response_content.strip()}
 
     def _route_decision(self, state: ConversationState) -> str:

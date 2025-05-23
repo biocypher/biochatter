@@ -10,6 +10,7 @@ from biochatter.llm_connect.llmlite import LiteLLMConversation
 from biochatter.llm_connect.misc import BloomConversation, WasmConversation
 from biochatter.llm_connect.ollama import OllamaConversation
 from biochatter.llm_connect.openai import GptConversation
+from biochatter.llm_connect.sequential_agent import SequentialAgent
 from biochatter.llm_connect.xinference import XinferenceConversation
 
 __all__ = [
@@ -23,6 +24,7 @@ __all__ = [
     "LangGraphConversation",
     "LiteLLMConversation",
     "OllamaConversation",
+    "SequentialAgent",
     "WasmConversation",
     "XinferenceConversation",
 ]
