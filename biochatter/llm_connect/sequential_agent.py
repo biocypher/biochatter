@@ -36,6 +36,7 @@ class Step(TypedDict):
         expected: What the model expects to obtain from executing this step
         tool: Name of bound tool to call, if any
         status: Current status of the step
+        revisions: List of revisions to the various steps
 
     """
 
@@ -43,6 +44,7 @@ class Step(TypedDict):
     expected: str
     tool: str | None
     status: Literal["pending", "done", "skipped"]
+    revisions: list[str] | None
 
 
 class AgentState(TypedDict):
@@ -136,8 +138,8 @@ class SequentialAgent:
 
             # Get the user query from the current query or the last human message
             user_query = (
-                state["current_query"]
-                if state["current_query"]
+                state.get("current_query")
+                if state.get("current_query")
                 else next((msg.content for msg in reversed(messages) if isinstance(msg, HumanMessage)), "")
             )
 
@@ -236,44 +238,97 @@ Only return the JSON, no additional text.
 
         current_step = plan[next_step_index]
 
-        # Execute the step
-        if current_step["tool"] and self.tool_node:
-            # Tool execution path
-            # Create a tool call message for the tool_node
-            tool_call_message = HumanMessage(content=f"Use the {current_step['tool']} tool to: {current_step['task']}")
+        # Execute the step with comprehensive prompt
+        # Collect information about completed steps for context
+        completed_steps = [step for step in plan if step["status"] == "done"]
+        completed_steps_summary = ""
+        if completed_steps:
+            completed_steps_summary = "\n".join(
+                [f"- {step['task']} (Expected: {step['expected']})" for step in completed_steps]
+            )
 
-            # This is a simplified approach - in a real implementation,
-            # you'd need to properly format tool calls based on the specific tool
-            try:
-                tool_result = self.tool_node.invoke({"messages": state["messages"] + [tool_call_message]})
+        # Get original query for context
+        original_query = state.get("current_query", "")
+        if not original_query:
+            # Fallback to first human message if current_query not available
+            for msg in state["messages"]:
+                if isinstance(msg, HumanMessage):
+                    original_query = msg.content
+                    break
 
-                # Create tool message from result
-                result_message = ToolMessage(content=str(tool_result), tool_call_id="step_" + str(next_step_index))
+        # Include suggested tool information in the prompt
+        tool_info = ""
+        if current_step["tool"]:
+            tool_info = f"\nSUGGESTED TOOL: {current_step['tool']} - Use this tool if appropriate for the task."
 
-            except Exception:
-                logger.exception("Tool execution failed")
-                result_message = ToolMessage(
-                    content="Tool execution failed - see logs for details", tool_call_id="step_" + str(next_step_index)
-                )
+        task_prompt = f"""
+You are executing a specific step in a larger plan to address the original question.
 
-        else:
-            # Direct LLM execution path
-            task_prompt = f"""
-You are executing a specific step in a larger plan. Complete this step:
+ORIGINAL QUESTION: {original_query}
 
+COMPLETED STEPS SO FAR:
+{completed_steps_summary if completed_steps_summary else "None yet"}
+
+CURRENT STEP TO EXECUTE:
 Task: {current_step["task"]}
-Expected Outcome: {current_step["expected"]}
+Expected Outcome: {current_step["expected"]}{tool_info}
 
-Based on the conversation context, provide a focused response for this specific step.
+Based on the original question, progress made so far, and the conversation context, provide a focused response for this specific step that builds upon previous work.
 """
 
-            response = self.llm.invoke(state["messages"] + [HumanMessage(content=task_prompt)])
-            result_message = response
+        # Create LLM with tools bound if available
+        llm_with_tools = self.llm.bind_tools(self.tools) if self.tools else self.llm
+
+        # Get response from LLM (may include tool calls)
+        response = llm_with_tools.invoke(state["messages"] + [HumanMessage(content=task_prompt)])
+
+        # Handle tool execution based on suggested tool
+        if current_step["tool"] and self.tool_node:
+            # Use suggested tool directly - check if response contains tool calls
+            if hasattr(response, "tool_calls") and response.tool_calls:
+                # Process tool calls through ToolNode
+                try:
+                    tool_result = self.tool_node.invoke({"messages": state["messages"] + [response]})
+                    # Handle tool results - ensure we get ToolMessage objects
+                    if isinstance(tool_result, dict) and "messages" in tool_result:
+                        # Use the messages directly if they're already ToolMessage objects, or convert them
+                        result_messages = []
+                        for i, msg in enumerate(tool_result["messages"]):
+                            if isinstance(msg, ToolMessage):
+                                result_messages.append(msg)
+                            else:
+                                # Convert to ToolMessage if not already
+                                result_messages.append(
+                                    ToolMessage(
+                                        content=str(msg.content) if hasattr(msg, "content") else str(msg),
+                                        tool_call_id="step_" + str(next_step_index) + "_" + str(i),
+                                    )
+                                )
+                    else:
+                        # Single result - convert to ToolMessage
+                        result_messages = [
+                            ToolMessage(content=str(tool_result), tool_call_id="step_" + str(next_step_index))
+                        ]
+                except Exception:
+                    logger.exception("Tool execution failed")
+                    # Return tool error message for compatibility
+                    result_messages = [
+                        ToolMessage(
+                            content="Tool execution failed - see logs for details",
+                            tool_call_id="step_" + str(next_step_index),
+                        )
+                    ]
+            else:
+                # LLM didn't make tool calls even though tool was suggested - return LLM response
+                result_messages = [response]
+        else:
+            # Direct response without tool suggestion
+            result_messages = [response]
 
         # Mark step as done
         plan[next_step_index] = {**current_step, "status": "done"}
 
-        return {"messages": [result_message], "plan": plan}
+        return {"messages": result_messages, "plan": plan}
 
     def _controller(self, state: AgentState) -> dict[str, Any]:
         """Control the flow based on remaining pending steps.
