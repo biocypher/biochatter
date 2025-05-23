@@ -8,9 +8,8 @@ architecture for handling both direct responses and multi-step tool execution.
 from __future__ import annotations
 
 import logging
-import operator
 import re
-from typing import TYPE_CHECKING, Annotated, Any, Literal, TypedDict
+from typing import TYPE_CHECKING, Any, Literal
 
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import BaseMessage, HumanMessage
@@ -18,8 +17,11 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.prebuilt import ToolNode
+from langgraph.types import Command
 
 from biochatter.llm_connect.sequential_agent import SequentialAgent
+
+from .sequential_agent import AgentState as ConversationState
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
@@ -28,22 +30,6 @@ if TYPE_CHECKING:
 
 
 logger = logging.getLogger(__name__)
-
-
-class ConversationState(TypedDict):
-    """State model for the LangGraph conversation.
-
-    Attributes
-    ----------
-        messages: List of conversation messages
-        plan: Optional plan string for multi-step execution
-        intermediate_steps: List of intermediate tool execution results
-
-    """
-
-    messages: Annotated[list[BaseMessage], operator.add]
-    plan: str | None
-    intermediate_steps: list[tuple[str, Any]]
 
 
 class LangGraphConversation:
@@ -183,7 +169,7 @@ class LangGraphConversation:
         # Rebuild the graph to incorporate new tools
         self.graph = self._build_graph()
 
-    def invoke(self, query: str, *, tools: Sequence[BaseTool] | None = None) -> str:
+    def invoke(self, query: str, *, tools: Sequence[BaseTool] | None = None, config: dict | None = None) -> str:
         """Invoke the conversation with a query and optional ad-hoc tools.
 
         Args:
@@ -212,16 +198,18 @@ class LangGraphConversation:
             initial_state: ConversationState = {
                 "messages": [HumanMessage(content=query)],
                 "plan": None,
-                "intermediate_steps": [],
             }
 
             # Create runtime config
-            runtime_config = {}
-            if self.config:
-                runtime_config.update(self.config)
+            if config:
+                self.config = config
+            elif self.config and not config:
+                pass
+            else:
+                self.config = {}
 
             # Run the graph
-            result = self.graph.invoke(initial_state, runtime_config)
+            result = self.graph.invoke(initial_state, config=self.config)
 
             # Extract the final assistant message
             if result["messages"]:
@@ -270,19 +258,9 @@ class LangGraphConversation:
 
         workflow.add_node("reason_about_tools", self._reason_about_tools)
 
-        # Add edges
+        # Add edges - router now uses Command objects for direct routing
         workflow.add_edge(START, "router")
-
-        # Conditional edges from router
-        workflow.add_conditional_edges(
-            "router",
-            self._route_decision,
-            {
-                "direct": "direct_response",
-                "tool": "llm_with_tools",
-                "plan": "sequential_execution",  # Route to sequential execution for plans
-            },
-        )
+        # No conditional edges needed from router - Command objects handle the routing
 
         workflow.add_edge("direct_response", END)
         workflow.add_edge("sequential_execution", END)
@@ -319,7 +297,7 @@ class LangGraphConversation:
 
         # Use the sequential agent to process the query
         try:
-            agent_result = self.sequential_agent.invoke(user_query)
+            agent_result = self.sequential_agent.invoke(state=state, config=self.config)
 
             # Extract the final response from the agent result
             if agent_result["messages"]:
@@ -335,7 +313,9 @@ class LangGraphConversation:
             error_message = BaseMessage(content=f"I encountered an error during planned execution: {e}", type="ai")
             return {"messages": [error_message]}
 
-    def _route_or_plan(self, state: ConversationState) -> dict[str, Any]:
+    def _route_or_plan(
+        self, state: ConversationState
+    ) -> Command[Literal["direct_response", "llm_with_tools", "sequential_execution"]]:
         """Router/planner node that decides between direct response and planning.
 
         Args:
@@ -344,11 +324,11 @@ class LangGraphConversation:
 
         Returns:
         -------
-            Updated state with plan decision
+            Command object with routing decision and state update
 
         """
         if not state["messages"]:
-            return {"plan": None}
+            return Command(goto="direct_response")
 
         last_message = state["messages"][-1]
         user_query = last_message.content if hasattr(last_message, "content") else str(last_message)
@@ -378,33 +358,16 @@ For example:
 
         response_content = response.content if hasattr(response, "content") else str(response)
 
-        # Determine the execution path
+        # Determine the execution path and route using Command
         response_clean = response_content.strip().upper()
         if response_clean == "DIRECT":
-            return {"plan": None}
+            return Command(goto="direct_response")
         if response_clean == "TOOL":
-            return {"plan": "TOOL"}
+            return Command(goto="llm_with_tools")
         if response_clean == "PLAN":
-            return {"plan": "PLAN"}
-        return {"plan": response_content.strip()}
-
-    def _route_decision(self, state: ConversationState) -> str:
-        """Determine the routing decision based on the plan.
-
-        Args:
-        ----
-            state: Current conversation state
-
-        Returns:
-        -------
-            Route decision: "direct", "tool", or "plan"
-
-        """
-        if state["plan"] is None:
-            return "direct"
-        if state["plan"] == "TOOL":
-            return "tool"
-        return "plan"
+            return Command(goto="sequential_execution")
+        # Fallback: treat as plan with the actual response content
+        return Command(goto="sequential_execution")
 
     def _direct_response(self, state: ConversationState) -> dict[str, Any]:
         """Handle direct response without tools.

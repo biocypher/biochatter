@@ -56,7 +56,7 @@ class AgentState(TypedDict):
     """
 
     messages: Annotated[list[AnyMessage], add_messages]
-    plan: list[Step]
+    plan: list[Step] | None
 
 
 class SequentialAgent:
@@ -299,23 +299,36 @@ Based on the conversation context, provide a focused response for this specific 
             return "executor"
         return "END"
 
-    def invoke(self, query: str) -> AgentState:
+    def invoke(
+        self,
+        query: str | None = None,
+        state: AgentState | None = None,
+        config: dict[str, Any] | None = None,
+    ) -> AgentState:
         """Invoke the sequential agent with a query.
 
         Args:
         ----
             query: User query string
+            state: Optional initial state (coming from another graph)
+            config: Optional runtime configuration
 
         Returns:
         -------
             Final updated AgentState with full conversation and tool traces
 
         """
-        # Initialize the state
-        initial_state: AgentState = {"messages": [HumanMessage(content=query)], "plan": []}
+        if (query is None) and (state is None):
+            raise ValueError("query or state is required")
+
+        if state is None:
+            # Initialize the state
+            initial_state: AgentState = {"messages": [HumanMessage(content=query)], "plan": []}
+        else:
+            initial_state = state
 
         # Run the graph
-        return self.graph.invoke(initial_state)
+        return self.graph.invoke(initial_state, config=config)
 
     def bind_tools(self, tools: Sequence[BaseTool]) -> None:
         """Bind additional tools to the agent.

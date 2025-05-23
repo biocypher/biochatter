@@ -4,30 +4,33 @@
 import sys
 import tempfile
 from pathlib import Path
-from unittest.mock import Mock
+from unittest.mock import MagicMock
 
 # Add the biochatter module to the path (adjust for test directory location)
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root))
 
 from biochatter.llm_connect.langgraph_conversation import LangGraphConversation
 from langchain_core.messages import AIMessage
 
 
 def create_mock_llm():
-    """Create a mock LLM that simulates chat model behavior."""
-    mock_llm = Mock()
+    """Create a mock LLM that returns predictable responses for testing."""
+    mock_llm = MagicMock()
 
-    # Mock the invoke method to return a simple AI message
     def mock_invoke(messages):
+        # Check if this is a routing message
+        if len(messages) == 1 and "Decide how to handle" in messages[0].content:
+            # Return DIRECT to force direct response path
+            return AIMessage(content="DIRECT")
+        # For all other messages, return the standard mock response
         return AIMessage(content="Mock response")
 
-    # Mock the bind_tools method to return self (chainable)
     def mock_bind_tools(tools):
         return mock_llm
 
-    mock_llm.invoke = mock_invoke
-    mock_llm.bind_tools = mock_bind_tools
-
+    mock_llm.invoke.side_effect = mock_invoke
+    mock_llm.bind_tools.side_effect = mock_bind_tools
     return mock_llm
 
 
