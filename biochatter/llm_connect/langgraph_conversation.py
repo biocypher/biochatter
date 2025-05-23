@@ -8,20 +8,21 @@ architecture for handling both direct responses and multi-step tool execution.
 from __future__ import annotations
 
 import logging
+import operator
 import re
-from typing import TYPE_CHECKING, Annotated, Any, TypedDict
+from typing import TYPE_CHECKING, Annotated, Any, Literal, TypedDict
 
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import BaseMessage, HumanMessage
+from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.prebuilt import ToolNode
-import operator
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
 
     from langchain_core.tools import BaseTool
-    from langgraph.checkpoint.base import BaseCheckpointSaver
+
 
 logger = logging.getLogger(__name__)
 
@@ -57,8 +58,10 @@ class LangGraphConversation:
         model_provider: str,
         *,
         tools: Sequence[BaseTool] | None = None,
-        config: Mapping | None = None,
-        checkpointer: BaseCheckpointSaver | None = None,
+        save_history: bool = True,
+        thread_id: int = 0,
+        config: dict | None = None,
+        checkpointer_type: Literal["memory", "sqlite"] = "memory",
         llm_kwargs: Mapping | None = None,
     ) -> None:
         """Initialize the LangGraphConversation.
@@ -68,8 +71,10 @@ class LangGraphConversation:
             model_name: Name of the model to use
             model_provider: Provider of the model (e.g., 'openai', 'anthropic')
             tools: Optional sequence of tools to make available
+            save_history: Whether to save history
+            thread_id: Default thread ID to use if not provided
             config: Optional configuration mapping
-            checkpointer: Optional checkpoint manager for persistence
+            checkpointer_type: Type of checkpointer to use
             llm_kwargs: Optional additional keyword arguments for LLM
                 initialization
 
@@ -77,8 +82,22 @@ class LangGraphConversation:
         self.model_name = model_name
         self.model_provider = model_provider
         self.tools = list(tools) if tools else []
+
+        # case in which no config but save_history is True
+        if save_history and config is None:
+            config = {"configurable": {"thread_id": thread_id}}
+            self.memory = MemorySaver()
+        elif save_history and config is not None:
+            # check if thread_id is in config
+            assert "thread_id" in config["configurable"], "thread_id must be in config if save_history is True"
+            self.memory = MemorySaver()
+        elif not save_history:
+            config = {}
+            self.memory = None
+        else:
+            raise ValueError("Invalid configuration")
+
         self.config = config or {}
-        self.checkpointer = checkpointer
 
         # Initialize the LLM using langchain's init_chat_model
         self.llm = init_chat_model(model=model_name, model_provider=model_provider, **(llm_kwargs or {}))
@@ -200,8 +219,8 @@ class LangGraphConversation:
         workflow.add_edge("reason_about_tools", END)
 
         # Compile with optional checkpointer
-        if self.checkpointer:
-            return workflow.compile(checkpointer=self.checkpointer)
+        if self.memory:
+            return workflow.compile(checkpointer=self.memory)
         return workflow.compile()
 
     def _route_or_plan(self, state: ConversationState) -> dict[str, Any]:
@@ -413,3 +432,25 @@ For example:
             tool_descriptions.append(f"- {tool_name}: {tool_desc}")
 
         return "\n".join(tool_descriptions)
+
+    def reset(self) -> None:
+        """Reset the conversation memory by creating a new checkpointer.
+
+        This method deletes the current checkpointer and creates a fresh one,
+        then rebuilds the graph with the new checkpointer. This ensures a
+        completely clean slate for the conversation.
+        Only works when save_history is enabled.
+
+        Raises
+        ------
+            ValueError: If no checkpointer is configured
+
+        """
+        if not hasattr(self, "memory") or self.memory is None:
+            raise ValueError("No checkpointer configured. Cannot reset conversation memory.")
+
+        # Create a new MemorySaver instance
+        self.memory = MemorySaver()
+
+        # Rebuild the graph with the new checkpointer
+        self.graph = self._build_graph()
