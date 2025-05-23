@@ -25,6 +25,9 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Bio-Informatics"
 ]
 dynamic = ["dependencies"]
+dependencies = [
+    "langgraph-checkpoint-sqlite>=2.0.10",
+]
 
 [tool.poetry.dependencies]
 langchain = ">=0.3.20,<0.4.0"
