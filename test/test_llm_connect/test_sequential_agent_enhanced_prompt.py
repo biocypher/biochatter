@@ -325,3 +325,128 @@ class TestSequentialAgentEnhancedPrompt:
         completed_step = result["plan"][0]
         assert completed_step["status"] == "done"
         assert completed_step["revisions"] == []  # Should be empty list on parsing error
+
+    @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
+    def test_executor_includes_revisions_in_task_prompt(self, mock_init):
+        """Test that existing revisions are included in the task prompt."""
+        mock_llm = MagicMock()
+        mock_llm_with_tools = MagicMock()
+
+        mock_init.return_value = mock_llm
+        mock_llm.bind_tools.return_value = mock_llm_with_tools
+
+        # Mock execution response
+        execution_response = AIMessage(content="Executing task with revisions in mind...")
+        mock_llm_with_tools.invoke.return_value = execution_response
+
+        # Mock revision evaluation response
+        revision_response = AIMessage(content='{"revisions": "New revision for this attempt", "change_plan": false}')
+        mock_llm.invoke.return_value = revision_response
+
+        agent = SequentialAgent(model_name="gpt-4", model_provider="openai", tools=[test_tool])
+
+        # State with a step that has existing revisions
+        state: AgentState = {
+            "messages": [HumanMessage(content="Analyze protein structure data")],
+            "current_query": "Analyze protein structure data",
+            "plan": [
+                {
+                    "task": "Generate structural analysis report",
+                    "expected": "Comprehensive protein structure analysis",
+                    "tool": "test_tool",
+                    "status": "pending",
+                    "revisions": [
+                        "Previous attempt lacked detailed bond analysis",
+                        "Need to include secondary structure information",
+                    ],
+                }
+            ],
+        }
+
+        result = agent._executor(state)
+
+        # Verify that the LLM was called
+        mock_llm_with_tools.invoke.assert_called_once()
+
+        # Get the call arguments to verify the prompt content
+        call_args = mock_llm_with_tools.invoke.call_args[0][0]
+        human_message = call_args[-1]  # Last message should be the task prompt
+        prompt_content = human_message.content
+
+        # Verify that the prompt includes the original question
+        assert "ORIGINAL QUESTION: Analyze protein structure data" in prompt_content
+
+        # Verify that current task is included
+        assert "CURRENT STEP TO EXECUTE:" in prompt_content
+        assert "Generate structural analysis report" in prompt_content
+
+        # Verify that existing revisions are included in the prompt
+        assert "PREVIOUS REVISIONS FOR THIS STEP:" in prompt_content
+        assert "- Previous attempt lacked detailed bond analysis" in prompt_content
+        assert "- Need to include secondary structure information" in prompt_content
+
+        # Verify that suggested tool information is included
+        assert "SUGGESTED TOOL: test_tool - Use this tool if appropriate for the task." in prompt_content
+
+        # Verify response handling and that new revision was added
+        assert "messages" in result
+        assert "plan" in result
+        completed_step = result["plan"][0]
+        assert completed_step["status"] == "done"
+
+        # Check that the new revision was appended to existing ones
+        expected_revisions = [
+            "Previous attempt lacked detailed bond analysis",
+            "Need to include secondary structure information",
+            "New revision for this attempt",
+        ]
+        assert completed_step["revisions"] == expected_revisions
+
+    @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
+    def test_executor_handles_no_revisions_gracefully(self, mock_init):
+        """Test that task prompt works correctly when no revisions exist."""
+        mock_llm = MagicMock()
+
+        mock_init.return_value = mock_llm
+
+        # Mock execution response
+        execution_response = AIMessage(content="Executing task without previous revisions...")
+        # Mock revision evaluation response
+        revision_response = AIMessage(content='{"revisions": "First revision for this step", "change_plan": false}')
+        mock_llm.invoke.side_effect = [execution_response, revision_response]
+
+        agent = SequentialAgent(model_name="gpt-4", model_provider="openai")
+
+        # State with a step that has no existing revisions
+        state: AgentState = {
+            "messages": [HumanMessage(content="Process dataset")],
+            "current_query": "Process dataset",
+            "plan": [
+                {
+                    "task": "Clean and preprocess data",
+                    "expected": "Cleaned dataset ready for analysis",
+                    "tool": None,
+                    "status": "pending",
+                    # No revisions field
+                }
+            ],
+        }
+
+        result = agent._executor(state)
+
+        # Get the prompt content
+        call_args = mock_llm.invoke.call_args_list[0][0][0]  # First call is execution
+        human_message = call_args[-1]
+        prompt_content = human_message.content
+
+        # Verify that the prompt does NOT include revisions section when no revisions exist
+        assert "PREVIOUS REVISIONS FOR THIS STEP:" not in prompt_content
+
+        # Verify that other expected sections are still present
+        assert "ORIGINAL QUESTION: Process dataset" in prompt_content
+        assert "CURRENT STEP TO EXECUTE:" in prompt_content
+        assert "Clean and preprocess data" in prompt_content
+
+        # Verify that the first revision was added correctly
+        completed_step = result["plan"][0]
+        assert completed_step["revisions"] == ["First revision for this step"]
