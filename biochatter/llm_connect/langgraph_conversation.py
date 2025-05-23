@@ -41,6 +41,10 @@ class LangGraphConversation:
     decide between direct responses and planned tool execution.
     """
 
+    # =============================================================================
+    # CORE LIFECYCLE METHODS
+    # =============================================================================
+
     def __init__(
         self,
         model_name: str,
@@ -155,6 +159,14 @@ class LangGraphConversation:
 
         return config, memory
 
+    def __del__(self) -> None:
+        """Cleanup when the conversation is destroyed."""
+        self._cleanup_sqlite_context()
+
+    # =============================================================================
+    # PUBLIC INTERFACE METHODS
+    # =============================================================================
+
     def bind_tools(self, tools: Sequence[BaseTool]) -> None:
         """Extend the persistent tool list with additional tools.
 
@@ -233,6 +245,44 @@ class LangGraphConversation:
                 # Rebuild graph with restored tools
                 self.graph = self._build_graph()
 
+    def reset(self) -> None:
+        """Reset the conversation memory by creating a new checkpointer.
+
+        This method deletes the current checkpointer and creates a fresh one,
+        then rebuilds the graph with the new checkpointer. This ensures a
+        completely clean slate for the conversation.
+        Only works when save_history is enabled.
+
+        Raises
+        ------
+            ValueError: If no checkpointer is configured
+
+        """
+        if not hasattr(self, "memory") or self.memory is None:
+            raise ValueError("No checkpointer configured. Cannot reset conversation memory.")
+
+        # Clean up existing SQLite context if it exists
+        self._cleanup_sqlite_context()
+
+        # Extract current thread_id from config for reuse
+        current_thread_id = self.config.get("configurable", {}).get("thread_id", 0)
+
+        # Create a new checkpointer using the auxiliary method
+        self.config, self.memory = self._setup_memory_management(
+            save_history=True,  # We know save_history is True if we have memory
+            thread_id=current_thread_id,
+            config=None,  # Let the method create new config
+            checkpointer_type=self.checkpointer_type,
+            sqlite_db_path=self.sqlite_db_path,
+        )
+
+        # Rebuild the graph with the new checkpointer
+        self.graph = self._build_graph()
+
+    # =============================================================================
+    # GRAPH BUILDING METHODS
+    # =============================================================================
+
     def _build_graph(self) -> StateGraph:
         """Build the LangGraph state graph.
 
@@ -277,38 +327,9 @@ class LangGraphConversation:
             return workflow.compile(checkpointer=self.memory)
         return workflow.compile()
 
-    def _sequential_execution(self, state: ConversationState) -> dict[str, Any]:
-        """Execute sequential planning using the SequentialAgent.
-
-        Args:
-        ----
-            state: Current conversation state
-
-        Returns:
-        -------
-            Updated state with sequential execution results
-
-        """
-        if not state["messages"]:
-            return {"messages": []}
-
-        # Use the sequential agent to process the query
-        try:
-            agent_result = self.sequential_agent.invoke(state=state, config=self.config)
-
-            # Extract the final response from the agent result
-            if agent_result["messages"]:
-                # Get all messages except the original human message (since it's already in state)
-                new_messages = agent_result["messages"][1:]  # Skip the original HumanMessage
-                return {"messages": new_messages}
-            # Fallback response
-            fallback_message = BaseMessage(content="I was unable to complete the planned execution.", type="ai")
-            return {"messages": [fallback_message]}
-
-        except Exception as e:
-            logger.error("Sequential execution failed: %s", e)
-            error_message = BaseMessage(content=f"I encountered an error during planned execution: {e}", type="ai")
-            return {"messages": [error_message]}
+    # =============================================================================
+    # CORE WORKFLOW METHODS
+    # =============================================================================
 
     def _route_or_plan(
         self, state: ConversationState
@@ -327,24 +348,8 @@ class LangGraphConversation:
         if not state["messages"]:
             return Command(goto="direct_response")
 
-        # Create routing prompt
-        routing_prompt = f"""Decide how to handle the user message based on these three options:
-
-User message: {state["current_query"]}
-
-The tools available are:
-{self._get_tools_description(self.tools)}
-
-Output exactly one of:
-- "DIRECT" if it can be answered directly without any tools
-- "TOOL" if it can be answered with a single tool call (prefer using tools over direct response when possible)
-- "PLAN" if it can be answered with a multi-step plan
-
-For example:
-- "What is the capital of France?" → output "DIRECT"
-- "Search for information about protein folding" → output "TOOL"
-- "Compare protein sequences A and B, then analyze their structure" → output "PLAN"
-"""
+        # Create routing prompt using dedicated method
+        routing_prompt = self._generate_routing_prompt(state["current_query"], self.tools)
 
         # Get routing decision from LLM
         routing_message = HumanMessage(content=routing_prompt)
@@ -448,14 +453,110 @@ For example:
         """
         # The ToolNode will have added ToolMessage(s) to the messages
         # Now we ask the LLM to reason about the results
-        reasoning_prompt = HumanMessage(
-            content="Based on the tool results above, please provide a comprehensive response to the original question."
-        )
+        reasoning_prompt = self._generate_reasoning_prompt()
 
-        messages_with_prompt = state["messages"] + [reasoning_prompt]
+        messages_with_prompt = state["messages"] + [HumanMessage(content=reasoning_prompt)]
         response = self.llm.invoke(messages_with_prompt)
 
         return {"messages": [response]}
+
+    def _sequential_execution(self, state: ConversationState) -> dict[str, Any]:
+        """Execute sequential planning using the SequentialAgent.
+
+        Args:
+        ----
+            state: Current conversation state
+
+        Returns:
+        -------
+            Updated state with sequential execution results
+
+        """
+        if not state["messages"]:
+            return {"messages": []}
+
+        # Use the sequential agent to process the query
+        try:
+            agent_result = self.sequential_agent.invoke(state=state, config=self.config)
+
+            # Extract the final response from the agent result
+            if agent_result["messages"]:
+                # Get all messages except the original human message (since it's already in state)
+                new_messages = agent_result["messages"][1:]  # Skip the original HumanMessage
+                return {"messages": new_messages}
+            # Fallback response
+            fallback_message = BaseMessage(content="I was unable to complete the planned execution.", type="ai")
+            return {"messages": [fallback_message]}
+
+        except Exception as e:
+            logger.error("Sequential execution failed: %s", e)
+            error_message = BaseMessage(content=f"I encountered an error during planned execution: {e}", type="ai")
+            return {"messages": [error_message]}
+
+    # =============================================================================
+    # PROMPT GENERATION METHODS
+    # =============================================================================
+
+    def _generate_routing_prompt(self, current_query: str, tools: list[BaseTool]) -> str:
+        """Generate the routing prompt for deciding between execution strategies.
+
+        Args:
+        ----
+            current_query: The user's current query
+            tools: List of available tools
+
+        Returns:
+        -------
+            Formatted routing prompt string
+
+        """
+        tools_description = self._get_tools_description(tools)
+
+        return f"""<instructions>
+Decide how to handle the user message based on these three options:
+</instructions>
+
+<query>
+{current_query}
+</query>
+
+<tools>
+The tools available are:
+{tools_description}
+</tools>
+
+<options>
+Output exactly one of:
+- "DIRECT" if it can be answered directly without any tools
+- "TOOL" if it can be answered with a single tool call (prefer using tools over direct response when possible)
+- "PLAN" if it can be answered with a multi-step plan
+</options>
+
+<examples>
+- "What is the capital of France?" → output "DIRECT"
+- "Search for information about protein folding" → output "TOOL"
+- "Compare protein sequences A and B, then analyze their structure" → output "PLAN"
+</examples>"""
+
+    def _generate_reasoning_prompt(self) -> str:
+        """Generate the reasoning prompt for analyzing tool results.
+
+        Returns
+        -------
+            Formatted reasoning prompt string
+
+        """
+        return """<instructions>
+Based on the tool results above, please provide a comprehensive response to the original question.
+</instructions>
+
+<task>
+Analyze the tool execution results and synthesize them into a coherent, helpful response that directly addresses the user's original query.
+</task>"""
+
+    # =============================================================================
+    # UTILITY METHODS
+    # =============================================================================
 
     def _parse_plan(self, plan: str) -> list[str]:
         """Parse a numbered plan into individual steps.
@@ -500,39 +601,9 @@ For example:
 
         return "\n".join(tool_descriptions)
 
-    def reset(self) -> None:
-        """Reset the conversation memory by creating a new checkpointer.
-
-        This method deletes the current checkpointer and creates a fresh one,
-        then rebuilds the graph with the new checkpointer. This ensures a
-        completely clean slate for the conversation.
-        Only works when save_history is enabled.
-
-        Raises
-        ------
-            ValueError: If no checkpointer is configured
-
-        """
-        if not hasattr(self, "memory") or self.memory is None:
-            raise ValueError("No checkpointer configured. Cannot reset conversation memory.")
-
-        # Clean up existing SQLite context if it exists
-        self._cleanup_sqlite_context()
-
-        # Extract current thread_id from config for reuse
-        current_thread_id = self.config.get("configurable", {}).get("thread_id", 0)
-
-        # Create a new checkpointer using the auxiliary method
-        self.config, self.memory = self._setup_memory_management(
-            save_history=True,  # We know save_history is True if we have memory
-            thread_id=current_thread_id,
-            config=None,  # Let the method create new config
-            checkpointer_type=self.checkpointer_type,
-            sqlite_db_path=self.sqlite_db_path,
-        )
-
-        # Rebuild the graph with the new checkpointer
-        self.graph = self._build_graph()
+    # =============================================================================
+    # CLEANUP METHODS
+    # =============================================================================
 
     def _cleanup_sqlite_context(self) -> None:
         """Clean up the SQLite context manager if it exists."""
@@ -544,7 +615,3 @@ For example:
                 pass
             finally:
                 self._sqlite_context = None
-
-    def __del__(self) -> None:
-        """Cleanup when the conversation is destroyed."""
-        self._cleanup_sqlite_context()

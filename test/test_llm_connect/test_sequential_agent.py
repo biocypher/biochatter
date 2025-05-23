@@ -677,8 +677,8 @@ class TestSequentialAgent:
         assert mock_llm.invoke.called
         call_args = mock_llm.invoke.call_args[0][0][0].content
         assert "replanning assistant" in call_args
-        assert "WORK COMPLETED SO FAR:" in call_args
-        assert "KEY INSIGHTS AND REVISIONS" in call_args
+        assert "<completed_work>" in call_args
+        assert "<insights>" in call_args
 
     @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
     def test_planner_continue_existing_plan(self, mock_init):

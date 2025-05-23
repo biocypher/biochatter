@@ -75,15 +75,16 @@ class TestSequentialAgentEnhancedPrompt:
         prompt_content = human_message.content
 
         # Verify that the prompt includes the original question
-        assert "ORIGINAL QUESTION: What is the best approach for analyzing gene expression data?" in prompt_content
+        assert "<original_question>" in prompt_content
+        assert "What is the best approach for analyzing gene expression data?" in prompt_content
 
         # Verify that completed steps are included
-        assert "COMPLETED STEPS SO FAR:" in prompt_content
+        assert "<completed_steps>" in prompt_content
         assert "Identify data preprocessing requirements" in prompt_content
         assert "Research analysis methods" in prompt_content
 
         # Verify that current task is included
-        assert "CURRENT STEP TO EXECUTE:" in prompt_content
+        assert "<current_step>" in prompt_content
         assert "Provide final recommendation" in prompt_content
 
         # Verify the contextualized instruction
@@ -134,7 +135,8 @@ class TestSequentialAgentEnhancedPrompt:
 
         # Verify that suggested tool information is included
         assert "SUGGESTED TOOL: test_tool - Use this tool if appropriate for the task." in prompt_content
-        assert "ORIGINAL QUESTION: Search for recent papers on CRISPR" in prompt_content
+        assert "<original_question>" in prompt_content
+        assert "Search for recent papers on CRISPR" in prompt_content
 
     @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
     def test_executor_without_current_query_falls_back_to_human_message(self, mock_init):
@@ -170,7 +172,8 @@ class TestSequentialAgentEnhancedPrompt:
         prompt_content = human_message.content
 
         # Verify that it uses the first human message as the original question
-        assert "ORIGINAL QUESTION: Analyze this dataset" in prompt_content
+        assert "<original_question>" in prompt_content
+        assert "Analyze this dataset" in prompt_content
 
     @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
     def test_executor_handles_multiple_tool_messages(self, mock_init):
@@ -272,10 +275,11 @@ class TestSequentialAgentEnhancedPrompt:
         revision_prompt = revision_call_args[-1].content
 
         # Verify revision prompt contains expected elements
-        assert "ORIGINAL QUESTION: Analyze gene expression data" in revision_prompt
+        assert "<original_question>" in revision_prompt
+        assert "Analyze gene expression data" in revision_prompt
         assert "Task: Perform statistical analysis of gene expression" in revision_prompt
         assert "Expected Outcome: Detailed report with statistical significance and methodology" in revision_prompt
-        assert "ACTUAL RESULTS:" in revision_prompt
+        assert "<actual_results>" in revision_prompt
         assert "Analysis complete. Found 3 genes with significant expression changes." in revision_prompt
 
         # Verify that revisions were populated in the step
@@ -374,14 +378,16 @@ class TestSequentialAgentEnhancedPrompt:
         prompt_content = human_message.content
 
         # Verify that the prompt includes the original question
-        assert "ORIGINAL QUESTION: Analyze protein structure data" in prompt_content
+        assert "<original_question>" in prompt_content
+        assert "Analyze protein structure data" in prompt_content
 
         # Verify that current task is included
-        assert "CURRENT STEP TO EXECUTE:" in prompt_content
+        assert "<current_step>" in prompt_content
         assert "Generate structural analysis report" in prompt_content
 
         # Verify that existing revisions are included in the prompt
-        assert "PREVIOUS REVISIONS FOR THIS STEP:" in prompt_content
+        assert "<revisions>" in prompt_content
+        assert "Previous revisions for this step:" in prompt_content
         assert "- Previous attempt lacked detailed bond analysis" in prompt_content
         assert "- Need to include secondary structure information" in prompt_content
 
@@ -440,11 +446,12 @@ class TestSequentialAgentEnhancedPrompt:
         prompt_content = human_message.content
 
         # Verify that the prompt does NOT include revisions section when no revisions exist
-        assert "PREVIOUS REVISIONS FOR THIS STEP:" not in prompt_content
+        assert "Previous revisions for this step:" not in prompt_content
 
         # Verify that other expected sections are still present
-        assert "ORIGINAL QUESTION: Process dataset" in prompt_content
-        assert "CURRENT STEP TO EXECUTE:" in prompt_content
+        assert "<original_question>" in prompt_content
+        assert "Process dataset" in prompt_content
+        assert "<current_step>" in prompt_content
         assert "Clean and preprocess data" in prompt_content
 
         # Verify that the first revision was added correctly

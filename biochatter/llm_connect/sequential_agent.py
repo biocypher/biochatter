@@ -72,6 +72,10 @@ class SequentialAgent:
     results.
     """
 
+    # =============================================================================
+    # CORE LIFECYCLE METHODS
+    # =============================================================================
+
     def __init__(
         self,
         model_name: str,
@@ -104,6 +108,62 @@ class SequentialAgent:
         # Build the graph
         self.graph = self._build_graph()
 
+    # =============================================================================
+    # PUBLIC INTERFACE METHODS
+    # =============================================================================
+
+    def invoke(
+        self,
+        query: str | None = None,
+        state: AgentState | None = None,
+        config: dict[str, Any] | None = None,
+    ) -> AgentState:
+        """Invoke the sequential agent with a query.
+
+        Args:
+        ----
+            query: User query string
+            state: Optional initial state (coming from another graph)
+            config: Optional runtime configuration
+
+        Returns:
+        -------
+            Final updated AgentState with full conversation and tool traces
+
+        """
+        if (query is None) and (state is None):
+            raise ValueError("query or state is required")
+
+        if state is None:
+            # Initialize the state
+            initial_state: AgentState = {
+                "messages": [HumanMessage(content=query)],
+                "plan": [],
+                "current_query": query,
+            }
+        else:
+            initial_state = state
+
+        # Run the graph
+        return self.graph.invoke(initial_state, config=config)
+
+    def bind_tools(self, tools: Sequence[BaseTool]) -> None:
+        """Bind additional tools to the agent.
+
+        Args:
+        ----
+            tools: Sequence of tools to add
+
+        """
+        self.tools.extend(tools)
+        self.tool_node = ToolNode(self.tools) if self.tools else None
+        # Rebuild the graph with new tools
+        self.graph = self._build_graph()
+
+    # =============================================================================
+    # GRAPH BUILDING METHODS
+    # =============================================================================
+
     def _build_graph(self) -> Runnable:
         """Build the LangGraph state graph."""
         # Create the state graph
@@ -125,181 +185,9 @@ class SequentialAgent:
         # Compile the graph
         return workflow.compile()
 
-    def _planner(self, state: AgentState) -> dict[str, Any]:
-        """Plan the next steps or update existing plan.
-
-        Handles three scenarios:
-        1. Initial planning: No plan exists or all steps are done
-        2. Replanning: Some steps are done, need to replan remaining work
-        3. Continue existing: Plan exists with only pending steps
-        """
-        messages = state["messages"]
-        user_query = (
-            state.get("current_query")
-            if state.get("current_query")
-            else next((msg.content for msg in reversed(messages) if isinstance(msg, HumanMessage)), "")
-        )
-        available_tools = [tool.name for tool in self.tools] if self.tools else "None"
-
-        # Case 1: Initial planning (no plan or all steps done)
-        if not state["plan"] or all(step["status"] == "done" for step in state["plan"]):
-            return self._create_initial_plan(user_query, available_tools)
-
-        # Case 2: Replanning scenario (some steps done, some pending)
-        completed_steps = [step for step in state["plan"] if step["status"] == "done"]
-        pending_steps = [step for step in state["plan"] if step["status"] == "pending"]
-
-        if completed_steps and pending_steps:
-            return self._replan_remaining_steps(user_query, available_tools, completed_steps, pending_steps)
-
-        # Case 3: Continue existing plan (only pending steps remain)
-        return {}
-
-    def _create_initial_plan(self, user_query: str, available_tools: str) -> dict[str, Any]:
-        """Create a fresh initial plan for the user query."""
-        plan_prompt = f"""
-You are a helpful planning assistant. Given the following user query, create a 
-detailed step-by-step plan to accomplish the task.
-
-User Query: {user_query}
-
-Available Tools: {available_tools}
-
-Create a plan with steps that are:
-1. Atomic and specific
-2. Executable with available tools or direct reasoning
-3. Ordered logically
-
-For each step, specify:
-- task: A clear description of what to do
-- expected: What you expect to get from this step
-- tool: The name of the tool to use, or null for direct reasoning
-- status: Always set to "pending"
-
-Return your plan as a JSON list of steps in the following format:
-[
-    {{
-        "task": "description of task",
-        "expected": "what you expect to achieve",
-        "tool": "tool_name_or_null",
-        "status": "pending"
-    }}
-]
-
-Only return the JSON, no additional text.
-"""
-
-        response = self.llm.invoke([HumanMessage(content=plan_prompt)])
-        return self._parse_and_validate_plan(response, user_query)
-
-    def _replan_remaining_steps(
-        self, user_query: str, available_tools: str, completed_steps: list[Step], pending_steps: list[Step]
-    ) -> dict[str, Any]:
-        """Replan the remaining steps based on completed work and revisions."""
-        # Summarize completed work and key insights
-        completed_summary = []
-        key_revisions = []
-
-        for step in completed_steps:
-            completed_summary.append(f"✓ {step['task']} (Expected: {step['expected']})")
-            if step.get("revisions") and isinstance(step["revisions"], list):
-                key_revisions.extend(step["revisions"])
-
-        completed_work = "\n".join(completed_summary) if completed_summary else "None completed yet"
-        insights = (
-            "\n".join([f"- {revision}" for revision in key_revisions]) if key_revisions else "No specific insights yet"
-        )
-
-        # Current pending steps for context
-        remaining_work = "\n".join([f"• {step['task']} (Expected: {step['expected']})" for step in pending_steps])
-
-        replan_prompt = f"""
-You are a replanning assistant. Based on completed work and insights gained, 
-create a revised plan for the remaining tasks.
-
-ORIGINAL QUERY: {user_query}
-
-WORK COMPLETED SO FAR:
-{completed_work}
-
-KEY INSIGHTS AND REVISIONS FROM COMPLETED WORK:
-{insights}
-
-CURRENTLY PLANNED REMAINING WORK:
-{remaining_work}
-
-Available Tools: {available_tools}
-
-Based on the insights from completed work, create a NEW plan for the remaining tasks.
-The new plan should:
-1. Take into account lessons learned from completed steps
-2. Address any issues identified in the revisions
-3. Be more effective than the original remaining plan
-4. Complete the original user query successfully
-
-Return your revised plan as a JSON list of steps in the following format:
-[
-    {{
-        "task": "description of task",
-        "expected": "what you expect to achieve", 
-        "tool": "tool_name_or_null",
-        "status": "pending"
-    }}
-]
-
-Only return the JSON, no additional text.
-"""
-
-        response = self.llm.invoke([HumanMessage(content=replan_prompt)])
-        replanned_steps = self._parse_and_validate_plan(response, user_query, is_replan=True)
-
-        # Combine completed steps with new replanned steps
-        if "plan" in replanned_steps:
-            full_plan = completed_steps + replanned_steps["plan"]
-            return {"plan": full_plan}
-
-        # Fallback: keep existing plan if replanning fails
-        return {}
-
-    def _parse_and_validate_plan(self, response, user_query: str, is_replan: bool = False) -> dict[str, Any]:
-        """Parse and validate the LLM's plan response."""
-        try:
-            plan_text = response.content.strip()
-            # Extract JSON from response if it's wrapped in other text
-            if plan_text.startswith("```"):
-                plan_text = plan_text.split("```")[1]
-                plan_text = plan_text.removeprefix("json")
-            plan_text = plan_text.strip()
-            new_plan = json.loads(plan_text)
-
-            # Validate plan structure
-            validated_plan = []
-            for step_data in new_plan:
-                step: Step = {
-                    "task": str(step_data.get("task", "")),
-                    "expected": str(step_data.get("expected", "")),
-                    "tool": step_data.get("tool") if step_data.get("tool") != "null" else None,
-                    "status": "pending",
-                    "revisions": [],
-                }
-                validated_plan.append(step)
-
-            return {"plan": validated_plan}
-
-        except (json.JSONDecodeError, KeyError) as e:
-            logger.warning("Failed to parse %s: %s", "replan" if is_replan else "plan", e)
-            # Fallback to a simple single-step plan
-            action = "replan and address" if is_replan else "address"
-            validated_plan = [
-                {
-                    "task": f"Re-evaluate and {action} the user query: {user_query}",
-                    "expected": "A comprehensive response addressing the user's question",
-                    "tool": None,
-                    "status": "pending",
-                    "revisions": [],
-                }
-            ]
-            return {"plan": validated_plan}
+    # =============================================================================
+    # CORE WORKFLOW METHODS
+    # =============================================================================
 
     def _executor(self, state: AgentState) -> dict[str, Any] | Command[Literal["planner"]]:
         """Execute the next pending step.
@@ -342,34 +230,10 @@ Only return the JSON, no additional text.
                     original_query = msg.content
                     break
 
-        # Include suggested tool information in the prompt
-        tool_info = ""
-        if current_step["tool"]:
-            tool_info = f"\nSUGGESTED TOOL: {current_step['tool']} - Use this tool if appropriate for the task."
-
-        # Include previous revisions if they exist
-        revisions_info = ""
-        revisions_list = []
-        for k in range(next_step_index):
-            existing_revisions = state["plan"][k].get("revisions", [])[0]
-            revisions_list.append(existing_revisions)
-        revisions_list = "\n".join([f"- {revision}" for revision in revisions_list])
-        revisions_info = f"\n\nPREVIOUS REVISIONS FOR THIS STEP:\n{revisions_list}"
-
-        task_prompt = f"""
-You are executing a specific step in a larger plan to address the original question.
-
-ORIGINAL QUESTION: {original_query}
-
-COMPLETED STEPS SO FAR:
-{completed_steps_summary if completed_steps_summary else "None yet"}
-
-CURRENT STEP TO EXECUTE:
-Task: {current_step["task"]}
-Expected Outcome: {current_step["expected"]}{tool_info}{revisions_info}
-
-Based on the original question, progress made so far, and the conversation context, provide a focused response for this specific step that builds upon previous work.
-"""
+        # Generate task execution prompt using dedicated method
+        task_prompt = self._generate_task_execution_prompt(
+            original_query, completed_steps_summary, current_step, next_step_index, state["plan"]
+        )
 
         # Create LLM with tools bound if available
         llm_with_tools = self.llm.bind_tools(self.tools) if self.tools else self.llm
@@ -430,31 +294,7 @@ Based on the original question, progress made so far, and the conversation conte
         # Evaluate results against expectations and generate revisions
         actual_results = "\n".join([msg.content if hasattr(msg, "content") else str(msg) for msg in result_messages])
 
-        revision_prompt = f"""
-You are evaluating whether a step in a plan was executed successfully. Compare the expected outcome with the actual results and provide revision recommendations if needed.
-
-ORIGINAL QUESTION: {original_query}
-
-STEPS TO EXECUTE:
-{chr(10).join([f"- {step['task']} (Expected: {step['expected']}, Tool: {step['tool']}, Status: {step['status']})" for step in plan if step.get("status") != "done"])}
-
-STEP DETAILS:
-Task: {current_step["task"]}
-Expected Outcome: {current_step["expected"]}
-
-ACTUAL RESULTS:
-{actual_results}
-
-Please evaluate:
-1. Does the actual result meet the expected outcome?
-2. What could be improved or done differently?
-3. Are there any gaps or missing elements?
-
-Return a JSON dict with the following keys:
-- "revisions": A succint mono line revising the obtained result
-- "change_plan": either True or False, indicating if the plan should be revised
-Only return the JSON, no additional text.
-"""
+        revision_prompt = self._generate_revision_prompt(original_query, plan, current_step, actual_results)
 
         try:
             # messages_to_add.append(HumanMessage(content=revision_prompt))
@@ -534,50 +374,374 @@ Only return the JSON, no additional text.
             return "executor"
         return "END"
 
-    def invoke(
-        self,
-        query: str | None = None,
-        state: AgentState | None = None,
-        config: dict[str, Any] | None = None,
-    ) -> AgentState:
-        """Invoke the sequential agent with a query.
+    # =============================================================================
+    # PLANNING METHODS
+    # =============================================================================
+
+    def _planner(self, state: AgentState) -> dict[str, Any]:
+        """Plan the next steps or update existing plan.
+
+        Handles three scenarios:
+        1. Initial planning: No plan exists or all steps are done
+        2. Replanning: Some steps are done, need to replan remaining work
+        3. Continue existing: Plan exists with only pending steps
+        """
+        messages = state["messages"]
+        user_query = (
+            state.get("current_query")
+            if state.get("current_query")
+            else next((msg.content for msg in reversed(messages) if isinstance(msg, HumanMessage)), "")
+        )
+        available_tools = [tool.name for tool in self.tools] if self.tools else "None"
+
+        # Case 1: Initial planning (no plan or all steps done)
+        if not state["plan"] or all(step["status"] == "done" for step in state["plan"]):
+            return self._create_initial_plan(user_query, available_tools)
+
+        # Case 2: Replanning scenario (some steps done, some pending)
+        completed_steps = [step for step in state["plan"] if step["status"] == "done"]
+        pending_steps = [step for step in state["plan"] if step["status"] == "pending"]
+
+        if completed_steps and pending_steps:
+            return self._replan_remaining_steps(user_query, available_tools, completed_steps, pending_steps)
+
+        # Case 3: Continue existing plan (only pending steps remain)
+        return {}
+
+    def _create_initial_plan(self, user_query: str, available_tools: str) -> dict[str, Any]:
+        """Create a fresh initial plan for the user query."""
+        plan_prompt = self._generate_initial_plan_prompt(user_query, available_tools)
+
+        response = self.llm.invoke([HumanMessage(content=plan_prompt)])
+        return self._parse_and_validate_plan(response, user_query)
+
+    def _replan_remaining_steps(
+        self, user_query: str, available_tools: str, completed_steps: list[Step], pending_steps: list[Step]
+    ) -> dict[str, Any]:
+        """Replan the remaining steps based on completed work and revisions."""
+        # Summarize completed work and key insights
+        completed_summary = []
+        key_revisions = []
+
+        for step in completed_steps:
+            completed_summary.append(f"✓ {step['task']} (Expected: {step['expected']})")
+            if step.get("revisions") and isinstance(step["revisions"], list):
+                key_revisions.extend(step["revisions"])
+
+        completed_work = "\n".join(completed_summary) if completed_summary else "None completed yet"
+        insights = (
+            "\n".join([f"- {revision}" for revision in key_revisions]) if key_revisions else "No specific insights yet"
+        )
+
+        # Current pending steps for context
+        remaining_work = "\n".join([f"• {step['task']} (Expected: {step['expected']})" for step in pending_steps])
+
+        replan_prompt = self._generate_replan_prompt(
+            user_query, available_tools, completed_work, insights, remaining_work
+        )
+
+        response = self.llm.invoke([HumanMessage(content=replan_prompt)])
+        replanned_steps = self._parse_and_validate_plan(response, user_query, is_replan=True)
+
+        # Combine completed steps with new replanned steps
+        if "plan" in replanned_steps:
+            full_plan = completed_steps + replanned_steps["plan"]
+            return {"plan": full_plan}
+
+        # Fallback: keep existing plan if replanning fails
+        return {}
+
+    # =============================================================================
+    # PROMPT GENERATION METHODS
+    # =============================================================================
+
+    def _generate_initial_plan_prompt(self, user_query: str, available_tools: str) -> str:
+        """Generate the initial planning prompt.
 
         Args:
         ----
-            query: User query string
-            state: Optional initial state (coming from another graph)
-            config: Optional runtime configuration
+            user_query: The user's query to plan for
+            available_tools: String description of available tools
 
         Returns:
         -------
-            Final updated AgentState with full conversation and tool traces
+            Formatted initial planning prompt string
 
         """
-        if (query is None) and (state is None):
-            raise ValueError("query or state is required")
+        return f"""<role>
+You are a helpful planning assistant. Given the following user query, create a 
+detailed step-by-step plan to accomplish the task.
+</role>
 
-        if state is None:
-            # Initialize the state
-            initial_state: AgentState = {
-                "messages": [HumanMessage(content=query)],
-                "plan": [],
-                "current_query": query,
-            }
-        else:
-            initial_state = state
+<query>
+{user_query}
+</query>
 
-        # Run the graph
-        return self.graph.invoke(initial_state, config=config)
+<tools>
+Available Tools: {available_tools}
+</tools>
 
-    def bind_tools(self, tools: Sequence[BaseTool]) -> None:
-        """Bind additional tools to the agent.
+<requirements>
+Create a plan with steps that are:
+1. Atomic and specific
+2. Executable with available tools or direct reasoning
+3. Ordered logically
+</requirements>
+
+<step_format>
+For each step, specify:
+- task: A clear description of what to do
+- expected: What you expect to get from this step
+- tool: The name of the tool to use, or null for direct reasoning
+- status: Always set to "pending"
+</step_format>
+
+<output_format>
+Return your plan as a JSON list of steps in the following format:
+[
+    {{
+        "task": "description of task",
+        "expected": "what you expect to achieve",
+        "tool": "tool_name_or_null",
+        "status": "pending"
+    }}
+]
+
+Only return the JSON, no additional text.
+</output_format>"""
+
+    def _generate_replan_prompt(
+        self, user_query: str, available_tools: str, completed_work: str, insights: str, remaining_work: str
+    ) -> str:
+        """Generate the replanning prompt.
 
         Args:
         ----
-            tools: Sequence of tools to add
+            user_query: The original user query
+            available_tools: String description of available tools
+            completed_work: Summary of completed steps
+            insights: Key insights from completed work
+            remaining_work: Summary of remaining planned work
+
+        Returns:
+        -------
+            Formatted replanning prompt string
 
         """
-        self.tools.extend(tools)
-        self.tool_node = ToolNode(self.tools) if self.tools else None
-        # Rebuild the graph with new tools
-        self.graph = self._build_graph()
+        return f"""<role>
+You are a replanning assistant. Based on completed work and insights gained, 
+create a revised plan for the remaining tasks.
+</role>
+
+<original_query>
+{user_query}
+</original_query>
+
+<completed_work>
+{completed_work}
+</completed_work>
+
+<insights>
+Key insights and revisions from completed work:
+{insights}
+</insights>
+
+<remaining_work>
+Currently planned remaining work:
+{remaining_work}
+</remaining_work>
+
+<tools>
+Available Tools: {available_tools}
+</tools>
+
+<requirements>
+Based on the insights from completed work, create a NEW plan for the remaining tasks.
+The new plan should:
+1. Take into account lessons learned from completed steps
+2. Address any issues identified in the revisions
+3. Be more effective than the original remaining plan
+4. Complete the original user query successfully
+</requirements>
+
+<output_format>
+Return your revised plan as a JSON list of steps in the following format:
+[
+    {{
+        "task": "description of task",
+        "expected": "what you expect to achieve", 
+        "tool": "tool_name_or_null",
+        "status": "pending"
+    }}
+]
+
+Only return the JSON, no additional text.
+</output_format>"""
+
+    def _generate_task_execution_prompt(
+        self,
+        original_query: str,
+        completed_steps_summary: str,
+        current_step: Step,
+        next_step_index: int,
+        plan: list[Step],
+    ) -> str:
+        """Generate the task execution prompt.
+
+        Args:
+        ----
+            original_query: The original user query
+            completed_steps_summary: Summary of completed steps
+            current_step: The current step to execute
+            next_step_index: Index of the current step
+            plan: The full plan with all steps
+
+        Returns:
+        -------
+            Formatted task execution prompt string
+
+        """
+        # Include suggested tool information
+        tool_info = ""
+        if current_step["tool"]:
+            tool_info = f"SUGGESTED TOOL: {current_step['tool']} - Use this tool if appropriate for the task."
+
+        # Include previous revisions if they exist for the current step
+        revisions_info = ""
+        if current_step.get("revisions") and isinstance(current_step["revisions"], list) and current_step["revisions"]:
+            revisions_content = "\n".join([f"- {revision}" for revision in current_step["revisions"]])
+            revisions_info = f"Previous revisions for this step:\n{revisions_content}"
+
+        return f"""<role>
+You are executing a specific step in a larger plan to address the original question.
+</role>
+
+<original_question>
+{original_query}
+</original_question>
+
+<completed_steps>
+{completed_steps_summary if completed_steps_summary else "None yet"}
+</completed_steps>
+
+<current_step>
+Task: {current_step["task"]}
+Expected Outcome: {current_step["expected"]}
+</current_step>
+
+<tool_suggestion>
+{tool_info if tool_info else "No specific tool suggested for this step."}
+</tool_suggestion>
+
+<revisions>
+{revisions_info if revisions_info else "No previous revisions for this step."}
+</revisions>
+
+<instructions>
+Based on the original question, progress made so far, and the conversation context, provide a focused response for this specific step that builds upon previous work.
+</instructions>"""
+
+    def _generate_revision_prompt(
+        self, original_query: str, plan: list[Step], current_step: Step, actual_results: str
+    ) -> str:
+        """Generate the revision evaluation prompt.
+
+        Args:
+        ----
+            original_query: The original user query
+            plan: The full plan with all steps
+            current_step: The step that was just executed
+            actual_results: The actual results from step execution
+
+        Returns:
+        -------
+            Formatted revision evaluation prompt string
+
+        """
+        remaining_steps = "\n".join(
+            [
+                f"- {step['task']} (Expected: {step['expected']}, Tool: {step['tool']}, Status: {step['status']})"
+                for step in plan
+                if step.get("status") != "done"
+            ]
+        )
+
+        return f"""<role>
+You are evaluating whether a step in a plan was executed successfully. Compare the expected outcome with the actual results and provide revision recommendations if needed.
+</role>
+
+<original_question>
+{original_query}
+</original_question>
+
+<remaining_steps>
+Steps to execute:
+{remaining_steps}
+</remaining_steps>
+
+<executed_step>
+Task: {current_step["task"]}
+Expected Outcome: {current_step["expected"]}
+</executed_step>
+
+<actual_results>
+{actual_results}
+</actual_results>
+
+<evaluation_criteria>
+Please evaluate:
+1. Does the actual result meet the expected outcome?
+2. What could be improved or done differently?
+3. Are there any gaps or missing elements?
+</evaluation_criteria>
+
+<output_format>
+Return a JSON dict with the following keys:
+- "revisions": A succinct mono line revising the obtained result
+- "change_plan": either True or False, indicating if the plan should be revised
+Only return the JSON, no additional text.
+</output_format>"""
+
+    # =============================================================================
+    # UTILITY METHODS
+    # =============================================================================
+
+    def _parse_and_validate_plan(self, response, user_query: str, is_replan: bool = False) -> dict[str, Any]:
+        """Parse and validate the LLM's plan response."""
+        try:
+            plan_text = response.content.strip()
+            # Extract JSON from response if it's wrapped in other text
+            if plan_text.startswith("```"):
+                plan_text = plan_text.split("```")[1]
+                plan_text = plan_text.removeprefix("json")
+            plan_text = plan_text.strip()
+            new_plan = json.loads(plan_text)
+
+            # Validate plan structure
+            validated_plan = []
+            for step_data in new_plan:
+                step: Step = {
+                    "task": str(step_data.get("task", "")),
+                    "expected": str(step_data.get("expected", "")),
+                    "tool": step_data.get("tool") if step_data.get("tool") != "null" else None,
+                    "status": "pending",
+                    "revisions": [],
+                }
+                validated_plan.append(step)
+
+            return {"plan": validated_plan}
+
+        except (json.JSONDecodeError, KeyError) as e:
+            logger.warning("Failed to parse %s: %s", "replan" if is_replan else "plan", e)
+            # Fallback to a simple single-step plan
+            action = "replan and address" if is_replan else "address"
+            validated_plan = [
+                {
+                    "task": f"Re-evaluate and {action} the user query: {user_query}",
+                    "expected": "A comprehensive response addressing the user's question",
+                    "tool": None,
+                    "status": "pending",
+                    "revisions": [],
+                }
+            ]
+            return {"plan": validated_plan}
