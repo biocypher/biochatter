@@ -1,5 +1,6 @@
 """Test enhanced prompt functionality in sequential agent."""
 
+import json
 from unittest.mock import MagicMock, patch
 
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
@@ -30,6 +31,10 @@ class TestSequentialAgentEnhancedPrompt:
         # Mock execution response
         execution_response = AIMessage(content="Based on the original question and completed work...")
         mock_llm_with_tools.invoke.return_value = execution_response
+
+        # Mock revision evaluation response
+        revision_response = AIMessage(content='["Could be more specific", "Add more details"]')
+        mock_llm.invoke.return_value = revision_response
 
         agent = SequentialAgent(model_name="gpt-4", model_provider="openai", tools=[test_tool])
 
@@ -101,6 +106,10 @@ class TestSequentialAgentEnhancedPrompt:
         execution_response = AIMessage(content="I'll use the suggested tool...")
         mock_llm_with_tools.invoke.return_value = execution_response
 
+        # Mock revision evaluation response
+        revision_response = AIMessage(content='{"revisions": "No revisions needed", "change_plan": false}')
+        mock_llm.invoke.return_value = revision_response
+
         agent = SequentialAgent(model_name="gpt-4", model_provider="openai", tools=[test_tool])
 
         state: AgentState = {
@@ -135,7 +144,9 @@ class TestSequentialAgentEnhancedPrompt:
         mock_init.return_value = mock_llm
 
         execution_response = AIMessage(content="Using fallback to human message...")
-        mock_llm.invoke.return_value = execution_response
+        # Mock revision evaluation response as well
+        revision_response = AIMessage(content='{"revisions": "No revisions needed", "change_plan": false}')
+        mock_llm.invoke.side_effect = [execution_response, revision_response]
 
         agent = SequentialAgent(model_name="gpt-4", model_provider="openai")
 
@@ -154,7 +165,7 @@ class TestSequentialAgentEnhancedPrompt:
         result = agent._executor(state)
 
         # Get the prompt content - when no tools, uses mock_llm directly
-        call_args = mock_llm.invoke.call_args[0][0]
+        call_args = mock_llm.invoke.call_args_list[0][0][0]  # First call is execution
         human_message = call_args[-1]
         prompt_content = human_message.content
 
@@ -174,6 +185,12 @@ class TestSequentialAgentEnhancedPrompt:
         execution_response = MagicMock()
         execution_response.tool_calls = [{"name": "test_tool", "args": {"query": "test"}}]
         mock_llm_with_tools.invoke.return_value = execution_response
+
+        # Mock revision evaluation response
+        revision_response = AIMessage(
+            content='{"revisions": "Tool results could be more comprehensive", "change_plan": false}'
+        )
+        mock_llm.invoke.return_value = revision_response
 
         agent = SequentialAgent(model_name="gpt-4", model_provider="openai", tools=[test_tool])
 
@@ -201,8 +218,110 @@ class TestSequentialAgentEnhancedPrompt:
 
         # Verify that multiple ToolMessages are preserved
         assert "messages" in result
-        assert len(result["messages"]) == 2
-        assert all(isinstance(msg, ToolMessage) for msg in result["messages"])
-        assert result["messages"][0].content == "First tool result"
-        assert result["messages"][1].content == "Second tool result"
+        assert len(result["messages"]) == 4
+        # First message is the task prompt
+        assert "You are executing a specific step" in result["messages"][0].content
+        # Next two messages are the tool results
+        assert isinstance(result["messages"][1], ToolMessage)
+        assert isinstance(result["messages"][2], ToolMessage)
+        assert result["messages"][1].content == "First tool result"
+        assert result["messages"][2].content == "Second tool result"
+        # Fourth message is the revision
+        assert "Revision: Tool results could be more comprehensive" in result["messages"][3].content
         assert result["plan"][0]["status"] == "done"
+
+    @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
+    def test_executor_evaluates_results_and_populates_revisions(self, mock_init):
+        """Test that executor evaluates results against expectations and populates revisions field."""
+        mock_llm = MagicMock()
+
+        mock_init.return_value = mock_llm
+
+        # Mock execution response
+        execution_response = AIMessage(content="Analysis complete. Found 3 genes with significant expression changes.")
+
+        # Mock revision evaluation response with specific recommendations
+        revision_text = "Should include statistical significance values"
+        revision_response = AIMessage(content=json.dumps({"revisions": revision_text, "change_plan": False}))
+
+        # Set up side_effect to return different responses for each call
+        mock_llm.invoke.side_effect = [execution_response, revision_response]
+
+        agent = SequentialAgent(model_name="gpt-4", model_provider="openai")
+
+        state: AgentState = {
+            "messages": [HumanMessage(content="Analyze gene expression data")],
+            "current_query": "Analyze gene expression data",
+            "plan": [
+                {
+                    "task": "Perform statistical analysis of gene expression",
+                    "expected": "Detailed report with statistical significance and methodology",
+                    "tool": None,
+                    "status": "pending",
+                }
+            ],
+        }
+
+        result = agent._executor(state)
+
+        # Verify that revision evaluation was called
+        assert mock_llm.invoke.call_count == 2
+
+        # Get the revision evaluation prompt (second call)
+        revision_call_args = mock_llm.invoke.call_args_list[1][0][0]
+        revision_prompt = revision_call_args[-1].content
+
+        # Verify revision prompt contains expected elements
+        assert "ORIGINAL QUESTION: Analyze gene expression data" in revision_prompt
+        assert "Task: Perform statistical analysis of gene expression" in revision_prompt
+        assert "Expected Outcome: Detailed report with statistical significance and methodology" in revision_prompt
+        assert "ACTUAL RESULTS:" in revision_prompt
+        assert "Analysis complete. Found 3 genes with significant expression changes." in revision_prompt
+
+        # Verify that revisions were populated in the step
+        assert "plan" in result
+        completed_step = result["plan"][0]
+        assert completed_step["status"] == "done"
+        assert completed_step["revisions"] == [revision_text]
+
+        # Verify that the original step fields are preserved
+        assert completed_step["task"] == "Perform statistical analysis of gene expression"
+        assert completed_step["expected"] == "Detailed report with statistical significance and methodology"
+
+    @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
+    def test_executor_handles_revision_parsing_errors_gracefully(self, mock_init):
+        """Test that executor handles malformed revision JSON gracefully."""
+        mock_llm = MagicMock()
+
+        mock_init.return_value = mock_llm
+
+        # Mock execution response
+        execution_response = AIMessage(content="Task completed successfully.")
+
+        # Mock revision evaluation response with malformed JSON
+        revision_response = AIMessage(content="This is not valid JSON format")
+
+        mock_llm.invoke.side_effect = [execution_response, revision_response]
+
+        agent = SequentialAgent(model_name="gpt-4", model_provider="openai")
+
+        state: AgentState = {
+            "messages": [HumanMessage(content="Complete the task")],
+            "current_query": "Complete the task",
+            "plan": [
+                {
+                    "task": "Execute task",
+                    "expected": "Successful completion",
+                    "tool": None,
+                    "status": "pending",
+                }
+            ],
+        }
+
+        result = agent._executor(state)
+
+        # Verify that revisions field is empty list when parsing fails
+        assert "plan" in result
+        completed_step = result["plan"][0]
+        assert completed_step["status"] == "done"
+        assert completed_step["revisions"] == []  # Should be empty list on parsing error

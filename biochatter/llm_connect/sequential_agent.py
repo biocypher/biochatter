@@ -223,6 +223,8 @@ Only return the JSON, no additional text.
         Pop the next pending step and either call tool_node or call LLM
         directly. Mark the step done and append result messages.
         """
+        messages_to_add = []
+
         # Find the next pending step
         plan = state["plan"][:]  # Copy to avoid mutation
         next_step_index = None
@@ -279,6 +281,8 @@ Based on the original question, progress made so far, and the conversation conte
         # Create LLM with tools bound if available
         llm_with_tools = self.llm.bind_tools(self.tools) if self.tools else self.llm
 
+        messages_to_add.append(HumanMessage(content=task_prompt))
+
         # Get response from LLM (may include tool calls)
         response = llm_with_tools.invoke(state["messages"] + [HumanMessage(content=task_prompt)])
 
@@ -304,11 +308,13 @@ Based on the original question, progress made so far, and the conversation conte
                                         tool_call_id="step_" + str(next_step_index) + "_" + str(i),
                                     )
                                 )
+                        messages_to_add.extend(result_messages)
                     else:
                         # Single result - convert to ToolMessage
                         result_messages = [
                             ToolMessage(content=str(tool_result), tool_call_id="step_" + str(next_step_index))
                         ]
+                        messages_to_add.extend(result_messages)
                 except Exception:
                     logger.exception("Tool execution failed")
                     # Return tool error message for compatibility
@@ -318,17 +324,86 @@ Based on the original question, progress made so far, and the conversation conte
                             tool_call_id="step_" + str(next_step_index),
                         )
                     ]
+                    messages_to_add.extend(result_messages)
             else:
                 # LLM didn't make tool calls even though tool was suggested - return LLM response
                 result_messages = [response]
+                messages_to_add.extend(result_messages)
         else:
             # Direct response without tool suggestion
             result_messages = [response]
+            messages_to_add.extend(result_messages)
 
-        # Mark step as done
-        plan[next_step_index] = {**current_step, "status": "done"}
+        # Evaluate results against expectations and generate revisions
+        actual_results = "\n".join([msg.content if hasattr(msg, "content") else str(msg) for msg in result_messages])
 
-        return {"messages": result_messages, "plan": plan}
+        revision_prompt = f"""
+You are evaluating whether a step in a plan was executed successfully. Compare the expected outcome with the actual results and provide revision recommendations if needed.
+
+ORIGINAL QUESTION: {original_query}
+
+STEPS TO EXECUTE:
+{chr(10).join([f"- {step['task']} (Expected: {step['expected']}, Tool: {step['tool']}, Status: {step['status']})" for step in plan if step.get("status") != "done"])}
+
+STEP DETAILS:
+Task: {current_step["task"]}
+Expected Outcome: {current_step["expected"]}
+
+ACTUAL RESULTS:
+{actual_results}
+
+Please evaluate:
+1. Does the actual result meet the expected outcome?
+2. What could be improved or done differently?
+3. Are there any gaps or missing elements?
+
+Return a JSON dict with the following keys:
+- "revisions": A succint mono line revising the obtained result
+- "change_plan": either True or False, indicating if the plan should be revised
+Only return the JSON, no additional text.
+"""
+
+        try:
+            # messages_to_add.append(HumanMessage(content=revision_prompt))
+            revision_response = self.llm.invoke([HumanMessage(content=revision_prompt)])
+            revision_text = revision_response.content.strip()
+
+            # Extract JSON from response if it's wrapped in other text
+            if revision_text.startswith("```"):
+                revision_text = revision_text.split("```")[1]
+                revision_text = revision_text.removeprefix("json")
+            revision_text = revision_text.strip()
+
+            revisions = json.loads(revision_text) if revision_text else {}
+
+            # Add revision message only if we have valid revision data
+            if isinstance(revisions, dict) and "revisions" in revisions and "change_plan" in revisions:
+                messages_to_add.append(
+                    HumanMessage(
+                        content=f"Revision: {revisions['revisions']}\nNeed to change plan: {revisions['change_plan']}"
+                    )
+                )
+
+        except (json.JSONDecodeError, AttributeError) as e:
+            logger.warning("Failed to parse revision recommendations: %s", e)
+            revisions = {}
+
+        # Mark step as done and add revisions
+        # Append new revisions to any existing ones
+        existing_revisions = current_step.get("revisions", [])
+        if isinstance(revisions, dict) and "revisions" in revisions:
+            # Extract the revision text from the dict
+            revision_text = revisions["revisions"]
+            if isinstance(existing_revisions, list):
+                combined_revisions = existing_revisions + [revision_text]
+            else:
+                combined_revisions = [revision_text]
+        else:
+            # Keep existing revisions if no new ones
+            combined_revisions = existing_revisions if isinstance(existing_revisions, list) else []
+        plan[next_step_index] = {**current_step, "status": "done", "revisions": combined_revisions}
+
+        return {"messages": messages_to_add, "plan": plan}
 
     def _controller(self, state: AgentState) -> dict[str, Any]:
         """Control the flow based on remaining pending steps.

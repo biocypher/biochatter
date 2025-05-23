@@ -224,7 +224,8 @@ class TestSequentialAgent:
         mock_init.return_value = mock_llm
 
         execution_response = AIMessage(content="I understand machine learning is...")
-        mock_llm.invoke.return_value = execution_response
+        revision_response = AIMessage(content='{"revisions": "No revisions needed", "change_plan": false}')
+        mock_llm.invoke.side_effect = [execution_response, revision_response]
 
         agent = SequentialAgent(model_name="gpt-4", model_provider="openai")
 
@@ -239,15 +240,31 @@ class TestSequentialAgent:
 
         assert "messages" in result
         assert "plan" in result
-        assert len(result["messages"]) == 1
-        assert result["messages"][0].content == "I understand machine learning is..."
+        assert len(result["messages"]) == 3
+        # First message is the task prompt
+        assert "You are executing a specific step" in result["messages"][0].content
+        # Second message is the AI response
+        assert result["messages"][1].content == "I understand machine learning is..."
+        # Third message is the revision
+        assert "Revision: No revisions needed" in result["messages"][2].content
         assert result["plan"][0]["status"] == "done"
 
     @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
     def test_executor_with_tool_execution(self, mock_init):
         """Test executor with tool execution."""
         mock_llm = MagicMock()
+        mock_llm_with_tools = MagicMock()
         mock_init.return_value = mock_llm
+        mock_llm.bind_tools.return_value = mock_llm_with_tools
+
+        # Mock LLM response with tool calls
+        execution_response = MagicMock()
+        execution_response.tool_calls = [{"name": "search", "args": {"query": "machine learning"}}]
+        mock_llm_with_tools.invoke.return_value = execution_response
+
+        # Mock revision evaluation response
+        revision_response = AIMessage(content='{"revisions": "No revisions needed", "change_plan": false}')
+        mock_llm.invoke.return_value = revision_response
 
         agent = SequentialAgent(model_name="gpt-4", model_provider="openai", tools=[search])
 
@@ -271,8 +288,13 @@ class TestSequentialAgent:
 
         assert "messages" in result
         assert "plan" in result
-        assert len(result["messages"]) == 1
-        assert isinstance(result["messages"][0], ToolMessage)
+        assert len(result["messages"]) == 3
+        # First message is the task prompt
+        assert "You are executing a specific step" in result["messages"][0].content
+        # Second message is the tool result
+        assert isinstance(result["messages"][1], ToolMessage)
+        # Third message is the revision
+        assert "Revision: No revisions needed" in result["messages"][2].content
         assert result["plan"][0]["status"] == "done"
 
     @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
@@ -376,7 +398,18 @@ class TestSequentialAgent:
     def test_tool_execution_error_handling(self, mock_init):
         """Test error handling during tool execution."""
         mock_llm = MagicMock()
+        mock_llm_with_tools = MagicMock()
         mock_init.return_value = mock_llm
+        mock_llm.bind_tools.return_value = mock_llm_with_tools
+
+        # Mock LLM response with tool calls
+        execution_response = MagicMock()
+        execution_response.tool_calls = [{"name": "search", "args": {"query": "machine learning"}}]
+        mock_llm_with_tools.invoke.return_value = execution_response
+
+        # Mock revision evaluation response
+        revision_response = AIMessage(content='{"revisions": "No revisions needed", "change_plan": false}')
+        mock_llm.invoke.return_value = revision_response
 
         agent = SequentialAgent(model_name="gpt-4", model_provider="openai", tools=[search])
 
@@ -394,9 +427,14 @@ class TestSequentialAgent:
 
         assert "messages" in result
         assert "plan" in result
-        assert len(result["messages"]) == 1
-        assert isinstance(result["messages"][0], ToolMessage)
-        assert "Tool execution failed" in result["messages"][0].content
+        assert len(result["messages"]) == 3
+        # First message is the task prompt
+        assert "You are executing a specific step" in result["messages"][0].content
+        # Second message is the tool error
+        assert isinstance(result["messages"][1], ToolMessage)
+        assert "Tool execution failed" in result["messages"][1].content
+        # Third message is the revision
+        assert "Revision: No revisions needed" in result["messages"][2].content
         assert result["plan"][0]["status"] == "done"
 
     @patch("biochatter.llm_connect.sequential_agent.init_chat_model")
