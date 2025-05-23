@@ -198,6 +198,7 @@ class LangGraphConversation:
             initial_state: ConversationState = {
                 "messages": [HumanMessage(content=query)],
                 "plan": None,
+                "current_query": query,
             }
 
             # Create runtime config
@@ -291,10 +292,6 @@ class LangGraphConversation:
         if not state["messages"]:
             return {"messages": []}
 
-        # Get the user query from the last human message
-        last_message = state["messages"][-1]
-        user_query = last_message.content if hasattr(last_message, "content") else str(last_message)
-
         # Use the sequential agent to process the query
         try:
             agent_result = self.sequential_agent.invoke(state=state, config=self.config)
@@ -330,13 +327,10 @@ class LangGraphConversation:
         if not state["messages"]:
             return Command(goto="direct_response")
 
-        last_message = state["messages"][-1]
-        user_query = last_message.content if hasattr(last_message, "content") else str(last_message)
-
         # Create routing prompt
         routing_prompt = f"""Decide how to handle the user message based on these three options:
 
-User message: {user_query}
+User message: {state["current_query"]}
 
 The tools available are:
 {self._get_tools_description(self.tools)}

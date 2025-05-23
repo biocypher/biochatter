@@ -57,6 +57,7 @@ class AgentState(TypedDict):
 
     messages: Annotated[list[AnyMessage], add_messages]
     plan: list[Step] | None
+    current_query: str | None
 
 
 class SequentialAgent:
@@ -132,7 +133,13 @@ class SequentialAgent:
         if not state["plan"] or all(step["status"] == "done" for step in state["plan"]):
             # Create a fresh plan for the user query
             messages = state["messages"]
-            user_query = next((msg.content for msg in reversed(messages) if isinstance(msg, HumanMessage)), "")
+
+            # Get the user query from the current query or the last human message
+            user_query = (
+                state["current_query"]
+                if state["current_query"]
+                else next((msg.content for msg in reversed(messages) if isinstance(msg, HumanMessage)), "")
+            )
 
             available_tools = [tool.name for tool in self.tools] if self.tools else "None"
 
@@ -323,7 +330,11 @@ Based on the conversation context, provide a focused response for this specific 
 
         if state is None:
             # Initialize the state
-            initial_state: AgentState = {"messages": [HumanMessage(content=query)], "plan": []}
+            initial_state: AgentState = {
+                "messages": [HumanMessage(content=query)],
+                "plan": [],
+                "current_query": query,
+            }
         else:
             initial_state = state
 
