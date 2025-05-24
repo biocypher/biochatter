@@ -22,10 +22,10 @@ jobs:
 
       - name: Install Poetry
         run: |
-          curl -sSL https://install.python-poetry.org | POETRY_VERSION=1.7.1 python3 -
+          curl -sSL https://install.python-poetry.org | python3 -
           
       - name: Install dependencies
-        run: poetry install --all-extras
+        run: poetry install --all-groups
 
       - name: Run tests and generate coverage report
         run: |

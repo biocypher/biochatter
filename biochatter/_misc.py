@@ -1,7 +1,9 @@
 # straight copy from BioCypher repo
 # TODO: have a utils package for both repos
 
+import json
 import re
+from pydantic import BaseModel
 from collections.abc import Generator, ItemsView, Iterable, KeysView, Mapping, ValuesView
 from typing import (
     Any,
@@ -137,9 +139,29 @@ def to_lower_sentence_case(s: str) -> str:
     """
     if "_" in s:
         return snakecase_to_sentencecase(s)
-    elif " " in s:
+    if " " in s:
         return s.lower()
-    elif s[0].isupper():
+    if s[0].isupper():
         return pascalcase_to_sentencecase(s)
-    else:
-        return s
+    return s
+
+
+def extract_json(text: str) -> str:
+    """Given a string containing a ```json ... ``` code fence,
+    return only the JSON text inside the fences.
+    """
+    # Regex to capture the JSON object inside a ```json ... ``` block
+    pattern = re.compile(r"```json\s*(\{[\s\S]*?\})\s*```", re.MULTILINE)
+    match = pattern.search(text)
+    if match is None:
+        raise ValueError("No valid JSON code fence found in the input text.")
+    return match.group(1)
+
+
+def pydantic_manual_validator(raw: str, model_cls: BaseModel):
+    try:
+        json_text = extract_json(raw)
+        data = json.loads(json_text)
+        return model_cls.parse_obj(data)
+    except Exception as e:
+        raise ValueError(f"Error parsing JSON: {e}") from e
