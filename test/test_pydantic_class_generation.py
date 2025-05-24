@@ -2,7 +2,7 @@ import scanpy as sc
 
 from biochatter.api_agent.python.autogenerate_model import generate_pydantic_classes
 
-EXPECTED_UMAP_PARAMS = 16
+EXPECTED_UMAP_PARAMS = 17
 
 
 def test_generate_pydantic_classes():
@@ -51,8 +51,10 @@ def test_generate_pydantic_classes_umap():
         "copy_param",
         "negative_sample_rate",
         "min_dist",
+        "key_added",
         "maxiter",
         "spread",
         "b",
         "random_state",
+        "key_added",
     }

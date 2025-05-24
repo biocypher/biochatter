@@ -31,13 +31,22 @@ jobs:
       #----------------------------------------------
       - name: Checkout Repository
         uses: actions/checkout@v4
-      - name: Setup Python and Poetry
-        uses: biocypher/biocypher/.github/actions/setup@main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+
       #----------------------------------------------
       #            install dependencies
       #----------------------------------------------
       - name: Install dependencies
-        uses: biocypher/biocypher/.github/actions/install@main
+        run: poetry install --no-interaction --no-root
+
       #----------------------------------------------
       #             build artifact
       #----------------------------------------------

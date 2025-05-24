@@ -43,6 +43,7 @@ plugins:
             heading_level: 3
   - table-reader
   - social
+  - mike
   - redirects:
       redirect_maps:
         "vignette-custom-bclight-simple.md": "vignettes/custom-bclight-simple.md"
@@ -82,7 +83,9 @@ nav:
           - Basic Usage - Chat: features/chat.md
           - Multimodal Models: features/multimodal.md
           - Retrieval-Augmented Generation: features/rag.md
-          - API Calling: features/api.md
+          - In Chat Tool Calling: features/tool_chat.md
+          - Ad hoc API Calling: features/api.md
+          - Structured outputs: features/structured_outputs.md
           - Reflexion via LangGraph: features/reflexion-agent.md
           - Open-source and Local LLMs: features/open-llm.md
           - The Living Benchmark: features/benchmark.md
@@ -140,6 +143,10 @@ markdown_extensions:
   - pymdownx.details
   - toc:
       toc_depth: 3
+
+extra:
+  version:
+    provider: mike
 
 extra_javascript:
   - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
