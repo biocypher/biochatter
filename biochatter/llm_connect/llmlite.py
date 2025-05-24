@@ -124,8 +124,7 @@ class LiteLLMConversation(Conversation):
                 litellm.exceptions.APIConnectionError,
                 litellm.exceptions.InternalServerError) as api_setup_error:
             raise api_setup_error
-        except Exception as e:
-            raise e
+# Removed redundant `except Exception as e:` block to let unexpected exceptions bubble up naturally.
 
     def set_api_key(self, api_key: str, user: str | None = None) -> bool:
         """Set the API key for the LLM provider.
