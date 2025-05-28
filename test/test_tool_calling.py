@@ -260,3 +260,128 @@ def test_porcess_manual_tool_call_explain_tool_result(dummy_conv):
     msg = dummy_conv._process_manual_tool_call(tool_call.copy(), [tool], explain_tool_result=True)
     assert "Tool result interpretation: Interpreted result." in msg
     assert any("Interpreted result." in m.content for m in dummy_conv.messages if hasattr(m, "content"))
+
+
+def test_auto_mode_explain_tool_result_single_tool(dummy_conv, mock_tools):
+    """Test that single tool call with explain_tool_result maintains current behavior."""
+    dummy_conv.chat.invoke.return_value = MagicMock(content="Single tool interpretation.")
+    tool_calls = [
+        {"name": "tool1", "args": {"x": 1}, "id": "id1"},
+    ]
+    msg = dummy_conv._process_tool_calls(tool_calls, mock_tools, "fallback", explain_tool_result=True)
+
+    # Should contain tool result
+    assert "Tool call (tool1) result: result1" in msg
+    # Should contain interpretation (singular)
+    assert "Tool result interpretation: Single tool interpretation." in msg
+    # Should invoke chat.invoke once
+    dummy_conv.chat.invoke.assert_called_once()
+    # Should append the interpretation as an AI message
+    assert any(isinstance(m, AIMessage) and "Single tool interpretation." in m.content for m in dummy_conv.messages)
+
+
+def test_auto_mode_explain_tool_result_multiple_tools(dummy_conv, mock_tools):
+    """Test that multiple tool calls with explain_tool_result are explained together."""
+    dummy_conv.chat.invoke.return_value = MagicMock(content="Combined tools interpretation.")
+    tool_calls = [
+        {"name": "tool1", "args": {"x": 1}, "id": "id1"},
+        {"name": "tool2", "args": {"y": 2}, "id": "id2"},
+    ]
+    msg = dummy_conv._process_tool_calls(tool_calls, mock_tools, "fallback", explain_tool_result=True)
+
+    # Should contain both tool results
+    assert "Tool call (tool1) result: result1" in msg
+    assert "Tool call (tool2) result: result2" in msg
+    # Should contain interpretation (plural)
+    assert "Tool results interpretation: Combined tools interpretation." in msg
+
+    # Should invoke chat.invoke once with combined results
+    dummy_conv.chat.invoke.assert_called_once()
+    call_args = dummy_conv.chat.invoke.call_args[0][0]
+
+    # The combined tool results should be in the prompt
+    assert "Tool: tool1" in call_args
+    assert "Arguments: {'x': 1}" in call_args
+    assert "Result: result1" in call_args
+    assert "Tool: tool2" in call_args
+    assert "Arguments: {'y': 2}" in call_args
+    assert "Result: result2" in call_args
+
+    # Should append the interpretation as an AI message
+    assert any(isinstance(m, AIMessage) and "Combined tools interpretation." in m.content for m in dummy_conv.messages)
+
+
+def test_auto_mode_explain_tool_result_multiple_tools_with_error(dummy_conv, mock_tools):
+    """Test that multiple tool calls with explain_tool_result handle errors correctly."""
+    dummy_conv.chat.invoke.return_value = MagicMock(content="Partial success interpretation.")
+    tool_calls = [
+        {"name": "tool1", "args": {"x": 1}, "id": "id1"},
+        {"name": "tool3", "args": {"z": 3}, "id": "id3"},  # This will raise an exception
+    ]
+    msg = dummy_conv._process_tool_calls(tool_calls, mock_tools, "fallback", explain_tool_result=True)
+
+    # Should contain successful tool result
+    assert "Tool call (tool1) result: result1" in msg
+    # Should contain error message for failed tool
+    assert "Error executing tool tool3" in msg
+
+    # Only successful tools should be included in explanation
+    # Since only 1 tool succeeded, it should use single tool interpretation (not plural)
+    dummy_conv.chat.invoke.assert_called_once()
+    call_args = dummy_conv.chat.invoke.call_args[0][0]
+
+    # Should only contain the successful tool result (not the full format since it's single tool)
+    assert "result1" in call_args
+    # Should not contain the failed tool
+    assert "tool3" not in call_args
+    # Should use singular interpretation since only 1 tool succeeded
+    assert "Tool result interpretation: Partial success interpretation." in msg
+
+    # Should append the interpretation as an AI message
+    assert any(isinstance(m, AIMessage) and "Partial success interpretation." in m.content for m in dummy_conv.messages)
+
+
+def test_auto_mode_explain_tool_result_all_tools_fail(dummy_conv, mock_tools):
+    """Test that when all tools fail, no explanation is attempted."""
+    dummy_conv.chat.invoke.reset_mock()
+    tool_calls = [
+        {"name": "tool3", "args": {"z": 3}, "id": "id3"},  # This will raise an exception
+    ]
+    msg = dummy_conv._process_tool_calls(tool_calls, mock_tools, "fallback", explain_tool_result=True)
+
+    # Should contain error message
+    assert "Error executing tool tool3" in msg
+    # Should not invoke chat.invoke since no successful tools
+    dummy_conv.chat.invoke.assert_not_called()
+
+
+def test_auto_mode_explain_tool_result_three_tools(dummy_conv, mock_tools):
+    """Test that three successful tool calls are explained together."""
+    # Add another successful tool
+    tool4 = MockTool("tool4", result="result4")
+    all_tools = mock_tools + [tool4]
+
+    dummy_conv.chat.invoke.return_value = MagicMock(content="Three tools interpretation.")
+    tool_calls = [
+        {"name": "tool1", "args": {"x": 1}, "id": "id1"},
+        {"name": "tool2", "args": {"y": 2}, "id": "id2"},
+        {"name": "tool4", "args": {"w": 4}, "id": "id4"},
+    ]
+    msg = dummy_conv._process_tool_calls(tool_calls, all_tools, "fallback", explain_tool_result=True)
+
+    # Should contain all tool results
+    assert "Tool call (tool1) result: result1" in msg
+    assert "Tool call (tool2) result: result2" in msg
+    assert "Tool call (tool4) result: result4" in msg
+    # Should contain interpretation (plural)
+    assert "Tool results interpretation: Three tools interpretation." in msg
+
+    # Should invoke chat.invoke once with all combined results
+    dummy_conv.chat.invoke.assert_called_once()
+    call_args = dummy_conv.chat.invoke.call_args[0][0]
+
+    # All three tools should be in the prompt
+    assert "Tool: tool1" in call_args
+    assert "Tool: tool2" in call_args
+    assert "Tool: tool4" in call_args
+    assert call_args.count("Tool:") == 3  # Ensure exactly 3 tools are mentioned

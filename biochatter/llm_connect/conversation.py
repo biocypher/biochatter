@@ -604,6 +604,9 @@ class Conversation(ABC):
         msg = ""
 
         if self.tool_call_mode == "auto":
+            # Collect tool results for collective explanation when multiple tools are called
+            tool_results_for_explanation = []
+
             for idx, tool_call in enumerate(tool_calls):
                 # Extract tool name and arguments
                 tool_name = tool_call["name"]
@@ -634,17 +637,11 @@ class Conversation(ABC):
                             msg += "\n"
                         msg += f"Tool call ({tool_name}) result: {tool_result!s}"
 
+                        # Collect tool results for explanation if needed
                         if explain_tool_result:
-                            tool_result_interpretation = self.chat.invoke(
-                                TOOL_RESULT_INTERPRETATION_PROMPT.format(
-                                    original_question=self.last_human_prompt,
-                                    tool_result=tool_result,
-                                    general_instructions=self.general_instructions_tool_interpretation,
-                                    additional_instructions=self.additional_instructions_tool_interpretation,
-                                )
+                            tool_results_for_explanation.append(
+                                {"name": tool_name, "args": tool_args, "result": tool_result}
                             )
-                            self.append_ai_message(tool_result_interpretation.content)
-                            msg += f"\nTool result interpretation: {tool_result_interpretation.content}"
 
                     except Exception as e:
                         # Handle tool execution errors
@@ -652,10 +649,49 @@ class Conversation(ABC):
                         self.messages.append(
                             ToolMessage(content=error_message, name=tool_name, tool_call_id=tool_call_id)
                         )
-                        msg = error_message
+                        if idx > 0:
+                            msg += "\n"
+                        msg += error_message
+
+            # Handle tool result explanation
+            if explain_tool_result and tool_results_for_explanation:
+                if len(tool_results_for_explanation) > 1:
+                    # Multiple tools: explain all results together
+                    combined_tool_results = "\n\n".join(
+                        [
+                            f"Tool: {tr['name']}\nArguments: {tr['args']}\nResult: {tr['result']}"
+                            for tr in tool_results_for_explanation
+                        ]
+                    )
+
+                    tool_result_interpretation = self.chat.invoke(
+                        TOOL_RESULT_INTERPRETATION_PROMPT.format(
+                            original_question=self.last_human_prompt,
+                            tool_result=combined_tool_results,
+                            general_instructions=self.general_instructions_tool_interpretation,
+                            additional_instructions=self.additional_instructions_tool_interpretation,
+                        )
+                    )
+                    self.append_ai_message(tool_result_interpretation.content)
+                    msg += f"\nTool results interpretation: {tool_result_interpretation.content}"
+                else:
+                    # Single tool: explain individual result (maintain current behavior)
+                    tool_result_data = tool_results_for_explanation[0]
+                    tool_result_interpretation = self.chat.invoke(
+                        TOOL_RESULT_INTERPRETATION_PROMPT.format(
+                            original_question=self.last_human_prompt,
+                            tool_result=tool_result_data["result"],
+                            general_instructions=self.general_instructions_tool_interpretation,
+                            additional_instructions=self.additional_instructions_tool_interpretation,
+                        )
+                    )
+                    self.append_ai_message(tool_result_interpretation.content)
+                    msg += f"\nTool result interpretation: {tool_result_interpretation.content}"
+
             return msg
 
         if self.tool_call_mode == "text":
+            print('here')
             # Join all tool calls in a text format
             tool_calls_text = []
             for tool_call in tool_calls:
