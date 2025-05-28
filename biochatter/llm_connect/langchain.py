@@ -134,7 +134,7 @@ class LangChainConversation(Conversation):
         """
         token_usage = None  # Initialize token_usage
         msg = None  # Initialize msg
-        
+
         starting_tools = self.tools if self.tools else []
         in_chat_tools = tools if tools else []
         available_tools = starting_tools + in_chat_tools
@@ -144,9 +144,7 @@ class LangChainConversation(Conversation):
 
         if self.model_name in STRUCTURED_OUTPUT_MODELS and structured_model:
             chat = self.chat.with_structured_output(structured_model)
-        elif (
-            structured_model and self.model_name not in STRUCTURED_OUTPUT_MODELS
-        ):  
+        elif structured_model and self.model_name not in STRUCTURED_OUTPUT_MODELS:
             # add to the end of the prompt an instruction to return a structured output
             chat = self.chat
             self.messages[-1].content = (
@@ -222,6 +220,7 @@ class LangChainConversation(Conversation):
             else:
                 msg = response.content
                 token_usage = response.usage_metadata["total_tokens"]
+                self.append_ai_message(msg)
 
         # even if there are no tool calls, the standard langchain output has a tool_calls attribute
         # therefore, this case only happens when the returned ouput from the invoke is a structured output
@@ -230,8 +229,7 @@ class LangChainConversation(Conversation):
             if wrap_structured_output:
                 msg = "```json\n" + msg + "\n```"
             token_usage = None
-
-        self.append_ai_message(msg)
+            self.append_ai_message(msg)
 
         return msg, token_usage
 
