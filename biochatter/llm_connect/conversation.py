@@ -386,6 +386,7 @@ class Conversation(ABC):
         additional_instructions_tool_interpretation: str | None = None,
         mcp: bool | None = None,
         return_tool_calls_as_ai_message: bool | None = None,
+        track_tool_calls: bool | None = None,
         **kwargs,
     ) -> tuple[str, dict | None, str | None]:
         """Query the LLM API using the user's query.
@@ -423,6 +424,8 @@ class Conversation(ABC):
             mcp (bool): If you want to use MCP mode, this should be set to True.
 
             return_tool_calls_as_ai_message (bool): If you want to return the tool calls as an AI message, this should be set to True.
+
+            track_tool_calls (bool): If you want to track the tool calls, this should be set to True.
 
             **kwargs: Additional keyword arguments.
 
@@ -467,6 +470,7 @@ class Conversation(ABC):
             return_tool_calls_as_ai_message=return_tool_calls_as_ai_message,
             structured_model=structured_model,
             wrap_structured_output=wrap_structured_output,
+            track_tool_calls=track_tool_calls,
         )
 
         if not token_usage:
@@ -578,6 +582,7 @@ class Conversation(ABC):
         response_content: str,
         explain_tool_result: bool = False,
         return_tool_calls_as_ai_message: bool = False,
+        track_tool_calls: bool = False,
     ) -> str:
         """Process tool calls from the model response.
 
@@ -592,6 +597,7 @@ class Conversation(ABC):
             available_tools: The tools available in the chat.
             explain_tool_result (bool): Whether to explain the tool result.
             return_tool_calls_as_ai_message (bool): If you want to return the tool calls as an AI message, this should be set to True.
+            track_tool_calls (bool): If you want to track the tool calls, this should be set to True.
 
         Returns:
         -------
@@ -627,10 +633,14 @@ class Conversation(ABC):
                         # Add the tool result to the conversation
                         if return_tool_calls_as_ai_message:
                             self.append_ai_message(f"Tool call ({tool_name}) \nResult: {tool_result!s}")
-                            self.tool_calls.append({"name": tool_name, "args": tool_args, "id": tool_call_id})
                         else:
                             self.messages.append(
                                 ToolMessage(content=str(tool_result), name=tool_name, tool_call_id=tool_call_id)
+                            )
+
+                        if track_tool_calls:
+                            self.tool_calls.append(
+                                {"name": tool_name, "args": tool_args, "id": tool_call_id, "result": tool_result}
                             )
 
                         if idx > 0:
@@ -691,7 +701,6 @@ class Conversation(ABC):
             return msg
 
         if self.tool_call_mode == "text":
-            print('here')
             # Join all tool calls in a text format
             tool_calls_text = []
             for tool_call in tool_calls:
@@ -840,3 +849,4 @@ class Conversation(ABC):
         self.messages = []
         self.ca_messages = []
         self.current_statements = []
+        self.tool_calls.clear()

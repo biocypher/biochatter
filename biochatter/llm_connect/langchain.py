@@ -116,6 +116,7 @@ class LangChainConversation(Conversation):
         return_tool_calls_as_ai_message: bool = False,
         structured_model: BaseModel | None = None,
         wrap_structured_output: bool = False,
+        track_tool_calls: bool = False,
     ) -> tuple:
         """Run the primary query.
 
@@ -126,7 +127,7 @@ class LangChainConversation(Conversation):
             return_tool_calls_as_ai_message (bool, optional): Whether to return tool calls as an AI message.
             structured_model (BaseModel, optional): The structured output model to use.
             wrap_structured_output (bool, optional): Whether to wrap the structured output in JSON quotes.
-
+            track_tool_calls (bool, optional): Whether to track the tool calls.
         Returns:
         -------
             tuple: A tuple containing the response message and token usage information.
@@ -189,6 +190,7 @@ class LangChainConversation(Conversation):
                     response_content=response.content,
                     explain_tool_result=explain_tool_result,
                     return_tool_calls_as_ai_message=return_tool_calls_as_ai_message,
+                    track_tool_calls=track_tool_calls,
                 )
             # case where the model does not support tool calling natively, called a tool and we need manual processing
             elif self.model_name not in TOOL_CALLING_MODELS and self.tools_prompt:
