@@ -659,9 +659,21 @@ class Conversation(ABC):
                         self.messages.append(
                             ToolMessage(content=error_message, name=tool_name, tool_call_id=tool_call_id)
                         )
+
+                        # Track failed tool calls
+                        if track_tool_calls:
+                            self.tool_calls.append(
+                                {"name": tool_name, "args": tool_args, "id": tool_call_id, "error": str(e)}
+                            )
+
                         if idx > 0:
                             msg += "\n"
                         msg += error_message
+                # Handle missing/unknown tool
+                elif track_tool_calls:
+                    self.tool_calls.append(
+                        {"name": tool_name, "args": tool_args, "id": tool_call_id, "error": "Tool not found"}
+                    )
 
             # Handle tool result explanation
             if explain_tool_result and tool_results_for_explanation:
