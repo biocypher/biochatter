@@ -386,6 +386,7 @@ class Conversation(ABC):
         additional_instructions_tool_interpretation: str | None = None,
         mcp: bool | None = None,
         return_tool_calls_as_ai_message: bool | None = None,
+        track_tool_calls: bool | None = None,
         **kwargs,
     ) -> tuple[str, dict | None, str | None]:
         """Query the LLM API using the user's query.
@@ -423,6 +424,8 @@ class Conversation(ABC):
             mcp (bool): If you want to use MCP mode, this should be set to True.
 
             return_tool_calls_as_ai_message (bool): If you want to return the tool calls as an AI message, this should be set to True.
+
+            track_tool_calls (bool): If you want to track the tool calls, this should be set to True.
 
             **kwargs: Additional keyword arguments.
 
@@ -467,6 +470,7 @@ class Conversation(ABC):
             return_tool_calls_as_ai_message=return_tool_calls_as_ai_message,
             structured_model=structured_model,
             wrap_structured_output=wrap_structured_output,
+            track_tool_calls=track_tool_calls,
         )
 
         if not token_usage:
@@ -578,6 +582,7 @@ class Conversation(ABC):
         response_content: str,
         explain_tool_result: bool = False,
         return_tool_calls_as_ai_message: bool = False,
+        track_tool_calls: bool = False,
     ) -> str:
         """Process tool calls from the model response.
 
@@ -592,6 +597,7 @@ class Conversation(ABC):
             available_tools: The tools available in the chat.
             explain_tool_result (bool): Whether to explain the tool result.
             return_tool_calls_as_ai_message (bool): If you want to return the tool calls as an AI message, this should be set to True.
+            track_tool_calls (bool): If you want to track the tool calls, this should be set to True.
 
         Returns:
         -------
@@ -604,6 +610,9 @@ class Conversation(ABC):
         msg = ""
 
         if self.tool_call_mode == "auto":
+            # Collect tool results for collective explanation when multiple tools are called
+            tool_results_for_explanation = []
+
             for idx, tool_call in enumerate(tool_calls):
                 # Extract tool name and arguments
                 tool_name = tool_call["name"]
@@ -624,27 +633,25 @@ class Conversation(ABC):
                         # Add the tool result to the conversation
                         if return_tool_calls_as_ai_message:
                             self.append_ai_message(f"Tool call ({tool_name}) \nResult: {tool_result!s}")
-                            self.tool_calls.append({"name": tool_name, "args": tool_args, "id": tool_call_id})
                         else:
                             self.messages.append(
                                 ToolMessage(content=str(tool_result), name=tool_name, tool_call_id=tool_call_id)
+                            )
+
+                        if track_tool_calls:
+                            self.tool_calls.append(
+                                {"name": tool_name, "args": tool_args, "id": tool_call_id, "result": tool_result}
                             )
 
                         if idx > 0:
                             msg += "\n"
                         msg += f"Tool call ({tool_name}) result: {tool_result!s}"
 
+                        # Collect tool results for explanation if needed
                         if explain_tool_result:
-                            tool_result_interpretation = self.chat.invoke(
-                                TOOL_RESULT_INTERPRETATION_PROMPT.format(
-                                    original_question=self.last_human_prompt,
-                                    tool_result=tool_result,
-                                    general_instructions=self.general_instructions_tool_interpretation,
-                                    additional_instructions=self.additional_instructions_tool_interpretation,
-                                )
+                            tool_results_for_explanation.append(
+                                {"name": tool_name, "args": tool_args, "result": tool_result}
                             )
-                            self.append_ai_message(tool_result_interpretation.content)
-                            msg += f"\nTool result interpretation: {tool_result_interpretation.content}"
 
                     except Exception as e:
                         # Handle tool execution errors
@@ -652,7 +659,57 @@ class Conversation(ABC):
                         self.messages.append(
                             ToolMessage(content=error_message, name=tool_name, tool_call_id=tool_call_id)
                         )
-                        msg = error_message
+
+                        # Track failed tool calls
+                        if track_tool_calls:
+                            self.tool_calls.append(
+                                {"name": tool_name, "args": tool_args, "id": tool_call_id, "error": str(e)}
+                            )
+
+                        if idx > 0:
+                            msg += "\n"
+                        msg += error_message
+                # Handle missing/unknown tool
+                elif track_tool_calls:
+                    self.tool_calls.append(
+                        {"name": tool_name, "args": tool_args, "id": tool_call_id, "error": "Tool not found"}
+                    )
+
+            # Handle tool result explanation
+            if explain_tool_result and tool_results_for_explanation:
+                if len(tool_results_for_explanation) > 1:
+                    # Multiple tools: explain all results together
+                    combined_tool_results = "\n\n".join(
+                        [
+                            f"Tool: {tr['name']}\nArguments: {tr['args']}\nResult: {tr['result']}"
+                            for tr in tool_results_for_explanation
+                        ]
+                    )
+
+                    tool_result_interpretation = self.chat.invoke(
+                        TOOL_RESULT_INTERPRETATION_PROMPT.format(
+                            original_question=self.last_human_prompt,
+                            tool_result=combined_tool_results,
+                            general_instructions=self.general_instructions_tool_interpretation,
+                            additional_instructions=self.additional_instructions_tool_interpretation,
+                        )
+                    )
+                    self.append_ai_message(tool_result_interpretation.content)
+                    msg += f"\nTool results interpretation: {tool_result_interpretation.content}"
+                else:
+                    # Single tool: explain individual result (maintain current behavior)
+                    tool_result_data = tool_results_for_explanation[0]
+                    tool_result_interpretation = self.chat.invoke(
+                        TOOL_RESULT_INTERPRETATION_PROMPT.format(
+                            original_question=self.last_human_prompt,
+                            tool_result=tool_result_data["result"],
+                            general_instructions=self.general_instructions_tool_interpretation,
+                            additional_instructions=self.additional_instructions_tool_interpretation,
+                        )
+                    )
+                    self.append_ai_message(tool_result_interpretation.content)
+                    msg += f"\nTool result interpretation: {tool_result_interpretation.content}"
+
             return msg
 
         if self.tool_call_mode == "text":
@@ -804,3 +861,4 @@ class Conversation(ABC):
         self.messages = []
         self.ca_messages = []
         self.current_statements = []
+        self.tool_calls.clear()
