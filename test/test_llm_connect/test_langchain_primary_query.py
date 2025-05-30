@@ -92,8 +92,10 @@ def test_primary_query_no_tools_no_structured_basic_model(conversation_instance,
 
     assert msg == mock_response_content
     assert token_usage == 10
-    mock_chat_object.invoke.assert_called_once_with(initial_messages)
-    conversation_instance.append_ai_message.assert_called_once_with(mock_response_content)
+    # The mock records the final state of self.messages, which includes the appended response
+    expected_final_messages = initial_messages + [mock_response]
+    mock_chat_object.invoke.assert_called_once_with(expected_final_messages)
+    conversation_instance.append_ai_message.assert_not_called()  # Changed: now uses messages.append(response)
     mock_chat_object.bind_tools.assert_not_called()
     mock_chat_object.with_structured_output.assert_not_called()
 
@@ -126,7 +128,9 @@ def test_primary_query_with_tools_model_supports_tool_calling_tool_used(conversa
     assert token_usage is None  # Token usage not set when tool_calls are processed by _primary_query
     mock_chat_object.bind_tools.assert_called_once_with(all_tools)
     bound_chat_mock = mock_chat_object.bind_tools.return_value
-    bound_chat_mock.invoke.assert_called_once_with(initial_messages)
+    # The mock records the final state of self.messages, which includes the appended response
+    expected_final_messages = initial_messages + [mock_llm_response]
+    bound_chat_mock.invoke.assert_called_once_with(expected_final_messages)
     conversation_instance._process_tool_calls.assert_called_once_with(
         tool_calls=[mock_tool_call_dict],
         available_tools=all_tools,
@@ -155,9 +159,11 @@ def test_primary_query_with_tools_model_supports_tool_calling_no_tool_use(conver
     assert msg == mock_response_content
     assert token_usage == 25
     mock_chat_object.bind_tools.assert_called_once_with([mock_tool_one])
-    mock_chat_object.bind_tools.return_value.invoke.assert_called_once_with(initial_messages)
+    # The mock records the final state of self.messages, which includes the appended response
+    expected_final_messages = initial_messages + [mock_llm_response]
+    mock_chat_object.bind_tools.return_value.invoke.assert_called_once_with(expected_final_messages)
     conversation_instance._process_tool_calls.assert_not_called()
-    conversation_instance.append_ai_message.assert_called_once_with(mock_response_content)
+    conversation_instance.append_ai_message.assert_not_called()  # Changed: now uses messages.append(response)
 
 
 def test_primary_query_tools_model_not_supports_manual_call_success(conversation_instance, mock_chat_object):
