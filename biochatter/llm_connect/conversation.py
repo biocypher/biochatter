@@ -696,7 +696,7 @@ class Conversation(ABC):
                             additional_instructions=self.additional_instructions_tool_interpretation,
                         )
                     )
-                    self.append_ai_message(tool_result_interpretation.content)
+                    self.messages.append(tool_result_interpretation)
                     msg += f"\nTool results interpretation: {tool_result_interpretation.content}"
                 else:
                     # Single tool: explain individual result (maintain current behavior)
@@ -709,7 +709,7 @@ class Conversation(ABC):
                             additional_instructions=self.additional_instructions_tool_interpretation,
                         )
                     )
-                    self.append_ai_message(tool_result_interpretation.content)
+                    self.messages.append(tool_result_interpretation)
                     msg += f"\nTool result interpretation: {tool_result_interpretation.content}"
 
             return msg

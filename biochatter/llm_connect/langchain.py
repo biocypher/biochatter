@@ -186,6 +186,7 @@ class LangChainConversation(Conversation):
             token_usage = None
             # case in which the model called tools
             if len(response.tool_calls) > 0:
+                self.messages.append(response)
                 msg = self._process_tool_calls(
                     tool_calls=response.tool_calls,
                     available_tools=available_tools,
@@ -224,7 +225,7 @@ class LangChainConversation(Conversation):
             else:
                 msg = response.content
                 token_usage = response.usage_metadata["total_tokens"]
-                self.append_ai_message(msg)
+                self.messages.append(response)
 
         # even if there are no tool calls, the standard langchain output has a tool_calls attribute
         # therefore, this case only happens when the returned ouput from the invoke is a structured output
