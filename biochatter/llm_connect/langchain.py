@@ -25,6 +25,7 @@ class LangChainConversation(Conversation):
         tool_call_mode: Literal["auto", "text"] = "auto",
         async_mode: bool = False,
         mcp: bool = False,
+        force_tool: bool = False,
     ) -> None:
         """Initialise the LangChainConversation class.
 
@@ -48,7 +49,7 @@ class LangChainConversation(Conversation):
                 "text": Only return text output of the tool call.
             async_mode (bool): Whether to run in async mode. Defaults to False.
             mcp (bool): If you want to use MCP mode, this should be set to True.
-
+            force_tool (bool): If you want to force the model to use tools, this should be set to True.
         """
         super().__init__(
             model_name=model_name,
@@ -58,6 +59,7 @@ class LangChainConversation(Conversation):
             tools=tools,
             tool_call_mode=tool_call_mode,
             mcp=mcp,
+            force_tool=force_tool,
         )
 
         self.model_name = model_name
@@ -159,7 +161,7 @@ class LangChainConversation(Conversation):
                 )
             )
 
-        if self.model_name in TOOL_CALLING_MODELS and not structured_model:
+        if (self.model_name in TOOL_CALLING_MODELS and not structured_model) or self.force_tool:
             chat = self.chat.bind_tools(available_tools)
         elif self.model_name not in TOOL_CALLING_MODELS and len(available_tools) > 0:
             self.tools_prompt = self._create_tool_prompt(

@@ -110,6 +110,7 @@ class Conversation(ABC):
         tool_call_mode: Literal["auto", "text"] = "auto",
         mcp: bool = False,
         additional_tools_instructions: str = None,
+        force_tool: bool = False
     ) -> None:
         super().__init__()
         self.model_name = model_name
@@ -130,6 +131,7 @@ class Conversation(ABC):
         self.tools_prompt = None
         self.mcp = mcp
         self.additional_tools_instructions = additional_tools_instructions if additional_tools_instructions else ""
+        self.force_tool = force_tool
 
     @property
     def chat(self):
