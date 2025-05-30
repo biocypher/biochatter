@@ -184,6 +184,8 @@ def _expand_multi_instruction(data_dict: dict) -> dict:
 
     """
     for module_key in data_dict:
+        if "longevity" in module_key:
+            data_dict[module_key] = _expand_longevity_test_cases(data_dict[module_key])
         if "kg_schemas" not in module_key:
             test_list = data_dict[module_key]
             expanded_test_list = []
@@ -216,6 +218,43 @@ def _expand_multi_instruction(data_dict: dict) -> dict:
 
     return data_dict
 
+def _expand_longevity_test_cases(data_dict: dict) -> dict:
+    expanded_test_list = []
+
+    message_dict = data_dict[0]["general_system_messages"]
+    rag_message_dict = data_dict[1]["general_system_messages_rag"]
+
+    for test in data_dict[2:]:
+        prompt_dict = test["input"]["prompt"]
+        if not isinstance(prompt_dict, dict):
+            expanded_test_list.append(test)
+            continue
+
+        keys_lists = [list(value.keys()) for value in prompt_dict.values() if isinstance(value, dict)]
+        for combination in itertools.product(*keys_lists):
+            new_case = copy.deepcopy(test)
+            new_case["case"] = ":".join([test["case"], *combination])
+
+            # Update prompt values based on combination
+            prompt_keys = [key for key, value in prompt_dict.items() if isinstance(value, dict)]
+            for key, value in zip(prompt_keys, combination, strict=True):
+                # First update individual prompt keys
+                new_case["input"]["prompt"][key] = prompt_dict[key][value]
+
+            new_case["input"]["prompt"] = " ".join(str(v) for v in new_case["input"]["prompt"].values())
+            new_case["input"]["prompt"] = new_case["input"]["prompt"].strip()
+            
+            if "rag:" in new_case["case"]:
+                messages = rag_message_dict
+            else:
+                messages = message_dict
+
+            for key, value in messages.items():
+                final_case = copy.deepcopy(new_case)
+                final_case["input"]["system_messages"] = {key: value}
+                expanded_test_list.append(final_case)
+
+    return expanded_test_list
 
 def _get_private_key_from_env_variable() -> rsa.PrivateKey:
     """Get the private key from an environment variable.

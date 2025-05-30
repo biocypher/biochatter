@@ -153,6 +153,10 @@ def extract_json(text: str) -> str:
     # Regex to capture the JSON object inside a ```json ... ``` block
     pattern = re.compile(r"```json\s*(\{[\s\S]*?\})\s*```", re.MULTILINE)
     match = pattern.search(text)
+
+    if match is None:
+        raise ValueError("No valid JSON code fence found in the input text.")
+
     return match.group(1)
 
 
