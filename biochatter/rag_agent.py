@@ -16,7 +16,8 @@ class RagAgent:
     def __init__(
         self,
         mode: str,
-        model_name: str | None = "gpt-3.5-turbo",
+        model_provider: str = "google_genai",
+        model_name: str = "gemini-2.0-flash",
         connection_args: dict | None = None,
         n_results: int | None = 3,
         use_prompt: bool | None = False,
@@ -38,6 +39,8 @@ class RagAgent:
         Args:
         ----
             mode (str): The mode of the agent. Either "kg" or "vectorstore".
+
+            model_provider (str): The provider of the model to use.
 
             model_name (str): The name of the model to use.
 
@@ -74,6 +77,7 @@ class RagAgent:
 
         """
         self.mode = mode
+        self.model_provider = model_provider
         self.model_name = model_name
         self.use_prompt = use_prompt
         self.n_results = n_results
@@ -93,6 +97,7 @@ class RagAgent:
             self.schema_config_or_info_dict = schema_config_or_info_dict
 
             self.agent = DatabaseAgent(
+                model_provider=model_provider,
                 model_name=model_name,
                 connection_args=connection_args,
                 schema_config_or_info_dict=self.schema_config_or_info_dict,
