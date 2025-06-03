@@ -319,7 +319,7 @@ To connect to a vector DB host, we can use the corresponding class:
 from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
 
 dbHost = VectorDatabaseAgentMilvus(
-    embedding_func=OpenAIEmbeddings(),
+    embedding_func=GoogleGenerativeAIEmbeddings(),
     connection_args={"host": _HOST, "port": _PORT},
     embedding_collection_name=EMBEDDING_NAME,
     metadata_collection_name=METADATA_NAME
