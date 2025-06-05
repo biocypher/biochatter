@@ -39,9 +39,9 @@ def test_web_api_calling(
         pytest.skip(
             f"model {model_name} does not support API calling for {task} benchmark",
         )
-    if "scanpy" in yaml_data["case"]:
+    if "scanpy" in yaml_data["case"] or "anndata" in yaml_data["case"]:
         pytest.skip(
-            "scanpy is not a web API",
+            "scanpy and anndata are not web APIs",
         )
 
     def run_test():
@@ -50,6 +50,9 @@ def test_web_api_calling(
             builder = OncoKBQueryBuilder()
         elif "biotools" in yaml_data["case"]:
             builder = BioToolsQueryBuilder()
+        else:
+            # Skip test cases that are not supported web APIs
+            return (0, 1)  # Return tuple as expected by calculate_bool_vector_score
         parameters = builder.parameterise_query(
             question=yaml_data["input"]["prompt"],
             conversation=conversation,
@@ -107,6 +110,12 @@ def test_python_api_calling(
             builder = ScanpyPlQueryBuilder()
         elif "anndata" in yaml_data["case"]:
             builder = AnnDataIOQueryBuilder()
+        elif "scanpy:tl" in yaml_data["case"] or "scanpy:pp" in yaml_data["case"]:
+            # scanpy:tl and scanpy:pp cases are not implemented yet
+            return (0, 1)  # Return tuple as expected by calculate_bool_vector_score
+        else:
+            # Skip test cases that are not supported Python APIs
+            return (0, 1)  # Return tuple as expected by calculate_bool_vector_score
         parameters = builder.parameterise_query(
             question=yaml_data["input"]["prompt"],
             conversation=conversation,
