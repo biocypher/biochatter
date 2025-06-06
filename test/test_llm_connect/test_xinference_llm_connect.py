@@ -84,7 +84,7 @@ def test_xinference_chatting():
             correct=False,
         )
         (msg, token_usage, correction) = convo.query("Hello, world!")
-        assert token_usage["completion_tokens"] > 0
+        assert token_usage > 0  # Now returns total tokens as integer
 
 
 @pytest.fixture
