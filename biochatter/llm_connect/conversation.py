@@ -332,6 +332,52 @@ class Conversation(ABC):
         # If we can't extract meaningful output token count, return None
         return None
 
+    def compute_cumulative_token_usage(self) -> dict:
+        """Compute the token usage by looping over the messages.
+
+        Extracts token usage information from each message's usage_metadata and
+        computes running cumulative totals throughout the conversation.
+        Handles various token usage formats from different LLM providers.
+
+        Returns
+        -------
+            dict: Token usage information with lists of running totals:
+                - "total_tokens": list[int] - running total at each message
+                - "input_tokens": list[int] - running input total at each message
+                - "output_tokens": list[int] - running output total at each message
+
+        """
+        # Initialize data structures
+        individual_usage = {
+            "total_tokens": [],
+            "input_tokens": [],
+            "output_tokens": [],
+        }
+
+        # Extract individual token counts for each AI message
+        for message in self.messages:
+            if isinstance(message, AIMessage):
+                usage_metadata = getattr(message, "usage_metadata", None)
+                individual_usage["total_tokens"].append(self._extract_total_tokens(usage_metadata))
+                individual_usage["input_tokens"].append(self._extract_input_tokens(usage_metadata))
+                individual_usage["output_tokens"].append(self._extract_output_tokens(usage_metadata))
+
+        # Compute running cumulative totals for each message
+        per_message_cumulative = {
+            "total_tokens": [],
+            "input_tokens": [],
+            "output_tokens": [],
+        }
+
+        for token_type in ["total_tokens", "input_tokens", "output_tokens"]:
+            running_total = 0
+            for count in individual_usage[token_type]:
+                if count is not None:
+                    running_total += count
+                per_message_cumulative[token_type].append(running_total)
+
+        return per_message_cumulative
+
     @abstractmethod
     def set_api_key(self, api_key: str, user: str | None = None) -> None:
         """Set the API key."""
