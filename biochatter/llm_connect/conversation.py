@@ -707,8 +707,26 @@ class Conversation(ABC):
         return corrections
 
     @abstractmethod
-    def _primary_query(self, text: str) -> tuple[str, dict | None]:
-        """Run the primary query."""
+    def _primary_query(self, **kwargs) -> tuple[str, dict | None]:
+        """Run the primary query.
+
+        Args:
+        ----
+            **kwargs: Keyword arguments that may include:
+                - text: The user query.
+                - tools: List of tools for tool-calling models
+                - explain_tool_result: Whether to explain tool results
+                - return_tool_calls_as_ai_message: Whether to return tool calls as AI message
+                - structured_model: Structured output model
+                - wrap_structured_output: Whether to wrap structured output
+                - track_tool_calls: Whether to track tool calls
+                - Other model-specific parameters
+
+        Returns:
+        -------
+            tuple: A tuple containing the response message and token usage information.
+
+        """
 
     @abstractmethod
     def _correct_response(self, msg: str) -> str:

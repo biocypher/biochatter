@@ -643,6 +643,7 @@ def test_langchain_conversation_track_tool_calls_parameter():
     """Test that LangChainConversation properly passes through track_tool_calls parameter."""
     from biochatter.llm_connect.langchain import LangChainConversation
     from unittest.mock import patch, MagicMock
+    from langchain_core.messages import AIMessage
 
     # Create a mock conversation instance
     with patch.object(LangChainConversation, "set_api_key", return_value=True):
@@ -660,10 +661,11 @@ def test_langchain_conversation_track_tool_calls_parameter():
         # Mock the _process_tool_calls method to verify it receives the parameter
         conv._process_tool_calls = MagicMock(return_value="tool result")
 
-        # Mock the chat and other necessary attributes
-        mock_response = MagicMock()
+        # Create a proper AIMessage mock instead of a generic MagicMock
+        mock_response = AIMessage(content="test content")
         mock_response.tool_calls = [{"name": "test_tool", "args": {}, "id": "test_id"}]
-        mock_response.content = "test content"
+        mock_response.usage_metadata = None  # Add usage_metadata attribute
+
         conv.chat = MagicMock()
         conv.chat.invoke = MagicMock(return_value=mock_response)
         conv.messages = []

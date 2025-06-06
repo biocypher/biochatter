@@ -221,11 +221,16 @@ class LiteLLMConversation(Conversation):
             print(f"Unexpected error while parsing LLM response: {e}")
             return None
 
-    def _primary_query(self) -> tuple:
+    def _primary_query(self, **kwargs) -> tuple:
         """Query the LLM API with the user's message.
 
         Return the response using the message history (flattery system messages,
         prior conversation) as context. Correct the response if necessary.
+
+        Args:
+        ----
+            **kwargs: Keyword arguments (not used by this basic LiteLLM implementation,
+                     but accepted for compatibility with the base Conversation interface)
 
         Returns:
             tuple: A tuple containing the response from the LLM API and the token usage.
@@ -260,7 +265,7 @@ class LiteLLMConversation(Conversation):
 
         self.append_ai_message(msg)
 
-        self._update_usage_stats(self.model_name, token_usage_raw)
+        self._update_usage_stats(self.model_name, token_usage)
 
         return msg, token_usage
 
