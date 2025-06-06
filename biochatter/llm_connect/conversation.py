@@ -196,7 +196,7 @@ class Conversation(ABC):
                 return i, val
         return -1, None
 
-    def _extract_total_tokens(self, token_usage) -> int | None:
+    def _extract_total_tokens(self, token_usage: dict | int | None) -> int | None:
         """Extract total tokens from various token usage formats.
 
         This method standardizes token counting across different providers:
@@ -248,6 +248,88 @@ class Conversation(ABC):
                 return token_usage["completion_tokens"]
 
         # If we can't extract meaningful token count, return None
+        return None
+
+    def _extract_input_tokens(self, token_usage: dict | int | None) -> int | None:
+        """Extract input tokens from various token usage formats.
+
+        This method standardizes input token counting across different providers:
+        - OpenAI/Azure: {"prompt_tokens": X, "completion_tokens": Y, "total_tokens": Z}
+        - Anthropic: {"input_tokens": X, "output_tokens": Y}
+        - Gemini: {"prompt_tokens": X, "candidates_tokens": Y, "total_tokens": Z}
+        - LiteLLM: {"input_tokens": X, "output_tokens": Y, "total_tokens": Z}
+        - Others: try to extract input/prompt tokens
+
+        Args:
+        ----
+            token_usage: Token usage in various formats (dict, int, or None)
+
+        Returns:
+        -------
+            int | None: Input token count, or None if not available
+
+        """
+        if token_usage is None:
+            return None
+
+        # Handle integer token counts (cannot distinguish input vs output)
+        if isinstance(token_usage, int):
+            return None
+
+        # Handle dictionary token counts
+        if isinstance(token_usage, dict):
+            # First try to get input_tokens (Anthropic, LiteLLM style)
+            if "input_tokens" in token_usage:
+                return token_usage["input_tokens"]
+
+            # Try prompt_tokens (OpenAI style)
+            if "prompt_tokens" in token_usage:
+                return token_usage["prompt_tokens"]
+
+        # If we can't extract meaningful input token count, return None
+        return None
+
+    def _extract_output_tokens(self, token_usage: dict | int | None) -> int | None:
+        """Extract output tokens from various token usage formats.
+
+        This method standardizes output token counting across different providers:
+        - OpenAI/Azure: {"prompt_tokens": X, "completion_tokens": Y, "total_tokens": Z}
+        - Anthropic: {"input_tokens": X, "output_tokens": Y}
+        - Gemini: {"prompt_tokens": X, "candidates_tokens": Y, "total_tokens": Z}
+        - LiteLLM: {"input_tokens": X, "output_tokens": Y, "total_tokens": Z}
+        - Others: try to extract output/completion tokens
+
+        Args:
+        ----
+            token_usage: Token usage in various formats (dict, int, or None)
+
+        Returns:
+        -------
+            int | None: Output token count, or None if not available
+
+        """
+        if token_usage is None:
+            return None
+
+        # Handle integer token counts (cannot distinguish input vs output)
+        if isinstance(token_usage, int):
+            return None
+
+        # Handle dictionary token counts
+        if isinstance(token_usage, dict):
+            # First try to get output_tokens (Anthropic, LiteLLM style)
+            if "output_tokens" in token_usage:
+                return token_usage["output_tokens"]
+
+            # Try completion_tokens (OpenAI style)
+            if "completion_tokens" in token_usage:
+                return token_usage["completion_tokens"]
+
+            # Try candidates_tokens (Gemini style)
+            if "candidates_tokens" in token_usage:
+                return token_usage["candidates_tokens"]
+
+        # If we can't extract meaningful output token count, return None
         return None
 
     @abstractmethod
