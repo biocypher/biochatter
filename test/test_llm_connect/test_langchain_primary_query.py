@@ -125,7 +125,7 @@ def test_primary_query_with_tools_model_supports_tool_calling_tool_used(conversa
         )
 
     assert msg == processed_tool_output
-    assert token_usage is None  # Token usage not set when tool_calls are processed by _primary_query
+    assert token_usage == 20  # Token usage is now returned when available, even with tool calls
     mock_chat_object.bind_tools.assert_called_once_with(all_tools)
     bound_chat_mock = mock_chat_object.bind_tools.return_value
     # The mock records the final state of self.messages, which includes the appended response
@@ -193,7 +193,7 @@ def test_primary_query_tools_model_not_supports_manual_call_success(conversation
         msg, token_usage = conversation_instance._primary_query(tools=[mock_tool_one], explain_tool_result=True)
 
     assert msg == processed_manual_tool_output
-    assert token_usage is None
+    assert token_usage == 30  # Token usage is now returned when available, even with manual tool calls
 
     conversation_instance._create_tool_prompt.assert_called_once_with(
         tools=[mock_tool_one], additional_instructions=None
@@ -259,7 +259,7 @@ def test_primary_query_structured_output_model_supports(conversation_instance, m
 
     expected_json_output = structured_response_obj.model_dump_json()
     assert msg == expected_json_output
-    assert token_usage is None
+    assert token_usage == 0  # Token usage is 0 for structured outputs (can't count tokens but not an error)
 
     mock_chat_object.with_structured_output.assert_called_once_with(MockOutputModel)
     structured_chat_mock = mock_chat_object.with_structured_output.return_value
@@ -281,7 +281,7 @@ def test_primary_query_structured_output_model_supports_wrapped(conversation_ins
     unwrapped_json = structured_response_obj.model_dump_json()
     expected_wrapped_output = "```json\n" + unwrapped_json + "\n```"
     assert msg == expected_wrapped_output
-    assert token_usage is None
+    assert token_usage == 0  # Token usage is 0 for structured outputs (can't count tokens but not an error)
     mock_chat_object.with_structured_output.assert_called_once_with(MockOutputModel)
     mock_chat_object.with_structured_output.return_value.invoke.assert_called_once_with(initial_messages)
     conversation_instance.append_ai_message.assert_called_once_with(expected_wrapped_output)
@@ -307,7 +307,7 @@ def test_primary_query_structured_output_model_not_supports_fallback(conversatio
 
     expected_json_output = structured_response_obj.model_dump_json()
     assert msg == expected_json_output
-    assert token_usage is None
+    assert token_usage == 0  # Token usage is 0 for structured outputs (can't count tokens but not an error)
 
     expected_modified_content = (
         user_query_content
@@ -347,7 +347,7 @@ def test_primary_query_structured_output_model_not_supports_fallback_wrapped(con
     unwrapped_json = structured_response_obj.model_dump_json()
     expected_wrapped_output = "```json\n" + unwrapped_json + "\n```"
     assert msg == expected_wrapped_output
-    assert token_usage is None
+    assert token_usage == 0  # Token usage is 0 for structured outputs (can't count tokens but not an error)
 
     expected_modified_content = (
         user_query_content
@@ -380,5 +380,5 @@ def test_primary_query_invoke_raises_exception(conversation_instance, mock_chat_
         msg, token_usage = conversation_instance._primary_query()
 
     assert msg == str(Exception(error_message))  # Method returns str(e)
-    assert token_usage is None
+    assert token_usage is None  # Token usage is None when there's an exception
     conversation_instance.append_ai_message.assert_not_called()
