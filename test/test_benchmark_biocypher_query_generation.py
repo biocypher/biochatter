@@ -16,6 +16,7 @@ def prompt_engine(request):
     model_name = request.param
     return BioCypherPromptEngine(
         schema_config_or_info_path="test/test_schema_info.yaml",
+        model_provider="openai",
         model_name=model_name,
     )
 
@@ -138,7 +139,7 @@ def test_property_selection(prompt_engine):
 
 
 def test_query_generation(prompt_engine):
-    with patch("biochatter.prompts.GptConversation") as mock_conversation:
+    with patch("biochatter.prompts.LangChainConversation") as mock_conversation:
         resultMsg = """
         MATCH (d:Disease {name: 'mucoviscidosis'})-[:PERTURBED]->(g:Gene)
         RETURN g.name AS AssociatedGenes

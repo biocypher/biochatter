@@ -86,6 +86,71 @@ def test_rag_agent_kg_mode():
         mock_agent.get_query_results.assert_called_once_with("test question", 3)
 
 
+def test_rag_agent_kg_mode_with_custom_model_provider():
+    """Test RagAgent in KG mode with custom model provider."""
+    with patch("biochatter.database_agent.DatabaseAgent") as MockDatabaseAgent:
+        mock_agent = MockDatabaseAgent.return_value
+        mock_agent.get_query_results.return_value = [
+            Document(
+                page_content=json.dumps({"node1": {"name": "result1"}}),
+                metadata={"cypher_query": "test_query"},
+            ),
+        ]
+
+        agent = RagAgent(
+            use_prompt=True,
+            mode=RagAgentModeEnum.KG,
+            model_provider="openai",
+            model_name="gpt-4",
+            connection_args={"host": "xxx", "port": "xxx"},
+            schema_config_or_info_dict={
+                "schema_config_or_info_dict": "test_schema_config_or_info_dict",
+            },
+        )
+
+        assert agent.mode == RagAgentModeEnum.KG
+        assert agent.model_provider == "openai"
+        assert agent.model_name == "gpt-4"
+
+        # Verify that DatabaseAgent was called with the model_provider
+        MockDatabaseAgent.assert_called_once_with(
+            model_provider="openai",
+            model_name="gpt-4",
+            connection_args={"host": "xxx", "port": "xxx"},
+            schema_config_or_info_dict={
+                "schema_config_or_info_dict": "test_schema_config_or_info_dict",
+            },
+            conversation_factory=None,
+            use_reflexion=False,
+        )
+
+
+def test_rag_agent_defaults_to_gemini():
+    """Test that RagAgent defaults to Google Gemini 2.0 flash model."""
+    with patch("biochatter.database_agent.DatabaseAgent") as MockDatabaseAgent:
+        mock_agent = MockDatabaseAgent.return_value
+        mock_agent.get_query_results.return_value = []
+
+        agent = RagAgent(
+            mode=RagAgentModeEnum.KG,
+            connection_args={"host": "xxx", "port": "xxx"},
+            schema_config_or_info_dict={"test": "schema"},
+        )
+
+        assert agent.model_provider == "google_genai"
+        assert agent.model_name == "gemini-2.0-flash"
+
+        # Verify that DatabaseAgent was called with the default values
+        MockDatabaseAgent.assert_called_once_with(
+            model_provider="google_genai",
+            model_name="gemini-2.0-flash",
+            connection_args={"host": "xxx", "port": "xxx"},
+            schema_config_or_info_dict={"test": "schema"},
+            conversation_factory=None,
+            use_reflexion=False,
+        )
+
+
 def test_rag_agent_vectorstore_mode():
     with patch(
         "biochatter.vectorstore_agent.VectorDatabaseAgentMilvus",

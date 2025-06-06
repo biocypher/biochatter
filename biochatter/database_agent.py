@@ -12,6 +12,7 @@ from .prompts import BioCypherPromptEngine
 class DatabaseAgent:
     def __init__(
         self,
+        model_provider: str,
         model_name: str,
         connection_args: dict,
         schema_config_or_info_dict: dict,
@@ -36,6 +37,7 @@ class DatabaseAgent:
         """
         self.conversation_factory = conversation_factory
         self.prompt_engine = BioCypherPromptEngine(
+            model_provider=model_provider,
             model_name=model_name,
             schema_config_or_info_dict=schema_config_or_info_dict,
             conversation_factory=conversation_factory,

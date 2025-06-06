@@ -37,7 +37,7 @@ class LiteLLMConversation(Conversation):
         correct: bool = False,
         split_correction: bool = False,
         use_ragagent_selector: bool = False,
-        update_token_usage: Callable | None =None
+        update_token_usage: Callable | None = None,
     ) -> None:
         """Initialize a UnifiedConversation instance.
 
@@ -59,8 +59,8 @@ class LiteLLMConversation(Conversation):
         )
         self.api_key = None
         self.user = None
-        self.ca_model_name=model_name
-        self._update_token_usage=update_token_usage
+        self.ca_model_name = model_name
+        self._update_token_usage = update_token_usage
 
     def get_litellm_object(self, api_key: str, model: str) -> ChatLiteLLM:
         """Get a LiteLLM object for the specified model and API key.
@@ -89,40 +89,42 @@ class LiteLLMConversation(Conversation):
             raise ValueError("API key must not be None")
 
         try:
-            max_tokens=self.get_model_max_tokens(model)
+            max_tokens = self.get_model_max_tokens(model)
         except:
-            max_tokens= None
+            max_tokens = None
 
-        kwargs={
-            "temperature":0,
-            "max_token": max_tokens,
-            "model_name": model
-        }
+        kwargs = {"temperature": 0, "max_token": max_tokens, "model_name": model}
 
         if self.model_name.startswith("gpt-"):
-            api_key_kwarg= "openai_api_key"
+            api_key_kwarg = "openai_api_key"
         elif self.model_name.startswith("claude-"):
-            api_key_kwarg= "anthropic_api_key"
+            api_key_kwarg = "anthropic_api_key"
         elif self.model_name.startswith("azure/"):
-            api_key_kwarg= "azure_api_key"
-        elif (self.model_name.startswith("mistral/") or
-                self.model_name in ["mistral-tiny", "mistral-small", "mistral-medium", "mistral-large-latest"]):
-            api_key_kwarg= "api_key"
+            api_key_kwarg = "azure_api_key"
+        elif self.model_name.startswith("mistral/") or self.model_name in [
+            "mistral-tiny",
+            "mistral-small",
+            "mistral-medium",
+            "mistral-large-latest",
+        ]:
+            api_key_kwarg = "api_key"
         else:
-            api_key_kwarg= "api_key"
+            api_key_kwarg = "api_key"
 
-        kwargs[api_key_kwarg]= api_key
+        kwargs[api_key_kwarg] = api_key
         try:
             return ChatLiteLLM(**kwargs)
 
-        except (litellm.exceptions.AuthenticationError,
-                litellm.exceptions.InvalidRequestError,
-                litellm.exceptions.RateLimitError,
-                litellm.exceptions.ServiceUnavailableError,
-                litellm.exceptions.APIError,
-                litellm.exceptions.Timeout,
-                litellm.exceptions.APIConnectionError,
-                litellm.exceptions.InternalServerError) as api_setup_error:
+        except (
+            litellm.exceptions.AuthenticationError,
+            litellm.exceptions.InvalidRequestError,
+            litellm.exceptions.RateLimitError,
+            litellm.exceptions.ServiceUnavailableError,
+            litellm.exceptions.APIError,
+            litellm.exceptions.Timeout,
+            litellm.exceptions.APIConnectionError,
+            litellm.exceptions.InternalServerError,
+        ) as api_setup_error:
             raise api_setup_error
         except Exception as e:
             raise e
@@ -150,15 +152,15 @@ class LiteLLMConversation(Conversation):
             if self.ca_model_name is None:
                 raise ValueError("Correction Model name is not set.")
 
-            self.chat=self.get_litellm_object(api_key,self.model_name)
+            self.chat = self.get_litellm_object(api_key, self.model_name)
             if self.chat is None:
                 raise TypeError("Failed to intialize primary agent chat object.")
 
-            self.ca_chat=self.get_litellm_object(api_key,self.ca_model_name)
+            self.ca_chat = self.get_litellm_object(api_key, self.ca_model_name)
             if self.ca_chat is None:
                 raise TypeError("Failed to intialize correcting agent chat object.")
 
-            self.user=user
+            self.user = user
             if user == "community":
                 self.usage_stats = get_stats(user=user)
             return True
@@ -172,7 +174,7 @@ class LiteLLMConversation(Conversation):
             self.ca_chat = None
             return False
 
-    def json_serializable(self,obj):
+    def json_serializable(self, obj):
         """Convert non-serializable objects to serializable format."""
         if obj is None:
             raise ValueError("Object is None")
@@ -185,7 +187,7 @@ class LiteLLMConversation(Conversation):
         except:
             return repr(obj)
 
-    def parse_llm_response(self,response) -> dict | None:
+    def parse_llm_response(self, response) -> dict | None:
         """Parse the response from the LLM."""
         try:
             full_json = json.loads(json.dumps(response, default=self.json_serializable))
@@ -219,18 +221,23 @@ class LiteLLMConversation(Conversation):
             print(f"Unexpected error while parsing LLM response: {e}")
             return None
 
-    def _primary_query(self) -> tuple:
+    def _primary_query(self, **kwargs) -> tuple:
         """Query the LLM API with the user's message.
 
         Return the response using the message history (flattery system messages,
         prior conversation) as context. Correct the response if necessary.
+
+        Args:
+        ----
+            **kwargs: Keyword arguments (not used by this basic LiteLLM implementation,
+                     but accepted for compatibility with the base Conversation interface)
 
         Returns:
             tuple: A tuple containing the response from the LLM API and the token usage.
 
         """
         try:
-            response=self.chat.generate([self.messages])
+            response = self.chat.generate([self.messages])
         except (
             AttributeError,
             litellm.exceptions.APIError,
@@ -257,7 +264,7 @@ class LiteLLMConversation(Conversation):
 
         self.append_ai_message(msg)
 
-        self._update_usage_stats(self.model_name,token_usage)
+        self._update_usage_stats(self.model_name, token_usage)
 
         return msg, token_usage
 
@@ -334,9 +341,9 @@ class LiteLLMConversation(Conversation):
         """
         models_info: dict = self.get_all_model_info()
         if model not in models_info:
-            raise litellm.exceptions.NotFoundError(f"{model} model's information is not available.",
-                                                   model=model,
-                                                   llm_provider="Unknown")
+            raise litellm.exceptions.NotFoundError(
+                f"{model} model's information is not available.", model=model, llm_provider="Unknown"
+            )
         return models_info[model]
 
     def get_model_max_tokens(self, model: str) -> int:
@@ -350,11 +357,11 @@ class LiteLLMConversation(Conversation):
 
         """
         try:
-            model_info=self.get_model_info(model)
+            model_info = self.get_model_info(model)
             if "max_tokens" not in model_info:
-                raise litellm.exceptions.NotFoundError(f"Max token information for {model} is not available.",
-                                                       model=model,
-                                                       llm_provider="Unknown")
+                raise litellm.exceptions.NotFoundError(
+                    f"Max token information for {model} is not available.", model=model, llm_provider="Unknown"
+                )
             return model_info["max_tokens"]
         except litellm.exceptions.NotFoundError as e:
             raise e

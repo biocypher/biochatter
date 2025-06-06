@@ -87,13 +87,18 @@ class AnthropicConversation(Conversation):
             self._ca_chat = None
             return False
 
-    def _primary_query(self) -> tuple:
+    def _primary_query(self, **kwargs) -> tuple:
         """Query the Anthropic API with the user's message.
 
         Return the response using the message history (flattery system messages,
         prior conversation) as context. Correct the response if necessary.
 
-        Returns
+        Args:
+        ----
+            **kwargs: Keyword arguments (not used by this basic Anthropic implementation,
+                     but accepted for compatibility with the base Conversation interface)
+
+        Returns:
         -------
             tuple: A tuple containing the response from the Anthropic API and
                 the token usage.
