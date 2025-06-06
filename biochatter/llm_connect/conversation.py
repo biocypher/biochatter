@@ -477,7 +477,7 @@ class Conversation(ABC):
 
         if not token_usage:
             # indicates error
-            return (msg, token_usage, None)
+            return (msg, None, None)
 
         if not self.correct:
             return (msg, token_usage, None)

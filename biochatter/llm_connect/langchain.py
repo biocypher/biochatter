@@ -183,7 +183,7 @@ class LangChainConversation(Conversation):
 
         # Structured output don't have tool calls attribute
         if hasattr(response, "tool_calls"):
-            token_usage = None
+            token_usage = response.usage_metadata.get("total_tokens") if response.usage_metadata else None
             # case in which the model called tools
             if len(response.tool_calls) > 0:
                 self.messages.append(response)
@@ -213,18 +213,15 @@ class LangChainConversation(Conversation):
                     # Treat as a regular message from the LLM.
                     msg = response.content  # Use original content
                     # Update token_usage, similar to 'no tool calls' or 'manual structured output' paths
-                    token_usage = response.usage_metadata.get("total_tokens") if response.usage_metadata else None
             # case where the model does not support structured output but the user has provided a structured model
             elif self.model_name not in STRUCTURED_OUTPUT_MODELS and structured_model:
                 # check that the output conforms to the structured model
                 pydantic_manual_validator(response.content, structured_model)
                 msg = response.content
-                token_usage = response.usage_metadata["total_tokens"]
 
             # no tool calls
             else:
                 msg = response.content
-                token_usage = response.usage_metadata["total_tokens"]
                 self.messages.append(response)
 
         # even if there are no tool calls, the standard langchain output has a tool_calls attribute
