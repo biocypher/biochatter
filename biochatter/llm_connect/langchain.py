@@ -50,6 +50,7 @@ class LangChainConversation(Conversation):
             async_mode (bool): Whether to run in async mode. Defaults to False.
             mcp (bool): If you want to use MCP mode, this should be set to True.
             force_tool (bool): If you want to force the model to use tools, this should be set to True.
+
         """
         super().__init__(
             model_name=model_name,
@@ -130,6 +131,7 @@ class LangChainConversation(Conversation):
             structured_model (BaseModel, optional): The structured output model to use.
             wrap_structured_output (bool, optional): Whether to wrap the structured output in JSON quotes.
             track_tool_calls (bool, optional): Whether to track the tool calls.
+
         Returns:
         -------
             tuple: A tuple containing the response message and token usage information.
@@ -230,7 +232,8 @@ class LangChainConversation(Conversation):
             msg = response.model_dump_json()
             if wrap_structured_output:
                 msg = "```json\n" + msg + "\n```"
-            token_usage = None
+            # we don't return None because is used to signal an error, instead here we just can't count the tokens
+            token_usage = 0
             self.append_ai_message(msg)
 
         return msg, token_usage
