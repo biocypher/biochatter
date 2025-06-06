@@ -126,8 +126,8 @@ def test_invalid_mode(dummy_conv, mock_tools):
 
 
 def test_auto_mode_explain_tool_result_success(dummy_conv, mock_tools):
-    # Patch chat.invoke to return a mock with .content
-    dummy_conv.chat.invoke.return_value = MagicMock(content="This is an interpretation.")
+    # Patch chat.invoke to return an actual AIMessage instead of a mock
+    dummy_conv.chat.invoke.return_value = AIMessage(content="This is an interpretation.")
     tool_calls = [
         {"name": "tool1", "args": {"x": 1}, "id": "id1"},
     ]
@@ -256,7 +256,7 @@ def test_porcess_manual_tool_call_explain_tool_result(dummy_conv):
     tool.tool_call_schema = "schema"
     tool.args = "args"
     tool_call = {"tool_name": "tool1", "param": 42}
-    dummy_conv.chat.invoke.return_value = MagicMock(content="Interpreted result.")
+    dummy_conv.chat.invoke.return_value = AIMessage(content="Interpreted result.")
     msg = dummy_conv._process_manual_tool_call(tool_call.copy(), [tool], explain_tool_result=True)
     assert "Tool result interpretation: Interpreted result." in msg
     assert any("Interpreted result." in m.content for m in dummy_conv.messages if hasattr(m, "content"))
@@ -264,7 +264,7 @@ def test_porcess_manual_tool_call_explain_tool_result(dummy_conv):
 
 def test_auto_mode_explain_tool_result_single_tool(dummy_conv, mock_tools):
     """Test that single tool call with explain_tool_result maintains current behavior."""
-    dummy_conv.chat.invoke.return_value = MagicMock(content="Single tool interpretation.")
+    dummy_conv.chat.invoke.return_value = AIMessage(content="Single tool interpretation.")
     tool_calls = [
         {"name": "tool1", "args": {"x": 1}, "id": "id1"},
     ]
@@ -282,7 +282,7 @@ def test_auto_mode_explain_tool_result_single_tool(dummy_conv, mock_tools):
 
 def test_auto_mode_explain_tool_result_multiple_tools(dummy_conv, mock_tools):
     """Test that multiple tool calls with explain_tool_result are explained together."""
-    dummy_conv.chat.invoke.return_value = MagicMock(content="Combined tools interpretation.")
+    dummy_conv.chat.invoke.return_value = AIMessage(content="Combined tools interpretation.")
     tool_calls = [
         {"name": "tool1", "args": {"x": 1}, "id": "id1"},
         {"name": "tool2", "args": {"y": 2}, "id": "id2"},
@@ -313,7 +313,7 @@ def test_auto_mode_explain_tool_result_multiple_tools(dummy_conv, mock_tools):
 
 def test_auto_mode_explain_tool_result_multiple_tools_with_error(dummy_conv, mock_tools):
     """Test that multiple tool calls with explain_tool_result handle errors correctly."""
-    dummy_conv.chat.invoke.return_value = MagicMock(content="Partial success interpretation.")
+    dummy_conv.chat.invoke.return_value = AIMessage(content="Partial success interpretation.")
     tool_calls = [
         {"name": "tool1", "args": {"x": 1}, "id": "id1"},
         {"name": "tool3", "args": {"z": 3}, "id": "id3"},  # This will raise an exception
@@ -327,15 +327,16 @@ def test_auto_mode_explain_tool_result_multiple_tools_with_error(dummy_conv, moc
 
     # Only successful tools should be included in explanation
     # Since only 1 tool succeeded, it should use single tool interpretation (not plural)
+    assert "Tool result interpretation: Partial success interpretation." in msg
+
+    # Should invoke chat.invoke once
     dummy_conv.chat.invoke.assert_called_once()
     call_args = dummy_conv.chat.invoke.call_args[0][0]
 
-    # Should only contain the successful tool result (not the full format since it's single tool)
+    # Since only one tool succeeded, it uses the single-tool format which just puts the raw result
     assert "result1" in call_args
-    # Should not contain the failed tool
+    # Failed tool should not be in the prompt
     assert "tool3" not in call_args
-    # Should use singular interpretation since only 1 tool succeeded
-    assert "Tool result interpretation: Partial success interpretation." in msg
 
     # Should append the interpretation as an AI message
     assert any(isinstance(m, AIMessage) and "Partial success interpretation." in m.content for m in dummy_conv.messages)
@@ -361,7 +362,7 @@ def test_auto_mode_explain_tool_result_three_tools(dummy_conv, mock_tools):
     tool4 = MockTool("tool4", result="result4")
     all_tools = mock_tools + [tool4]
 
-    dummy_conv.chat.invoke.return_value = MagicMock(content="Three tools interpretation.")
+    dummy_conv.chat.invoke.return_value = AIMessage(content="Three tools interpretation.")
     tool_calls = [
         {"name": "tool1", "args": {"x": 1}, "id": "id1"},
         {"name": "tool2", "args": {"y": 2}, "id": "id2"},
@@ -642,6 +643,7 @@ def test_langchain_conversation_track_tool_calls_parameter():
     """Test that LangChainConversation properly passes through track_tool_calls parameter."""
     from biochatter.llm_connect.langchain import LangChainConversation
     from unittest.mock import patch, MagicMock
+    from langchain_core.messages import AIMessage
 
     # Create a mock conversation instance
     with patch.object(LangChainConversation, "set_api_key", return_value=True):
@@ -659,10 +661,11 @@ def test_langchain_conversation_track_tool_calls_parameter():
         # Mock the _process_tool_calls method to verify it receives the parameter
         conv._process_tool_calls = MagicMock(return_value="tool result")
 
-        # Mock the chat and other necessary attributes
-        mock_response = MagicMock()
+        # Create a proper AIMessage mock instead of a generic MagicMock
+        mock_response = AIMessage(content="test content")
         mock_response.tool_calls = [{"name": "test_tool", "args": {}, "id": "test_id"}]
-        mock_response.content = "test content"
+        mock_response.usage_metadata = None  # Add usage_metadata attribute
+
         conv.chat = MagicMock()
         conv.chat.invoke = MagicMock(return_value=mock_response)
         conv.messages = []

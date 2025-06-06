@@ -169,9 +169,10 @@ class XinferenceConversation(Conversation):
             return str(e), None
 
         msg = response["choices"][0]["message"]["content"]
-        token_usage = response["usage"]
+        token_usage_raw = response["usage"]
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
-        self._update_usage_stats(self.model_name, token_usage)
+        self._update_usage_stats(self.model_name, token_usage_raw)
 
         self.append_ai_message(msg)
 
@@ -295,9 +296,10 @@ class XinferenceConversation(Conversation):
         )
 
         correction = response["choices"][0]["message"]["content"]
-        token_usage = response["usage"]
+        token_usage_raw = response["usage"]
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
-        self._update_usage_stats(self.ca_model_name, token_usage)
+        self._update_usage_stats(self.ca_model_name, token_usage_raw)
 
         return correction
 

@@ -260,7 +260,8 @@ class LiteLLMConversation(Conversation):
             return e, None
 
         msg = response.generations[0][0].text
-        token_usage = self.parse_llm_response(response)
+        token_usage_raw = self.parse_llm_response(response)
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
         self.append_ai_message(msg)
 
@@ -293,9 +294,10 @@ class LiteLLMConversation(Conversation):
         response = self.ca_chat.generate([ca_messages])
 
         correction = response.generations[0][0].text
-        token_usage = self.parse_llm_response(response)
+        token_usage_raw = self.parse_llm_response(response)
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
-        self._update_usage_stats(self.ca_model_name, token_usage)
+        self._update_usage_stats(self.ca_model_name, token_usage_raw)
 
         return correction
 

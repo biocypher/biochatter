@@ -134,7 +134,8 @@ class GeminiConversation(Conversation):
             msg = response.content
             self.append_ai_message(msg)
 
-        token_usage = response.usage_metadata["total_tokens"]
+        token_usage_raw = response.usage_metadata
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
         return msg, token_usage
 
@@ -171,6 +172,7 @@ class GeminiConversation(Conversation):
         response = self.ca_chat.invoke(ca_messages)
 
         correction = response.content
-        token_usage = response.usage_metadata["total_tokens"]
+        token_usage_raw = response.usage_metadata
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
         return correction
