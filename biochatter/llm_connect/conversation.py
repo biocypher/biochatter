@@ -110,7 +110,7 @@ class Conversation(ABC):
         tool_call_mode: Literal["auto", "text"] = "auto",
         mcp: bool = False,
         additional_tools_instructions: str = None,
-        force_tool: bool = False
+        force_tool: bool = False,
     ) -> None:
         super().__init__()
         self.model_name = model_name
@@ -255,7 +255,7 @@ class Conversation(ABC):
         # If not, fail gracefully
         # raise ValueError(f"Model {self.model_name} does not support tool calling.")
 
-    def append_ai_message(self, message: str) -> None:
+    def append_ai_message(self, message: str | AIMessage) -> None:
         """Add a message from the AI to the conversation.
 
         Args:
@@ -263,11 +263,16 @@ class Conversation(ABC):
             message (str): The message from the AI.
 
         """
-        self.messages.append(
-            AIMessage(
-                content=message,
-            ),
-        )
+        if isinstance(message, AIMessage):
+            self.messages.append(message)
+        elif isinstance(message, str):
+            self.messages.append(
+                AIMessage(
+                    content=message,
+                ),
+            )
+        else:
+            raise ValueError(f"Invalid message type: {type(message)}")
 
     def append_system_message(self, message: str) -> None:
         """Add a system message to the conversation.
@@ -474,6 +479,10 @@ class Conversation(ABC):
             wrap_structured_output=wrap_structured_output,
             track_tool_calls=track_tool_calls,
         )
+
+        #case of structured output
+        if (token_usage == -1) and structured_model:
+            return (msg, 0, None)
 
         if not token_usage:
             # indicates error
