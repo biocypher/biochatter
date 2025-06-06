@@ -196,6 +196,60 @@ class Conversation(ABC):
                 return i, val
         return -1, None
 
+    def _extract_total_tokens(self, token_usage) -> int | None:
+        """Extract total tokens from various token usage formats.
+
+        This method standardizes token counting across different providers:
+        - OpenAI/Azure: {"prompt_tokens": X, "completion_tokens": Y, "total_tokens": Z}
+        - Anthropic: {"input_tokens": X, "output_tokens": Y} -> calculate total
+        - Gemini: {"total_tokens": Z} -> extract total
+        - Ollama: integer (eval_count) -> return as is
+        - LiteLLM: {"input_tokens": X, "output_tokens": Y, "total_tokens": Z}
+        - Others: try to extract or calculate total
+
+        Args:
+        ----
+            token_usage: Token usage in various formats (dict, int, or None)
+
+        Returns:
+        -------
+            int | None: Total token count, or None if not available
+
+        """
+        if token_usage is None:
+            return None
+
+        # Handle integer token counts (Ollama, some others)
+        if isinstance(token_usage, int):
+            return token_usage
+
+        # Handle dictionary token counts
+        if isinstance(token_usage, dict):
+            # First try to get total_tokens directly
+            if "total_tokens" in token_usage:
+                return token_usage["total_tokens"]
+
+            # Calculate from input/output tokens (Anthropic style)
+            if "input_tokens" in token_usage and "output_tokens" in token_usage:
+                return token_usage["input_tokens"] + token_usage["output_tokens"]
+
+            # Calculate from prompt/completion tokens (OpenAI style fallback)
+            if "prompt_tokens" in token_usage and "completion_tokens" in token_usage:
+                return token_usage["prompt_tokens"] + token_usage["completion_tokens"]
+
+            # If only one type of token count is available, use it
+            if "input_tokens" in token_usage:
+                return token_usage["input_tokens"]
+            if "output_tokens" in token_usage:
+                return token_usage["output_tokens"]
+            if "prompt_tokens" in token_usage:
+                return token_usage["prompt_tokens"]
+            if "completion_tokens" in token_usage:
+                return token_usage["completion_tokens"]
+
+        # If we can't extract meaningful token count, return None
+        return None
+
     @abstractmethod
     def set_api_key(self, api_key: str, user: str | None = None) -> None:
         """Set the API key."""
@@ -480,7 +534,7 @@ class Conversation(ABC):
             track_tool_calls=track_tool_calls,
         )
 
-        #case of structured output
+        # case of structured output
         if (token_usage == -1) and structured_model:
             return (msg, 0, None)
 

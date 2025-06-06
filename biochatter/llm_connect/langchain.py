@@ -185,7 +185,8 @@ class LangChainConversation(Conversation):
 
         # Structured output don't have tool calls attribute
         if hasattr(response, "tool_calls"):
-            token_usage = response.usage_metadata.get("total_tokens") if response.usage_metadata else None
+            token_usage_raw = response.usage_metadata if response.usage_metadata else None
+            token_usage = self._extract_total_tokens(token_usage_raw)
             # case in which the model called tools
             if len(response.tool_calls) > 0:
                 self.append_ai_message(response)
@@ -269,6 +270,7 @@ class LangChainConversation(Conversation):
         response = self.ca_chat.invoke(ca_messages)
 
         correction = response.content
-        token_usage = response.usage_metadata["total_tokens"]
+        token_usage_raw = response.usage_metadata
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
         return correction, token_usage

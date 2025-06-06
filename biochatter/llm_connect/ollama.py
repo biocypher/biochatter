@@ -167,9 +167,10 @@ class OllamaConversation(Conversation):
             return str(e), None
         response_dict = response.dict()
         msg = response_dict["content"]
-        token_usage = response_dict["response_metadata"]["eval_count"]
+        token_usage_raw = response_dict["response_metadata"]["eval_count"]
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
-        self._update_usage_stats(self.model_name, token_usage)
+        self._update_usage_stats(self.model_name, token_usage_raw)
 
         self.append_ai_message(msg)
 
@@ -218,9 +219,10 @@ class OllamaConversation(Conversation):
             chat_history=self._create_history(self.messages),
         ).dict()
         correction = response["content"]
-        token_usage = response["eval_count"]
+        token_usage_raw = response["eval_count"]
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
-        self._update_usage_stats(self.ca_model_name, token_usage)
+        self._update_usage_stats(self.ca_model_name, token_usage_raw)
 
         return correction
 
