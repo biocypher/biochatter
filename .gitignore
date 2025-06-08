@@ -15,6 +15,7 @@ benchmark/encrypted_llm_test_data.json
 site/
 benchmark/data/*
 !benchmark/data/benchmark_data.json
+!benchmark/data/benchmark_longevity_rag_data.yaml
 serve.sh
 .blast/*
 .api_results/*
