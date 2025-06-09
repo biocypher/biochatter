@@ -49,7 +49,8 @@ class TestLongevityResponseAndJudgement:
         # print("setup_method called")
         self.responses = []
         self.data = pd.DataFrame()
-        self.ITERATIONS = 2
+        self.ITERATIONS = 2 # defines number of rounds of judgement
+        self.NUM_RESPONSES = 4 # must match N_ITERATIONS in conftest.py
     
     @pytest.mark.order(1)
     def test_generate_responses(
@@ -282,7 +283,7 @@ class TestLongevityResponseAndJudgement:
             write_judgement_to_file(
                 judge_model = judge_name,
                 evaluated_model = data["model_name"],
-                iterations = f"{self.ITERATIONS}",
+                iterations = f"{self.NUM_RESPONSES}",
                 metric = judge_metric,
                 case_id = data["case_id"],
                 subtask = data["subtask"],

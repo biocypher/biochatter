@@ -67,7 +67,7 @@ def benchmark_already_executed(
 
         return task_executed(
             task_results = task_results,
-            filters = f"metric == '{metric}' and evaluated_model == '{model_name}' and model_name == '{judge_name}' and md5_hash == '{md5_hash}'",
+            filters = f"metric == '{metric}' and model_name == '{model_name}' and judge == '{judge_name}' and md5_hash == '{md5_hash}'",
         )
 
     return False
@@ -695,8 +695,8 @@ def return_or_create_judge_file(task: str, evaluated_model: str):
         results = pd.read_csv(path)
     except (pd.errors.EmptyDataError, FileNotFoundError):
         results = {
+            "judge": [],
             "model_name": [],
-            "evaluated_model": [],
             "iterations": [],
             "metric": [],
             "case_id": [],
@@ -710,7 +710,7 @@ def return_or_create_judge_file(task: str, evaluated_model: str):
             "type": [],
             "responses": [],
             "expected_answer": [],
-            "rating": [],
+            "score": [],
             "datetime": [],
             "biochatter_version": [],
         }
