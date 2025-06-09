@@ -62,7 +62,7 @@ You can make tools available to the model in two ways:
 
 ```python
 #import the conversation class
-from biochatter.conversation import LangChainConversation
+from biochatter.llm_connect import LangChainConversation
 
 # Tools definition is recycled from the previous section
 
@@ -93,7 +93,7 @@ Tools passed in this way remain accessible for **the entire conversation**.
 
 ```python
 #import the conversation class
-from biochatter.conversation import LangChainConversation
+from biochatter.llm_connect import LangChainConversation
 
 # Tools definition is recycled from the previous section
 
