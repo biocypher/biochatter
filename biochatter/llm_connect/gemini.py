@@ -1,3 +1,4 @@
+import warnings
 from collections.abc import Callable
 from typing import Literal
 
@@ -119,6 +120,10 @@ class GeminiConversation(Conversation):
                 the token usage.
 
         """
+        if kwargs:
+            kwargs.pop("tools", None)
+            warnings.warn(f"Warning: {kwargs} are not used by this class", UserWarning)
+
         # bind tools to the chat if provided in the query
         chat = self.chat.bind_tools(tools) if (tools and self.model_name in TOOL_CALLING_MODELS) else self.chat
 

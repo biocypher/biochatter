@@ -1,4 +1,5 @@
 import json
+import warnings
 from collections.abc import Callable
 
 import litellm
@@ -236,6 +237,9 @@ class LiteLLMConversation(Conversation):
             tuple: A tuple containing the response from the LLM API and the token usage.
 
         """
+        if kwargs:
+            warnings.warn(f"Warning: {kwargs} are not used by this class", UserWarning)
+
         try:
             response = self.chat.generate([self.messages])
         except (
@@ -344,7 +348,9 @@ class LiteLLMConversation(Conversation):
         models_info: dict = self.get_all_model_info()
         if model not in models_info:
             raise litellm.exceptions.NotFoundError(
-                f"{model} model's information is not available.", model=model, llm_provider="Unknown"
+                f"{model} model's information is not available.",
+                model=model,
+                llm_provider="Unknown",
             )
         return models_info[model]
 
@@ -362,7 +368,9 @@ class LiteLLMConversation(Conversation):
             model_info = self.get_model_info(model)
             if "max_tokens" not in model_info:
                 raise litellm.exceptions.NotFoundError(
-                    f"Max token information for {model} is not available.", model=model, llm_provider="Unknown"
+                    f"Max token information for {model} is not available.",
+                    model=model,
+                    llm_provider="Unknown",
                 )
             return model_info["max_tokens"]
         except litellm.exceptions.NotFoundError as e:

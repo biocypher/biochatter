@@ -1,3 +1,5 @@
+import warnings
+
 import openai
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
@@ -141,6 +143,9 @@ class XinferenceConversation(Conversation):
             usage.
 
         """
+        if kwargs:
+            warnings.warn(f"Warning: {kwargs} are not used by this class", UserWarning)
+
         try:
             history = self._create_history()
             # TODO this is for LLaMA2 arch, may be different for newer models

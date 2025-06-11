@@ -1,3 +1,5 @@
+import warnings
+
 import anthropic
 from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
@@ -104,6 +106,9 @@ class AnthropicConversation(Conversation):
                 the token usage.
 
         """
+        if kwargs:
+            warnings.warn(f"Warning: {kwargs} are not used by this class", UserWarning)
+
         try:
             history = self._create_history()
             response = self.chat.generate([history])

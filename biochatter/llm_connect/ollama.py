@@ -1,3 +1,5 @@
+import warnings
+
 import openai
 from langchain_community.chat_models import ChatOllama
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
@@ -142,6 +144,9 @@ class OllamaConversation(Conversation):
             usage.
 
         """
+        if kwargs:
+            warnings.warn(f"Warning: {kwargs} are not used by this class", UserWarning)
+
         try:
             messages = self._create_history(self.messages)
             response = self.model.invoke(

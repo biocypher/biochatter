@@ -1,3 +1,4 @@
+import warnings
 from collections.abc import Callable
 
 import openai
@@ -116,6 +117,9 @@ class GptConversation(Conversation):
                 token usage.
 
         """
+        if kwargs:
+            warnings.warn(f"Warning: {kwargs} are not used by this class", UserWarning)
+
         try:
             response = self.chat.generate([self.messages])
         except (
