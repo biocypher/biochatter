@@ -1,3 +1,4 @@
+import warnings
 from collections.abc import Callable
 from typing import Literal
 
@@ -119,6 +120,10 @@ class GeminiConversation(Conversation):
                 the token usage.
 
         """
+        if kwargs:
+            kwargs.pop("tools", None)
+            warnings.warn(f"Warning: {kwargs} are not used by this class", UserWarning)
+
         # bind tools to the chat if provided in the query
         chat = self.chat.bind_tools(tools) if (tools and self.model_name in TOOL_CALLING_MODELS) else self.chat
 
@@ -134,7 +139,8 @@ class GeminiConversation(Conversation):
             msg = response.content
             self.append_ai_message(msg)
 
-        token_usage = response.usage_metadata["total_tokens"]
+        token_usage_raw = response.usage_metadata
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
         return msg, token_usage
 
@@ -171,6 +177,7 @@ class GeminiConversation(Conversation):
         response = self.ca_chat.invoke(ca_messages)
 
         correction = response.content
-        token_usage = response.usage_metadata["total_tokens"]
+        token_usage_raw = response.usage_metadata
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
         return correction

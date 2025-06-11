@@ -1,3 +1,4 @@
+import warnings
 from collections.abc import Callable
 
 import openai
@@ -116,6 +117,9 @@ class GptConversation(Conversation):
                 token usage.
 
         """
+        if kwargs:
+            warnings.warn(f"Warning: {kwargs} are not used by this class", UserWarning)
+
         try:
             response = self.chat.generate([self.messages])
         except (
@@ -137,9 +141,10 @@ class GptConversation(Conversation):
             return str(e), None
 
         msg = response.generations[0][0].text
-        token_usage = response.llm_output.get("token_usage")
+        token_usage_raw = response.llm_output.get("token_usage")
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
-        self._update_usage_stats(self.model_name, token_usage)
+        self._update_usage_stats(self.model_name, token_usage_raw)
 
         self.append_ai_message(msg)
 
