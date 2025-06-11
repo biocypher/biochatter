@@ -5,7 +5,8 @@ description = "Backend library for conversational AI in biomedicine"
 authors = [
     {name = "Sebastian Lobentanzer", email = "sebastian.lobentanzer@gmail.com"},
     {name = "Shaohong Feng", email = "shaohong.feng.78@gmail.com"},
-    {name = "Andreas Maier", email = "andreas.maier-1@uni-hamburg.de"}
+    {name = "Andreas Maier", email = "andreas.maier-1@uni-hamburg.de"},
+    {name = "Francesco Carli", email = "francesco.carli94@gmail.com"}
 ]
 repository = "https://github.com/biocypher/biochatter"
 license = "MIT"
