@@ -10,7 +10,7 @@ import nltk
 import pytest
 
 from biochatter._misc import ensure_iterable
-from .conftest import return_response, calculate_bool_vector_score
+from .conftest import return_response, calculate_bool_vector_score, N_ITERATIONS
 from .benchmark_utils import (
     benchmark_already_executed,
     skip_if_already_run,
@@ -283,7 +283,7 @@ class TestLongevityResponseAndJudgement:
             write_judgement_to_file(
                 judge_model = judge_name,
                 evaluated_model = data["model_name"],
-                iterations = f"{self.NUM_RESPONSES}",
+                iterations = f"{N_ITERATIONS}",
                 metric = judge_metric,
                 case_id = data["case_id"],
                 subtask = data["subtask"],
