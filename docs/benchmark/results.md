@@ -113,3 +113,51 @@ In this set of tasks, we test LLM abilities to answer medical exam questions.
 === "Overall Performance"
 
     {{ read_csv('benchmark/results/processed/medical_exam.csv', colalign=("center","center","center","center","center")) }}
+
+## Validation Requirements
+
+In this set of tasks, we evaluated LLMs based on five validation requirements. The tests address the topic of personalized interventional medicine in geroscience. The tasks were conducted both without and with retrieval-augmented generation (RAG).
+
+Without **RAG**:
+
+=== "Comprehensiveness"
+
+    {{ read_csv('benchmark/results/processed/judge_no_rag_comprehensiveness.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Correctness"
+
+    {{ read_csv('benchmark/results/processed/judge_no_rag_correctness.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Usefulness"
+
+    {{ read_csv('benchmark/results/processed/judge_no_rag_usefulness.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Interpretability/Explainability"
+
+    {{ read_csv('benchmark/results/processed/judge_no_rag_interpretability_explainability.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Consideration of Toxicity"
+
+    {{ read_csv('benchmark/results/processed/judge_no_rag_toxicity.csv', colalign=("center","center","center","center","center")) }}
+
+With **RAG**:
+
+=== "Comprehensiveness"
+
+    {{ read_csv('benchmark/results/processed/judge_rag_comprehensiveness.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Correctness"
+
+    {{ read_csv('benchmark/results/processed/judge_rag_correctness.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Usefulness"
+
+    {{ read_csv('benchmark/results/processed/judge_rag_usefulness.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Interpretability/Explainability"
+
+    {{ read_csv('benchmark/results/processed/judge_rag_interpretability_explainability.csv', colalign=("center","center","center","center","center")) }}
+
+=== "Consideration of Toxicity"
+
+    {{ read_csv('benchmark/results/processed/judge_rag_toxicity.csv', colalign=("center","center","center","center","center")) }}

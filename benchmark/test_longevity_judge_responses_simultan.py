@@ -10,7 +10,7 @@ import nltk
 import pytest
 
 from biochatter._misc import ensure_iterable
-from .conftest import return_response, calculate_bool_vector_score
+from .conftest import return_response, calculate_bool_vector_score, N_ITERATIONS
 from .benchmark_utils import (
     benchmark_already_executed,
     skip_if_already_run,
@@ -49,7 +49,7 @@ class TestLongevityResponseAndJudgement:
         # print("setup_method called")
         self.responses = []
         self.data = pd.DataFrame()
-        self.ITERATIONS = 2
+        self.ITERATIONS = 2 # defines number of rounds of judgement
     
     @pytest.mark.order(1)
     def test_generate_responses(
@@ -282,7 +282,7 @@ class TestLongevityResponseAndJudgement:
             write_judgement_to_file(
                 judge_model = judge_name,
                 evaluated_model = data["model_name"],
-                iterations = f"{self.ITERATIONS}",
+                iterations = f"{N_ITERATIONS}",
                 metric = judge_metric,
                 case_id = data["case_id"],
                 subtask = data["subtask"],
