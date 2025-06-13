@@ -50,7 +50,6 @@ class TestLongevityResponseAndJudgement:
         self.responses = []
         self.data = pd.DataFrame()
         self.ITERATIONS = 2 # defines number of rounds of judgement
-        self.NUM_RESPONSES = 4 # must match N_ITERATIONS in conftest.py
     
     @pytest.mark.order(1)
     def test_generate_responses(
