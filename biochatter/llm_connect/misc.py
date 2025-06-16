@@ -145,11 +145,12 @@ class BloomConversation(Conversation):
         response = self.chat.generate([self._cast_messages(self.messages)])
 
         msg = response.generations[0][0].text
-        token_usage = {
+        token_usage_raw = {
             "prompt_tokens": 0,
             "completion_tokens": 0,
             "total_tokens": 0,
         }
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
         self.append_ai_message(msg)
 

@@ -1,3 +1,5 @@
+import warnings
+
 import openai
 from langchain_community.chat_models import ChatOllama
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
@@ -142,6 +144,9 @@ class OllamaConversation(Conversation):
             usage.
 
         """
+        if kwargs:
+            warnings.warn(f"Warning: {kwargs} are not used by this class", UserWarning)
+
         try:
             messages = self._create_history(self.messages)
             response = self.model.invoke(
@@ -167,9 +172,10 @@ class OllamaConversation(Conversation):
             return str(e), None
         response_dict = response.dict()
         msg = response_dict["content"]
-        token_usage = response_dict["response_metadata"]["eval_count"]
+        token_usage_raw = response_dict["response_metadata"]["eval_count"]
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
-        self._update_usage_stats(self.model_name, token_usage)
+        self._update_usage_stats(self.model_name, token_usage_raw)
 
         self.append_ai_message(msg)
 
@@ -218,9 +224,10 @@ class OllamaConversation(Conversation):
             chat_history=self._create_history(self.messages),
         ).dict()
         correction = response["content"]
-        token_usage = response["eval_count"]
+        token_usage_raw = response["eval_count"]
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
-        self._update_usage_stats(self.ca_model_name, token_usage)
+        self._update_usage_stats(self.ca_model_name, token_usage_raw)
 
         return correction
 

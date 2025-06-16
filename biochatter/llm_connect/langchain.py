@@ -25,6 +25,7 @@ class LangChainConversation(Conversation):
         tool_call_mode: Literal["auto", "text"] = "auto",
         async_mode: bool = False,
         mcp: bool = False,
+        force_tool: bool = False,
     ) -> None:
         """Initialise the LangChainConversation class.
 
@@ -48,6 +49,7 @@ class LangChainConversation(Conversation):
                 "text": Only return text output of the tool call.
             async_mode (bool): Whether to run in async mode. Defaults to False.
             mcp (bool): If you want to use MCP mode, this should be set to True.
+            force_tool (bool): If you want to force the model to use tools, this should be set to True.
 
         """
         super().__init__(
@@ -58,6 +60,7 @@ class LangChainConversation(Conversation):
             tools=tools,
             tool_call_mode=tool_call_mode,
             mcp=mcp,
+            force_tool=force_tool,
         )
 
         self.model_name = model_name
@@ -128,6 +131,7 @@ class LangChainConversation(Conversation):
             structured_model (BaseModel, optional): The structured output model to use.
             wrap_structured_output (bool, optional): Whether to wrap the structured output in JSON quotes.
             track_tool_calls (bool, optional): Whether to track the tool calls.
+
         Returns:
         -------
             tuple: A tuple containing the response message and token usage information.
@@ -159,7 +163,7 @@ class LangChainConversation(Conversation):
                 )
             )
 
-        if self.model_name in TOOL_CALLING_MODELS and not structured_model:
+        if (self.model_name in TOOL_CALLING_MODELS and not structured_model) or self.force_tool:
             chat = self.chat.bind_tools(available_tools)
         elif self.model_name not in TOOL_CALLING_MODELS and len(available_tools) > 0:
             self.tools_prompt = self._create_tool_prompt(
@@ -181,9 +185,11 @@ class LangChainConversation(Conversation):
 
         # Structured output don't have tool calls attribute
         if hasattr(response, "tool_calls"):
-            token_usage = None
+            token_usage_raw = response.usage_metadata if response.usage_metadata else None
+            token_usage = self._extract_total_tokens(token_usage_raw)
             # case in which the model called tools
             if len(response.tool_calls) > 0:
+                self.append_ai_message(response)
                 msg = self._process_tool_calls(
                     tool_calls=response.tool_calls,
                     available_tools=available_tools,
@@ -210,19 +216,16 @@ class LangChainConversation(Conversation):
                     # Treat as a regular message from the LLM.
                     msg = response.content  # Use original content
                     # Update token_usage, similar to 'no tool calls' or 'manual structured output' paths
-                    token_usage = response.usage_metadata.get("total_tokens") if response.usage_metadata else None
             # case where the model does not support structured output but the user has provided a structured model
             elif self.model_name not in STRUCTURED_OUTPUT_MODELS and structured_model:
                 # check that the output conforms to the structured model
                 pydantic_manual_validator(response.content, structured_model)
                 msg = response.content
-                token_usage = response.usage_metadata["total_tokens"]
 
             # no tool calls
             else:
                 msg = response.content
-                token_usage = response.usage_metadata["total_tokens"]
-                self.append_ai_message(msg)
+                self.append_ai_message(response)
 
         # even if there are no tool calls, the standard langchain output has a tool_calls attribute
         # therefore, this case only happens when the returned ouput from the invoke is a structured output
@@ -230,7 +233,8 @@ class LangChainConversation(Conversation):
             msg = response.model_dump_json()
             if wrap_structured_output:
                 msg = "```json\n" + msg + "\n```"
-            token_usage = None
+            # we don't return None because is used to signal an error, instead here we just can't count the tokens
+            token_usage = -1
             self.append_ai_message(msg)
 
         return msg, token_usage
@@ -266,6 +270,7 @@ class LangChainConversation(Conversation):
         response = self.ca_chat.invoke(ca_messages)
 
         correction = response.content
-        token_usage = response.usage_metadata["total_tokens"]
+        token_usage_raw = response.usage_metadata
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
         return correction, token_usage

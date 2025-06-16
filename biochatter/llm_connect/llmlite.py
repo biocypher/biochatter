@@ -1,4 +1,5 @@
 import json
+import warnings
 from collections.abc import Callable
 
 import litellm
@@ -236,6 +237,9 @@ class LiteLLMConversation(Conversation):
             tuple: A tuple containing the response from the LLM API and the token usage.
 
         """
+        if kwargs:
+            warnings.warn(f"Warning: {kwargs} are not used by this class", UserWarning)
+
         try:
             response = self.chat.generate([self.messages])
         except (
@@ -260,7 +264,8 @@ class LiteLLMConversation(Conversation):
             return e, None
 
         msg = response.generations[0][0].text
-        token_usage = self.parse_llm_response(response)
+        token_usage_raw = self.parse_llm_response(response)
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
         self.append_ai_message(msg)
 
@@ -293,9 +298,10 @@ class LiteLLMConversation(Conversation):
         response = self.ca_chat.generate([ca_messages])
 
         correction = response.generations[0][0].text
-        token_usage = self.parse_llm_response(response)
+        token_usage_raw = self.parse_llm_response(response)
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
-        self._update_usage_stats(self.ca_model_name, token_usage)
+        self._update_usage_stats(self.ca_model_name, token_usage_raw)
 
         return correction
 
@@ -342,7 +348,9 @@ class LiteLLMConversation(Conversation):
         models_info: dict = self.get_all_model_info()
         if model not in models_info:
             raise litellm.exceptions.NotFoundError(
-                f"{model} model's information is not available.", model=model, llm_provider="Unknown"
+                f"{model} model's information is not available.",
+                model=model,
+                llm_provider="Unknown",
             )
         return models_info[model]
 
@@ -360,7 +368,9 @@ class LiteLLMConversation(Conversation):
             model_info = self.get_model_info(model)
             if "max_tokens" not in model_info:
                 raise litellm.exceptions.NotFoundError(
-                    f"Max token information for {model} is not available.", model=model, llm_provider="Unknown"
+                    f"Max token information for {model} is not available.",
+                    model=model,
+                    llm_provider="Unknown",
                 )
             return model_info["max_tokens"]
         except litellm.exceptions.NotFoundError as e:
