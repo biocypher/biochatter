@@ -1343,6 +1343,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#validation-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation Requirements
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -14314,6 +14323,658 @@ Instructions can be explicit ("is this fragment relevant to the question?") or i
 <td style="text-align: center;">0.57735</td>
 <td style="text-align: center;">0.329599</td>
 <td style="text-align: right;">3</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<h2 id="validation-requirements">Validation Requirements</h2>
+<p>In this set of tasks, we evaluated LLMs based on five validation requirements. The tests address the topic of personalized interventional medicine in geroscience. The tasks were conducted both without and with retrieval-augmented generation (RAG).</p>
+<p>Without <strong>RAG</strong>:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="5:5"><input checked="checked" id="comprehensiveness" name="__tabbed_5" type="radio" /><input id="correctness" name="__tabbed_5" type="radio" /><input id="usefulness" name="__tabbed_5" type="radio" /><input id="interpretabilityexplainability" name="__tabbed_5" type="radio" /><input id="consideration-of-toxicity" name="__tabbed_5" type="radio" /><div class="tabbed-labels"><label for="comprehensiveness">Comprehensiveness</label><label for="correctness">Correctness</label><label for="usefulness">Usefulness</label><label for="interpretabilityexplainability">Interpretability/Explainability</label><label for="consideration-of-toxicity">Consideration of Toxicity</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Full model name</th>
+<th style="text-align: center;">Score achieved</th>
+<th style="text-align: center;">Score possible</th>
+<th style="text-align: center;">Score SD</th>
+<th style="text-align: center;">Accuracy</th>
+<th style="text-align: right;">Iterations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">gpt-4o-2024-11-20</td>
+<td style="text-align: center;">3402</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.06752</td>
+<td style="text-align: center;">0.8505</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">o3-mini</td>
+<td style="text-align: center;">2687</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.06074</td>
+<td style="text-align: center;">0.67175</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">deepseek-r1-distill-llama-70b</td>
+<td style="text-align: center;">1943</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.05637</td>
+<td style="text-align: center;">0.48575</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">gpt-4o-mini-2024-07-18</td>
+<td style="text-align: center;">1791</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.18732</td>
+<td style="text-align: center;">0.44775</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">qwen2.5-14b-instruct</td>
+<td style="text-align: center;">1680.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.20535</td>
+<td style="text-align: center;">0.42012</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">llama-3.2-3b-instruct</td>
+<td style="text-align: center;">1109</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.0874</td>
+<td style="text-align: center;">0.27725</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Full model name</th>
+<th style="text-align: center;">Score achieved</th>
+<th style="text-align: center;">Score possible</th>
+<th style="text-align: center;">Score SD</th>
+<th style="text-align: center;">Accuracy</th>
+<th style="text-align: right;">Iterations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">gpt-4o-2024-11-20</td>
+<td style="text-align: center;">2924</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.01817</td>
+<td style="text-align: center;">0.731</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">deepseek-r1-distill-llama-70b</td>
+<td style="text-align: center;">2756</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.02485</td>
+<td style="text-align: center;">0.689</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">qwen2.5-14b-instruct</td>
+<td style="text-align: center;">2718</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.01095</td>
+<td style="text-align: center;">0.6795</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">gpt-4o-mini-2024-07-18</td>
+<td style="text-align: center;">2632</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.02564</td>
+<td style="text-align: center;">0.658</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">o3-mini</td>
+<td style="text-align: center;">2616</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.0338</td>
+<td style="text-align: center;">0.654</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">llama-3.2-3b-instruct</td>
+<td style="text-align: center;">2092</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.09114</td>
+<td style="text-align: center;">0.523</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Full model name</th>
+<th style="text-align: center;">Score achieved</th>
+<th style="text-align: center;">Score possible</th>
+<th style="text-align: center;">Score SD</th>
+<th style="text-align: center;">Accuracy</th>
+<th style="text-align: right;">Iterations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">gpt-4o-2024-11-20</td>
+<td style="text-align: center;">3566</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.03465</td>
+<td style="text-align: center;">0.8915</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">o3-mini</td>
+<td style="text-align: center;">3147</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.02609</td>
+<td style="text-align: center;">0.78675</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">deepseek-r1-distill-llama-70b</td>
+<td style="text-align: center;">2800.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.05497</td>
+<td style="text-align: center;">0.70013</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">gpt-4o-mini-2024-07-18</td>
+<td style="text-align: center;">2764.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.09091</td>
+<td style="text-align: center;">0.69113</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">qwen2.5-14b-instruct</td>
+<td style="text-align: center;">2342</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.16641</td>
+<td style="text-align: center;">0.5855</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">llama-3.2-3b-instruct</td>
+<td style="text-align: center;">1746</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.08907</td>
+<td style="text-align: center;">0.4365</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Full model name</th>
+<th style="text-align: center;">Score achieved</th>
+<th style="text-align: center;">Score possible</th>
+<th style="text-align: center;">Score SD</th>
+<th style="text-align: center;">Accuracy</th>
+<th style="text-align: right;">Iterations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">gpt-4o-2024-11-20</td>
+<td style="text-align: center;">3748.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.04068</td>
+<td style="text-align: center;">0.93712</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">o3-mini</td>
+<td style="text-align: center;">3341.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.03216</td>
+<td style="text-align: center;">0.83538</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">deepseek-r1-distill-llama-70b</td>
+<td style="text-align: center;">3210.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.04667</td>
+<td style="text-align: center;">0.80263</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">gpt-4o-mini-2024-07-18</td>
+<td style="text-align: center;">3088.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.11361</td>
+<td style="text-align: center;">0.77212</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">qwen2.5-14b-instruct</td>
+<td style="text-align: center;">2611</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.19511</td>
+<td style="text-align: center;">0.65275</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">llama-3.2-3b-instruct</td>
+<td style="text-align: center;">2143.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.11997</td>
+<td style="text-align: center;">0.53588</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Full model name</th>
+<th style="text-align: center;">Score achieved</th>
+<th style="text-align: center;">Score possible</th>
+<th style="text-align: center;">Score SD</th>
+<th style="text-align: center;">Accuracy</th>
+<th style="text-align: right;">Iterations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">gpt-4o-2024-11-20</td>
+<td style="text-align: center;">3952</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.01251</td>
+<td style="text-align: center;">0.988</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">gpt-4o-mini-2024-07-18</td>
+<td style="text-align: center;">3886.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.01239</td>
+<td style="text-align: center;">0.97162</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">deepseek-r1-distill-llama-70b</td>
+<td style="text-align: center;">3854.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.01086</td>
+<td style="text-align: center;">0.96362</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">o3-mini</td>
+<td style="text-align: center;">3835</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.01818</td>
+<td style="text-align: center;">0.95875</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">llama-3.2-3b-instruct</td>
+<td style="text-align: center;">3554.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.04898</td>
+<td style="text-align: center;">0.88862</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">qwen2.5-14b-instruct</td>
+<td style="text-align: center;">3408.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.18944</td>
+<td style="text-align: center;">0.85212</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>With <strong>RAG</strong>:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="6:5"><input checked="checked" id="comprehensiveness_1" name="__tabbed_6" type="radio" /><input id="correctness_1" name="__tabbed_6" type="radio" /><input id="usefulness_1" name="__tabbed_6" type="radio" /><input id="interpretabilityexplainability_1" name="__tabbed_6" type="radio" /><input id="consideration-of-toxicity_1" name="__tabbed_6" type="radio" /><div class="tabbed-labels"><label for="comprehensiveness_1">Comprehensiveness</label><label for="correctness_1">Correctness</label><label for="usefulness_1">Usefulness</label><label for="interpretabilityexplainability_1">Interpretability/Explainability</label><label for="consideration-of-toxicity_1">Consideration of Toxicity</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Full model name</th>
+<th style="text-align: center;">Score achieved</th>
+<th style="text-align: center;">Score possible</th>
+<th style="text-align: center;">Score SD</th>
+<th style="text-align: center;">Accuracy</th>
+<th style="text-align: right;">Iterations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">gpt-4o-2024-11-20</td>
+<td style="text-align: center;">3031.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.06086</td>
+<td style="text-align: center;">0.75788</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">o3-mini</td>
+<td style="text-align: center;">2758</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.05266</td>
+<td style="text-align: center;">0.6895</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">qwen2.5-14b-instruct</td>
+<td style="text-align: center;">2225</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.04408</td>
+<td style="text-align: center;">0.55625</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">deepseek-r1-distill-llama-70b</td>
+<td style="text-align: center;">2134.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.02644</td>
+<td style="text-align: center;">0.53362</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">gpt-4o-mini-2024-07-18</td>
+<td style="text-align: center;">1813</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.17479</td>
+<td style="text-align: center;">0.45325</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">llama-3.2-3b-instruct</td>
+<td style="text-align: center;">1019.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.07838</td>
+<td style="text-align: center;">0.25488</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Full model name</th>
+<th style="text-align: center;">Score achieved</th>
+<th style="text-align: center;">Score possible</th>
+<th style="text-align: center;">Score SD</th>
+<th style="text-align: center;">Accuracy</th>
+<th style="text-align: right;">Iterations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">gpt-4o-2024-11-20</td>
+<td style="text-align: center;">2908</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.02197</td>
+<td style="text-align: center;">0.727</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">qwen2.5-14b-instruct</td>
+<td style="text-align: center;">2816</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.02329</td>
+<td style="text-align: center;">0.704</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">o3-mini</td>
+<td style="text-align: center;">2720</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.02574</td>
+<td style="text-align: center;">0.68</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">deepseek-r1-distill-llama-70b</td>
+<td style="text-align: center;">2708</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.00447</td>
+<td style="text-align: center;">0.677</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">gpt-4o-mini-2024-07-18</td>
+<td style="text-align: center;">2686</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.02632</td>
+<td style="text-align: center;">0.6715</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">llama-3.2-3b-instruct</td>
+<td style="text-align: center;">2536</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.02426</td>
+<td style="text-align: center;">0.634</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Full model name</th>
+<th style="text-align: center;">Score achieved</th>
+<th style="text-align: center;">Score possible</th>
+<th style="text-align: center;">Score SD</th>
+<th style="text-align: center;">Accuracy</th>
+<th style="text-align: right;">Iterations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">gpt-4o-2024-11-20</td>
+<td style="text-align: center;">3267</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.03612</td>
+<td style="text-align: center;">0.81675</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">o3-mini</td>
+<td style="text-align: center;">3070.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.03648</td>
+<td style="text-align: center;">0.76762</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">qwen2.5-14b-instruct</td>
+<td style="text-align: center;">2823.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.02041</td>
+<td style="text-align: center;">0.70588</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">deepseek-r1-distill-llama-70b</td>
+<td style="text-align: center;">2760</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.02968</td>
+<td style="text-align: center;">0.69</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">gpt-4o-mini-2024-07-18</td>
+<td style="text-align: center;">2581.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.0879</td>
+<td style="text-align: center;">0.64538</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">llama-3.2-3b-instruct</td>
+<td style="text-align: center;">1842.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.06809</td>
+<td style="text-align: center;">0.46062</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Full model name</th>
+<th style="text-align: center;">Score achieved</th>
+<th style="text-align: center;">Score possible</th>
+<th style="text-align: center;">Score SD</th>
+<th style="text-align: center;">Accuracy</th>
+<th style="text-align: right;">Iterations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">gpt-4o-2024-11-20</td>
+<td style="text-align: center;">3483.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.03944</td>
+<td style="text-align: center;">0.87088</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">o3-mini</td>
+<td style="text-align: center;">3288</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.04035</td>
+<td style="text-align: center;">0.822</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">deepseek-r1-distill-llama-70b</td>
+<td style="text-align: center;">3170.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.02518</td>
+<td style="text-align: center;">0.79262</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">qwen2.5-14b-instruct</td>
+<td style="text-align: center;">3136.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.03515</td>
+<td style="text-align: center;">0.78412</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">gpt-4o-mini-2024-07-18</td>
+<td style="text-align: center;">2811.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.09566</td>
+<td style="text-align: center;">0.70288</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">llama-3.2-3b-instruct</td>
+<td style="text-align: center;">2145</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.08587</td>
+<td style="text-align: center;">0.53625</td>
+<td style="text-align: right;">4</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="tabbed-block">
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Full model name</th>
+<th style="text-align: center;">Score achieved</th>
+<th style="text-align: center;">Score possible</th>
+<th style="text-align: center;">Score SD</th>
+<th style="text-align: center;">Accuracy</th>
+<th style="text-align: right;">Iterations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">o3-mini</td>
+<td style="text-align: center;">3809.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.0176</td>
+<td style="text-align: center;">0.95238</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">gpt-4o-mini-2024-07-18</td>
+<td style="text-align: center;">3729</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.02935</td>
+<td style="text-align: center;">0.93225</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">qwen2.5-14b-instruct</td>
+<td style="text-align: center;">3725</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.02091</td>
+<td style="text-align: center;">0.93125</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">gpt-4o-2024-11-20</td>
+<td style="text-align: center;">3724.5</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.02567</td>
+<td style="text-align: center;">0.93113</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">deepseek-r1-distill-llama-70b</td>
+<td style="text-align: center;">3682</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.02092</td>
+<td style="text-align: center;">0.9205</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td style="text-align: center;">llama-3.2-3b-instruct</td>
+<td style="text-align: center;">3432</td>
+<td style="text-align: center;">4000</td>
+<td style="text-align: center;">0.03228</td>
+<td style="text-align: center;">0.858</td>
+<td style="text-align: right;">4</td>
 </tr>
 </tbody>
 </table>
