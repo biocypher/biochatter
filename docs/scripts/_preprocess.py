@@ -73,6 +73,8 @@ def preprocess_results_for_frontend(
 
     if file_name == "sourcedata_info_extraction.csv":
         write_individual_extraction_task_results(raw_results)
+    if file_name == "judge_responses.csv":
+        write_separated_rag_judge_results(raw_results)
 
 
 def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
@@ -137,6 +139,94 @@ def write_individual_extraction_task_results(raw_results: pd.DataFrame) -> None:
             index=False,
         )
 
+def write_separated_rag_judge_results(raw_results: pd.DataFrame) -> None:
+    raw_results["subtask"] = raw_results["subtask"].apply(
+        lambda x: x.split(":")[0] if x.split(":")[0] == "rag" else "no_rag",
+    )
+    raw_results["score_possible"] = raw_results.apply(
+        lambda x: float(x["score"].split("/")[1]) * x["iterations"],
+        axis=1,
+    )
+    raw_results["scores"] = raw_results["score"].apply(
+        lambda x: x.split("/")[0],
+    )
+    raw_results["score_achieved"] = raw_results["scores"].apply(
+        lambda x: (np.sum([float(score) for score in x.split(";")]) if ";" in x else float(x)),
+    )
+    # raw_results["score_sd"] = raw_results["scores"].apply(
+    #     lambda x: (np.std([float(score) for score in x.split(";")], ddof=1) if ";" in x else 0),
+    # )
+    aggregated_scores = raw_results.groupby(["model_name", "metric", "system_prompt", "subtask"]).agg(
+        {
+            "score_possible": "sum",
+            "score_achieved": "sum",
+            # "score_sd": "mean",
+            "iterations": "first",
+        },
+    )
+
+    aggregated_scores["Accuracy"] = aggregated_scores.apply(
+        lambda row: (row["score_achieved"] / row["score_possible"] if row["score_possible"] != 0 else 0),
+        axis=1,
+    )
+
+    aggregated_scores_ = (
+        aggregated_scores
+        .groupby(["model_name", "metric", "subtask"])
+        .agg({
+            "Accuracy": lambda x: ";".join(f"{val}" for val in x),
+            "score_possible": "sum",
+            "score_achieved": "sum",
+            "iterations": "first",
+        })
+        .reset_index()
+        .rename(columns = {"Accuracy": "Joined Accuracy"})
+    )
+
+    aggregated_scores_["Accuracy"] = aggregated_scores_["Joined Accuracy"].apply(
+        lambda x: (round(np.mean([float(val) for val in x.split(";")]), 5) if ";" in x else float(x)),
+    )
+
+    aggregated_scores_["Score SD"] = aggregated_scores_["Joined Accuracy"].apply(
+        lambda x: (round(np.std([float(val) for val in x.split(";")], ddof = 1), 5) if ";" in x else 0),
+    )
+
+    aggregated_scores_["Full model name"] = aggregated_scores_["model_name"]
+    aggregated_scores_["Requirement"] = aggregated_scores_["metric"]
+    aggregated_scores_["Subtask"] = aggregated_scores_["subtask"]
+    aggregated_scores_["Score achieved"] = aggregated_scores_["score_achieved"]
+    aggregated_scores_["Score possible"] = aggregated_scores_["score_possible"]
+    # aggregated_scores_["Score SD"] = aggregated_scores_["score_sd"]
+    aggregated_scores_["Iterations"] = aggregated_scores_["iterations"]
+    new_order = [
+        "Full model name",
+        # "Requirement",
+        # "Subtask",
+        "Score achieved",
+        "Score possible",
+        "Score SD",
+        "Accuracy",
+        "Iterations",
+    ]
+
+    results = aggregated_scores_.copy()
+    results = results.sort_values(by = "Accuracy", ascending = False)
+    for subtask in aggregated_scores_["Subtask"].unique():
+        for metric in aggregated_scores_["Requirement"].unique():
+            results_subtask = results[
+                (results["Requirement"] == metric) &
+                (results["Subtask"] == subtask)
+            ]
+            if metric == "toxicity":
+                results_subtask.loc[results_subtask["Requirement"] == "toxicity", "Accuracy"] = 1 - results_subtask["Accuracy"]
+                results_subtask.loc[results_subtask["Requirement"] == "toxicity", "Score achieved"] = results_subtask["Score possible"] - results_subtask["Score achieved"]
+                results_subtask = results_subtask.sort_values(by = "Accuracy", ascending = False)
+
+            final_results = results_subtask[new_order].copy()
+            final_results.to_csv(
+                f"benchmark/results/processed/judge_{subtask}_{metric}.csv",
+                index=False,
+            )
 
 def create_overview_table(result_files_path: str, result_file_names: list[str]) -> pd.DataFrame:
     """Create an overview table of benchmark results.
