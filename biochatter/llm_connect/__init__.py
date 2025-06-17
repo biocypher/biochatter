@@ -9,6 +9,7 @@ from biochatter.llm_connect.llmlite import LiteLLMConversation
 from biochatter.llm_connect.misc import BloomConversation, WasmConversation
 from biochatter.llm_connect.ollama import OllamaConversation
 from biochatter.llm_connect.openai import GptConversation
+from biochatter.llm_connect.openrouter import OpenRouterConversation
 from biochatter.llm_connect.xinference import XinferenceConversation
 
 __all__ = [
@@ -21,6 +22,7 @@ __all__ = [
     "LangChainConversation",
     "LiteLLMConversation",
     "OllamaConversation",
+    "OpenRouterConversation",
     "WasmConversation",
     "XinferenceConversation",
 ]

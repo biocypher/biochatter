@@ -14,6 +14,16 @@ def prompt_engine():
     )
 
 
+@pytest.fixture
+def prompt_engine_custom_provider():
+    """Fixture for testing custom model provider."""
+    return BioCypherPromptEngine(
+        schema_config_or_info_path="test/test_schema_info.yaml",
+        model_provider="openai",
+        model_name="gpt-4",
+    )
+
+
 def test_biocypher_prompts(prompt_engine):
     assert list(prompt_engine.entities.keys()) == [
         "Protein",
@@ -31,6 +41,43 @@ def test_biocypher_prompts(prompt_engine):
 
     assert "name" in prompt_engine.entities.get("Protein").get("properties")
     assert prompt_engine.relationships.get("Phosphorylation").get("represented_as") == "edge"
+
+
+def test_biocypher_prompts_defaults_to_gemini():
+    """Test that BioCypherPromptEngine defaults to Google Gemini 2.0 flash."""
+    engine = BioCypherPromptEngine(
+        schema_config_or_info_path="test/test_schema_info.yaml",
+    )
+    assert engine.model_provider == "google_genai"
+    assert engine.model_name == "gemini-2.0-flash"
+
+
+def test_biocypher_prompts_custom_provider(prompt_engine_custom_provider):
+    """Test that BioCypherPromptEngine accepts custom model provider."""
+    assert prompt_engine_custom_provider.model_provider == "openai"
+    assert prompt_engine_custom_provider.model_name == "gpt-4"
+
+
+def test_get_conversation_uses_langchain():
+    """Test that _get_conversation creates LangChainConversation instances."""
+    engine = BioCypherPromptEngine(
+        schema_config_or_info_path="test/test_schema_info.yaml",
+        model_provider="openai",
+        model_name="gpt-4",
+    )
+
+    with patch("biochatter.prompts.LangChainConversation") as MockLangChainConversation:
+        mock_conversation = MockLangChainConversation.return_value
+
+        conversation = engine._get_conversation(model_provider="openai", model_name="gpt-4")
+
+        MockLangChainConversation.assert_called_once_with(
+            model_provider="openai",
+            model_name="gpt-4",
+            prompts={},
+            correct=False,
+        )
+        assert conversation == mock_conversation
 
 
 def test_entity_selection(prompt_engine):

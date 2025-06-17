@@ -1,3 +1,4 @@
+import warnings
 from collections.abc import Callable
 
 import openai
@@ -99,18 +100,26 @@ class GptConversation(Conversation):
             self._ca_chat = None
             return False
 
-    def _primary_query(self) -> tuple:
+    def _primary_query(self, **kwargs) -> tuple:
         """Query the OpenAI API with the user's message.
 
         Return the response using the message history (flattery system messages,
         prior conversation) as context. Correct the response if necessary.
 
-        Returns
+        Args:
+        ----
+            **kwargs: Keyword arguments (not used by this basic GPT implementation,
+                     but accepted for compatibility with the base Conversation interface)
+
+        Returns:
         -------
             tuple: A tuple containing the response from the OpenAI API and the
                 token usage.
 
         """
+        if kwargs:
+            warnings.warn(f"Warning: {kwargs} are not used by this class", UserWarning)
+
         try:
             response = self.chat.generate([self.messages])
         except (
@@ -132,9 +141,10 @@ class GptConversation(Conversation):
             return str(e), None
 
         msg = response.generations[0][0].text
-        token_usage = response.llm_output.get("token_usage")
+        token_usage_raw = response.llm_output.get("token_usage")
+        token_usage = self._extract_total_tokens(token_usage_raw)
 
-        self._update_usage_stats(self.model_name, token_usage)
+        self._update_usage_stats(self.model_name, token_usage_raw)
 
         self.append_ai_message(msg)
 

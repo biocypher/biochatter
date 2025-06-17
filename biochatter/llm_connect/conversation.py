@@ -110,6 +110,7 @@ class Conversation(ABC):
         tool_call_mode: Literal["auto", "text"] = "auto",
         mcp: bool = False,
         additional_tools_instructions: str = None,
+        force_tool: bool = False,
     ) -> None:
         super().__init__()
         self.model_name = model_name
@@ -130,6 +131,7 @@ class Conversation(ABC):
         self.tools_prompt = None
         self.mcp = mcp
         self.additional_tools_instructions = additional_tools_instructions if additional_tools_instructions else ""
+        self.force_tool = force_tool
 
     @property
     def chat(self):
@@ -194,6 +196,188 @@ class Conversation(ABC):
                 return i, val
         return -1, None
 
+    def _extract_total_tokens(self, token_usage: dict | int | None) -> int | None:
+        """Extract total tokens from various token usage formats.
+
+        This method standardizes token counting across different providers:
+        - OpenAI/Azure: {"prompt_tokens": X, "completion_tokens": Y, "total_tokens": Z}
+        - Anthropic: {"input_tokens": X, "output_tokens": Y} -> calculate total
+        - Gemini: {"total_tokens": Z} -> extract total
+        - Ollama: integer (eval_count) -> return as is
+        - LiteLLM: {"input_tokens": X, "output_tokens": Y, "total_tokens": Z}
+        - Others: try to extract or calculate total
+
+        Args:
+        ----
+            token_usage: Token usage in various formats (dict, int, or None)
+
+        Returns:
+        -------
+            int | None: Total token count, or None if not available
+
+        """
+        if token_usage is None:
+            return None
+
+        # Handle integer token counts (Ollama, some others)
+        if isinstance(token_usage, int):
+            return token_usage
+
+        # Handle dictionary token counts
+        if isinstance(token_usage, dict):
+            # First try to get total_tokens directly
+            if "total_tokens" in token_usage:
+                return token_usage["total_tokens"]
+
+            # Calculate from input/output tokens (Anthropic style)
+            if "input_tokens" in token_usage and "output_tokens" in token_usage:
+                return token_usage["input_tokens"] + token_usage["output_tokens"]
+
+            # Calculate from prompt/completion tokens (OpenAI style fallback)
+            if "prompt_tokens" in token_usage and "completion_tokens" in token_usage:
+                return token_usage["prompt_tokens"] + token_usage["completion_tokens"]
+
+            # If only one type of token count is available, use it
+            if "input_tokens" in token_usage:
+                return token_usage["input_tokens"]
+            if "output_tokens" in token_usage:
+                return token_usage["output_tokens"]
+            if "prompt_tokens" in token_usage:
+                return token_usage["prompt_tokens"]
+            if "completion_tokens" in token_usage:
+                return token_usage["completion_tokens"]
+
+        # If we can't extract meaningful token count, return None
+        return None
+
+    def _extract_input_tokens(self, token_usage: dict | int | None) -> int | None:
+        """Extract input tokens from various token usage formats.
+
+        This method standardizes input token counting across different providers:
+        - OpenAI/Azure: {"prompt_tokens": X, "completion_tokens": Y, "total_tokens": Z}
+        - Anthropic: {"input_tokens": X, "output_tokens": Y}
+        - Gemini: {"prompt_tokens": X, "candidates_tokens": Y, "total_tokens": Z}
+        - LiteLLM: {"input_tokens": X, "output_tokens": Y, "total_tokens": Z}
+        - Others: try to extract input/prompt tokens
+
+        Args:
+        ----
+            token_usage: Token usage in various formats (dict, int, or None)
+
+        Returns:
+        -------
+            int | None: Input token count, or None if not available
+
+        """
+        if token_usage is None:
+            return None
+
+        # Handle integer token counts (cannot distinguish input vs output)
+        if isinstance(token_usage, int):
+            return None
+
+        # Handle dictionary token counts
+        if isinstance(token_usage, dict):
+            # First try to get input_tokens (Anthropic, LiteLLM style)
+            if "input_tokens" in token_usage:
+                return token_usage["input_tokens"]
+
+            # Try prompt_tokens (OpenAI style)
+            if "prompt_tokens" in token_usage:
+                return token_usage["prompt_tokens"]
+
+        # If we can't extract meaningful input token count, return None
+        return None
+
+    def _extract_output_tokens(self, token_usage: dict | int | None) -> int | None:
+        """Extract output tokens from various token usage formats.
+
+        This method standardizes output token counting across different providers:
+        - OpenAI/Azure: {"prompt_tokens": X, "completion_tokens": Y, "total_tokens": Z}
+        - Anthropic: {"input_tokens": X, "output_tokens": Y}
+        - Gemini: {"prompt_tokens": X, "candidates_tokens": Y, "total_tokens": Z}
+        - LiteLLM: {"input_tokens": X, "output_tokens": Y, "total_tokens": Z}
+        - Others: try to extract output/completion tokens
+
+        Args:
+        ----
+            token_usage: Token usage in various formats (dict, int, or None)
+
+        Returns:
+        -------
+            int | None: Output token count, or None if not available
+
+        """
+        if token_usage is None:
+            return None
+
+        # Handle integer token counts (cannot distinguish input vs output)
+        if isinstance(token_usage, int):
+            return None
+
+        # Handle dictionary token counts
+        if isinstance(token_usage, dict):
+            # First try to get output_tokens (Anthropic, LiteLLM style)
+            if "output_tokens" in token_usage:
+                return token_usage["output_tokens"]
+
+            # Try completion_tokens (OpenAI style)
+            if "completion_tokens" in token_usage:
+                return token_usage["completion_tokens"]
+
+            # Try candidates_tokens (Gemini style)
+            if "candidates_tokens" in token_usage:
+                return token_usage["candidates_tokens"]
+
+        # If we can't extract meaningful output token count, return None
+        return None
+
+    def compute_cumulative_token_usage(self) -> dict:
+        """Compute the token usage by looping over the messages.
+
+        Extracts token usage information from each message's usage_metadata and
+        computes running cumulative totals throughout the conversation.
+        Handles various token usage formats from different LLM providers.
+
+        Returns
+        -------
+            dict: Token usage information with lists of running totals:
+                - "total_tokens": list[int] - running total at each message
+                - "input_tokens": list[int] - running input total at each message
+                - "output_tokens": list[int] - running output total at each message
+
+        """
+        # Initialize data structures
+        individual_usage = {
+            "total_tokens": [],
+            "input_tokens": [],
+            "output_tokens": [],
+        }
+
+        # Extract individual token counts for each AI message
+        for message in self.messages:
+            if isinstance(message, AIMessage):
+                usage_metadata = getattr(message, "usage_metadata", None)
+                individual_usage["total_tokens"].append(self._extract_total_tokens(usage_metadata))
+                individual_usage["input_tokens"].append(self._extract_input_tokens(usage_metadata))
+                individual_usage["output_tokens"].append(self._extract_output_tokens(usage_metadata))
+
+        # Compute running cumulative totals for each message
+        per_message_cumulative = {
+            "total_tokens": [],
+            "input_tokens": [],
+            "output_tokens": [],
+        }
+
+        for token_type in ["total_tokens", "input_tokens", "output_tokens"]:
+            running_total = 0
+            for count in individual_usage[token_type]:
+                if count is not None:
+                    running_total += count
+                per_message_cumulative[token_type].append(running_total)
+
+        return per_message_cumulative
+
     @abstractmethod
     def set_api_key(self, api_key: str, user: str | None = None) -> None:
         """Set the API key."""
@@ -253,7 +437,7 @@ class Conversation(ABC):
         # If not, fail gracefully
         # raise ValueError(f"Model {self.model_name} does not support tool calling.")
 
-    def append_ai_message(self, message: str) -> None:
+    def append_ai_message(self, message: str | AIMessage) -> None:
         """Add a message from the AI to the conversation.
 
         Args:
@@ -261,11 +445,16 @@ class Conversation(ABC):
             message (str): The message from the AI.
 
         """
-        self.messages.append(
-            AIMessage(
-                content=message,
-            ),
-        )
+        if isinstance(message, AIMessage):
+            self.messages.append(message)
+        elif isinstance(message, str):
+            self.messages.append(
+                AIMessage(
+                    content=message,
+                ),
+            )
+        else:
+            raise ValueError(f"Invalid message type: {type(message)}")
 
     def append_system_message(self, message: str) -> None:
         """Add a system message to the conversation.
@@ -386,6 +575,7 @@ class Conversation(ABC):
         additional_instructions_tool_interpretation: str | None = None,
         mcp: bool | None = None,
         return_tool_calls_as_ai_message: bool | None = None,
+        track_tool_calls: bool | None = None,
         **kwargs,
     ) -> tuple[str, dict | None, str | None]:
         """Query the LLM API using the user's query.
@@ -423,6 +613,8 @@ class Conversation(ABC):
             mcp (bool): If you want to use MCP mode, this should be set to True.
 
             return_tool_calls_as_ai_message (bool): If you want to return the tool calls as an AI message, this should be set to True.
+
+            track_tool_calls (bool): If you want to track the tool calls, this should be set to True.
 
             **kwargs: Additional keyword arguments.
 
@@ -467,11 +659,16 @@ class Conversation(ABC):
             return_tool_calls_as_ai_message=return_tool_calls_as_ai_message,
             structured_model=structured_model,
             wrap_structured_output=wrap_structured_output,
+            track_tool_calls=track_tool_calls,
         )
+
+        # case of structured output
+        if (token_usage == -1) and structured_model:
+            return (msg, 0, None)
 
         if not token_usage:
             # indicates error
-            return (msg, token_usage, None)
+            return (msg, None, None)
 
         if not self.correct:
             return (msg, token_usage, None)
@@ -510,8 +707,26 @@ class Conversation(ABC):
         return corrections
 
     @abstractmethod
-    def _primary_query(self, text: str) -> tuple[str, dict | None]:
-        """Run the primary query."""
+    def _primary_query(self, **kwargs) -> tuple[str, dict | None]:
+        """Run the primary query.
+
+        Args:
+        ----
+            **kwargs: Keyword arguments that may include:
+                - text: The user query.
+                - tools: List of tools for tool-calling models
+                - explain_tool_result: Whether to explain tool results
+                - return_tool_calls_as_ai_message: Whether to return tool calls as AI message
+                - structured_model: Structured output model
+                - wrap_structured_output: Whether to wrap structured output
+                - track_tool_calls: Whether to track tool calls
+                - Other model-specific parameters
+
+        Returns:
+        -------
+            tuple: A tuple containing the response message and token usage information.
+
+        """
 
     @abstractmethod
     def _correct_response(self, msg: str) -> str:
@@ -578,6 +793,7 @@ class Conversation(ABC):
         response_content: str,
         explain_tool_result: bool = False,
         return_tool_calls_as_ai_message: bool = False,
+        track_tool_calls: bool = False,
     ) -> str:
         """Process tool calls from the model response.
 
@@ -592,6 +808,7 @@ class Conversation(ABC):
             available_tools: The tools available in the chat.
             explain_tool_result (bool): Whether to explain the tool result.
             return_tool_calls_as_ai_message (bool): If you want to return the tool calls as an AI message, this should be set to True.
+            track_tool_calls (bool): If you want to track the tool calls, this should be set to True.
 
         Returns:
         -------
@@ -604,6 +821,9 @@ class Conversation(ABC):
         msg = ""
 
         if self.tool_call_mode == "auto":
+            # Collect tool results for collective explanation when multiple tools are called
+            tool_results_for_explanation = []
+
             for idx, tool_call in enumerate(tool_calls):
                 # Extract tool name and arguments
                 tool_name = tool_call["name"]
@@ -624,27 +844,25 @@ class Conversation(ABC):
                         # Add the tool result to the conversation
                         if return_tool_calls_as_ai_message:
                             self.append_ai_message(f"Tool call ({tool_name}) \nResult: {tool_result!s}")
-                            self.tool_calls.append({"name": tool_name, "args": tool_args, "id": tool_call_id})
                         else:
                             self.messages.append(
                                 ToolMessage(content=str(tool_result), name=tool_name, tool_call_id=tool_call_id)
+                            )
+
+                        if track_tool_calls:
+                            self.tool_calls.append(
+                                {"name": tool_name, "args": tool_args, "id": tool_call_id, "result": tool_result}
                             )
 
                         if idx > 0:
                             msg += "\n"
                         msg += f"Tool call ({tool_name}) result: {tool_result!s}"
 
+                        # Collect tool results for explanation if needed
                         if explain_tool_result:
-                            tool_result_interpretation = self.chat.invoke(
-                                TOOL_RESULT_INTERPRETATION_PROMPT.format(
-                                    original_question=self.last_human_prompt,
-                                    tool_result=tool_result,
-                                    general_instructions=self.general_instructions_tool_interpretation,
-                                    additional_instructions=self.additional_instructions_tool_interpretation,
-                                )
+                            tool_results_for_explanation.append(
+                                {"name": tool_name, "args": tool_args, "result": tool_result}
                             )
-                            self.append_ai_message(tool_result_interpretation.content)
-                            msg += f"\nTool result interpretation: {tool_result_interpretation.content}"
 
                     except Exception as e:
                         # Handle tool execution errors
@@ -652,7 +870,57 @@ class Conversation(ABC):
                         self.messages.append(
                             ToolMessage(content=error_message, name=tool_name, tool_call_id=tool_call_id)
                         )
-                        msg = error_message
+
+                        # Track failed tool calls
+                        if track_tool_calls:
+                            self.tool_calls.append(
+                                {"name": tool_name, "args": tool_args, "id": tool_call_id, "error": str(e)}
+                            )
+
+                        if idx > 0:
+                            msg += "\n"
+                        msg += error_message
+                # Handle missing/unknown tool
+                elif track_tool_calls:
+                    self.tool_calls.append(
+                        {"name": tool_name, "args": tool_args, "id": tool_call_id, "error": "Tool not found"}
+                    )
+
+            # Handle tool result explanation
+            if explain_tool_result and tool_results_for_explanation:
+                if len(tool_results_for_explanation) > 1:
+                    # Multiple tools: explain all results together
+                    combined_tool_results = "\n\n".join(
+                        [
+                            f"Tool: {tr['name']}\nArguments: {tr['args']}\nResult: {tr['result']}"
+                            for tr in tool_results_for_explanation
+                        ]
+                    )
+
+                    tool_result_interpretation = self.chat.invoke(
+                        TOOL_RESULT_INTERPRETATION_PROMPT.format(
+                            original_question=self.last_human_prompt,
+                            tool_result=combined_tool_results,
+                            general_instructions=self.general_instructions_tool_interpretation,
+                            additional_instructions=self.additional_instructions_tool_interpretation,
+                        )
+                    )
+                    self.messages.append(tool_result_interpretation)
+                    msg += f"\nTool results interpretation: {tool_result_interpretation.content}"
+                else:
+                    # Single tool: explain individual result (maintain current behavior)
+                    tool_result_data = tool_results_for_explanation[0]
+                    tool_result_interpretation = self.chat.invoke(
+                        TOOL_RESULT_INTERPRETATION_PROMPT.format(
+                            original_question=self.last_human_prompt,
+                            tool_result=tool_result_data["result"],
+                            general_instructions=self.general_instructions_tool_interpretation,
+                            additional_instructions=self.additional_instructions_tool_interpretation,
+                        )
+                    )
+                    self.messages.append(tool_result_interpretation)
+                    msg += f"\nTool result interpretation: {tool_result_interpretation.content}"
+
             return msg
 
         if self.tool_call_mode == "text":
@@ -804,3 +1072,4 @@ class Conversation(ABC):
         self.messages = []
         self.ca_messages = []
         self.current_statements = []
+        self.tool_calls.clear()

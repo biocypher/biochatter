@@ -282,11 +282,13 @@ def check_document_splitter(
 @patch("biochatter.vectorstore.OpenAIEmbeddings")
 @patch("biochatter.vectorstore.VectorDatabaseAgentMilvus")
 @patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")
-def test_split_by_characters(mock_textsplitter, mock_host, mock_embeddings):
+@patch("biochatter.vectorstore.GPT2TokenizerFast")
+def test_split_by_characters(mock_tokenizer, mock_textsplitter, mock_host, mock_embeddings):
     # character splitter
     mock_textsplitter.from_huggingface_tokenizer.return_value = mock_textsplitter()
     mock_textsplitter.from_tiktoken_encoder.return_value = mock_textsplitter()
     mock_textsplitter.return_value.split_documents.return_value = splitted_docs
+    mock_tokenizer.from_pretrained.return_value = mock_tokenizer()
     rag_agent = DocumentEmbedder(
         chunk_size=CHUNK_SIZE,
         chunk_overlap=CHUNK_OVERLAP,
