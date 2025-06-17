@@ -1,0 +1,7 @@
+Full model name,Score achieved,Score possible,Score SD,Accuracy,Iterations
+gpt-4o-2024-11-20,3031.5,4000.0,0.06086,0.75788,4
+o3-mini,2758.0,4000.0,0.05266,0.6895,4
+qwen2.5-14b-instruct,2225.0,4000.0,0.04408,0.55625,4
+deepseek-r1-distill-llama-70b,2134.5,4000.0,0.02644,0.53362,4
+gpt-4o-mini-2024-07-18,1813.0,4000.0,0.17479,0.45325,4
+llama-3.2-3b-instruct,1019.5,4000.0,0.07838,0.25488,4
