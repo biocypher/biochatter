@@ -20,6 +20,8 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      GIT_LFS_SKIP_SMUDGE: 1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
