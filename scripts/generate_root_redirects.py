@@ -30,7 +30,7 @@ REDIRECTS = {
     "podcast-reference": "latest/api-docs/podcast",
     "benchmark": "latest/benchmark/overview",
     "benchmark-results": "latest/benchmark/results",
-    "benchmark-developer": "latest/benchmark/developer"
+    "benchmark-developer": "latest/benchmark/developer",
 }
 
 # Output directory for your site
@@ -40,21 +40,21 @@ for old, new in REDIRECTS.items():
     # Remove leading/trailing slashes
     old = old.strip("/")
     new = new.strip("/")
-    
+
     # Create directory for the old path
     out_dir = os.path.join(SITE_ROOT, old)
     os.makedirs(out_dir, exist_ok=True)
-    
+
     # Calculate relative path from old to new
-    old_parts = old.split('/')
-    new_parts = new.split('/')
-    
+    old_parts = old.split("/")
+    new_parts = new.split("/")
+
     # Count how many levels deep the old path is
     depth = len(old_parts)
-    
+
     # Create relative path by going up the directory tree
-    relative_path = '../' * depth + new
-    
+    relative_path = "../" * depth + new
+
     # Write index.html with meta-refresh
     with open(os.path.join(out_dir, "index.html"), "w") as f:
         f.write(f"""<!DOCTYPE html>

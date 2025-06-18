@@ -17,7 +17,8 @@ class LiteLLMConversation(Conversation):
     and provides a unified way to interact with different LLM providers through
     LiteLLM, which supports models from OpenAI, Anthropic, HuggingFace, and more.
 
-    Attributes:
+    Attributes
+    ----------
         model_name (str): The name of the model to use.
         prompts (dict): Dictionary containing various prompts used in the conversation.
         correct (bool): Whether to use a correcting agent.
@@ -43,6 +44,7 @@ class LiteLLMConversation(Conversation):
         """Initialize a UnifiedConversation instance.
 
         Args:
+        ----
             model_name (str): The name of the model to use.
             prompts (dict): Dictionary containing various prompts used in the conversation.
             correct (bool): Whether to use a correcting agent. Defaults to False.
@@ -67,13 +69,16 @@ class LiteLLMConversation(Conversation):
         """Get a LiteLLM object for the specified model and API key.
 
         Args:
+        ----
             api_key (str): The API key for the LLM provider.
             model (str): The name of the model to use.
 
         Returns:
+        -------
             ChatLiteLLM: An instance of ChatLiteLLM configured with the specified model, temperature, max tokens and API key.
 
         Raises:
+        ------
             ValueError: If the API key is None.
             litellm.exceptions.AuthenticationError: If there is an authentication error.
             litellm.exceptions.InvalidRequestError: If the request is invalid.
@@ -132,13 +137,16 @@ class LiteLLMConversation(Conversation):
         """Set the API key for the LLM provider.
 
         Args:
+        ----
             api_key (str): The API key for the LLM provider.
             user (Union[str, None]): The username
 
         Returns:
+        -------
             bool: True if the API key is successfully set, False otherwise.
 
         Raises:
+        ------
             ValueError: If the model name or correction model name is not set.
             TypeError: If the LiteLLM object initialization fails.
             Exception: If there is an unexpected error.
@@ -232,6 +240,7 @@ class LiteLLMConversation(Conversation):
                      but accepted for compatibility with the base Conversation interface)
 
         Returns:
+        -------
             tuple: A tuple containing the response from the LLM API and the token usage.
 
         """
@@ -275,9 +284,11 @@ class LiteLLMConversation(Conversation):
         """Correct the response from the LLM.
 
         Args:
+        ----
             msg (str): The response message to correct.
 
         Returns:
+        -------
             str: The corrected response message.
 
         """
@@ -307,6 +318,7 @@ class LiteLLMConversation(Conversation):
         """Update the usage statistics.
 
         Args:
+        ----
             model (str): The model name.
             token_usage (dict): The token usage information.
 
@@ -337,9 +349,11 @@ class LiteLLMConversation(Conversation):
         """Get information about a specific model.
 
         Args:
+        ----
             model (str): The name of the model.
 
         Returns:
+        -------
             dict: A dictionary containing information about the specified model.
 
         """
@@ -356,9 +370,11 @@ class LiteLLMConversation(Conversation):
         """Get the maximum number of tokens for a specific model.
 
         Args:
+        ----
             model (str): The name of the model.
 
         Returns:
+        -------
             int: The maximum number of tokens for the specified model.
 
         """

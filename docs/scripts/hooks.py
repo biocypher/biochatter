@@ -13,6 +13,7 @@ import pandas as pd
 # Get the current directory
 CURRENT_DIR = Path(__file__).parent
 
+
 # Dynamically import local modules with full paths
 def import_local_module(module_name: str) -> None:
     """Import a local module."""
@@ -31,6 +32,7 @@ def import_local_module(module_name: str) -> None:
     sys.modules[module.__name__] = module
     spec.loader.exec_module(module)
     return module
+
 
 # Import the modules
 plotting = import_local_module("plotting")
@@ -63,6 +65,7 @@ project_root = str(Path(__file__).parent.parent.parent)
 for path in [current_dir, project_root]:
     if path not in sys.path:
         sys.path.insert(0, path)
+
 
 def on_pre_build() -> None:
     """Run pre-processing and plotting scripts.
