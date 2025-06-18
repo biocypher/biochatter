@@ -43,9 +43,6 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
 
-      - name: Build documentation
-        run: poetry run mkdocs build
-
       - name: Setup gh-pages branch
         run: |
           # Fetch the gh-pages branch
@@ -57,9 +54,12 @@ jobs:
 
       - name: Deploy documentation with mike
         run: |
-          # Extract version from pyproject.toml or use a default version
           VERSION=$(poetry version -s || echo "latest")
-          # Deploy the docs with mike
-          poetry run mike deploy --push --update-aliases --ignore-remote-status $VERSION latest
-          # Set the latest version as default
-          poetry run mike set-default --push latest
+          poetry run mike deploy --update-aliases --ignore-remote-status $VERSION latest
+          poetry run mike set-default latest
+
+      - name: Generate root-level HTML redirects
+        run: python scripts/generate_root_redirects.py
+
+      - name: Push documentation to gh-pages
+        run: poetry run mike push
