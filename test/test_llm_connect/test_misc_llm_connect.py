@@ -1,6 +1,7 @@
 """Tests for the miscellaneous LLM connect module."""
 
 import os
+import tempfile
 from unittest.mock import MagicMock, Mock, mock_open, patch
 
 import pytest
@@ -18,8 +19,28 @@ from biochatter.llm_connect import (
     OllamaConversation,
     WasmConversation,
 )
+from biochatter.llm_connect.conversation import Conversation
 
-from langchain_core.messages import AIMessage
+from langchain_core.messages import AIMessage, HumanMessage
+
+
+class MockConversation(Conversation):
+    """Mock conversation class for testing."""
+
+    def __init__(self):
+        super().__init__(model_name="test-model", prompts={})
+        self.messages = []
+
+    def set_api_key(self, api_key: str, user: str | None = None) -> None:
+        """Mock implementation."""
+
+    def _primary_query(self, **kwargs):
+        """Mock implementation."""
+        return "test response", {"total_tokens": 100}
+
+    def _correct_response(self, msg: str) -> str:
+        """Mock implementation."""
+        return "corrected response"
 
 
 def test_ollama_chatting():
@@ -179,3 +200,282 @@ def test_encode_image_from_url():
             mock_remove.assert_called_once_with("test_temp_file")
             assert isinstance(encoded_str, str)
             assert encoded_str == "base64string"
+
+
+def test_append_single_image_message():
+    """Test that append_image_message works with a single image (backward compatibility)."""
+    convo = MockConversation()
+
+    # Create a temporary image file
+    with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp_file:
+        # Create a simple image and save it
+        img = Image.new("RGB", (100, 100), color="red")
+        img.save(tmp_file.name, "JPEG")
+        tmp_path = tmp_file.name
+
+    try:
+        # Test with single image string
+        convo.append_image_message("Describe this image", tmp_path, local=True)
+
+        # Verify the message was added correctly
+        assert len(convo.messages) == 1
+        message = convo.messages[0]
+        assert isinstance(message, HumanMessage)
+        assert isinstance(message.content, list)
+        assert len(message.content) == 2  # text + 1 image
+
+        # Check text content
+        text_content = message.content[0]
+        assert text_content["type"] == "text"
+        assert text_content["text"] == "Describe this image"
+
+        # Check image content
+        image_content = message.content[1]
+        assert image_content["type"] == "image_url"
+        assert "image_url" in image_content
+        assert image_content["image_url"]["url"].startswith("data:image/jpeg;base64,")
+
+    finally:
+        # Clean up
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+
+
+def test_append_multiple_images_message():
+    """Test that append_image_message works with multiple images."""
+    convo = MockConversation()
+
+    # Create temporary image files
+    tmp_paths = []
+    for i in range(3):
+        with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp_file:
+            # Create a simple image with different colors
+            colors = ["red", "green", "blue"]
+            img = Image.new("RGB", (100, 100), color=colors[i])
+            img.save(tmp_file.name, "JPEG")
+            tmp_paths.append(tmp_file.name)
+
+    try:
+        # Test with multiple images
+        convo.append_image_message("Compare these images", tmp_paths, local=True)
+
+        # Verify the message was added correctly
+        assert len(convo.messages) == 1
+        message = convo.messages[0]
+        assert isinstance(message, HumanMessage)
+        assert isinstance(message.content, list)
+        assert len(message.content) == 4  # text + 3 images
+
+        # Check text content
+        text_content = message.content[0]
+        assert text_content["type"] == "text"
+        assert text_content["text"] == "Compare these images"
+
+        # Check image contents
+        for i in range(1, 4):
+            image_content = message.content[i]
+            assert image_content["type"] == "image_url"
+            assert "image_url" in image_content
+            assert image_content["image_url"]["url"].startswith("data:image/jpeg;base64,")
+
+    finally:
+        # Clean up
+        for tmp_path in tmp_paths:
+            if os.path.exists(tmp_path):
+                os.unlink(tmp_path)
+
+
+def test_append_mixed_local_and_remote_images():
+    """Test that append_image_message works with mixed local and remote images."""
+    convo = MockConversation()
+
+    # Create a temporary local image
+    with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp_file:
+        img = Image.new("RGB", (100, 100), color="red")
+        img.save(tmp_file.name, "JPEG")
+        tmp_path = tmp_file.name
+
+    try:
+        # Mock the encode_image_from_url function to avoid actual HTTP requests
+        with patch("biochatter.llm_connect.conversation.encode_image_from_url") as mock_encode_url:
+            mock_encode_url.return_value = "fake_base64_data"
+
+            # Test with mixed local and remote images
+            image_urls = [
+                tmp_path,  # local file
+                "https://example.com/image.jpg",  # remote URL
+            ]
+
+            convo.append_image_message("Compare these images", image_urls, local=False)
+
+            # Verify the message was added correctly
+            assert len(convo.messages) == 1
+            message = convo.messages[0]
+            assert isinstance(message, HumanMessage)
+            assert isinstance(message.content, list)
+            assert len(message.content) == 3  # text + 2 images
+
+            # Verify mock was called for the remote URL
+            mock_encode_url.assert_called_once_with("https://example.com/image.jpg")
+
+    finally:
+        # Clean up
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+
+
+def test_query_single_image():
+    """Test that query method works with a single image (backward compatibility)."""
+    convo = MockConversation()
+
+    # Create a temporary image file
+    with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp_file:
+        img = Image.new("RGB", (100, 100), color="blue")
+        img.save(tmp_file.name, "JPEG")
+        tmp_path = tmp_file.name
+
+    try:
+        # Test query with single image
+        result, token_usage, correction = convo.query("What do you see in this image?", image_url=tmp_path)
+
+        # Verify the query worked
+        assert result == "test response"
+        assert token_usage["total_tokens"] == 100
+        assert correction is None  # correct=False in MockConversation
+
+        # Verify the message was added correctly
+        assert len(convo.messages) == 1
+        message = convo.messages[0]
+        assert isinstance(message, HumanMessage)
+        assert isinstance(message.content, list)
+        assert len(message.content) == 2  # text + 1 image
+
+        # Check content structure
+        assert message.content[0]["type"] == "text"
+        assert message.content[0]["text"] == "What do you see in this image?"
+        assert message.content[1]["type"] == "image_url"
+
+    finally:
+        # Clean up
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+
+
+def test_query_multiple_images():
+    """Test that query method works with multiple images."""
+    convo = MockConversation()
+
+    # Create temporary image files
+    tmp_paths = []
+    for i in range(2):
+        with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp_file:
+            colors = ["purple", "orange"]
+            img = Image.new("RGB", (100, 100), color=colors[i])
+            img.save(tmp_file.name, "JPEG")
+            tmp_paths.append(tmp_file.name)
+
+    try:
+        # Test query with multiple images
+        result, token_usage, correction = convo.query("Compare these images", image_url=tmp_paths)
+
+        # Verify the query worked
+        assert result == "test response"
+        assert token_usage["total_tokens"] == 100
+        assert correction is None
+
+        # Verify the message was added correctly
+        assert len(convo.messages) == 1
+        message = convo.messages[0]
+        assert isinstance(message, HumanMessage)
+        assert isinstance(message.content, list)
+        assert len(message.content) == 3  # text + 2 images
+
+        # Check content structure
+        assert message.content[0]["type"] == "text"
+        assert message.content[0]["text"] == "Compare these images"
+
+        # Check both images
+        for i in range(1, 3):
+            assert message.content[i]["type"] == "image_url"
+            assert "image_url" in message.content[i]
+            assert message.content[i]["image_url"]["url"].startswith("data:image/jpeg;base64,")
+
+    finally:
+        # Clean up
+        for tmp_path in tmp_paths:
+            if os.path.exists(tmp_path):
+                os.unlink(tmp_path)
+
+
+def test_query_no_image():
+    """Test that query method works without images (text only)."""
+    convo = MockConversation()
+
+    # Test query without image
+    result, token_usage, correction = convo.query("Hello, how are you?")
+
+    # Verify the query worked
+    assert result == "test response"
+    assert token_usage["total_tokens"] == 100
+    assert correction is None
+
+    # Verify the message was added correctly
+    assert len(convo.messages) == 1
+    message = convo.messages[0]
+    assert isinstance(message, HumanMessage)
+    assert isinstance(message.content, str)  # Text-only message has string content
+    assert message.content == "Hello, how are you?"
+
+
+def test_query_with_local_parameter():
+    """Test that query method properly passes the local parameter to append_image_message."""
+    convo = MockConversation()
+
+    # Create a temporary image file
+    with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp_file:
+        img = Image.new("RGB", (100, 100), color="cyan")
+        img.save(tmp_file.name, "JPEG")
+        tmp_path = tmp_file.name
+
+    try:
+        # Test query with local=True (should work with local files)
+        result, token_usage, correction = convo.query("Analyze this local image", image_url=tmp_path, local=True)
+
+        # Verify the query worked
+        assert result == "test response"
+        assert token_usage["total_tokens"] == 100
+        assert correction is None
+
+        # Verify the message was added correctly
+        assert len(convo.messages) == 1
+        message = convo.messages[0]
+        assert isinstance(message, HumanMessage)
+        assert isinstance(message.content, list)
+        assert len(message.content) == 2  # text + 1 image
+
+        # Check that the image was encoded as base64 (indicates local=True worked)
+        assert message.content[1]["type"] == "image_url"
+        assert message.content[1]["image_url"]["url"].startswith("data:image/jpeg;base64,")
+
+        # Test with multiple images and local=True
+        convo.messages.clear()
+        result, token_usage, correction = convo.query(
+            "Compare these local images",
+            image_url=[tmp_path, tmp_path],  # Use same image twice for simplicity
+            local=True,
+        )
+
+        # Verify multiple images work with local parameter
+        assert result == "test response"
+        message = convo.messages[0]
+        assert len(message.content) == 3  # text + 2 images
+
+        # Both images should be encoded as base64
+        for i in [1, 2]:
+            assert message.content[i]["type"] == "image_url"
+            assert message.content[i]["image_url"]["url"].startswith("data:image/jpeg;base64,")
+
+    finally:
+        # Clean up
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
