@@ -3,13 +3,13 @@
 
 import json
 import re
-from pydantic import BaseModel
 from collections.abc import Generator, ItemsView, Iterable, KeysView, Mapping, ValuesView
 from typing import (
     Any,
 )
 
 import stringcase
+from pydantic import BaseModel
 
 __all__ = ["LIST_LIKE", "SIMPLE_TYPES", "ensure_iterable", "to_list"]
 

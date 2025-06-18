@@ -288,7 +288,9 @@ XINFERENCE_MODEL_NAMES = [
     for quantization in XINFERENCE_MODELS[model_name]["quantization"]
 ]
 
-BENCHMARKED_MODELS = OPENAI_MODEL_NAMES + ANTHROPIC_MODEL_NAMES + XINFERENCE_MODEL_NAMES + GROQ_MODEL_NAMES + LM_STUDIO_MODEL_NAMES
+BENCHMARKED_MODELS = (
+    OPENAI_MODEL_NAMES + ANTHROPIC_MODEL_NAMES + XINFERENCE_MODEL_NAMES + GROQ_MODEL_NAMES + LM_STUDIO_MODEL_NAMES
+)
 BENCHMARKED_MODELS.sort()
 
 # Xinference IP and port
@@ -309,6 +311,7 @@ METRICS = [
     # "interpretability_explainability",
     # "toxicity",
 ]
+
 
 @pytest.fixture(scope="session")
 def client():
@@ -356,28 +359,32 @@ def pytest_collection_modifyitems(items):
 def model_name(request):
     return request.param
 
+
 @pytest.fixture(params=JUDGES)
 def judge_name(request):
-    """
-    A Pytest fixture that provides parameterized model names for testing.
+    """Provide parameterized model names for testing.
 
-    This fixture iterates over the list of models defined in the global `JUDGES` 
-    variable, allowing each test that uses this fixture to be executed with a 
+    This fixture iterates over the list of models defined in the global `JUDGES`
+    variable, allowing each test that uses this fixture to be executed with a
     different model name.
 
     Args:
-        request (FixtureRequest): A built-in Pytest object that provides access 
+    ----
+        request (FixtureRequest): A built-in Pytest object that provides access
         to the current parameter (`request.param`).
 
     Returns:
+    -------
         str: A model name from the `JUDGES` list.
-    """
 
+    """
     return request.param
+
 
 @pytest.fixture(params=METRICS)
 def judge_metric(request):
     return request.param
+
 
 @pytest.fixture
 def multiple_testing(request):
@@ -397,6 +404,7 @@ def calculate_bool_vector_score(vector: list[bool]) -> tuple[int, int]:
     max_score = len(vector)
     return (score, max_score)
 
+
 @pytest.fixture
 def multiple_responses(request):
     def run_multiple_times(test_func, *args, **kwargs):
@@ -404,18 +412,22 @@ def multiple_responses(request):
         for _ in range(N_ITERATIONS):
             response = test_func(*args, **kwargs)
             cleaned_response = re.sub(r"\n\d*", "", response[0])
-            responses.append(cleaned_response.replace(".. ", ".").replace(":. ", ": ").replace(".", ". ").replace(".  ", ". "))
+            responses.append(
+                cleaned_response.replace(".. ", ".").replace(":. ", ": ").replace(".", ". ").replace(".  ", ". ")
+            )
         resps = [resp for resp in responses]
         return (N_ITERATIONS, resps)
 
     return run_multiple_times
 
+
 def return_response(response: list):
     return response
 
+
 @pytest.fixture
 def conversation(request, model_name, client) -> Conversation:
-    """Return conversation object.
+    """Return a conversation object.
 
     Could skip due to the test having been run before (but not sure how to
     implement yet). If not skipped, will create a conversation object for
@@ -447,7 +459,7 @@ def conversation(request, model_name, client) -> Conversation:
             os.getenv("ANTHROPIC_API_KEY"),
             user="benchmark_user",
         )
-    
+
     elif model_name in GROQ_MODEL_NAMES:
         print(model_name)
         conversation = GptConversation(
@@ -460,7 +472,7 @@ def conversation(request, model_name, client) -> Conversation:
             os.getenv("GROQ_API_KEY"),
             user="benchmark_user",
         )
-    
+
     elif model_name in LM_STUDIO_MODEL_NAMES:
         print(model_name)
         conversation = GptConversation(
@@ -544,16 +556,18 @@ def prompt_engine(request, model_name, conversation):
 
     return setup_prompt_engine
 
-@pytest.fixture()
+
+@pytest.fixture
 def judge_conversation(judge_name):
     if judge_name in OPENAI_JUDGE:
         conversation = GptConversation(
-            model_name = judge_name,
-            prompts = {},
-            correct = False,
+            model_name=judge_name,
+            prompts={},
+            correct=False,
         )
-        conversation.set_api_key(os.getenv("OPENAI_API_KEY"), user = "benchmark_user")
+        conversation.set_api_key(os.getenv("OPENAI_API_KEY"), user="benchmark_user")
     return conversation
+
 
 @pytest.fixture
 def evaluation_conversation() -> Conversation:
@@ -623,21 +637,23 @@ def result_files():
 
     return result_files
 
+
 @pytest.fixture
 def test_judge_longevity_responses():
-    """Fixture to dynamically load judgment data."""
+    """Dynamically load judgment data."""
     path = "./benchmark/results/"
     if not os.path.exists(path) or not os.listdir(path):
         pytest.skip(f"No files found in directory: {path}")
-    
+
     try:
         JUDGEMENT_DATA = get_judgement_dataset(path)
         return JUDGEMENT_DATA["judgement"]
     except ValueError as e:
         pytest.fail(f"Failed to load judgment data: {e}")
 
+
 def pytest_generate_tests(metafunc):
-    """Generate test cases (Pytest hook).
+    """Generate test cases.
 
     Called once for each test case in the benchmark test collection.
     If fixture is part of test declaration, the test is parametrized.

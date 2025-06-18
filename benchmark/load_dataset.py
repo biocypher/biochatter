@@ -218,6 +218,7 @@ def _expand_multi_instruction(data_dict: dict) -> dict:
 
     return data_dict
 
+
 def _expand_longevity_test_cases(data_dict: dict) -> dict:
     expanded_test_list = []
 
@@ -243,7 +244,7 @@ def _expand_longevity_test_cases(data_dict: dict) -> dict:
 
             new_case["input"]["prompt"] = " ".join(str(v) for v in new_case["input"]["prompt"].values())
             new_case["input"]["prompt"] = new_case["input"]["prompt"].strip()
-            
+
             if "rag:" in new_case["case"]:
                 messages = rag_message_dict
             else:
@@ -255,6 +256,7 @@ def _expand_longevity_test_cases(data_dict: dict) -> dict:
                 expanded_test_list.append(final_case)
 
     return expanded_test_list
+
 
 def _get_private_key_from_env_variable() -> rsa.PrivateKey:
     """Get the private key from an environment variable.

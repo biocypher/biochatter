@@ -44,28 +44,6 @@ plugins:
   - table-reader
   - social
   - mike
-  - redirects:
-      redirect_maps:
-        "vignette-custom-bclight-simple.md": "vignettes/custom-bclight-simple.md"
-        "vignette-custom-bclight-advanced.md": "vignettes/custom-bclight-advanced.md"
-        "vignette-kg.md": "vignettes/kg.md"
-        "vignette-rag.md": "vignettes/rag.md"
-        "benchmarking.md": "features/benchmark.md"
-        "chat.md": "features/chat.md"
-        "rag.md": "features/rag.md"
-        "reflexion-agent.md": "features/reflexion-agent.md"
-        "open-llm.md": "features/open-llm.md"
-        "wasm.md": "features/wasm.md"
-        "podcast.md": "features/podcast.md"
-        "llm_connect-reference.md": "api-docs/llm_connect.md"
-        "vectorstore-reference.md": "api-docs/vectorstore.md"
-        "kg-reference.md": "api-docs/kg.md"
-        "api-reference.md": "api-docs/api-calling-base.md"
-        "reflexion-reference.md": "api-docs/reflexion.md"
-        "podcast-reference.md": "api-docs/podcast.md"
-        "benchmark.md": "benchmark/overview.md"
-        "benchmark-results.md": "benchmark/results.md"
-        "benchmark-developer.md": "benchmark/developer.md"
 
 site_url: https://biochatter.org/
 

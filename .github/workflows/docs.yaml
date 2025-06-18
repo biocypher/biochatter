@@ -20,11 +20,14 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      GIT_LFS_SKIP_SMUDGE: 1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch all history and branches
+          fetch-depth: 0
+          lfs: false
 
       - name: Configure Git Credentials
         run: |
@@ -42,9 +45,6 @@ jobs:
 
       - name: Install dependencies
         run: poetry install --no-interaction --no-root
-
-      - name: Build documentation
-        run: poetry run mkdocs build
 
       - name: Setup gh-pages branch
         run: |
