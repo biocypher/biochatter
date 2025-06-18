@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script>
+      // Preserve the fragment identifier during redirect
+      var target = '/latest/features/reflexion-agent' + window.location.hash;
+      window.location.href = target;
+    </script>
     <meta http-equiv="refresh" content="0; url=/latest/features/reflexion-agent" />
     <link rel="canonical" href="/latest/features/reflexion-agent" />
   </head>

@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script>
+      // Preserve the fragment identifier during redirect
+      var target = '/latest/api-docs/podcast' + window.location.hash;
+      window.location.href = target;
+    </script>
     <meta http-equiv="refresh" content="0; url=/latest/api-docs/podcast" />
     <link rel="canonical" href="/latest/api-docs/podcast" />
   </head>

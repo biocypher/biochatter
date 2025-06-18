@@ -16,9 +16,11 @@ REDIRECTS = {
     "benchmark": "latest/benchmark",
     "benchmark/results": "latest/benchmark/results",
     "chat": "latest/features/chat",
+    "features/chat": "latest/features/chat",
     "rag": "latest/features/rag",
-    "features/reflexion-agent": "latest/features/reflexion-agent",
+    "features/rag": "latest/features/rag",
     "reflexion-agent": "latest/features/reflexion-agent",
+    "features/reflexion-agent": "latest/features/reflexion-agent",
     "open-llm": "latest/features/open-llm",
     "wasm": "latest/features/wasm",
     "podcast": "latest/features/podcast",
@@ -43,19 +45,21 @@ for old, new in REDIRECTS.items():
     
     # Create directory for the old path
     out_dir = os.path.join(SITE_ROOT, old)
-    if os.path.exists(out_dir):
-        print(f"WARNING: Skipping redirect for /{old} because {out_dir} already exists.")
-        continue
     os.makedirs(out_dir, exist_ok=True)
     
     # Always use an absolute path for the redirect
     absolute_path = '/' + new
     
-    # Write index.html with meta-refresh
+    # Write index.html with meta-refresh and JavaScript
     with open(os.path.join(out_dir, "index.html"), "w") as f:
         f.write(f"""<!DOCTYPE html>
 <html>
   <head>
+    <script>
+      // Preserve the fragment identifier during redirect
+      var target = '{absolute_path}' + window.location.hash;
+      window.location.href = target;
+    </script>
     <meta http-equiv=\"refresh\" content=\"0; url={absolute_path}\" />
     <link rel=\"canonical\" href=\"{absolute_path}\" />
   </head>
@@ -64,4 +68,4 @@ for old, new in REDIRECTS.items():
   </body>
 </html>
 """)
-    print(f"Created redirect: /{old} -> {absolute_path}")
+    print(f"Updated redirect: /{old} -> {absolute_path}")
