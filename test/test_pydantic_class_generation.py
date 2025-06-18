@@ -56,5 +56,4 @@ def test_generate_pydantic_classes_umap():
         "spread",
         "b",
         "random_state",
-        "key_added",
     }
