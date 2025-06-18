@@ -49,3 +49,4 @@ jobs:
           BRANCH: coverage
           FOLDER: docs/coverage
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_LFS_SKIP_SMUDGE: 1
