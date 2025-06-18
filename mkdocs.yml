@@ -44,37 +44,6 @@ plugins:
   - table-reader
   - social
   - mike
-  - redirects:
-      redirect_maps:
-        "vignettes/custom-bclight-simple.md": "latest/vignettes/custom-bclight-simple"
-        "vignettes/custom-bclight-advanced.md": "latest/vignettes/custom-bclight-advanced"
-        "vignette-custom-bclight-simple.md": "latest/vignettes/custom-bclight-simple"
-        "vignette-custom-bclight-advanced.md": "latest/vignettes/custom-bclight-advanced"
-        "vignettes/custom-decider-use-case.md": "latest/vignettes/custom-decider-use-case"
-        "vignette-kg.md": "latest/vignettes/kg"
-        "vignettes/kg.md": "latest/vignettes/kg"
-        "vignette-rag.md": "latest/vignettes/rag"
-        "vignettes/rag.md": "latest/vignettes/rag"
-        "benchmarking.md": "latest/features/benchmark"
-        "benchmark/": "latest/benchmark"
-        "benchmark/results/": "latest/benchmark/results"
-        "chat.md": "latest/features/chat"
-        "rag.md": "latest/features/rag"
-        "features/reflexion-agent.md": "latest/features/reflexion-agent"
-        "reflexion-agent.md": "latest/features/reflexion-agent"
-        "open-llm.md": "latest/features/open-llm"
-        "wasm.md": "latest/features/wasm"
-        "podcast.md": "latest/features/podcast"
-        "llm_connect-reference.md": "latest/api-docs/llm_connect"
-        "api-docs/llm_connect.md": "latest/api-docs/llm_connect"
-        "vectorstore-reference.md": "latest/api-docs/vectorstore"
-        "kg-reference.md": "latest/api-docs/kg"
-        "api-reference.md": "latest/api-docs/api-calling-base"
-        "reflexion-reference.md": "latest/api-docs/reflexion"
-        "podcast-reference.md": "latest/api-docs/podcast"
-        "benchmark.md": "latest/benchmark/overview"
-        "benchmark-results.md": "latest/benchmark/results"
-        "benchmark-developer.md": "latest/benchmark/developer"
 
 site_url: https://biochatter.org/
 
