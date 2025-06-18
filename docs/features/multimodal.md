@@ -44,6 +44,39 @@ msg, token_usage, correction = conversation.query(
 )
 ```
 
+### Parsing PDF as images
+
+Recent multimodal models achieve strong performance on image processing tasks.
+To leverage this, we provide the `pdf_pages_to_images` utility, which converts a
+PDF into a list of page images. These images can be passed to the `query`
+method to enrich the context of your queries.
+
+Since PDF parsing can be noisy, especially when documents contain many embedded
+images, this option allows you to pass a list of pre-extracted images directly
+to the `query` method, enabling a fast document question-answering.
+
+```python
+from biochatter.utils import pdf_pages_to_images
+from biochatter.llm_connect import LangChainConversation
+
+convo = LangChainConversation(
+    model_name="gemini-2.5-flash-05-20-preview",
+    model_provider="google_genai",
+    prompts={},
+)
+
+convo.set_api_key()
+
+pdf_path = "/path/to/your/pdf.pdf"
+output_folder = "/path/to/output/folder"
+images = pdf_pages_to_images(pdf_path, output_folder)
+
+convo.query(
+    "Summarize the content of this document",
+    image_url=images,
+)
+```
+
 ### Open-source multimodal models
 
 While OpenAI models work seamlessly, open-source multimodal models can be buggy
