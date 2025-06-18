@@ -73,6 +73,23 @@ please join our community at https://biocypher.zulipchat.com!
 >
 > This disclaimer was adapted from the [Pooch](https://github.com/fatiando/pooch) project.
 
+## Git LFS Configuration
+
+This repository uses Git LFS for some large files. If you're a developer and don't need to work with these files, you have two options:
+
+1. Disable Git LFS smudge globally (set once for all repositories):
+```bash
+git lfs install --skip-smudge
+git clone https://github.com/biocypher/biochatter.git
+```
+
+2. Skip LFS files for a one-time clone:
+```bash
+GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/biocypher/biochatter.git
+```
+
+Both options will prevent Git LFS from downloading the large files while still allowing you to work with the repository normally.
+
 ## More information about LLMs
 
 Check out [this repository](https://github.com/csbl-br/awesome-compbio-chatgpt)
