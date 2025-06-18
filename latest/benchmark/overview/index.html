@@ -1,0 +1,4225 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://biochatter.org/latest/benchmark/overview/">
+      
+      
+        <link rel="prev" href="../../vignettes/custom-decider-use-case/">
+      
+      
+        <link rel="next" href="../results/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Overview - BioChatter</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Lato";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+      
+        <meta  property="og:type"  content="website" >
+      
+        <meta  property="og:title"  content="Overview - BioChatter" >
+      
+        <meta  property="og:description"  content="None" >
+      
+        <meta  property="og:image"  content="https://biochatter.org/latest/assets/images/social/benchmark/overview.png" >
+      
+        <meta  property="og:image:type"  content="image/png" >
+      
+        <meta  property="og:image:width"  content="1200" >
+      
+        <meta  property="og:image:height"  content="630" >
+      
+        <meta  property="og:url"  content="https://biochatter.org/latest/benchmark/overview/" >
+      
+        <meta  name="twitter:card"  content="summary_large_image" >
+      
+        <meta  name="twitter:title"  content="Overview - BioChatter" >
+      
+        <meta  name="twitter:description"  content="None" >
+      
+        <meta  name="twitter:image"  content="https://biochatter.org/latest/assets/images/social/benchmark/overview.png" >
+      
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#benchmark-results-overview" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="BioChatter" class="md-header__button md-logo" aria-label="BioChatter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            BioChatter
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Overview
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/biocypher/biochatter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    biocypher/biochatter
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../about/project/" class="md-tabs__link">
+          
+  
+  
+  About
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../installation/" class="md-tabs__link">
+          
+  
+  
+  Get Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../features/chat/" class="md-tabs__link">
+          
+  
+  
+  Learn
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Benchmark
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api-docs/llm_connect/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="BioChatter" class="md-nav__button md-logo" aria-label="BioChatter" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    BioChatter
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/biocypher/biochatter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    biocypher/biochatter
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    About
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            About
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/project/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Project
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/design-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Design Philosophy
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/use-cases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Use Cases
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Get Started
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Get Started
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quickstart
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learn
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Learn
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Tutorials
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            Tutorials
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Basic Usage - Chat
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/multimodal/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Multimodal Models
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Retrieval-Augmented Generation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/tool_chat/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    In Chat Tool Calling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Ad hoc API Calling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/structured_outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Structured outputs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/reflexion-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reflexion via LangGraph
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/open-llm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Open-source and Local LLMs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/benchmark/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The Living Benchmark
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/podcast/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Podcast my Paper
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../features/wasm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LLM in your Browser - WebAssembly
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    HowTo / FAQ
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            HowTo / FAQ
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/kg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Knowledge Graph RAG
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Retrieval-Augmented Generation (RAG)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/custom-bclight-simple/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Customising BioChatter Light - Simple
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/custom-bclight-advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Customising BioChatter Light - Advanced
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vignettes/custom-decider-use-case/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Customising BioChatter Light and Next - Cancer Genetics Use Case
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    Benchmark
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Benchmark
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#scores-per-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scores per model
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scores-per-quantisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scores per quantisation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scores-of-all-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scores of all tasks
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../results/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    All Results
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../developer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Developer Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_1" id="__nav_6_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    API Documentation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_1">
+            <span class="md-nav__icon md-icon"></span>
+            API Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-docs/llm_connect/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    LLM Connectivity
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-docs/vectorstore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Vectorstore Agent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-docs/kg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Knowledge Graph Agent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-docs/api-calling-base/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    API Calling: Base Classes
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-docs/api-calling-web/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    API Calling: Web APIs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-docs/api-calling-python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    API Calling: Python APIs
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-docs/reflexion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reflexion Agent
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api-docs/podcast/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Podcast
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/biocypher/biochatter/edit/main/docs/benchmark/overview.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="benchmark-results-overview">Benchmark Results - Overview</h1>
+<p>Here we collect the results of the living BioChatter benchmark. For an
+explanation, see the <a href="../../features/benchmark/">benchmarking documentation</a> and the
+<a href="../developer/">developer docs</a> for further reading.</p>
+<h2 id="scores-per-model">Scores per model</h2>
+<p>Table sorted by median score in descending order.
+Click the column names to reorder.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Model name</th>
+<th style="text-align: right;">Size</th>
+<th style="text-align: right;">Median Accuracy</th>
+<th style="text-align: right;">SD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">claude-3-opus-20240229</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: right;">0.77</td>
+<td style="text-align: right;">0.28</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-3.5-turbo-0125</td>
+<td style="text-align: right;">175</td>
+<td style="text-align: right;">0.77</td>
+<td style="text-align: right;">0.19</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-3.5-turbo-0613</td>
+<td style="text-align: right;">175</td>
+<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">0.21</td>
+</tr>
+<tr>
+<td style="text-align: left;">claude-3-5-sonnet-20240620</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">0.28</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4-0613</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">0.17</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4o-2024-08-06</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">0.24</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">0.29</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.72</td>
+<td style="text-align: right;">0.28</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4-0125-preview</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: right;">0.69</td>
+<td style="text-align: right;">0.26</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4o-mini-2024-07-18</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: right;">0.69</td>
+<td style="text-align: right;">0.22</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4-1106-preview</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: right;">0.69</td>
+<td style="text-align: right;">0.06</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4o-2024-05-13</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">0.31</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4-turbo-2024-04-09</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">0.27</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3-instruct</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">0.36</td>
+</tr>
+<tr>
+<td style="text-align: left;">openhermes-2.5</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">0.3</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4o-2024-11-20</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: right;">0.55</td>
+<td style="text-align: right;">0.14</td>
+</tr>
+<tr>
+<td style="text-align: left;">chatglm3</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.26</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">0.42</td>
+<td style="text-align: right;">0.34</td>
+</tr>
+<tr>
+<td style="text-align: left;">mistral-instruct-v0.2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">0.33</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">0.35</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.35</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.33</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.33</td>
+</tr>
+<tr>
+<td style="text-align: left;">mixtral-instruct-v0.1</td>
+<td style="text-align: right;">46,7</td>
+<td style="text-align: right;">0.34</td>
+<td style="text-align: right;">0.28</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">0.3</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Scatter Quantisation Name" src="../../images/scatter-per-quantisation-name.png" />
+<img alt="Boxplot Model" src="../../images/stripplot-per-model.png" /></p>
+<h2 id="scores-per-quantisation">Scores per quantisation</h2>
+<p>Table sorted by median score in descending order.
+Click the column names to reorder.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Model name</th>
+<th style="text-align: right;">Size</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Quantisation</th>
+<th style="text-align: right;">Median Accuracy</th>
+<th style="text-align: right;">SD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">claude-3-opus-20240229</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">0.77</td>
+<td style="text-align: right;">0.28</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-3.5-turbo-0125</td>
+<td style="text-align: right;">175</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">0.77</td>
+<td style="text-align: right;">0.19</td>
+</tr>
+<tr>
+<td style="text-align: left;">claude-3-5-sonnet-20240620</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">0.28</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-3.5-turbo-0613</td>
+<td style="text-align: right;">175</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">0.21</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q6_K</td>
+<td style="text-align: right;">0.74</td>
+<td style="text-align: right;">0.28</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">IQ2_M</td>
+<td style="text-align: right;">0.74</td>
+<td style="text-align: right;">0.29</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q5_K_M</td>
+<td style="text-align: right;">0.74</td>
+<td style="text-align: right;">0.28</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4-0613</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">0.17</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">IQ4_XS</td>
+<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">0.29</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4o-2024-08-06</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">0.73</td>
+<td style="text-align: right;">0.24</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q8_0</td>
+<td style="text-align: right;">0.72</td>
+<td style="text-align: right;">0.3</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q3_K_L</td>
+<td style="text-align: right;">0.71</td>
+<td style="text-align: right;">0.28</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q4_K_M</td>
+<td style="text-align: right;">0.7</td>
+<td style="text-align: right;">0.26</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">IQ4_XS</td>
+<td style="text-align: right;">0.69</td>
+<td style="text-align: right;">0.28</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4-1106-preview</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">0.69</td>
+<td style="text-align: right;">0.06</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4-0125-preview</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">0.69</td>
+<td style="text-align: right;">0.26</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4o-mini-2024-07-18</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">0.69</td>
+<td style="text-align: right;">0.22</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4-turbo-2024-04-09</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">0.27</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4o-2024-05-13</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">0.31</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q3_K_S</td>
+<td style="text-align: right;">0.67</td>
+<td style="text-align: right;">0.28</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3-instruct</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q8_0</td>
+<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">0.35</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3-instruct</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q4_K_M</td>
+<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">0.38</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3-instruct</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q6_K</td>
+<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">0.36</td>
+</tr>
+<tr>
+<td style="text-align: left;">openhermes-2.5</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q6_K</td>
+<td style="text-align: right;">0.62</td>
+<td style="text-align: right;">0.3</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3-instruct</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q5_K_M</td>
+<td style="text-align: right;">0.62</td>
+<td style="text-align: right;">0.36</td>
+</tr>
+<tr>
+<td style="text-align: left;">openhermes-2.5</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q5_K_M</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">0.29</td>
+</tr>
+<tr>
+<td style="text-align: left;">openhermes-2.5</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q8_0</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">0.3</td>
+</tr>
+<tr>
+<td style="text-align: left;">openhermes-2.5</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q4_K_M</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">0.3</td>
+</tr>
+<tr>
+<td style="text-align: left;">openhermes-2.5</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q3_K_M</td>
+<td style="text-align: right;">0.56</td>
+<td style="text-align: right;">0.3</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4o-2024-11-20</td>
+<td style="text-align: right;">Unknown</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: left;">nan</td>
+<td style="text-align: right;">0.55</td>
+<td style="text-align: right;">0.14</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q2_K</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.33</td>
+</tr>
+<tr>
+<td style="text-align: left;">openhermes-2.5</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q2_K</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.28</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q3_K_M</td>
+<td style="text-align: right;">0.49</td>
+<td style="text-align: right;">0.31</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q4_K_M</td>
+<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">0.39</td>
+</tr>
+<tr>
+<td style="text-align: left;">mistral-instruct-v0.2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q5_K_M</td>
+<td style="text-align: right;">0.46</td>
+<td style="text-align: right;">0.34</td>
+</tr>
+<tr>
+<td style="text-align: left;">mistral-instruct-v0.2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q6_K</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.34</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q3_K_M</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">0.31</td>
+</tr>
+<tr>
+<td style="text-align: left;">chatglm3</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">ggmlv3</td>
+<td style="text-align: left;">q4_0</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.26</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q5_K_M</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.35</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q4_K_M</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.35</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q6_K</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.35</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q8_0</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.33</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q5_K_M</td>
+<td style="text-align: right;">0.43</td>
+<td style="text-align: right;">0.32</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q3_K_M</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.33</td>
+</tr>
+<tr>
+<td style="text-align: left;">mistral-instruct-v0.2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q3_K_M</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.34</td>
+</tr>
+<tr>
+<td style="text-align: left;">mistral-instruct-v0.2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q8_0</td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">0.33</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q8_0</td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">0.34</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q8_0</td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">0.37</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q5_K_M</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.34</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q3_K_M</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.33</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q5_K_M</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.33</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q2_K</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.29</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q4_K_M</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.35</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q6_K</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.39</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q5_K_M</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.38</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q2_K</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.35</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q6_K</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">0.34</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q8_0</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">0.35</td>
+</tr>
+<tr>
+<td style="text-align: left;">mistral-instruct-v0.2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q2_K</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">0.29</td>
+</tr>
+<tr>
+<td style="text-align: left;">mistral-instruct-v0.2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q4_K_M</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">0.35</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q6_K</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">0.36</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q4_K_M</td>
+<td style="text-align: right;">0.36</td>
+<td style="text-align: right;">0.34</td>
+</tr>
+<tr>
+<td style="text-align: left;">mixtral-instruct-v0.1</td>
+<td style="text-align: right;">46,7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q4_K_M</td>
+<td style="text-align: right;">0.35</td>
+<td style="text-align: right;">0.3</td>
+</tr>
+<tr>
+<td style="text-align: left;">mixtral-instruct-v0.1</td>
+<td style="text-align: right;">46,7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q5_K_M</td>
+<td style="text-align: right;">0.34</td>
+<td style="text-align: right;">0.31</td>
+</tr>
+<tr>
+<td style="text-align: left;">mixtral-instruct-v0.1</td>
+<td style="text-align: right;">46,7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q6_K</td>
+<td style="text-align: right;">0.34</td>
+<td style="text-align: right;">0.29</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q5_K_M</td>
+<td style="text-align: right;">0.34</td>
+<td style="text-align: right;">0.29</td>
+</tr>
+<tr>
+<td style="text-align: left;">mixtral-instruct-v0.1</td>
+<td style="text-align: right;">46,7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q3_K_M</td>
+<td style="text-align: right;">0.33</td>
+<td style="text-align: right;">0.28</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q2_K</td>
+<td style="text-align: right;">0.33</td>
+<td style="text-align: right;">0.32</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q4_K_M</td>
+<td style="text-align: right;">0.33</td>
+<td style="text-align: right;">0.31</td>
+</tr>
+<tr>
+<td style="text-align: left;">mixtral-instruct-v0.1</td>
+<td style="text-align: right;">46,7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q8_0</td>
+<td style="text-align: right;">0.33</td>
+<td style="text-align: right;">0.25</td>
+</tr>
+<tr>
+<td style="text-align: left;">mixtral-instruct-v0.1</td>
+<td style="text-align: right;">46,7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q2_K</td>
+<td style="text-align: right;">0.32</td>
+<td style="text-align: right;">0.27</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q8_0</td>
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">0.28</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q6_K</td>
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">0.29</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q4_K_M</td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">0.29</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q3_K_M</td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">0.33</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q2_K</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">0.29</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q2_K</td>
+<td style="text-align: right;">0.17</td>
+<td style="text-align: right;">0.34</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: left;">ggufv2</td>
+<td style="text-align: left;">Q3_K_M</td>
+<td style="text-align: right;">0.15</td>
+<td style="text-align: right;">0.34</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Boxplot Quantisation" src="../../images/boxplot-per-quantisation.png" /></p>
+<h2 id="scores-of-all-tasks">Scores of all tasks</h2>
+<p>Wide table; you may need to scroll horizontally to see all columns.
+Table sorted by median score in descending order.
+Click the column names to reorder.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Full model name</th>
+<th style="text-align: right;">naive_query_generation_using_schema</th>
+<th style="text-align: right;">entity_selection</th>
+<th style="text-align: right;">sourcedata_info_extraction</th>
+<th style="text-align: right;">explicit_relevance_of_single_fragments</th>
+<th style="text-align: right;">property_selection</th>
+<th style="text-align: right;">relationship_selection</th>
+<th style="text-align: right;">api_calling</th>
+<th style="text-align: right;">query_generation</th>
+<th style="text-align: right;">medical_exam</th>
+<th style="text-align: right;">end_to_end_query_generation</th>
+<th style="text-align: right;">implicit_relevance_of_multiple_fragments</th>
+<th style="text-align: right;">multimodal_answer</th>
+<th style="text-align: right;">python_api_calling</th>
+<th style="text-align: right;">property_exists</th>
+<th style="text-align: right;">python_api_calling_reduced</th>
+<th style="text-align: right;">Mean Accuracy</th>
+<th style="text-align: right;">Median Accuracy</th>
+<th style="text-align: right;">SD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">claude-3-opus-20240229</td>
+<td style="text-align: right;">0.733333</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.691235</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">0.421875</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.944444</td>
+<td style="text-align: right;">0.805556</td>
+<td style="text-align: right;">0.655556</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.73503</td>
+<td style="text-align: right;">0.770293</td>
+<td style="text-align: right;">0.276411</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-3.5-turbo-0125</td>
+<td style="text-align: right;">0.514451</td>
+<td style="text-align: right;">0.978261</td>
+<td style="text-align: right;">0.510032</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.36747</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.746479</td>
+<td style="text-align: right;">0.953757</td>
+<td style="text-align: right;">0.671322</td>
+<td style="text-align: right;">0.919075</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.615789</td>
+<td style="text-align: right;">0.789474</td>
+<td style="text-align: right;">0.759615</td>
+<td style="text-align: right;">0.766123</td>
+<td style="text-align: right;">0.766123</td>
+<td style="text-align: right;">0.191717</td>
+</tr>
+<tr>
+<td style="text-align: left;">claude-3-5-sonnet-20240620</td>
+<td style="text-align: right;">0.633333</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.756088</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.375</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.966667</td>
+<td style="text-align: right;">0.7737</td>
+<td style="text-align: right;">0.733333</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.866667</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.736799</td>
+<td style="text-align: right;">0.764894</td>
+<td style="text-align: right;">0.283502</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-3.5-turbo-0613</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.888889</td>
+<td style="text-align: right;">0.575381</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.3625</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.946667</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.755556</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.736233</td>
+<td style="text-align: right;">0.755556</td>
+<td style="text-align: right;">0.211926</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct:8:ggufv2:Q6_K</td>
+<td style="text-align: right;">0.633333</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.394469</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.46875</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.955556</td>
+<td style="text-align: right;">0.751748</td>
+<td style="text-align: right;">0.733333</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.69126</td>
+<td style="text-align: right;">0.742541</td>
+<td style="text-align: right;">0.278015</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct:70:ggufv2:IQ2_M</td>
+<td style="text-align: right;">0.633333</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.626498</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.328125</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.955556</td>
+<td style="text-align: right;">0.772881</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.916667</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.712096</td>
+<td style="text-align: right;">0.742489</td>
+<td style="text-align: right;">0.293676</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct:8:ggufv2:Q5_K_M</td>
+<td style="text-align: right;">0.7</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.380477</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.4375</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.933333</td>
+<td style="text-align: right;">0.749117</td>
+<td style="text-align: right;">0.733333</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.690948</td>
+<td style="text-align: right;">0.741225</td>
+<td style="text-align: right;">0.279278</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4-0613</td>
+<td style="text-align: right;">0.682081</td>
+<td style="text-align: right;">0.920635</td>
+<td style="text-align: right;">0.668903</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.38253</td>
+<td style="text-align: right;">0.695652</td>
+<td style="text-align: right;">0.619048</td>
+<td style="text-align: right;">0.959538</td>
+<td style="text-align: right;">0.730912</td>
+<td style="text-align: right;">0.878613</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.489474</td>
+<td style="text-align: right;">0.666667</td>
+<td style="text-align: right;">0.769231</td>
+<td style="text-align: right;">0.747377</td>
+<td style="text-align: right;">0.730912</td>
+<td style="text-align: right;">0.174471</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct:70:ggufv2:IQ4_XS</td>
+<td style="text-align: right;">0.566667</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.699238</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.375</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.955556</td>
+<td style="text-align: right;">0.822581</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.706276</td>
+<td style="text-align: right;">0.728138</td>
+<td style="text-align: right;">0.285226</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4o-2024-08-06</td>
+<td style="text-align: right;">0.528302</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.711185</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.425439</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.874214</td>
+<td style="text-align: right;">0.850211</td>
+<td style="text-align: right;">0.830189</td>
+<td style="text-align: right;">0.666667</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.363158</td>
+<td style="text-align: right;">0.179894</td>
+<td style="text-align: right;">0.740385</td>
+<td style="text-align: right;">0.705357</td>
+<td style="text-align: right;">0.725785</td>
+<td style="text-align: right;">0.243719</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct:8:ggufv2:Q8_0</td>
+<td style="text-align: right;">0.660377</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.38907</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.565789</td>
+<td style="text-align: right;">0.142857</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.937107</td>
+<td style="text-align: right;">0.765734</td>
+<td style="text-align: right;">0.773585</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.161765</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.67239</td>
+<td style="text-align: right;">0.719062</td>
+<td style="text-align: right;">0.295232</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct:8:ggufv2:Q3_K_L</td>
+<td style="text-align: right;">0.622642</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.360379</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.486842</td>
+<td style="text-align: right;">0.142857</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.943396</td>
+<td style="text-align: right;">0.768421</td>
+<td style="text-align: right;">0.811321</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.655381</td>
+<td style="text-align: right;">0.711901</td>
+<td style="text-align: right;">0.280463</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct:8:ggufv2:Q4_K_M</td>
+<td style="text-align: right;">0.660377</td>
+<td style="text-align: right;">0.92</td>
+<td style="text-align: right;">0.382027</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.513158</td>
+<td style="text-align: right;">0.285714</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.924528</td>
+<td style="text-align: right;">0.741935</td>
+<td style="text-align: right;">0.735849</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.150538</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.649769</td>
+<td style="text-align: right;">0.698113</td>
+<td style="text-align: right;">0.257418</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct:8:ggufv2:IQ4_XS</td>
+<td style="text-align: right;">0.646018</td>
+<td style="text-align: right;">0.893939</td>
+<td style="text-align: right;">0.414621</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.387255</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.946903</td>
+<td style="text-align: right;">0.756944</td>
+<td style="text-align: right;">0.743363</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.439394</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.641979</td>
+<td style="text-align: right;">0.69469</td>
+<td style="text-align: right;">0.276449</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4-1106-preview</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.616216</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.767677</td>
+<td style="text-align: right;">0.691946</td>
+<td style="text-align: right;">0.691946</td>
+<td style="text-align: right;">0.0618335</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4-0125-preview</td>
+<td style="text-align: right;">0.456647</td>
+<td style="text-align: right;">0.824561</td>
+<td style="text-align: right;">0.689705</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0301205</td>
+<td style="text-align: right;">0.782609</td>
+<td style="text-align: right;">0.793651</td>
+<td style="text-align: right;">0.83815</td>
+<td style="text-align: right;">0.777159</td>
+<td style="text-align: right;">0.109827</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.508772</td>
+<td style="text-align: right;">0.619048</td>
+<td style="text-align: right;">0.769231</td>
+<td style="text-align: right;">0.621391</td>
+<td style="text-align: right;">0.689705</td>
+<td style="text-align: right;">0.259268</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4o-mini-2024-07-18</td>
+<td style="text-align: right;">0.537572</td>
+<td style="text-align: right;">0.921053</td>
+<td style="text-align: right;">0.684553</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">0.388554</td>
+<td style="text-align: right;">0.130435</td>
+<td style="text-align: right;">0.714286</td>
+<td style="text-align: right;">0.953757</td>
+<td style="text-align: right;">0.840796</td>
+<td style="text-align: right;">0.687861</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.98</td>
+<td style="text-align: right;">0.578947</td>
+<td style="text-align: right;">0.52439</td>
+<td style="text-align: right;">0.730769</td>
+<td style="text-align: right;">0.667087</td>
+<td style="text-align: right;">0.686207</td>
+<td style="text-align: right;">0.216242</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4-turbo-2024-04-09</td>
+<td style="text-align: right;">0.508671</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.650369</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.325301</td>
+<td style="text-align: right;">0.130435</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.83237</td>
+<td style="text-align: right;">0.83701</td>
+<td style="text-align: right;">0.635838</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">0.259649</td>
+<td style="text-align: right;">0.657143</td>
+<td style="text-align: right;">0.762821</td>
+<td style="text-align: right;">0.684972</td>
+<td style="text-align: right;">0.684972</td>
+<td style="text-align: right;">0.270175</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4o-2024-05-13</td>
+<td style="text-align: right;">0.537572</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.653946</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0301205</td>
+<td style="text-align: right;">0.130435</td>
+<td style="text-align: right;">0.809524</td>
+<td style="text-align: right;">0.809249</td>
+<td style="text-align: right;">0.763501</td>
+<td style="text-align: right;">0.115607</td>
+<td style="text-align: right;">0.7</td>
+<td style="text-align: right;">0.96</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.526316</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.618175</td>
+<td style="text-align: right;">0.676973</td>
+<td style="text-align: right;">0.312259</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3.1-instruct:70:ggufv2:Q3_K_S</td>
+<td style="text-align: right;">0.633333</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.642336</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.375</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.966667</td>
+<td style="text-align: right;">0.8</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.625</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.694758</td>
+<td style="text-align: right;">0.668547</td>
+<td style="text-align: right;">0.28438</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3-instruct:8:ggufv2:Q8_0</td>
+<td style="text-align: right;">0.666667</td>
+<td style="text-align: right;">0.875</td>
+<td style="text-align: right;">0.188555</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.28125</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.92</td>
+<td style="text-align: right;">0.640669</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.725</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.572467</td>
+<td style="text-align: right;">0.653668</td>
+<td style="text-align: right;">0.35454</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3-instruct:8:ggufv2:Q4_K_M</td>
+<td style="text-align: right;">0.666667</td>
+<td style="text-align: right;">0.861111</td>
+<td style="text-align: right;">0.116871</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.109375</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.92</td>
+<td style="text-align: right;">0.624884</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.775</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.552173</td>
+<td style="text-align: right;">0.645775</td>
+<td style="text-align: right;">0.376754</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3-instruct:8:ggufv2:Q6_K</td>
+<td style="text-align: right;">0.666667</td>
+<td style="text-align: right;">0.875</td>
+<td style="text-align: right;">0.162657</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.28125</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.926667</td>
+<td style="text-align: right;">0.623955</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.775</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.573745</td>
+<td style="text-align: right;">0.645311</td>
+<td style="text-align: right;">0.359165</td>
+</tr>
+<tr>
+<td style="text-align: left;">openhermes-2.5:7:ggufv2:Q6_K</td>
+<td style="text-align: right;">0.557078</td>
+<td style="text-align: right;">0.7675</td>
+<td style="text-align: right;">0.619167</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.126404</td>
+<td style="text-align: right;">0.896552</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.890411</td>
+<td style="text-align: right;">0.57423</td>
+<td style="text-align: right;">0.273973</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.113379</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.619881</td>
+<td style="text-align: right;">0.619524</td>
+<td style="text-align: right;">0.300867</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-3-instruct:8:ggufv2:Q5_K_M</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">0.875</td>
+<td style="text-align: right;">0.166434</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.1875</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.926667</td>
+<td style="text-align: right;">0.635097</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.549154</td>
+<td style="text-align: right;">0.617549</td>
+<td style="text-align: right;">0.360565</td>
+</tr>
+<tr>
+<td style="text-align: left;">openhermes-2.5:7:ggufv2:Q5_K_M</td>
+<td style="text-align: right;">0.56621</td>
+<td style="text-align: right;">0.758808</td>
+<td style="text-align: right;">0.579916</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.196629</td>
+<td style="text-align: right;">0.896552</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.917808</td>
+<td style="text-align: right;">0.571429</td>
+<td style="text-align: right;">0.26484</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.120988</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.624835</td>
+<td style="text-align: right;">0.602375</td>
+<td style="text-align: right;">0.293641</td>
+</tr>
+<tr>
+<td style="text-align: left;">openhermes-2.5:7:ggufv2:Q8_0</td>
+<td style="text-align: right;">0.497717</td>
+<td style="text-align: right;">0.628118</td>
+<td style="text-align: right;">0.600829</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.196629</td>
+<td style="text-align: right;">0.896552</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.90411</td>
+<td style="text-align: right;">0.577031</td>
+<td style="text-align: right;">0.237443</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.100629</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.603551</td>
+<td style="text-align: right;">0.60219</td>
+<td style="text-align: right;">0.296591</td>
+</tr>
+<tr>
+<td style="text-align: left;">openhermes-2.5:7:ggufv2:Q4_K_M</td>
+<td style="text-align: right;">0.479452</td>
+<td style="text-align: right;">0.66967</td>
+<td style="text-align: right;">0.597281</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.126404</td>
+<td style="text-align: right;">0.896552</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.894977</td>
+<td style="text-align: right;">0.586368</td>
+<td style="text-align: right;">0.246575</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.140921</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.603473</td>
+<td style="text-align: right;">0.600377</td>
+<td style="text-align: right;">0.299216</td>
+</tr>
+<tr>
+<td style="text-align: left;">openhermes-2.5:7:ggufv2:Q3_K_M</td>
+<td style="text-align: right;">0.47032</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.554488</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.171348</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.917808</td>
+<td style="text-align: right;">0.563959</td>
+<td style="text-align: right;">0.287671</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.156805</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.602036</td>
+<td style="text-align: right;">0.559223</td>
+<td style="text-align: right;">0.301462</td>
+</tr>
+<tr>
+<td style="text-align: left;">gpt-4o-2024-11-20</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.377193</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.730769</td>
+<td style="text-align: right;">0.553981</td>
+<td style="text-align: right;">0.553981</td>
+<td style="text-align: right;">0.144347</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:34:ggufv2:Q2_K</td>
+<td style="text-align: right;">0.566667</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.686667</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.444815</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.328199</td>
+</tr>
+<tr>
+<td style="text-align: left;">openhermes-2.5:7:ggufv2:Q2_K</td>
+<td style="text-align: right;">0.420091</td>
+<td style="text-align: right;">0.604444</td>
+<td style="text-align: right;">0.444054</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0168539</td>
+<td style="text-align: right;">0.655172</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.917808</td>
+<td style="text-align: right;">0.539106</td>
+<td style="text-align: right;">0.159817</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.18638</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.494884</td>
+<td style="text-align: right;">0.497442</td>
+<td style="text-align: right;">0.27656</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:7:ggufv2:Q3_K_M</td>
+<td style="text-align: right;">0.426667</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.873333</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.7</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.8</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.487037</td>
+<td style="text-align: right;">0.493519</td>
+<td style="text-align: right;">0.307716</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:7:ggufv2:Q4_K_M</td>
+<td style="text-align: right;">0.653333</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">0.138732</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.966667</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.469207</td>
+<td style="text-align: right;">0.469207</td>
+<td style="text-align: right;">0.38731</td>
+</tr>
+<tr>
+<td style="text-align: left;">mistral-instruct-v0.2:7:ggufv2:Q5_K_M</td>
+<td style="text-align: right;">0.466667</td>
+<td style="text-align: right;">0.444444</td>
+<td style="text-align: right;">0.385754</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.826667</td>
+<td style="text-align: right;">0.364146</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.688889</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.470597</td>
+<td style="text-align: right;">0.455556</td>
+<td style="text-align: right;">0.34385</td>
+</tr>
+<tr>
+<td style="text-align: left;">mistral-instruct-v0.2:7:ggufv2:Q6_K</td>
+<td style="text-align: right;">0.433333</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.367412</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.046875</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">0.366947</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.472536</td>
+<td style="text-align: right;">0.452935</td>
+<td style="text-align: right;">0.337974</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:34:ggufv2:Q3_K_M</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.786667</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.875</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.390185</td>
+<td style="text-align: right;">0.445093</td>
+<td style="text-align: right;">0.306514</td>
+</tr>
+<tr>
+<td style="text-align: left;">chatglm3:6:ggmlv3:q4_0</td>
+<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: right;">0.188284</td>
+<td style="text-align: right;">0.733333</td>
+<td style="text-align: right;">0.2875</td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.553333</td>
+<td style="text-align: right;">0.426704</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.275</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.463105</td>
+<td style="text-align: right;">0.444905</td>
+<td style="text-align: right;">0.260423</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat:70:ggufv2:Q5_K_M</td>
+<td style="text-align: right;">0.36</td>
+<td style="text-align: right;">0.444444</td>
+<td style="text-align: right;">0.210166</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.906667</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.777778</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.484905</td>
+<td style="text-align: right;">0.444444</td>
+<td style="text-align: right;">0.346535</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat:70:ggufv2:Q4_K_M</td>
+<td style="text-align: right;">0.42</td>
+<td style="text-align: right;">0.444444</td>
+<td style="text-align: right;">0.240936</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.92</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.755556</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.503094</td>
+<td style="text-align: right;">0.444444</td>
+<td style="text-align: right;">0.354692</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:13:ggufv2:Q6_K</td>
+<td style="text-align: right;">0.54</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.793333</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.825</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.387963</td>
+<td style="text-align: right;">0.443981</td>
+<td style="text-align: right;">0.345581</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:13:ggufv2:Q8_0</td>
+<td style="text-align: right;">0.566667</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.766667</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.37963</td>
+<td style="text-align: right;">0.439815</td>
+<td style="text-align: right;">0.334971</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:13:ggufv2:Q5_K_M</td>
+<td style="text-align: right;">0.566667</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.666667</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.78</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.775</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.36537</td>
+<td style="text-align: right;">0.432685</td>
+<td style="text-align: right;">0.320506</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat:70:ggufv2:Q3_K_M</td>
+<td style="text-align: right;">0.413333</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">0.197898</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.171875</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.906667</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.777778</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.430088</td>
+<td style="text-align: right;">0.413333</td>
+<td style="text-align: right;">0.327267</td>
+</tr>
+<tr>
+<td style="text-align: left;">mistral-instruct-v0.2:7:ggufv2:Q3_K_M</td>
+<td style="text-align: right;">0.466667</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">0.368974</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.046875</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.773333</td>
+<td style="text-align: right;">0.360411</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.666667</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.456024</td>
+<td style="text-align: right;">0.412499</td>
+<td style="text-align: right;">0.335885</td>
+</tr>
+<tr>
+<td style="text-align: left;">mistral-instruct-v0.2:7:ggufv2:Q8_0</td>
+<td style="text-align: right;">0.433333</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">0.351684</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0375</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.846667</td>
+<td style="text-align: right;">0.366947</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.644444</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.446719</td>
+<td style="text-align: right;">0.40014</td>
+<td style="text-align: right;">0.330107</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat:13:ggufv2:Q8_0</td>
+<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0762457</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.786667</td>
+<td style="text-align: right;">0.431373</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.711111</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.362309</td>
+<td style="text-align: right;">0.396841</td>
+<td style="text-align: right;">0.335904</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:7:ggufv2:Q8_0</td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.96</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.666667</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.391852</td>
+<td style="text-align: right;">0.395926</td>
+<td style="text-align: right;">0.37338</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:7:ggufv2:Q5_K_M</td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">0.111111</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.96</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.688889</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.388148</td>
+<td style="text-align: right;">0.394074</td>
+<td style="text-align: right;">0.340156</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat:13:ggufv2:Q3_K_M</td>
+<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.112631</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">0.428571</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.733333</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.357685</td>
+<td style="text-align: right;">0.393128</td>
+<td style="text-align: right;">0.325419</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat:13:ggufv2:Q5_K_M</td>
+<td style="text-align: right;">0.433333</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0766167</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.746667</td>
+<td style="text-align: right;">0.431373</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.644444</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.348403</td>
+<td style="text-align: right;">0.389888</td>
+<td style="text-align: right;">0.32518</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:7:ggufv2:Q2_K</td>
+<td style="text-align: right;">0.533333</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">0.0625</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.92</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.7</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.8</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.427685</td>
+<td style="text-align: right;">0.380509</td>
+<td style="text-align: right;">0.292686</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:34:ggufv2:Q4_K_M</td>
+<td style="text-align: right;">0.466667</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.906667</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.975</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.360926</td>
+<td style="text-align: right;">0.380463</td>
+<td style="text-align: right;">0.350483</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:7:ggufv2:Q6_K</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.96</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.775</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.422407</td>
+<td style="text-align: right;">0.37787</td>
+<td style="text-align: right;">0.391629</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:34:ggufv2:Q5_K_M</td>
+<td style="text-align: right;">0.466667</td>
+<td style="text-align: right;">0.125</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.419444</td>
+<td style="text-align: right;">0.376389</td>
+<td style="text-align: right;">0.384096</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat:70:ggufv2:Q2_K</td>
+<td style="text-align: right;">0.473333</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.215047</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.666667</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.375505</td>
+<td style="text-align: right;">0.375505</td>
+<td style="text-align: right;">0.352226</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat:13:ggufv2:Q6_K</td>
+<td style="text-align: right;">0.386667</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0781337</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.813333</td>
+<td style="text-align: right;">0.428571</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.775</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.361973</td>
+<td style="text-align: right;">0.37432</td>
+<td style="text-align: right;">0.342819</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:34:ggufv2:Q8_0</td>
+<td style="text-align: right;">0.466667</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.86</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.925</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.415</td>
+<td style="text-align: right;">0.374167</td>
+<td style="text-align: right;">0.353285</td>
+</tr>
+<tr>
+<td style="text-align: left;">mistral-instruct-v0.2:7:ggufv2:Q2_K</td>
+<td style="text-align: right;">0.573333</td>
+<td style="text-align: right;">0.222222</td>
+<td style="text-align: right;">0.331261</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.693333</td>
+<td style="text-align: right;">0.352941</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.388463</td>
+<td style="text-align: right;">0.370702</td>
+<td style="text-align: right;">0.294881</td>
+</tr>
+<tr>
+<td style="text-align: left;">mistral-instruct-v0.2:7:ggufv2:Q4_K_M</td>
+<td style="text-align: right;">0.366667</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">0.347025</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.826667</td>
+<td style="text-align: right;">0.365079</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.688889</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.447969</td>
+<td style="text-align: right;">0.365873</td>
+<td style="text-align: right;">0.348328</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:34:ggufv2:Q6_K</td>
+<td style="text-align: right;">0.473333</td>
+<td style="text-align: right;">0.125</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.853333</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.398333</td>
+<td style="text-align: right;">0.365833</td>
+<td style="text-align: right;">0.356636</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat:13:ggufv2:Q4_K_M</td>
+<td style="text-align: right;">0.366667</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0888675</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">0.428571</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.777778</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.356535</td>
+<td style="text-align: right;">0.361601</td>
+<td style="text-align: right;">0.336686</td>
+</tr>
+<tr>
+<td style="text-align: left;">mixtral-instruct-v0.1:46_7:ggufv2:Q4_K_M</td>
+<td style="text-align: right;">0.426667</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">0.193786</td>
+<td style="text-align: right;">0.166667</td>
+<td style="text-align: right;">0.1625</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.76</td>
+<td style="text-align: right;">0.368814</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.755556</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.378848</td>
+<td style="text-align: right;">0.351074</td>
+<td style="text-align: right;">0.301567</td>
+</tr>
+<tr>
+<td style="text-align: left;">mixtral-instruct-v0.1:46_7:ggufv2:Q5_K_M</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">0.422222</td>
+<td style="text-align: right;">0.235659</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.84</td>
+<td style="text-align: right;">0.352941</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.711111</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.376842</td>
+<td style="text-align: right;">0.343137</td>
+<td style="text-align: right;">0.313874</td>
+</tr>
+<tr>
+<td style="text-align: left;">mixtral-instruct-v0.1:46_7:ggufv2:Q6_K</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">0.475</td>
+<td style="text-align: right;">0.225524</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.826667</td>
+<td style="text-align: right;">0.34267</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.7</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.85</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.363927</td>
+<td style="text-align: right;">0.338002</td>
+<td style="text-align: right;">0.289705</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat:7:ggufv2:Q5_K_M</td>
+<td style="text-align: right;">0.3379</td>
+<td style="text-align: right;">0.57037</td>
+<td style="text-align: right;">0.0697591</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0337079</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.547945</td>
+<td style="text-align: right;">0.40056</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.155556</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.3378</td>
+<td style="text-align: right;">0.33785</td>
+<td style="text-align: right;">0.293711</td>
+</tr>
+<tr>
+<td style="text-align: left;">mixtral-instruct-v0.1:46_7:ggufv2:Q3_K_M</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">0.229622</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.065625</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.893333</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.777778</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.342969</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">0.278279</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat:7:ggufv2:Q2_K</td>
+<td style="text-align: right;">0.164384</td>
+<td style="text-align: right;">0.410256</td>
+<td style="text-align: right;">0.0361865</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.611872</td>
+<td style="text-align: right;">0.369748</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.324786</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.340961</td>
+<td style="text-align: right;">0.332873</td>
+<td style="text-align: right;">0.320018</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:13:ggufv2:Q4_K_M</td>
+<td style="text-align: right;">0.533333</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.775</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.330556</td>
+<td style="text-align: right;">0.331944</td>
+<td style="text-align: right;">0.30939</td>
+</tr>
+<tr>
+<td style="text-align: left;">mixtral-instruct-v0.1:46_7:ggufv2:Q8_0</td>
+<td style="text-align: right;">0.386667</td>
+<td style="text-align: right;">0.311111</td>
+<td style="text-align: right;">0.189177</td>
+<td style="text-align: right;">0.133333</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.846667</td>
+<td style="text-align: right;">0.358543</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.666667</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.340197</td>
+<td style="text-align: right;">0.325654</td>
+<td style="text-align: right;">0.248216</td>
+</tr>
+<tr>
+<td style="text-align: left;">mixtral-instruct-v0.1:46_7:ggufv2:Q2_K</td>
+<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.157514</td>
+<td style="text-align: right;">0.333333</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.726667</td>
+<td style="text-align: right;">0.329599</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.733333</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.305495</td>
+<td style="text-align: right;">0.317547</td>
+<td style="text-align: right;">0.269925</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat:7:ggufv2:Q8_0</td>
+<td style="text-align: right;">0.292237</td>
+<td style="text-align: right;">0.481481</td>
+<td style="text-align: right;">0.0847297</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.103448</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.589041</td>
+<td style="text-align: right;">0.40056</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.163399</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.328627</td>
+<td style="text-align: right;">0.310432</td>
+<td style="text-align: right;">0.278624</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat:7:ggufv2:Q6_K</td>
+<td style="text-align: right;">0.292237</td>
+<td style="text-align: right;">0.553846</td>
+<td style="text-align: right;">0.0614608</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.561644</td>
+<td style="text-align: right;">0.406162</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.177778</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.323012</td>
+<td style="text-align: right;">0.307625</td>
+<td style="text-align: right;">0.290181</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat:7:ggufv2:Q4_K_M</td>
+<td style="text-align: right;">0.273973</td>
+<td style="text-align: right;">0.57037</td>
+<td style="text-align: right;">0.0852494</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.611872</td>
+<td style="text-align: right;">0.40056</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.251852</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.335807</td>
+<td style="text-align: right;">0.30489</td>
+<td style="text-align: right;">0.291028</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat:7:ggufv2:Q3_K_M</td>
+<td style="text-align: right;">0.228311</td>
+<td style="text-align: right;">0.435897</td>
+<td style="text-align: right;">0.0650717</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0898876</td>
+<td style="text-align: right;">0.103448</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.589041</td>
+<td style="text-align: right;">0.394958</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.207407</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.374002</td>
+<td style="text-align: right;">0.301156</td>
+<td style="text-align: right;">0.326263</td>
+</tr>
+<tr>
+<td style="text-align: left;">llama-2-chat:13:ggufv2:Q2_K</td>
+<td style="text-align: right;">0.366667</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0649389</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.433333</td>
+<td style="text-align: right;">0.414566</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.288889</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.278945</td>
+<td style="text-align: right;">0.283917</td>
+<td style="text-align: right;">0.285171</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:13:ggufv2:Q2_K</td>
+<td style="text-align: right;">0.566667</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.0333333</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.82</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.875</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.299444</td>
+<td style="text-align: right;">0.166389</td>
+<td style="text-align: right;">0.336056</td>
+</tr>
+<tr>
+<td style="text-align: left;">code-llama-instruct:13:ggufv2:Q3_K_M</td>
+<td style="text-align: right;">0.533333</td>
+<td style="text-align: right;">0.45</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.833333</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.85</td>
+<td style="text-align: right;">nan</td>
+<td style="text-align: right;">0.296296</td>
+<td style="text-align: right;">0.148148</td>
+<td style="text-align: right;">0.336707</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy", "content.action.edit", "search.suggest", "search.highlight", "navigation.instant", "navigation.tabs", "toc.integrate"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+        <script src="https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js"></script>
+      
+        <script src="../../scripts/tablesort.js"></script>
+      
+    
+  </body>
+</html>
