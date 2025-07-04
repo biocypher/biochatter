@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: >-
+  If you use this software, please cite it using the
+  preferred-citation below.
+type: software
+preferred-citation:
+  type: article
+  title: A platform for the biomedical application of large language models
+  authors:
+    - given-names: Sebastian
+      family-names: Lobentanzer
+      orcid: 'https://orcid.org/0000-0003-3399-6695'
+    - given-names: Shaohong
+      family-names: Feng
+    - given-names: Noah
+      family-names: Bruderer
+    - given-names: Andreas
+      family-names: Maier
+    - name: The BioChatter Consortium
+      type: consortium
+    - given-names: Cankun
+      family-names: Wang
+    - given-names: Jan
+      family-names: Baumbach
+    - given-names: Jorge
+      family-names: Abreu-Vicente
+    - given-names: Nils
+      family-names: Krehl
+    - given-names: Qin
+      family-names: Ma
+    - given-names: Thomas
+      family-names: Lemberger
+    - given-names: Julio
+      family-names: Saez-Rodriguez
+      orcid: 'https://orcid.org/0000-0002-8552-8976'
+  doi: 10.1038/s41587-024-02534-3
+  journal: Nature Biotechnology
+  year: 2025
+repository: 'https://github.com/biocypher/biochatter'
+repository-code: 'https://github.com/biocypher/biochatter'
+repository-artifact: 'https://pypi.org/project/biochatter/'
+url: 'https://biochatter.org/'
+license: MIT
