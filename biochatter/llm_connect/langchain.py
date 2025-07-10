@@ -270,7 +270,7 @@ class LangChainConversation(Conversation):
         response = self.ca_chat.invoke(ca_messages)
 
         correction = response.content
-        token_usage_raw = response.usage_metadata
-        token_usage = self._extract_total_tokens(token_usage_raw)
+        # token_usage_raw = response.usage_metadata
+        # token_usage = self._extract_total_tokens(token_usage_raw)
 
-        return correction, token_usage
+        return correction
