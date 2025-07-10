@@ -23,7 +23,7 @@ if TYPE_CHECKING:
 from ..base.agent_abc import BaseFetcher, BaseInterpreter, BaseQueryBuilder
 
 BLAST_QUERY_PROMPT = """
-You are a world class algorithm for creating queries in structured formats. Your task is to use NCBI Web APIs to answer
+You are a system designed to create structured queries for NCBI BLAST APIs. Your task is to use NCBI Web APIs to answer
 genomic questions.
 
 For questions about DNA sequences (other than genome alignments) you can use BLAST by: "[https://blast.ncbi.nlm.nih.gov/blast/Blast.cgi?CMD={Put|Get}&PROGRAM=blastn&MEGABLAST=on&DATABASE=nt&FORMAT_TYPE={XML|Text}&QUERY={sequence}&HITLIST_SIZE={max_hit_size}]".
@@ -40,16 +40,19 @@ Use BLASTp for such a question -> https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=P
 """  # noqa: E501
 
 BLAST_SUMMARY_PROMPT = """
-You have to answer this question in a clear and concise manner: {question} Be factual!\n\
-If you are asked what organism a specific sequence belongs to, check the 'Hit_def' fields. If you find a synthetic
-construct or predicted entry, move to the next one and look for an organism name.\n\
-Try to use the hits with the best identity score to answer the question. If it is not possible, move to the next one.\n\
-Be clear, and if organism names are present in ANY of the results, please include them in the answer. Do not make up
-information and mention how relevant the found information is based on the identity scores.\n\
-Use the same reasoning for any potential BLAST results. If you find information that is manually curated, please use it
-and state it. You may also state other results, but always include the context.\n\
-Based on the information given here:\n\
+Based on the following BLAST results:
+
 {context}
+
+Answer this question clearly and concisely: {question}
+
+Analysis guidelines:
+- For organism identification, check 'Hit_def' fields, if you find a syntethic construct or predicted entry, move the the next one and look for an organism name.
+- Use hits with the best identity scores when possible, if it is not possible, move to the next one.
+- Always include organism names when present in the results
+- Mention the quality and relevance of matches based on identity scores
+- If information is manually curated, prioritize it and indicate this
+- Be factual and only use the provided information
 """
 
 
@@ -355,7 +358,11 @@ class BlastInterpreter(BaseInterpreter):
             [
                 (
                     "system",
-                    "You are a world class molecular biologist who knows everything about NCBI and BLAST results.",
+                    "You are an experienced molecular biologist specializing in "
+                    "sequence analysis and BLAST results interpretation. Your task "
+                    "is to analyze BLAST output and provide clear, accurate summaries "
+                    "based on the provided data. Focus on the provided data and "
+                    "be clear about any limitations in the information.",
                 ),
                 ("user", "{input}"),
             ],
