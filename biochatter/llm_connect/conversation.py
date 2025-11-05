@@ -764,8 +764,21 @@ class Conversation(ABC):
 
         # Execute the tool based on whether we're in async context or not
         if self.mcp:
-            loop = asyncio.get_running_loop()
-            tool_result = loop.run_until_complete(tool_func.ainvoke(tool_call))
+            # For MCP tools, we need to handle async execution
+            try:
+                # Try to get running loop first (if we're in async context)
+                loop = asyncio.get_running_loop()
+                # If we're in async context, we can't use run_until_complete
+                # This shouldn't happen in synchronous context, but handle it
+                raise RuntimeError("Cannot use run_until_complete in async context. Use await instead.")
+            except RuntimeError:
+                # No running loop, create one for synchronous execution
+                try:
+                    loop = asyncio.get_event_loop()
+                except RuntimeError:
+                    loop = asyncio.new_event_loop()
+                    asyncio.set_event_loop(loop)
+                tool_result = loop.run_until_complete(tool_func.ainvoke(tool_call))
         else:
             tool_result = tool_func.invoke(tool_call)
 

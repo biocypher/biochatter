@@ -168,7 +168,8 @@ class LangChainConversation(Conversation):
         elif self.model_name not in TOOL_CALLING_MODELS and len(available_tools) > 0:
             self.tools_prompt = self._create_tool_prompt(
                 tools=available_tools,
-                additional_instructions=self.additional_tools_instructions,
+                additional_tools_instructions=self.additional_tools_instructions,
+                mcp=self.mcp,
             )
             if not self.messages:
                 msg = "No messages available in the conversation"
