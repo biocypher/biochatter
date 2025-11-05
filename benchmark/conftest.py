@@ -29,25 +29,57 @@ if 'ipykernel' not in sys.modules:
         pass
 
 # how often should each benchmark be run?
-N_ITERATIONS = 4
+N_ITERATIONS = 1
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
 
 # which models should be benchmarked?
+# List generated from https://api.openai.com/v1/models
 OPENAI_MODEL_NAMES = [
+    # GPT-3.5 models
     # "gpt-3.5-turbo-0125",
+    
+    # GPT-4 models
     # "gpt-4-0613",
-    # "gpt-4-1106-preview",
     # "gpt-4-0125-preview",
+    # "gpt-4-1106-preview",
+    # "gpt-4-turbo",
     # "gpt-4-turbo-2024-04-09",
+    # "gpt-4-turbo-preview",
+    
+    # GPT-4o models
     # "gpt-4o-2024-05-13",
     # "gpt-4o-2024-08-06",
     # "gpt-4o-2024-11-20",
     "gpt-4o-mini-2024-07-18",
-    # "o1-preview-2024-09-12",
+    
+    # GPT-4.1 models
+    # "gpt-4.1-2025-04-14",
+    "gpt-4.1-mini-2025-04-14",
+    # "gpt-4.1-nano-2025-04-14",
+    
+    # GPT-5 models
+    # "gpt-5-2025-08-07",
+    # "gpt-5-chat-latest",
+    # "gpt-5-codex",
+    "gpt-5-mini-2025-08-07",
+    "gpt-5-nano-2025-08-07",
+    # "gpt-5-pro-2025-10-06",
+    
+    # O1 models (reasoning models)
+    # "o1",
+    # "o1-2024-12-17",
+    # "o1-mini",
     # "o1-mini-2024-09-12",
+    # "o1-pro",
+    # "o1-pro-2025-03-19",
+    
+    # O3 models (reasoning models)
+    # "o3",
+    # "o3-2025-04-16",
     # "o3-mini",
+    # "o3-mini-2025-01-31",
 ]
 
 GROQ_MODEL_NAMES = [
