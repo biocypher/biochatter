@@ -7,7 +7,12 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel
 
 from biochatter._misc import pydantic_manual_validator
-from biochatter.llm_connect.available_models import STRUCTURED_OUTPUT_MODELS, TOOL_CALLING_MODELS
+from biochatter.llm_connect.available_models import (
+    supports_structured_output,
+    supports_tool_calling,
+    STRUCTURED_OUTPUT_MODELS,
+    TOOL_CALLING_MODELS,
+)
 from biochatter.llm_connect.conversation import Conversation
 
 
@@ -147,9 +152,9 @@ class LangChainConversation(Conversation):
         if structured_model and len(available_tools) > 0:
             raise ValueError("Structured output and tools cannot be used together at the moment.")
 
-        if self.model_name in STRUCTURED_OUTPUT_MODELS and structured_model:
+        if supports_structured_output(self.model_name) and structured_model:
             chat = self.chat.with_structured_output(structured_model)
-        elif structured_model and self.model_name not in STRUCTURED_OUTPUT_MODELS:
+        elif structured_model and not supports_structured_output(self.model_name):
             # add to the end of the prompt an instruction to return a structured output
             chat = self.chat
             self.messages[-1].content = (
@@ -163,9 +168,9 @@ class LangChainConversation(Conversation):
                 )
             )
 
-        if (self.model_name in TOOL_CALLING_MODELS and not structured_model) or self.force_tool:
+        if (supports_tool_calling(self.model_name) and not structured_model) or self.force_tool:
             chat = self.chat.bind_tools(available_tools)
-        elif self.model_name not in TOOL_CALLING_MODELS and len(available_tools) > 0:
+        elif not supports_tool_calling(self.model_name) and len(available_tools) > 0:
             self.tools_prompt = self._create_tool_prompt(
                 tools=available_tools,
                 additional_tools_instructions=self.additional_tools_instructions,
@@ -200,7 +205,7 @@ class LangChainConversation(Conversation):
                     track_tool_calls=track_tool_calls,
                 )
             # case where the model does not support tool calling natively, called a tool and we need manual processing
-            elif self.model_name not in TOOL_CALLING_MODELS and self.tools_prompt:
+            elif not supports_tool_calling(self.model_name) and self.tools_prompt:
                 cleaned_content = (
                     response.content.replace('"""', "").replace("json", "").replace("`", "").replace("\n", "").strip()
                 )
@@ -218,7 +223,7 @@ class LangChainConversation(Conversation):
                     msg = response.content  # Use original content
                     # Update token_usage, similar to 'no tool calls' or 'manual structured output' paths
             # case where the model does not support structured output but the user has provided a structured model
-            elif self.model_name not in STRUCTURED_OUTPUT_MODELS and structured_model:
+            elif not supports_structured_output(self.model_name) and structured_model:
                 # check that the output conforms to the structured model
                 pydantic_manual_validator(response.content, structured_model)
                 msg = response.content

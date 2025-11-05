@@ -338,7 +338,7 @@ class TestLangChainConversationTokenCounting:
         langchain_conversation.chat.invoke.return_value = mock_response
 
         # Act
-        with patch("biochatter.llm_connect.langchain.TOOL_CALLING_MODELS", []):
+        with patch("biochatter.llm_connect.langchain.supports_tool_calling", return_value=False):
             msg, token_usage = langchain_conversation._primary_query()
 
         # Assert
@@ -356,7 +356,7 @@ class TestLangChainConversationTokenCounting:
         langchain_conversation._process_tool_calls = MagicMock(return_value="Tool executed")
 
         # Act
-        with patch("biochatter.llm_connect.langchain.TOOL_CALLING_MODELS", [langchain_conversation.model_name]):
+        with patch("biochatter.llm_connect.langchain.supports_tool_calling", return_value=True):
             msg, token_usage = langchain_conversation._primary_query(tools=[mock_test_tool])
 
         # Assert
@@ -370,7 +370,7 @@ class TestLangChainConversationTokenCounting:
         langchain_conversation.chat.with_structured_output.return_value.invoke.return_value = structured_response
 
         # Act
-        with patch("biochatter.llm_connect.langchain.STRUCTURED_OUTPUT_MODELS", [langchain_conversation.model_name]):
+        with patch("biochatter.llm_connect.langchain.supports_structured_output", return_value=True):
             msg, token_usage = langchain_conversation._primary_query(structured_model=MockStructuredModel)
 
         # Assert
@@ -383,7 +383,7 @@ class TestLangChainConversationTokenCounting:
         langchain_conversation.chat.invoke.side_effect = Exception("LangChain Error")
 
         # Act
-        with patch("biochatter.llm_connect.langchain.TOOL_CALLING_MODELS", []):
+        with patch("biochatter.llm_connect.langchain.supports_tool_calling", return_value=False):
             msg, token_usage = langchain_conversation._primary_query()
 
         # Assert
@@ -418,7 +418,7 @@ class TestOpenRouterConversationTokenCounting:
         openrouter_conversation.chat.invoke.return_value = mock_response
 
         # Act
-        with patch("biochatter.llm_connect.langchain.TOOL_CALLING_MODELS", []):
+        with patch("biochatter.llm_connect.langchain.supports_tool_calling", return_value=False):
             msg, token_usage = openrouter_conversation._primary_query()
 
         # Assert

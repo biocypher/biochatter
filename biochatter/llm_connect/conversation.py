@@ -29,7 +29,7 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, Tool
 from langchain_core.prompts import ChatPromptTemplate
 
 from biochatter._image import encode_image, encode_image_from_url
-from biochatter.llm_connect.available_models import TOOL_CALLING_MODELS
+from biochatter.llm_connect.available_models import TOOL_CALLING_MODELS, supports_tool_calling
 from biochatter.rag_agent import RagAgent
 from biochatter.selector_agent import RagAgentSelector
 
@@ -424,11 +424,11 @@ class Conversation(ABC):
         """Bind tools to the chat."""
         # Check if the model supports tool calling
         # (exploit the enum class in available_models.py)
-        if self.model_name in TOOL_CALLING_MODELS and self.ca_chat:
+        if supports_tool_calling(self.model_name) and self.ca_chat:
             self.chat = self.chat.bind_tools(tools)
             self.ca_chat = self.ca_chat.bind_tools(tools)
 
-        elif self.model_name in TOOL_CALLING_MODELS:
+        elif supports_tool_calling(self.model_name):
             self.chat = self.chat.bind_tools(tools)
 
         # elif self.model_name not in TOOL_CALLING_MODELS:
@@ -764,25 +764,45 @@ class Conversation(ABC):
 
         # Execute the tool based on whether we're in async context or not
         if self.mcp:
+            # For MCP tools, parameters need to be wrapped in a 'request' object
+            # Also, we need to handle async execution
+            # Make sure we're not already wrapped (in case the model returned it that way)
+            if "request" in tool_call and len(tool_call) == 1:
+                # Already wrapped, use as-is but extract the inner structure
+                tool_args = tool_call
+            else:
+                # Wrap the parameters in a 'request' object
+                tool_args = {"request": tool_call}
+            
             # For MCP tools, we need to handle async execution
+            # Check if we're in an async context (has running loop)
             try:
-                # Try to get running loop first (if we're in async context)
                 loop = asyncio.get_running_loop()
-                # If we're in async context, we can't use run_until_complete
-                # This shouldn't happen in synchronous context, but handle it
+                # If we get here, we're in an async context
+                # We can't use run_until_complete in async context
                 raise RuntimeError("Cannot use run_until_complete in async context. Use await instead.")
-            except RuntimeError:
-                # No running loop, create one for synchronous execution
-                try:
-                    loop = asyncio.get_event_loop()
-                except RuntimeError:
-                    loop = asyncio.new_event_loop()
-                    asyncio.set_event_loop(loop)
-                tool_result = loop.run_until_complete(tool_func.ainvoke(tool_call))
+            except RuntimeError as e:
+                # Check if this is the "no running loop" error (what we want)
+                # The error message can vary, so check for common patterns
+                error_msg = str(e).lower()
+                if "no running event loop" in error_msg or "no running loop" in error_msg:
+                    # No running loop, create one for synchronous execution
+                    try:
+                        loop = asyncio.get_event_loop()
+                    except RuntimeError:
+                        loop = asyncio.new_event_loop()
+                        asyncio.set_event_loop(loop)
+                    tool_result = loop.run_until_complete(tool_func.ainvoke(tool_args))
+                else:
+                    # Re-raise if it's a different RuntimeError (e.g., our custom one)
+                    raise
+            display_args = tool_args
         else:
             tool_result = tool_func.invoke(tool_call)
+            display_args = tool_call
 
-        msg = f"Tool: {tool_name}\nArguments: {tool_call}\nTool result: {tool_result}"
+        # Show the actual arguments passed to the tool (may be wrapped in 'request' for MCP)
+        msg = f"Tool: {tool_name}\nArguments: {display_args}\nTool result: {tool_result}"
 
         if explain_tool_result:
             tool_result_interpretation = self.chat.invoke(
@@ -850,8 +870,27 @@ class Conversation(ABC):
                     # Execute the tool
                     try:
                         if self.mcp:
-                            loop = asyncio.get_running_loop()
-                            tool_result = loop.run_until_complete(tool_func.ainvoke(tool_args))
+                            # For MCP tools, parameters need to be wrapped in a 'request' object
+                            mcp_tool_args = {"request": tool_args}
+                            # Handle async execution for MCP tools
+                            try:
+                                loop = asyncio.get_running_loop()
+                                # If we get here, we're in an async context
+                                # We can't use run_until_complete in async context
+                                raise RuntimeError("Cannot use run_until_complete in async context. Use await instead.")
+                            except RuntimeError as e:
+                                # Check if this is the "no running loop" error (what we want)
+                                if "no running event loop" in str(e).lower():
+                                    # No running loop, create one for synchronous execution
+                                    try:
+                                        loop = asyncio.get_event_loop()
+                                    except RuntimeError:
+                                        loop = asyncio.new_event_loop()
+                                        asyncio.set_event_loop(loop)
+                                    tool_result = loop.run_until_complete(tool_func.ainvoke(mcp_tool_args))
+                                else:
+                                    # Re-raise if it's a different RuntimeError (e.g., our custom one)
+                                    raise
                         else:
                             tool_result = tool_func.invoke(tool_args)
                         # Add the tool result to the conversation
@@ -878,6 +917,9 @@ class Conversation(ABC):
                             )
 
                     except Exception as e:
+                        # Re-raise if it's our RuntimeError about async context (not a tool execution error)
+                        if isinstance(e, RuntimeError) and "Cannot use run_until_complete in async context" in str(e):
+                            raise
                         # Handle tool execution errors
                         error_message = f"Error executing tool {tool_name}: {e!s}"
                         self.messages.append(

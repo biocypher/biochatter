@@ -211,7 +211,7 @@ def test_create_tool_prompt(dummy_conv):
     assert "Extra instructions" in content
 
 
-def test_porcess_manual_tool_call_non_mcp(dummy_conv):
+def test_process_manual_tool_call_non_mcp(dummy_conv):
     tool = MockTool("tool1", result="sync_result")
     tool.description = "desc"
     tool.tool_call_schema = "schema"
@@ -225,7 +225,7 @@ def test_porcess_manual_tool_call_non_mcp(dummy_conv):
     tool.ainvoke.assert_not_called()
 
 
-def test_porcess_manual_tool_call_mcp(dummy_conv, monkeypatch):
+def test_process_manual_tool_call_mcp(dummy_conv, monkeypatch):
     dummy_conv.mcp = True
     tool = MockTool("tool1", result="async_result")
     tool.description = "desc"
@@ -233,24 +233,38 @@ def test_porcess_manual_tool_call_mcp(dummy_conv, monkeypatch):
     tool.args = "args"
     tool_call = {"tool_name": "tool1", "param": 99}
 
-    # Patch asyncio.get_running_loop and run_until_complete
+    # Patch asyncio.get_running_loop to raise RuntimeError (simulating no running loop)
+    # and patch get_event_loop to return a new loop
+    import asyncio
+    
+    def mock_get_running_loop():
+        raise RuntimeError("no running event loop")
+    
     class DummyLoop:
+        def __init__(self):
+            self._loop = asyncio.new_event_loop()
+        
         def run_until_complete(self, coro):
             # Actually run the coroutine
-            import asyncio
+            return self._loop.run_until_complete(coro)
 
-            return asyncio.get_event_loop().run_until_complete(coro)
-
-    monkeypatch.setattr("asyncio.get_running_loop", lambda: DummyLoop())
+    dummy_loop = DummyLoop()
+    monkeypatch.setattr("asyncio.get_running_loop", mock_get_running_loop)
+    monkeypatch.setattr("asyncio.get_event_loop", lambda: dummy_loop)
+    monkeypatch.setattr("asyncio.new_event_loop", lambda: DummyLoop())
+    monkeypatch.setattr("asyncio.set_event_loop", lambda loop: None)
+    
     msg = dummy_conv._process_manual_tool_call(tool_call.copy(), [tool], explain_tool_result=False)
     assert "Tool: tool1" in msg
-    assert "Arguments: {'param': 99}" in msg
+    # MCP tools wrap arguments in 'request' object
+    assert "Arguments: {'request': {'param': 99}}" in msg
     assert "Tool result: async_result" in msg
-    tool.ainvoke.assert_called_once_with({"param": 99})
+    # Verify the tool was called with wrapped arguments
+    tool.ainvoke.assert_called_once_with({"request": {"param": 99}})
     tool.invoke.assert_not_called()
 
 
-def test_porcess_manual_tool_call_explain_tool_result(dummy_conv):
+def test_process_manual_tool_call_explain_tool_result(dummy_conv):
     tool = MockTool("tool1", result="sync_result")
     tool.description = "desc"
     tool.tool_call_schema = "schema"
@@ -677,3 +691,168 @@ def test_langchain_conversation_track_tool_calls_parameter():
         conv._process_tool_calls.assert_called_once()
         call_args = conv._process_tool_calls.call_args
         assert call_args[1]["track_tool_calls"] is True
+
+
+# ===== NEW TESTS FOR MCP FUNCTIONALITY =====
+
+
+def test_process_tool_calls_mcp(dummy_conv, monkeypatch):
+    """Test that _process_tool_calls wraps MCP tool arguments in 'request' object."""
+    dummy_conv.mcp = True
+    dummy_conv.tool_call_mode = "auto"
+    tool = MockTool("tool1", result="async_result")
+    tool_calls = [
+        {"name": "tool1", "args": {"param": 99}, "id": "id1"},
+    ]
+    
+    # Patch asyncio to handle event loop
+    import asyncio
+    
+    def mock_get_running_loop():
+        raise RuntimeError("no running event loop")
+    
+    class DummyLoop:
+        def __init__(self):
+            self._loop = asyncio.new_event_loop()
+        
+        def run_until_complete(self, coro):
+            return self._loop.run_until_complete(coro)
+
+    dummy_loop = DummyLoop()
+    monkeypatch.setattr("asyncio.get_running_loop", mock_get_running_loop)
+    monkeypatch.setattr("asyncio.get_event_loop", lambda: dummy_loop)
+    monkeypatch.setattr("asyncio.new_event_loop", lambda: DummyLoop())
+    monkeypatch.setattr("asyncio.set_event_loop", lambda loop: None)
+    
+    msg = dummy_conv._process_tool_calls(tool_calls, [tool], "fallback", explain_tool_result=False)
+    assert "Tool call (tool1) result: async_result" in msg
+    # Verify the tool was called with wrapped arguments
+    tool.ainvoke.assert_called_once_with({"request": {"param": 99}})
+    tool.invoke.assert_not_called()
+
+
+def test_process_tool_calls_mcp_multiple_tools(dummy_conv, monkeypatch):
+    """Test that _process_tool_calls handles multiple MCP tools correctly."""
+    dummy_conv.mcp = True
+    dummy_conv.tool_call_mode = "auto"
+    tool1 = MockTool("tool1", result="result1")
+    tool2 = MockTool("tool2", result="result2")
+    tool_calls = [
+        {"name": "tool1", "args": {"param1": 1}, "id": "id1"},
+        {"name": "tool2", "args": {"param2": 2}, "id": "id2"},
+    ]
+    
+    # Patch asyncio to handle event loop
+    import asyncio
+    
+    def mock_get_running_loop():
+        raise RuntimeError("no running event loop")
+    
+    class DummyLoop:
+        def __init__(self):
+            self._loop = asyncio.new_event_loop()
+        
+        def run_until_complete(self, coro):
+            return self._loop.run_until_complete(coro)
+
+    dummy_loop = DummyLoop()
+    monkeypatch.setattr("asyncio.get_running_loop", mock_get_running_loop)
+    monkeypatch.setattr("asyncio.get_event_loop", lambda: dummy_loop)
+    monkeypatch.setattr("asyncio.new_event_loop", lambda: DummyLoop())
+    monkeypatch.setattr("asyncio.set_event_loop", lambda loop: None)
+    
+    msg = dummy_conv._process_tool_calls(tool_calls, [tool1, tool2], "fallback", explain_tool_result=False)
+    assert "Tool call (tool1) result: result1" in msg
+    assert "Tool call (tool2) result: result2" in msg
+    # Verify both tools were called with wrapped arguments
+    tool1.ainvoke.assert_called_once_with({"request": {"param1": 1}})
+    tool2.ainvoke.assert_called_once_with({"request": {"param2": 2}})
+
+
+def test_process_manual_tool_call_mcp_with_running_loop(dummy_conv, monkeypatch):
+    """Test that _process_manual_tool_call raises error when already in async context."""
+    dummy_conv.mcp = True
+    tool = MockTool("tool1", result="async_result")
+    tool_call = {"tool_name": "tool1", "param": 99}
+    
+    # Patch asyncio.get_running_loop to return a loop (simulating async context)
+    class MockLoop:
+        pass
+    
+    def mock_get_running_loop():
+        return MockLoop()
+    
+    monkeypatch.setattr("asyncio.get_running_loop", mock_get_running_loop)
+    
+    # Should raise RuntimeError about not being able to use run_until_complete in async context
+    with pytest.raises(RuntimeError, match="Cannot use run_until_complete in async context"):
+        dummy_conv._process_manual_tool_call(tool_call.copy(), [tool], explain_tool_result=False)
+
+
+def test_process_tool_calls_mcp_with_running_loop(dummy_conv, monkeypatch):
+    """Test that _process_tool_calls raises error when already in async context."""
+    dummy_conv.mcp = True
+    dummy_conv.tool_call_mode = "auto"
+    tool = MockTool("tool1", result="async_result")
+    tool_calls = [
+        {"name": "tool1", "args": {"param": 99}, "id": "id1"},
+    ]
+    
+    # Patch asyncio.get_running_loop to return a loop (simulating async context)
+    class MockLoop:
+        pass
+    
+    def mock_get_running_loop():
+        return MockLoop()
+    
+    monkeypatch.setattr("asyncio.get_running_loop", mock_get_running_loop)
+    
+    # Should raise RuntimeError about not being able to use run_until_complete in async context
+    with pytest.raises(RuntimeError, match="Cannot use run_until_complete in async context"):
+        dummy_conv._process_tool_calls(tool_calls, [tool], "fallback", explain_tool_result=False)
+
+
+def test_process_manual_tool_call_mcp_new_event_loop(dummy_conv, monkeypatch):
+    """Test that _process_manual_tool_call creates new event loop when get_event_loop fails."""
+    dummy_conv.mcp = True
+    tool = MockTool("tool1", result="async_result")
+    tool_call = {"tool_name": "tool1", "param": 99}
+    
+    import asyncio
+    
+    def mock_get_running_loop():
+        raise RuntimeError("no running event loop")
+    
+    # First get_event_loop fails, then new_event_loop succeeds
+    call_count = {"get_event_loop": 0, "new_event_loop": 0}
+    
+    # Create a real event loop for running coroutines
+    real_loop = asyncio.new_event_loop()
+    
+    class DummyLoop:
+        def run_until_complete(self, coro):
+            # Use the real loop to actually run the coroutine
+            return real_loop.run_until_complete(coro)
+    
+    def mock_get_event_loop():
+        call_count["get_event_loop"] += 1
+        raise RuntimeError("no current event loop")
+    
+    def mock_new_event_loop():
+        call_count["new_event_loop"] += 1
+        return DummyLoop()
+    
+    monkeypatch.setattr("asyncio.get_running_loop", mock_get_running_loop)
+    monkeypatch.setattr("asyncio.get_event_loop", mock_get_event_loop)
+    monkeypatch.setattr("asyncio.new_event_loop", mock_new_event_loop)
+    monkeypatch.setattr("asyncio.set_event_loop", lambda loop: None)
+    
+    msg = dummy_conv._process_manual_tool_call(tool_call.copy(), [tool], explain_tool_result=False)
+    assert "Tool: tool1" in msg
+    assert "Tool result: async_result" in msg
+    # Verify new_event_loop was called
+    assert call_count["new_event_loop"] == 1
+    tool.ainvoke.assert_called_once_with({"request": {"param": 99}})
+    
+    # Clean up
+    real_loop.close()

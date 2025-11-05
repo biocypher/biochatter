@@ -5,7 +5,7 @@ from typing import Literal
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-from biochatter.llm_connect.available_models import TOOL_CALLING_MODELS
+from biochatter.llm_connect.available_models import supports_tool_calling
 from biochatter.llm_connect.conversation import Conversation
 
 
@@ -125,7 +125,7 @@ class GeminiConversation(Conversation):
             warnings.warn(f"Warning: {kwargs} are not used by this class", UserWarning)
 
         # bind tools to the chat if provided in the query
-        chat = self.chat.bind_tools(tools) if (tools and self.model_name in TOOL_CALLING_MODELS) else self.chat
+        chat = self.chat.bind_tools(tools) if (tools and supports_tool_calling(self.model_name)) else self.chat
 
         try:
             response = chat.invoke(self.messages)

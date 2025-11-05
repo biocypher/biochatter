@@ -6,8 +6,11 @@ from the EDAM ontology server.
 
 import inspect
 import re
+import warnings
 
 import pytest
+
+from biochatter.llm_connect.available_models import supports_tool_calling
 
 from .benchmark_utils import (
     get_result_file_path,
@@ -37,14 +40,21 @@ def test_mcp_edam_qa(
         md5_hash=yaml_data["hash"],
     )
     
-    # Skip if model doesn't support tool calling
-    # Note: MCP requires models that support tool calling
-    if "gpt-" not in model_name and model_name not in [
-        "claude-3-5-sonnet-20240620",
-        "claude-3-opus-20240229",
-    ]:
+    # MCP requires models that support native tool calling
+    # Use the actual capability check to ensure we're testing compatible models
+    if not supports_tool_calling(model_name):
         pytest.skip(
-            f"model {model_name} may not support MCP tool calling for {task} benchmark",
+            f"model {model_name} does not support tool calling. "
+            f"MCP benchmarks require models with native tool calling capability. "
+            f"Use a model that supports tool calling (e.g., gpt-4o, gpt-4.1-mini, claude-3-7-sonnet-latest, etc.)",
+        )
+    
+    # Additional validation: warn if we're using a model that might fall back to manual tool calling
+    # This can happen if the model name matching fails unexpectedly
+    if not hasattr(mcp_conversation, 'mcp') or not mcp_conversation.mcp:
+        pytest.fail(
+            f"MCP conversation was not properly initialized with mcp=True. "
+            f"This indicates a configuration error in the benchmark setup."
         )
     
     def run_test():
@@ -55,6 +65,21 @@ def test_mcp_edam_qa(
             yaml_data["input"]["prompt"],
             mcp=True,
         )
+        
+        # Critical validation: Check if the model fell back to manual tool calling
+        # If tools_prompt is set, it means the model doesn't support native tool calling
+        # and fell back to manual mode, which is invalid for MCP benchmarks
+        if hasattr(mcp_conversation, 'tools_prompt') and mcp_conversation.tools_prompt is not None:
+            pytest.fail(
+                f"CRITICAL: Model {model_name} fell back to MANUAL tool calling instead of NATIVE tool calling. "
+                f"This indicates that supports_tool_calling('{model_name}') returned False during execution. "
+                f"MCP benchmarks require native tool calling capability. "
+                f"Possible causes:\n"
+                f"  1. Model name matching failed (check supports_tool_calling function)\n"
+                f"  2. Model was incorrectly classified as supporting tool calling\n"
+                f"  3. Configuration error in conversation setup\n"
+                f"Please verify the model supports tool calling and update model capability detection if needed."
+            )
         
         # Parse expected answer: semicolon-separated list of EDAM terms
         expected_terms = [
