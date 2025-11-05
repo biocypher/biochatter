@@ -56,27 +56,35 @@ def test_mcp_edam_qa(
             mcp=True,
         )
         
-        # Clean response for comparison
-        response_clean = (
-            response.lower()
-            .replace(".", "")
-            .replace("?", "")
-            .replace("!", "")
-            .replace(",", "")
-            .strip()
-        )
-        expected_clean = (
-            yaml_data["expected"]["answer"]
-            .lower()
-            .replace(".", "")
-            .replace("?", "")
-            .replace("!", "")
-            .replace(",", "")
-            .strip()
-        )
+        # Parse expected answer: semicolon-separated list of EDAM terms
+        expected_terms = [
+            term.strip() 
+            for term in yaml_data["expected"]["answer"].split(";") 
+            if term.strip()
+        ]
         
-        # Score: exact match
-        score = [response_clean == expected_clean]
+        # Normalize response for searching (case-insensitive)
+        response_normalized = response.lower()
+        
+        # Score: check if each expected EDAM term appears in the response
+        # This follows the same pattern as test_api_calling.py
+        score = []
+        for expected_term in expected_terms:
+            # Check if the EDAM term (or its ID) appears in the response
+            # Handle both full URLs and just the operation ID
+            term_normalized = expected_term.lower().strip()
+            
+            # Try exact match first, then check if operation ID is present
+            if term_normalized in response_normalized:
+                score.append(True)
+            else:
+                # Extract operation ID (e.g., "operation_3694" from URL)
+                operation_id = term_normalized.split("/")[-1] if "/" in term_normalized else term_normalized
+                # Check if the operation ID appears in the response
+                if operation_id in response_normalized:
+                    score.append(True)
+                else:
+                    score.append(False)
         
         return calculate_bool_vector_score(score)
     
