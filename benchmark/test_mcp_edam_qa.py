@@ -5,17 +5,19 @@ from the EDAM ontology server.
 """
 
 import inspect
-import re
-import warnings
 
 import pytest
 
 from biochatter.llm_connect.available_models import supports_tool_calling
 
 from .benchmark_utils import (
+    get_failure_mode_file_path,
     get_result_file_path,
+    get_trace_file_path,
     skip_if_already_run,
+    write_failure_modes_to_file,
     write_results_to_file,
+    write_trace_to_file,
 )
 from .conftest import calculate_bool_vector_score
 
@@ -57,14 +59,83 @@ def test_mcp_edam_qa(
             f"This indicates a configuration error in the benchmark setup."
         )
     
+    # Track failure mode information
+    actual_answer = ""
+    expected_answer = ""
+    failure_mode = ""
+    
+    # Track tool call traces
+    tool_schemas = {}
+    tool_calls_trace = []
+    tool_results_trace = []
+    
     def run_test():
+        nonlocal actual_answer
+        nonlocal expected_answer
+        nonlocal failure_mode
+        nonlocal tool_schemas
+        nonlocal tool_calls_trace
+        nonlocal tool_results_trace
+        
         mcp_conversation.reset()
+        
+        # Capture tool schemas (what the LLM sees)
+        if hasattr(mcp_conversation, 'tools') and mcp_conversation.tools:
+            for tool in mcp_conversation.tools:
+                schema_info = {}
+                if hasattr(tool, 'name'):
+                    if hasattr(tool, 'args_schema'):
+                        schema_info['args_schema'] = tool.args_schema
+                    if hasattr(tool, 'input_schema'):
+                        # Store schema type name for readability
+                        schema_info['input_schema_type'] = str(type(tool.input_schema).__name__)
+                    if hasattr(tool, 'description'):
+                        schema_info['description'] = tool.description
+                    tool_schemas[tool.name] = schema_info
+        
+        # Monkey-patch to capture tool calls and results
+        original_process = mcp_conversation._process_tool_calls
+        captured_calls = []
+        captured_results = []
+        
+        def capture_tool_calls(tool_calls, *args, **kwargs):
+            for tc in tool_calls:
+                captured_calls.append({
+                    "name": tc.get("name", "unknown"),
+                    "args": tc.get("args", {}),
+                    "id": tc.get("id", ""),
+                })
+            return original_process(tool_calls, *args, **kwargs)
+        
+        mcp_conversation._process_tool_calls = capture_tool_calls
         
         # Query with MCP tools available
         response, token_usage, _ = mcp_conversation.query(
             yaml_data["input"]["prompt"],
             mcp=True,
+            track_tool_calls=True,  # Enable tool call tracking
         )
+        
+        # Capture tool results from messages after query completes
+        from langchain_core.messages import ToolMessage
+        if hasattr(mcp_conversation, 'messages'):
+            for msg in mcp_conversation.messages:
+                if isinstance(msg, ToolMessage):
+                    # Extract result, truncate if too long
+                    content = str(msg.content)
+                    if len(content) > 500:
+                        content = content[:500] + "... [truncated]"
+                    # Check if it's an error message
+                    is_error = content.startswith("Error executing tool") or "Error" in content[:50]
+                    captured_results.append({
+                        "name": msg.name or "unknown",
+                        "result": content if not is_error else None,
+                        "error": content if is_error else None,
+                    })
+        
+        # Store captured traces
+        tool_calls_trace = captured_calls
+        tool_results_trace = captured_results
         
         # Critical validation: Check if the model fell back to manual tool calling
         # If tools_prompt is set, it means the model doesn't support native tool calling
@@ -88,12 +159,19 @@ def test_mcp_edam_qa(
             if term.strip()
         ]
         
+        # Store expected answer for failure mode tracking
+        expected_answer = yaml_data["expected"]["answer"]
+        actual_answer = response
+        
         # Normalize response for searching (case-insensitive)
         response_normalized = response.lower()
         
         # Score: check if each expected EDAM term appears in the response
-        # This follows the same pattern as test_api_calling.py
+        # Track which terms were found and which were missing
         score = []
+        found_terms = []
+        missing_terms = []
+        
         for expected_term in expected_terms:
             # Check if the EDAM term (or its ID) appears in the response
             # Handle both full URLs and just the operation ID
@@ -102,14 +180,35 @@ def test_mcp_edam_qa(
             # Try exact match first, then check if operation ID is present
             if term_normalized in response_normalized:
                 score.append(True)
+                found_terms.append(expected_term)
             else:
                 # Extract operation ID (e.g., "operation_3694" from URL)
                 operation_id = term_normalized.split("/")[-1] if "/" in term_normalized else term_normalized
                 # Check if the operation ID appears in the response
                 if operation_id in response_normalized:
                     score.append(True)
+                    found_terms.append(expected_term)
                 else:
                     score.append(False)
+                    missing_terms.append(expected_term)
+        
+        # Determine failure mode if not all terms were found
+        if len(missing_terms) > 0:
+            total_terms = len(expected_terms)
+            found_count = len(found_terms)
+            missing_count = len(missing_terms)
+            
+            if found_count == 0:
+                failure_mode = f"All Terms Missing ({missing_count}/{total_terms} missing)"
+            elif missing_count == 1:
+                failure_mode = f"Partial Match - Missing: {missing_terms[0]} ({found_count}/{total_terms} found)"
+            else:
+                # For multiple missing terms, list them concisely
+                missing_short = [term.split("/")[-1] for term in missing_terms]
+                failure_mode = f"Partial Match - Missing {missing_count} terms: {', '.join(missing_short[:3])}{'...' if len(missing_short) > 3 else ''} ({found_count}/{total_terms} found)"
+        else:
+            # All terms found - no failure
+            failure_mode = ""
         
         return calculate_bool_vector_score(score)
     
@@ -122,5 +221,30 @@ def test_mcp_edam_qa(
         f"{n_iterations}",
         yaml_data["hash"],
         get_result_file_path(task),
+    )
+    
+    # Write failure modes if there was a failure (not all terms found)
+    if failure_mode and actual_answer:
+        write_failure_modes_to_file(
+            model_name,
+            yaml_data["case"],
+            actual_answer,
+            expected_answer,
+            failure_mode,
+            yaml_data["hash"],
+            get_failure_mode_file_path(task),
+        )
+    
+    # Write trace information for all runs
+    write_trace_to_file(
+        model_name,
+        yaml_data["case"],
+        yaml_data["input"]["prompt"],
+        actual_answer,
+        tool_schemas,
+        tool_calls_trace,
+        tool_results_trace,
+        yaml_data["hash"],
+        get_trace_file_path(task),
     )
 
