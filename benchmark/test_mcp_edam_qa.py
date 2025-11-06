@@ -21,6 +21,14 @@ from .benchmark_utils import (
 )
 from .conftest import calculate_bool_vector_score
 
+# System prompt to ensure consistent output format across MCP and baseline tests
+EDAM_OUTPUT_FORMAT_PROMPT = (
+    "You are answering questions about EDAM ontology concepts. "
+    "Your response should contain only the EDAM ontology URIs (e.g., http://edamontology.org/data_2536) "
+    "that match the question, separated by semicolons if multiple URIs are needed. "
+    "Do not include any additional text, explanations, or formatting beyond the URIs."
+)
+
 
 def test_mcp_edam_qa(
     model_name,
@@ -78,6 +86,9 @@ def test_mcp_edam_qa(
         nonlocal tool_results_trace
         
         mcp_conversation.reset()
+        
+        # Add system prompt to specify output format
+        mcp_conversation.append_system_message(EDAM_OUTPUT_FORMAT_PROMPT)
         
         # Capture tool schemas (what the LLM sees)
         if hasattr(mcp_conversation, 'tools') and mcp_conversation.tools:
@@ -281,6 +292,9 @@ def test_mcp_edam_qa_baseline(
         nonlocal failure_mode
         
         baseline_conversation.reset()
+        
+        # Add system prompt to specify output format (same as MCP test for fairness)
+        baseline_conversation.append_system_message(EDAM_OUTPUT_FORMAT_PROMPT)
         
         # Query without MCP tools (baseline)
         response, token_usage, _ = baseline_conversation.query(
