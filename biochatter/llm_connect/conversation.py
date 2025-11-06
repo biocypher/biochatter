@@ -774,6 +774,9 @@ class Conversation(ABC):
                 # Wrap the parameters in a 'request' object
                 tool_args = {"request": tool_call}
             
+            # Log manual tool call for debugging
+            logger.debug(f"MCP Manual Tool Call - Tool: {tool_name}, Args: {tool_call}")
+            
             # For MCP tools, we need to handle async execution
             # Check if we're in an async context (has running loop)
             try:
@@ -792,7 +795,18 @@ class Conversation(ABC):
                     except RuntimeError:
                         loop = asyncio.new_event_loop()
                         asyncio.set_event_loop(loop)
-                    tool_result = loop.run_until_complete(tool_func.ainvoke(tool_args))
+                    try:
+                        tool_result = loop.run_until_complete(tool_func.ainvoke(tool_args))
+                    except Exception as tool_error:
+                        # Enhanced error logging for MCP tools
+                        logger.error(
+                            f"MCP Tool Execution Error - Tool: {tool_name}, "
+                            f"Args: {tool_args}, "
+                            f"Error: {tool_error!s}"
+                        )
+                        if hasattr(tool_func, 'input_schema'):
+                            logger.error(f"Tool {tool_name} expected schema: {tool_func.input_schema}")
+                        raise
                 else:
                     # Re-raise if it's a different RuntimeError (e.g., our custom one)
                     raise
@@ -871,7 +885,17 @@ class Conversation(ABC):
                     try:
                         if self.mcp:
                             # For MCP tools, parameters need to be wrapped in a 'request' object
-                            mcp_tool_args = {"request": tool_args}
+                            # Check if already wrapped (in case the model returned it that way)
+                            if "request" in tool_args and len(tool_args) == 1:
+                                # Already wrapped, use as-is
+                                mcp_tool_args = tool_args
+                            else:
+                                # Wrap the parameters in a 'request' object
+                                mcp_tool_args = {"request": tool_args}
+                            
+                            # Log tool call for debugging (only on errors, detailed traces in benchmark)
+                            logger.debug(f"MCP Tool Call - Tool: {tool_name}, Args: {tool_args}")
+                            
                             # Handle async execution for MCP tools
                             try:
                                 loop = asyncio.get_running_loop()
@@ -887,7 +911,19 @@ class Conversation(ABC):
                                     except RuntimeError:
                                         loop = asyncio.new_event_loop()
                                         asyncio.set_event_loop(loop)
-                                    tool_result = loop.run_until_complete(tool_func.ainvoke(mcp_tool_args))
+                                    try:
+                                        tool_result = loop.run_until_complete(tool_func.ainvoke(mcp_tool_args))
+                                    except Exception as tool_error:
+                                        # Enhanced error logging for MCP tools
+                                        logger.error(
+                                            f"MCP Tool Execution Error - Tool: {tool_name}, "
+                                            f"Args from LLM: {tool_args}, "
+                                            f"Wrapped args: {mcp_tool_args}, "
+                                            f"Error: {tool_error!s}"
+                                        )
+                                        if hasattr(tool_func, 'input_schema'):
+                                            logger.error(f"Tool {tool_name} expected schema: {tool_func.input_schema}")
+                                        raise
                                 else:
                                     # Re-raise if it's a different RuntimeError (e.g., our custom one)
                                     raise
@@ -920,8 +956,27 @@ class Conversation(ABC):
                         # Re-raise if it's our RuntimeError about async context (not a tool execution error)
                         if isinstance(e, RuntimeError) and "Cannot use run_until_complete in async context" in str(e):
                             raise
-                        # Handle tool execution errors
+                        # Handle tool execution errors with enhanced debugging info
                         error_message = f"Error executing tool {tool_name}: {e!s}"
+                        
+                        # Add debugging information for MCP tools
+                        if self.mcp:
+                            logger.error(
+                                f"MCP Tool Error - Tool: {tool_name}, "
+                                f"Args sent: {tool_args}, "
+                                f"Wrapped args: {mcp_tool_args if 'mcp_tool_args' in locals() else 'N/A'}, "
+                                f"Error: {e!s}"
+                            )
+                            # Try to get tool schema to help debug
+                            if tool_func:
+                                schema_info = {}
+                                if hasattr(tool_func, 'input_schema'):
+                                    schema_info['input_schema'] = tool_func.input_schema
+                                if hasattr(tool_func, 'args_schema'):
+                                    schema_info['args_schema'] = tool_func.args_schema
+                                if schema_info:
+                                    logger.error(f"Tool {tool_name} schema: {schema_info}")
+                        
                         self.messages.append(
                             ToolMessage(content=error_message, name=tool_name, tool_call_id=tool_call_id)
                         )
