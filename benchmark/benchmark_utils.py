@@ -1,3 +1,4 @@
+import json
 import re
 from datetime import datetime
 import os
@@ -299,6 +300,21 @@ def get_failure_mode_file_path(task: str) -> str:
     return f"benchmark/results/{task}_failure_modes.csv"
 
 
+def get_trace_file_path(task: str) -> str:
+    """Return the path to the trace recording file.
+
+    Args:
+    ----
+        task (str): The benchmark task, e.g. "mcp_edam_qa"
+
+    Returns:
+    -------
+        str: The path to the trace file
+
+    """
+    return f"benchmark/results/{task}_traces.jsonl"
+
+
 def get_response_mode_file_path(task: str, model: str) -> str:
     """Return the path to the response mode recording file.
 
@@ -458,6 +474,50 @@ def write_failure_modes_to_file(
         by=["model_name", "subtask"],
     )
     results.to_csv(file_path, index=False)
+
+
+def write_trace_to_file(
+    model_name: str,
+    subtask: str,
+    prompt: str,
+    response: str,
+    tool_schemas: dict,
+    tool_calls: list,
+    tool_results: list,
+    md5_hash: str,
+    file_path: str,
+):
+    """Write trace information for MCP tool calls to a JSONL file.
+
+    Args:
+    ----
+        model_name (str): The model name, e.g. "gpt-4o-mini"
+        subtask (str): The benchmark subtask test case
+        prompt (str): The input prompt
+        response (str): The final response from the model
+        tool_schemas (dict): Dictionary of tool names to their schemas
+        tool_calls (list): List of tool calls made, each with name, args, and timestamp
+        tool_results (list): List of tool results, each with name, result, error (if any)
+        md5_hash (str): The md5 hash of the test case
+        file_path (str): The path to the trace file (JSONL format)
+
+    """
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    trace_entry = {
+        "model_name": model_name,
+        "subtask": subtask,
+        "md5_hash": md5_hash,
+        "datetime": now,
+        "prompt": prompt,
+        "response": response,
+        "tool_schemas": tool_schemas,
+        "tool_calls": tool_calls,
+        "tool_results": tool_results,
+    }
+
+    # Append to JSONL file (one JSON object per line)
+    with open(file_path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(trace_entry, ensure_ascii=False) + "\n")
 
 
 def categorize_failure_modes(

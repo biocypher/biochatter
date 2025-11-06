@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 
 import numpy as np
 import pandas as pd
@@ -11,6 +12,7 @@ from biochatter.llm_connect import (
     AnthropicConversation,
     Conversation,
     GptConversation,
+    LangChainConversation,
     XinferenceConversation,
 )
 from biochatter.prompts import BioCypherPromptEngine
@@ -18,26 +20,61 @@ from biochatter.prompts import BioCypherPromptEngine
 from .benchmark_utils import benchmark_already_executed, get_judgement_dataset
 from .load_dataset import get_benchmark_dataset
 
+# Patch event loop if running in pytest
+if "ipykernel" not in sys.modules:
+    try:
+        import nest_asyncio
+
+        nest_asyncio.apply()
+    except ImportError:
+        pass
+
 # how often should each benchmark be run?
-N_ITERATIONS = 4
+N_ITERATIONS = 1
 
 # which dataset should be used for benchmarking?
 BENCHMARK_DATASET = get_benchmark_dataset()
 
 # which models should be benchmarked?
+# List generated from https://api.openai.com/v1/models
 OPENAI_MODEL_NAMES = [
-    "gpt-3.5-turbo-0125",
+    # GPT-3.5 models
+    # "gpt-3.5-turbo-0125",
+    # GPT-4 models
     # "gpt-4-0613",
-    # "gpt-4-1106-preview",
     # "gpt-4-0125-preview",
+    # "gpt-4-1106-preview",
+    # "gpt-4-turbo",
     # "gpt-4-turbo-2024-04-09",
+    # "gpt-4-turbo-preview",
+    # GPT-4o models
     # "gpt-4o-2024-05-13",
     # "gpt-4o-2024-08-06",
     # "gpt-4o-2024-11-20",
-    # "gpt-4o-mini-2024-07-18",
-    # "o1-preview-2024-09-12",
+    "gpt-4o-mini-2024-07-18",
+    # GPT-4.1 models
+    # "gpt-4.1-2025-04-14",
+    "gpt-4.1-mini-2025-04-14",
+    # "gpt-4.1-nano-2025-04-14",
+    # GPT-5 models
+    "gpt-5-2025-08-07",
+    # "gpt-5-chat-latest",
+    # "gpt-5-codex",
+    "gpt-5-mini-2025-08-07",
+    "gpt-5-nano-2025-08-07",
+    # "gpt-5-pro-2025-10-06",
+    # O1 models (reasoning models)
+    # "o1",
+    # "o1-2024-12-17",
+    # "o1-mini",
     # "o1-mini-2024-09-12",
+    # "o1-pro",
+    # "o1-pro-2025-03-19",
+    # O3 models (reasoning models)
+    # "o3",
+    # "o3-2025-04-16",
     # "o3-mini",
+    # "o3-mini-2025-01-31",
 ]
 
 GROQ_MODEL_NAMES = [
@@ -47,12 +84,12 @@ GROQ_MODEL_NAMES = [
 LM_STUDIO_MODEL_NAMES = [
     # "llama-3.2-1b-instruct",
     # "llama-3.2-3b-instruct",
-    "qwen2.5-14b-instruct",
+    # "qwen2.5-14b-instruct",
 ]
 
 ANTHROPIC_MODEL_NAMES = [
-    # "claude-3-5-sonnet-20240620",
-    # "claude-3-opus-20240229",  # does not make a lot of sense to use, as more expensive and "less intelligent" (according to anthropic)
+    "claude-sonnet-4-5-20250929",
+    "claude-haiku-4-5-20251001",
 ]
 
 XINFERENCE_MODELS = {
@@ -580,6 +617,220 @@ def evaluation_conversation() -> Conversation:
     return conversation
 
 
+@pytest.fixture(scope="session")
+def mcp_server_config():
+    """Get MCP server configuration.
+
+    Returns the directory and module path for running the MCP server.
+    The server must be run as a module from its parent directory to handle
+    relative imports correctly.
+    """
+    from pathlib import Path
+
+    # Path to the edammcp repository root
+    # You can override this with MCP_SERVER_DIR environment variable
+    server_dir = os.getenv("MCP_SERVER_DIR", None)
+    if server_dir is None:
+        # Default: try to find it in common locations
+        server_dir = Path.home() / "GitHub" / "edammcp"
+        if not server_dir.exists():
+            pytest.skip("MCP server directory not found. Set MCP_SERVER_DIR environment variable.")
+    else:
+        server_dir = Path(server_dir)
+
+    if not server_dir.exists():
+        pytest.skip(f"MCP server directory not found at {server_dir}")
+
+    # Verify the module exists
+    main_module = server_dir / "edam_mcp" / "main.py"
+    if not main_module.exists():
+        pytest.skip(f"MCP server main.py not found at {main_module}")
+
+    # Try to find virtual environment Python, fallback to system python
+    venv_python = server_dir / ".venv" / "bin" / "python"
+    python_command = str(venv_python) if venv_python.exists() else "python"
+
+    return {
+        "cwd": server_dir,
+        "module": "edam_mcp.main",
+        "python": python_command,
+    }
+
+
+@pytest.fixture
+def mcp_server(mcp_server_config):
+    """Set up and tear down the MCP server for each test.
+
+    This fixture provides an MCP server session. The server is
+    started fresh for each test to ensure clean state.
+
+    Note: You need to set the MCP_SERVER_PATH environment variable or
+    modify the server_path in mcp_server_config fixture to point to your EDAM MCP server.
+    """
+    try:
+        from mcp import ClientSession, StdioServerParameters
+        from mcp.client.stdio import stdio_client
+        import asyncio
+
+        server_config = mcp_server_config
+        server_dir = server_config["cwd"]
+        server_module = server_config["module"]
+        python_command = server_config["python"]
+
+        # Run as a module from the parent directory to handle relative imports
+        # The server needs to run from its parent directory to resolve relative imports
+        # and access any data files it might need
+        # Use -u flag for unbuffered output (important for stdio communication)
+        # Match the Cursor MCP configuration approach
+        server_params = StdioServerParameters(
+            command=python_command,
+            args=["-u", "-m", server_module],
+            env=dict(
+                os.environ,
+                PYTHONPATH=str(server_dir),
+                PYTHONUNBUFFERED="1",
+            ),
+        )
+
+        # Note: StdioServerParameters doesn't directly support cwd parameter.
+        # However, by setting PYTHONPATH to the server directory, the module should
+        # be importable. The stdio_client will spawn the process, and we rely on
+        # the server's ability to handle relative paths from its package location.
+        # If the server needs to access files relative to its directory, those should
+        # be resolved using __file__ or similar within the server code itself.
+
+        # Create a new event loop for this fixture
+        # Using a new loop avoids conflicts with pytest's event loop handling
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+
+        # Store context managers to keep them alive
+        context_managers = []
+        session = None
+
+        try:
+            # Run async context manager with timeout
+            async def _get_session():
+                stdio_ctx = stdio_client(server_params)
+                read, write = await stdio_ctx.__aenter__()
+                context_managers.append(stdio_ctx)
+
+                session_ctx = ClientSession(read, write)
+                sess = await session_ctx.__aenter__()
+                context_managers.append(session_ctx)
+
+                await sess.initialize()
+                return sess
+
+            # Start the server and get session with timeout
+            try:
+                session = loop.run_until_complete(asyncio.wait_for(_get_session(), timeout=30.0))
+            except asyncio.TimeoutError:
+                pytest.skip("MCP server connection timed out after 30 seconds")
+
+            yield session
+
+        finally:
+            # Cleanup: exit context managers in reverse order
+            for ctx in reversed(context_managers):
+                try:
+                    loop.run_until_complete(asyncio.wait_for(ctx.__aexit__(None, None, None), timeout=5.0))
+                except Exception:
+                    pass
+            loop.close()
+
+    except ImportError:
+        pytest.skip("MCP dependencies not installed. Install with: poetry install --with mcp")
+    except Exception as e:
+        pytest.skip(f"Could not start MCP server: {e}")
+
+
+@pytest.fixture
+def mcp_conversation(request, model_name, mcp_server):
+    """Create a conversation with MCP tools loaded.
+
+    This fixture creates a LangChainConversation with MCP tools
+    loaded from the MCP server session.
+    """
+    try:
+        from langchain_mcp_adapters.tools import load_mcp_tools
+        import asyncio
+
+        # Get event loop
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+
+        # Load MCP tools from the session
+        tools = loop.run_until_complete(load_mcp_tools(mcp_server))
+
+        # Determine model provider and API key
+        if model_name in OPENAI_MODEL_NAMES:
+            provider = "openai"
+            api_key = os.getenv("OPENAI_API_KEY")
+        elif model_name in ANTHROPIC_MODEL_NAMES:
+            provider = "anthropic"
+            api_key = os.getenv("ANTHROPIC_API_KEY")
+        else:
+            pytest.skip(f"Model {model_name} not configured for MCP benchmark")
+
+        if not api_key:
+            pytest.skip(f"API key not set for {provider}")
+
+        # Create conversation with MCP support
+        conversation = LangChainConversation(
+            model_name=model_name,
+            model_provider=provider,
+            prompts={},
+            mcp=True,
+            tools=tools,
+        )
+
+        conversation.set_api_key(api_key, user="benchmark_user")
+
+        return conversation
+    except ImportError:
+        pytest.skip("MCP dependencies not installed. Install with: poetry install --with mcp")
+    except Exception as e:
+        pytest.skip(f"Could not create MCP conversation: {e}")
+
+
+@pytest.fixture
+def baseline_conversation(request, model_name):
+    """Create a conversation without MCP tools for baseline comparison.
+
+    This fixture creates a LangChainConversation with the same model
+    but without any tools, to serve as a baseline for comparison.
+    """
+    # Determine model provider and API key
+    if model_name in OPENAI_MODEL_NAMES:
+        provider = "openai"
+        api_key = os.getenv("OPENAI_API_KEY")
+    elif model_name in ANTHROPIC_MODEL_NAMES:
+        provider = "anthropic"
+        api_key = os.getenv("ANTHROPIC_API_KEY")
+    else:
+        pytest.skip(f"Model {model_name} not configured for baseline benchmark")
+
+    if not api_key:
+        pytest.skip(f"API key not set for {provider}")
+
+    # Create conversation without tools (baseline)
+    conversation = LangChainConversation(
+        model_name=model_name,
+        model_provider=provider,
+        prompts={},
+        mcp=False,
+        tools=None,
+    )
+
+    conversation.set_api_key(api_key, user="benchmark_user")
+
+    return conversation
+
+
 def pytest_addoption(parser):
     parser.addoption(
         "--run-all",
@@ -691,6 +942,11 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize(
             "test_create_longevity_responses_simultaneously",
             data["longevity_geriatric_case_assessment"],
+        )
+    if "test_data_mcp_edam_qa" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "test_data_mcp_edam_qa",
+            data.get("mcp_edam_qa", []),
         )
 
 

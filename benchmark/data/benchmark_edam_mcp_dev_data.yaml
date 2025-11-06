@@ -1,0 +1,78 @@
+# Simplified EDAM MCP benchmark for development
+# Escalating complexity: 1-term, 2-term, and 3-term questions
+#
+# Test case keys:
+# - input (for creating the test)
+# - expected (for asserting outcomes and generating a score)
+# - case (for categorizing the test case)
+
+mcp_edam_qa:
+# ============================================
+# 1-TERM QUESTIONS (Simple, single answer)
+# ============================================
+- case: mcp_edam_dev:single_term_data_type_1
+  input:
+    prompt: What type of data does this tool accept as input? — Mass spectrometry data from LC/MS experiments.
+  expected:
+    answer: http://edamontology.org/data_2536
+
+- case: mcp_edam_dev:single_term_format_2
+  input:
+    prompt: What input format is supported? — The tool reads mzML files.
+  expected:
+    answer: http://edamontology.org/format_3244
+
+- case: mcp_edam_dev:single_term_topic_3
+  input:
+    prompt: What scientific field is this tool designed for? — Metabolomics research.
+  expected:
+    answer: http://edamontology.org/topic_3172
+
+- case: mcp_edam_dev:single_term_operation_4
+  input:
+    prompt: What operation does this tool perform? — Peak detection in mass spectrometry data.
+  expected:
+    answer: http://edamontology.org/operation_3215
+
+# ============================================
+# 2-TERM QUESTIONS (Moderate complexity)
+# ============================================
+- case: mcp_edam_dev:two_term_data_format_5
+  input:
+    prompt: What data types and formats does your tool accept? — It accepts mass spectrometry data from LC/MS runs in mzML format.
+  expected:
+    answer: http://edamontology.org/data_2536; http://edamontology.org/format_3244
+
+- case: mcp_edam_dev:two_term_operations_6
+  input:
+    prompt: What operations does this tool perform? — Peak detection and alignment of retention times.
+  expected:
+    answer: http://edamontology.org/operation_3215; http://edamontology.org/operation_3628
+
+- case: mcp_edam_dev:two_term_output_7
+  input:
+    prompt: What outputs does your tool generate? — Expression data and feature tables.
+  expected:
+    answer: http://edamontology.org/data_2603; http://edamontology.org/data_1270
+
+# ============================================
+# 3-TERM QUESTIONS (Higher complexity)
+# ============================================
+- case: mcp_edam_dev:three_term_outputs_8
+  input:
+    prompt: What are the output data types? — Expression data, feature table, and alignment results.
+  expected:
+    answer: http://edamontology.org/data_2603; http://edamontology.org/data_1270; http://edamontology.org/data_1916
+
+- case: mcp_edam_dev:three_term_operations_9
+  input:
+    prompt: What operations does this tool perform? — Peak detection, retention time correction, and feature extraction.
+  expected:
+    answer: http://edamontology.org/operation_3215; http://edamontology.org/operation_3628; http://edamontology.org/operation_3799
+
+- case: mcp_edam_dev:three_term_complete_10
+  input:
+    prompt: What outputs does your tool generate and in what format? — Expression data, feature tables, and alignment results in binary format.
+  expected:
+    answer: http://edamontology.org/data_2603; http://edamontology.org/data_1270; http://edamontology.org/format_2333
+

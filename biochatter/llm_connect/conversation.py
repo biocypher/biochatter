@@ -12,7 +12,7 @@ import urllib.parse
 from abc import ABC, abstractmethod
 from collections import deque
 from collections.abc import Callable
-from typing import Literal
+from typing import Any, Literal
 
 import nltk
 from pydantic import BaseModel
@@ -29,7 +29,7 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, Tool
 from langchain_core.prompts import ChatPromptTemplate
 
 from biochatter._image import encode_image, encode_image_from_url
-from biochatter.llm_connect.available_models import TOOL_CALLING_MODELS
+from biochatter.llm_connect.available_models import supports_tool_calling
 from biochatter.rag_agent import RagAgent
 from biochatter.selector_agent import RagAgentSelector
 
@@ -424,11 +424,11 @@ class Conversation(ABC):
         """Bind tools to the chat."""
         # Check if the model supports tool calling
         # (exploit the enum class in available_models.py)
-        if self.model_name in TOOL_CALLING_MODELS and self.ca_chat:
+        if supports_tool_calling(self.model_name) and self.ca_chat:
             self.chat = self.chat.bind_tools(tools)
             self.ca_chat = self.ca_chat.bind_tools(tools)
 
-        elif self.model_name in TOOL_CALLING_MODELS:
+        elif supports_tool_calling(self.model_name):
             self.chat = self.chat.bind_tools(tools)
 
         # elif self.model_name not in TOOL_CALLING_MODELS:
@@ -745,6 +745,127 @@ class Conversation(ABC):
     def _correct_response(self, msg: str) -> str:
         """Correct the response."""
 
+    def _wrap_mcp_tool_args(self, tool_args: dict) -> dict:
+        """Wrap MCP tool arguments in 'request' object if not already wrapped.
+
+        MCP tools require their arguments to be wrapped in a 'request' object.
+        This method handles wrapping and also detects/prevents double-wrapping.
+
+        Args:
+        ----
+            tool_args: Arguments from the LLM (may need wrapping)
+
+        Returns:
+        -------
+            Wrapped arguments ready for MCP tool execution
+
+        """
+        # Check if already properly wrapped
+        if isinstance(tool_args, dict) and len(tool_args) == 1 and "request" in tool_args:
+            # Already wrapped - return as-is
+            return tool_args
+
+        # Check for double-wrapping (defensive)
+        if isinstance(tool_args, dict) and "request" in tool_args:
+            inner = tool_args["request"]
+            if isinstance(inner, dict) and len(inner) == 1 and "request" in inner:
+                # Double-wrapped - unwrap once
+                logger.warning(f"Detected double-wrapped MCP tool args, unwrapping: {tool_args}")
+                return inner
+
+        # Wrap the arguments
+        return {"request": tool_args}
+
+    def _run_async_in_sync_context(self, coro):
+        """Run an async coroutine in a synchronous context.
+
+        This method safely executes async operations from synchronous code by
+        checking if we're already in an async context (which would be an error)
+        and creating/getting an event loop for synchronous execution.
+
+        Args:
+        ----
+            coro: The coroutine to execute
+
+        Returns:
+        -------
+            The result of the coroutine execution
+
+        Raises:
+        ------
+            RuntimeError: If called from within an async context
+
+        """
+        # Check if we're already in an async context
+        # get_running_loop() returns the loop if one exists, or raises RuntimeError if not
+        try:
+            asyncio.get_running_loop()
+            # If we get here, we're in an async context - this is an error
+            raise RuntimeError(
+                "Cannot execute async operations synchronously from async context. " "Use async methods instead."
+            )
+        except RuntimeError as e:
+            # Check if this is our custom error (re-raise it)
+            if "Cannot execute async operations synchronously from async context" in str(e):
+                raise
+            # Otherwise, it's the "no running loop" error - this is what we want
+            # Proceed with sync execution
+
+        # Get or create event loop for sync execution
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+
+        return loop.run_until_complete(coro)
+
+    def _execute_mcp_tool(self, tool_func: Callable, tool_name: str, tool_args: dict) -> tuple[Any, dict]:
+        """Execute an MCP tool with proper argument wrapping and async handling.
+
+        This method handles the complete MCP tool execution flow:
+        1. Wraps arguments in 'request' object if needed
+        2. Executes the async tool function in a sync context
+        3. Provides enhanced error logging
+
+        Args:
+        ----
+            tool_func: The tool function to execute
+            tool_name: Name of the tool (for logging)
+            tool_args: Arguments from the LLM (may need wrapping)
+
+        Returns:
+        -------
+            Tuple of (tool_result, wrapped_args) where wrapped_args is the
+            actual arguments passed to the tool (for display/logging)
+
+        Raises:
+        ------
+            Exception: Any exception raised by the tool execution
+
+        """
+        # Wrap arguments if needed
+        mcp_tool_args = self._wrap_mcp_tool_args(tool_args)
+
+        logger.debug(f"MCP Tool Call - Tool: {tool_name}, Args: {tool_args}")
+
+        # Execute in sync context
+        try:
+            tool_result = self._run_async_in_sync_context(tool_func.ainvoke(mcp_tool_args))
+        except Exception as tool_error:
+            # Enhanced error logging for MCP tools
+            logger.error(
+                f"MCP Tool Execution Error - Tool: {tool_name}, "
+                f"Args from LLM: {tool_args}, "
+                f"Wrapped args: {mcp_tool_args}, "
+                f"Error: {tool_error!s}"
+            )
+            if hasattr(tool_func, "input_schema"):
+                logger.error(f"Tool {tool_name} expected schema: {tool_func.input_schema}")
+            raise
+
+        return tool_result, mcp_tool_args
+
     def _process_manual_tool_call(
         self,
         tool_call: list[dict],
@@ -775,14 +896,16 @@ class Conversation(ABC):
         # This is beacause tool_name is not a valid argument for the tool
         del tool_call["tool_name"]
 
-        # Execute the tool based on whether we're in async context or not
+        # Execute the tool based on whether we're in MCP mode or not
         if self.mcp:
-            loop = asyncio.get_running_loop()
-            tool_result = loop.run_until_complete(tool_func.ainvoke(tool_call))
+            # Use the helper method for MCP tools (handles wrapping and async execution)
+            tool_result, display_args = self._execute_mcp_tool(tool_func, tool_name, tool_call)
         else:
             tool_result = tool_func.invoke(tool_call)
+            display_args = tool_call
 
-        msg = f"Tool: {tool_name}\nArguments: {tool_call}\nTool result: {tool_result}"
+        # Show the actual arguments passed to the tool (may be wrapped in 'request' for MCP)
+        msg = f"Tool: {tool_name}\nArguments: {display_args}\nTool result: {tool_result}"
 
         if explain_tool_result:
             tool_result_interpretation = self.chat.invoke(
@@ -850,8 +973,8 @@ class Conversation(ABC):
                     # Execute the tool
                     try:
                         if self.mcp:
-                            loop = asyncio.get_running_loop()
-                            tool_result = loop.run_until_complete(tool_func.ainvoke(tool_args))
+                            # Use the helper method for MCP tools (handles wrapping and async execution)
+                            tool_result, mcp_tool_args = self._execute_mcp_tool(tool_func, tool_name, tool_args)
                         else:
                             tool_result = tool_func.invoke(tool_args)
                         # Add the tool result to the conversation
@@ -878,8 +1001,38 @@ class Conversation(ABC):
                             )
 
                     except Exception as e:
-                        # Handle tool execution errors
+                        # Re-raise if it's our RuntimeError about async context (not a tool execution error)
+                        if isinstance(
+                            e, RuntimeError
+                        ) and "Cannot execute async operations synchronously from async context" in str(e):
+                            raise
+                        # Handle tool execution errors with enhanced debugging info
                         error_message = f"Error executing tool {tool_name}: {e!s}"
+
+                        # Add debugging information for MCP tools
+                        if self.mcp:
+                            # Try to get wrapped args for logging (may not exist if error occurred during wrapping)
+                            try:
+                                wrapped_args = self._wrap_mcp_tool_args(tool_args)
+                            except Exception:
+                                wrapped_args = "N/A (error during wrapping)"
+
+                            logger.error(
+                                f"MCP Tool Error - Tool: {tool_name}, "
+                                f"Args sent: {tool_args}, "
+                                f"Wrapped args: {wrapped_args}, "
+                                f"Error: {e!s}"
+                            )
+                            # Try to get tool schema to help debug
+                            if tool_func:
+                                schema_info = {}
+                                if hasattr(tool_func, "input_schema"):
+                                    schema_info["input_schema"] = tool_func.input_schema
+                                if hasattr(tool_func, "args_schema"):
+                                    schema_info["args_schema"] = tool_func.args_schema
+                                if schema_info:
+                                    logger.error(f"Tool {tool_name} schema: {schema_info}")
+
                         self.messages.append(
                             ToolMessage(content=error_message, name=tool_name, tool_call_id=tool_call_id)
                         )
