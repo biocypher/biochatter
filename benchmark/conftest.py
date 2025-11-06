@@ -57,7 +57,7 @@ OPENAI_MODEL_NAMES = [
     "gpt-4.1-mini-2025-04-14",
     # "gpt-4.1-nano-2025-04-14",
     # GPT-5 models
-    # "gpt-5-2025-08-07",
+    "gpt-5-2025-08-07",
     # "gpt-5-chat-latest",
     # "gpt-5-codex",
     "gpt-5-mini-2025-08-07",
@@ -88,8 +88,8 @@ LM_STUDIO_MODEL_NAMES = [
 ]
 
 ANTHROPIC_MODEL_NAMES = [
-    # "claude-3-5-sonnet-20240620",
-    # "claude-3-opus-20240229",  # does not make a lot of sense to use, as more expensive and "less intelligent" (according to anthropic)
+    "claude-sonnet-4-5-20250929",
+    "claude-haiku-4-5-20251001",
 ]
 
 XINFERENCE_MODELS = {
