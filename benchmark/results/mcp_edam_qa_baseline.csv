@@ -1,0 +1,2 @@
+model_name,subtask,score,iterations,md5_hash,datetime,biochatter_version
+gpt-4.1-mini-2025-04-14,mcp_edam_dev:single_term_data_type_1,0/1,1,543541dea5ea64092e0ba2f8e3401766,2025-11-06 13:54:21,0.13.5

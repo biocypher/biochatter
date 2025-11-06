@@ -806,6 +806,40 @@ def mcp_conversation(request, model_name, mcp_server):
         pytest.skip(f"Could not create MCP conversation: {e}")
 
 
+@pytest.fixture
+def baseline_conversation(request, model_name):
+    """Create a conversation without MCP tools for baseline comparison.
+    
+    This fixture creates a LangChainConversation with the same model
+    but without any tools, to serve as a baseline for comparison.
+    """
+    # Determine model provider and API key
+    if model_name in OPENAI_MODEL_NAMES:
+        provider = "openai"
+        api_key = os.getenv("OPENAI_API_KEY")
+    elif model_name in ANTHROPIC_MODEL_NAMES:
+        provider = "anthropic"
+        api_key = os.getenv("ANTHROPIC_API_KEY")
+    else:
+        pytest.skip(f"Model {model_name} not configured for baseline benchmark")
+    
+    if not api_key:
+        pytest.skip(f"API key not set for {provider}")
+    
+    # Create conversation without tools (baseline)
+    conversation = LangChainConversation(
+        model_name=model_name,
+        model_provider=provider,
+        prompts={},
+        mcp=False,
+        tools=None,
+    )
+    
+    conversation.set_api_key(api_key, user="benchmark_user")
+    
+    return conversation
+
+
 def pytest_addoption(parser):
     parser.addoption(
         "--run-all",
