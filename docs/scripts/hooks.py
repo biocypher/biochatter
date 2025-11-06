@@ -83,6 +83,7 @@ def on_pre_build() -> None:
         and f.endswith(".csv")
         and "failure_mode" not in f
         and "confidence" not in f
+        and "mcp" not in f.lower()
     ]
 
     overview_file_names = []

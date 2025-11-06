@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from biochatter.llm_connect.langchain import LangChainConversation
 
-# Import TOOL_CALLING_MODELS and STRUCTURED_OUTPUT_MODELS from where they are referenced in langchain.py
+# Import helper functions from where they are referenced in langchain.py
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 
 
@@ -85,8 +85,8 @@ def test_primary_query_no_tools_no_structured_basic_model(conversation_instance,
     mock_chat_object.invoke = MagicMock(return_value=mock_response)
 
     with (
-        patch("biochatter.llm_connect.langchain.TOOL_CALLING_MODELS", []),
-        patch("biochatter.llm_connect.langchain.STRUCTURED_OUTPUT_MODELS", []),
+        patch("biochatter.llm_connect.langchain.supports_tool_calling", return_value=False),
+        patch("biochatter.llm_connect.langchain.supports_structured_output", return_value=False),
     ):
         msg, token_usage = conversation_instance._primary_query(tools=None, structured_model=None)
 
@@ -117,7 +117,7 @@ def test_primary_query_with_tools_model_supports_tool_calling_tool_used(conversa
     processed_tool_output = "Tool mock_tool_two finished."
     conversation_instance._process_tool_calls = MagicMock(return_value=processed_tool_output)
 
-    with patch("biochatter.llm_connect.langchain.TOOL_CALLING_MODELS", [conversation_instance.model_name]):
+    with patch("biochatter.llm_connect.langchain.supports_tool_calling", return_value=True):
         msg, token_usage = conversation_instance._primary_query(
             tools=[query_tool], explain_tool_result=True, return_tool_calls_as_ai_message=False
         )
@@ -150,7 +150,7 @@ def test_primary_query_with_tools_model_supports_tool_calling_no_tool_use(conver
     mock_llm_response.usage_metadata = {"total_tokens": 25}
     mock_chat_object.invoke = MagicMock(return_value=mock_llm_response)
 
-    with patch("biochatter.llm_connect.langchain.TOOL_CALLING_MODELS", [conversation_instance.model_name]):
+    with patch("biochatter.llm_connect.langchain.supports_tool_calling", return_value=True):
         msg, token_usage = conversation_instance._primary_query(tools=[mock_tool_one])
 
     assert msg == mock_response_content
@@ -182,8 +182,8 @@ def test_primary_query_tools_model_not_supports_manual_call_success(conversation
     conversation_instance._process_manual_tool_call = MagicMock(return_value=processed_manual_tool_output)
 
     with (
-        patch("biochatter.llm_connect.langchain.TOOL_CALLING_MODELS", []),
-        patch("biochatter.llm_connect.langchain.STRUCTURED_OUTPUT_MODELS", []),
+        patch("biochatter.llm_connect.langchain.supports_tool_calling", return_value=False),
+        patch("biochatter.llm_connect.langchain.supports_structured_output", return_value=False),
     ):
         msg, token_usage = conversation_instance._primary_query(tools=[mock_tool_one], explain_tool_result=True)
 
@@ -191,7 +191,7 @@ def test_primary_query_tools_model_not_supports_manual_call_success(conversation
     assert token_usage == 30  # Manual tool calls return the actual token count
 
     conversation_instance._create_tool_prompt.assert_called_once_with(
-        tools=[mock_tool_one], additional_instructions=None
+        tools=[mock_tool_one], additional_tools_instructions=None, mcp=False
     )
     # Check self.messages was modified for invoke
     # Initial messages: [HumanMessage(content="User query")]
@@ -224,8 +224,8 @@ def test_primary_query_tools_model_not_supports_invalid_json_response(conversati
     conversation_instance._create_tool_prompt = MagicMock(return_value=system_tool_prompt_obj)
 
     with (
-        patch("biochatter.llm_connect.langchain.TOOL_CALLING_MODELS", []),
-        patch("biochatter.llm_connect.langchain.STRUCTURED_OUTPUT_MODELS", []),
+        patch("biochatter.llm_connect.langchain.supports_tool_calling", return_value=False),
+        patch("biochatter.llm_connect.langchain.supports_structured_output", return_value=False),
     ):
         msg, token_usage = conversation_instance._primary_query(tools=[mock_tool_one])
 
@@ -246,7 +246,7 @@ def test_primary_query_structured_output_model_supports(conversation_instance, m
     # For structured output, invoke returns the Pydantic model instance directly
     mock_chat_object.invoke = MagicMock(return_value=structured_response_obj)
 
-    with patch("biochatter.llm_connect.langchain.STRUCTURED_OUTPUT_MODELS", [conversation_instance.model_name]):
+    with patch("biochatter.llm_connect.langchain.supports_structured_output", return_value=True):
         msg, token_usage = conversation_instance._primary_query(
             structured_model=MockOutputModel,  # Pass the class
             wrap_structured_output=False,
@@ -268,7 +268,7 @@ def test_primary_query_structured_output_model_supports_wrapped(conversation_ins
     structured_response_obj = MockOutputModel(param1="Wrapped data", param2=200)
     mock_chat_object.invoke = MagicMock(return_value=structured_response_obj)
 
-    with patch("biochatter.llm_connect.langchain.STRUCTURED_OUTPUT_MODELS", [conversation_instance.model_name]):
+    with patch("biochatter.llm_connect.langchain.supports_structured_output", return_value=True):
         msg, token_usage = conversation_instance._primary_query(
             structured_model=MockOutputModel, wrap_structured_output=True
         )
@@ -293,8 +293,8 @@ def test_primary_query_structured_output_model_not_supports_fallback(conversatio
     schema_json_str = str(MockOutputModel.model_json_schema())
 
     with (
-        patch("biochatter.llm_connect.langchain.STRUCTURED_OUTPUT_MODELS", []),
-        patch("biochatter.llm_connect.langchain.TOOL_CALLING_MODELS", []),
+        patch("biochatter.llm_connect.langchain.supports_structured_output", return_value=False),
+        patch("biochatter.llm_connect.langchain.supports_tool_calling", return_value=False),
     ):  # Ensure not tool calling either
         msg, token_usage = conversation_instance._primary_query(
             structured_model=MockOutputModel, wrap_structured_output=False
@@ -331,8 +331,8 @@ def test_primary_query_structured_output_model_not_supports_fallback_wrapped(con
     schema_json_str = str(MockOutputModel.model_json_schema())
 
     with (
-        patch("biochatter.llm_connect.langchain.STRUCTURED_OUTPUT_MODELS", []),
-        patch("biochatter.llm_connect.langchain.TOOL_CALLING_MODELS", []),
+        patch("biochatter.llm_connect.langchain.supports_structured_output", return_value=False),
+        patch("biochatter.llm_connect.langchain.supports_tool_calling", return_value=False),
     ):
         msg, token_usage = conversation_instance._primary_query(
             structured_model=MockOutputModel,
@@ -369,8 +369,8 @@ def test_primary_query_invoke_raises_exception(conversation_instance, mock_chat_
     conversation_instance.chat.invoke = MagicMock(side_effect=Exception(error_message))
 
     with (
-        patch("biochatter.llm_connect.langchain.TOOL_CALLING_MODELS", []),
-        patch("biochatter.llm_connect.langchain.STRUCTURED_OUTPUT_MODELS", []),
+        patch("biochatter.llm_connect.langchain.supports_tool_calling", return_value=False),
+        patch("biochatter.llm_connect.langchain.supports_structured_output", return_value=False),
     ):
         msg, token_usage = conversation_instance._primary_query()
 
