@@ -37,8 +37,8 @@ mistral-instruct-v0.2,7,ggufv2,Q5_K_M,0.46,0.34
 mistral-instruct-v0.2,7,ggufv2,Q6_K,0.45,0.34
 code-llama-instruct,34,ggufv2,Q3_K_M,0.45,0.31
 chatglm3,6,ggmlv3,q4_0,0.44,0.26
-llama-2-chat,70,ggufv2,Q5_K_M,0.44,0.35
 llama-2-chat,70,ggufv2,Q4_K_M,0.44,0.35
+llama-2-chat,70,ggufv2,Q5_K_M,0.44,0.35
 code-llama-instruct,13,ggufv2,Q6_K,0.44,0.35
 code-llama-instruct,13,ggufv2,Q8_0,0.44,0.33
 code-llama-instruct,13,ggufv2,Q5_K_M,0.43,0.32
