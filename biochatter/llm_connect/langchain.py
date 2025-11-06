@@ -10,8 +10,6 @@ from biochatter._misc import pydantic_manual_validator
 from biochatter.llm_connect.available_models import (
     supports_structured_output,
     supports_tool_calling,
-    STRUCTURED_OUTPUT_MODELS,
-    TOOL_CALLING_MODELS,
 )
 from biochatter.llm_connect.conversation import Conversation
 

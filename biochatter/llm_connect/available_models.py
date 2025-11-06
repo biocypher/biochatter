@@ -123,31 +123,34 @@ _TOOL_CALLING_PREFIXES = frozenset(
 
 def supports_tool_calling(model_name: str) -> bool:
     """Check if a model supports tool calling.
-    
+
     This function uses prefix matching to handle model variants with date suffixes
     (e.g., "gpt-4.1-mini-2025-04-14" matches "gpt-4.1-mini").
-    
+
     Args:
+    ----
         model_name: The model name to check (e.g., "gpt-4.1-mini-2025-04-14")
-    
+
     Returns:
+    -------
         True if the model supports tool calling, False otherwise.
+
     """
     # First check exact match (for backward compatibility)
     if model_name in _TOOL_CALLING_BASE_MODELS:
         return True
-    
+
     # Check if model_name starts with any base model name
     # This handles cases like "gpt-4.1-mini-2025-04-14" matching "gpt-4.1-mini"
     for base_model in _TOOL_CALLING_BASE_MODELS:
         if model_name.startswith(base_model + "-") or model_name == base_model:
             return True
-    
+
     # Check against additional prefixes for models not yet in the enum
     for prefix in _TOOL_CALLING_PREFIXES:
         if model_name.startswith(prefix + "-") or model_name == prefix:
             return True
-    
+
     return False
 
 
@@ -181,29 +184,32 @@ _STRUCTURED_OUTPUT_PREFIXES = frozenset(
 
 def supports_structured_output(model_name: str) -> bool:
     """Check if a model supports structured output.
-    
+
     This function uses prefix matching to handle model variants with date suffixes.
-    
+
     Args:
+    ----
         model_name: The model name to check
-    
+
     Returns:
+    -------
         True if the model supports structured output, False otherwise.
+
     """
     # First check exact match
     if model_name in _STRUCTURED_OUTPUT_BASE_MODELS:
         return True
-    
+
     # Check if model_name starts with any base model name
     for base_model in _STRUCTURED_OUTPUT_BASE_MODELS:
         if model_name.startswith(base_model + "-") or model_name == base_model:
             return True
-    
+
     # Check against additional prefixes
     for prefix in _STRUCTURED_OUTPUT_PREFIXES:
         if model_name.startswith(prefix + "-") or model_name == prefix:
             return True
-    
+
     return False
 
 

@@ -16,6 +16,7 @@ from urllib.request import urlopen, Request
 
 try:
     import requests
+
     HAS_REQUESTS = True
 except ImportError:
     HAS_REQUESTS = False
@@ -23,29 +24,28 @@ except ImportError:
 
 def get_benchmark_subdirectories(repo: str = "edamontology/edammcp", branch: str = "main") -> list[str]:
     """Get list of subdirectories in the benchmark folder.
-    
+
     Uses GitHub API to discover subdirectories.
-    
+
     Args:
+    ----
         repo: Repository in format "org/repo"
         branch: Branch name
-    
+
     Returns:
+    -------
         List of subdirectory names
+
     """
     # Try GitHub API first (requires requests or urllib)
     api_url = f"https://api.github.com/repos/{repo}/contents/benchmark"
-    
+
     try:
         if HAS_REQUESTS:
             response = requests.get(api_url, timeout=10)
             if response.status_code == 200:
                 contents = response.json()
-                subdirs = [
-                    item["name"] 
-                    for item in contents 
-                    if item["type"] == "dir"
-                ]
+                subdirs = [item["name"] for item in contents if item["type"] == "dir"]
                 return sorted(subdirs)
         else:
             # Fallback to urllib
@@ -53,39 +53,40 @@ def get_benchmark_subdirectories(repo: str = "edamontology/edammcp", branch: str
             req.add_header("Accept", "application/vnd.github.v3+json")
             with urlopen(req, timeout=10) as response:
                 contents = json.loads(response.read())
-                subdirs = [
-                    item["name"] 
-                    for item in contents 
-                    if item["type"] == "dir"
-                ]
+                subdirs = [item["name"] for item in contents if item["type"] == "dir"]
                 return sorted(subdirs)
     except (HTTPError, URLError, json.JSONDecodeError, KeyError) as e:
         print(f"Warning: Could not fetch subdirectories from GitHub API: {e}")
         print("You may need to specify subdirectories manually with --subdirectories")
-    
+
     return []
 
 
-def download_qa_tsv(subdirectory: str, output_dir: Path, repo_base: str = "edamontology/edammcp", branch: str = "main") -> Path | None:
+def download_qa_tsv(
+    subdirectory: str, output_dir: Path, repo_base: str = "edamontology/edammcp", branch: str = "main"
+) -> Path | None:
     """Download qa.tsv file from a subdirectory.
-    
+
     Args:
+    ----
         subdirectory: Name of the subdirectory
         output_dir: Directory to save the downloaded file
         repo_base: Repository in format "org/repo"
         branch: Branch name
-    
+
     Returns:
+    -------
         Path to downloaded file, or None if download failed
+
     """
     # Construct raw GitHub URL
     raw_url = f"https://raw.githubusercontent.com/{repo_base}/{branch}/benchmark/{subdirectory}/qa.tsv"
-    
+
     output_file = output_dir / f"{subdirectory}_qa.tsv"
-    
+
     try:
         print(f"Downloading {raw_url}...")
-        
+
         if HAS_REQUESTS:
             response = requests.get(raw_url, timeout=30)
             if response.status_code == 200:
@@ -100,7 +101,7 @@ def download_qa_tsv(subdirectory: str, output_dir: Path, repo_base: str = "edamo
             # Fallback to urllib
             try:
                 with urlopen(raw_url, timeout=30) as response:
-                    content = response.read().decode('utf-8')
+                    content = response.read().decode("utf-8")
             except HTTPError as e:
                 if e.code == 404:
                     print(f"  ✗ File not found: {raw_url}")
@@ -108,9 +109,9 @@ def download_qa_tsv(subdirectory: str, output_dir: Path, repo_base: str = "edamo
                 else:
                     print(f"  ✗ Failed to download: HTTP {e.code}")
                     return None
-        
+
         output_file.parent.mkdir(parents=True, exist_ok=True)
-        output_file.write_text(content, encoding='utf-8')
+        output_file.write_text(content, encoding="utf-8")
         print(f"  ✓ Downloaded to {output_file}")
         return output_file
     except Exception as e:
@@ -120,32 +121,40 @@ def download_qa_tsv(subdirectory: str, output_dir: Path, repo_base: str = "edamo
 
 def convert_tsv_to_yaml(tsv_file: Path, output_dir: Path, subdirectory: str) -> Path | None:
     """Convert a TSV file to YAML format.
-    
+
     Args:
+    ----
         tsv_file: Path to the TSV file
         output_dir: Directory to save the YAML file
         subdirectory: Name of the subdirectory (used for naming)
-    
+
     Returns:
+    -------
         Path to converted YAML file, or None if conversion failed
+
     """
     # Get the conversion script path
     script_dir = Path(__file__).parent
     convert_script = script_dir / "convert_tsv_to_yaml.py"
-    
+
     # Generate output filename with edam_mcp prefix to indicate topic
     output_file = output_dir / f"benchmark_edam_mcp_{subdirectory}_data.yaml"
-    
+
     try:
         print(f"Converting {tsv_file.name}...")
         result = subprocess.run(
             [
-                "uv", "run", "python",
+                "uv",
+                "run",
+                "python",
                 str(convert_script),
                 str(tsv_file),
-                "-o", str(output_file),
-                "--top-level-key", "mcp_edam_qa",
-                "--case-prefix", f"mcp_edam_{subdirectory}",
+                "-o",
+                str(output_file),
+                "--top-level-key",
+                "mcp_edam_qa",
+                "--case-prefix",
+                f"mcp_edam_{subdirectory}",
             ],
             capture_output=True,
             text=True,
@@ -204,13 +213,13 @@ def main():
         action="store_true",
         help="Skip conversion step, only download TSV files",
     )
-    
+
     args = parser.parse_args()
-    
+
     # Create output directories
     args.download_dir.mkdir(parents=True, exist_ok=True)
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # Get list of subdirectories
     if args.subdirectories:
         subdirectories = args.subdirectories
@@ -218,25 +227,25 @@ def main():
     else:
         print("Discovering subdirectories from GitHub...")
         subdirectories = get_benchmark_subdirectories(args.repo, args.branch)
-        
+
         if not subdirectories:
             print("Warning: Could not auto-discover subdirectories.")
             print("You can specify them manually with --subdirectories")
             print("\nExample:")
             print("  python download_and_convert_edammcp_benchmarks.py --subdirectories subdir1 subdir2")
             return 1
-        
+
         print(f"Found {len(subdirectories)} subdirectories: {', '.join(subdirectories)}")
-    
+
     # Download and convert each file
     downloaded_files = []
     converted_files = []
-    
+
     for subdir in subdirectories:
         print(f"\n{'='*60}")
         print(f"Processing subdirectory: {subdir}")
         print(f"{'='*60}")
-        
+
         # Download
         if not args.skip_download:
             tsv_file = download_qa_tsv(subdir, args.download_dir, args.repo, args.branch)
@@ -251,28 +260,27 @@ def main():
             if not tsv_file.exists():
                 print(f"  File not found: {tsv_file}")
                 continue
-        
+
         # Convert
         if not args.skip_convert:
             yaml_file = convert_tsv_to_yaml(tsv_file, args.output_dir, subdir)
             if yaml_file:
                 converted_files.append(yaml_file)
-    
+
     # Summary
     print(f"\n{'='*60}")
     print("Summary")
     print(f"{'='*60}")
     print(f"Downloaded: {len(downloaded_files)} files")
     print(f"Converted: {len(converted_files)} files")
-    
+
     if converted_files:
-        print(f"\nConverted YAML files:")
+        print("\nConverted YAML files:")
         for yaml_file in converted_files:
             print(f"  - {yaml_file}")
-    
+
     return 0
 
 
 if __name__ == "__main__":
     sys.exit(main())
-

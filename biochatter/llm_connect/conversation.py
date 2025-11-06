@@ -29,7 +29,7 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, Tool
 from langchain_core.prompts import ChatPromptTemplate
 
 from biochatter._image import encode_image, encode_image_from_url
-from biochatter.llm_connect.available_models import TOOL_CALLING_MODELS, supports_tool_calling
+from biochatter.llm_connect.available_models import supports_tool_calling
 from biochatter.rag_agent import RagAgent
 from biochatter.selector_agent import RagAgentSelector
 
@@ -734,21 +734,24 @@ class Conversation(ABC):
 
     def _wrap_mcp_tool_args(self, tool_args: dict) -> dict:
         """Wrap MCP tool arguments in 'request' object if not already wrapped.
-        
+
         MCP tools require their arguments to be wrapped in a 'request' object.
         This method handles wrapping and also detects/prevents double-wrapping.
-        
+
         Args:
+        ----
             tool_args: Arguments from the LLM (may need wrapping)
-        
+
         Returns:
+        -------
             Wrapped arguments ready for MCP tool execution
+
         """
         # Check if already properly wrapped
         if isinstance(tool_args, dict) and len(tool_args) == 1 and "request" in tool_args:
             # Already wrapped - return as-is
             return tool_args
-        
+
         # Check for double-wrapping (defensive)
         if isinstance(tool_args, dict) and "request" in tool_args:
             inner = tool_args["request"]
@@ -756,25 +759,29 @@ class Conversation(ABC):
                 # Double-wrapped - unwrap once
                 logger.warning(f"Detected double-wrapped MCP tool args, unwrapping: {tool_args}")
                 return inner
-        
+
         # Wrap the arguments
         return {"request": tool_args}
 
     def _run_async_in_sync_context(self, coro):
         """Run an async coroutine in a synchronous context.
-        
+
         This method safely executes async operations from synchronous code by
         checking if we're already in an async context (which would be an error)
         and creating/getting an event loop for synchronous execution.
-        
+
         Args:
+        ----
             coro: The coroutine to execute
-        
+
         Returns:
+        -------
             The result of the coroutine execution
-        
+
         Raises:
+        ------
             RuntimeError: If called from within an async context
+
         """
         # Check if we're already in an async context
         # get_running_loop() returns the loop if one exists, or raises RuntimeError if not
@@ -782,8 +789,7 @@ class Conversation(ABC):
             asyncio.get_running_loop()
             # If we get here, we're in an async context - this is an error
             raise RuntimeError(
-                "Cannot execute async operations synchronously from async context. "
-                "Use async methods instead."
+                "Cannot execute async operations synchronously from async context. " "Use async methods instead."
             )
         except RuntimeError as e:
             # Check if this is our custom error (re-raise it)
@@ -791,44 +797,45 @@ class Conversation(ABC):
                 raise
             # Otherwise, it's the "no running loop" error - this is what we want
             # Proceed with sync execution
-            pass
-        
+
         # Get or create event loop for sync execution
         try:
             loop = asyncio.get_event_loop()
         except RuntimeError:
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-        
+
         return loop.run_until_complete(coro)
 
-    def _execute_mcp_tool(
-        self, tool_func: Callable, tool_name: str, tool_args: dict
-    ) -> tuple[Any, dict]:
+    def _execute_mcp_tool(self, tool_func: Callable, tool_name: str, tool_args: dict) -> tuple[Any, dict]:
         """Execute an MCP tool with proper argument wrapping and async handling.
-        
+
         This method handles the complete MCP tool execution flow:
         1. Wraps arguments in 'request' object if needed
         2. Executes the async tool function in a sync context
         3. Provides enhanced error logging
-        
+
         Args:
+        ----
             tool_func: The tool function to execute
             tool_name: Name of the tool (for logging)
             tool_args: Arguments from the LLM (may need wrapping)
-        
+
         Returns:
+        -------
             Tuple of (tool_result, wrapped_args) where wrapped_args is the
             actual arguments passed to the tool (for display/logging)
-        
+
         Raises:
+        ------
             Exception: Any exception raised by the tool execution
+
         """
         # Wrap arguments if needed
         mcp_tool_args = self._wrap_mcp_tool_args(tool_args)
-        
+
         logger.debug(f"MCP Tool Call - Tool: {tool_name}, Args: {tool_args}")
-        
+
         # Execute in sync context
         try:
             tool_result = self._run_async_in_sync_context(tool_func.ainvoke(mcp_tool_args))
@@ -840,10 +847,10 @@ class Conversation(ABC):
                 f"Wrapped args: {mcp_tool_args}, "
                 f"Error: {tool_error!s}"
             )
-            if hasattr(tool_func, 'input_schema'):
+            if hasattr(tool_func, "input_schema"):
                 logger.error(f"Tool {tool_name} expected schema: {tool_func.input_schema}")
             raise
-        
+
         return tool_result, mcp_tool_args
 
     def _process_manual_tool_call(
@@ -982,11 +989,13 @@ class Conversation(ABC):
 
                     except Exception as e:
                         # Re-raise if it's our RuntimeError about async context (not a tool execution error)
-                        if isinstance(e, RuntimeError) and "Cannot execute async operations synchronously from async context" in str(e):
+                        if isinstance(
+                            e, RuntimeError
+                        ) and "Cannot execute async operations synchronously from async context" in str(e):
                             raise
                         # Handle tool execution errors with enhanced debugging info
                         error_message = f"Error executing tool {tool_name}: {e!s}"
-                        
+
                         # Add debugging information for MCP tools
                         if self.mcp:
                             # Try to get wrapped args for logging (may not exist if error occurred during wrapping)
@@ -994,7 +1003,7 @@ class Conversation(ABC):
                                 wrapped_args = self._wrap_mcp_tool_args(tool_args)
                             except Exception:
                                 wrapped_args = "N/A (error during wrapping)"
-                            
+
                             logger.error(
                                 f"MCP Tool Error - Tool: {tool_name}, "
                                 f"Args sent: {tool_args}, "
@@ -1004,13 +1013,13 @@ class Conversation(ABC):
                             # Try to get tool schema to help debug
                             if tool_func:
                                 schema_info = {}
-                                if hasattr(tool_func, 'input_schema'):
-                                    schema_info['input_schema'] = tool_func.input_schema
-                                if hasattr(tool_func, 'args_schema'):
-                                    schema_info['args_schema'] = tool_func.args_schema
+                                if hasattr(tool_func, "input_schema"):
+                                    schema_info["input_schema"] = tool_func.input_schema
+                                if hasattr(tool_func, "args_schema"):
+                                    schema_info["args_schema"] = tool_func.args_schema
                                 if schema_info:
                                     logger.error(f"Tool {tool_name} schema: {schema_info}")
-                        
+
                         self.messages.append(
                             ToolMessage(content=error_message, name=tool_name, tool_call_id=tool_call_id)
                         )

@@ -514,7 +514,7 @@ def write_trace_to_file(
         "tool_calls": tool_calls,
         "tool_results": tool_results,
     }
-    
+
     # Append to JSONL file (one JSON object per line)
     with open(file_path, "a", encoding="utf-8") as f:
         f.write(json.dumps(trace_entry, ensure_ascii=False) + "\n")
