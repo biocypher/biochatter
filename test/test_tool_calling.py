@@ -784,8 +784,8 @@ def test_process_manual_tool_call_mcp_with_running_loop(dummy_conv, monkeypatch)
     
     monkeypatch.setattr("asyncio.get_running_loop", mock_get_running_loop)
     
-    # Should raise RuntimeError about not being able to use run_until_complete in async context
-    with pytest.raises(RuntimeError, match="Cannot use run_until_complete in async context"):
+    # Should raise RuntimeError about not being able to execute async operations synchronously
+    with pytest.raises(RuntimeError, match="Cannot execute async operations synchronously from async context"):
         dummy_conv._process_manual_tool_call(tool_call.copy(), [tool], explain_tool_result=False)
 
 
@@ -807,8 +807,8 @@ def test_process_tool_calls_mcp_with_running_loop(dummy_conv, monkeypatch):
     
     monkeypatch.setattr("asyncio.get_running_loop", mock_get_running_loop)
     
-    # Should raise RuntimeError about not being able to use run_until_complete in async context
-    with pytest.raises(RuntimeError, match="Cannot use run_until_complete in async context"):
+    # Should raise RuntimeError about not being able to execute async operations synchronously
+    with pytest.raises(RuntimeError, match="Cannot execute async operations synchronously from async context"):
         dummy_conv._process_tool_calls(tool_calls, [tool], "fallback", explain_tool_result=False)
 
 

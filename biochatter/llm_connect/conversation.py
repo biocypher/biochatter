@@ -12,7 +12,7 @@ import urllib.parse
 from abc import ABC, abstractmethod
 from collections import deque
 from collections.abc import Callable
-from typing import Literal
+from typing import Any, Literal
 
 import nltk
 from pydantic import BaseModel
@@ -732,6 +732,120 @@ class Conversation(ABC):
     def _correct_response(self, msg: str) -> str:
         """Correct the response."""
 
+    def _wrap_mcp_tool_args(self, tool_args: dict) -> dict:
+        """Wrap MCP tool arguments in 'request' object if not already wrapped.
+        
+        MCP tools require their arguments to be wrapped in a 'request' object.
+        This method handles wrapping and also detects/prevents double-wrapping.
+        
+        Args:
+            tool_args: Arguments from the LLM (may need wrapping)
+        
+        Returns:
+            Wrapped arguments ready for MCP tool execution
+        """
+        # Check if already properly wrapped
+        if isinstance(tool_args, dict) and len(tool_args) == 1 and "request" in tool_args:
+            # Already wrapped - return as-is
+            return tool_args
+        
+        # Check for double-wrapping (defensive)
+        if isinstance(tool_args, dict) and "request" in tool_args:
+            inner = tool_args["request"]
+            if isinstance(inner, dict) and len(inner) == 1 and "request" in inner:
+                # Double-wrapped - unwrap once
+                logger.warning(f"Detected double-wrapped MCP tool args, unwrapping: {tool_args}")
+                return inner
+        
+        # Wrap the arguments
+        return {"request": tool_args}
+
+    def _run_async_in_sync_context(self, coro):
+        """Run an async coroutine in a synchronous context.
+        
+        This method safely executes async operations from synchronous code by
+        checking if we're already in an async context (which would be an error)
+        and creating/getting an event loop for synchronous execution.
+        
+        Args:
+            coro: The coroutine to execute
+        
+        Returns:
+            The result of the coroutine execution
+        
+        Raises:
+            RuntimeError: If called from within an async context
+        """
+        # Check if we're already in an async context
+        # get_running_loop() returns the loop if one exists, or raises RuntimeError if not
+        try:
+            asyncio.get_running_loop()
+            # If we get here, we're in an async context - this is an error
+            raise RuntimeError(
+                "Cannot execute async operations synchronously from async context. "
+                "Use async methods instead."
+            )
+        except RuntimeError as e:
+            # Check if this is our custom error (re-raise it)
+            if "Cannot execute async operations synchronously from async context" in str(e):
+                raise
+            # Otherwise, it's the "no running loop" error - this is what we want
+            # Proceed with sync execution
+            pass
+        
+        # Get or create event loop for sync execution
+        try:
+            loop = asyncio.get_event_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+        
+        return loop.run_until_complete(coro)
+
+    def _execute_mcp_tool(
+        self, tool_func: Callable, tool_name: str, tool_args: dict
+    ) -> tuple[Any, dict]:
+        """Execute an MCP tool with proper argument wrapping and async handling.
+        
+        This method handles the complete MCP tool execution flow:
+        1. Wraps arguments in 'request' object if needed
+        2. Executes the async tool function in a sync context
+        3. Provides enhanced error logging
+        
+        Args:
+            tool_func: The tool function to execute
+            tool_name: Name of the tool (for logging)
+            tool_args: Arguments from the LLM (may need wrapping)
+        
+        Returns:
+            Tuple of (tool_result, wrapped_args) where wrapped_args is the
+            actual arguments passed to the tool (for display/logging)
+        
+        Raises:
+            Exception: Any exception raised by the tool execution
+        """
+        # Wrap arguments if needed
+        mcp_tool_args = self._wrap_mcp_tool_args(tool_args)
+        
+        logger.debug(f"MCP Tool Call - Tool: {tool_name}, Args: {tool_args}")
+        
+        # Execute in sync context
+        try:
+            tool_result = self._run_async_in_sync_context(tool_func.ainvoke(mcp_tool_args))
+        except Exception as tool_error:
+            # Enhanced error logging for MCP tools
+            logger.error(
+                f"MCP Tool Execution Error - Tool: {tool_name}, "
+                f"Args from LLM: {tool_args}, "
+                f"Wrapped args: {mcp_tool_args}, "
+                f"Error: {tool_error!s}"
+            )
+            if hasattr(tool_func, 'input_schema'):
+                logger.error(f"Tool {tool_name} expected schema: {tool_func.input_schema}")
+            raise
+        
+        return tool_result, mcp_tool_args
+
     def _process_manual_tool_call(
         self,
         tool_call: list[dict],
@@ -762,55 +876,10 @@ class Conversation(ABC):
         # This is beacause tool_name is not a valid argument for the tool
         del tool_call["tool_name"]
 
-        # Execute the tool based on whether we're in async context or not
+        # Execute the tool based on whether we're in MCP mode or not
         if self.mcp:
-            # For MCP tools, parameters need to be wrapped in a 'request' object
-            # Also, we need to handle async execution
-            # Make sure we're not already wrapped (in case the model returned it that way)
-            if "request" in tool_call and len(tool_call) == 1:
-                # Already wrapped, use as-is but extract the inner structure
-                tool_args = tool_call
-            else:
-                # Wrap the parameters in a 'request' object
-                tool_args = {"request": tool_call}
-            
-            # Log manual tool call for debugging
-            logger.debug(f"MCP Manual Tool Call - Tool: {tool_name}, Args: {tool_call}")
-            
-            # For MCP tools, we need to handle async execution
-            # Check if we're in an async context (has running loop)
-            try:
-                loop = asyncio.get_running_loop()
-                # If we get here, we're in an async context
-                # We can't use run_until_complete in async context
-                raise RuntimeError("Cannot use run_until_complete in async context. Use await instead.")
-            except RuntimeError as e:
-                # Check if this is the "no running loop" error (what we want)
-                # The error message can vary, so check for common patterns
-                error_msg = str(e).lower()
-                if "no running event loop" in error_msg or "no running loop" in error_msg:
-                    # No running loop, create one for synchronous execution
-                    try:
-                        loop = asyncio.get_event_loop()
-                    except RuntimeError:
-                        loop = asyncio.new_event_loop()
-                        asyncio.set_event_loop(loop)
-                    try:
-                        tool_result = loop.run_until_complete(tool_func.ainvoke(tool_args))
-                    except Exception as tool_error:
-                        # Enhanced error logging for MCP tools
-                        logger.error(
-                            f"MCP Tool Execution Error - Tool: {tool_name}, "
-                            f"Args: {tool_args}, "
-                            f"Error: {tool_error!s}"
-                        )
-                        if hasattr(tool_func, 'input_schema'):
-                            logger.error(f"Tool {tool_name} expected schema: {tool_func.input_schema}")
-                        raise
-                else:
-                    # Re-raise if it's a different RuntimeError (e.g., our custom one)
-                    raise
-            display_args = tool_args
+            # Use the helper method for MCP tools (handles wrapping and async execution)
+            tool_result, display_args = self._execute_mcp_tool(tool_func, tool_name, tool_call)
         else:
             tool_result = tool_func.invoke(tool_call)
             display_args = tool_call
@@ -884,49 +953,8 @@ class Conversation(ABC):
                     # Execute the tool
                     try:
                         if self.mcp:
-                            # For MCP tools, parameters need to be wrapped in a 'request' object
-                            # Check if already wrapped (in case the model returned it that way)
-                            if "request" in tool_args and len(tool_args) == 1:
-                                # Already wrapped, use as-is
-                                mcp_tool_args = tool_args
-                            else:
-                                # Wrap the parameters in a 'request' object
-                                mcp_tool_args = {"request": tool_args}
-                            
-                            # Log tool call for debugging (only on errors, detailed traces in benchmark)
-                            logger.debug(f"MCP Tool Call - Tool: {tool_name}, Args: {tool_args}")
-                            
-                            # Handle async execution for MCP tools
-                            try:
-                                loop = asyncio.get_running_loop()
-                                # If we get here, we're in an async context
-                                # We can't use run_until_complete in async context
-                                raise RuntimeError("Cannot use run_until_complete in async context. Use await instead.")
-                            except RuntimeError as e:
-                                # Check if this is the "no running loop" error (what we want)
-                                if "no running event loop" in str(e).lower():
-                                    # No running loop, create one for synchronous execution
-                                    try:
-                                        loop = asyncio.get_event_loop()
-                                    except RuntimeError:
-                                        loop = asyncio.new_event_loop()
-                                        asyncio.set_event_loop(loop)
-                                    try:
-                                        tool_result = loop.run_until_complete(tool_func.ainvoke(mcp_tool_args))
-                                    except Exception as tool_error:
-                                        # Enhanced error logging for MCP tools
-                                        logger.error(
-                                            f"MCP Tool Execution Error - Tool: {tool_name}, "
-                                            f"Args from LLM: {tool_args}, "
-                                            f"Wrapped args: {mcp_tool_args}, "
-                                            f"Error: {tool_error!s}"
-                                        )
-                                        if hasattr(tool_func, 'input_schema'):
-                                            logger.error(f"Tool {tool_name} expected schema: {tool_func.input_schema}")
-                                        raise
-                                else:
-                                    # Re-raise if it's a different RuntimeError (e.g., our custom one)
-                                    raise
+                            # Use the helper method for MCP tools (handles wrapping and async execution)
+                            tool_result, mcp_tool_args = self._execute_mcp_tool(tool_func, tool_name, tool_args)
                         else:
                             tool_result = tool_func.invoke(tool_args)
                         # Add the tool result to the conversation
@@ -954,17 +982,23 @@ class Conversation(ABC):
 
                     except Exception as e:
                         # Re-raise if it's our RuntimeError about async context (not a tool execution error)
-                        if isinstance(e, RuntimeError) and "Cannot use run_until_complete in async context" in str(e):
+                        if isinstance(e, RuntimeError) and "Cannot execute async operations synchronously from async context" in str(e):
                             raise
                         # Handle tool execution errors with enhanced debugging info
                         error_message = f"Error executing tool {tool_name}: {e!s}"
                         
                         # Add debugging information for MCP tools
                         if self.mcp:
+                            # Try to get wrapped args for logging (may not exist if error occurred during wrapping)
+                            try:
+                                wrapped_args = self._wrap_mcp_tool_args(tool_args)
+                            except Exception:
+                                wrapped_args = "N/A (error during wrapping)"
+                            
                             logger.error(
                                 f"MCP Tool Error - Tool: {tool_name}, "
                                 f"Args sent: {tool_args}, "
-                                f"Wrapped args: {mcp_tool_args if 'mcp_tool_args' in locals() else 'N/A'}, "
+                                f"Wrapped args: {wrapped_args}, "
                                 f"Error: {e!s}"
                             )
                             # Try to get tool schema to help debug
