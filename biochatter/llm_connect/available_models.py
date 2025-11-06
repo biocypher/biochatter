@@ -117,6 +117,8 @@ _TOOL_CALLING_PREFIXES = frozenset(
         "gpt-4o-mini",  # e.g., gpt-4o-mini-2024-07-18 (not in enum, only has date variants)
         "claude-3-5-sonnet",  # e.g., claude-3-5-sonnet-20240620 (not in enum, only has date variants)
         "claude-3-opus",  # e.g., claude-3-opus-20240229 (not in enum, only has date variants)
+        "claude-sonnet-4-5",  # e.g., claude-sonnet-4-5-20250929 (not in enum, only has date variants)
+        "claude-haiku-4-5",  # e.g., claude-haiku-4-5-20251001 (not in enum, only has date variants)
     ]
 )
 
