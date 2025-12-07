@@ -31,7 +31,8 @@ models in the biomedical domain.
 - [BioChatter Server](https://github.com/biocypher/biochatter-server) - RESTful
 API server
 
-📖 Learn more in our [paper](https://www.nature.com/articles/s41587-024-02534-3).
+📖 Learn more in our [paper](https://www.nature.com/articles/s41587-024-02534-3)
+(self-archived [here](https://zenodo.org/records/15684945)).
 
 ## Installation
 
