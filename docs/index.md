@@ -11,8 +11,9 @@ framework for deploying, testing, and evaluating the diverse models and
 auxiliary technologies that are needed. `biochatter` is a Python package
 implementing a generic backend library for the connection of biomedical
 applications to conversational AI. We describe the framework in [this
-paper](https://www.nature.com/articles/s41587-024-02534-3); for a more hands-on
-experience, check out our two web app implementations:
+paper](https://www.nature.com/articles/s41587-024-02534-3) (self-archived
+[here](https://zenodo.org/records/15684945)); for a more hands-on experience,
+check out our two web app implementations:
 
 <div class="grid cards" markdown>
 
