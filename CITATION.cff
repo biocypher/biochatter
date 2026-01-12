@@ -40,4 +40,4 @@ repository: 'https://github.com/biocypher/biochatter'
 repository-code: 'https://github.com/biocypher/biochatter'
 repository-artifact: 'https://pypi.org/project/biochatter/'
 url: 'https://biochatter.org/'
-license: MIT
+license: Apache-2.0

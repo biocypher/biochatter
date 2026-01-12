@@ -10,4 +10,4 @@ that you have read the [Developer Guide](DEVELOPER.md) before you start working
 on a pull request.
 
 Before joining the community, please also make sure that you agree with our
-[Code of Conduct](CODE_OF_CONDUCT.md).
+[Code of Conduct](CODE_OF_CONDUCT.md) and our [License](LICENSE).
