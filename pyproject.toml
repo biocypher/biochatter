@@ -1,6 +1,6 @@
 [project]
 name = "biochatter"
-version = "0.14.0"
+version = "0.14.1"
 description = "Backend library for conversational AI in biomedicine"
 authors = [
     {name = "Sebastian Lobentanzer", email = "sebastian.lobentanzer@gmail.com"},
@@ -41,7 +41,7 @@ transformers = ">=4.49.0,<5.0.0"
 rsa = ">=4.9,<5.0"
 cryptography = ">=44.0.2,<45.0.0"
 neo4j-utils = ">=0.0.12,<0.0.13"
-seaborn = ">=0.13.2,<0.14.0"
+seaborn = ">=0.13.2,<0.14.1"
 rouge-score = ">=0.1.2,<0.2.0"
 evaluate = ">=0.4.3,<0.5.0"
 pillow = "==10.4.0"
