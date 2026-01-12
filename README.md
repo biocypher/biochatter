@@ -91,11 +91,6 @@ GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/biocypher/biochatter.git
 
 Both options will prevent Git LFS from downloading the large files while still allowing you to work with the repository normally.
 
-## More information about LLMs
-
-Check out [this repository](https://github.com/csbl-br/awesome-compbio-chatgpt)
-for more info on computational biology usage of large language models.
-
 ## Citation
 
 If you use BioChatter in your work, please cite our
