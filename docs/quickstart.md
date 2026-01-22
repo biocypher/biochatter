@@ -38,7 +38,7 @@ prompts for model instructions.
 
 ### Advanced Features
 
-1. **Knowledge Graph Connectivity**: Connect to a [BioCypher](/biocypher) knowledge graph:
+1. **Knowledge Graph Connectivity**: Connect to a [BioCypher](../BioCypher/index.md) knowledge graph:
 ```python
 from biochatter.prompts import BioCypherPromptEngine
 from biochatter.llm_connect import GptConversation

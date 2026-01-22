@@ -10,7 +10,7 @@ model chaining workflows provided by LangChain.
 Rather, we look to provide an interface tuned towards the needs of the
 biomedical community, with focus points on robustness in the face of
 health-critical applications, native connectivity to [data
-representations](/biocypher) used in biomedical research, and a
+representations](../../BioCypher/index.md) used in biomedical research, and a
 benchmark-forward approach to model evaluation in very specific use cases.
 
 # Our Vision
