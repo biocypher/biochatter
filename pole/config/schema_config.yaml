@@ -1,0 +1,131 @@
+# add your desired knowledge graph components here
+
+person:
+    is_a: actor
+    represented_as: node
+    input_label: :Person
+    properties:
+        name: str
+        surname: str
+        nhs_no: str
+        phone: str
+        email: str
+
+officer:
+    is_a: person
+    represented_as: node
+    input_label: :Officer
+    properties:
+        name: str
+        surname: str
+        rank: str
+        badge_no: str
+
+knows:
+    is_a: [fact, core]
+    represented_as: edge
+    label_as_edge: KNOWS
+    input_label: KNOWS
+    source: person
+    target: person
+
+is related to:
+    is_a: [fact, core]
+    represented_as: edge
+    label_as_edge: IS_RELATED_TO
+    input_label: FAMILY_REL
+    source: person
+    target: person
+
+location:
+    is_a: place
+    represented_as: node
+    input_label: :Location
+    properties:
+        address: str
+        postcode: str
+        latitude: float
+        longitude: float
+
+lives at:
+    is_a: [fact, core]
+    represented_as: edge
+    label_as_edge: LIVES_AT
+    input_label: CURRENT_ADDRESS
+    source: person
+    target: location
+
+crime:
+    is_a: event
+    represented_as: node
+    input_label: :Crime
+    properties:
+        type: str
+        date: str
+        last_outcome: str
+        hash: str
+
+occurred at:
+    is_a: [fact, core]
+    represented_as: edge
+    label_as_edge: OCCURRED_AT
+    input_label: OCCURRED_AT
+    source: crime
+    target: location
+
+party to:
+    is_a: [fact, core]
+    represented_as: edge
+    label_as_edge: PARTY_TO
+    input_label: PARTY_TO
+    source: person
+    target: crime
+
+investigated by:
+    is_a: [fact, core]
+    represented_as: edge
+    label_as_edge: INVESTIGATED_BY
+    input_label: INVESTIGATED_BY
+    source: crime
+    target: officer
+
+phone call:
+    is_a: event
+    represented_as: node
+    input_label: :PhoneCall
+    properties:
+        call_type: str
+        call_date: str
+        call_time: str
+        call_duration: int
+
+made call:
+    is_a: event
+    represented_as: edge
+    label_as_edge: MADE_CALL
+    input_label: MADE_CALL
+    source: person
+    target: phone call
+
+received call:
+    is_a: event
+    represented_as: edge
+    label_as_edge: RECEIVED_CALL
+    input_label: RECEIVED_CALL
+    source: person
+    target: phone call
+
+object:
+    represented_as: node
+    input_label: :Object
+    properties:
+        type: str
+        description: str
+
+involved in:
+    is_a: [fact, core]
+    represented_as: edge
+    label_as_edge: INVOLVED_IN
+    input_label: INVOLVED_IN
+    source: object
+    target: crime

@@ -1,0 +1,175 @@
+crime:
+  input_label: :Crime
+  is_a: event
+  is_relationship: false
+  preferred_id: id
+  present_in_knowledge_graph: true
+  properties:
+    date: str
+    hash: str
+    last_outcome: str
+    type: str
+  represented_as: node
+investigated by:
+  input_label: INVESTIGATED_BY
+  is_a:
+  - fact
+  - core
+  is_relationship: true
+  label_as_edge: INVESTIGATED_BY
+  preferred_id: id
+  present_in_knowledge_graph: true
+  represented_as: edge
+  source: crime
+  target: officer
+involved in:
+  input_label: INVOLVED_IN
+  is_a:
+  - fact
+  - core
+  is_relationship: true
+  label_as_edge: INVOLVED_IN
+  preferred_id: id
+  present_in_knowledge_graph: true
+  represented_as: edge
+  source: object
+  target: crime
+is related to:
+  input_label: FAMILY_REL
+  is_a:
+  - fact
+  - core
+  is_relationship: true
+  label_as_edge: IS_RELATED_TO
+  preferred_id: id
+  present_in_knowledge_graph: true
+  represented_as: edge
+  source: person
+  target: person
+is_schema_info: true
+knows:
+  input_label: KNOWS
+  is_a:
+  - fact
+  - core
+  is_relationship: true
+  label_as_edge: KNOWS
+  preferred_id: id
+  present_in_knowledge_graph: true
+  represented_as: edge
+  source: person
+  target: person
+lives at:
+  input_label: CURRENT_ADDRESS
+  is_a:
+  - fact
+  - core
+  is_relationship: true
+  label_as_edge: LIVES_AT
+  preferred_id: id
+  present_in_knowledge_graph: true
+  represented_as: edge
+  source: person
+  target: location
+location:
+  input_label: :Location
+  is_a: place
+  is_relationship: false
+  preferred_id: id
+  present_in_knowledge_graph: true
+  properties:
+    address: str
+    latitude: float
+    longitude: float
+    postcode: str
+  represented_as: node
+made call:
+  input_label: MADE_CALL
+  is_a: event
+  is_relationship: true
+  label_as_edge: MADE_CALL
+  preferred_id: id
+  present_in_knowledge_graph: true
+  represented_as: edge
+  source: person
+  target: phone call
+object:
+  input_label: :Object
+  is_relationship: false
+  preferred_id: id
+  present_in_knowledge_graph: true
+  properties:
+    description: str
+    type: str
+  represented_as: node
+occurred at:
+  input_label: OCCURRED_AT
+  is_a:
+  - fact
+  - core
+  is_relationship: true
+  label_as_edge: OCCURRED_AT
+  preferred_id: id
+  present_in_knowledge_graph: true
+  represented_as: edge
+  source: crime
+  target: location
+officer:
+  input_label: :Officer
+  is_a: person
+  is_relationship: false
+  preferred_id: id
+  present_in_knowledge_graph: true
+  properties:
+    badge_no: str
+    name: str
+    rank: str
+    surname: str
+  represented_as: node
+party to:
+  input_label: PARTY_TO
+  is_a:
+  - fact
+  - core
+  is_relationship: true
+  label_as_edge: PARTY_TO
+  preferred_id: id
+  present_in_knowledge_graph: true
+  represented_as: edge
+  source: person
+  target: crime
+person:
+  input_label: :Person
+  is_a: actor
+  is_relationship: false
+  preferred_id: id
+  present_in_knowledge_graph: true
+  properties:
+    email: str
+    name: str
+    nhs_no: str
+    phone: str
+    surname: str
+  represented_as: node
+phone call:
+  input_label: :PhoneCall
+  is_a: event
+  is_relationship: false
+  preferred_id: id
+  present_in_knowledge_graph: true
+  properties:
+    call_date: str
+    call_duration: int
+    call_time: str
+    call_type: str
+  represented_as: node
+received call:
+  input_label: RECEIVED_CALL
+  is_a: event
+  is_relationship: true
+  label_as_edge: RECEIVED_CALL
+  preferred_id: id
+  present_in_knowledge_graph: true
+  represented_as: edge
+  source: person
+  target: phone call
