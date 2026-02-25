@@ -90,7 +90,11 @@ def _load_test_data_from_this_repository() -> dict[str, pd.DataFrame | dict[str,
                     msg = f"Expected dict, got {type(yaml_data).__name__}"
                     raise TypeError(msg)
                 yaml_data = _get_yaml_data(yaml_data)
-                combined_data.update(yaml_data)
+                for key, value in yaml_data.items():
+                    if key in combined_data and isinstance(combined_data[key], list) and isinstance(value, list):
+                        combined_data[key].extend(value)
+                    else:
+                        combined_data[key] = value
             except yaml.YAMLError as exc:
                 print(exc)
 

@@ -1,0 +1,526 @@
+mcp_edam_qa:
+# ============================================
+# 1-TERM QUESTIONS (Simple, single answer)
+# ============================================
+- case: mcp_edam_nfcore:one_term_1
+  input:
+    prompt: What is the format of this file? Input guide tree in Newick format
+  expected:
+    answer: http://edamontology.org/format_2006
+
+- case: mcp_edam_nfcore:one_term_2
+  input:
+    prompt: What is the format of this file? HMM file for profile alignment
+  expected:
+    answer: http://edamontology.org/format_1391
+
+- case: mcp_edam_nfcore:one_term_3
+  input:
+    prompt: What is the format of this file? specify HMMs for individual sequences
+  expected:
+    answer: http://edamontology.org/format_1391
+
+- case: mcp_edam_nfcore:one_term_4
+  input:
+    prompt: What is the format of this file? File containing software versions
+  expected:
+    answer: http://edamontology.org/format_3750
+
+- case: mcp_edam_nfcore:one_term_5
+  input:
+    prompt: What is the format of this file? Input guide tree in Newick format
+  expected:
+    answer: http://edamontology.org/format_2006
+
+- case: mcp_edam_nfcore:one_term_6
+  input:
+    prompt: What is the format of this file? File containing software versions
+  expected:
+    answer: http://edamontology.org/format_3750
+
+- case: mcp_edam_nfcore:one_term_7
+  input:
+    prompt: What operation does this tool perform? Aligns sequences using kalign
+  expected:
+    answer: http://edamontology.org/operation_0492
+
+- case: mcp_edam_nfcore:one_term_8
+  input:
+    prompt: What is the format of this file? File containing software versions
+  expected:
+    answer: http://edamontology.org/format_3750
+
+- case: mcp_edam_nfcore:one_term_9
+  input:
+    prompt: What operation does this tool perform? Align sequences using learnMSA
+  expected:
+    answer: http://edamontology.org/operation_0492
+
+- case: mcp_edam_nfcore:one_term_10
+  input:
+    prompt: What is the format of this file? File containing software versions
+  expected:
+    answer: http://edamontology.org/format_3750
+
+# - case: mcp_edam_nfcore:one_term_11
+#   input:
+#     prompt: What operation does this tool perform? Multiple sequence alignment using MAFFT
+#   expected:
+#     answer: http://edamontology.org/operation_0492
+
+# - case: mcp_edam_nfcore:one_term_12
+#   input:
+#     prompt: What is the format of this file? File containing software versions
+#   expected:
+#     answer: http://edamontology.org/format_3750
+
+# - case: mcp_edam_nfcore:one_term_13
+#   input:
+#     prompt: What is the format of this file? Optional path to a file containing a guide tree in newick format to use as input. If empty, or overwritten by passing `-t [fasttree|fasttree-noml|clustal|parttree]`, MAGUS will construct its own guide tree. If empty, `fasttree` is used as a default.
+#   expected:
+#     answer: http://edamontology.org/format_2006
+
+# - case: mcp_edam_nfcore:one_term_14
+#   input:
+#     prompt: What is the format of this file? File containing software versions
+#   expected:
+#     answer: http://edamontology.org/format_3750
+
+# - case: mcp_edam_nfcore:one_term_15
+#   input:
+#     prompt: What operation does this tool perform? Muscle is a program for creating multiple alignments of amino acid or nucleotide sequences. This particular module uses the super5 algorithm for very big alignments. It can permutate the guide tree according to a set of flags.
+#   expected:
+#     answer: http://edamontology.org/operation_0492
+
+# - case: mcp_edam_nfcore:one_term_16
+#   input:
+#     prompt: What is the format of this file? File containing software versions
+#   expected:
+#     answer: http://edamontology.org/format_3750
+
+# - case: mcp_edam_nfcore:one_term_17
+#   input:
+#     prompt: What is the format of this file? Input guide tree in Newick format
+#   expected:
+#     answer: http://edamontology.org/format_2006
+
+# - case: mcp_edam_nfcore:one_term_18
+#   input:
+#     prompt: What is the format of this file? T_coffee template file that maps sequences to the accessory information files to be used.
+#   expected:
+#     answer: http://edamontology.org/format_1476
+
+# - case: mcp_edam_nfcore:one_term_19
+#   input:
+#     prompt: What is the format of this file? File containing software versions
+#   expected:
+#     answer: http://edamontology.org/format_3750
+
+# - case: mcp_edam_nfcore:one_term_20
+#   input:
+#     prompt: What is the format of this file? Input guide tree in Newick format
+#   expected:
+#     answer: http://edamontology.org/format_2006
+
+# - case: mcp_edam_nfcore:one_term_21
+#   input:
+#     prompt: What is the format of this file? T_coffee template file that maps sequences to the accessory information files to be used.
+#   expected:
+#     answer: http://edamontology.org/format_1476
+
+# - case: mcp_edam_nfcore:one_term_22
+#   input:
+#     prompt: What is the format of this file? Accessory files to be used in the alignment. For example, it could be protein structures or secondary structures.
+#   expected:
+#     answer: http://edamontology.org/format_1476
+
+# - case: mcp_edam_nfcore:one_term_23
+#   input:
+#     prompt: What is the format of this file? File containing software versions
+#   expected:
+#     answer: http://edamontology.org/format_3750
+
+# - case: mcp_edam_nfcore:one_term_24
+#   input:
+#     prompt: What is the format of this file? Input guide tree in Newick format
+#   expected:
+#     answer: http://edamontology.org/format_2006
+
+# - case: mcp_edam_nfcore:one_term_25
+#   input:
+#     prompt: What is the format of this file? File containing software versions
+#   expected:
+#     answer: http://edamontology.org/format_3750
+
+# - case: mcp_edam_nfcore:one_term_26
+#   input:
+#     prompt: What operation does this tool perform? Renders a guidetree in clustalo
+#   expected:
+#     answer: http://edamontology.org/operation_0323
+
+# - case: mcp_edam_nfcore:one_term_27
+#   input:
+#     prompt: What is the format of this file? Guide tree file in Newick format
+#   expected:
+#     answer: http://edamontology.org/format_2006
+
+# - case: mcp_edam_nfcore:one_term_28
+#   input:
+#     prompt: What is the format of this file? File containing software versions
+#   expected:
+#     answer: http://edamontology.org/format_3750
+
+# - case: mcp_edam_nfcore:one_term_29
+#   input:
+#     prompt: What operation does this tool perform? Renders a guidetree in famsa
+#   expected:
+#     answer: http://edamontology.org/operation_0323
+
+# - case: mcp_edam_nfcore:one_term_30
+#   input:
+#     prompt: What is the format of this file? Guide tree file in Newick format
+#   expected:
+#     answer: http://edamontology.org/format_2006
+
+# - case: mcp_edam_nfcore:one_term_31
+#   input:
+#     prompt: What is the format of this file? File containing software versions
+#   expected:
+#     answer: http://edamontology.org/format_3750
+
+# - case: mcp_edam_nfcore:one_term_32
+#   input:
+#     prompt: What operation does this tool perform? Guide tree rendering using MAFFT
+#   expected:
+#     answer: http://edamontology.org/operation_0323
+
+# - case: mcp_edam_nfcore:one_term_33
+#   input:
+#     prompt: What is the format of this file? Guide tree in Newick format.
+#   expected:
+#     answer: http://edamontology.org/format_2006
+
+# - case: mcp_edam_nfcore:one_term_34
+#   input:
+#     prompt: What is the format of this file? File containing software versions
+#   expected:
+#     answer: http://edamontology.org/format_3750
+
+# - case: mcp_edam_nfcore:one_term_35
+#   input:
+#     prompt: What operation does this tool perform? Multiple Sequence Alignment using Graph Clustering
+#   expected:
+#     answer: http://edamontology.org/operation_0323
+
+# - case: mcp_edam_nfcore:one_term_36
+#   input:
+#     prompt: What is the format of this file? File containing the output guidetree, in newick format.
+#   expected:
+#     answer: http://edamontology.org/format_2006
+
+# - case: mcp_edam_nfcore:one_term_37
+#   input:
+#     prompt: What is the format of this file? File containing software versions
+#   expected:
+#     answer: http://edamontology.org/format_3750
+
+# - case: mcp_edam_nfcore:one_term_38
+#   input:
+#     prompt: What operation does this tool perform? Aligns protein structures using foldmason
+#   expected:
+#     answer: http://edamontology.org/operation_0504
+
+# - case: mcp_edam_nfcore:one_term_39
+#   input:
+#     prompt: What is the format of this file? File containing software versions
+#   expected:
+#     answer: http://edamontology.org/format_3750
+
+# - case: mcp_edam_nfcore:one_term_40
+#   input:
+#     prompt: What operation does this tool perform? Aligns protein structures using mTM-align
+#   expected:
+#     answer: http://edamontology.org/operation_0504
+
+# - case: mcp_edam_nfcore:one_term_41
+#   input:
+#     prompt: What is the format of this file? Overlaid structures in PDB format. May be gzipped or uncompressed.
+#   expected:
+#     answer: http://edamontology.org/format_1476
+
+# - case: mcp_edam_nfcore:one_term_42
+#   input:
+#     prompt: What is the format of this file? File containing software versions
+#   expected:
+#     answer: http://edamontology.org/format_3750
+
+# ============================================
+# 2-TERM QUESTIONS
+# ============================================
+- case: mcp_edam_nfcore:two_terms_1
+  input:
+    prompt: What operation does this tool perform? Align sequences using Clustal Omega
+  expected:
+    answer: http://edamontology.org/operation_0492; http://edamontology.org/operation_0504
+
+- case: mcp_edam_nfcore:two_terms_2
+  input:
+    prompt: What is the format of this file? Input sequences in FASTA format
+  expected:
+    answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+- case: mcp_edam_nfcore:two_terms_3
+  input:
+    prompt: What operation does this tool perform? Aligns sequences using FAMSA
+  expected:
+    answer: http://edamontology.org/operation_0492; http://edamontology.org/operation_0504
+
+- case: mcp_edam_nfcore:two_terms_4
+  input:
+    prompt: What is the format of this file? Input sequences in FASTA format
+  expected:
+    answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+- case: mcp_edam_nfcore:two_terms_5
+  input:
+    prompt: What is the format of this file? Input sequences in FASTA format. May be gzipped or uncompressed.
+  expected:
+    answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+- case: mcp_edam_nfcore:two_terms_6
+  input:
+    prompt: What is the format of this file? Input sequences in FASTA format.
+  expected:
+    answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+- case: mcp_edam_nfcore:two_terms_7
+  input:
+    prompt: What is the format of this file? FASTA file containing the sequences to align. May be gzipped or uncompressed.
+  expected:
+    answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+- case: mcp_edam_nfcore:two_terms_8
+  input:
+    prompt: What is the format of this file? FASTA file containing sequences to align to the sequences in `fasta` using `--add`. May be gzipped or uncompressed.
+  expected:
+    answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+- case: mcp_edam_nfcore:two_terms_9
+  input:
+    prompt: What is the format of this file? FASTA file containing sequences to align to the sequences in `fasta` using `--addfragments`. May be gzipped or uncompressed.
+  expected:
+    answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+- case: mcp_edam_nfcore:two_terms_10
+  input:
+    prompt: What is the format of this file? FASTA file containing sequences to align to the sequences in `fasta` using `--addfull`. May be gzipped or uncompressed.
+  expected:
+    answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+# - case: mcp_edam_nfcore:two_terms_11
+#   input:
+#     prompt: What is the format of this file? FASTA file containing sequences to align to the sequences in `fasta` using `--addprofile`. May be gzipped or uncompressed.
+#   expected:
+#     answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+# - case: mcp_edam_nfcore:two_terms_12
+#   input:
+#     prompt: What is the format of this file? FASTA file containing sequences to align to the sequences in `fasta` using `--addlong`. May be gzipped or uncompressed.
+#   expected:
+#     answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+# - case: mcp_edam_nfcore:two_terms_13
+#   input:
+#     prompt: What operation does this tool perform? Multiple Sequence Alignment using Graph Clustering
+#   expected:
+#     answer: http://edamontology.org/operation_0492; http://edamontology.org/operation_0504
+
+# - case: mcp_edam_nfcore:two_terms_14
+#   input:
+#     prompt: What is the format of this file? Input sequences in FASTA format.
+#   expected:
+#     answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+# - case: mcp_edam_nfcore:two_terms_15
+#   input:
+#     prompt: What is the format of this file? Input sequences for alignment must be in FASTA format
+#   expected:
+#     answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+# - case: mcp_edam_nfcore:two_terms_16
+#   input:
+#     prompt: What operation does this tool perform? Aligns sequences using T_COFFEE
+#   expected:
+#     answer: http://edamontology.org/operation_0492; http://edamontology.org/operation_0504
+
+# - case: mcp_edam_nfcore:two_terms_17
+#   input:
+#     prompt: What is the format of this file? Input sequences in FASTA format
+#   expected:
+#     answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+# - case: mcp_edam_nfcore:two_terms_18
+#   input:
+#     prompt: What is the format of this file? Accessory files to be used in the alignment. For example, it could be protein structures or secondary structures.
+#   expected:
+#     answer: http://edamontology.org/format_1476; http://edamontology.org/format_1477
+
+# - case: mcp_edam_nfcore:two_terms_19
+#   input:
+#     prompt: What operation does this tool perform? Aligns sequences using the regressive algorithm as implemented in the T_COFFEE package
+#   expected:
+#     answer: http://edamontology.org/operation_0492; http://edamontology.org/operation_0504
+
+# - case: mcp_edam_nfcore:two_terms_20
+#   input:
+#     prompt: What is the format of this file? Input sequences in FASTA format
+#   expected:
+#     answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+# - case: mcp_edam_nfcore:two_terms_21
+#   input:
+#     prompt: What operation does this tool perform? Aligns protein structures using UPP
+#   expected:
+#     answer: http://edamontology.org/operation_0492; http://edamontology.org/operation_0504
+
+# - case: mcp_edam_nfcore:two_terms_22
+#   input:
+#     prompt: What is the format of this file? Input sequences in FASTA format
+#   expected:
+#     answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+# - case: mcp_edam_nfcore:two_terms_23
+#   input:
+#     prompt: What is the format of this file? Input sequences in FASTA format
+#   expected:
+#     answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+# - case: mcp_edam_nfcore:two_terms_24
+#   input:
+#     prompt: What is the format of this file? Input sequences in FASTA format
+#   expected:
+#     answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+# - case: mcp_edam_nfcore:two_terms_25
+#   input:
+#     prompt: What is the format of this file? FASTA file containing the sequences to be used to render the guidetree.
+#   expected:
+#     answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+# - case: mcp_edam_nfcore:two_terms_26
+#   input:
+#     prompt: What is the format of this file? Input sequences in FASTA format.
+#   expected:
+#     answer: http://edamontology.org/format_1919; http://edamontology.org/format_1929
+
+# - case: mcp_edam_nfcore:two_terms_27
+#   input:
+#     prompt: What is the format of this file? Input protein structures in PDB format.
+#   expected:
+#     answer: http://edamontology.org/format_1476; http://edamontology.org/format_1477
+
+# - case: mcp_edam_nfcore:two_terms_28
+#   input:
+#     prompt: What is the format of this file? Input guide tree in Newick format.
+#   expected:
+#     answer: http://edamontology.org/format_2006; http://edamontology.org/format_1910
+
+# - case: mcp_edam_nfcore:two_terms_29
+#   input:
+#     prompt: What is the format of this file? Input protein structures in PDB format. Files may be gzipped or uncompressed. They should contain exactly one chain!
+#   expected:
+#     answer: http://edamontology.org/format_1476; http://edamontology.org/format_1477
+
+# ============================================
+# 3+ TERM QUESTIONS (Multiple answers)
+# ============================================
+- case: mcp_edam_nfcore:more_terms_1
+  input:
+    prompt: What is the format of this file? Pre-aligned multiple sequence file 1
+  expected:
+    answer: http://edamontology.org/format_1929; http://edamontology.org/format_2554; http://edamontology.org/format_1921; http://edamontology.org/format_1984
+
+- case: mcp_edam_nfcore:more_terms_2
+  input:
+    prompt: What is the format of this file? Pre-aligned multiple sequence file 2
+  expected:
+    answer: http://edamontology.org/format_1929; http://edamontology.org/format_2554; http://edamontology.org/format_1921; http://edamontology.org/format_1984
+
+- case: mcp_edam_nfcore:more_terms_3
+  input:
+    prompt: What is the format of this file? Alignment file, in gzipped fasta format
+  expected:
+    answer: http://edamontology.org/format_2554; http://edamontology.org/format_1921; http://edamontology.org/format_1984
+
+- case: mcp_edam_nfcore:more_terms_4
+  input:
+    prompt: What is the format of this file? Alignment file, in FASTA format. May be gzipped or uncompressed, depending on if compress is set to true or false
+  expected:
+    answer: http://edamontology.org/format_2554; http://edamontology.org/format_1921; http://edamontology.org/format_1984
+
+- case: mcp_edam_nfcore:more_terms_5
+  input:
+    prompt: What is the format of this file? Alignment file. May be gzipped or uncompressed, depending on if `compress` is set to `true` or `false`.
+  expected:
+    answer: http://edamontology.org/format_2554; http://edamontology.org/format_1921; http://edamontology.org/format_1984
+
+- case: mcp_edam_nfcore:more_terms_6
+  input:
+    prompt: What is the format of this file? Alignment file, in FASTA format.
+  expected:
+    answer: http://edamontology.org/format_2554; http://edamontology.org/format_1921; http://edamontology.org/format_1984
+
+- case: mcp_edam_nfcore:more_terms_7
+  input:
+    prompt: What is the format of this file? Aligned sequences in FASTA format. May be gzipped or uncompressed.
+  expected:
+    answer: http://edamontology.org/format_2554; http://edamontology.org/format_1921; http://edamontology.org/format_1984
+
+- case: mcp_edam_nfcore:more_terms_8
+  input:
+    prompt: What is the format of this file? File containing the output alignment, in FASTA format containing gaps. The sequences may be in a different order than in the input FASTA. The output file may or may not be gzipped, depending on the value supplied to `compress`.
+  expected:
+    answer: http://edamontology.org/format_2554; http://edamontology.org/format_1921; http://edamontology.org/format_1984
+
+- case: mcp_edam_nfcore:more_terms_9
+  input:
+    prompt: What is the format of this file? Multiple sequence alignment produced in gzipped FASTA format. If '-perm all' is passed in ext.args, this will be multiple files per input!
+  expected:
+    answer: http://edamontology.org/format_2554; http://edamontology.org/format_1921; http://edamontology.org/format_1984
+
+- case: mcp_edam_nfcore:more_terms_10
+  input:
+    prompt: What is the format of this file? Alignment file in FASTA format. May be gzipped.
+  expected:
+    answer: http://edamontology.org/format_2554; http://edamontology.org/format_1921; http://edamontology.org/format_1984
+
+# - case: mcp_edam_nfcore:more_terms_11
+#   input:
+#     prompt: What is the format of this file? Alignment file in FASTA format. May be gzipped.
+#   expected:
+#     answer: http://edamontology.org/format_2554; http://edamontology.org/format_1921; http://edamontology.org/format_1984
+
+# - case: mcp_edam_nfcore:more_terms_12
+#   input:
+#     prompt: What is the format of this file? Alignment file, in FASTA format. May be gzipped or uncompressed, depending on if compress is set to true or false
+#   expected:
+#     answer: http://edamontology.org/format_2554; http://edamontology.org/format_1921; http://edamontology.org/format_1984
+
+# - case: mcp_edam_nfcore:more_terms_13
+#   input:
+#     prompt: What is the format of this file? Fasta file containing the multiple sequence alignment with 3Di alphabet
+#   expected:
+#     answer: http://edamontology.org/format_2554; http://edamontology.org/format_1921; http://edamontology.org/format_1984
+
+# - case: mcp_edam_nfcore:more_terms_14
+#   input:
+#     prompt: What is the format of this file? Fasta file containing the multiple sequence alignment with Amino Acid alphabet
+#   expected:
+#     answer: http://edamontology.org/format_2554; http://edamontology.org/format_1921; http://edamontology.org/format_1984
+
+# - case: mcp_edam_nfcore:more_terms_15
+#   input:
+#     prompt: What is the format of this file? Alignment in FASTA format. May be gzipped or uncompressed.
+#   expected:
+#     answer: http://edamontology.org/format_2554; http://edamontology.org/format_1921; http://edamontology.org/format_1984
+

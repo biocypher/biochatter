@@ -62,6 +62,22 @@ def calculate_accuracy(score_str: str) -> float:
     return score / max_score
 
 
+# Minimum bar width for visibility when accuracy is 0 (otherwise bars are invisible)
+_MIN_BAR_WIDTH = 0.02
+
+
+def _extract_dataset(subtask: str) -> str:
+    """Extract dataset name from subtask (e.g. mcp_edam_dev:... -> dev, mcp_edam_nfcore:... -> nfcore)."""
+    if pd.isna(subtask):
+        return "other"
+    s = str(subtask)
+    if "mcp_edam_dev:" in s:
+        return "dev"
+    if "mcp_edam_nfcore:" in s:
+        return "nfcore"
+    return "other"
+
+
 def load_and_prepare_data(mcp_file: str, baseline_file: str) -> pd.DataFrame:
     """Load and prepare data for comparison.
 
@@ -95,6 +111,9 @@ def load_and_prepare_data(mcp_file: str, baseline_file: str) -> pd.DataFrame:
         suffixes=("_mcp", "_baseline"),
         how="outer",
     )
+
+    # Add dataset column (dev vs nfcore) for splitting visualizations
+    merged["dataset"] = merged["subtask"].apply(_extract_dataset)
 
     # Fill missing values (if one method doesn't have a result)
     merged["accuracy_mcp"] = merged["accuracy_mcp"].fillna(0.0)
@@ -132,9 +151,25 @@ def create_overall_comparison_plot(df: pd.DataFrame, output_path: Path):
     ax1.grid(True, alpha=0.3)
     ax1.set_xlim(0, 1.05)
 
-    # Plot 2: Improvement scatter
+    # Plot 2: Improvement scatter (color by dataset: dev vs nfcore)
     ax2 = axes[1]
-    ax2.scatter(baseline_acc, mcp_acc, alpha=0.6, s=50, edgecolors="black", linewidth=0.5)
+    if "dataset" in df.columns:
+        for ds, color in [("dev", "#3498db"), ("nfcore", "#e67e22"), ("other", "#95a5a6")]:
+            mask = df["dataset"] == ds
+            if mask.any():
+                ax2.scatter(
+                    df.loc[mask, "accuracy_baseline"],
+                    df.loc[mask, "accuracy_mcp"],
+                    alpha=0.6,
+                    s=50,
+                    c=color,
+                    edgecolors="black",
+                    linewidth=0.5,
+                    label=ds.capitalize(),
+                )
+        ax2.legend(fontsize=10)
+    else:
+        ax2.scatter(baseline_acc, mcp_acc, alpha=0.6, s=50, edgecolors="black", linewidth=0.5)
     ax2.plot([0, 1], [0, 1], "r--", alpha=0.5, label="No improvement")
     ax2.set_xlabel("Baseline Accuracy", fontsize=12)
     ax2.set_ylabel("MCP Accuracy", fontsize=12)
@@ -170,34 +205,16 @@ def create_overall_comparison_plot(df: pd.DataFrame, output_path: Path):
     print(f"Saved overall comparison plot to {output_path}")
 
 
-def create_subtask_comparison_plot(df: pd.DataFrame, output_path: Path):
-    """Create subtask-level comparison plot.
-
-    Args:
-    ----
-        df: Prepared DataFrame
-        output_path: Path to save figure
-
-    """
-    # Calculate mean accuracy per subtask
-    subtask_stats = (
-        df.groupby("subtask")
-        .agg({"accuracy_mcp": "mean", "accuracy_baseline": "mean", "improvement": "mean"})
-        .reset_index()
-    )
-
-    # Sort by improvement
+def _make_subtask_bar_plot(ax, subtask_stats: pd.DataFrame, title: str):
+    """Draw grouped bar chart for subtask stats on given axis."""
     subtask_stats = subtask_stats.sort_values("improvement", ascending=True)
-
-    fig, ax = plt.subplots(figsize=(12, max(8, len(subtask_stats) * 0.4)))
-
     y_pos = range(len(subtask_stats))
-
-    # Create grouped bar chart
     width = 0.35
+    baseline_vals = subtask_stats["accuracy_baseline"].clip(lower=_MIN_BAR_WIDTH)
+    mcp_vals = subtask_stats["accuracy_mcp"].clip(lower=_MIN_BAR_WIDTH)
     ax.barh(
         [y - width / 2 for y in y_pos],
-        subtask_stats["accuracy_baseline"],
+        baseline_vals,
         width,
         label="Baseline",
         color="#e74c3c",
@@ -206,45 +223,74 @@ def create_subtask_comparison_plot(df: pd.DataFrame, output_path: Path):
     )
     ax.barh(
         [y + width / 2 for y in y_pos],
-        subtask_stats["accuracy_mcp"],
+        mcp_vals,
         width,
         label="MCP",
         color="#2ecc71",
         alpha=0.8,
         edgecolor="black",
     )
-
-    # Add improvement annotations
     for i, (idx, row) in enumerate(subtask_stats.iterrows()):
         improvement = row["improvement"]
+        base_display = max(row["accuracy_baseline"], _MIN_BAR_WIDTH)
+        mcp_display = max(row["accuracy_mcp"], _MIN_BAR_WIDTH)
         if improvement > 0:
             ax.text(
-                row["accuracy_mcp"] + 0.02,
-                i,
-                f"+{improvement:.2f}",
-                va="center",
-                fontsize=9,
-                color="green",
-                fontweight="bold",
+                mcp_display + 0.02, i, f"+{improvement:.2f}", va="center", fontsize=9, color="green", fontweight="bold"
             )
         elif improvement < 0:
             ax.text(
-                row["accuracy_baseline"] + 0.02,
-                i,
-                f"{improvement:.2f}",
-                va="center",
-                fontsize=9,
-                color="red",
-                fontweight="bold",
+                base_display + 0.02, i, f"{improvement:.2f}", va="center", fontsize=9, color="red", fontweight="bold"
             )
-
     ax.set_yticks(y_pos)
     ax.set_yticklabels(subtask_stats["subtask"], fontsize=10)
     ax.set_xlabel("Mean Accuracy", fontsize=12)
-    ax.set_title("Performance by Subtask: MCP vs Baseline", fontsize=14, fontweight="bold")
+    ax.set_title(title, fontsize=14, fontweight="bold")
     ax.legend(fontsize=11, loc="lower right")
     ax.grid(True, alpha=0.3, axis="x")
     ax.set_xlim(0, 1.05)
+
+
+def create_subtask_comparison_plot(df: pd.DataFrame, output_path: Path):
+    """Create subtask-level comparison plot, split by dataset (dev vs nfcore).
+
+    Args:
+    ----
+        df: Prepared DataFrame
+        output_path: Path to save figure
+
+    """
+    subtask_stats = (
+        df.groupby("subtask")
+        .agg({"accuracy_mcp": "mean", "accuracy_baseline": "mean", "improvement": "mean", "dataset": "first"})
+        .reset_index()
+    )
+
+    # Split by dataset: dev and nfcore in separate plots
+    datasets = [d for d in ["dev", "nfcore"] if d in subtask_stats["dataset"].values]
+    n_plots = len(datasets)
+
+    if n_plots == 0:
+        n_plots = 1
+        datasets = [None]
+
+    # Height: ~5-6 inches per panel, cap total
+    panel_heights = (
+        [max(5, min(15, (subtask_stats["dataset"] == d).sum() * 0.4)) for d in datasets]
+        if n_plots > 1
+        else [max(8, len(subtask_stats) * 0.4)]
+    )
+    fig_height = min(30, sum(panel_heights))
+    fig, axes = plt.subplots(n_plots, 1, figsize=(12, fig_height))
+    if n_plots == 1:
+        axes = [axes]
+
+    for ax, ds in zip(axes, datasets, strict=True):
+        if ds is not None:
+            subset = subtask_stats[subtask_stats["dataset"] == ds]
+            _make_subtask_bar_plot(ax, subset, f"Performance by Subtask ({ds.capitalize()}): MCP vs Baseline")
+        else:
+            _make_subtask_bar_plot(ax, subtask_stats, "Performance by Subtask: MCP vs Baseline")
 
     plt.tight_layout()
     plt.savefig(output_path, dpi=300, bbox_inches="tight")
@@ -252,34 +298,17 @@ def create_subtask_comparison_plot(df: pd.DataFrame, output_path: Path):
     print(f"Saved subtask comparison plot to {output_path}")
 
 
-def create_model_comparison_plot(df: pd.DataFrame, output_path: Path):
-    """Create model-level comparison plot.
-
-    Args:
-    ----
-        df: Prepared DataFrame
-        output_path: Path to save figure
-
-    """
-    # Calculate mean accuracy per model
-    model_stats = (
-        df.groupby("model_name")
-        .agg({"accuracy_mcp": "mean", "accuracy_baseline": "mean", "improvement": "mean"})
-        .reset_index()
-    )
-
-    # Sort by improvement
+def _make_model_bar_plot(ax, model_stats: pd.DataFrame, title: str):
+    """Draw model comparison bar chart on given axis."""
     model_stats = model_stats.sort_values("improvement", ascending=True)
-
-    fig, ax = plt.subplots(figsize=(12, max(6, len(model_stats) * 0.5)))
-
     y_pos = range(len(model_stats))
-
-    # Create grouped bar chart
     width = 0.35
+    # Use minimum width for zero values so bars remain visible
+    baseline_vals = model_stats["accuracy_baseline"].clip(lower=_MIN_BAR_WIDTH)
+    mcp_vals = model_stats["accuracy_mcp"].clip(lower=_MIN_BAR_WIDTH)
     ax.barh(
         [y - width / 2 for y in y_pos],
-        model_stats["accuracy_baseline"],
+        baseline_vals,
         width,
         label="Baseline",
         color="#e74c3c",
@@ -288,50 +317,85 @@ def create_model_comparison_plot(df: pd.DataFrame, output_path: Path):
     )
     ax.barh(
         [y + width / 2 for y in y_pos],
-        model_stats["accuracy_mcp"],
+        mcp_vals,
         width,
         label="MCP",
         color="#2ecc71",
         alpha=0.8,
         edgecolor="black",
     )
-
-    # Add improvement annotations
     for i, (idx, row) in enumerate(model_stats.iterrows()):
         improvement = row["improvement"]
+        # Position text to the right of the bar (use displayed width for placement)
+        base_display = max(row["accuracy_baseline"], _MIN_BAR_WIDTH)
+        mcp_display = max(row["accuracy_mcp"], _MIN_BAR_WIDTH)
         if improvement > 0:
             ax.text(
-                row["accuracy_mcp"] + 0.02,
-                i,
-                f"+{improvement:.2%}",
-                va="center",
-                fontsize=10,
-                color="green",
-                fontweight="bold",
+                mcp_display + 0.02, i, f"+{improvement:.2%}", va="center", fontsize=10, color="green", fontweight="bold"
             )
         elif improvement < 0:
             ax.text(
-                row["accuracy_baseline"] + 0.02,
-                i,
-                f"{improvement:.2%}",
-                va="center",
-                fontsize=10,
-                color="red",
-                fontweight="bold",
+                base_display + 0.02, i, f"{improvement:.2%}", va="center", fontsize=10, color="red", fontweight="bold"
             )
-
     ax.set_yticks(y_pos)
     ax.set_yticklabels(model_stats["model_name"], fontsize=10)
     ax.set_xlabel("Mean Accuracy", fontsize=12)
-    ax.set_title("Performance by Model: MCP vs Baseline", fontsize=14, fontweight="bold")
+    ax.set_title(title, fontsize=14, fontweight="bold")
     ax.legend(fontsize=11, loc="lower right")
     ax.grid(True, alpha=0.3, axis="x")
     ax.set_xlim(0, 1.05)
+
+
+def create_model_comparison_plot(df: pd.DataFrame, output_path: Path):
+    """Create model-level comparison plot, split by dataset (dev vs nfcore) when present.
+
+    Args:
+    ----
+        df: Prepared DataFrame
+        output_path: Path to save figure
+
+    """
+    datasets = [d for d in ["dev", "nfcore"] if "dataset" in df.columns and d in df["dataset"].values]
+    n_plots = len(datasets) if datasets else 1
+
+    if n_plots > 1:
+        n_models = len(df["model_name"].unique())
+        fig, axes = plt.subplots(1, 2, figsize=(16, max(8, n_models * 0.7)))
+        for ax, ds in zip(axes, datasets, strict=True):
+            subset = df[df["dataset"] == ds]
+            model_stats = (
+                subset.groupby("model_name")
+                .agg({"accuracy_mcp": "mean", "accuracy_baseline": "mean", "improvement": "mean"})
+                .reset_index()
+            )
+            _make_model_bar_plot(ax, model_stats, f"Performance by Model ({ds.capitalize()}): MCP vs Baseline")
+    else:
+        model_stats = (
+            df.groupby("model_name")
+            .agg({"accuracy_mcp": "mean", "accuracy_baseline": "mean", "improvement": "mean"})
+            .reset_index()
+        )
+        fig, ax = plt.subplots(figsize=(12, max(6, len(model_stats) * 0.5)))
+        _make_model_bar_plot(ax, model_stats, "Performance by Model: MCP vs Baseline")
 
     plt.tight_layout()
     plt.savefig(output_path, dpi=300, bbox_inches="tight")
     plt.close()
     print(f"Saved model comparison plot to {output_path}")
+
+
+def _get_subtask_type(subtask: str) -> str:
+    """Categorize subtask by complexity (handles dev and nfcore naming)."""
+    if pd.isna(subtask):
+        return "other"
+    s = str(subtask).lower()
+    if "single_term" in s or "one_term" in s:
+        return "1-term"
+    if "two_term" in s or "two_terms" in s:
+        return "2-term"
+    if "three_term" in s or "three_terms" in s:
+        return "3-term"
+    return "other"
 
 
 def create_improvement_summary_plot(df: pd.DataFrame, output_path: Path):
@@ -343,10 +407,20 @@ def create_improvement_summary_plot(df: pd.DataFrame, output_path: Path):
         output_path: Path to save figure
 
     """
-    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+    df = df.copy()
+    df["subtask_type"] = df["subtask"].apply(_get_subtask_type)
 
-    # Plot 1: Improvement distribution
-    ax1 = axes[0]
+    n_datasets = df["dataset"].nunique() if "dataset" in df.columns else 1
+    has_dataset_split = n_datasets > 1 and "dataset" in df.columns
+
+    if has_dataset_split:
+        fig, axes = plt.subplots(2, 2, figsize=(14, 14))
+    else:
+        fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+        axes = [axes]
+
+    # Plot 1: Improvement distribution (optionally by dataset)
+    ax1 = axes[0][0] if has_dataset_split else axes[0]
     improvements = df["improvement"].values
     ax1.hist(improvements, bins=30, color="#3498db", alpha=0.7, edgecolor="black")
     ax1.axvline(x=0, color="red", linestyle="--", linewidth=2, label="No improvement")
@@ -360,22 +434,9 @@ def create_improvement_summary_plot(df: pd.DataFrame, output_path: Path):
     ax1.grid(True, alpha=0.3)
 
     # Plot 2: Improvement by subtask type
-    ax2 = axes[1]
-
-    # Categorize subtasks
-    df["subtask_type"] = df["subtask"].apply(
-        lambda x: "single"
-        if "single_term" in x
-        else "two"
-        if "two_term" in x
-        else "three"
-        if "three_term" in x
-        else "other"
-    )
-
+    ax2 = axes[0][1] if has_dataset_split else axes[1]
     type_stats = df.groupby("subtask_type")["improvement"].agg(["mean", "std"]).reset_index()
     type_stats = type_stats.sort_values("mean", ascending=True)
-
     colors = ["#e74c3c" if x < 0 else "#2ecc71" for x in type_stats["mean"]]
     ax2.barh(
         type_stats["subtask_type"],
@@ -391,6 +452,43 @@ def create_improvement_summary_plot(df: pd.DataFrame, output_path: Path):
     ax2.set_ylabel("Subtask Type", fontsize=12)
     ax2.set_title("Improvement by Subtask Complexity", fontsize=14, fontweight="bold")
     ax2.grid(True, alpha=0.3, axis="x")
+
+    if has_dataset_split:
+        # Plot 3: Mean improvement by dataset (dev vs nfcore)
+        ax3 = axes[1][0]
+        ds_stats = df.groupby("dataset")["improvement"].agg(["mean", "std", "count"]).reset_index()
+        ds_stats = ds_stats[ds_stats["dataset"] != "other"]  # exclude if present
+        if not ds_stats.empty:
+            colors_ds = ["#3498db" if d == "dev" else "#e67e22" for d in ds_stats["dataset"]]
+            ax3.barh(ds_stats["dataset"], ds_stats["mean"], xerr=ds_stats["std"], color=colors_ds, alpha=0.8, capsize=5)
+            for i, row in ds_stats.iterrows():
+                ax3.text(
+                    row["mean"] + 0.02 if row["mean"] >= 0 else row["mean"] - 0.02,
+                    i,
+                    f"n={int(row['count'])}",
+                    va="center",
+                    fontsize=9,
+                )
+        ax3.axvline(x=0, color="black", linestyle="--", linewidth=1, alpha=0.5)
+        ax3.set_xlabel("Mean Improvement", fontsize=12)
+        ax3.set_title("Improvement by Dataset", fontsize=14, fontweight="bold")
+        ax3.grid(True, alpha=0.3, axis="x")
+
+        # Plot 4: Model performance by dataset
+        ax4 = axes[1][1]
+        model_ds_stats = df.groupby(["model_name", "dataset"])["improvement"].mean().reset_index()
+        model_ds_pivot = model_ds_stats.pivot(index="model_name", columns="dataset", values="improvement")
+        model_ds_pivot = model_ds_pivot.drop(columns=["other"], errors="ignore")
+        ds_colors = {"dev": "#3498db", "nfcore": "#e67e22"}
+        if not model_ds_pivot.empty:
+            colors = [ds_colors.get(c, "#95a5a6") for c in model_ds_pivot.columns]
+            model_ds_pivot.plot(kind="barh", ax=ax4, color=colors, alpha=0.8, edgecolor="black")
+            ax4.axvline(x=0, color="black", linestyle="--", linewidth=1, alpha=0.5)
+            ax4.tick_params(axis="y", labelsize=9)
+        ax4.set_xlabel("Mean Improvement", fontsize=12)
+        ax4.set_title("Model Improvement by Dataset", fontsize=14, fontweight="bold")
+        ax4.legend(title="Dataset", fontsize=10)
+        ax4.grid(True, alpha=0.3, axis="x")
 
     plt.tight_layout()
     plt.savefig(output_path, dpi=300, bbox_inches="tight")
@@ -450,19 +548,34 @@ def print_summary_statistics(df: pd.DataFrame):
             f"({worst['improvement']:.3f})"
         )
 
+    # Per-dataset breakdown (dev vs nfcore)
+    if "dataset" in df.columns:
+        datasets = [d for d in ["dev", "nfcore"] if d in df["dataset"].values]
+        if datasets:
+            print("\nPerformance by Dataset:")
+            for ds in datasets:
+                subset = df[df["dataset"] == ds]
+                mcp_m = subset["accuracy_mcp"].mean()
+                base_m = subset["accuracy_baseline"].mean()
+                imp_m = subset["improvement"].mean()
+                n = len(subset)
+                print(f"  {ds.capitalize():8} (n={n:4}): Baseline {base_m:.3f} → MCP {mcp_m:.3f}  (Δ {imp_m:+.3f})")
+
     print("\n" + "=" * 80 + "\n")
 
 
 def main():
     """Main function to generate all visualizations."""
+    # Resolve default paths relative to project root so script works from any cwd
+    project_root = Path(__file__).resolve().parent.parent.parent
+    default_mcp = project_root / "benchmark" / "results" / "mcp_edam_qa.csv"
+    default_baseline = project_root / "benchmark" / "results" / "mcp_edam_qa_baseline.csv"
+    default_output = project_root / "benchmark" / "results" / "images"
+
     parser = argparse.ArgumentParser(description="Visualize MCP vs Baseline performance comparison")
-    parser.add_argument("--mcp-file", default="benchmark/results/mcp_edam_qa.csv", help="Path to MCP results CSV file")
-    parser.add_argument(
-        "--baseline-file",
-        default="benchmark/results/mcp_edam_qa_baseline.csv",
-        help="Path to baseline results CSV file",
-    )
-    parser.add_argument("--output-dir", default="benchmark/results/images", help="Directory to save output figures")
+    parser.add_argument("--mcp-file", default=str(default_mcp), help="Path to MCP results CSV file")
+    parser.add_argument("--baseline-file", default=str(default_baseline), help="Path to baseline results CSV file")
+    parser.add_argument("--output-dir", default=str(default_output), help="Directory to save output figures")
 
     args = parser.parse_args()
 
