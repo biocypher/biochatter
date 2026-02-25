@@ -1,0 +1,18 @@
+# add your settings here (overriding the defaults)
+
+biocypher:
+  offline: true
+  debug: false
+  schema_config_path: [~]/biochatter/pole/config/schema_config.yaml
+
+  head_ontology:
+    url: [~]/biochatter/pole/data/sem.file
+    root_node: Core
+    format: rdf
+
+neo4j:
+  delimiter: '\t'
+  array_delimiter: "|"
+  quote_character: "+"
+  skip_duplicate_nodes: true
+  skip_bad_relationships: true

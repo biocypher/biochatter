@@ -1,0 +1,22 @@
+# add your settings here (overriding the defaults)
+
+biocypher:
+  offline: true
+  debug: false
+  schema_config_path: config/schema_config.yaml
+  output_directory: data/build2neo
+
+  head_ontology:
+    url: data/sem.file
+    root_node: Core
+    format: rdf
+
+neo4j:
+  database_name: neo4j
+  wipe: true
+  delimiter: '\t'
+  array_delimiter: "|"
+  quote_character: "+"
+  skip_duplicate_nodes: true
+  skip_bad_relationships: true
+  import_call_file_prefix: /data/build2neo

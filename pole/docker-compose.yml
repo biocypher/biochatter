@@ -1,0 +1,72 @@
+services:
+
+  build:
+    image: biocypher/base:1.2.0
+    container_name: build
+    volumes:
+      - biocypher_neo4j_volume:/usr/app/data
+      - .:/src/
+    command:
+      - /bin/bash
+      - /src/scripts/build.sh
+
+  import:
+    image: neo4j:4.4-enterprise
+    container_name: import
+    environment:
+      NEO4J_AUTH: none
+      NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
+      FILL_DB_ON_STARTUP: "yes"
+    volumes:
+      - biocypher_neo4j_volume:/data
+      - ./scripts/import.sh:/scripts/import.sh
+    command:
+      - /bin/bash
+      - /scripts/import.sh
+    depends_on:
+      build:
+        condition: service_completed_successfully
+
+  deploy:
+    image: neo4j:4.4-enterprise
+    container_name: deploy
+    volumes:
+      - biocypher_neo4j_volume:/data
+    environment:
+      NEO4J_dbms_security_auth__enabled: "false"
+      NEO4J_dbms_databases_default__to__read__only: "false"
+      NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
+    ports:
+      - "127.0.0.1:7474:7474"
+      - "127.0.0.1:7687:7687"
+    networks:
+      - biochatter
+    depends_on:
+      import:
+        condition: service_completed_successfully
+
+  app:
+    image: biocypher/biochatter-light:0.8.4
+    container_name: app
+    ports:
+      - "8501:8501"
+    networks:
+      - biochatter
+    depends_on:
+      import:
+        condition: service_completed_successfully
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DOCKER_COMPOSE=true
+      - CHAT_TAB=false
+      - PROMPT_ENGINEERING_TAB=false
+      - RAG_TAB=false
+      - CORRECTING_AGENT_TAB=false
+      - KNOWLEDGE_GRAPH_TAB=true
+
+volumes:
+  biocypher_neo4j_volume:
+
+
+networks:
+  biochatter:
