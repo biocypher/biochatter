@@ -24,3 +24,4 @@ scaling_test.py
 coverage.xml
 libcairo*
 notebooks/*
+viz/
