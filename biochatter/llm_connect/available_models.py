@@ -240,6 +240,7 @@ def get_temperature_for_model(model_name: str) -> float:
     Returns:
     -------
         Temperature value: 1.0 for models that reject temperature=0, else 0.0
+
     """
     if not model_name:
         return 0.0

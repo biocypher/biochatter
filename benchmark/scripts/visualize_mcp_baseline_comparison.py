@@ -235,9 +235,13 @@ def _make_subtask_bar_plot(ax, subtask_stats: pd.DataFrame, title: str):
         base_display = max(row["accuracy_baseline"], _MIN_BAR_WIDTH)
         mcp_display = max(row["accuracy_mcp"], _MIN_BAR_WIDTH)
         if improvement > 0:
-            ax.text(mcp_display + 0.02, i, f"+{improvement:.2f}", va="center", fontsize=9, color="green", fontweight="bold")
+            ax.text(
+                mcp_display + 0.02, i, f"+{improvement:.2f}", va="center", fontsize=9, color="green", fontweight="bold"
+            )
         elif improvement < 0:
-            ax.text(base_display + 0.02, i, f"{improvement:.2f}", va="center", fontsize=9, color="red", fontweight="bold")
+            ax.text(
+                base_display + 0.02, i, f"{improvement:.2f}", va="center", fontsize=9, color="red", fontweight="bold"
+            )
     ax.set_yticks(y_pos)
     ax.set_yticklabels(subtask_stats["subtask"], fontsize=10)
     ax.set_xlabel("Mean Accuracy", fontsize=12)
@@ -271,7 +275,11 @@ def create_subtask_comparison_plot(df: pd.DataFrame, output_path: Path):
         datasets = [None]
 
     # Height: ~5-6 inches per panel, cap total
-    panel_heights = [max(5, min(15, (subtask_stats["dataset"] == d).sum() * 0.4)) for d in datasets] if n_plots > 1 else [max(8, len(subtask_stats) * 0.4)]
+    panel_heights = (
+        [max(5, min(15, (subtask_stats["dataset"] == d).sum() * 0.4)) for d in datasets]
+        if n_plots > 1
+        else [max(8, len(subtask_stats) * 0.4)]
+    )
     fig_height = min(30, sum(panel_heights))
     fig, axes = plt.subplots(n_plots, 1, figsize=(12, fig_height))
     if n_plots == 1:
@@ -322,9 +330,13 @@ def _make_model_bar_plot(ax, model_stats: pd.DataFrame, title: str):
         base_display = max(row["accuracy_baseline"], _MIN_BAR_WIDTH)
         mcp_display = max(row["accuracy_mcp"], _MIN_BAR_WIDTH)
         if improvement > 0:
-            ax.text(mcp_display + 0.02, i, f"+{improvement:.2%}", va="center", fontsize=10, color="green", fontweight="bold")
+            ax.text(
+                mcp_display + 0.02, i, f"+{improvement:.2%}", va="center", fontsize=10, color="green", fontweight="bold"
+            )
         elif improvement < 0:
-            ax.text(base_display + 0.02, i, f"{improvement:.2%}", va="center", fontsize=10, color="red", fontweight="bold")
+            ax.text(
+                base_display + 0.02, i, f"{improvement:.2%}", va="center", fontsize=10, color="red", fontweight="bold"
+            )
     ax.set_yticks(y_pos)
     ax.set_yticklabels(model_stats["model_name"], fontsize=10)
     ax.set_xlabel("Mean Accuracy", fontsize=12)
@@ -450,7 +462,13 @@ def create_improvement_summary_plot(df: pd.DataFrame, output_path: Path):
             colors_ds = ["#3498db" if d == "dev" else "#e67e22" for d in ds_stats["dataset"]]
             ax3.barh(ds_stats["dataset"], ds_stats["mean"], xerr=ds_stats["std"], color=colors_ds, alpha=0.8, capsize=5)
             for i, row in ds_stats.iterrows():
-                ax3.text(row["mean"] + 0.02 if row["mean"] >= 0 else row["mean"] - 0.02, i, f"n={int(row['count'])}", va="center", fontsize=9)
+                ax3.text(
+                    row["mean"] + 0.02 if row["mean"] >= 0 else row["mean"] - 0.02,
+                    i,
+                    f"n={int(row['count'])}",
+                    va="center",
+                    fontsize=9,
+                )
         ax3.axvline(x=0, color="black", linestyle="--", linewidth=1, alpha=0.5)
         ax3.set_xlabel("Mean Improvement", fontsize=12)
         ax3.set_title("Improvement by Dataset", fontsize=14, fontweight="bold")
