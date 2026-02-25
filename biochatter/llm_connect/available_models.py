@@ -218,6 +218,37 @@ def supports_structured_output(model_name: str) -> bool:
 # For backward compatibility
 STRUCTURED_OUTPUT_MODELS = _STRUCTURED_OUTPUT_BASE_MODELS
 
+# Models that only support temperature=1 (default); passing temperature=0 causes API errors.
+# GPT-5 and reasoning models use an internal multi-step process and reject custom temperature.
+_TEMPERATURE_1_ONLY_PREFIXES = frozenset(
+    [
+        "gpt-5-",  # gpt-5-2025-08-07, gpt-5-mini-2025-08-07, gpt-5-nano-2025-08-07
+        "o1",  # o1, o1-mini, o1-pro
+        "o3",  # o3, o3-mini
+        "o4-mini",
+    ]
+)
+
+
+def get_temperature_for_model(model_name: str) -> float:
+    """Return temperature to use for a model. Some models (e.g. GPT-5) only support temperature=1.
+
+    Args:
+    ----
+        model_name: The model name (e.g. "gpt-5-2025-08-07")
+
+    Returns:
+    -------
+        Temperature value: 1.0 for models that reject temperature=0, else 0.0
+    """
+    if not model_name:
+        return 0.0
+    for prefix in _TEMPERATURE_1_ONLY_PREFIXES:
+        if model_name.startswith(prefix) or model_name == prefix.rstrip("-"):
+            return 1.0
+    return 0.0
+
+
 # For backward compatibility (even if not sure if this is needed)
 OPENAI_MODELS = [model.value for model in OpenAIModels]
 GEMINI_MODELS = [model.value for model in GeminiModels]

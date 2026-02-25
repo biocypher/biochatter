@@ -6,6 +6,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 
 from biochatter._stats import get_stats
+from biochatter.llm_connect.available_models import get_temperature_for_model
 from biochatter.llm_connect.conversation import Conversation
 
 
@@ -78,9 +79,10 @@ class GptConversation(Conversation):
 
         try:
             client.models.list()
+            temperature = get_temperature_for_model(self.model_name)
             self.chat = ChatOpenAI(
                 model_name=self.model_name,
-                temperature=0,
+                temperature=temperature,
                 openai_api_key=api_key,
                 base_url=self.base_url,
             )

@@ -8,6 +8,7 @@ from pydantic import BaseModel
 
 from biochatter._misc import pydantic_manual_validator
 from biochatter.llm_connect.available_models import (
+    get_temperature_for_model,
     supports_structured_output,
     supports_tool_calling,
 )
@@ -93,15 +94,16 @@ class LangChainConversation(Conversation):
         self.user = user
 
         try:
+            temperature = get_temperature_for_model(self.model_name)
             self.chat = init_chat_model(
                 model=self.model_name,
                 model_provider=self.model_provider,
-                temperature=0,
+                temperature=temperature,
             )
             self.ca_chat = init_chat_model(
                 model=self.model_name,
                 model_provider=self.model_provider,
-                temperature=0,
+                temperature=temperature,
             )
 
             # if binding happens here, tools will be available for all messages
