@@ -11,7 +11,7 @@ from langchain_core.messages import (
     HumanMessage,
     ToolMessage,
 )
-from langchain_core.pydantic_v1 import ValidationError
+from pydantic import ValidationError
 from langgraph.graph import END, MessageGraph
 from langgraph.graph.graph import CompiledGraph
 from langsmith import traceable
