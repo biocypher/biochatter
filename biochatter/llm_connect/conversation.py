@@ -501,10 +501,10 @@ class Conversation(ABC):
     def append_image_message(
         self,
         message: str,
-        image_url: str,
+        image_url: str | list[str],
         local: bool = False,
     ) -> None:
-        """Add a user message with an image to the conversation.
+        """Add a user message with one or more images to the conversation.
 
         Also checks, in addition to the `local` flag, if the image URL is a
         local file path. If it is local, the image will be encoded as a base64
@@ -513,25 +513,32 @@ class Conversation(ABC):
         Args:
         ----
             message (str): The message from the user.
-            image_url (str): The URL of the image.
-            local (bool): Whether the image is local or not. If local, it will
-                be encoded as a base64 string to be passed to the LLM.
+            image_url (str | list[str]): The URL(s) of the image(s). Can be a single
+                URL string or a list of URL strings for multiple images.
+            local (bool): Whether the image(s) are local or not. If local, they will
+                be encoded as base64 strings to be passed to the LLM.
 
         """
-        parsed_url = urllib.parse.urlparse(image_url)
-        if local or not parsed_url.netloc:
-            image_url = f"data:image/jpeg;base64,{encode_image(image_url)}"
+        # Ensure image_url is always a list for consistent processing
+        if isinstance(image_url, str):
+            image_urls = [image_url]
         else:
-            image_url = f"data:image/jpeg;base64,{encode_image_from_url(image_url)}"
+            image_urls = image_url
 
-        self.messages.append(
-            HumanMessage(
-                content=[
-                    {"type": "text", "text": message},
-                    {"type": "image_url", "image_url": {"url": image_url}},
-                ],
-            ),
-        )
+        # Build the content list starting with the text message
+        content = [{"type": "text", "text": message}]
+
+        # Process each image and add to content
+        for url in image_urls:
+            parsed_url = urllib.parse.urlparse(url)
+            if local or not parsed_url.netloc:
+                encoded_url = f"data:image/jpeg;base64,{encode_image(url)}"
+            else:
+                encoded_url = f"data:image/jpeg;base64,{encode_image_from_url(url)}"
+
+            content.append({"type": "image_url", "image_url": {"url": encoded_url}})
+
+        self.messages.append(HumanMessage(content=content))
 
     def setup(self, context: str) -> None:
         """Set up the conversation with general prompts and a context."""
@@ -565,7 +572,8 @@ class Conversation(ABC):
     def query(
         self,
         text: str,
-        image_url: str | None = None,
+        image_url: str | list[str] | None = None,
+        local: bool = False,
         structured_model: BaseModel | None = None,
         wrap_structured_output: bool | None = None,
         tools: list[Callable] | None = None,
@@ -588,8 +596,13 @@ class Conversation(ABC):
         ----
             text (str): The user query.
 
-            image_url (str): The URL of an image to include in the conversation.
-                Optional and only supported for models with vision capabilities.
+            image_url (str | list[str] | None): The URL(s) of image(s) to include
+                in the conversation. Can be a single URL string, a list of URL strings
+                for multiple images, or None. Optional and only supported for models
+                with vision capabilities.
+
+            local (bool): Whether the image(s) are local files or not. If True,
+                images will be encoded as base64 strings. Defaults to False.
 
             structured_model (BaseModel): The structured output model to use for the query.
 
@@ -648,7 +661,7 @@ class Conversation(ABC):
         if not image_url:
             self.append_user_message(text)
         else:
-            self.append_image_message(text, image_url)
+            self.append_image_message(text, image_url, local=local)
 
         self._inject_context(text)
 
