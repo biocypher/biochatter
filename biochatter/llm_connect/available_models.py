@@ -32,6 +32,9 @@ class GeminiModels(str, Enum):
 
     GEMINI_20_FLASH = "gemini-2.0-flash"
     GEMINI_25_FLASH = "gemini-2.5-flash-preview-04-17"
+    GEMINI_30_FLASH = "gemini-3-flash-preview"
+    GEMINI_15_PRO = "gemini-1.5-pro"
+    GEMINI_25_PRO = "gemini-2.5-pro"
 
 
 class MistralModels(str, Enum):
@@ -82,6 +85,9 @@ class TokenLimits(Enum):
     CUSTOM_ENDPOINT = ("custom-endpoint", 1)
     GEMINI_20_FLASH = ("gemini-2.0-flash", 1000000)
     GEMINI_25_FLASH = ("gemini-2.5-flash-preview-04-17", 1048576)
+    GEMINI_30_FLASH = ("gemini-3-flash", 1048576)
+    GEMINI_15_PRO = ("gemini-1.5-pro", 1048576)
+    GEMINI_25_PRO = ("gemini-2.5-pro", 1048576)
 
     @property
     def limit(self):
@@ -96,6 +102,9 @@ _TOOL_CALLING_BASE_MODELS = frozenset(
     [
         GeminiModels.GEMINI_20_FLASH.value,
         GeminiModels.GEMINI_25_FLASH.value,
+        GeminiModels.GEMINI_30_FLASH.value,
+        GeminiModels.GEMINI_15_PRO.value,
+        GeminiModels.GEMINI_25_PRO.value,
         OpenAIModels.GPT_4o.value,
         OpenAIModels.GPT_41.value,
         OpenAIModels.GPT_41_mini.value,
@@ -165,6 +174,9 @@ _STRUCTURED_OUTPUT_BASE_MODELS = frozenset(
     [
         GeminiModels.GEMINI_20_FLASH.value,
         GeminiModels.GEMINI_25_FLASH.value,
+        GeminiModels.GEMINI_30_FLASH.value,
+        GeminiModels.GEMINI_15_PRO.value,
+        GeminiModels.GEMINI_25_PRO.value,
         OpenAIModels.GPT_4o.value,
         OpenAIModels.GPT_41.value,
         OpenAIModels.GPT_41_mini.value,
@@ -268,6 +280,9 @@ TOKEN_LIMITS = {
     XInferenceModels.CUSTOM_ENDPOINT.value: TokenLimits.CUSTOM_ENDPOINT.limit,
     GeminiModels.GEMINI_20_FLASH.value: TokenLimits.GEMINI_20_FLASH.limit,
     GeminiModels.GEMINI_25_FLASH.value: TokenLimits.GEMINI_25_FLASH.limit,
+    GeminiModels.GEMINI_30_FLASH.value: TokenLimits.GEMINI_30_FLASH.limit,
+    GeminiModels.GEMINI_15_PRO.value: TokenLimits.GEMINI_15_PRO.limit,
+    GeminiModels.GEMINI_25_PRO.value: TokenLimits.GEMINI_25_PRO.limit,
     OpenAIModels.GPT_41.value: TokenLimits.GPT_41.limit,
     OpenAIModels.GPT_41_mini.value: TokenLimits.GPT_41_mini.limit,
     OpenAIModels.GPT_5.value: TokenLimits.GPT_5.limit,
