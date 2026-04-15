@@ -1,0 +1,94 @@
+{
+  "schema_id": "gene_kg_subset",
+  "source_file": "../data/benchmark_kg_schema_data.yaml",
+  "entities": {
+    "CellType": {
+      "source_name": "cell type",
+      "represented_as": "node",
+      "properties": [
+        "cell_type_name",
+        "medium",
+        "organism"
+      ]
+    },
+    "Disease": {
+      "source_name": "disease",
+      "represented_as": "node",
+      "properties": [
+        "DSM5",
+        "ICD10",
+        "name"
+      ]
+    },
+    "Gene": {
+      "source_name": "gene",
+      "represented_as": "node",
+      "properties": [
+        "id",
+        "name",
+        "taxon"
+      ]
+    },
+    "Protein": {
+      "source_name": "protein",
+      "represented_as": "node",
+      "properties": [
+        "genes",
+        "name",
+        "score",
+        "taxon"
+      ]
+    }
+  },
+  "relationships": {
+    "GeneExpressedInCellType": {
+      "source_name": "gene expressed in cell type",
+      "represented_as": "edge",
+      "label": "GENE_EXPRESSED_IN_CELL_TYPE",
+      "source": "Gene",
+      "target": "CellType",
+      "properties": [
+        "expression_level"
+      ]
+    },
+    "GeneToDiseaseAssociation": {
+      "source_name": "gene to disease association",
+      "represented_as": "edge",
+      "label": "PERTURBED_IN",
+      "source": "Protein",
+      "target": "Disease",
+      "properties": [
+        "evidence",
+        "score",
+        "source"
+      ]
+    },
+    "GeneToPhenotypeAssociation": {
+      "source_name": "gene to phenotype association",
+      "represented_as": "edge",
+      "label": "PERTURBED",
+      "source": "Disease",
+      "target": [
+        "Protein",
+        "Gene"
+      ],
+      "properties": [
+        "evidence",
+        "score",
+        "source"
+      ]
+    },
+    "GeneToProteinAssociation": {
+      "source_name": "gene to protein association",
+      "represented_as": "edge",
+      "label": "GeneToProteinAssociation",
+      "source": "Gene",
+      "target": "Protein",
+      "properties": [
+        "evidence",
+        "score",
+        "source"
+      ]
+    }
+  }
+}

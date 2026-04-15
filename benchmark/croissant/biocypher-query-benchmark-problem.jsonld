@@ -1,0 +1,254 @@
+{
+  "@context": {
+    "croissant": "http://mlcommons.org/croissant/",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@type": "croissant:TaskProblem",
+  "@id": "http://example.org/biochatter/biocypher-query-benchmark-problem",
+  "schema:name": "BioChatter BioCypher Query Benchmark Slice",
+  "schema:description": "A conceptual benchmark slice for natural-language-to-Cypher query generation in BioChatter. The task uses a fixed subset of benchmark prompts and a reduced BioCypher knowledge-graph schema. Independent implementations are free to realize the semantic stages differently, as long as they solve the same benchmark cases and are evaluated against the same high-level task contract.",
+  "croissant:input": [
+    {
+      "@type": "schema:Dataset",
+      "@id": "http://example.org/biochatter/biocypher-query-benchmark-cases",
+      "schema:name": "BioChatter BioCypher Query Benchmark Cases",
+      "schema:description": "A frozen subset of BioChatter benchmark cases for query generation over the BioCypher gene knowledge graph. Derived from benchmark/data/benchmark_query_test_data.yaml.",
+      "schema:url": "./biocypher-query-subset.json"
+    },
+    {
+      "@type": "schema:Dataset",
+      "@id": "http://example.org/biochatter/gene-kg-schema-subset",
+      "schema:name": "BioChatter Gene KG Schema Subset",
+      "schema:description": "A reduced schema context containing the entity and relationship types needed by the selected benchmark cases. Derived from benchmark/data/benchmark_kg_schema_data.yaml.",
+      "schema:url": "./gene-kg-subset.json"
+    }
+  ],
+  "croissant:output": {
+    "@type": "croissant:OutputSpec",
+    "@id": "http://example.org/biochatter/specs#queryGenerationOutput",
+    "croissant:schema": {
+      "@type": "croissant:RecordSet",
+      "croissant:field": [
+        {
+          "@type": "croissant:Field",
+          "schema:name": "case_id",
+          "croissant:dataType": "xsd:string"
+        },
+        {
+          "@type": "croissant:Field",
+          "schema:name": "query_text",
+          "croissant:dataType": "xsd:string",
+          "schema:description": "A Cypher query intended to answer the benchmark prompt for the given case."
+        }
+      ]
+    }
+  },
+  "croissant:evaluation": {
+    "@type": "croissant:EvaluationSpec",
+    "@id": "http://example.org/biochatter/specs#overallEvaluation",
+    "croissant:expectedMetric": [
+      "Entity Selection Accuracy",
+      "Relationship Selection Accuracy",
+      "Property Selection Accuracy",
+      "Query Pattern Coverage"
+    ]
+  },
+  "croissant:subTask": [
+    {
+      "@type": "croissant:TaskProblem",
+      "@id": "http://example.org/biochatter/biocypher-query-benchmark-problem#entity-selection",
+      "schema:name": "Entity Selection",
+      "schema:description": "Identify the entity types from the schema that are relevant to answering each benchmark question.",
+      "croissant:input": [
+        {
+          "@id": "http://example.org/biochatter/biocypher-query-benchmark-cases"
+        },
+        {
+          "@id": "http://example.org/biochatter/gene-kg-schema-subset"
+        }
+      ],
+      "croissant:output": {
+        "@type": "croissant:OutputSpec",
+        "@id": "http://example.org/biochatter/specs#entitySelectionOutput",
+        "croissant:schema": {
+          "@type": "croissant:RecordSet",
+          "croissant:field": [
+            {
+              "@type": "croissant:Field",
+              "schema:name": "case_id",
+              "croissant:dataType": "xsd:string"
+            },
+            {
+              "@type": "croissant:Field",
+              "schema:name": "entity",
+              "croissant:dataType": "xsd:string",
+              "croissant:repeated": true
+            }
+          ]
+        }
+      },
+      "croissant:evaluation": {
+        "@type": "croissant:EvaluationSpec",
+        "croissant:expectedMetric": [
+          "Entity Selection Accuracy"
+        ]
+      }
+    },
+    {
+      "@type": "croissant:TaskProblem",
+      "@id": "http://example.org/biochatter/biocypher-query-benchmark-problem#relationship-selection",
+      "schema:name": "Relationship Selection",
+      "schema:description": "Identify which schema relationships or edge labels are needed to connect the selected entity types for each benchmark question.",
+      "croissant:input": [
+        {
+          "@id": "http://example.org/biochatter/biocypher-query-benchmark-cases"
+        },
+        {
+          "@id": "http://example.org/biochatter/gene-kg-schema-subset"
+        }
+      ],
+      "croissant:output": {
+        "@type": "croissant:OutputSpec",
+        "@id": "http://example.org/biochatter/specs#relationshipSelectionOutput",
+        "croissant:schema": {
+          "@type": "croissant:RecordSet",
+          "croissant:field": [
+            {
+              "@type": "croissant:Field",
+              "schema:name": "case_id",
+              "croissant:dataType": "xsd:string"
+            },
+            {
+              "@type": "croissant:Field",
+              "schema:name": "relationship_label",
+              "croissant:dataType": "xsd:string",
+              "croissant:repeated": true
+            },
+            {
+              "@type": "croissant:Field",
+              "schema:name": "source_entity",
+              "croissant:dataType": "xsd:string",
+              "croissant:repeated": true
+            },
+            {
+              "@type": "croissant:Field",
+              "schema:name": "target_entity",
+              "croissant:dataType": "xsd:string",
+              "croissant:repeated": true
+            }
+          ]
+        }
+      },
+      "croissant:evaluation": {
+        "@type": "croissant:EvaluationSpec",
+        "croissant:expectedMetric": [
+          "Relationship Selection Accuracy"
+        ]
+      }
+    },
+    {
+      "@type": "croissant:TaskProblem",
+      "@id": "http://example.org/biochatter/biocypher-query-benchmark-problem#property-selection",
+      "schema:name": "Property Selection",
+      "schema:description": "Identify which entity or relationship properties are needed to constrain the query and return the requested information.",
+      "croissant:input": [
+        {
+          "@id": "http://example.org/biochatter/biocypher-query-benchmark-cases"
+        },
+        {
+          "@id": "http://example.org/biochatter/gene-kg-schema-subset"
+        }
+      ],
+      "croissant:output": {
+        "@type": "croissant:OutputSpec",
+        "@id": "http://example.org/biochatter/specs#propertySelectionOutput",
+        "croissant:schema": {
+          "@type": "croissant:RecordSet",
+          "croissant:field": [
+            {
+              "@type": "croissant:Field",
+              "schema:name": "case_id",
+              "croissant:dataType": "xsd:string"
+            },
+            {
+              "@type": "croissant:Field",
+              "schema:name": "subject_type",
+              "croissant:dataType": "xsd:string",
+              "croissant:repeated": true
+            },
+            {
+              "@type": "croissant:Field",
+              "schema:name": "property_name",
+              "croissant:dataType": "xsd:string",
+              "croissant:repeated": true
+            }
+          ]
+        }
+      },
+      "croissant:evaluation": {
+        "@type": "croissant:EvaluationSpec",
+        "croissant:expectedMetric": [
+          "Property Selection Accuracy"
+        ]
+      }
+    },
+    {
+      "@type": "croissant:TaskProblem",
+      "@id": "http://example.org/biochatter/biocypher-query-benchmark-problem#query-generation",
+      "schema:name": "Query Generation",
+      "schema:description": "Generate a Cypher query that answers each benchmark question using the fixed schema context and either the explicit or equivalent internal query plan.",
+      "croissant:input": [
+        {
+          "@id": "http://example.org/biochatter/biocypher-query-benchmark-cases"
+        },
+        {
+          "@id": "http://example.org/biochatter/gene-kg-schema-subset"
+        },
+        {
+          "@type": "croissant:InputSpec",
+          "@id": "http://example.org/biochatter/specs#queryPlanningInput",
+          "schema:description": "Structured intermediate selections produced by upstream task stages or by an equivalent query-planning representation.",
+          "croissant:schema": {
+            "@type": "croissant:RecordSet",
+            "croissant:field": [
+              {
+                "@type": "croissant:Field",
+                "schema:name": "case_id",
+                "croissant:dataType": "xsd:string"
+              },
+              {
+                "@type": "croissant:Field",
+                "schema:name": "selected_entity",
+                "croissant:dataType": "xsd:string",
+                "croissant:repeated": true
+              },
+              {
+                "@type": "croissant:Field",
+                "schema:name": "selected_relationship_label",
+                "croissant:dataType": "xsd:string",
+                "croissant:repeated": true
+              },
+              {
+                "@type": "croissant:Field",
+                "schema:name": "selected_property",
+                "croissant:dataType": "xsd:string",
+                "croissant:repeated": true
+              }
+            ]
+          }
+        }
+      ],
+      "croissant:output": {
+        "@type": "croissant:OutputSpec",
+        "@id": "http://example.org/biochatter/specs#queryGenerationOutput"
+      },
+      "croissant:evaluation": {
+        "@type": "croissant:EvaluationSpec",
+        "croissant:expectedMetric": [
+          "Query Pattern Coverage"
+        ]
+      }
+    }
+  ]
+}

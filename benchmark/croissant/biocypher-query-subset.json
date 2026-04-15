@@ -1,0 +1,182 @@
+{
+  "benchmark_family": "biocypher_query_generation",
+  "source_file": "../data/benchmark_query_test_data.yaml",
+  "scope": {
+    "kg_schema": "gene_kg",
+    "cases": [
+      "simple",
+      "single_word",
+      "multi_word",
+      "complex"
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "simple",
+      "prompt": "What is the name of the disease with ICD10 code 'E10'?",
+      "kg_schema_id": "gene_kg_subset",
+      "reference_entities": [
+        "Disease"
+      ],
+      "reference_relationships": [],
+      "reference_relationship_labels": {},
+      "reference_properties": {
+        "Disease": [
+          "name",
+          "ICD10"
+        ]
+      },
+      "reference_query_checks": [
+        "^MATCH",
+        "RETURN",
+        "([a-zA-Z]*:Disease)",
+        "WHERE [a-zA-Z]*\\.ICD10|{ICD10:"
+      ]
+    },
+    {
+      "case_id": "single_word",
+      "prompt": "Which genes are associated with mucoviscidosis?",
+      "kg_schema_id": "gene_kg_subset",
+      "reference_entities": [
+        "Gene",
+        "Disease"
+      ],
+      "reference_relationships": [
+        "GeneToPhenotypeAssociation"
+      ],
+      "reference_relationship_labels": {
+        "PERTURBED": {
+          "source": "Disease",
+          "target": [
+            "Protein",
+            "Gene"
+          ]
+        }
+      },
+      "reference_properties": {
+        "Disease": [
+          "name",
+          "ICD10",
+          "DSM5"
+        ],
+        "Gene": [
+          "id",
+          "name"
+        ],
+        "GeneToPhenotypeAssociation": [
+          "score",
+          "source",
+          "evidence"
+        ]
+      },
+      "reference_query_checks": [
+        "^MATCH",
+        "RETURN",
+        "([a-zA-Z]*:Gene)",
+        "([a-zA-Z]*:Disease)",
+        "([a-zA-Z]*)?:PERTURBED]",
+        "[Mm]ucoviscidosis",
+        "\\(.*:Gene\\)<-\\[:PERTURBED\\]-|-\\[:PERTURBED\\]->\\(.*:Gene\\)",
+        "WHERE [a-zA-Z]*\\.name|{name:"
+      ]
+    },
+    {
+      "case_id": "multi_word",
+      "prompt": "Which genes are expressed in fibroblasts?",
+      "kg_schema_id": "gene_kg_subset",
+      "reference_entities": [
+        "Gene",
+        "CellType"
+      ],
+      "reference_relationships": [
+        "GeneExpressedInCellType"
+      ],
+      "reference_relationship_labels": {
+        "GENE_EXPRESSED_IN_CELL_TYPE": {
+          "source": "Gene",
+          "target": "CellType"
+        }
+      },
+      "reference_properties": {
+        "CellType": [
+          "cell_type_name"
+        ],
+        "Gene": [
+          "id",
+          "name"
+        ],
+        "GeneExpressedInCellType": [
+          "expression_level"
+        ]
+      },
+      "reference_query_checks": [
+        "^MATCH",
+        "RETURN",
+        "([a-zA-Z]*:Gene)",
+        "([a-zA-Z]*:CellType.*)",
+        "([a-zA-Z]*)?:GENE_EXPRESSED_IN_CELL_TYPE]",
+        "[Ff]ibroblast",
+        "\\(.*:Gene\\)-\\[:GENE_EXPRESSED_IN_CELL_TYPE\\]->\\(.*:CellType.*\\)|\\(.*:CellType.*\\)<-\\[:GENE_EXPRESSED_IN_CELL_TYPE\\]-\\(.*:Gene\\)",
+        "WHERE [a-zA-Z]*\\.cell_type_name|{cell_type_name:"
+      ]
+    },
+    {
+      "case_id": "complex",
+      "prompt": "Which proteins are associated with the disease having ICD10 code 'E10', what are their scores, and what is the gene related to these proteins?",
+      "kg_schema_id": "gene_kg_subset",
+      "reference_entities": [
+        "Protein",
+        "Disease",
+        "Gene"
+      ],
+      "reference_relationships": [
+        "GeneToDiseaseAssociation",
+        "GeneToProteinAssociation"
+      ],
+      "reference_relationship_labels": {
+        "PERTURBED_IN": {
+          "source": "Protein",
+          "target": "Disease"
+        },
+        "GeneToProteinAssociation": {
+          "source": "Gene",
+          "target": "Protein"
+        }
+      },
+      "reference_properties": {
+        "Disease": [
+          "name",
+          "ICD10"
+        ],
+        "Protein": [
+          "name",
+          "score"
+        ],
+        "Gene": [
+          "name",
+          "score"
+        ],
+        "GeneToDiseaseAssociation": [
+          "score",
+          "source",
+          "evidence"
+        ],
+        "GeneToProteinAssociation": [
+          "score"
+        ]
+      },
+      "reference_query_checks": [
+        "^MATCH",
+        "RETURN",
+        "([a-zA-Z]*:Protein)",
+        "([a-zA-Z]*:Disease)",
+        "([a-zA-Z]*:Gene)",
+        "([a-zA-Z]*)?:PERTURBED_IN]",
+        "([a-zA-Z]*)?:GeneToProteinAssociation]",
+        "WHERE [a-zA-Z]*\\.ICD10|{ICD10:",
+        "\\)<-\\[([a-zA-Z]*)?:PERTURBED_IN]-|-\\[([a-zA-Z]*)?:PERTURBED_IN]->\\(([a-zA-Z]*:Disease)",
+        "\\(([a-zA-Z]*(:Protein)?)\\)<-\\[([a-zA-Z]*)?:GeneToProteinAssociation]-|-\\[([a-zA-Z]*)?:GeneToProteinAssociation]->\\(([a-zA-Z]*(:Protein)?)\\)"
+      ]
+    }
+  ]
+}
