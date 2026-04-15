@@ -20,8 +20,8 @@ JSON-LD executable by itself. Instead, they separate:
 
 ## Current Draft
 
-- `biocypher-query-benchmark-problem.jsonld`
-  - a `croissant:TaskProblem` for a reduced BioCypher query benchmark slice
+- `biocypher-query-benchmark-suite.jsonld`
+  - a Croissant task suite for a reduced BioCypher query benchmark slice
 - `biocypher-query-subset.json`
   - the fixed benchmark cases used by the draft task
 - `gene-kg-subset.json`
@@ -35,12 +35,12 @@ The first draft freezes:
 - KG schema slice: `gene_kg`
 - cases: `simple`, `single_word`, `multi_word`, `complex`
 
-The task description preserves four semantic stages as subtasks:
+The task description preserves four independent benchmark targets as subtasks:
 
+- end-to-end query generation
 - entity selection
 - relationship selection
 - property selection
-- query generation
 
 Detailed regex-based query checking and score aggregation remain protocol-level
 evaluation details rather than being fully encoded in the JSON-LD.

@@ -3,6 +3,12 @@
   "source_file": "../data/benchmark_query_test_data.yaml",
   "scope": {
     "kg_schema": "gene_kg",
+    "benchmark_targets": [
+      "query_generation",
+      "entity_selection",
+      "relationship_selection",
+      "property_selection"
+    ],
     "cases": [
       "simple",
       "single_word",

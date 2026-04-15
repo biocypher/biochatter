@@ -1,0 +1,239 @@
+{
+  "@context": {
+    "croissant": "http://mlcommons.org/croissant/",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@type": "croissant:Task",
+  "@id": "http://example.org/biochatter/biocypher-query-benchmark-suite",
+  "schema:name": "BioChatter BioCypher Query Benchmark Suite",
+  "schema:description": "A conceptual benchmark suite for natural-language-to-Cypher query tasks in BioChatter. The suite fixes a subset of benchmark prompts and a reduced BioCypher knowledge-graph schema, and exposes multiple benchmark targets over the same cases. The Croissant description captures benchmark questions, inputs, outputs, and reference implementations, but does not prescribe a required internal reasoning process.",
+  "croissant:input": [
+    {
+      "@type": "schema:Dataset",
+      "@id": "http://example.org/biochatter/biocypher-query-benchmark-cases",
+      "schema:name": "BioChatter BioCypher Query Benchmark Cases",
+      "schema:description": "A frozen subset of BioChatter benchmark cases for query-related tasks over the BioCypher gene knowledge graph. Derived from benchmark/data/benchmark_query_test_data.yaml.",
+      "schema:url": "./biocypher-query-subset.json"
+    },
+    {
+      "@type": "schema:Dataset",
+      "@id": "http://example.org/biochatter/gene-kg-schema-subset",
+      "schema:name": "BioChatter Gene KG Schema Subset",
+      "schema:description": "A reduced schema context containing the entity and relationship types needed by the selected benchmark cases. Derived from benchmark/data/benchmark_kg_schema_data.yaml.",
+      "schema:url": "./gene-kg-subset.json"
+    }
+  ],
+  "croissant:implementation": [
+    {
+      "@type": "schema:SoftwareSourceCode",
+      "@id": "http://example.org/biochatter/implementation#benchmark-tests",
+      "schema:name": "BioChatter Query Benchmark Tests",
+      "schema:description": "Reference benchmark implementation in BioChatter. This source is descriptive and non-normative for independent reimplementations.",
+      "schema:url": "../test_biocypher_query_generation.py"
+    },
+    {
+      "@type": "schema:SoftwareSourceCode",
+      "@id": "http://example.org/biochatter/implementation#prompt-engine",
+      "schema:name": "BioChatter Prompt Engine",
+      "schema:description": "Reference prompt-engine implementation used by the benchmark. This source is descriptive and non-normative for independent reimplementations.",
+      "schema:url": "../../biochatter/prompts.py"
+    }
+  ],
+  "croissant:subTask": [
+    {
+      "@type": "croissant:TaskProblem",
+      "@id": "http://example.org/biochatter/biocypher-query-benchmark-suite#query-generation",
+      "schema:name": "End-to-End Query Generation",
+      "schema:description": "Generate a Cypher query that answers each benchmark question using the provided benchmark cases and schema context.",
+      "croissant:input": [
+        {
+          "@id": "http://example.org/biochatter/biocypher-query-benchmark-cases"
+        },
+        {
+          "@id": "http://example.org/biochatter/gene-kg-schema-subset"
+        }
+      ],
+      "croissant:output": {
+        "@type": "croissant:OutputSpec",
+        "@id": "http://example.org/biochatter/specs#queryGenerationOutput",
+        "croissant:schema": {
+          "@type": "croissant:RecordSet",
+          "croissant:field": [
+            {
+              "@type": "croissant:Field",
+              "schema:name": "case_id",
+              "croissant:dataType": "xsd:string"
+            },
+            {
+              "@type": "croissant:Field",
+              "schema:name": "query_text",
+              "croissant:dataType": "xsd:string",
+              "schema:description": "A Cypher query intended to answer the benchmark prompt for the given case."
+            }
+          ]
+        }
+      },
+      "croissant:evaluation": {
+        "@type": "croissant:EvaluationSpec",
+        "@id": "http://example.org/biochatter/specs#queryGenerationEvaluation",
+        "croissant:expectedMetric": [
+          "Query Pattern Coverage"
+        ]
+      },
+      "croissant:implementation": {
+        "@id": "http://example.org/biochatter/implementation#benchmark-tests"
+      }
+    },
+    {
+      "@type": "croissant:TaskProblem",
+      "@id": "http://example.org/biochatter/biocypher-query-benchmark-suite#entity-selection",
+      "schema:name": "Entity Selection",
+      "schema:description": "Identify the entity types from the schema that are relevant to answering each benchmark question.",
+      "croissant:input": [
+        {
+          "@id": "http://example.org/biochatter/biocypher-query-benchmark-cases"
+        },
+        {
+          "@id": "http://example.org/biochatter/gene-kg-schema-subset"
+        }
+      ],
+      "croissant:output": {
+        "@type": "croissant:OutputSpec",
+        "@id": "http://example.org/biochatter/specs#entitySelectionOutput",
+        "croissant:schema": {
+          "@type": "croissant:RecordSet",
+          "croissant:field": [
+            {
+              "@type": "croissant:Field",
+              "schema:name": "case_id",
+              "croissant:dataType": "xsd:string"
+            },
+            {
+              "@type": "croissant:Field",
+              "schema:name": "entity",
+              "croissant:dataType": "xsd:string",
+              "schema:description": "One selected entity type for the given case. Emit one record per selected entity."
+            }
+          ]
+        }
+      },
+      "croissant:evaluation": {
+        "@type": "croissant:EvaluationSpec",
+        "@id": "http://example.org/biochatter/specs#entitySelectionEvaluation",
+        "croissant:expectedMetric": [
+          "Entity Selection Accuracy"
+        ]
+      },
+      "croissant:implementation": {
+        "@id": "http://example.org/biochatter/implementation#prompt-engine"
+      }
+    },
+    {
+      "@type": "croissant:TaskProblem",
+      "@id": "http://example.org/biochatter/biocypher-query-benchmark-suite#relationship-selection",
+      "schema:name": "Relationship Selection",
+      "schema:description": "Identify the relationship bindings from the schema that are relevant to answering each benchmark question.",
+      "croissant:input": [
+        {
+          "@id": "http://example.org/biochatter/biocypher-query-benchmark-cases"
+        },
+        {
+          "@id": "http://example.org/biochatter/gene-kg-schema-subset"
+        }
+      ],
+      "croissant:output": {
+        "@type": "croissant:OutputSpec",
+        "@id": "http://example.org/biochatter/specs#relationshipSelectionOutput",
+        "croissant:schema": {
+          "@type": "croissant:RecordSet",
+          "croissant:field": [
+            {
+              "@type": "croissant:Field",
+              "schema:name": "case_id",
+              "croissant:dataType": "xsd:string"
+            },
+            {
+              "@type": "croissant:Field",
+              "schema:name": "relationship_label",
+              "croissant:dataType": "xsd:string",
+              "schema:description": "The schema relationship label selected for the given case."
+            },
+            {
+              "@type": "croissant:Field",
+              "schema:name": "source_entity",
+              "croissant:dataType": "xsd:string",
+              "schema:description": "The source entity type associated with this relationship binding."
+            },
+            {
+              "@type": "croissant:Field",
+              "schema:name": "target_entity",
+              "croissant:dataType": "xsd:string",
+              "schema:description": "The target entity type associated with this relationship binding. Emit one record per label/source/target binding."
+            }
+          ]
+        }
+      },
+      "croissant:evaluation": {
+        "@type": "croissant:EvaluationSpec",
+        "@id": "http://example.org/biochatter/specs#relationshipSelectionEvaluation",
+        "croissant:expectedMetric": [
+          "Relationship Selection Accuracy"
+        ]
+      },
+      "croissant:implementation": {
+        "@id": "http://example.org/biochatter/implementation#prompt-engine"
+      }
+    },
+    {
+      "@type": "croissant:TaskProblem",
+      "@id": "http://example.org/biochatter/biocypher-query-benchmark-suite#property-selection",
+      "schema:name": "Property Selection",
+      "schema:description": "Identify which schema properties are relevant to answering each benchmark question.",
+      "croissant:input": [
+        {
+          "@id": "http://example.org/biochatter/biocypher-query-benchmark-cases"
+        },
+        {
+          "@id": "http://example.org/biochatter/gene-kg-schema-subset"
+        }
+      ],
+      "croissant:output": {
+        "@type": "croissant:OutputSpec",
+        "@id": "http://example.org/biochatter/specs#propertySelectionOutput",
+        "croissant:schema": {
+          "@type": "croissant:RecordSet",
+          "croissant:field": [
+            {
+              "@type": "croissant:Field",
+              "schema:name": "case_id",
+              "croissant:dataType": "xsd:string"
+            },
+            {
+              "@type": "croissant:Field",
+              "schema:name": "subject_type",
+              "croissant:dataType": "xsd:string",
+              "schema:description": "The entity or relationship type to which the property belongs."
+            },
+            {
+              "@type": "croissant:Field",
+              "schema:name": "property_name",
+              "croissant:dataType": "xsd:string",
+              "schema:description": "One selected property for the given case. Emit one record per subject_type/property_name pair."
+            }
+          ]
+        }
+      },
+      "croissant:evaluation": {
+        "@type": "croissant:EvaluationSpec",
+        "@id": "http://example.org/biochatter/specs#propertySelectionEvaluation",
+        "croissant:expectedMetric": [
+          "Property Selection Accuracy"
+        ]
+      },
+      "croissant:implementation": {
+        "@id": "http://example.org/biochatter/implementation#prompt-engine"
+      }
+    }
+  ]
+}

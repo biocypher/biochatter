@@ -10,7 +10,7 @@ Croissant task objects are strongest at describing a task contract:
 - what the task is
 - what goes in
 - what comes out
-- what semantic subtasks matter
+- what benchmark targets or conceptual subproblems matter
 - what high-level metrics are expected
 
 They are weaker as a declarative language for benchmark procedure:
@@ -37,6 +37,38 @@ If they still need substantial procedural details, the missing parts belong in a
 short companion protocol note.
 
 ## Common Cases
+
+### Benchmark targets vs implementation stages
+
+This is the most important distinction to get right.
+
+Sometimes a benchmark exposes several real targets over the same inputs, for
+example:
+
+- final answer generation
+- label selection
+- retrieval ranking
+- attribute extraction
+
+If each of these is a legitimate thing that the benchmark evaluates in its own
+right, each can be modeled as its own `croissant:TaskProblem`, often grouped
+under a top-level `croissant:Task` suite.
+
+By contrast, if a system happens to use internal steps such as:
+
+- plan generation
+- candidate pruning
+- intermediate serialization
+- prompt chaining
+
+those steps should usually not be modeled as Croissant subtasks unless the
+benchmark itself treats them as benchmark targets.
+
+Migration strategy:
+
+- preserve benchmark targets
+- omit implementation-only pipeline steps
+- use `croissant:implementation` for reference code when helpful
 
 ### LLM-as-judge evaluation
 
@@ -134,3 +166,7 @@ independent implementation should reproduce.
 
 Put something in companion protocol text when it mainly explains how one
 particular benchmark harness executes, samples, caches, or judges the task.
+
+Put something in `croissant:subTask` when it is itself a benchmark target or a
+conceptual subproblem worth reproducing, not just a step that happened to exist
+inside one implementation.

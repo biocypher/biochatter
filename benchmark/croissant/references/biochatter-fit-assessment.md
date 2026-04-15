@@ -10,7 +10,7 @@ generic skill itself.
 
 | Benchmark family | Fit | Rationale | Main Croissant boundary |
 | --- | --- | --- | --- |
-| `biocypher_query_generation` | strong | Structured cases, explicit semantic stages, schema-as-input, mostly transparent evaluation | Detailed regex scoring remains external |
+| `biocypher_query_generation` | strong | Structured cases, multiple independent benchmark targets over shared inputs, schema-as-input, mostly transparent evaluation | Detailed regex scoring remains external |
 | `medical_exam` | moderate to strong | Fixed QA cases with explicit expected answers | Exact-match and regex scoring details are not first-class in the task spec |
 | `rag_interpretation` | moderate | Binary relevance tasks are simple and bounded | Implicit cases use another evaluator model, which moves key semantics outside the task description |
 | `text_extraction` | moderate | Clear input captions and output intents | Heterogeneous extraction requests plus ROUGE-based scoring exceed what `EvaluationSpec` can express cleanly |
@@ -61,6 +61,19 @@ BioChatter expands prompt variants and multi-input dictionaries into a larger
 test matrix in `benchmark/load_dataset.py`. Croissant can describe the resulting
 task data, but it does not currently offer a first-class declarative language
 for benchmark-case expansion logic.
+
+### 2b. Internal pipelines should not be confused with benchmark targets
+
+Some BioChatter families expose several real benchmark targets over the same
+cases, which is a good fit for Croissant subtasks. But that does not imply that
+every internal step in a system should become a subtask.
+
+The useful question is:
+
+- is this intermediate artifact itself benchmarked as a target, or
+- is it just one implementation's route to the answer
+
+Only the former usually belongs in the Croissant task structure.
 
 ### 3. Tool-calling benchmarks need more than inputs and outputs
 

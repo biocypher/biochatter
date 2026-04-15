@@ -1,6 +1,6 @@
 ---
 name: croissant-benchmark-migration
-description: Convert an existing benchmark or evaluation pipeline into a Croissant task description for conceptual reproducibility. Use when selecting a migration subset, mapping benchmark inputs, outputs, subtasks, and evaluation into Croissant TaskProblem or TaskSolution structures, and documenting where the benchmark exceeds the current Croissant task spec.
+description: Convert an existing benchmark or evaluation pipeline into a Croissant task description for conceptual reproducibility. Use when selecting a migration subset, mapping benchmark inputs, outputs, subtasks, and evaluation into Croissant Task or TaskProblem structures, and documenting where the benchmark exceeds the current Croissant task spec.
 ---
 
 # Croissant Benchmark Migration
@@ -36,8 +36,9 @@ Produce these artifacts or decisions:
    - little hidden runtime state
    - minimal dependence on external services or judge models
 4. Map the chosen subset into Croissant:
-   - top-level benchmark slice -> `croissant:TaskProblem`
-   - semantic stages worth preserving -> `croissant:subTask`
+   - top-level benchmark suite or collection -> `croissant:Task`
+   - individual benchmark target -> `croissant:TaskProblem`
+   - independent benchmark targets or conceptual subproblems worth preserving -> `croissant:subTask`
    - required data and context -> `croissant:input`
    - expected output structure -> `croissant:output`
    - expected high-level metrics -> `croissant:evaluation`
@@ -57,7 +58,8 @@ Strong first candidates usually have all or most of these properties:
 - inputs that can be named as datasets or structured records
 - outputs that can be described with a simple schema
 - evaluation that can be summarized as one or a few metrics
-- subtasks that are semantic stages rather than implementation accidents
+- subtasks that are independent benchmark targets or conceptual subproblems,
+  rather than steps in one implementation pipeline
 
 The following are not disqualifiers, but they are signals that the migration
 will need either a companion protocol note or a frozen materialization of the
@@ -83,10 +85,16 @@ supporting documentation.
 
 ## Croissant Mapping Guidance
 
-- Use `croissant:TaskProblem` for the benchmark slice that another team should
-  be able to reproduce conceptually.
-- Use `croissant:subTask` only for stages that are meaningful to preserve in an
-  independent reimplementation.
+- Use `croissant:TaskProblem` for an individual benchmark target that another
+  team should be able to reproduce conceptually.
+- Use `croissant:Task` when the top-level object is better understood as a
+  benchmark suite or collection of related targets rather than one problem with
+  one output contract.
+- Use `croissant:subTask` only for benchmark targets or conceptual subproblems
+  that are meaningful to preserve in an independent reimplementation.
+- Do not model one implementation's internal pipeline as normative task
+  structure unless those intermediate artifacts are themselves benchmarked as
+  standalone targets.
 - Put datasets, schemas, fixed examples, and reference context in
   `croissant:input` when they are part of the task definition.
 - Put the predicted object shape in `croissant:output`; do not confuse this
@@ -94,6 +102,9 @@ supporting documentation.
 - Use `croissant:EvaluationSpec` to name expected metrics, but keep detailed
   scoring rules in companion documentation when they are more specific than the
   ontology can express.
+- Use `croissant:implementation` to point to reference code or systems when
+  that helps orientation, but treat those implementations as descriptive rather
+  than normative unless the benchmark explicitly constrains them.
 - Treat `croissant:TaskSolution` as optional for the manuscript phase unless
   you are also documenting a concrete implementation run.
 
@@ -102,6 +113,8 @@ supporting documentation.
 Always state these distinctions when writing the migration:
 
 - The Croissant JSON-LD describes the task, not the runner.
+- A benchmark target is not the same thing as one implementation's internal
+  decomposition of that target.
 - Execution matrices across models, prompts, quantizations, or iterations are
   benchmark harness details unless they are part of the task identity.
 - LLM-as-judge procedures, regex scoring, ROUGE scoring, trace capture, and
