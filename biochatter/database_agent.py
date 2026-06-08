@@ -78,12 +78,9 @@ class DatabaseAgent:
             query = self.prompt_engine.generate_query(query)
             query = query.strip()
             if "```" in query:
-                m = re.search(r"```(?:neo4j|cypher)?\s*(.*?)```", query, re.DOTALL)
+                m = re.search(r"```(?:\w+)?\s*(.*?)```", query, re.DOTALL)
                 if m:
                     query = m.group(1).strip()
-            cs = re.search(r"(MATCH|CALL|WITH|CREATE|MERGE)\s", query, re.IGNORECASE)
-            if cs:
-                query = query[cs.start():]
             results = self.driver.query(query=query)
             return query, results
 
