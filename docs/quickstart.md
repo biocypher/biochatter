@@ -155,7 +155,7 @@ configurations, check our [RAG documentation](features/rag.md).
 For developers who want to create a user-friendly web interface quickly:
 
 1. Clone the [BioChatter Light](https://github.com/biocypher/biochatter-light) repository
-1. Install dependencies (Poetry recommended)
+1. Install dependencies (uv recommended)
 1. Set up debugging environment using `streamlit run app.py`
 1. Modify the app components to introduce your desired functionality (refer to the [customisation vignette](vignettes/custom-bclight-advanced.md) for more details)
 

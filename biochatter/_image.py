@@ -25,7 +25,7 @@ def convert_and_resize_image(image: Image, max_size: int = 1024) -> Image:
     """
     if image.mode != "RGB":
         image = image.convert("RGB")
-    image.thumbnail((max_size, max_size), Image.LANCZOS)
+    image.thumbnail((max_size, max_size), Image.Resampling.LANCZOS)
     return image
 
 

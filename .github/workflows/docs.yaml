@@ -39,12 +39,13 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
 
       - name: Install dependencies
-        run: poetry install --no-interaction --no-root
+        run: uv sync --no-install-project
 
       - name: Setup gh-pages branch
         run: |
@@ -58,8 +59,8 @@ jobs:
       - name: Deploy documentation with mike
         run: |
           # Extract version from pyproject.toml or use a default version
-          VERSION=$(poetry version -s || echo "latest")
+          VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])" || echo "latest")
           # Deploy the docs with mike
-          poetry run mike deploy --push --update-aliases --ignore-remote-status $VERSION latest
+          uv run mike deploy --push --update-aliases --ignore-remote-status $VERSION latest
           # Set the latest version as default
-          poetry run mike set-default --push latest
+          uv run mike set-default --push latest

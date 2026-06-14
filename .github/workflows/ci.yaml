@@ -18,27 +18,28 @@ jobs:
         with:
           lfs: false
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3.11
 
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
       - name: Install dependencies
-        run: poetry install --all-groups
+        run: uv sync --all-groups
 
       - name: Run tests and generate coverage report
         run: |
-          poetry run pytest --cov=biochatter --cov-report=xml test --ignore=./volumes
-          poetry run coverage report
+          uv run pytest --cov=biochatter --cov-report=xml test --ignore=./volumes
+          uv run coverage report
         shell: bash
 
       - name: Generate coverage badge
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.base_ref == 'refs/heads/main' && github.event.pull_request.merged == true)
         run: |
-          poetry run coverage-badge -f -o docs/coverage/coverage.svg
+          uv run coverage-badge -f -o docs/coverage/coverage.svg
         shell: bash
 
       - name: Commit changes
