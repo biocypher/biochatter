@@ -22,13 +22,13 @@ models in the biomedical domain.
 
 ### 🚀 Demo Applications and Utilities
 
-- [BioChatter Light](https://light.biochatter.org) - Simple Python frontend
+- BioChatter Light - Simple Python frontend
 ([repo](https://github.com/biocypher/biochatter-light))
 
-- [BioChatter Next](https://next.biochatter.org) - Advanced Next.js frontend
+- BioChatter Next - Advanced Next.js frontend
 ([repo](https://github.com/biocypher/biochatter-next))
 
-- [BioChatter Server](https://github.com/biocypher/biochatter-server) - RESTful
+- BioChatter Server - RESTful
 API server
 
 📖 Learn more in our [paper](https://www.nature.com/articles/s41587-024-02534-3)

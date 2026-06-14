@@ -1,7 +1,7 @@
 import warnings
 
 import openai
-from langchain_community.chat_models import ChatOllama
+from langchain_ollama import ChatOllama
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 from biochatter.llm_connect.conversation import Conversation
@@ -74,7 +74,7 @@ class OllamaConversation(Conversation):
 
         self.ca_model = ChatOllama(
             base_url=base_url,
-            model_name=self.ca_model_name,
+            model=self.ca_model_name,
             temperature=0.0,
         )
 

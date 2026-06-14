@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 import neo4j_utils as nu
 import shortuuid
 from dotenv import load_dotenv
-from langchain.output_parsers.openai_tools import PydanticToolsParser
+from langchain_core.output_parsers import PydanticToolsParser
 from langchain_core.messages import AIMessage, BaseMessage
 
 from biochatter.langgraph_agent_base import ResponderWithRetries

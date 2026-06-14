@@ -4,7 +4,6 @@ import os
 from unittest.mock import Mock, patch
 
 import pytest
-from google.api_core.exceptions import InvalidArgument
 
 from biochatter.llm_connect import GeminiConversation
 
@@ -86,7 +85,7 @@ def test_unknown_message_type():
 
 @patch("biochatter.llm_connect.gemini.ChatGoogleGenerativeAI")
 def test_gemini_catches_authentication_error(mock_gemini):
-    mock_gemini.side_effect = InvalidArgument("Invalid API key")
+    mock_gemini.side_effect = Exception("Invalid API key")
 
     convo = GeminiConversation(
         model_name="gemini-2.0-flash",
@@ -135,7 +134,7 @@ def test_ca_chat_attribute_not_initialized():
 @patch("biochatter.llm_connect.gemini.ChatGoogleGenerativeAI")
 def test_chat_attributes_reset_on_auth_error(mock_gemini):
     """Test that chat attributes are reset to None on authentication error."""
-    mock_gemini.side_effect = InvalidArgument("Invalid API key")
+    mock_gemini.side_effect = Exception("Invalid API key")
 
     convo = GeminiConversation(
         model_name="gemini-2.0-flash",

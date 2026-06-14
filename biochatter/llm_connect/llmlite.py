@@ -3,7 +3,7 @@ import warnings
 from collections.abc import Callable
 
 import litellm
-from langchain_community.chat_models import ChatLiteLLM
+from langchain_litellm import ChatLiteLLM
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from biochatter._stats import get_stats

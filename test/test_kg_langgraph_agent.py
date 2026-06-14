@@ -3,7 +3,7 @@ from typing import Any
 
 import pytest
 import shortuuid
-from langchain.output_parsers.openai_tools import PydanticToolsParser
+from langchain_core.output_parsers import PydanticToolsParser
 from langchain_core.messages import AIMessage, BaseMessage
 
 from biochatter.kg_langgraph_agent import (

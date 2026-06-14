@@ -2,7 +2,7 @@ import json
 from collections.abc import Callable
 
 import neo4j_utils as nu
-from langchain.schema import Document
+from langchain_core.documents import Document
 
 from .constants import MAX_AGENT_DESC_LENGTH
 from .kg_langgraph_agent import KGQueryReflexionAgent

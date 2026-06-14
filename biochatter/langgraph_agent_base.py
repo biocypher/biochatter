@@ -11,9 +11,9 @@ from langchain_core.messages import (
     HumanMessage,
     ToolMessage,
 )
-from langchain_core.pydantic_v1 import ValidationError
-from langgraph.graph import END, MessageGraph
-from langgraph.graph.graph import CompiledGraph
+from pydantic import ValidationError
+from langgraph.graph import END, MessagesState, START, StateGraph
+from langgraph.graph.state import CompiledStateGraph
 from langsmith import traceable
 
 logger = logging.getLogger(__name__)
@@ -240,35 +240,46 @@ class ReflexionAgent(ABC):
 
         Returns:
         -------
-          CompiledGraph | None: a Langgraph graph or None in case of errors
+          CompiledStateGraph | None: a Langgraph graph or None in case of errors
 
         """
         try:
             self.initial_responder = self._create_initial_responder(prompt)
             self.revise_responder = self._create_revise_responder(prompt)
-            builder = MessageGraph()
-            builder.add_node(DRAFT_NODE, self.initial_responder.respond)
-            builder.add_node(EXECUTE_TOOL_NODE, self._tool_function)
-            builder.add_node(REVISE_NODE, self.revise_responder.respond)
+            builder = StateGraph(MessagesState)
+
+            def draft_node(state: MessagesState):
+                return {"messages": [self.initial_responder.respond(state["messages"])]}
+
+            def execute_tool_node(state: MessagesState):
+                return {"messages": [self._tool_function(state["messages"])]}
+
+            def revise_node(state: MessagesState):
+                return {"messages": [self.revise_responder.respond(state["messages"])]}
+
+            builder.add_node(DRAFT_NODE, draft_node)
+            builder.add_node(EXECUTE_TOOL_NODE, execute_tool_node)
+            builder.add_node(REVISE_NODE, revise_node)
+            builder.add_edge(START, DRAFT_NODE)
             builder.add_edge(DRAFT_NODE, EXECUTE_TOOL_NODE)
             builder.add_edge(EXECUTE_TOOL_NODE, REVISE_NODE)
-
-            builder.add_conditional_edges(REVISE_NODE, self._should_continue)
-            builder.set_entry_point(DRAFT_NODE)
-            graph = builder.compile()
-            return graph
+            builder.add_conditional_edges(
+                REVISE_NODE,
+                lambda state: self._should_continue(state["messages"]),
+            )
+            return builder.compile()
         except Exception as e:
             logger.error(e)
             return None
 
     def _execute_graph(
         self,
-        graph: CompiledGraph | None = None,
+        graph: CompiledStateGraph | None = None,
         question: str | None = "",
     ) -> ReflexionAgentResult:
         """Execute Langgraph graph
         Args:
-          graph CompiledGraph: Langgraph graph
+          graph CompiledStateGraph: Langgraph graph
           question str: user question
 
         Returns
@@ -282,19 +293,21 @@ class ReflexionAgent(ABC):
             return None
 
         events = graph.stream(
-            [HumanMessage(content=question)],
+            {"messages": [HumanMessage(content=question)]},
             {
                 "recursion_limit": self.recursion_limit,
             },
         )
         messages = [HumanMessage(content=question)]
         for i, step in enumerate(events):
-            if isinstance(step, list):
-                node, output = (f"{i}", step[i])
+            node, output = next(iter(step.items()))
+            if isinstance(output, dict) and "messages" in output:
+                for msg in output["messages"]:
+                    self.agent_logger.log_step_message(i + 1, node, msg)
+                    messages.append(msg)
             else:
-                node, output = next(iter(step.items()))
-            self.agent_logger.log_step_message(i + 1, node, output)
-            messages.append(output)
+                self.agent_logger.log_step_message(i + 1, node, output)
+                messages.append(output)
 
         final_result = self._parse_final_result(messages)
         self.agent_logger.log_final_result(final_result)

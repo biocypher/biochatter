@@ -5,10 +5,9 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING
 
 import requests
-from langchain.chains.openai_functions import create_structured_output_runnable
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
@@ -499,8 +498,7 @@ class BioToolsQueryBuilder(BaseQueryBuilder):
     ) -> Callable:
         """Create a runnable object for executing queries.
 
-        Create runnable using the LangChain `create_structured_output_runnable`
-        method.
+        Create runnable using the chat model's `with_structured_output` method.
 
         Args:
         ----
@@ -514,10 +512,8 @@ class BioToolsQueryBuilder(BaseQueryBuilder):
             A Callable object that can execute the query.
 
         """
-        return create_structured_output_runnable(
-            output_schema=query_parameters,
-            llm=conversation.chat,
-            prompt=self.structured_output_prompt,
+        return self.structured_output_prompt | conversation.chat.with_structured_output(
+            query_parameters,
         )
 
     def parameterise_query(
