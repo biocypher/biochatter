@@ -192,6 +192,8 @@ class LangChainConversation(Conversation):
         except Exception as e:
             raise LLMConnectionError(str(e), provider="langchain", model=self.model_name) from e
 
+        content = self._content_to_str(response.content)
+
         # Structured output don't have tool calls attribute
         if hasattr(response, "tool_calls"):
             token_usage_raw = response.usage_metadata if response.usage_metadata else None
@@ -202,7 +204,7 @@ class LangChainConversation(Conversation):
                 msg = self._process_tool_calls(
                     tool_calls=response.tool_calls,
                     available_tools=available_tools,
-                    response_content=response.content,
+                    response_content=content,
                     explain_tool_result=explain_tool_result,
                     return_tool_calls_as_ai_message=return_tool_calls_as_ai_message,
                     track_tool_calls=track_tool_calls,
@@ -210,7 +212,7 @@ class LangChainConversation(Conversation):
             # case where the model does not support tool calling natively, called a tool and we need manual processing
             elif not supports_tool_calling(self.model_name) and self.tools_prompt:
                 cleaned_content = (
-                    response.content.replace('"""', "").replace("json", "").replace("`", "").replace("\n", "").strip()
+                    content.replace('"""', "").replace("json", "").replace("`", "").replace("\n", "").strip()
                 )
                 try:
                     tool_call_data = json.loads(cleaned_content)
@@ -223,17 +225,17 @@ class LangChainConversation(Conversation):
                 except json.JSONDecodeError:
                     # If JSON parsing fails, the model didn't return a valid tool call.
                     # Treat as a regular message from the LLM.
-                    msg = response.content  # Use original content
+                    msg = content  # Use original content
                     # Update token_usage, similar to 'no tool calls' or 'manual structured output' paths
             # case where the model does not support structured output but the user has provided a structured model
             elif not supports_structured_output(self.model_name) and structured_model:
                 # check that the output conforms to the structured model
-                pydantic_manual_validator(response.content, structured_model)
-                msg = response.content
+                pydantic_manual_validator(content, structured_model)
+                msg = content
 
             # no tool calls
             else:
-                msg = response.content
+                msg = content
                 self.append_ai_message(response)
 
         # even if there are no tool calls, the standard langchain output has a tool_calls attribute
@@ -278,7 +280,7 @@ class LangChainConversation(Conversation):
 
         response = self.ca_chat.invoke(ca_messages)
 
-        correction = response.content
+        correction = self._content_to_str(response.content)
         # token_usage_raw = response.usage_metadata
         # token_usage = self._extract_total_tokens(token_usage_raw)
 

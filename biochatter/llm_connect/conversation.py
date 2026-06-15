@@ -333,6 +333,25 @@ class Conversation(ABC):
         # If we can't extract meaningful output token count, return None
         return None
 
+    @staticmethod
+    def _content_to_str(content: Any) -> str:
+        """Normalize LLM response content blocks to a plain string."""
+        if content is None:
+            return ""
+        if isinstance(content, str):
+            return content
+        if isinstance(content, list):
+            parts = []
+            for block in content:
+                if isinstance(block, str):
+                    parts.append(block)
+                elif isinstance(block, dict) and "text" in block:
+                    parts.append(block["text"])
+                else:
+                    parts.append(str(block))
+            return "".join(parts)
+        return str(content)
+
     def compute_cumulative_token_usage(self) -> dict:
         """Compute the token usage by looping over the messages.
 
@@ -675,6 +694,9 @@ class Conversation(ABC):
                 provider=type(self).__name__,
                 model=self.model_name,
             ) from e
+
+        if not isinstance(msg, str):
+            msg = self._content_to_str(msg)
 
         # case of structured output
         if (token_usage == -1) and structured_model:

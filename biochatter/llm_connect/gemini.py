@@ -135,11 +135,13 @@ class GeminiConversation(Conversation):
         except Exception as e:
             raise LLMConnectionError(str(e), provider="google_genai", model=self.model_name) from e
 
+        content = self._content_to_str(response.content)
+
         # Process tool calls if present
         if response.tool_calls:
-            msg = self._process_tool_calls(response.tool_calls, tools, response.content)
+            msg = self._process_tool_calls(response.tool_calls, tools, content)
         else:
-            msg = response.content
+            msg = content
             self.append_ai_message(msg)
 
         token_usage_raw = response.usage_metadata
@@ -179,7 +181,7 @@ class GeminiConversation(Conversation):
 
         response = self.ca_chat.invoke(ca_messages)
 
-        correction = response.content
+        correction = self._content_to_str(response.content)
         token_usage_raw = response.usage_metadata
         token_usage = self._extract_total_tokens(token_usage_raw)
 
