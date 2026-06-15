@@ -11,7 +11,7 @@ authors = [
 ]
 license = {text = "Apache-2.0"}
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.14"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -34,7 +34,6 @@ dependencies = [
     "langchain-ollama>=1.0.0,<2.0.0",
     "langchain-milvus>=0.3.0,<1.0.0",
     "langchain-litellm>=0.2.0",
-    "xinference>=1.6.0,<2.0.0",
     # LLM provider SDKs: lower bound only; effective ceiling is set transitively
     # by the langchain-* integration packages above.
     "openai>=1.66.3",
@@ -69,6 +68,7 @@ streamlit = [
 
 [dependency-groups]
 dev = [
+    "xinference>=1.6.0,<2.0.0",
     "pytest>=8.3.5,<9.0.0",
     "pytest-cov>=6.0.0,<7.0.0",
     "bump2version>=1.0.1,<2.0.0",

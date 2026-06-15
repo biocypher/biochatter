@@ -8,6 +8,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 
 from biochatter._stats import get_stats
 from biochatter.llm_connect import Conversation
+from biochatter.llm_connect.exceptions import LLMConnectionError
 
 
 class LiteLLMConversation(Conversation):
@@ -266,9 +267,9 @@ class LiteLLMConversation(Conversation):
             litellm.exceptions.ServiceUnavailableError,
             litellm.exceptions.Timeout,
         ) as e:
-            return e, None
+            raise LLMConnectionError(str(e), provider="litellm", model=self.model_name) from e
         except Exception as e:
-            return e, None
+            raise LLMConnectionError(str(e), provider="litellm", model=self.model_name) from e
 
         msg = response.generations[0][0].text
         token_usage_raw = self.parse_llm_response(response)

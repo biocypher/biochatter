@@ -13,6 +13,7 @@ from biochatter.llm_connect.available_models import (
     supports_tool_calling,
 )
 from biochatter.llm_connect.conversation import Conversation
+from biochatter.llm_connect.exceptions import LLMConnectionError
 
 
 class LangChainConversation(Conversation):
@@ -187,7 +188,7 @@ class LangChainConversation(Conversation):
         try:
             response = chat.invoke(self.messages)
         except Exception as e:
-            return str(e), None
+            raise LLMConnectionError(str(e), provider="langchain", model=self.model_name) from e
 
         # Structured output don't have tool calls attribute
         if hasattr(response, "tool_calls"):

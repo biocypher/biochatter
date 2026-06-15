@@ -3,6 +3,7 @@
 from biochatter.llm_connect.anthropic import AnthropicConversation
 from biochatter.llm_connect.azure import AzureGptConversation
 from biochatter.llm_connect.conversation import Conversation
+from biochatter.llm_connect.exceptions import LLMConnectionError
 from biochatter.llm_connect.gemini import GeminiConversation
 from biochatter.llm_connect.langchain import LangChainConversation
 from biochatter.llm_connect.llmlite import LiteLLMConversation
@@ -21,6 +22,7 @@ __all__ = [
     "GptConversation",
     "LangChainConversation",
     "LiteLLMConversation",
+    "LLMConnectionError",
     "OllamaConversation",
     "OpenRouterConversation",
     "WasmConversation",

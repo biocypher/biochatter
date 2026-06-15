@@ -5,6 +5,7 @@ from langchain_ollama import ChatOllama
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 from biochatter.llm_connect.conversation import Conversation
+from biochatter.llm_connect.exceptions import LLMConnectionError
 
 
 class OllamaConversation(Conversation):
@@ -169,7 +170,7 @@ class OllamaConversation(Conversation):
             openai._exceptions.UnprocessableEntityError,
             openai._exceptions.APIResponseValidationError,
         ) as e:
-            return str(e), None
+            raise LLMConnectionError(str(e), provider="ollama", model=self.model_name) from e
         response_dict = response.dict()
         msg = response_dict["content"]
         token_usage_raw = response_dict["response_metadata"]["eval_count"]

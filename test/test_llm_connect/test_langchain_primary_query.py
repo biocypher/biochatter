@@ -2,6 +2,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 from pydantic import BaseModel
 
+from biochatter.llm_connect.exceptions import LLMConnectionError
 from biochatter.llm_connect.langchain import LangChainConversation
 
 # Import helper functions from where they are referenced in langchain.py
@@ -371,9 +372,8 @@ def test_primary_query_invoke_raises_exception(conversation_instance, mock_chat_
     with (
         patch("biochatter.llm_connect.langchain.supports_tool_calling", return_value=False),
         patch("biochatter.llm_connect.langchain.supports_structured_output", return_value=False),
+        pytest.raises(LLMConnectionError, match=error_message),
     ):
-        msg, token_usage = conversation_instance._primary_query()
+        conversation_instance._primary_query()
 
-    assert msg == str(Exception(error_message))  # Method returns str(e)
-    assert token_usage is None  # Token usage is None when there's an exception
     conversation_instance.append_ai_message.assert_not_called()

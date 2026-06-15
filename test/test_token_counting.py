@@ -22,6 +22,7 @@ from biochatter.llm_connect import (
     GptConversation,
     LangChainConversation,
     LiteLLMConversation,
+    LLMConnectionError,
     OllamaConversation,
     OpenRouterConversation,
     WasmConversation,
@@ -97,7 +98,7 @@ class TestGptConversationTokenCounting:
         assert isinstance(token_usage, int)
 
     def test_primary_query_handles_api_error(self, gpt_conversation):
-        """Test that _primary_query returns None token usage on API errors."""
+        """Test that _primary_query raises LLMConnectionError on API errors."""
         # Arrange
         import openai
 
@@ -108,12 +109,9 @@ class TestGptConversationTokenCounting:
             "Invalid API key", response=mock_response, body={"error": "Invalid API key"}
         )
 
-        # Act
-        msg, token_usage = gpt_conversation._primary_query()
-
-        # Assert
-        assert isinstance(msg, str)  # Error message
-        assert token_usage is None
+        # Act / Assert
+        with pytest.raises(LLMConnectionError, match="Invalid API key"):
+            gpt_conversation._primary_query()
 
     def test_correct_response_returns_token_usage(self, gpt_conversation):
         """Test that _correct_response returns token usage."""
@@ -222,7 +220,7 @@ class TestAnthropicConversationTokenCounting:
         assert isinstance(token_usage, int)
 
     def test_primary_query_handles_anthropic_error(self, anthropic_conversation):
-        """Test that _primary_query returns None token usage on Anthropic API errors."""
+        """Test that _primary_query raises LLMConnectionError on Anthropic API errors."""
         # Arrange
         import anthropic
 
@@ -233,12 +231,9 @@ class TestAnthropicConversationTokenCounting:
             "Invalid API key", response=mock_response, body={"error": "Invalid API key"}
         )
 
-        # Act
-        msg, token_usage = anthropic_conversation._primary_query()
-
-        # Assert
-        assert isinstance(msg, str)  # Error message
-        assert token_usage is None
+        # Act / Assert
+        with pytest.raises(LLMConnectionError, match="Invalid API key"):
+            anthropic_conversation._primary_query()
 
 
 # ================================================================================================
@@ -299,16 +294,13 @@ class TestGeminiConversationTokenCounting:
         assert token_usage == EXPECTED_TOTAL_TOKENS
 
     def test_primary_query_handles_exception(self, gemini_conversation):
-        """Test that _primary_query returns None token usage on exceptions."""
+        """Test that _primary_query raises LLMConnectionError on exceptions."""
         # Arrange
         gemini_conversation.chat.invoke.side_effect = Exception("API Error")
 
-        # Act
-        msg, token_usage = gemini_conversation._primary_query()
-
-        # Assert
-        assert isinstance(msg, str)  # Error message
-        assert token_usage is None
+        # Act / Assert
+        with pytest.raises(LLMConnectionError, match="API Error"):
+            gemini_conversation._primary_query()
 
 
 # ================================================================================================
@@ -378,17 +370,14 @@ class TestLangChainConversationTokenCounting:
         assert token_usage == -1  # Special value for structured outputs
 
     def test_primary_query_exception_handling(self, langchain_conversation):
-        """Test that exceptions result in None token usage."""
+        """Test that exceptions raise LLMConnectionError."""
         # Arrange
         langchain_conversation.chat.invoke.side_effect = Exception("LangChain Error")
 
-        # Act
+        # Act / Assert
         with patch("biochatter.llm_connect.langchain.supports_tool_calling", return_value=False):
-            msg, token_usage = langchain_conversation._primary_query()
-
-        # Assert
-        assert isinstance(msg, str)  # Error message
-        assert token_usage is None
+            with pytest.raises(LLMConnectionError, match="LangChain Error"):
+                langchain_conversation._primary_query()
 
 
 # ================================================================================================
@@ -499,7 +488,7 @@ class TestLiteLLMConversationTokenCounting:
         assert result is None
 
     def test_primary_query_handles_exceptions(self, litellm_conversation):
-        """Test that _primary_query handles exceptions and returns None token usage."""
+        """Test that _primary_query raises LLMConnectionError on API failures."""
         # Arrange
         import litellm
 
@@ -507,12 +496,9 @@ class TestLiteLLMConversationTokenCounting:
             "Invalid API key", "test_provider", "test_model"
         )
 
-        # Act
-        msg, token_usage = litellm_conversation._primary_query()
-
-        # Assert
-        assert isinstance(msg, Exception)
-        assert token_usage is None
+        # Act / Assert
+        with pytest.raises(LLMConnectionError):
+            litellm_conversation._primary_query()
 
 
 # ================================================================================================
@@ -554,7 +540,7 @@ class TestOllamaConversationTokenCounting:
         assert isinstance(token_usage, int)
 
     def test_primary_query_handles_exceptions(self, ollama_conversation):
-        """Test that _primary_query handles exceptions and returns None token usage."""
+        """Test that _primary_query raises LLMConnectionError on API failures."""
         # Arrange
         import openai
 
@@ -562,12 +548,9 @@ class TestOllamaConversationTokenCounting:
         mock_request = MagicMock()
         ollama_conversation.model.invoke.side_effect = openai._exceptions.APIConnectionError(request=mock_request)
 
-        # Act
-        msg, token_usage = ollama_conversation._primary_query()
-
-        # Assert
-        assert isinstance(msg, str)  # Error message
-        assert token_usage is None
+        # Act / Assert
+        with pytest.raises(LLMConnectionError):
+            ollama_conversation._primary_query()
 
 
 # ================================================================================================
@@ -612,7 +595,7 @@ class TestXinferenceConversationTokenCounting:
         assert isinstance(token_usage, int)
 
     def test_primary_query_handles_exceptions(self, xinference_conversation):
-        """Test that _primary_query handles exceptions and returns None token usage."""
+        """Test that _primary_query raises LLMConnectionError on API failures."""
         # Arrange
         import openai
 
@@ -621,12 +604,9 @@ class TestXinferenceConversationTokenCounting:
             "API Error", request=mock_request, body={"error": "API Error"}
         )
 
-        # Act
-        msg, token_usage = xinference_conversation._primary_query()
-
-        # Assert
-        assert isinstance(msg, str)  # Error message
-        assert token_usage is None
+        # Act / Assert
+        with pytest.raises(LLMConnectionError, match="API Error"):
+            xinference_conversation._primary_query()
 
 
 # ================================================================================================

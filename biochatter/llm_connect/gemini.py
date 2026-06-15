@@ -7,6 +7,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 from biochatter.llm_connect.available_models import supports_tool_calling
 from biochatter.llm_connect.conversation import Conversation
+from biochatter.llm_connect.exceptions import LLMConnectionError
 
 
 class GeminiConversation(Conversation):
@@ -130,7 +131,7 @@ class GeminiConversation(Conversation):
         try:
             response = chat.invoke(self.messages)
         except Exception as e:
-            return str(e), None
+            raise LLMConnectionError(str(e), provider="google_genai", model=self.model_name) from e
 
         # Process tool calls if present
         if response.tool_calls:

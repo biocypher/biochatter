@@ -44,12 +44,12 @@ def test_biocypher_prompts(prompt_engine):
 
 
 def test_biocypher_prompts_defaults_to_gemini():
-    """Test that BioCypherPromptEngine defaults to Google Gemini 2.0 flash."""
+    """Test that BioCypherPromptEngine defaults to Google Gemini 3.5 flash."""
     engine = BioCypherPromptEngine(
         schema_config_or_info_path="test/test_schema_info.yaml",
     )
     assert engine.model_provider == "google_genai"
-    assert engine.model_name == "gemini-2.0-flash"
+    assert engine.model_name == "gemini-3.5-flash"
 
 
 def test_biocypher_prompts_custom_provider(prompt_engine_custom_provider):

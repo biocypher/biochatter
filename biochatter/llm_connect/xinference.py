@@ -4,6 +4,7 @@ import openai
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 from biochatter.llm_connect.conversation import Conversation
+from biochatter.llm_connect.exceptions import LLMConnectionError
 
 
 class XinferenceConversation(Conversation):
@@ -171,7 +172,7 @@ class XinferenceConversation(Conversation):
             openai._exceptions.UnprocessableEntityError,
             openai._exceptions.APIResponseValidationError,
         ) as e:
-            return str(e), None
+            raise LLMConnectionError(str(e), provider="xinference", model=self.model_name) from e
 
         msg = response["choices"][0]["message"]["content"]
         token_usage_raw = response["usage"]

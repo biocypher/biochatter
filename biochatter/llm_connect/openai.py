@@ -8,6 +8,7 @@ from langchain_openai import ChatOpenAI
 from biochatter._stats import get_stats
 from biochatter.llm_connect.available_models import get_temperature_for_model
 from biochatter.llm_connect.conversation import Conversation
+from biochatter.llm_connect.exceptions import LLMConnectionError
 
 
 class GptConversation(Conversation):
@@ -140,7 +141,7 @@ class GptConversation(Conversation):
             openai._exceptions.UnprocessableEntityError,
             openai._exceptions.APIResponseValidationError,
         ) as e:
-            return str(e), None
+            raise LLMConnectionError(str(e), provider="openai", model=self.model_name) from e
 
         msg = response.generations[0][0].text
         token_usage_raw = response.llm_output.get("token_usage")
