@@ -4,6 +4,7 @@ import openai
 from langchain_core.messages import HumanMessage
 from langchain_openai import AzureChatOpenAI
 
+from biochatter.llm_connect.exceptions import LLMInitializationError
 from biochatter.llm_connect.openai import GptConversation
 
 
@@ -60,7 +61,7 @@ class AzureGptConversation(GptConversation):
         self.base_url = base_url
         self.deployment_name = deployment_name
 
-    def set_api_key(self, api_key: str, user: str | None = None) -> bool:
+    def set_api_key(self, api_key: str, user: str | None = None) -> None:
         """Set the API key for the Azure API.
 
         If the key is valid, initialise the conversational agent. No user stats
@@ -72,9 +73,9 @@ class AzureGptConversation(GptConversation):
 
             user (str, optional): The user for usage statistics.
 
-        Returns:
-        -------
-            bool: True if the API key is valid, False otherwise.
+        Raises:
+        ------
+            LLMInitializationError: If authentication or chat client setup fails.
 
         """
         try:
@@ -98,12 +99,14 @@ class AzureGptConversation(GptConversation):
             self.chat.generate([[HumanMessage(content="Hello")]])
             self.user = user if user is not None else "Azure Community"
 
-            return True
-
-        except openai._exceptions.AuthenticationError:
+        except openai._exceptions.AuthenticationError as e:
             self._chat = None
             self._ca_chat = None
-            return False
+            raise LLMInitializationError(
+                f"Azure OpenAI authentication failed: {e}",
+                provider="azure",
+                model=self.model_name,
+            ) from e
 
     def _update_usage_stats(self, model: str, token_usage: dict) -> None:
         if self._update_token_usage is not None:

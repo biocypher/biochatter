@@ -7,6 +7,7 @@ import openai
 import pytest
 from openai._exceptions import NotFoundError
 
+from biochatter.llm_connect.exceptions import LLMInitializationError
 from biochatter.llm_connect.openai import (
     GptConversation,
 )
@@ -103,12 +104,11 @@ def test_openai_catches_authentication_error(mock_openai):
         split_correction=False,
     )
 
-    success = convo.set_api_key(
-        api_key="fake_key",
-        user="test_user",
-    )
-
-    assert not success
+    with pytest.raises(LLMInitializationError):
+        convo.set_api_key(
+            api_key="fake_key",
+            user="test_user",
+        )
 
 
 @patch("biochatter.llm_connect.azure.AzureChatOpenAI")
@@ -150,7 +150,7 @@ def test_azure(mock_azure_chat):
 
     mock_azure_chat.return_value = Mock()
 
-    assert convo.set_api_key(os.getenv("AZURE_TEST_OPENAI_API_KEY"))
+    convo.set_api_key(os.getenv("AZURE_TEST_OPENAI_API_KEY"))
 
 
 @pytest.mark.skip(reason="Live test for development purposes")
@@ -248,8 +248,8 @@ def test_chat_attribute_not_initialized():
     with pytest.raises(AttributeError) as exc_info:
         _ = convo.chat
 
-    assert "Chat attribute not initialized" in str(exc_info.value)
-    assert "Did you call set_api_key()?" in str(exc_info.value)
+    assert "Chat client is not initialized" in str(exc_info.value)
+    assert "Call set_api_key() before querying" in str(exc_info.value)
 
 
 def test_ca_chat_attribute_not_initialized():
@@ -263,8 +263,8 @@ def test_ca_chat_attribute_not_initialized():
     with pytest.raises(AttributeError) as exc_info:
         _ = convo.ca_chat
 
-    assert "Correcting agent chat attribute not initialized" in str(exc_info.value)
-    assert "Did you call set_api_key()?" in str(exc_info.value)
+    assert "Correcting agent chat client is not initialized" in str(exc_info.value)
+    assert "Call set_api_key() before querying" in str(exc_info.value)
 
 
 @patch("biochatter.llm_connect.openai.openai.OpenAI")
@@ -282,15 +282,8 @@ def test_chat_attributes_reset_on_auth_error(mock_openai):
         split_correction=False,
     )
 
-    # Set API key (which will fail)
-    success = convo.set_api_key(api_key="fake_key")
-    assert not success
-
-    # Verify both chat attributes are None
-    with pytest.raises(AttributeError):
-        _ = convo.chat
-    with pytest.raises(AttributeError):
-        _ = convo.ca_chat
+    with pytest.raises(LLMInitializationError):
+        convo.set_api_key(api_key="fake_key")
 
 
 @pytest.mark.skip(reason="Test depends on langchain-openai implementation which needs to be updated")
@@ -324,10 +317,7 @@ def test_chat_attributes_set_on_success(mock_openai):
         split_correction=False,
     )
 
-    # Set API key (which will succeed)
-    success = convo.set_api_key(api_key="fake_key")
-
-    assert success
+    convo.set_api_key(api_key="fake_key")
 
     # Verify both chat attributes are accessible
     assert convo.chat is not None

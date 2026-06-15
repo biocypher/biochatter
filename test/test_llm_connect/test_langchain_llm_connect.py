@@ -87,8 +87,8 @@ def test_chat_attribute_not_initialized(model_provider, model_name):
     with pytest.raises(AttributeError) as exc_info:
         _ = convo.chat
 
-    assert "Chat attribute not initialized" in str(exc_info.value)
-    assert "Did you call set_api_key()?" in str(exc_info.value)
+    assert "Chat client is not initialized" in str(exc_info.value)
+    assert "Call set_api_key() before querying" in str(exc_info.value)
 
 
 @pytest.mark.parametrize("model_provider, model_name", MODEL_PARAMS)
@@ -104,8 +104,8 @@ def test_ca_chat_attribute_not_initialized(model_provider, model_name):
     with pytest.raises(AttributeError) as exc_info:
         _ = convo.ca_chat
 
-    assert "Correcting agent chat attribute not initialized" in str(exc_info.value)
-    assert "Did you call set_api_key()?" in str(exc_info.value)
+    assert "Correcting agent chat client is not initialized" in str(exc_info.value)
+    assert "Call set_api_key() before querying" in str(exc_info.value)
 
 
 @pytest.mark.skip(reason="Live test for development purposes")

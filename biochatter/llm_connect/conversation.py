@@ -138,7 +138,7 @@ class Conversation(ABC):
     def chat(self):
         """Access the chat attribute with error handling."""
         if self._chat is None:
-            msg = "Chat attribute not initialized. Did you call set_api_key()?"
+            msg = "Chat client is not initialized. Call set_api_key() before querying."
             logger.error(msg)
             raise AttributeError(msg)
         return self._chat
@@ -152,7 +152,7 @@ class Conversation(ABC):
     def ca_chat(self):
         """Access the correcting agent chat attribute with error handling."""
         if self._ca_chat is None:
-            msg = "Correcting agent chat attribute not initialized. Did you call set_api_key()?"
+            msg = "Correcting agent chat client is not initialized. Call set_api_key() before querying."
             logger.error(msg)
             raise AttributeError(msg)
         return self._ca_chat

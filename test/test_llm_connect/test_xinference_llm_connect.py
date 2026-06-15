@@ -1,7 +1,7 @@
 """Tests for the Xinference LLM connect module."""
 
 import os
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import pytest
 
@@ -44,12 +44,13 @@ def test_xinference_init():
     base_url = os.getenv("XINFERENCE_BASE_URL", "http://localhost:9997")
     with patch("xinference.client.Client") as mock_client:
         mock_client.return_value.list_models.return_value = xinference_models
+        mock_client.return_value.get_model.return_value = Mock()
         convo = XinferenceConversation(
             base_url=base_url,
             prompts={},
             split_correction=False,
         )
-        assert convo.set_api_key()
+        assert convo.model is not None
 
 
 def test_xinference_chatting():
@@ -173,7 +174,7 @@ def test_local_image_query_xinference():
         prompts={},
         correct=False,
     )
-    assert convo.set_api_key()
+    convo.set_api_key()
 
     result, _, _ = convo.query(
         "Does this text describe the attached image: Live confocal imaging of liver stage P. berghei expressing UIS4-mCherry and cytoplasmic GFP reveals different morphologies of the LS-TVN: elongated membrane clusters (left), vesicles in the host cell cytoplasm (center), and a thin tubule protruding from the PVM (right). Live imaging was performed 20?h after infection of hepatoma cells. Features are marked with white arrowheads.",

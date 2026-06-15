@@ -8,7 +8,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 
 from biochatter._stats import get_stats
 from biochatter.llm_connect import Conversation
-from biochatter.llm_connect.exceptions import LLMConnectionError
+from biochatter.llm_connect.exceptions import LLMConnectionError, LLMInitializationError
 
 
 class LiteLLMConversation(Conversation):
@@ -134,7 +134,7 @@ class LiteLLMConversation(Conversation):
         ) as api_setup_error:
             raise api_setup_error
 
-    def set_api_key(self, api_key: str, user: str | None = None) -> bool:
+    def set_api_key(self, api_key: str, user: str | None = None) -> None:
         """Set the API key for the LLM provider.
 
         Args:
@@ -142,45 +142,50 @@ class LiteLLMConversation(Conversation):
             api_key (str): The API key for the LLM provider.
             user (Union[str, None]): The username
 
-        Returns:
-        -------
-            bool: True if the API key is successfully set, False otherwise.
-
         Raises:
         ------
-            ValueError: If the model name or correction model name is not set.
-            TypeError: If the LiteLLM object initialization fails.
-            Exception: If there is an unexpected error.
+            LLMInitializationError: If model configuration or chat client setup fails.
 
         """
+        if self.model_name is None:
+            raise LLMInitializationError(
+                "Primary model name is not set.",
+                provider="litellm",
+                model=None,
+            )
+
+        if self.ca_model_name is None:
+            raise LLMInitializationError(
+                "Correction model name is not set.",
+                provider="litellm",
+                model=self.model_name,
+            )
+
         try:
-            if self.model_name is None:
-                raise ValueError("Primary Model name is not set.")
-
-            if self.ca_model_name is None:
-                raise ValueError("Correction Model name is not set.")
-
             self.chat = self.get_litellm_object(api_key, self.model_name)
             if self.chat is None:
-                raise TypeError("Failed to intialize primary agent chat object.")
+                raise TypeError("Failed to initialize primary agent chat object.")
 
             self.ca_chat = self.get_litellm_object(api_key, self.ca_model_name)
             if self.ca_chat is None:
-                raise TypeError("Failed to intialize correcting agent chat object.")
+                raise TypeError("Failed to initialize correcting agent chat object.")
 
             self.user = user
             if user == "community":
                 self.usage_stats = get_stats(user=user)
-            return True
 
-        except (ValueError, TypeError):
-            self.chat = None
-            self.ca_chat = None
-            return False
-        except Exception:
-            self.chat = None
-            self.ca_chat = None
-            return False
+        except LLMInitializationError:
+            self._chat = None
+            self._ca_chat = None
+            raise
+        except Exception as e:
+            self._chat = None
+            self._ca_chat = None
+            raise LLMInitializationError(
+                f"Failed to initialize LiteLLM chat client: {e}",
+                provider="litellm",
+                model=self.model_name,
+            ) from e
 
     def json_serializable(self, obj):
         """Convert non-serializable objects to serializable format."""

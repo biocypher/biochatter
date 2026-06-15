@@ -14,7 +14,7 @@ def test_anthropic():
         prompts={},
         split_correction=False,
     )
-    assert conv.set_api_key(
+    conv.set_api_key(
         api_key=os.getenv("ANTHROPIC_API_KEY"),
         user="test_user",
     )

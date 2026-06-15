@@ -13,7 +13,7 @@ from biochatter.llm_connect.available_models import (
     supports_tool_calling,
 )
 from biochatter.llm_connect.conversation import Conversation
-from biochatter.llm_connect.exceptions import LLMConnectionError
+from biochatter.llm_connect.exceptions import LLMConnectionError, LLMInitializationError
 
 
 class LangChainConversation(Conversation):
@@ -74,7 +74,7 @@ class LangChainConversation(Conversation):
 
     # TODO: the name of this method is overloaded, since the api key is loaded
     # from the environment variables and not as an argument
-    def set_api_key(self, api_key: str | None = None, user: str | None = None) -> bool:
+    def set_api_key(self, api_key: str | None = None, user: str | None = None) -> None:
         """Set the API key for the model provider.
 
         If the key is valid, initialise the conversational agent. Optionally set
@@ -87,9 +87,9 @@ class LangChainConversation(Conversation):
             user (str, optional): The user for usage statistics. If provided and
                 equals "community", will track usage stats.
 
-        Returns:
-        -------
-            bool: True if the API key is valid, False otherwise.
+        Raises:
+        ------
+            LLMInitializationError: If chat client setup fails.
 
         """
         self.user = user
@@ -111,12 +111,14 @@ class LangChainConversation(Conversation):
             if self.tools:
                 self.bind_tools(self.tools)
 
-            return True
-
-        except Exception:  # Google Genai doesn't expose specific exception types
+        except Exception as e:
             self._chat = None
             self._ca_chat = None
-            return False
+            raise LLMInitializationError(
+                f"Failed to initialize LangChain chat client: {e}",
+                provider=self.model_provider or "langchain",
+                model=self.model_name,
+            ) from e
 
     def _primary_query(
         self,

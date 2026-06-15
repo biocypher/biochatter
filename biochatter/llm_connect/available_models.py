@@ -31,7 +31,10 @@ class GeminiModels(str, Enum):
     """Enum for Gemini models."""
 
     GEMINI_20_FLASH = "gemini-2.0-flash"
-    GEMINI_25_FLASH = "gemini-2.5-flash-preview-04-17"
+    GEMINI_25_FLASH = "gemini-2.5-flash"
+    GEMINI_35_FLASH = "gemini-3.5-flash"
+    GEMINI_31_PRO = "gemini-3.1-pro-preview"
+
 
 
 class MistralModels(str, Enum):

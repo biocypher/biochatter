@@ -11,7 +11,7 @@ from biochatter.llm_connect.exceptions import LLMConnectionError
 class OllamaConversation(Conversation):
     """Conversation class for the Ollama model."""
 
-    def set_api_key(self, api_key: str, user: str | None = None) -> bool:
+    def set_api_key(self, api_key: str, user: str | None = None) -> None:
         """Set the API key for the Ollama API. Not implemented.
 
         Args:

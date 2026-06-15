@@ -7,7 +7,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 from biochatter.llm_connect.available_models import supports_tool_calling
 from biochatter.llm_connect.conversation import Conversation
-from biochatter.llm_connect.exceptions import LLMConnectionError
+from biochatter.llm_connect.exceptions import LLMConnectionError, LLMInitializationError
 
 
 class GeminiConversation(Conversation):
@@ -58,7 +58,7 @@ class GeminiConversation(Conversation):
 
         self.ca_model_name = "gemini-2.0-flash"
 
-    def set_api_key(self, api_key: str, user: str | None = None) -> bool:
+    def set_api_key(self, api_key: str, user: str | None = None) -> None:
         """Set the API key for the Google Gemini API.
 
         If the key is valid, initialise the conversational agent. Optionally set
@@ -71,9 +71,9 @@ class GeminiConversation(Conversation):
             user (str, optional): The user for usage statistics. If provided and
                 equals "community", will track usage stats.
 
-        Returns:
-        -------
-            bool: True if the API key is valid, False otherwise.
+        Raises:
+        ------
+            LLMInitializationError: If chat client setup fails.
 
         """
         self.user = user
@@ -94,12 +94,14 @@ class GeminiConversation(Conversation):
             if self.tools:
                 self.bind_tools(self.tools)
 
-            return True
-
-        except Exception:  # Google Genai doesn't expose specific exception types
+        except Exception as e:
             self._chat = None
             self._ca_chat = None
-            return False
+            raise LLMInitializationError(
+                f"Failed to initialize Gemini chat client: {e}",
+                provider="google_genai",
+                model=self.model_name,
+            ) from e
 
     def _primary_query(self, tools: list[Callable] | None = None, **kwargs) -> tuple:
         """Query the Google Gemini API with the user's message.

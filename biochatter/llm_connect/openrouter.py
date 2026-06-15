@@ -6,6 +6,7 @@ from langchain_openai import ChatOpenAI
 from pydantic import Field, SecretStr
 
 from biochatter.llm_connect import LangChainConversation
+from biochatter.llm_connect.exceptions import LLMInitializationError
 
 load_dotenv()
 
@@ -30,7 +31,7 @@ class OpenRouterConversation(LangChainConversation):
     def __init__(self, model_name: str, prompts: dict, **kwargs):
         super().__init__(model_name, "", prompts, **kwargs)
 
-    def set_api_key(self, api_key: str | None = None, user: str | None = None) -> bool:
+    def set_api_key(self, api_key: str | None = None, user: str | None = None) -> None:
         """Set the API key for the model provider.
 
         If the key is valid, initialise the conversational agent. Optionally set
@@ -43,9 +44,9 @@ class OpenRouterConversation(LangChainConversation):
             user (str, optional): The user for usage statistics. If provided and
                 equals "community", will track usage stats.
 
-        Returns:
-        -------
-            bool: True if the API key is valid, False otherwise.
+        Raises:
+        ------
+            LLMInitializationError: If chat client setup fails.
 
         """
         self.user = user
@@ -64,9 +65,11 @@ class OpenRouterConversation(LangChainConversation):
             if self.tools:
                 self.bind_tools(self.tools)
 
-            return True
-
-        except Exception:
+        except Exception as e:
             self._chat = None
             self._ca_chat = None
-            return False
+            raise LLMInitializationError(
+                f"Failed to initialize OpenRouter chat client: {e}",
+                provider="openrouter",
+                model=self.model_name,
+            ) from e

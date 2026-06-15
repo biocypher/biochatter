@@ -5,6 +5,7 @@ from unittest.mock import Mock, patch
 
 import pytest
 
+from biochatter.llm_connect.exceptions import LLMInitializationError
 from biochatter.llm_connect.openrouter import ChatOpenRouter, OpenRouterConversation
 
 from langchain_core.messages import (
@@ -125,12 +126,11 @@ def test_openrouter_catches_authentication_error(mock_openrouter):
         split_correction=False,
     )
 
-    success = convo.set_api_key(
-        api_key="fake_key",
-        user="test_user",
-    )
-
-    assert not success
+    with pytest.raises(LLMInitializationError):
+        convo.set_api_key(
+            api_key="fake_key",
+            user="test_user",
+        )
 
 
 @patch("biochatter.llm_connect.openrouter.ChatOpenRouter")
@@ -145,12 +145,11 @@ def test_openrouter_set_api_key_success(mock_openrouter):
         split_correction=False,
     )
 
-    success = convo.set_api_key(
+    convo.set_api_key(
         api_key="valid_key",
         user="test_user",
     )
 
-    assert success
     assert convo.user == "test_user"
     assert convo.chat == mock_chat_instance
     assert convo.ca_chat == mock_chat_instance
@@ -176,12 +175,11 @@ def test_openrouter_set_api_key_with_tools(mock_openrouter):
 
     convo.bind_tools = Mock()  # Mock the bind_tools method
 
-    success = convo.set_api_key(
+    convo.set_api_key(
         api_key="valid_key",
         user="test_user",
     )
 
-    assert success
     convo.bind_tools.assert_called_once_with([test_tool])
 
 
@@ -196,8 +194,8 @@ def test_chat_attribute_not_initialized():
     with pytest.raises(AttributeError) as exc_info:
         _ = convo.chat
 
-    assert "Chat attribute not initialized" in str(exc_info.value)
-    assert "Did you call set_api_key()?" in str(exc_info.value)
+    assert "Chat client is not initialized" in str(exc_info.value)
+    assert "Call set_api_key() before querying" in str(exc_info.value)
 
 
 def test_ca_chat_attribute_not_initialized():
@@ -211,8 +209,8 @@ def test_ca_chat_attribute_not_initialized():
     with pytest.raises(AttributeError) as exc_info:
         _ = convo.ca_chat
 
-    assert "Correcting agent chat attribute not initialized" in str(exc_info.value)
-    assert "Did you call set_api_key()?" in str(exc_info.value)
+    assert "Correcting agent chat client is not initialized" in str(exc_info.value)
+    assert "Call set_api_key() before querying" in str(exc_info.value)
 
 
 @patch("biochatter.llm_connect.openrouter.ChatOpenRouter")
@@ -226,15 +224,8 @@ def test_chat_attributes_reset_on_auth_error(mock_openrouter):
         split_correction=False,
     )
 
-    # Set API key (which will fail)
-    success = convo.set_api_key(api_key="fake_key")
-    assert not success
-
-    # Verify both chat attributes are None
-    with pytest.raises(AttributeError):
-        _ = convo.chat
-    with pytest.raises(AttributeError):
-        _ = convo.ca_chat
+    with pytest.raises(LLMInitializationError):
+        convo.set_api_key(api_key="fake_key")
 
 
 @patch("biochatter.llm_connect.openrouter.ChatOpenRouter")
@@ -249,9 +240,7 @@ def test_chat_attributes_set_on_success(mock_openrouter):
         split_correction=False,
     )
 
-    # Set API key (which will succeed)
-    success = convo.set_api_key(api_key="valid_key")
-    assert success
+    convo.set_api_key(api_key="valid_key")
 
     # Verify both chat attributes are accessible
     assert convo.chat is not None
@@ -304,7 +293,7 @@ def test_openrouter_api_key_environment_variable(mock_openrouter):
         split_correction=False,
     )
 
-    success = convo.set_api_key()  # No explicit API key provided
+    convo.set_api_key()  # No explicit API key provided
 
     # Should still try to initialize (would use env var in real implementation)
     mock_openrouter.assert_called()
@@ -364,12 +353,11 @@ def test_openrouter_usage_stats_tracking(mock_openrouter):
         split_correction=False,
     )
 
-    success = convo.set_api_key(
+    convo.set_api_key(
         api_key="valid_key",
         user="community",
     )
 
-    assert success
     assert convo.user == "community"
 
 
@@ -384,9 +372,9 @@ def test_openrouter_exception_handling_details():
             split_correction=False,
         )
 
-        success = convo.set_api_key("failing_key")
+        with pytest.raises(LLMInitializationError):
+            convo.set_api_key("failing_key")
 
-        assert not success
         # Verify that the private attributes are set to None
         assert convo._chat is None
         assert convo._ca_chat is None
@@ -403,8 +391,7 @@ def test_openrouter_live_query():
         split_correction=False,
     )
 
-    success = convo.set_api_key(api_key=os.getenv("OPENROUTER_API_KEY"))
-    assert success
+    convo.set_api_key(api_key=os.getenv("OPENROUTER_API_KEY"))
 
     result, _, _ = convo.query("What is the capital of France?")
     assert "paris" in result.lower()
@@ -420,8 +407,7 @@ def test_openrouter_image_message():
         split_correction=False,
     )
 
-    success = convo.set_api_key(api_key=os.getenv("OPENROUTER_API_KEY"))
-    assert success
+    convo.set_api_key(api_key=os.getenv("OPENROUTER_API_KEY"))
 
     convo.append_system_message(
         "You are an editorial assistant to a journal in biomedical science.",
@@ -463,8 +449,7 @@ def test_openrouter_tool_calling():
         tool_call_mode="auto",
     )
 
-    success = convo.set_api_key(api_key=os.getenv("OPENROUTER_API_KEY"))
-    assert success
+    convo.set_api_key(api_key=os.getenv("OPENROUTER_API_KEY"))
 
     convo.query("What is 2 times 3?")
     # Check if tool was called and result is in conversation
