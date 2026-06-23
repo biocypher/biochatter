@@ -139,48 +139,46 @@ def _get_searchable_entity_types(schema: dict) -> list[str]:
     return entity_types
 
 
-# ── Agent 1: EntityIdentifierAgent ────────────────────────────────────────────
+# ── Agent 1 (revised): term extraction only ───────────────────────────────────
 
-def _identify_entities(
+def _extract_entity_terms(
     question: str,
-    entity_types: list[str],
+    selected_entity_types: list[str],
     client,
     model: str,
 ) -> list[tuple[str, str]]:
     """
-    Agent 1: identify biomedical entities in the question.
-    Returns list of (term, entity_type) tuples.
-    Pure LLM call, no tools.
+    Revised Agent 1 — term extraction only.
+    Entity types are provided by BioCypherPromptEngine._select_entities().
+    LLM only finds the exact string the user wrote for each type.
     """
-    entity_list = ", ".join(entity_types)
+    entity_list = ", ".join(selected_entity_types)
     prompt = (
-        f"Identify ALL biomedical entities in this question: '{question}'\n\n"
-        f"Entity types to look for: {entity_list}\n\n"
+        f"The following entity types are relevant to this question: {entity_list}\n\n"
+        f"Question: '{question}'\n\n"
+        f"Extract the exact term the user wrote for each entity type.\n"
         f"Rules:\n"
-        f"- Only return entities explicitly mentioned in the question\n"
-        f"- Do NOT include 'gene' unless a specific gene symbol is mentioned (e.g. MYH7)\n"
-        f"- Keep the original term as written in the question\n\n"
-        f"Respond with JSON only, no other text:\n"
-        f"[{{\"term\": \"<term as written>\", \"entity_type\": \"<type>\"}}]"
+        f"- Use the exact string as written, do not expand or change it\n"
+        f"- Only include types that have a term in the question\n"
+        f"- Do NOT include 'gene' unless a specific gene symbol is mentioned\n\n"
+        f"Respond with JSON only:\n"
+        f"[{{\"term\": \"<exact term>\", \"entity_type\": \"<type>\"}}]"
     )
 
     try:
-        response = client.models.generate_content(
-            model=model,
-            contents=prompt,
-        )
+        response = client.models.generate_content(model=model, contents=prompt)
         text = response.candidates[0].content.parts[0].text.strip()
-        # strip markdown if present
         text = text.replace("```json", "").replace("```", "").strip()
         entities = json.loads(text)
-        result = [(e["term"], e["entity_type"]) for e in entities
-                  if e.get("entity_type") in entity_types]
-        logger.info(f"[Agent 1] identified entities: {result}")
+        result = [
+            (e["term"], e["entity_type"]) for e in entities
+            if e.get("entity_type") in selected_entity_types
+        ]
+        logger.info(f"[Agent 1 revised] extracted terms: {result}")
         return result
     except Exception as e:
-        logger.error(f"[Agent 1] failed: {e}")
+        logger.error(f"[Agent 1 revised] failed: {e}")
         return []
-
 
 # ── Agent 2: TierSelectorAgent ─────────────────────────────────────────────────
 
@@ -445,39 +443,37 @@ def _rewrite_question(question: str, grounded: dict) -> str:
     )
 
 
-# ── main entry point ───────────────────────────────────────────────────────────
+# ── main entry points ──────────────────────────────────────────────────────────
 
-def ground_entities_in_question(
+def ground_entities(
     question: str,
+    selected_entity_types: list[str],
     connection_args: dict,
-    schema: dict | None = None,
     api_key: str | None = None,
     model: str = GROUNDING_MODEL,
-    max_attempts: int = MAX_GROUNDING_ATTEMPTS,
 ) -> tuple[str, dict]:
     """
-    Ground biomedical entities in a user question against the Neo4j graph.
-
-    Uses a three-agent pipeline:
-        Agent 1: identify entities (LLM, no tools)
-        Agent 2: select tier per entity (LLM, no tools)
-        Agent 3: execute grounding (pure Python + simple LLM calls, no AFC)
+    Ground entity terms in the question against the KG.
+    Entity types provided by BioCypherPromptEngine._select_entities().
 
     Args:
-        question:        raw user question
-        connection_args: Neo4j connection dict {host, port, db_name, user, password}
-        schema:          BioCypher schema dict for dynamic entity type discovery
-        api_key:         Gemini API key, falls back to GOOGLE_API_KEY env var
-        model:           Gemini model to use
-        max_attempts:    max retry attempts if grounding fails
+        question:              raw user question
+        selected_entity_types: from BioCypherPromptEngine._select_entities()
+                               e.g. ["Disease", "CellType"]
+        connection_args:       Neo4j connection dict
+        api_key:               Gemini API key
+        model:                 model to use
 
     Returns:
-        tuple of (grounded_question, grounded_entities_dict)
-        If grounding fails, returns (original_question, {})
+        (grounded_question, grounded_entities_dict)
     """
     key = api_key or os.getenv("GOOGLE_API_KEY")
     if not key:
-        logger.warning("No Gemini API key found. Skipping grounding.")
+        logger.warning("No API key. Skipping entity grounding.")
+        return question, {}
+
+    if not selected_entity_types:
+        logger.warning("No entity types provided. Skipping entity grounding.")
         return question, {}
 
     try:
@@ -485,56 +481,160 @@ def ground_entities_in_question(
         driver = _make_driver(connection_args)
         ontomcp_manager, find_terms_fn = _make_ontomcp_manager()
     except Exception as e:
-        logger.error(f"Grounding setup failed: {e}")
+        logger.error(f"Entity grounding setup failed: {e}")
         return question, {}
 
-    # get entity types from schema or use defaults
-    if schema:
-        entity_types = _get_searchable_entity_types(schema)
-        logger.info(f"Entity types from schema: {entity_types}")
-    else:
-        entity_types = ["disease", "cell_type", "gene", "tissue", "species"]
-        logger.warning("No schema provided, using default entity types.")
+    try:
+        # Agent 1 (revised) — extract terms only, types already known
+        entities = _extract_entity_terms(
+            question, selected_entity_types, client, model
+        )
+        if not entities:
+            logger.warning("[Agent 1] no terms extracted")
+            return question, {}
 
-    if not entity_types:
-        logger.warning("No searchable entity types found.")
-        return question, {}
+        # Agent 2 — select tier per entity
+        entity_tiers = []
+        for term, entity_type in entities:
+            tier = _select_tier(term, entity_type, client, model)
+            entity_tiers.append((term, entity_type, tier))
 
-    for attempt in range(1, max_attempts + 1):
-        if attempt > 1:
-            logger.info(f"Grounding retry {attempt}, waiting {RETRY_WAIT_SECONDS}s...")
-            time.sleep(RETRY_WAIT_SECONDS)
+        # Agent 3 — execute grounding
+        grounded = {}
+        for term, entity_type, tier in entity_tiers:
+            result = _ground_entity(
+                term, entity_type, tier,
+                driver, ontomcp_manager, find_terms_fn,
+                client, model,
+            )
+            if result:
+                grounded[term] = result  # key by term, not entity_type
 
-        try:
-            # ── Agent 1: identify entities ──────────────────────────────────
-            entities = _identify_entities(question, entity_types, client, model)
-            if not entities:
-                logger.warning("[Agent 1] no entities found")
+        if grounded:
+            logger.info(f"Entity grounding succeeded: {grounded}")
+            return _rewrite_question(question, grounded), grounded
+
+    except Exception as e:
+        logger.error(f"Entity grounding failed: {e}")
+
+    return question, {}
+
+
+def ground_property_values(
+    question: str,
+    selected_properties: dict,
+    connection_args: dict,
+    api_key: str | None = None,
+    model: str = GROUNDING_MODEL,
+    max_categorical_values: int = 20,
+) -> str:
+    """
+    Ground property filter terms in the question against KG property values.
+    Called after BioCypherPromptEngine._select_properties().
+
+    Args:
+        question:             grounded question (after entity grounding)
+        selected_properties:  from BioCypherPromptEngine._select_properties()
+                              e.g. {"DeResult": ["direction", "logFC"]}
+        connection_args:      Neo4j connection dict
+        api_key:              Gemini API key
+        model:                model to use
+        max_categorical_values: skip properties with more distinct values
+
+    Returns:
+        question with property filter terms replaced by canonical KG values
+    """
+    key = api_key or os.getenv("GOOGLE_API_KEY")
+    if not key:
+        logger.warning("No API key. Skipping property value grounding.")
+        return question
+
+    try:
+        client = genai.Client(api_key=key)
+        driver = _make_driver(connection_args)
+    except Exception as e:
+        logger.error(f"Property grounding setup failed: {e}")
+        return question
+
+    substitutions = {}
+
+    for entity_type, props in selected_properties.items():
+        for prop_name in props:
+            try:
+                neo4j_label = entity_type[0].upper() + entity_type[1:]
+                results = driver.query(
+                    f"MATCH (n:{neo4j_label}) "
+                    f"WHERE n.{prop_name} IS NOT NULL "
+                    f"RETURN DISTINCT n.{prop_name} AS value"
+                )
+                if not results or not results[0]:
+                    continue
+
+                allowed_values = [
+                    r["value"] for r in results[0]
+                    if r.get("value") is not None
+                ]
+
+                # skip continuous/high-cardinality properties
+                if len(allowed_values) > max_categorical_values:
+                    logger.info(
+                        f"Skipping '{prop_name}' — "
+                        f"{len(allowed_values)} distinct values (continuous)"
+                    )
+                    continue
+
+                if not allowed_values:
+                    continue
+
+                canonical = _map_property_value(
+                    question, prop_name, allowed_values, client, model
+                )
+
+                if canonical:
+                    substitutions[prop_name] = canonical
+                    logger.info(
+                        f"Property grounding: '{prop_name}' -> '{canonical}'"
+                    )
+
+            except Exception as e:
+                logger.warning(
+                    f"Property grounding failed for '{prop_name}': {e}"
+                )
                 continue
 
-            # ── Agent 2: select tier per entity ─────────────────────────────
-            entity_tiers = []
-            for term, entity_type in entities:
-                tier = _select_tier(term, entity_type, client, model)
-                entity_tiers.append((term, entity_type, tier))
+    if not substitutions:
+        return question
 
-            # ── Agent 3: execute grounding ───────────────────────────────────
-            grounded = {}
-            for term, entity_type, tier in entity_tiers:
-                result = _ground_entity(
-                    term, entity_type, tier,
-                    driver, ontomcp_manager, find_terms_fn,
-                    client, model,
-                )
-                if result:
-                    grounded[entity_type] = result
+    canonical_list = [f"{p}: {v}" for p, v in substitutions.items()]
+    return (
+        f"{question}\n\n"
+        f"[Grounded property values: {', '.join(canonical_list)}. "
+        f"Use these exact values in the query WHERE clause.]"
+    )
 
-            if grounded:
-                logger.info(f"Grounding succeeded: {grounded}")
-                return _rewrite_question(question, grounded), grounded
 
-        except Exception as e:
-            logger.error(f"Grounding attempt {attempt} failed: {e}")
-
-    logger.warning("Grounding failed. Returning original question.")
-    return question, {}
+def _map_property_value(
+    question: str,
+    prop_name: str,
+    allowed_values: list,
+    client,
+    model: str,
+) -> str | None:
+    """LLM maps user's informal term to a canonical property value."""
+    prompt = (
+        f"Property: '{prop_name}'\n"
+        f"Allowed values in the database: {allowed_values}\n"
+        f"Question: '{question}'\n\n"
+        f"Which allowed value did the user mean for '{prop_name}'?\n"
+        f"Respond with ONLY one value from the allowed list, "
+        f"or 'none' if the question does not filter on this property."
+    )
+    try:
+        response = client.models.generate_content(model=model, contents=prompt)
+        result = response.candidates[0].content.parts[0].text.strip()
+        if result.lower() == "none" or result not in allowed_values:
+            return None
+        return result
+    except Exception as e:
+        logger.warning(f"_map_property_value failed: {e}")
+        return None

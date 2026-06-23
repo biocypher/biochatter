@@ -5,6 +5,7 @@ from collections.abc import Callable
 import yaml
 
 from ._misc import ensure_iterable, sentencecase_to_pascalcase
+from .kg_grounding import ground_entities, ground_property_values
 from .llm_connect import Conversation, LangChainConversation
 
 
@@ -16,7 +17,9 @@ class BioCypherPromptEngine:
         model_provider: str = "google_genai",
         model_name: str = "gemini-2.0-flash",
         conversation_factory: Callable | None = None,
-    ) -> None:
+        connection_args: dict | None = None,
+        use_grounding: bool = False,
+        ) -> None:
         """Given a biocypher schema configuration, extract the entities and
         relationships, and for each extract their mode of representation (node
         or edge), properties, and identifier namespace. Using these data, allow
@@ -101,6 +104,8 @@ class BioCypherPromptEngine:
         self.question = ""
         self.selected_entities = []
         self.selected_relationships = []  # used in property selection
+        self.connection_args = connection_args
+        self.use_grounding = use_grounding
         self.selected_relationship_labels = {}  # copy to deal with labels that
         # are not the same as the relationship name, used in query generation
         # dictionary to also include source and target types
@@ -141,19 +146,39 @@ class BioCypherPromptEngine:
         if not success1:
             raise ValueError(
                 "Entity selection failed. Please try again with a different question.",
+                )
+
+        # entity grounding — runs after _select_entities()
+        if self.use_grounding and self.connection_args:
+            question, self.grounded_entities = ground_entities(
+                question=question,
+                selected_entity_types=self.selected_entities,
+                connection_args=self.connection_args,
             )
+            self.question = question
+
         conversation.reset()
         success2 = self._select_relationships(conversation=conversation)
         if not success2:
             raise ValueError(
                 "Relationship selection failed. Please try again with a different question.",
             )
+
         conversation.reset()
         success3 = self._select_properties(conversation=conversation)
         if not success3:
             raise ValueError(
                 "Property selection failed. Please try again with a different question.",
             )
+
+        # property value grounding — runs after _select_properties()
+        if self.use_grounding and self.connection_args:
+            question = ground_property_values(
+                question=question,
+                selected_properties=self.selected_properties,
+                connection_args=self.connection_args,
+            )
+            self.question = question
 
     def _generate_query_prompt(
         self,
