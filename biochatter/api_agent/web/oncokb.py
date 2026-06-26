@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 
 
 ONCOKB_QUERY_PROMPT = """
-You are a world class algorithm for creating queries in structured formats. Your task is to use OncoKB Web APIs to
+You are a system designed to create structured queries for the OncoKB web API. Your task is to use OncoKB Web APIs to
 answer genomic questions.
 
 For questions about genomic alterations, you can use the OncoKB API by providing the appropriate parameters based on the
@@ -111,11 +111,13 @@ Endpoints and Parameters
 
 
 ONCOKB_SUMMARY_PROMPT = """
-You have to answer this question in a clear and concise manner: {question} Be factual!\n\
-You are a world leading oncologist and molecular biologist who knows everything about OncoKB results.\n\
-Do not make up information, only use the provided information and mention how relevant the found information is based on your knowledge about OncoKB\n\
-Here is the information relevant to the question found on OncoKB:\n\
+Based on the following information from OncoKB:
+
 {context}
+
+Answer this question clearly and concisely: {question}
+
+Be factual and only use the provided information. If the information is incomplete or doesn't fully answer the question, mention this limitation.
 """
 
 
@@ -343,10 +345,11 @@ class OncoKBInterpreter(BaseInterpreter):
             [
                 (
                     "system",
-                    "You are a world class molecular biologist who knows "
-                    "everything about OncoKB and cancer genomics. Your task is "
-                    "to interpret results from OncoKB API calls and summarise "
-                    "them for the user.",
+                    "You are an experienced oncologist and molecular biologist "
+                    "specializing in cancer genomics and OncoKB data interpretation. "
+                    "Your task is to interpret results from OncoKB API calls and "
+                    "summarise them for the user. Focus on the provided data and "
+                    "be clear about any limitations in the information.",
                 ),
                 ("user", "{input}"),
             ],
