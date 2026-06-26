@@ -74,7 +74,13 @@ class DatabaseAgent:
             tool_result = [agent_result.tool_result] if agent_result.tool_result is not None else None
             return agent_result.answer, tool_result
         else:
+            import re
             query = self.prompt_engine.generate_query(query)
+            query = query.strip()
+            if "```" in query:
+                m = re.search(r"```(?:\w+)?\s*(.*?)```", query, re.DOTALL)
+                if m:
+                    query = m.group(1).strip()
             results = self.driver.query(query=query)
             return query, results
 
