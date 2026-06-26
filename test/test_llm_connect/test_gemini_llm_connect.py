@@ -42,7 +42,7 @@ def manage_test_context():
 
 def test_empty_messages():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
@@ -51,7 +51,7 @@ def test_empty_messages():
 
 def test_single_message():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
@@ -61,7 +61,7 @@ def test_single_message():
 
 def test_multiple_messages():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
@@ -75,7 +75,7 @@ def test_multiple_messages():
 
 def test_unknown_message_type():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
@@ -89,7 +89,7 @@ def test_gemini_catches_authentication_error(mock_gemini):
     mock_gemini.side_effect = Exception("Invalid API key")
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
@@ -104,7 +104,7 @@ def test_gemini_catches_authentication_error(mock_gemini):
 def test_chat_attribute_not_initialized():
     """Test that accessing chat before initialization raises AttributeError."""
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
@@ -119,7 +119,7 @@ def test_chat_attribute_not_initialized():
 def test_ca_chat_attribute_not_initialized():
     """Test that accessing ca_chat before initialization raises AttributeError."""
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
@@ -137,7 +137,7 @@ def test_chat_attributes_reset_on_auth_error(mock_gemini):
     mock_gemini.side_effect = Exception("Invalid API key")
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
@@ -153,7 +153,7 @@ def test_chat_attributes_set_on_success(mock_gemini):
     mock_gemini.return_value = Mock()
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
@@ -170,7 +170,7 @@ def test_gemini_update_usage_stats():
     """Test the _update_usage_stats method in GeminiConversation."""
     # Arrange
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         correct=False,
     )
@@ -184,7 +184,7 @@ def test_gemini_update_usage_stats():
     mock_update_callback = Mock()
     convo._update_token_usage = mock_update_callback
 
-    model = "gemini-2.0-flash"
+    model = "gemini-3.5-flash"
     token_usage = {
         "total_tokens": 80,
     }
@@ -197,14 +197,14 @@ def test_gemini_update_usage_stats():
     mock_usage_stats.increment.assert_called_once_with(
         "usage:[date]:[user]",
         {
-            "total_tokens:gemini-2.0-flash": 80,
+            "total_tokens:gemini-3.5-flash": 80,
         },
     )
 
     # Verify callback was called with complete token_usage
     mock_update_callback.assert_called_once_with(
         "community",
-        "gemini-2.0-flash",
+        "gemini-3.5-flash",
         token_usage,
     )
 
@@ -212,7 +212,7 @@ def test_gemini_update_usage_stats():
 @pytest.mark.skip(reason="Live test for development purposes")
 def test_gemini_default():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         correct=False,
         split_correction=False,
@@ -226,7 +226,7 @@ def test_gemini_default():
 @pytest.mark.skip(reason="Live test for development purposes")
 def test_append_local_image_gemini():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         correct=False,
         split_correction=False,
@@ -253,7 +253,7 @@ def test_append_local_image_gemini():
 @pytest.mark.skip(reason="Live test for development purposes")
 def test_local_image_query_gemini():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         correct=False,
         split_correction=False,
@@ -274,7 +274,7 @@ def test_local_image_query_gemini():
 @pytest.mark.skip(reason="Live test for development purposes")
 def test_append_online_image_gemini():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         correct=False,
         split_correction=False,
@@ -293,7 +293,7 @@ def test_append_online_image_gemini():
 @pytest.mark.skip(reason="Live test for development purposes")
 def test_online_image_query_gemini():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         correct=False,
         split_correction=False,
@@ -328,7 +328,7 @@ def test_tool_message_auto():
     multiply, _ = create_tool_functions()
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
         tools=[multiply],
@@ -346,7 +346,7 @@ def test_multiple_tool_calls_auto():
     multiply, add = create_tool_functions()
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
         tools=[multiply, add],
@@ -365,7 +365,7 @@ def test_tool_auto_message_passed_to_query():
     multiply, _ = create_tool_functions()
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
     )
 
@@ -380,7 +380,7 @@ def test_tool_message_text():
     multiply, _ = create_tool_functions()
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
         tools=[multiply],
@@ -403,7 +403,7 @@ def test_multiple_tool_calls_text_mode():
     multiply, add = create_tool_functions()
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
         tools=[multiply, add],
@@ -436,7 +436,7 @@ def test_tool_text_message_passed_to_query():
     multiply, _ = create_tool_functions()
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         tool_call_mode="text",
     )

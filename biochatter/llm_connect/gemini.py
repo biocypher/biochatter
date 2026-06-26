@@ -56,7 +56,7 @@ class GeminiConversation(Conversation):
             tool_call_mode=tool_call_mode,
         )
 
-        self.ca_model_name = "gemini-2.0-flash"
+        self.ca_model_name = "gemini-3.5-flash"
 
     def set_api_key(self, api_key: str, user: str | None = None) -> None:
         """Set the API key for the Google Gemini API.

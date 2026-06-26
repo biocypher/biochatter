@@ -100,7 +100,7 @@ def test_primary_query_no_tools_no_structured_basic_model(conversation_instance,
 
 
 def test_primary_query_with_tools_model_supports_tool_calling_tool_used(conversation_instance, mock_chat_object):
-    conversation_instance.model_name = "gemini-2.0-flash"  # Assumed to be in TOOL_CALLING_MODELS
+    conversation_instance.model_name = "gemini-3.5-flash"  # Assumed to be in TOOL_CALLING_MODELS
     conversation_instance.tools = [mock_tool_one]  # Instance tool
     query_tool = mock_tool_two  # Tool passed in query
     all_tools = [mock_tool_one, query_tool]
@@ -240,7 +240,7 @@ def test_primary_query_tools_model_not_supports_invalid_json_response(conversati
 
 
 def test_primary_query_structured_output_model_supports(conversation_instance, mock_chat_object):
-    conversation_instance.model_name = "gemini-2.0-flash"  # Assumed in STRUCTURED_OUTPUT_MODELS
+    conversation_instance.model_name = "gemini-3.5-flash"  # Assumed in STRUCTURED_OUTPUT_MODELS
     initial_messages = list(conversation_instance.messages)
 
     structured_response_obj = MockOutputModel(param1="Structured data", param2=100)
@@ -264,7 +264,7 @@ def test_primary_query_structured_output_model_supports(conversation_instance, m
 
 
 def test_primary_query_structured_output_model_supports_wrapped(conversation_instance, mock_chat_object):
-    conversation_instance.model_name = "gemini-2.0-flash"  # Assumed in STRUCTURED_OUTPUT_MODELS
+    conversation_instance.model_name = "gemini-3.5-flash"  # Assumed in STRUCTURED_OUTPUT_MODELS
     initial_messages = list(conversation_instance.messages)
     structured_response_obj = MockOutputModel(param1="Wrapped data", param2=200)
     mock_chat_object.invoke = MagicMock(return_value=structured_response_obj)

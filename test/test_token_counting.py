@@ -196,7 +196,7 @@ class TestAnthropicConversationTokenCounting:
     def anthropic_conversation(self):
         """Create an AnthropicConversation instance for testing."""
         with patch("biochatter.llm_connect.anthropic.ChatAnthropic"):
-            conv = AnthropicConversation(model_name="claude-3-7-sonnet-latest", prompts=MOCK_PROMPTS)
+            conv = AnthropicConversation(model_name="claude-sonnet-4-6", prompts=MOCK_PROMPTS)
             conv.chat = MagicMock()
             conv.ca_chat = MagicMock()
             conv._create_history = MagicMock(return_value=[])
@@ -248,7 +248,7 @@ class TestGeminiConversationTokenCounting:
     def gemini_conversation(self):
         """Create a GeminiConversation instance for testing."""
         with patch("biochatter.llm_connect.gemini.ChatGoogleGenerativeAI"):
-            conv = GeminiConversation(model_name="gemini-2.0-flash", prompts=MOCK_PROMPTS)
+            conv = GeminiConversation(model_name="gemini-3.5-flash", prompts=MOCK_PROMPTS)
             conv.chat = MagicMock()
             conv.ca_chat = MagicMock()
             return conv
@@ -391,7 +391,7 @@ class TestOpenRouterConversationTokenCounting:
     @pytest.fixture
     def openrouter_conversation(self):
         """Create an OpenRouterConversation instance for testing."""
-        conv = OpenRouterConversation(model_name="anthropic/claude-3-7-sonnet", prompts=MOCK_PROMPTS)
+        conv = OpenRouterConversation(model_name="anthropic/claude-sonnet-4-6", prompts=MOCK_PROMPTS)
         conv.chat = MagicMock()
         conv.ca_chat = MagicMock()
         conv.messages = [HumanMessage(content="Test message")]
@@ -703,8 +703,8 @@ class TestTokenCountingIntegration:
 
         test_cases = [
             (GptConversation, "gpt-4"),
-            (AnthropicConversation, "claude-3-7-sonnet-latest"),
-            (GeminiConversation, "gemini-2.0-flash"),
+            (AnthropicConversation, "claude-sonnet-4-6"),
+            (GeminiConversation, "gemini-3.5-flash"),
             (OllamaConversation, "llama3"),
             (XinferenceConversation, "auto"),
             (LiteLLMConversation, "gpt-3.5-turbo"),

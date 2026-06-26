@@ -281,7 +281,7 @@ class BioCypherPromptEngine:
     def _get_conversation(
         self,
         model_provider: str = "google_genai",
-        model_name: str = "gemini-2.0-flash",
+        model_name: str = "gemini-3.5-flash",
     ) -> "Conversation":
         """Create a conversation object given a model name.
 

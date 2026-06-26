@@ -15,10 +15,10 @@ from langchain_core.tools import tool
 
 
 MODEL_PARAMS = [
-    ("google_genai", "gemini-2.0-flash"),
+    ("google_genai", "gemini-3.5-flash"),
     ("openai", "gpt-4o"),
     ("mistralai", "mistral-large-latest"),
-    ("anthropic", "claude-3-7-sonnet-latest"),
+    ("anthropic", "claude-sonnet-4-6"),
 ]
 
 

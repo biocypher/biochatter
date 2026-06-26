@@ -56,7 +56,7 @@ def test_mcp_edam_qa(
         pytest.skip(
             f"model {model_name} does not support tool calling. "
             f"MCP benchmarks require models with native tool calling capability. "
-            f"Use a model that supports tool calling (e.g., gpt-4o, gpt-4.1-mini, claude-3-7-sonnet-latest, etc.)",
+            f"Use a model that supports tool calling (e.g., gpt-5.5, gpt-4.1-mini, claude-sonnet-4-6, etc.)",
         )
 
     # Additional validation: warn if we're using a model that might fall back to manual tool calling
