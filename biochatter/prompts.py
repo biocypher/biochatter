@@ -341,6 +341,8 @@ class BioCypherPromptEngine:
             self.conversation_factory(),
         )
 
+        print(f"DEBUG final question to generate_query: '{self.question}'")
+
         return self._generate_query(
             question=self.question,  # was: question=question
             entities=self.selected_entities,
@@ -462,35 +464,41 @@ class BioCypherPromptEngine:
         conversation.append_system_message(
             "You have access to a knowledge graph that contains "
             f"these entity types: {', '.join(self.entities)}. Your task is "
-            "to select the entity types that are relevant to the user's question, "
-            "and for each one, the exact term the user wrote in the question "
-            "that refers to it, for subsequent use in a query. Only return "
-            "the entity type and term pairs, comma-separated, each pair "
-            "formatted as 'term:entity_type', without any additional text. "
-            "Use the exact term as written in the question, do not expand "
-            "or correct it. Do not return entity names, relationships, or "
-            "properties that are not entity types from the list above.",
+            "to select the entity types that are relevant to the user's question "
+            "for subsequent use in a query. For each relevant entity type, also "
+            "identify whether the question mentions a specific named instance of "
+            "that type. If a specific named instance is mentioned, return the pair "
+            "as 'term:entity_type'. If no specific named instance is mentioned "
+            "for that entity type, return just the entity type name on its own. "
+            "Return all results comma-separated, without any additional text. "
+            "Use the exact term as written in the question, do not expand or "
+            "correct it. Do not return entity names, relationships, or properties "
+            "that are not entity types from the list above.",
         )
 
         msg, token_usage, correction = conversation.query(question)
 
         pairs = msg.split(",") if msg else []
-
         self.selected_entity_terms = []
 
         if pairs:
             for pair in pairs:
                 pair = pair.strip()
-                if ":" not in pair:
-                    continue
-                term, entity = pair.rsplit(":", 1)
-                term = term.strip()
-                entity = entity.strip()
-                if entity in self.entities:
-                    self.selected_entities.append(entity)
-                    self.selected_entity_terms.append((term, entity))
+                if ":" in pair:
+                    # specific named instance mentioned — capture term for grounding
+                    term, entity = pair.rsplit(":", 1)
+                    term = term.strip()
+                    entity = entity.strip()
+                    if entity in self.entities:
+                        self.selected_entities.append(entity)
+                        self.selected_entity_terms.append((term, entity))
+                else:
+                    # no specific instance — add type only, skip grounding
+                    entity = pair.strip()
+                    if entity in self.entities:
+                        self.selected_entities.append(entity)
 
-        return bool(self.selected_entity_terms)
+        return bool(self.selected_entities)
 
     def _select_relationships(self, conversation: "Conversation") -> bool:
         """Given a question and the preselected entities, select relationships for
@@ -745,13 +753,27 @@ class BioCypherPromptEngine:
 
 
 
+    # @staticmethod
+    # def _validate_json_str(json_str: str):
+    #     json_str = json_str.strip()
+    #     if json_str.startswith("```json"):
+    #         json_str = json_str[7:]
+    #     if json_str.endswith("```"):
+    #         json_str = json_str[:-3]
+    #     return json_str.strip()
+
     @staticmethod
     def _validate_json_str(json_str: str):
         json_str = json_str.strip()
         if json_str.startswith("```json"):
             json_str = json_str[7:]
+        elif json_str.startswith("```"):
+            json_str = json_str[3:]
         if json_str.endswith("```"):
             json_str = json_str[:-3]
+        # strip bare language tag if LLM returned "json\n{...}" without backticks
+        if json_str.startswith("json"):
+            json_str = json_str[4:]
         return json_str.strip()
 
     # def _select_properties(self, conversation: "Conversation") -> bool:
