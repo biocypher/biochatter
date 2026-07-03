@@ -196,7 +196,7 @@ class TestGeminiConversationWarnings:
     def test_gemini_warns_on_unused_kwargs_but_not_tools(self, common_prompts):
         """Test that GeminiConversation warns for unused kwargs but not for tools parameter."""
         conv = GeminiConversation(
-            model_name="gemini-2.0-flash",
+            model_name="gemini-3.5-flash",
             prompts=common_prompts,
         )
 
@@ -206,7 +206,7 @@ class TestGeminiConversationWarnings:
             # Mock the necessary methods
             conv.chat = MagicMock()
             conv.chat.bind_tools = MagicMock(return_value=conv.chat)
-            conv.model_name = "gemini-2.0-flash"  # Ensure it's in TOOL_CALLING_MODELS
+            conv.model_name = "gemini-3.5-flash"  # Ensure it's in TOOL_CALLING_MODELS
 
             # Mock a successful response
             mock_response = MagicMock()
@@ -232,7 +232,7 @@ class TestGeminiConversationWarnings:
     def test_gemini_no_warning_with_only_tools(self, common_prompts):
         """Test that GeminiConversation does not warn when only tools are passed."""
         conv = GeminiConversation(
-            model_name="gemini-2.0-flash",
+            model_name="gemini-3.5-flash",
             prompts=common_prompts,
         )
 
@@ -248,7 +248,7 @@ class TestGeminiConversationWarnings:
             mock_response.usage_metadata = {"total_tokens": 100}
             conv.chat.invoke.return_value = mock_response
             conv.append_ai_message = MagicMock()
-            conv.model_name = "gemini-2.0-flash"
+            conv.model_name = "gemini-3.5-flash"
 
             # Call with only tools parameter
             result = conv._primary_query(tools=[])

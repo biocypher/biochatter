@@ -4,6 +4,7 @@ import openai
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 from biochatter.llm_connect.conversation import Conversation
+from biochatter.llm_connect.exceptions import LLMConnectionError, LLMInitializationError
 
 
 class XinferenceConversation(Conversation):
@@ -171,7 +172,7 @@ class XinferenceConversation(Conversation):
             openai._exceptions.UnprocessableEntityError,
             openai._exceptions.APIResponseValidationError,
         ) as e:
-            return str(e), None
+            raise LLMConnectionError(str(e), provider="xinference", model=self.model_name) from e
 
         msg = response["choices"][0]["message"]["content"]
         token_usage_raw = response["usage"]
@@ -321,15 +322,15 @@ class XinferenceConversation(Conversation):
 
         """
 
-    def set_api_key(self) -> bool:
+    def set_api_key(self) -> None:
         """Try to get the Xinference model from the client API.
 
         If the model is found, initialise the conversational agent. If the model
         is not found, `get_model` will raise a RuntimeError.
 
-        Returns
-        -------
-            bool: True if the model is found, False otherwise.
+        Raises:
+        ------
+            LLMInitializationError: If the Xinference model cannot be loaded.
 
         """
         try:
@@ -344,12 +345,19 @@ class XinferenceConversation(Conversation):
             self.ca_model = self.client.get_model(
                 self.models[self.ca_model_name]["id"],
             )
-            return True
 
-        except RuntimeError:
-            self._chat = None
-            self._ca_chat = None
-            return False
+        except RuntimeError as e:
+            raise LLMInitializationError(
+                f"Failed to initialize Xinference model: {e}",
+                provider="xinference",
+                model=self.model_name,
+            ) from e
+        except Exception as e:
+            raise LLMInitializationError(
+                f"Failed to initialize Xinference model: {e}",
+                provider="xinference",
+                model=self.model_name,
+            ) from e
 
     def list_models_by_type(self, model_type: str) -> list[str]:
         """List the models by type.

@@ -4,9 +4,9 @@ import os
 from unittest.mock import Mock, patch
 
 import pytest
-from google.api_core.exceptions import InvalidArgument
 
 from biochatter.llm_connect import GeminiConversation
+from biochatter.llm_connect.exceptions import LLMInitializationError
 
 from langchain_core.messages import (
     AIMessage,
@@ -42,7 +42,7 @@ def manage_test_context():
 
 def test_empty_messages():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
@@ -51,7 +51,7 @@ def test_empty_messages():
 
 def test_single_message():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
@@ -61,7 +61,7 @@ def test_single_message():
 
 def test_multiple_messages():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
@@ -75,7 +75,7 @@ def test_multiple_messages():
 
 def test_unknown_message_type():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
@@ -86,26 +86,25 @@ def test_unknown_message_type():
 
 @patch("biochatter.llm_connect.gemini.ChatGoogleGenerativeAI")
 def test_gemini_catches_authentication_error(mock_gemini):
-    mock_gemini.side_effect = InvalidArgument("Invalid API key")
+    mock_gemini.side_effect = Exception("Invalid API key")
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
 
-    success = convo.set_api_key(
-        api_key="fake_key",
-        user="test_user",
-    )
-
-    assert not success
+    with pytest.raises(LLMInitializationError):
+        convo.set_api_key(
+            api_key="fake_key",
+            user="test_user",
+        )
 
 
 def test_chat_attribute_not_initialized():
     """Test that accessing chat before initialization raises AttributeError."""
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
@@ -113,14 +112,14 @@ def test_chat_attribute_not_initialized():
     with pytest.raises(AttributeError) as exc_info:
         _ = convo.chat
 
-    assert "Chat attribute not initialized" in str(exc_info.value)
-    assert "Did you call set_api_key()?" in str(exc_info.value)
+    assert "Chat client is not initialized" in str(exc_info.value)
+    assert "Call set_api_key() before querying" in str(exc_info.value)
 
 
 def test_ca_chat_attribute_not_initialized():
     """Test that accessing ca_chat before initialization raises AttributeError."""
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
@@ -128,30 +127,23 @@ def test_ca_chat_attribute_not_initialized():
     with pytest.raises(AttributeError) as exc_info:
         _ = convo.ca_chat
 
-    assert "Correcting agent chat attribute not initialized" in str(exc_info.value)
-    assert "Did you call set_api_key()?" in str(exc_info.value)
+    assert "Correcting agent chat client is not initialized" in str(exc_info.value)
+    assert "Call set_api_key() before querying" in str(exc_info.value)
 
 
 @patch("biochatter.llm_connect.gemini.ChatGoogleGenerativeAI")
 def test_chat_attributes_reset_on_auth_error(mock_gemini):
     """Test that chat attributes are reset to None on authentication error."""
-    mock_gemini.side_effect = InvalidArgument("Invalid API key")
+    mock_gemini.side_effect = Exception("Invalid API key")
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
 
-    # Set API key (which will fail)
-    success = convo.set_api_key(api_key="fake_key")
-    assert not success
-
-    # Verify both chat attributes are None
-    with pytest.raises(AttributeError):
-        _ = convo.chat
-    with pytest.raises(AttributeError):
-        _ = convo.ca_chat
+    with pytest.raises(LLMInitializationError):
+        convo.set_api_key(api_key="fake_key")
 
 
 @patch("biochatter.llm_connect.gemini.ChatGoogleGenerativeAI")
@@ -161,14 +153,12 @@ def test_chat_attributes_set_on_success(mock_gemini):
     mock_gemini.return_value = Mock()
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
     )
 
-    # Set API key (which will succeed)
-    success = convo.set_api_key(api_key="fake_key")
-    assert success
+    convo.set_api_key(api_key="fake_key")
 
     # Verify both chat attributes are accessible
     assert convo.chat is not None
@@ -180,7 +170,7 @@ def test_gemini_update_usage_stats():
     """Test the _update_usage_stats method in GeminiConversation."""
     # Arrange
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         correct=False,
     )
@@ -194,7 +184,7 @@ def test_gemini_update_usage_stats():
     mock_update_callback = Mock()
     convo._update_token_usage = mock_update_callback
 
-    model = "gemini-2.0-flash"
+    model = "gemini-3.5-flash"
     token_usage = {
         "total_tokens": 80,
     }
@@ -207,14 +197,14 @@ def test_gemini_update_usage_stats():
     mock_usage_stats.increment.assert_called_once_with(
         "usage:[date]:[user]",
         {
-            "total_tokens:gemini-2.0-flash": 80,
+            "total_tokens:gemini-3.5-flash": 80,
         },
     )
 
     # Verify callback was called with complete token_usage
     mock_update_callback.assert_called_once_with(
         "community",
-        "gemini-2.0-flash",
+        "gemini-3.5-flash",
         token_usage,
     )
 
@@ -222,7 +212,7 @@ def test_gemini_update_usage_stats():
 @pytest.mark.skip(reason="Live test for development purposes")
 def test_gemini_default():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         correct=False,
         split_correction=False,
@@ -236,7 +226,7 @@ def test_gemini_default():
 @pytest.mark.skip(reason="Live test for development purposes")
 def test_append_local_image_gemini():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         correct=False,
         split_correction=False,
@@ -263,7 +253,7 @@ def test_append_local_image_gemini():
 @pytest.mark.skip(reason="Live test for development purposes")
 def test_local_image_query_gemini():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         correct=False,
         split_correction=False,
@@ -284,7 +274,7 @@ def test_local_image_query_gemini():
 @pytest.mark.skip(reason="Live test for development purposes")
 def test_append_online_image_gemini():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         correct=False,
         split_correction=False,
@@ -303,7 +293,7 @@ def test_append_online_image_gemini():
 @pytest.mark.skip(reason="Live test for development purposes")
 def test_online_image_query_gemini():
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         correct=False,
         split_correction=False,
@@ -338,7 +328,7 @@ def test_tool_message_auto():
     multiply, _ = create_tool_functions()
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
         tools=[multiply],
@@ -356,7 +346,7 @@ def test_multiple_tool_calls_auto():
     multiply, add = create_tool_functions()
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
         tools=[multiply, add],
@@ -375,7 +365,7 @@ def test_tool_auto_message_passed_to_query():
     multiply, _ = create_tool_functions()
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
     )
 
@@ -390,7 +380,7 @@ def test_tool_message_text():
     multiply, _ = create_tool_functions()
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
         tools=[multiply],
@@ -413,7 +403,7 @@ def test_multiple_tool_calls_text_mode():
     multiply, add = create_tool_functions()
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         split_correction=False,
         tools=[multiply, add],
@@ -446,7 +436,7 @@ def test_tool_text_message_passed_to_query():
     multiply, _ = create_tool_functions()
 
     convo = GeminiConversation(
-        model_name="gemini-2.0-flash",
+        model_name="gemini-3.5-flash",
         prompts={},
         tool_call_mode="text",
     )

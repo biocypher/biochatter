@@ -5,10 +5,9 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING
 
 import requests
-from langchain.chains.openai_functions import create_structured_output_runnable
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 
 from biochatter.api_agent.base.agent_abc import (
     BaseFetcher,
@@ -212,8 +211,8 @@ class OncoKBQueryBuilder(BaseQueryBuilder):
         query_parameters: "OncoKBQueryParameters",
         conversation: "Conversation",
     ) -> Callable:
-        """Creates a runnable object for executing queries using the LangChain
-        `create_structured_output_runnable` method.
+        """Creates a runnable object for executing queries using the chat model's
+        `with_structured_output` method.
 
         Args:
         ----
@@ -227,10 +226,8 @@ class OncoKBQueryBuilder(BaseQueryBuilder):
             A Callable object that can execute the query.
 
         """
-        return create_structured_output_runnable(
-            output_schema=query_parameters,
-            llm=conversation.chat,
-            prompt=self.structured_output_prompt,
+        return self.structured_output_prompt | conversation.chat.with_structured_output(
+            query_parameters,
         )
 
     def parameterise_query(

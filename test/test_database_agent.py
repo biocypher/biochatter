@@ -112,7 +112,7 @@ def test_database_agent_passes_model_provider_to_prompt_engine():
 
         db_agent = DatabaseAgent(
             model_provider="google_genai",
-            model_name="gemini-2.0-flash",
+            model_name="gemini-3.5-flash",
             connection_args={
                 "db_name": "test_db",
                 "host": "localhost",
@@ -128,7 +128,7 @@ def test_database_agent_passes_model_provider_to_prompt_engine():
         # Verify that BioCypherPromptEngine was called with the correct model_provider
         MockPromptEngine.assert_called_once_with(
             model_provider="google_genai",
-            model_name="gemini-2.0-flash",
+            model_name="gemini-3.5-flash",
             schema_config_or_info_dict={"schema_config": "test_schema"},
             conversation_factory=None,
         )
@@ -143,7 +143,7 @@ def test_database_agent_defaults_to_gemini():
 
         db_agent = DatabaseAgent(
             model_provider="google_genai",
-            model_name="gemini-2.0-flash",
+            model_name="gemini-3.5-flash",
             connection_args={
                 "db_name": "test_db",
                 "host": "localhost",
@@ -159,7 +159,7 @@ def test_database_agent_defaults_to_gemini():
         # Verify that BioCypherPromptEngine was called with Gemini defaults
         MockPromptEngine.assert_called_once_with(
             model_provider="google_genai",
-            model_name="gemini-2.0-flash",
+            model_name="gemini-3.5-flash",
             schema_config_or_info_dict={"schema_config": "test_schema"},
             conversation_factory=None,
         )

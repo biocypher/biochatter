@@ -17,7 +17,7 @@ class RagAgent:
         self,
         mode: str,
         model_provider: str = "google_genai",
-        model_name: str = "gemini-2.0-flash",
+        model_name: str = "gemini-3.5-flash",
         connection_args: dict | None = None,
         n_results: int | None = 3,
         use_prompt: bool | None = False,

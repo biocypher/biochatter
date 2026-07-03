@@ -9,42 +9,54 @@ token limits.
 
 from enum import Enum
 
+_CTX_1M = 1_048_576
+_CTX_400K = 400_000
+_CTX_128K = 128_000
+
 
 class OpenAIModels(str, Enum):
     """Enum for OpenAI models."""
 
-    GPT_35_TURBO = "gpt-3.5-turbo"
-    GPT_35_TURBO_16K = "gpt-3.5-turbo-16k"
-    GPT_35_TURBO_1106 = "gpt-3.5-turbo-1106"  # further updated 3.5-turbo
-    GPT_4 = "gpt-4"
-    GPT_4_32K = "gpt-4-32k"
-    GPT_4_1106_PREVIEW = "gpt-4-1106-preview"  # gpt-4 turbo, 128k tokens
     GPT_4o = "gpt-4o"
+    GPT_4O_MINI = "gpt-4o-mini"
     GPT_41 = "gpt-4.1"
-    GPT_41_mini = "gpt-4.1-mini"
+    GPT_41_MINI = "gpt-4.1-mini"
+    GPT_41_NANO = "gpt-4.1-nano"
     GPT_5 = "gpt-5"
-    GPT_5_mini = "gpt-5-mini"
-    GPT_5_nano = "gpt-5-nano"
+    GPT_5_MINI = "gpt-5-mini"
+    GPT_5_NANO = "gpt-5-nano"
+    GPT_54 = "gpt-5.4"
+    GPT_54_MINI = "gpt-5.4-mini"
+    GPT_54_NANO = "gpt-5.4-nano"
+    GPT_55 = "gpt-5.5"
+    GPT_55_PRO = "gpt-5.5-pro"
 
 
 class GeminiModels(str, Enum):
     """Enum for Gemini models."""
 
-    GEMINI_20_FLASH = "gemini-2.0-flash"
-    GEMINI_25_FLASH = "gemini-2.5-flash-preview-04-17"
+    GEMINI_25_FLASH = "gemini-2.5-flash"
+    GEMINI_31_FLASH_LITE = "gemini-3.1-flash-lite"
+    GEMINI_35_FLASH = "gemini-3.5-flash"
+    GEMINI_31_PRO = "gemini-3.1-pro-preview"
 
 
 class MistralModels(str, Enum):
     """Enum for Mistral models."""
 
     MISTRAL_LARGE_LATEST = "mistral-large-latest"
+    MISTRAL_MEDIUM_LATEST = "mistral-medium-latest"
+    MISTRAL_SMALL_LATEST = "mistral-small-latest"
+    CODESTRAL_LATEST = "codestral-latest"
 
 
 class AnthropicModels(str, Enum):
     """Enum for Anthropic models."""
 
-    CLAUDE_3_7_SONNET_LATEST = "claude-3-7-sonnet-latest"
-    CLAUDE_3_5_HAIKU_LATEST = "claude-3-5-haiku-latest"
+    CLAUDE_SONNET_46 = "claude-sonnet-4-6"
+    CLAUDE_SONNET_45 = "claude-sonnet-4-5"
+    CLAUDE_HAIKU_45 = "claude-haiku-4-5"
+    CLAUDE_OPUS_48 = "claude-opus-4-8"
 
 
 class HuggingFaceModels(str, Enum):
@@ -66,22 +78,25 @@ class TokenLimits(Enum):
     maintaining the token limit information.
     """
 
-    GPT_35_TURBO = ("gpt-3.5-turbo", 4000)
-    GPT_35_TURBO_16K = ("gpt-3.5-turbo-16k", 16000)
-    GPT_35_TURBO_1106 = ("gpt-3.5-turbo-1106", 16000)
-    GPT_4 = ("gpt-4", 8000)
-    GPT_4_32K = ("gpt-4-32k", 32000)
-    GPT_4_1106_PREVIEW = ("gpt-4-1106-preview", 128000)
-    GPT_4o = ("gpt-4o", 32000)
-    GPT_41 = ("gpt-4.1", 1048576)
-    GPT_41_mini = ("gpt-4.1-mini", 1048576)
-    GPT_5 = ("gpt-5", 1048576)  # Assuming similar to GPT-4.1
-    GPT_5_mini = ("gpt-5-mini", 1048576)
-    GPT_5_nano = ("gpt-5-nano", 1048576)
+    GPT_4o = ("gpt-4o", _CTX_128K)
+    GPT_4O_MINI = ("gpt-4o-mini", _CTX_128K)
+    GPT_41 = ("gpt-4.1", _CTX_1M)
+    GPT_41_MINI = ("gpt-4.1-mini", _CTX_1M)
+    GPT_41_NANO = ("gpt-4.1-nano", _CTX_1M)
+    GPT_5 = ("gpt-5", _CTX_1M)
+    GPT_5_MINI = ("gpt-5-mini", _CTX_1M)
+    GPT_5_NANO = ("gpt-5-nano", _CTX_1M)
+    GPT_54 = ("gpt-5.4", _CTX_1M)
+    GPT_54_MINI = ("gpt-5.4-mini", _CTX_400K)
+    GPT_54_NANO = ("gpt-5.4-nano", _CTX_400K)
+    GPT_55 = ("gpt-5.5", _CTX_1M)
+    GPT_55_PRO = ("gpt-5.5-pro", _CTX_1M)
+    GEMINI_25_FLASH = ("gemini-2.5-flash", _CTX_1M)
+    GEMINI_31_FLASH_LITE = ("gemini-3.1-flash-lite", _CTX_1M)
+    GEMINI_35_FLASH = ("gemini-3.5-flash", _CTX_1M)
+    GEMINI_31_PRO = ("gemini-3.1-pro-preview", _CTX_1M)
     BLOOM = ("bigscience/bloom", 1000)
     CUSTOM_ENDPOINT = ("custom-endpoint", 1)
-    GEMINI_20_FLASH = ("gemini-2.0-flash", 1000000)
-    GEMINI_25_FLASH = ("gemini-2.5-flash-preview-04-17", 1048576)
 
     @property
     def limit(self):
@@ -94,17 +109,31 @@ class TokenLimits(Enum):
 # (e.g., "gpt-4.1-mini-2025-04-14" matches "gpt-4.1-mini")
 _TOOL_CALLING_BASE_MODELS = frozenset(
     [
-        GeminiModels.GEMINI_20_FLASH.value,
         GeminiModels.GEMINI_25_FLASH.value,
+        GeminiModels.GEMINI_31_FLASH_LITE.value,
+        GeminiModels.GEMINI_35_FLASH.value,
+        GeminiModels.GEMINI_31_PRO.value,
         OpenAIModels.GPT_4o.value,
+        OpenAIModels.GPT_4O_MINI.value,
         OpenAIModels.GPT_41.value,
-        OpenAIModels.GPT_41_mini.value,
+        OpenAIModels.GPT_41_MINI.value,
+        OpenAIModels.GPT_41_NANO.value,
         OpenAIModels.GPT_5.value,
-        OpenAIModels.GPT_5_mini.value,
-        OpenAIModels.GPT_5_nano.value,
+        OpenAIModels.GPT_5_MINI.value,
+        OpenAIModels.GPT_5_NANO.value,
+        OpenAIModels.GPT_54.value,
+        OpenAIModels.GPT_54_MINI.value,
+        OpenAIModels.GPT_54_NANO.value,
+        OpenAIModels.GPT_55.value,
+        OpenAIModels.GPT_55_PRO.value,
         MistralModels.MISTRAL_LARGE_LATEST.value,
-        AnthropicModels.CLAUDE_3_7_SONNET_LATEST.value,
-        AnthropicModels.CLAUDE_3_5_HAIKU_LATEST.value,
+        MistralModels.MISTRAL_MEDIUM_LATEST.value,
+        MistralModels.MISTRAL_SMALL_LATEST.value,
+        MistralModels.CODESTRAL_LATEST.value,
+        AnthropicModels.CLAUDE_SONNET_46.value,
+        AnthropicModels.CLAUDE_SONNET_45.value,
+        AnthropicModels.CLAUDE_HAIKU_45.value,
+        AnthropicModels.CLAUDE_OPUS_48.value,
     ]
 )
 
@@ -114,11 +143,9 @@ _TOOL_CALLING_BASE_MODELS = frozenset(
 # by the prefix matching logic in supports_tool_calling().
 _TOOL_CALLING_PREFIXES = frozenset(
     [
-        "gpt-4o-mini",  # e.g., gpt-4o-mini-2024-07-18 (not in enum, only has date variants)
-        "claude-3-5-sonnet",  # e.g., claude-3-5-sonnet-20240620 (not in enum, only has date variants)
-        "claude-3-opus",  # e.g., claude-3-opus-20240229 (not in enum, only has date variants)
-        "claude-sonnet-4-5",  # e.g., claude-sonnet-4-5-20250929 (not in enum, only has date variants)
-        "claude-haiku-4-5",  # e.g., claude-haiku-4-5-20251001 (not in enum, only has date variants)
+        "claude-opus-4-7",
+        "claude-opus-4-6",
+        "claude-opus-4-5",
     ]
 )
 
@@ -163,23 +190,23 @@ TOOL_CALLING_MODELS = _TOOL_CALLING_BASE_MODELS
 # Define a list of base model names that support structured output
 _STRUCTURED_OUTPUT_BASE_MODELS = frozenset(
     [
-        GeminiModels.GEMINI_20_FLASH.value,
         GeminiModels.GEMINI_25_FLASH.value,
+        GeminiModels.GEMINI_31_FLASH_LITE.value,
+        GeminiModels.GEMINI_35_FLASH.value,
+        GeminiModels.GEMINI_31_PRO.value,
         OpenAIModels.GPT_4o.value,
+        OpenAIModels.GPT_4O_MINI.value,
         OpenAIModels.GPT_41.value,
-        OpenAIModels.GPT_41_mini.value,
+        OpenAIModels.GPT_41_MINI.value,
+        OpenAIModels.GPT_41_NANO.value,
         OpenAIModels.GPT_5.value,
-        OpenAIModels.GPT_5_mini.value,
-        OpenAIModels.GPT_5_nano.value,
-    ]
-)
-
-# Additional patterns for structured output models
-# Note: Only include models NOT in the enum/base models here. Models in base models are already handled
-# by the prefix matching logic in supports_structured_output().
-_STRUCTURED_OUTPUT_PREFIXES = frozenset(
-    [
-        "gpt-4o-mini",  # e.g., gpt-4o-mini-2024-07-18 (not in enum, only has date variants)
+        OpenAIModels.GPT_5_MINI.value,
+        OpenAIModels.GPT_5_NANO.value,
+        OpenAIModels.GPT_54.value,
+        OpenAIModels.GPT_54_MINI.value,
+        OpenAIModels.GPT_54_NANO.value,
+        OpenAIModels.GPT_55.value,
+        OpenAIModels.GPT_55_PRO.value,
     ]
 )
 
@@ -207,11 +234,6 @@ def supports_structured_output(model_name: str) -> bool:
         if model_name.startswith(base_model + "-") or model_name == base_model:
             return True
 
-    # Check against additional prefixes
-    for prefix in _STRUCTURED_OUTPUT_PREFIXES:
-        if model_name.startswith(prefix + "-") or model_name == prefix:
-            return True
-
     return False
 
 
@@ -219,10 +241,12 @@ def supports_structured_output(model_name: str) -> bool:
 STRUCTURED_OUTPUT_MODELS = _STRUCTURED_OUTPUT_BASE_MODELS
 
 # Models that only support temperature=1 (default); passing temperature=0 causes API errors.
-# GPT-5 and reasoning models use an internal multi-step process and reject custom temperature.
+# GPT-5+ and reasoning models use an internal multi-step process and reject custom temperature.
 _TEMPERATURE_1_ONLY_PREFIXES = frozenset(
     [
         "gpt-5-",  # gpt-5-2025-08-07, gpt-5-mini-2025-08-07, gpt-5-nano-2025-08-07
+        "gpt-5.4",
+        "gpt-5.5",
         "o1",  # o1, o1-mini, o1-pro
         "o3",  # o3, o3-mini
         "o4-mini",
@@ -257,20 +281,4 @@ HUGGINGFACE_MODELS = [model.value for model in HuggingFaceModels]
 XINFERENCE_MODELS = [model.value for model in XInferenceModels]
 
 # For backward compatibility and easy lookup
-TOKEN_LIMITS = {
-    OpenAIModels.GPT_35_TURBO.value: TokenLimits.GPT_35_TURBO.limit,
-    OpenAIModels.GPT_35_TURBO_16K.value: TokenLimits.GPT_35_TURBO_16K.limit,
-    OpenAIModels.GPT_35_TURBO_1106.value: TokenLimits.GPT_35_TURBO_1106.limit,
-    OpenAIModels.GPT_4.value: TokenLimits.GPT_4.limit,
-    OpenAIModels.GPT_4_32K.value: TokenLimits.GPT_4_32K.limit,
-    OpenAIModels.GPT_4_1106_PREVIEW.value: TokenLimits.GPT_4_1106_PREVIEW.limit,
-    HuggingFaceModels.BLOOM.value: TokenLimits.BLOOM.limit,
-    XInferenceModels.CUSTOM_ENDPOINT.value: TokenLimits.CUSTOM_ENDPOINT.limit,
-    GeminiModels.GEMINI_20_FLASH.value: TokenLimits.GEMINI_20_FLASH.limit,
-    GeminiModels.GEMINI_25_FLASH.value: TokenLimits.GEMINI_25_FLASH.limit,
-    OpenAIModels.GPT_41.value: TokenLimits.GPT_41.limit,
-    OpenAIModels.GPT_41_mini.value: TokenLimits.GPT_41_mini.limit,
-    OpenAIModels.GPT_5.value: TokenLimits.GPT_5.limit,
-    OpenAIModels.GPT_5_mini.value: TokenLimits.GPT_5_mini.limit,
-    OpenAIModels.GPT_5_nano.value: TokenLimits.GPT_5_nano.limit,
-}
+TOKEN_LIMITS = {entry.value[0]: entry.limit for entry in TokenLimits}

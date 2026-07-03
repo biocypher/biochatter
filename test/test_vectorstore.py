@@ -159,7 +159,7 @@ def test_retrieval_augmented_generation_xinference_api(
     mock_host.return_value.remove_document.assert_called_once()
 
 
-@patch("langchain_community.embeddings.OllamaEmbeddings")
+@patch("langchain_ollama.OllamaEmbeddings")
 @patch("biochatter.vectorstore.OllamaEmbeddings")
 @patch("biochatter.vectorstore.VectorDatabaseAgentMilvus")
 @patch("biochatter.vectorstore.RecursiveCharacterTextSplitter")

@@ -7,15 +7,12 @@ databases, and retrieving relevant passages through similarity search.
 
 import fitz  # this is PyMuPDF (PyPI pymupdf package, not fitz)
 import openai
-from langchain.schema import Document
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_core.documents import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import TextLoader
-from langchain_community.embeddings import (
-    OllamaEmbeddings,
-    XinferenceEmbeddings,
-)
-from langchain_community.embeddings.azure_openai import AzureOpenAIEmbeddings
-from langchain_community.embeddings.openai import OpenAIEmbeddings
+from langchain_community.embeddings import XinferenceEmbeddings
+from langchain_ollama import OllamaEmbeddings
+from langchain_openai import AzureOpenAIEmbeddings, OpenAIEmbeddings
 from transformers import GPT2TokenizerFast
 
 from biochatter.vectorstore_agent import VectorDatabaseAgentMilvus
@@ -421,7 +418,7 @@ class OllamaDocumentEmbedder(DocumentEmbedder):
                 documents in the database.
 
         """
-        from langchain_community.embeddings import OllamaEmbeddings
+        from langchain_ollama import OllamaEmbeddings
 
         self.model_name = model
 

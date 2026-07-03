@@ -235,7 +235,7 @@ If everything is set up correctly, you can run the benchmark by executing the
 following command in the root directory of the repository:
 
 ```bash
-poetry run pytest benchmark
+uv run pytest benchmark
 ```
 
 We need to specify the `benchmark` directory to run the benchmark tests, because
@@ -258,7 +258,7 @@ changed, the old result is automatically removed from the result files. You can
 also force a rerun of all tests by using the `--run-all` flag:
 
 ```bash
-poetry run pytest benchmark --run-all
+uv run pytest benchmark --run-all
 ```
 
 ## Processing benchmark results

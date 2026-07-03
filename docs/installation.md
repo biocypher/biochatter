@@ -1,7 +1,7 @@
 # Installation
 
 To use the package, install it from PyPI, for instance using pip (`pip install
-biochatter`) or Poetry (`poetry add biochatter`).
+biochatter`) or uv (`uv add biochatter`).
 
 ## Extras
 

@@ -2,6 +2,7 @@ from langchain_community.llms.huggingface_hub import HuggingFaceHub
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 from biochatter.llm_connect.conversation import Conversation
+from biochatter.llm_connect.exceptions import LLMInitializationError
 
 
 class WasmConversation(Conversation):
@@ -70,9 +71,8 @@ class WasmConversation(Conversation):
         """Do not use for the wasm model."""
         return "ok"
 
-    def set_api_key(self, api_key: str, user: str | None = None) -> bool:
+    def set_api_key(self, api_key: str, user: str | None = None) -> None:
         """Do not use for the wasm model."""
-        return True
 
 
 class BloomConversation(Conversation):
@@ -96,7 +96,7 @@ class BloomConversation(Conversation):
 
         self.messages = []
 
-    def set_api_key(self, api_key: str, user: str | None = None) -> bool:
+    def set_api_key(self, api_key: str, user: str | None = None) -> None:
         """Set the API key for the HuggingFace API.
 
         If the key is valid, initialise the conversational agent.
@@ -107,23 +107,33 @@ class BloomConversation(Conversation):
 
             user (str): The user for usage statistics.
 
-        Returns:
-        -------
-            bool: True if the API key is valid, False otherwise.
+        Raises:
+        ------
+            LLMInitializationError: If chat client setup or validation fails.
 
         """
-        self.chat = HuggingFaceHub(
-            repo_id=self.model_name,
-            model_kwargs={"temperature": 1.0},  # "regular sampling"
-            # as per https://huggingface.co/docs/api-inference/detailed_parameters
-            huggingfacehub_api_token=api_key,
-        )
-
         try:
+            self.chat = HuggingFaceHub(
+                repo_id=self.model_name,
+                model_kwargs={"temperature": 1.0},  # "regular sampling"
+                # as per https://huggingface.co/docs/api-inference/detailed_parameters
+                huggingfacehub_api_token=api_key,
+            )
             self.chat.generate(["Hello, I am a biomedical researcher."])
-            return True
-        except ValueError:
-            return False
+        except ValueError as e:
+            self._chat = None
+            raise LLMInitializationError(
+                f"Failed to initialize HuggingFace chat client: {e}",
+                provider="huggingface",
+                model=self.model_name,
+            ) from e
+        except Exception as e:
+            self._chat = None
+            raise LLMInitializationError(
+                f"Failed to initialize HuggingFace chat client: {e}",
+                provider="huggingface",
+                model=self.model_name,
+            ) from e
 
     def _cast_messages(self, messages: list) -> str:
         """Render the different roles of the chat-based conversation."""

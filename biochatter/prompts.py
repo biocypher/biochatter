@@ -1,11 +1,14 @@
 import json
+import logging
 import os
 from collections.abc import Callable
 
 import yaml
 
 from ._misc import ensure_iterable, sentencecase_to_pascalcase
-from .llm_connect import Conversation, LangChainConversation
+from .llm_connect import Conversation, LangChainConversation, LLMConnectionError
+
+logger = logging.getLogger(__name__)
 
 
 class BioCypherPromptEngine:
@@ -14,7 +17,7 @@ class BioCypherPromptEngine:
         schema_config_or_info_path: str | None = None,
         schema_config_or_info_dict: dict | None = None,
         model_provider: str = "google_genai",
-        model_name: str = "gemini-2.0-flash",
+        model_name: str = "gemini-3.5-flash",
         conversation_factory: Callable | None = None,
     ) -> None:
         """Given a biocypher schema configuration, extract the entities and
@@ -128,29 +131,36 @@ class BioCypherPromptEngine:
                 relationship["target"] = [sentencecase_to_pascalcase(t) for t in relationship["target"]]
         return relationship
 
+    def _query_llm(self, conversation: Conversation, text: str, step: str) -> str:
+        """Run an LLM query and attach prompt-engine step context to failures."""
+        try:
+            msg, _, _ = conversation.query(text)
+        except LLMConnectionError as e:
+            raise LLMConnectionError(
+                f"{step} failed: {e}",
+                provider=e.provider,
+                model=e.model,
+            ) from e
+        return msg
+
     def _select_graph_entities_from_question(
         self,
         question: str,
         conversation: Conversation,
     ) -> str:
         conversation.reset()
-        success1 = self._select_entities(
-            question=question,
-            conversation=conversation,
-        )
-        if not success1:
+        if not self._select_entities(question=question, conversation=conversation):
             raise ValueError(
-                "Entity selection failed. Please try again with a different question.",
+                "Entity selection failed: none of the model's selected entities "
+                "matched the schema. Please try again with a different question.",
             )
         conversation.reset()
-        success2 = self._select_relationships(conversation=conversation)
-        if not success2:
+        if not self._select_relationships(conversation=conversation):
             raise ValueError(
                 "Relationship selection failed. Please try again with a different question.",
             )
         conversation.reset()
-        success3 = self._select_properties(conversation=conversation)
-        if not success3:
+        if not self._select_properties(conversation=conversation):
             raise ValueError(
                 "Property selection failed. Please try again with a different question.",
             )
@@ -271,7 +281,7 @@ class BioCypherPromptEngine:
     def _get_conversation(
         self,
         model_provider: str = "google_genai",
-        model_name: str = "gemini-2.0-flash",
+        model_name: str = "gemini-3.5-flash",
     ) -> "Conversation":
         """Create a conversation object given a model name.
 
@@ -334,20 +344,23 @@ class BioCypherPromptEngine:
             "entity names, relationships, or properties.",
         )
 
-        msg, token_usage, correction = conversation.query(question)
+        msg = self._query_llm(conversation, question, step="Entity selection")
 
         result = msg.split(",") if msg else []
         # TODO: do we go back and retry if no entities were selected? or ask for
         # a reason? offer visual selection of entities and relationships by the
         # user?
 
-        if result:
-            for entity in result:
-                entity = entity.strip()
-                if entity in self.entities:
-                    self.selected_entities.append(entity)
+        unmatched = [entity.strip() for entity in result if entity.strip() not in self.entities]
+        self.selected_entities = [entity.strip() for entity in result if entity.strip() in self.entities]
 
-        return bool(result)
+        if unmatched:
+            logger.warning(
+                "Ignoring entities returned by the model that are not in the schema: %s",
+                unmatched,
+            )
+
+        return bool(self.selected_entities)
 
     def _select_relationships(self, conversation: "Conversation") -> bool:
         """Given a question and the preselected entities, select relationships for
@@ -458,9 +471,9 @@ class BioCypherPromptEngine:
 
         conversation.append_system_message(msg)
 
-        res, token_usage, correction = conversation.query(self.question)
+        res = self._query_llm(conversation, self.question, step="Relationship selection")
 
-        result = res.split(",") if msg else []
+        result = res.split(",") if res else []
 
         if result:
             for relationship in result:
@@ -567,7 +580,7 @@ class BioCypherPromptEngine:
 
         conversation.append_system_message(msg)
 
-        msg, token_usage, correction = conversation.query(self.question)
+        msg = self._query_llm(conversation, self.question, step="Property selection")
         msg = BioCypherPromptEngine._validate_json_str(msg)
 
         try:
@@ -620,7 +633,7 @@ class BioCypherPromptEngine:
 
         conversation.append_system_message(msg)
 
-        out_msg, token_usage, correction = conversation.query(question)
+        out_msg = self._query_llm(conversation, question, step="Query generation")
 
         return out_msg.strip()
 

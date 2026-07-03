@@ -20,7 +20,7 @@ from types import MappingProxyType, ModuleType
 from typing import Any
 
 from docstring_parser import parse
-from langchain_core.pydantic_v1 import Field, create_model
+from pydantic import Field, create_model
 
 from biochatter.api_agent.base.agent_abc import BaseAPIModel
 
