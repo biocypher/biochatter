@@ -133,54 +133,6 @@ class BioCypherPromptEngine:
                 relationship["target"] = [sentencecase_to_pascalcase(t) for t in relationship["target"]]
         return relationship
 
-    # def _select_graph_entities_from_question(
-    #     self,
-    #     question: str,
-    #     conversation: Conversation,
-    # ) -> str:
-    #     conversation.reset()
-    #     success1 = self._select_entities(
-    #         question=question,
-    #         conversation=conversation,
-    #     )
-    #     if not success1:
-    #         raise ValueError(
-    #             "Entity selection failed. Please try again with a different question.",
-    #             )
-    #     print(f"DEBUG selected_entities before grounding: {self.selected_entities}")
-
-    #     # entity grounding — runs after _select_entities()
-    #     if self.use_grounding and self.connection_args:
-    #         print(f"DEBUG entering grounding block")
-    #         question, self.grounded_entities = ground_entities(
-    #             question=question,
-    #             selected_entity_types=self.selected_entities,
-    #             connection_args=self.connection_args,
-    #         )
-    #         self.question = question
-
-    #     conversation.reset()
-    #     success2 = self._select_relationships(conversation=conversation)
-    #     if not success2:
-    #         raise ValueError(
-    #             "Relationship selection failed. Please try again with a different question.",
-    #         )
-
-    #     conversation.reset()
-    #     success3 = self._select_properties(conversation=conversation)
-    #     if not success3:
-    #         raise ValueError(
-    #             "Property selection failed. Please try again with a different question.",
-    #         )
-
-    #     # property value grounding — runs after _select_properties()
-    #     if self.use_grounding and self.connection_args:
-    #         question = ground_property_values(
-    #             question=question,
-    #             selected_properties=self.selected_properties,
-    #             connection_args=self.connection_args,
-    #         )
-    #         self.question = question
 
     def _select_graph_entities_from_question(
         self,
@@ -341,7 +293,6 @@ class BioCypherPromptEngine:
             self.conversation_factory(),
         )
 
-        print(f"DEBUG final question to generate_query: '{self.question}'")
 
         return self._generate_query(
             question=self.question,  # was: question=question
@@ -386,52 +337,6 @@ class BioCypherPromptEngine:
         )
         return conversation
 
-    # def _select_entities(
-    #     self,
-    #     question: str,
-    #     conversation: "Conversation",
-    # ) -> bool:
-    #     """Given a question, select the entities that are relevant to the question
-    #     and store them in `selected_entities` and `selected_relationships`. Use
-    #     LLM conversation to do this.
-
-    #     Args:
-    #     ----
-    #         question: A user's question.
-
-    #         conversation: A BioChatter Conversation object for connecting to the
-    #             LLM.
-
-    #     Returns:
-    #     -------
-    #         True if at least one entity was selected, False otherwise.
-
-    #     """
-    #     self.question = question
-
-    #     conversation.append_system_message(
-    #         "You have access to a knowledge graph that contains "
-    #         f"these entity types: {', '.join(self.entities)}. Your task is "
-    #         "to select the entity types that are relevant to the user's question "
-    #         "for subsequent use in a query. Only return the entity types, "
-    #         "comma-separated, without any additional text. Do not return "
-    #         "entity names, relationships, or properties.",
-    #     )
-
-    #     msg, token_usage, correction = conversation.query(question)
-
-    #     result = msg.split(",") if msg else []
-    #     # TODO: do we go back and retry if no entities were selected? or ask for
-    #     # a reason? offer visual selection of entities and relationships by the
-    #     # user?
-
-    #     if result:
-    #         for entity in result:
-    #             entity = entity.strip()
-    #             if entity in self.entities:
-    #                 self.selected_entities.append(entity)
-
-    #     return bool(result)
 
     def _select_entities(
         self,
@@ -753,15 +658,6 @@ class BioCypherPromptEngine:
 
 
 
-    # @staticmethod
-    # def _validate_json_str(json_str: str):
-    #     json_str = json_str.strip()
-    #     if json_str.startswith("```json"):
-    #         json_str = json_str[7:]
-    #     if json_str.endswith("```"):
-    #         json_str = json_str[:-3]
-    #     return json_str.strip()
-
     @staticmethod
     def _validate_json_str(json_str: str):
         json_str = json_str.strip()
@@ -776,68 +672,6 @@ class BioCypherPromptEngine:
             json_str = json_str[4:]
         return json_str.strip()
 
-    # def _select_properties(self, conversation: "Conversation") -> bool:
-    #     """Given a question (optionally provided, but in the standard use case
-    #     reused from the entity selection step) and the selected entities, select
-    #     the properties that are relevant to the question and store them in
-    #     the dictionary `selected_properties`.
-
-    #     Returns
-    #     -------
-    #         True if at least one property was selected, False otherwise.
-
-    #     """
-    #     if not self.question:
-    #         raise ValueError(
-    #             "No question found. Please make sure to run entity and relationship selection first.",
-    #         )
-
-    #     if not self.selected_entities and not self.selected_relationships:
-    #         raise ValueError(
-    #             "No entities or relationships provided, and none available "
-    #             "from entity selection step. Please provide "
-    #             "entities/relationships or run the entity selection "
-    #             "(`select_entities()`) step first.",
-    #         )
-
-    #     e_props = {}
-    #     for entity in self.selected_entities:
-    #         if self.entities[entity].get("properties"):
-    #             e_props[entity] = list(
-    #                 self.entities[entity]["properties"].keys(),
-    #             )
-
-    #     r_props = {}
-    #     for relationship in self.selected_relationships:
-    #         if self.relationships[relationship].get("properties"):
-    #             r_props[relationship] = list(
-    #                 self.relationships[relationship]["properties"].keys(),
-    #             )
-
-    #     msg = (
-    #         "You have access to a knowledge graph that contains entities and "
-    #         "relationships. They have the following properties. Entities:"
-    #         f"{e_props}, Relationships: {r_props}. "
-    #         "Your task is to select the properties that are relevant to the "
-    #         "user's question for subsequent use in a query. Only return the "
-    #         "entities and relationships with their relevant properties in compact "
-    #         "JSON format, without any additional text. Return the "
-    #         "entities/relationships as top-level dictionary keys, and their "
-    #         "properties as dictionary values. "
-    #         "Do not return properties that are not relevant to the question."
-    #     )
-
-    #     conversation.append_system_message(msg)
-
-    #     msg, token_usage, correction = conversation.query(self.question)
-    #     msg = BioCypherPromptEngine._validate_json_str(msg)
-
-    #     try:
-    #         self.selected_properties = json.loads(msg) if msg else {}
-    #     except json.decoder.JSONDecodeError:
-    #         self.selected_properties = {}
-
-    #     return bool(self.selected_properties)
 
     def _generate_query(
         self,
