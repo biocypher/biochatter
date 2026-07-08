@@ -74,19 +74,6 @@ class DatabaseAgent:
         return self.driver is not None
 
     def _generate_query(self, query: str):
-        # if self.use_grounding:
-        #     try:
-        #         from .kg_grounding import ground_entities_in_question
-        #         query, _ = ground_entities_in_question(
-        #             question=query,
-        #             connection_args=self.connection_args,
-        #             schema=self.schema_config_or_info_dict,
-        #         )
-        #     except Exception as e:
-        #         import logging
-        #         logging.getLogger(__name__).warning(
-        #             f"Grounding failed, proceeding with original question: {e}"
-        #         )
 
         if self.use_reflexion:
             agent = KGQueryReflexionAgent(
