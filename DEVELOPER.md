@@ -6,38 +6,31 @@ please feel free to ask them in the issue tracker.
 
 ## Dependency management
 
-We use [Poetry](https://python-poetry.org) for dependency management. Please
-make sure that you have installed Poetry and set up the environment correctly
+We use [uv](https://github.com/astral-sh/uv) for dependency management. Please
+make sure that you have installed uv and set up the environment correctly
 before starting development.
 
 ### Setup the environment
 
-- Install dependencies from the lock file: `poetry install`
+- Install dependencies from the lock file: `uv sync`
 
-- Select extras for the functions you want to use: `poetry install -E <extras>`.
-You can also install all extras with `poetry install --all-extras`.
+- Select extras for the functions you want to use: `uv sync --extra <extra>`.
+You can also install all extras with `uv sync --all-extras`.
 
-- Use the environment: You can either run commands directly with `poetry run
-<command>` or open a shell with `poetry shell` and then run commands directly.
+- Use the environment: You can run commands directly with `uv run <command>`.
 
 ### Updating the environment
 
-If you want to fix dependency issues, please do so in the Poetry
-framework. If Poetry does not work for you for some reason, please let us know.
+If you want to fix dependency issues, please do so in the uv
+framework. If uv does not work for you for some reason, please let us know.
 
-The Poetry dependencies are organized in groups. There are groups with
-dependencies needed for running BioChatter (`[tool.poetry.dependencies` with the
-group name `main`) and a group with dependencies needed for development
-(`[tool.poetry.group.dev.dependencies` with the group name `dev`). There are
-also extras (groups of optional dependencies) for functions that you may not
-want to install.
+The dependencies are organized in standard PEP 621 dependencies and PEP 735 dependency groups. There are dependencies needed for running BioChatter (`dependencies` under `[project]`) and a group with dependencies needed for development (`dev` under `[dependency-groups]`). There are also extras (optional dependencies) for functions that you may not want to install.
 
 For adding new dependencies:
 
-- Add new dependencies: `poetry add <dependency> --group <group>`
+- Add new dependencies to a group: `uv add --group <group> <dependency>`
 
-- Update lock file (after adding new dependencies in pyproject.toml): `poetry
-lock`
+- Update lock file: `uv lock`
 
 ## Code quality and formal requirements
 
@@ -58,9 +51,9 @@ general naming rules -->
 
 Pre-commit hooks are used to automatically run these tools before each commit.
 They are defined in [.pre-commit-config.yaml](./.pre-commit-config.yaml). To
-install the hooks run `poetry run pre-commit install`. The hooks are then
+install the hooks run `uv run pre-commit install`. The hooks are then
 executed before each commit. For running the hook for all project files (not
-only the changed ones) run `poetry run pre-commit run --all-files`. -->
+only the changed ones) run `uv run pre-commit run --all-files`. -->
 
 The project uses [mkdocs-material](https://squidfunk.github.io/mkdocs-material/) within a GitHub Actions workflow to generate the documentation. If you add new code,
 please make sure that it is documented accordingly and in a consistent manner

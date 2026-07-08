@@ -30,6 +30,7 @@ from langchain_core.prompts import ChatPromptTemplate
 
 from biochatter._image import encode_image, encode_image_from_url
 from biochatter.llm_connect.available_models import supports_tool_calling
+from biochatter.llm_connect.exceptions import LLMConnectionError
 from biochatter.rag_agent import RagAgent
 from biochatter.selector_agent import RagAgentSelector
 
@@ -137,7 +138,7 @@ class Conversation(ABC):
     def chat(self):
         """Access the chat attribute with error handling."""
         if self._chat is None:
-            msg = "Chat attribute not initialized. Did you call set_api_key()?"
+            msg = "Chat client is not initialized. Call set_api_key() before querying."
             logger.error(msg)
             raise AttributeError(msg)
         return self._chat
@@ -151,7 +152,7 @@ class Conversation(ABC):
     def ca_chat(self):
         """Access the correcting agent chat attribute with error handling."""
         if self._ca_chat is None:
-            msg = "Correcting agent chat attribute not initialized. Did you call set_api_key()?"
+            msg = "Correcting agent chat client is not initialized. Call set_api_key() before querying."
             logger.error(msg)
             raise AttributeError(msg)
         return self._ca_chat
@@ -331,6 +332,25 @@ class Conversation(ABC):
 
         # If we can't extract meaningful output token count, return None
         return None
+
+    @staticmethod
+    def _content_to_str(content: Any) -> str:
+        """Normalize LLM response content blocks to a plain string."""
+        if content is None:
+            return ""
+        if isinstance(content, str):
+            return content
+        if isinstance(content, list):
+            parts = []
+            for block in content:
+                if isinstance(block, str):
+                    parts.append(block)
+                elif isinstance(block, dict) and "text" in block:
+                    parts.append(block["text"])
+                else:
+                    parts.append(str(block))
+            return "".join(parts)
+        return str(content)
 
     def compute_cumulative_token_usage(self) -> dict:
         """Compute the token usage by looping over the messages.
@@ -623,6 +643,10 @@ class Conversation(ABC):
             tuple: A tuple containing the response from the API, the token usage
                 information, and the correction if necessary/desired.
 
+        Raises:
+        ------
+            LLMConnectionError: If the underlying LLM API call fails.
+
         """
         if mcp:
             self.mcp = True
@@ -653,21 +677,33 @@ class Conversation(ABC):
         self._inject_context(text)
 
         # tools passed at this step are used only for this message
-        msg, token_usage = self._primary_query(
-            tools=tools,
-            explain_tool_result=explain_tool_result,
-            return_tool_calls_as_ai_message=return_tool_calls_as_ai_message,
-            structured_model=structured_model,
-            wrap_structured_output=wrap_structured_output,
-            track_tool_calls=track_tool_calls,
-        )
+        try:
+            msg, token_usage = self._primary_query(
+                tools=tools,
+                explain_tool_result=explain_tool_result,
+                return_tool_calls_as_ai_message=return_tool_calls_as_ai_message,
+                structured_model=structured_model,
+                wrap_structured_output=wrap_structured_output,
+                track_tool_calls=track_tool_calls,
+            )
+        except LLMConnectionError:
+            raise
+        except Exception as e:
+            raise LLMConnectionError(
+                str(e),
+                provider=type(self).__name__,
+                model=self.model_name,
+            ) from e
+
+        if not isinstance(msg, str):
+            msg = self._content_to_str(msg)
 
         # case of structured output
         if (token_usage == -1) and structured_model:
             return (msg, 0, None)
 
         if not token_usage:
-            # indicates error
+            # Some providers may return zero/empty usage metadata without failing.
             return (msg, None, None)
 
         if not self.correct:

@@ -1,9 +1,9 @@
 import json
 from collections.abc import Callable
 
-import neo4j_utils as nu
-from langchain.schema import Document
+from langchain_core.documents import Document
 
+from ._neo4j_client import Neo4jClient, bolt_uri_from_connection_args
 from .constants import MAX_AGENT_DESC_LENGTH
 from .kg_langgraph_agent import KGQueryReflexionAgent
 from .prompts import BioCypherPromptEngine
@@ -58,16 +58,11 @@ class DatabaseAgent:
 
     def connect(self) -> None:
         """Connect to the database and authenticate."""
-        db_name = self.connection_args.get("db_name")
-        uri = f"{self.connection_args.get('host')}:{self.connection_args.get('port')}"
-        uri = uri if uri.startswith("bolt://") else "bolt://" + uri
-        user = self.connection_args.get("user")
-        password = self.connection_args.get("password")
-        self.driver = nu.Driver(
-            db_name=db_name or "neo4j",
-            db_uri=uri,
-            user=user,
-            password=password,
+        self.driver = Neo4jClient(
+            db_name=self.connection_args.get("db_name") or "neo4j",
+            db_uri=bolt_uri_from_connection_args(self.connection_args),
+            db_user=self.connection_args.get("user"),
+            db_passwd=self.connection_args.get("password"),
         )
 
     def is_connected(self) -> bool:
@@ -85,7 +80,13 @@ class DatabaseAgent:
             tool_result = [agent_result.tool_result] if agent_result.tool_result is not None else None
             return agent_result.answer, tool_result
         else:
+            import re
             query = self.prompt_engine.generate_query(query)
+            query = query.strip()
+            if "```" in query:
+                m = re.search(r"```(?:\w+)?\s*(.*?)```", query, re.DOTALL)
+                if m:
+                    query = m.group(1).strip()
             results = self.driver.query(query=query)
             return query, results
 

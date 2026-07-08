@@ -51,9 +51,9 @@ ends in `.mp3`, the OpenAI text-to-speech API will be used to generate an audio
 file.  Otherwise, the script will generate a text file and skip the
 text-to-speech step.  If using the OpenAI text-to-speech API, multiple files
 will be generated with integer suffixes.  If you installed BioChatter with
-poetry, you can run the script like this (from the root directory of the
+uv, you can run the script like this (from the root directory of the
 repository):
 
 ```bash
-poetry run python scripts/podcast_single_document.py test/dcn.pdf test/test.mp3
+uv run python scripts/podcast_single_document.py test/dcn.pdf test/test.mp3
 ```

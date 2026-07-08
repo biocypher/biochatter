@@ -41,6 +41,8 @@ from typing import Callable
 
 from rapidfuzz import fuzz
 
+from ._neo4j_client import Neo4jClient, bolt_uri_from_connection_args
+
 logger = logging.getLogger(__name__)
 
 # ── constants ──────────────────────────────────────────────────────────────────
@@ -70,27 +72,29 @@ class KGAdapter:
 
 
 class Neo4jAdapter(KGAdapter):
-    """KGAdapter implementation for Neo4j via neo4j_utils.Driver."""
+    """KGAdapter implementation for Neo4j via Neo4jClient."""
 
-    def __init__(self, driver):
+    def __init__(self, driver: Neo4jClient):
         self.driver = driver
 
     def _label(self, entity_type: str) -> str:
         # PascalCase, matching BioCypherPromptEngine.entities keys
         return entity_type[0].upper() + entity_type[1:] if entity_type else entity_type
 
+    def _rows(self, query: str, parameters: dict | None = None) -> list[dict]:
+        rows, _ = self.driver.query(query, parameters=parameters)
+        return rows or []
+
     def get_all_values(self, entity_type: str, search_property: str) -> list[str]:
         if not search_property:
             return []
         label = self._label(entity_type)
         try:
-            results = self.driver.query(
+            rows = self._rows(
                 f"MATCH (n:{label}) WHERE n.{search_property} IS NOT NULL "
                 f"RETURN n.{search_property} AS value"
             )
-            if not results or not results[0]:
-                return []
-            return [r["value"] for r in results[0] if r.get("value") is not None]
+            return [r["value"] for r in rows if r.get("value") is not None]
         except Exception as e:
             logger.warning(f"[Neo4jAdapter] get_all_values failed for {entity_type}.{search_property}: {e}")
             return []
@@ -101,21 +105,19 @@ class Neo4jAdapter(KGAdapter):
         label = self._label(entity_type)
         try:
             if search_property:
-                results = self.driver.query(
+                query = (
                     f"MATCH (n:{label}) WHERE toLower(n.id) CONTAINS toLower($ontology_id) "
-                    f"RETURN n.{search_property} AS value LIMIT 1",
-                    parameters={"ontology_id": ontology_id},
+                    f"RETURN n.{search_property} AS value LIMIT 1"
                 )
             else:
-                results = self.driver.query(
+                query = (
                     f"MATCH (n:{label}) WHERE toLower(n.id) CONTAINS toLower($ontology_id) "
-                    f"RETURN n.id AS value LIMIT 1",
-                    parameters={"ontology_id": ontology_id},
+                    f"RETURN n.id AS value LIMIT 1"
                 )
-            if not results or not results[0]:
+            rows = self._rows(query, parameters={"ontology_id": ontology_id})
+            if not rows:
                 return None
-            value = results[0][0].get("value")
-            return value
+            return rows[0].get("value")
         except Exception as e:
             logger.warning(f"[Neo4jAdapter] get_node_value_by_id_substring failed for {entity_type}: {e}")
             return None
@@ -123,40 +125,30 @@ class Neo4jAdapter(KGAdapter):
     def get_distinct_property_values(self, entity_type: str, prop_name: str) -> list:
         label = self._label(entity_type)
         try:
-            results = self.driver.query(
+            rows = self._rows(
                 f"MATCH (n:{label}) WHERE n.{prop_name} IS NOT NULL "
                 f"RETURN DISTINCT n.{prop_name} AS value"
             )
-            if not results or not results[0]:
-                return []
-            return [r["value"] for r in results[0] if r.get("value") is not None]
+            return [r["value"] for r in rows if r.get("value") is not None]
         except Exception as e:
             logger.warning(f"[Neo4jAdapter] get_distinct_property_values failed for {entity_type}.{prop_name}: {e}")
             return []
 
 
-def _make_neo4j_driver(connection_args: dict):
-    """Create a neo4j_utils Driver from connection args dict."""
-    import neo4j_utils as nu
-
-    host = connection_args.get("host", "localhost")
-    port = connection_args.get("port", "7687")
-    db_uri = host if host.startswith(("bolt://", "neo4j://")) else f"bolt://{host}:{port}"
-    user = connection_args.get("user") or None
-    password = connection_args.get("password") or None
-    return nu.Driver(
+def _make_neo4j_client(connection_args: dict) -> Neo4jClient:
+    """Create a Neo4jClient from BioChatter connection args."""
+    return Neo4jClient(
         db_name=connection_args.get("db_name") or "neo4j",
-        db_uri=db_uri,
-        db_user=user,
-        db_passwd=password,
+        db_uri=bolt_uri_from_connection_args(connection_args),
+        db_user=connection_args.get("user"),
+        db_passwd=connection_args.get("password"),
     )
 
 
 def make_adapter(connection_args: dict, dbms: str = "neo4j") -> KGAdapter:
     """Factory for KGAdapter implementations. Extend with more DBMS as needed."""
     if dbms == "neo4j":
-        driver = _make_neo4j_driver(connection_args)
-        return Neo4jAdapter(driver)
+        return Neo4jAdapter(_make_neo4j_client(connection_args))
     raise NotImplementedError(f"No KGAdapter implementation for dbms='{dbms}'")
 
 

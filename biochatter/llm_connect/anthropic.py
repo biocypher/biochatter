@@ -6,6 +6,7 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 from biochatter._stats import get_stats
 from biochatter.llm_connect.conversation import Conversation
+from biochatter.llm_connect.exceptions import LLMConnectionError, LLMInitializationError
 
 
 class AnthropicConversation(Conversation):
@@ -44,7 +45,7 @@ class AnthropicConversation(Conversation):
         self.ca_model_name = "claude-3-5-sonnet-20240620"
         # TODO make accessible by drop-down
 
-    def set_api_key(self, api_key: str, user: str | None = None) -> bool:
+    def set_api_key(self, api_key: str, user: str | None = None) -> None:
         """Set the API key for the Anthropic API.
 
         If the key is valid, initialise the conversational agent. Optionally set
@@ -57,9 +58,9 @@ class AnthropicConversation(Conversation):
             user (str, optional): The user for usage statistics. If provided and
                 equals "community", will track usage stats.
 
-        Returns:
-        -------
-            bool: True if the API key is valid, False otherwise.
+        Raises:
+        ------
+            LLMInitializationError: If authentication or chat client setup fails.
 
         """
         client = anthropic.Anthropic(
@@ -82,12 +83,18 @@ class AnthropicConversation(Conversation):
             if user == "community":
                 self.usage_stats = get_stats(user=user)
 
-            return True
-
-        except anthropic._exceptions.AuthenticationError:
-            self._chat = None
-            self._ca_chat = None
-            return False
+        except anthropic._exceptions.AuthenticationError as e:
+            raise LLMInitializationError(
+                f"Anthropic authentication failed: {e}",
+                provider="anthropic",
+                model=self.model_name,
+            ) from e
+        except Exception as e:
+            raise LLMInitializationError(
+                f"Failed to initialize Anthropic chat client: {e}",
+                provider="anthropic",
+                model=self.model_name,
+            ) from e
 
     def _primary_query(self, **kwargs) -> tuple:
         """Query the Anthropic API with the user's message.
@@ -128,7 +135,7 @@ class AnthropicConversation(Conversation):
             anthropic._exceptions.UnprocessableEntityError,
             anthropic._exceptions.APIResponseValidationError,
         ) as e:
-            return str(e), None
+            raise LLMConnectionError(str(e), provider="anthropic", model=self.model_name) from e
 
         msg = response.generations[0][0].text
         token_usage_raw = response.llm_output.get("token_usage")

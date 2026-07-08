@@ -3,7 +3,7 @@ from collections import deque
 
 import nltk
 from gtts import gTTS
-from langchain.schema import Document
+from langchain_core.documents import Document
 from openai import OpenAI
 
 from .llm_connect import GptConversation

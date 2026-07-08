@@ -740,7 +740,7 @@ def mcp_server(mcp_server_config):
             loop.close()
 
     except ImportError:
-        pytest.skip("MCP dependencies not installed. Install with: poetry install --with mcp")
+        pytest.skip("MCP dependencies not installed. Install with: uv sync --group mcp")
     except Exception as e:
         pytest.skip(f"Could not start MCP server: {e}")
 
@@ -792,7 +792,7 @@ def mcp_conversation(request, model_name, mcp_server):
 
         return conversation
     except ImportError:
-        pytest.skip("MCP dependencies not installed. Install with: poetry install --with mcp")
+        pytest.skip("MCP dependencies not installed. Install with: uv sync --group mcp")
     except Exception as e:
         pytest.skip(f"Could not create MCP conversation: {e}")
 

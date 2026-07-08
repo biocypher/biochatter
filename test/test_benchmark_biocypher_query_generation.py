@@ -23,7 +23,7 @@ def prompt_engine(request):
 
 def test_entity_selection(prompt_engine):
     with patch("biochatter.prompts.Conversation") as mock_conversation:
-        system_msg = "You have access to a knowledge graph that contains these entity types: Protein, Gene, Disease, CellType. Your task is to select the entity types that are relevant to the user's question for subsequent use in a query. Only return the entity types, comma-separated, without any additional text. Do not return entity names, relationships, or properties."
+        system_msg = "You have access to a knowledge graph that contains these entity types: Protein, Gene, Disease, CellType. Your task is to select the entity types that are relevant to the user's question for subsequent use in a query. For each relevant entity type, also identify whether the question mentions a specific named instance of that type. If a specific named instance is mentioned, return the pair as 'term:entity_type'. If no specific named instance is mentioned for that entity type, return just the entity type name on its own. Return all results comma-separated, without any additional text. Use the exact term as written in the question, do not expand or correct it. Do not return entity names, relationships, or properties that are not entity types from the list above."
         mock_conversation.return_value.query.return_value = [
             "Gene,Disease",
             Mock(),
@@ -107,14 +107,14 @@ def test_property_selection(prompt_engine):
     with patch("biochatter.prompts.Conversation") as mock_conversation:
         resultMsg = """
         {
-            "Disease":{
-                "name":"mucoviscidosis"
-            },
-            "GeneToPhenotypeAssociation":{
-                "score":null,
-                "source":null,
-                "evidence":null
-            }
+            "Disease":[
+                {"property":"name","term":"mucoviscidosis"}
+            ],
+            "GeneToPhenotypeAssociation":[
+                {"property":"score","term":null},
+                {"property":"source","term":null},
+                {"property":"evidence","term":null}
+            ]
         }"""
         mock_conversation.return_value.query.return_value = [
             resultMsg,
@@ -128,7 +128,7 @@ def test_property_selection(prompt_engine):
         )
         assert success
         mock_append_system_messages.assert_called_once_with(
-            "You have access to a knowledge graph that contains entities and relationships. They have the following properties. Entities:{'Gene': ['id', 'name', 'taxon'], 'Disease': ['name', 'ICD10', 'DSM5']}, Relationships: {'GeneToPhenotypeAssociation': ['score', 'source', 'evidence']}. Your task is to select the properties that are relevant to the user's question for subsequent use in a query. Only return the entities and relationships with their relevant properties in compact JSON format, without any additional text. Return the entities/relationships as top-level dictionary keys, and their properties as dictionary values. Do not return properties that are not relevant to the question.",
+            "You have access to a knowledge graph that contains entities and relationships. They have the following properties. Entities:{'Gene': ['id', 'name', 'taxon'], 'Disease': ['name', 'ICD10', 'DSM5']}, Relationships: {'GeneToPhenotypeAssociation': ['score', 'source', 'evidence']}. Your task is to select the properties that are relevant to the user's question for subsequent use in a query, and for each selected property, the exact term in the question that refers to the value being filtered on for that property, if any. Only return the entities and relationships with their relevant properties and corresponding terms in compact JSON format, without any additional text. Return the entities/relationships as top-level dictionary keys, and a list of objects as values, each object having a 'property' key with the property name and a 'term' key with the exact term from the question, or null if the property is relevant but no specific value term is present. Do not return properties that are not relevant to the question.",
         )
 
         score = []

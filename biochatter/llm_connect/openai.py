@@ -8,6 +8,7 @@ from langchain_openai import ChatOpenAI
 from biochatter._stats import get_stats
 from biochatter.llm_connect.available_models import get_temperature_for_model
 from biochatter.llm_connect.conversation import Conversation
+from biochatter.llm_connect.exceptions import LLMConnectionError, LLMInitializationError
 
 
 class GptConversation(Conversation):
@@ -53,7 +54,7 @@ class GptConversation(Conversation):
 
         self._update_token_usage = update_token_usage
 
-    def set_api_key(self, api_key: str, user: str | None = None) -> bool:
+    def set_api_key(self, api_key: str, user: str | None = None) -> None:
         """Set the API key for the OpenAI API.
 
         If the key is valid, initialise the conversational agent. Optionally set
@@ -66,9 +67,9 @@ class GptConversation(Conversation):
             user (str, optional): The user for usage statistics. If provided and
                 equals "community", will track usage stats.
 
-        Returns:
-        -------
-            bool: True if the API key is valid, False otherwise.
+        Raises:
+        ------
+            LLMInitializationError: If authentication or chat client setup fails.
 
         """
         client = openai.OpenAI(
@@ -95,12 +96,18 @@ class GptConversation(Conversation):
             if user == "community":
                 self.usage_stats = get_stats(user=user)
 
-            return True
-
-        except openai._exceptions.AuthenticationError:
-            self._chat = None
-            self._ca_chat = None
-            return False
+        except openai._exceptions.AuthenticationError as e:
+            raise LLMInitializationError(
+                f"OpenAI authentication failed: {e}",
+                provider="openai",
+                model=self.model_name,
+            ) from e
+        except Exception as e:
+            raise LLMInitializationError(
+                f"Failed to initialize OpenAI chat client: {e}",
+                provider="openai",
+                model=self.model_name,
+            ) from e
 
     def _primary_query(self, **kwargs) -> tuple:
         """Query the OpenAI API with the user's message.
@@ -140,7 +147,7 @@ class GptConversation(Conversation):
             openai._exceptions.UnprocessableEntityError,
             openai._exceptions.APIResponseValidationError,
         ) as e:
-            return str(e), None
+            raise LLMConnectionError(str(e), provider="openai", model=self.model_name) from e
 
         msg = response.generations[0][0].text
         token_usage_raw = response.llm_output.get("token_usage")

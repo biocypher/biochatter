@@ -1,16 +1,17 @@
 import warnings
 
 import openai
-from langchain_community.chat_models import ChatOllama
+from langchain_ollama import ChatOllama
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
 from biochatter.llm_connect.conversation import Conversation
+from biochatter.llm_connect.exceptions import LLMConnectionError
 
 
 class OllamaConversation(Conversation):
     """Conversation class for the Ollama model."""
 
-    def set_api_key(self, api_key: str, user: str | None = None) -> bool:
+    def set_api_key(self, api_key: str, user: str | None = None) -> None:
         """Set the API key for the Ollama API. Not implemented.
 
         Args:
@@ -74,7 +75,7 @@ class OllamaConversation(Conversation):
 
         self.ca_model = ChatOllama(
             base_url=base_url,
-            model_name=self.ca_model_name,
+            model=self.ca_model_name,
             temperature=0.0,
         )
 
@@ -169,7 +170,7 @@ class OllamaConversation(Conversation):
             openai._exceptions.UnprocessableEntityError,
             openai._exceptions.APIResponseValidationError,
         ) as e:
-            return str(e), None
+            raise LLMConnectionError(str(e), provider="ollama", model=self.model_name) from e
         response_dict = response.dict()
         msg = response_dict["content"]
         token_usage_raw = response_dict["response_metadata"]["eval_count"]

@@ -53,7 +53,7 @@ def test_generate_pydantic_classes_umap():
         "adata",
         "init_pos",
         "neighbors_key",
-        "copy_param",
+        "copy",
         "negative_sample_rate",
         "min_dist",
         "key_added",
@@ -62,3 +62,4 @@ def test_generate_pydantic_classes_umap():
         "b",
         "random_state",
     }
+    assert "copy_param" in umap_function.model_fields

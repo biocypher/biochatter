@@ -5,10 +5,9 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING
 
 import requests
-from langchain.chains.openai_functions import create_structured_output_runnable
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 
 from biochatter.api_agent.base.agent_abc import (
     BaseFetcher,
@@ -21,7 +20,7 @@ if TYPE_CHECKING:
 
 
 ONCOKB_QUERY_PROMPT = """
-You are a world class algorithm for creating queries in structured formats. Your task is to use OncoKB Web APIs to
+You are a system designed to create structured queries for the OncoKB web API. Your task is to use OncoKB Web APIs to
 answer genomic questions.
 
 For questions about genomic alterations, you can use the OncoKB API by providing the appropriate parameters based on the
@@ -111,11 +110,13 @@ Endpoints and Parameters
 
 
 ONCOKB_SUMMARY_PROMPT = """
-You have to answer this question in a clear and concise manner: {question} Be factual!\n\
-You are a world leading oncologist and molecular biologist who knows everything about OncoKB results.\n\
-Do not make up information, only use the provided information and mention how relevant the found information is based on your knowledge about OncoKB\n\
-Here is the information relevant to the question found on OncoKB:\n\
+Based on the following information from OncoKB:
+
 {context}
+
+Answer this question clearly and concisely: {question}
+
+Be factual and only use the provided information. If the information is incomplete or doesn't fully answer the question, mention this limitation.
 """
 
 
@@ -210,8 +211,8 @@ class OncoKBQueryBuilder(BaseQueryBuilder):
         query_parameters: "OncoKBQueryParameters",
         conversation: "Conversation",
     ) -> Callable:
-        """Creates a runnable object for executing queries using the LangChain
-        `create_structured_output_runnable` method.
+        """Creates a runnable object for executing queries using the chat model's
+        `with_structured_output` method.
 
         Args:
         ----
@@ -225,10 +226,8 @@ class OncoKBQueryBuilder(BaseQueryBuilder):
             A Callable object that can execute the query.
 
         """
-        return create_structured_output_runnable(
-            output_schema=query_parameters,
-            llm=conversation.chat,
-            prompt=self.structured_output_prompt,
+        return self.structured_output_prompt | conversation.chat.with_structured_output(
+            query_parameters,
         )
 
     def parameterise_query(
@@ -343,10 +342,11 @@ class OncoKBInterpreter(BaseInterpreter):
             [
                 (
                     "system",
-                    "You are a world class molecular biologist who knows "
-                    "everything about OncoKB and cancer genomics. Your task is "
-                    "to interpret results from OncoKB API calls and summarise "
-                    "them for the user.",
+                    "You are an experienced oncologist and molecular biologist "
+                    "specializing in cancer genomics and OncoKB data interpretation. "
+                    "Your task is to interpret results from OncoKB API calls and "
+                    "summarise them for the user. Focus on the provided data and "
+                    "be clear about any limitations in the information.",
                 ),
                 ("user", "{input}"),
             ],

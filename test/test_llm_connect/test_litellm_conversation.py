@@ -4,6 +4,7 @@ from litellm.exceptions import NotFoundError
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from biochatter.llm_connect import LiteLLMConversation
+from biochatter.llm_connect.exceptions import LLMInitializationError
 
 
 MOCK_PROMPTS = {
@@ -72,9 +73,8 @@ def test_set_api_key_success(mock_get_llm):
     mock_get_llm.return_value = dummy_chat_instance
 
     uc = LiteLLMConversation(model_name="gpt-3.5-turbo", prompts={})
-    result = uc.set_api_key(dummy_api_key, user="test_user")
+    uc.set_api_key(dummy_api_key, user="test_user")
 
-    assert result is True
     mock_get_llm.assert_any_call(dummy_api_key, uc.model_name)
     mock_get_llm.assert_any_call(dummy_api_key, uc.ca_model_name)
 
@@ -85,18 +85,11 @@ def test_set_api_key_success(mock_get_llm):
 
 @patch.object(LiteLLMConversation, "get_litellm_object")
 def test_set_api_key_failure(mock_get_llm, dummy_api_key="dummy_key"):
-    """Test that if get_litellm_object throws an exception, set_api_key returns False
-    and does not initialize chat attributes.
-    """
+    """Test that if get_litellm_object throws an exception, set_api_key raises."""
     mock_get_llm.side_effect = ValueError("Invalid API key")
     uc = LiteLLMConversation(model_name="gpt-3.5-turbo", prompts={})
-    result = uc.set_api_key(dummy_api_key, user="test_user")
-
-    assert result is False
-    with pytest.raises(AttributeError):
-        _ = uc.chat
-    with pytest.raises(AttributeError):
-        _ = uc.ca_chat
+    with pytest.raises(LLMInitializationError):
+        uc.set_api_key(dummy_api_key, user="test_user")
 
 
 def valid_response(token_usage):

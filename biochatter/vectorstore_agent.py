@@ -2,9 +2,9 @@ import logging
 import random
 import uuid
 
-from langchain.schema import Document
-from langchain_community.embeddings import OpenAIEmbeddings
-from langchain_community.vectorstores import Milvus
+from langchain_core.documents import Document
+from langchain_openai import OpenAIEmbeddings
+from langchain_milvus import Milvus
 from pymilvus import (
     Collection,
     CollectionSchema,

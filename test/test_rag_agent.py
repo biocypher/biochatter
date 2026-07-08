@@ -122,6 +122,7 @@ def test_rag_agent_kg_mode_with_custom_model_provider():
             },
             conversation_factory=None,
             use_reflexion=False,
+            use_grounding=False,
         )
 
 
@@ -138,16 +139,17 @@ def test_rag_agent_defaults_to_gemini():
         )
 
         assert agent.model_provider == "google_genai"
-        assert agent.model_name == "gemini-2.0-flash"
+        assert agent.model_name == "gemini-3.5-flash"
 
         # Verify that DatabaseAgent was called with the default values
         MockDatabaseAgent.assert_called_once_with(
             model_provider="google_genai",
-            model_name="gemini-2.0-flash",
+            model_name="gemini-3.5-flash",
             connection_args={"host": "xxx", "port": "xxx"},
             schema_config_or_info_dict={"test": "schema"},
             conversation_factory=None,
             use_reflexion=False,
+            use_grounding=False,
         )
 
 

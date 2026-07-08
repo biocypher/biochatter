@@ -2,6 +2,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 from pydantic import BaseModel
 
+from biochatter.llm_connect.exceptions import LLMConnectionError
 from biochatter.llm_connect.langchain import LangChainConversation
 
 # Import helper functions from where they are referenced in langchain.py
@@ -99,7 +100,7 @@ def test_primary_query_no_tools_no_structured_basic_model(conversation_instance,
 
 
 def test_primary_query_with_tools_model_supports_tool_calling_tool_used(conversation_instance, mock_chat_object):
-    conversation_instance.model_name = "gemini-2.0-flash"  # Assumed to be in TOOL_CALLING_MODELS
+    conversation_instance.model_name = "gemini-3.5-flash"  # Assumed to be in TOOL_CALLING_MODELS
     conversation_instance.tools = [mock_tool_one]  # Instance tool
     query_tool = mock_tool_two  # Tool passed in query
     all_tools = [mock_tool_one, query_tool]
@@ -239,7 +240,7 @@ def test_primary_query_tools_model_not_supports_invalid_json_response(conversati
 
 
 def test_primary_query_structured_output_model_supports(conversation_instance, mock_chat_object):
-    conversation_instance.model_name = "gemini-2.0-flash"  # Assumed in STRUCTURED_OUTPUT_MODELS
+    conversation_instance.model_name = "gemini-3.5-flash"  # Assumed in STRUCTURED_OUTPUT_MODELS
     initial_messages = list(conversation_instance.messages)
 
     structured_response_obj = MockOutputModel(param1="Structured data", param2=100)
@@ -263,7 +264,7 @@ def test_primary_query_structured_output_model_supports(conversation_instance, m
 
 
 def test_primary_query_structured_output_model_supports_wrapped(conversation_instance, mock_chat_object):
-    conversation_instance.model_name = "gemini-2.0-flash"  # Assumed in STRUCTURED_OUTPUT_MODELS
+    conversation_instance.model_name = "gemini-3.5-flash"  # Assumed in STRUCTURED_OUTPUT_MODELS
     initial_messages = list(conversation_instance.messages)
     structured_response_obj = MockOutputModel(param1="Wrapped data", param2=200)
     mock_chat_object.invoke = MagicMock(return_value=structured_response_obj)
@@ -371,9 +372,8 @@ def test_primary_query_invoke_raises_exception(conversation_instance, mock_chat_
     with (
         patch("biochatter.llm_connect.langchain.supports_tool_calling", return_value=False),
         patch("biochatter.llm_connect.langchain.supports_structured_output", return_value=False),
+        pytest.raises(LLMConnectionError, match=error_message),
     ):
-        msg, token_usage = conversation_instance._primary_query()
+        conversation_instance._primary_query()
 
-    assert msg == str(Exception(error_message))  # Method returns str(e)
-    assert token_usage is None  # Token usage is None when there's an exception
     conversation_instance.append_ai_message.assert_not_called()

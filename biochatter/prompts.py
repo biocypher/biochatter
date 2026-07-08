@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from collections.abc import Callable
 
@@ -6,7 +7,9 @@ import yaml
 
 from ._misc import ensure_iterable, sentencecase_to_pascalcase
 from .kg_grounding import ground_entities, ground_property_values
-from .llm_connect import Conversation, LangChainConversation
+from .llm_connect import Conversation, LangChainConversation, LLMConnectionError
+
+logger = logging.getLogger(__name__)
 
 
 class BioCypherPromptEngine:
@@ -15,11 +18,11 @@ class BioCypherPromptEngine:
         schema_config_or_info_path: str | None = None,
         schema_config_or_info_dict: dict | None = None,
         model_provider: str = "google_genai",
-        model_name: str = "gemini-2.0-flash",
+        model_name: str = "gemini-3.5-flash",
         conversation_factory: Callable | None = None,
         connection_args: dict | None = None,
         use_grounding: bool = False,
-        ) -> None:
+    ) -> None:
         """Given a biocypher schema configuration, extract the entities and
         relationships, and for each extract their mode of representation (node
         or edge), properties, and identifier namespace. Using these data, allow
@@ -133,6 +136,17 @@ class BioCypherPromptEngine:
                 relationship["target"] = [sentencecase_to_pascalcase(t) for t in relationship["target"]]
         return relationship
 
+    def _query_llm(self, conversation: Conversation, text: str, step: str) -> str:
+        """Run an LLM query and attach prompt-engine step context to failures."""
+        try:
+            msg, _, _ = conversation.query(text)
+        except LLMConnectionError as e:
+            raise LLMConnectionError(
+                f"{step} failed: {e}",
+                provider=e.provider,
+                model=e.model,
+            ) from e
+        return msg
 
     def _select_graph_entities_from_question(
         self,
@@ -140,16 +154,13 @@ class BioCypherPromptEngine:
         conversation: Conversation,
     ) -> str:
         conversation.reset()
-        success1 = self._select_entities(
-            question=question,
-            conversation=conversation,
-        )
-        if not success1:
+        if not self._select_entities(question=question, conversation=conversation):
             raise ValueError(
-                "Entity selection failed. Please try again with a different question.",
+                "Entity selection failed: none of the model's selected entities "
+                "matched the schema. Please try again with a different question.",
             )
 
-        # entity grounding — runs after _select_entities(), using the
+        # Entity grounding runs after _select_entities(), using the
         # (term, entity_type) pairs captured in that same LLM call
         if self.use_grounding and self.connection_args:
             question, self.grounded_entities = ground_entities(
@@ -162,20 +173,18 @@ class BioCypherPromptEngine:
             self.question = question
 
         conversation.reset()
-        success2 = self._select_relationships(conversation=conversation)
-        if not success2:
+        if not self._select_relationships(conversation=conversation):
             raise ValueError(
                 "Relationship selection failed. Please try again with a different question.",
             )
 
         conversation.reset()
-        success3 = self._select_properties(conversation=conversation)
-        if not success3:
+        if not self._select_properties(conversation=conversation):
             raise ValueError(
                 "Property selection failed. Please try again with a different question.",
             )
 
-        # property value grounding — runs after _select_properties(), using
+        # Property value grounding runs after _select_properties(), using
         # the schema (combined entities and relationships) so properties
         # belonging to either can be looked up by type
         if self.use_grounding and self.connection_args:
@@ -295,18 +304,18 @@ class BioCypherPromptEngine:
 
 
         return self._generate_query(
-            question=self.question,  # was: question=question
+            question=self.question,
             entities=self.selected_entities,
             relationships=self.selected_relationship_labels,
             properties=self.selected_properties,
             query_language=query_language,
             conversation=self.conversation_factory(),
-            )
+        )
 
     def _get_conversation(
         self,
         model_provider: str = "google_genai",
-        model_name: str = "gemini-2.0-flash",
+        model_name: str = "gemini-3.5-flash",
     ) -> "Conversation":
         """Create a conversation object given a model name.
 
@@ -349,7 +358,7 @@ class BioCypherPromptEngine:
 
         Also captures, in the same LLM call, the exact term the user wrote
         for each selected entity type, stored separately in
-        `selected_entity_terms` for use by the grounding module — avoiding
+        `selected_entity_terms` for use by the grounding module. This avoids
         a second LLM call to re-identify what this call already determined.
 
         Args:
@@ -381,28 +390,38 @@ class BioCypherPromptEngine:
             "that are not entity types from the list above.",
         )
 
-        msg, token_usage, correction = conversation.query(question)
+        msg = self._query_llm(conversation, question, step="Entity selection")
 
         pairs = msg.split(",") if msg else []
         self.selected_entity_terms = []
+        unmatched = []
 
         if pairs:
             for pair in pairs:
                 pair = pair.strip()
                 if ":" in pair:
-                    # specific named instance mentioned — capture term for grounding
+                    # Specific named instance mentioned: capture term for grounding.
                     term, entity = pair.rsplit(":", 1)
                     term = term.strip()
                     entity = entity.strip()
                     if entity in self.entities:
                         self.selected_entities.append(entity)
                         self.selected_entity_terms.append((term, entity))
+                    else:
+                        unmatched.append(entity)
                 else:
-                    # no specific instance — add type only, skip grounding
+                    # No specific instance: add type only, skip grounding.
                     entity = pair.strip()
                     if entity in self.entities:
                         self.selected_entities.append(entity)
+                    else:
+                        unmatched.append(entity)
 
+        if unmatched:
+            logger.warning(
+                "Ignoring entities returned by the model that are not in the schema: %s",
+                unmatched,
+            )
         return bool(self.selected_entities)
 
     def _select_relationships(self, conversation: "Conversation") -> bool:
@@ -514,9 +533,9 @@ class BioCypherPromptEngine:
 
         conversation.append_system_message(msg)
 
-        res, token_usage, correction = conversation.query(self.question)
+        res = self._query_llm(conversation, self.question, step="Relationship selection")
 
-        result = res.split(",") if msg else []
+        result = res.split(",") if res else []
 
         if result:
             for relationship in result:
@@ -626,7 +645,7 @@ class BioCypherPromptEngine:
 
         conversation.append_system_message(msg)
 
-        msg, token_usage, correction = conversation.query(self.question)
+        msg = self._query_llm(conversation, self.question, step="Property selection")
         msg = BioCypherPromptEngine._validate_json_str(msg)
 
         self.selected_property_terms = {}
@@ -716,7 +735,7 @@ class BioCypherPromptEngine:
 
         conversation.append_system_message(msg)
 
-        out_msg, token_usage, correction = conversation.query(question)
+        out_msg = self._query_llm(conversation, question, step="Query generation")
 
         return out_msg.strip()
 

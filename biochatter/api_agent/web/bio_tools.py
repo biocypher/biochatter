@@ -5,10 +5,9 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING
 
 import requests
-from langchain.chains.openai_functions import create_structured_output_runnable
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 
 if TYPE_CHECKING:
     from biochatter.llm_connect import Conversation
@@ -20,7 +19,7 @@ from biochatter.api_agent.base.agent_abc import (
 )
 
 BIOTOOLS_QUERY_PROMPT = """
-You are a world class algorithm for creating queries in structured formats. Your task is to use the web API of bio.tools
+You are a system designed to create structured queries for the bio.tools web API. Your task is to use the web API of bio.tools
 to answer questions about bioinformatics tools and their properties.
 
 You have to extract the appropriate information out of the examples:
@@ -245,12 +244,13 @@ https://bio.tools/api/tool?biotoolsID=blast returns all tools with “blast” i
 
 
 BIOTOOLS_SUMMARY_PROMPT = """
-You have to answer this question in a clear and concise manner: {question} Be factual!\n\
-You are a world leading bioinformatician who knows everything about bio.tools packages.\n\
-Do not make up information, only use the provided information and mention how relevant the found information is based on
-your knowledge about bio.tools.\n\
-Here is the information relevant to the question found on the bio.tools web API:\n\
+Based on the following information from the bio.tools web API:
+
 {context}
+
+Answer this question clearly and concisely: {question}
+
+Be factual and only use the provided information. If the information is incomplete or doesn't fully answer the question, mention this limitation.
 """
 
 
@@ -499,8 +499,7 @@ class BioToolsQueryBuilder(BaseQueryBuilder):
     ) -> Callable:
         """Create a runnable object for executing queries.
 
-        Create runnable using the LangChain `create_structured_output_runnable`
-        method.
+        Create runnable using the chat model's `with_structured_output` method.
 
         Args:
         ----
@@ -514,10 +513,8 @@ class BioToolsQueryBuilder(BaseQueryBuilder):
             A Callable object that can execute the query.
 
         """
-        return create_structured_output_runnable(
-            output_schema=query_parameters,
-            llm=conversation.chat,
-            prompt=self.structured_output_prompt,
+        return self.structured_output_prompt | conversation.chat.with_structured_output(
+            query_parameters,
         )
 
     def parameterise_query(
@@ -644,11 +641,11 @@ class BioToolsInterpreter(BaseInterpreter):
             [
                 (
                     "system",
-                    "You are a world class bioinformatician who knows "
-                    "everything about bio.tools packages and the "
-                    "bioinformatics ecosystem. Your task is to interpret "
-                    "results from BioTools API calls and summarise "
-                    "them for the user.",
+                    "You are an experienced bioinformatician specializing in "
+                    "bio.tools packages and the bioinformatics ecosystem. "
+                    "Your task is to interpret results from BioTools API calls "
+                    "and summarise them for the user. Focus on the provided data and "
+                    "be clear about any limitations in the information.",
                 ),
                 ("user", "{input}"),
             ],
