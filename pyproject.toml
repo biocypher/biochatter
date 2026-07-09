@@ -69,26 +69,21 @@ streamlit = [
 
 [dependency-groups]
 dev = [
-    "xinference>=1.6.0,<2.0.0",
     "pytest>=8.3.5,<9.0.0",
     "pytest-cov>=6.0.0,<7.0.0",
     "bump2version>=1.0.1,<2.0.0",
-    "mkdocs-material[imaging]>=9.6.11,<10.0.0",
     "pre-commit>=4.1.0,<5.0.0",
-    "mkdocs-table-reader-plugin>=3.1.0,<4.0.0",
-    "scipy>=1.15.2,<2.0.0",
     "shortuuid>=1.0.13,<2.0.0",
     "coverage>=7.7.0,<8.0.0",
     "coverage-badge>=1.1.2,<2.0.0",
-    "mkdocs-redirects>=1.2.2,<2.0.0",
-    "scanpy>=1.11.0,<2.0.0",
-    "mkdocstrings>=0.29.0,<0.30.0",
-    "mkdocstrings-python>=1.16.5,<2.0.0",
-    "cairosvg>=2.7.1,<3.0.0",
     "ruff>=0.11.8,<0.12.0",
-    "mike>=2.1.3,<3.0.0",
+]
+benchmark = [
+    "scipy>=1.15.2,<2.0.0",
     "rouge-score>=0.1.2,<0.2.0",
     "evaluate>=0.4.3,<0.5.0",
+    "xinference>=1.6.0,<2.0.0",
+    "scanpy>=1.11.0,<2.0.0",
 ]
 examples = [
     "gseapy>=1.1.8,<2.0.0",
@@ -98,6 +93,13 @@ mcp = [
     "langchain-mcp-adapters>=0.1.0,<1.0.0",
 ]
 docs = [
+    "mkdocs-material[imaging]>=9.6.11,<10.0.0",
+    "mkdocs-table-reader-plugin>=3.1.0,<4.0.0",
+    "mkdocs-redirects>=1.2.2,<2.0.0",
+    "mkdocstrings>=0.29.0,<0.30.0",
+    "mkdocstrings-python>=1.16.5,<2.0.0",
+    "cairosvg>=2.7.1,<3.0.0",
+    "mike>=2.1.3,<3.0.0",
     "colorcet>=3.1.0,<4.0.0",
     "seaborn>=0.13.2,<0.14.1",
 ]

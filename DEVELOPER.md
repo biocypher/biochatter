@@ -12,19 +12,24 @@ before starting development.
 
 ### Setup the environment
 
-- Install dependencies from the lock file: `uv sync`
+- Install core + dev tooling (unit tests, lint): `uv sync`
 
-- Select extras for the functions you want to use: `uv sync --extra <extra>`.
-You can also install all extras with `uv sync --all-extras`.
+- Add optional groups as needed:
+  - `uv sync --group benchmark` — full test/benchmark stack (includes xinference → PyTorch; no Intel Mac wheels for recent torch)
+  - `uv sync --group docs` — MkDocs site build
+  - `uv sync --group mcp` — MCP benchmark tests
+  - `uv sync --all-groups` — everything (matches CI)
 
-- Use the environment: You can run commands directly with `uv run <command>`.
+- Project extras: `uv sync --extra <extra>` or `uv sync --all-extras`
+
+- Use the environment: `uv run <command>`
 
 ### Updating the environment
 
 If you want to fix dependency issues, please do so in the uv
 framework. If uv does not work for you for some reason, please let us know.
 
-The dependencies are organized in standard PEP 621 dependencies and PEP 735 dependency groups. There are dependencies needed for running BioChatter (`dependencies` under `[project]`) and a group with dependencies needed for development (`dev` under `[dependency-groups]`). There are also extras (optional dependencies) for functions that you may not want to install.
+Dependencies use PEP 621 (`[project]`) for runtime and PEP 735 groups under `[dependency-groups]`. Default `dev` is lean (pytest, ruff, pre-commit, …). Heavier stacks are optional: `benchmark`, `docs`, `mcp`, `examples`.
 
 For adding new dependencies:
 
