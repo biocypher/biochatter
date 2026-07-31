@@ -192,10 +192,9 @@ class LangChainConversation(Conversation):
         except Exception as e:
             raise LLMConnectionError(str(e), provider="langchain", model=self.model_name) from e
 
-        content = self._content_to_str(response.content)
-
         # Structured output don't have tool calls attribute
         if hasattr(response, "tool_calls"):
+            content = self._content_to_str(response.content)
             token_usage_raw = response.usage_metadata if response.usage_metadata else None
             token_usage = self._extract_total_tokens(token_usage_raw)
             # case in which the model called tools

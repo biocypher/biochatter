@@ -122,6 +122,7 @@ def test_rag_agent_kg_mode_with_custom_model_provider():
             },
             conversation_factory=None,
             use_reflexion=False,
+            use_grounding=False,
         )
 
 
@@ -148,6 +149,7 @@ def test_rag_agent_defaults_to_gemini():
             schema_config_or_info_dict={"test": "schema"},
             conversation_factory=None,
             use_reflexion=False,
+            use_grounding=False,
         )
 
 

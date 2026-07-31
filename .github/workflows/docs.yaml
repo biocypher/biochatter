@@ -45,7 +45,7 @@ jobs:
           enable-cache: true
 
       - name: Install dependencies
-        run: uv sync --no-install-project
+        run: uv sync --no-install-project --group docs
 
       - name: Setup gh-pages branch
         run: |

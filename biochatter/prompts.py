@@ -6,6 +6,7 @@ from collections.abc import Callable
 import yaml
 
 from ._misc import ensure_iterable, sentencecase_to_pascalcase
+from .kg_grounding import ground_entities, ground_property_values
 from .llm_connect import Conversation, LangChainConversation, LLMConnectionError
 
 logger = logging.getLogger(__name__)
@@ -19,6 +20,8 @@ class BioCypherPromptEngine:
         model_provider: str = "google_genai",
         model_name: str = "gemini-3.5-flash",
         conversation_factory: Callable | None = None,
+        connection_args: dict | None = None,
+        use_grounding: bool = False,
     ) -> None:
         """Given a biocypher schema configuration, extract the entities and
         relationships, and for each extract their mode of representation (node
@@ -104,6 +107,8 @@ class BioCypherPromptEngine:
         self.question = ""
         self.selected_entities = []
         self.selected_relationships = []  # used in property selection
+        self.connection_args = connection_args
+        self.use_grounding = use_grounding
         self.selected_relationship_labels = {}  # copy to deal with labels that
         # are not the same as the relationship name, used in query generation
         # dictionary to also include source and target types
@@ -154,16 +159,44 @@ class BioCypherPromptEngine:
                 "Entity selection failed: none of the model's selected entities "
                 "matched the schema. Please try again with a different question.",
             )
+
+        # Entity grounding runs after _select_entities(), using the
+        # (term, entity_type) pairs captured in that same LLM call
+        if self.use_grounding and self.connection_args:
+            question, self.grounded_entities = ground_entities(
+                question=question,
+                selected_entity_terms=self.selected_entity_terms,
+                connection_args=self.connection_args,
+                schema=self.entities,
+                conversation_factory=self.conversation_factory,
+            )
+            self.question = question
+
         conversation.reset()
         if not self._select_relationships(conversation=conversation):
             raise ValueError(
                 "Relationship selection failed. Please try again with a different question.",
             )
+
         conversation.reset()
         if not self._select_properties(conversation=conversation):
             raise ValueError(
                 "Property selection failed. Please try again with a different question.",
             )
+
+        # Property value grounding runs after _select_properties(), using
+        # the schema (combined entities and relationships) so properties
+        # belonging to either can be looked up by type
+        if self.use_grounding and self.connection_args:
+            combined_schema = {**self.entities, **self.relationships}
+            question = ground_property_values(
+                question=question,
+                selected_properties=self.selected_properties,
+                connection_args=self.connection_args,
+                schema=combined_schema,
+                conversation_factory=self.conversation_factory,
+            )
+            self.question = question
 
     def _generate_query_prompt(
         self,
@@ -269,8 +302,9 @@ class BioCypherPromptEngine:
             self.conversation_factory(),
         )
 
+
         return self._generate_query(
-            question=question,
+            question=self.question,
             entities=self.selected_entities,
             relationships=self.selected_relationship_labels,
             properties=self.selected_properties,
@@ -312,6 +346,7 @@ class BioCypherPromptEngine:
         )
         return conversation
 
+
     def _select_entities(
         self,
         question: str,
@@ -320,6 +355,11 @@ class BioCypherPromptEngine:
         """Given a question, select the entities that are relevant to the question
         and store them in `selected_entities` and `selected_relationships`. Use
         LLM conversation to do this.
+
+        Also captures, in the same LLM call, the exact term the user wrote
+        for each selected entity type, stored separately in
+        `selected_entity_terms` for use by the grounding module. This avoids
+        a second LLM call to re-identify what this call already determined.
 
         Args:
         ----
@@ -339,27 +379,49 @@ class BioCypherPromptEngine:
             "You have access to a knowledge graph that contains "
             f"these entity types: {', '.join(self.entities)}. Your task is "
             "to select the entity types that are relevant to the user's question "
-            "for subsequent use in a query. Only return the entity types, "
-            "comma-separated, without any additional text. Do not return "
-            "entity names, relationships, or properties.",
+            "for subsequent use in a query. For each relevant entity type, also "
+            "identify whether the question mentions a specific named instance of "
+            "that type. If a specific named instance is mentioned, return the pair "
+            "as 'term:entity_type'. If no specific named instance is mentioned "
+            "for that entity type, return just the entity type name on its own. "
+            "Return all results comma-separated, without any additional text. "
+            "Use the exact term as written in the question, do not expand or "
+            "correct it. Do not return entity names, relationships, or properties "
+            "that are not entity types from the list above.",
         )
 
         msg = self._query_llm(conversation, question, step="Entity selection")
 
-        result = msg.split(",") if msg else []
-        # TODO: do we go back and retry if no entities were selected? or ask for
-        # a reason? offer visual selection of entities and relationships by the
-        # user?
+        pairs = msg.split(",") if msg else []
+        self.selected_entity_terms = []
+        unmatched = []
 
-        unmatched = [entity.strip() for entity in result if entity.strip() not in self.entities]
-        self.selected_entities = [entity.strip() for entity in result if entity.strip() in self.entities]
+        if pairs:
+            for pair in pairs:
+                pair = pair.strip()
+                if ":" in pair:
+                    # Specific named instance mentioned: capture term for grounding.
+                    term, entity = pair.rsplit(":", 1)
+                    term = term.strip()
+                    entity = entity.strip()
+                    if entity in self.entities:
+                        self.selected_entities.append(entity)
+                        self.selected_entity_terms.append((term, entity))
+                    else:
+                        unmatched.append(entity)
+                else:
+                    # No specific instance: add type only, skip grounding.
+                    entity = pair.strip()
+                    if entity in self.entities:
+                        self.selected_entities.append(entity)
+                    else:
+                        unmatched.append(entity)
 
         if unmatched:
             logger.warning(
                 "Ignoring entities returned by the model that are not in the schema: %s",
                 unmatched,
             )
-
         return bool(self.selected_entities)
 
     def _select_relationships(self, conversation: "Conversation") -> bool:
@@ -518,20 +580,18 @@ class BioCypherPromptEngine:
 
         return bool(result)
 
-    @staticmethod
-    def _validate_json_str(json_str: str):
-        json_str = json_str.strip()
-        if json_str.startswith("```json"):
-            json_str = json_str[7:]
-        if json_str.endswith("```"):
-            json_str = json_str[:-3]
-        return json_str.strip()
 
     def _select_properties(self, conversation: "Conversation") -> bool:
         """Given a question (optionally provided, but in the standard use case
         reused from the entity selection step) and the selected entities, select
         the properties that are relevant to the question and store them in
         the dictionary `selected_properties`.
+
+        Also captures, in the same LLM call, the term the user wrote that
+        refers to each selected property's value, stored separately in
+        `selected_property_terms` for use by the property value grounding
+        module — avoiding a second LLM call or a fragile substring scan
+        over the raw question.
 
         Returns
         -------
@@ -570,11 +630,16 @@ class BioCypherPromptEngine:
             "relationships. They have the following properties. Entities:"
             f"{e_props}, Relationships: {r_props}. "
             "Your task is to select the properties that are relevant to the "
-            "user's question for subsequent use in a query. Only return the "
-            "entities and relationships with their relevant properties in compact "
-            "JSON format, without any additional text. Return the "
-            "entities/relationships as top-level dictionary keys, and their "
-            "properties as dictionary values. "
+            "user's question for subsequent use in a query, and for each "
+            "selected property, the exact term in the question that refers "
+            "to the value being filtered on for that property, if any. Only "
+            "return the entities and relationships with their relevant "
+            "properties and corresponding terms in compact JSON format, "
+            "without any additional text. Return the entities/relationships "
+            "as top-level dictionary keys, and a list of objects as values, "
+            "each object having a 'property' key with the property name and "
+            "a 'term' key with the exact term from the question, or null if "
+            "the property is relevant but no specific value term is present. "
             "Do not return properties that are not relevant to the question."
         )
 
@@ -583,12 +648,49 @@ class BioCypherPromptEngine:
         msg = self._query_llm(conversation, self.question, step="Property selection")
         msg = BioCypherPromptEngine._validate_json_str(msg)
 
+        self.selected_property_terms = {}
+
         try:
-            self.selected_properties = json.loads(msg) if msg else {}
+            parsed = json.loads(msg) if msg else {}
         except json.decoder.JSONDecodeError:
-            self.selected_properties = {}
+            parsed = {}
+
+        self.selected_properties = {}
+        for entity_or_relationship, entries in parsed.items():
+            prop_names = []
+            term_map = {}
+            for entry in entries:
+                if not isinstance(entry, dict):
+                    continue
+                prop_name = entry.get("property")
+                term = entry.get("term")
+                if prop_name:
+                    prop_names.append(prop_name)
+                    if term:
+                        term_map[prop_name] = term
+            if prop_names:
+                self.selected_properties[entity_or_relationship] = prop_names
+            if term_map:
+                self.selected_property_terms[entity_or_relationship] = term_map
 
         return bool(self.selected_properties)
+
+
+
+    @staticmethod
+    def _validate_json_str(json_str: str):
+        json_str = json_str.strip()
+        if json_str.startswith("```json"):
+            json_str = json_str[7:]
+        elif json_str.startswith("```"):
+            json_str = json_str[3:]
+        if json_str.endswith("```"):
+            json_str = json_str[:-3]
+        # strip bare language tag if LLM returned "json\n{...}" without backticks
+        if json_str.startswith("json"):
+            json_str = json_str[4:]
+        return json_str.strip()
+
 
     def _generate_query(
         self,

@@ -35,10 +35,15 @@ class Neo4jClient:
             auth=(db_user, db_passwd),
         )
 
-    def query(self, query: str, **kwargs) -> tuple[list[dict] | None, ResultSummary | None]:
+    def query(
+        self,
+        query: str,
+        parameters: dict | None = None,
+        **kwargs,
+    ) -> tuple[list[dict] | None, ResultSummary | None]:
         del kwargs
         with self._driver.session(database=self._db_name) as session:
-            result = session.run(query)
+            result = session.run(query, parameters or {})
             return result.data(), result.consume()
 
     def close(self) -> None:

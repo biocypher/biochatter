@@ -131,7 +131,15 @@ def test_database_agent_passes_model_provider_to_prompt_engine():
             model_name="gemini-3.5-flash",
             schema_config_or_info_dict={"schema_config": "test_schema"},
             conversation_factory=None,
-        )
+            connection_args={
+                "db_name": "test_db",
+                "host": "localhost",
+                "port": 7687,
+                "user": "neo4j",
+                "password": "password",
+                },
+                use_grounding=False,
+)
 
         assert db_agent.prompt_engine == mock_prompt_engine
 
@@ -162,6 +170,14 @@ def test_database_agent_defaults_to_gemini():
             model_name="gemini-3.5-flash",
             schema_config_or_info_dict={"schema_config": "test_schema"},
             conversation_factory=None,
+            connection_args={
+                "db_name": "test_db",
+                "host": "localhost",
+                "port": 7687,
+                "user": "neo4j",
+                "password": "password",
+            },
+            use_grounding=False,
         )
 
 def test_query_sanitisation_strips_markdown_fences():

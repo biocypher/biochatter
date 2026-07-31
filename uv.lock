@@ -527,30 +527,32 @@ streamlit = [
 [package.dev-dependencies]
 dev = [
     { name = "bump2version" },
-    { name = "cairosvg" },
     { name = "coverage" },
     { name = "coverage-badge" },
+    { name = "pre-commit" },
+    { name = "pytest" },
+    { name = "pytest-cov" },
+    { name = "ruff" },
+    { name = "shortuuid" },
+]
+benchmark = [
     { name = "evaluate" },
+    { name = "rouge-score" },
+    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "scanpy", version = "1.11.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
+    { name = "scanpy", version = "1.12.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "xinference" },
+]
+docs = [
+    { name = "cairosvg" },
+    { name = "colorcet" },
     { name = "mike" },
     { name = "mkdocs-material", extra = ["imaging"] },
     { name = "mkdocs-redirects" },
     { name = "mkdocs-table-reader-plugin" },
     { name = "mkdocstrings" },
     { name = "mkdocstrings-python" },
-    { name = "pre-commit" },
-    { name = "pytest" },
-    { name = "pytest-cov" },
-    { name = "rouge-score" },
-    { name = "ruff" },
-    { name = "scanpy", version = "1.11.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
-    { name = "scanpy", version = "1.12.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
-    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "shortuuid" },
-    { name = "xinference" },
-]
-docs = [
-    { name = "colorcet" },
     { name = "seaborn" },
 ]
 examples = [
@@ -600,28 +602,30 @@ provides-extras = ["podcast", "streamlit"]
 [package.metadata.requires-dev]
 dev = [
     { name = "bump2version", specifier = ">=1.0.1,<2.0.0" },
-    { name = "cairosvg", specifier = ">=2.7.1,<3.0.0" },
     { name = "coverage", specifier = ">=7.7.0,<8.0.0" },
     { name = "coverage-badge", specifier = ">=1.1.2,<2.0.0" },
+    { name = "pre-commit", specifier = ">=4.1.0,<5.0.0" },
+    { name = "pytest", specifier = ">=8.3.5,<9.0.0" },
+    { name = "pytest-cov", specifier = ">=6.0.0,<7.0.0" },
+    { name = "ruff", specifier = ">=0.11.8,<0.12.0" },
+    { name = "shortuuid", specifier = ">=1.0.13,<2.0.0" },
+]
+benchmark = [
     { name = "evaluate", specifier = ">=0.4.3,<0.5.0" },
+    { name = "rouge-score", specifier = ">=0.1.2,<0.2.0" },
+    { name = "scanpy", specifier = ">=1.11.0,<2.0.0" },
+    { name = "scipy", specifier = ">=1.15.2,<2.0.0" },
+    { name = "xinference", specifier = ">=1.6.0,<2.0.0" },
+]
+docs = [
+    { name = "cairosvg", specifier = ">=2.7.1,<3.0.0" },
+    { name = "colorcet", specifier = ">=3.1.0,<4.0.0" },
     { name = "mike", specifier = ">=2.1.3,<3.0.0" },
     { name = "mkdocs-material", extras = ["imaging"], specifier = ">=9.6.11,<10.0.0" },
     { name = "mkdocs-redirects", specifier = ">=1.2.2,<2.0.0" },
     { name = "mkdocs-table-reader-plugin", specifier = ">=3.1.0,<4.0.0" },
     { name = "mkdocstrings", specifier = ">=0.29.0,<0.30.0" },
     { name = "mkdocstrings-python", specifier = ">=1.16.5,<2.0.0" },
-    { name = "pre-commit", specifier = ">=4.1.0,<5.0.0" },
-    { name = "pytest", specifier = ">=8.3.5,<9.0.0" },
-    { name = "pytest-cov", specifier = ">=6.0.0,<7.0.0" },
-    { name = "rouge-score", specifier = ">=0.1.2,<0.2.0" },
-    { name = "ruff", specifier = ">=0.11.8,<0.12.0" },
-    { name = "scanpy", specifier = ">=1.11.0,<2.0.0" },
-    { name = "scipy", specifier = ">=1.15.2,<2.0.0" },
-    { name = "shortuuid", specifier = ">=1.0.13,<2.0.0" },
-    { name = "xinference", specifier = ">=1.6.0,<2.0.0" },
-]
-docs = [
-    { name = "colorcet", specifier = ">=3.1.0,<4.0.0" },
     { name = "seaborn", specifier = ">=0.13.2,<0.14.1" },
 ]
 examples = [{ name = "gseapy", specifier = ">=1.1.8,<2.0.0" }]

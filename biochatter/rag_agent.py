@@ -27,6 +27,7 @@ class RagAgent:
         documentids_workspace: list[str] | None = None,
         agent_desc: str | None = None,
         use_reflexion: bool | None = False,
+        use_grounding: bool | None = False,
     ) -> None:
         ######
         ##TO DO
@@ -75,6 +76,9 @@ class RagAgent:
             use_reflexion (bool): Whether to use the ReflexionAgent to generate
                 the query.
 
+            use_grounding (bool): Whether to use the grounding agent to resolve
+                ambiguous entity mentions before query generation. Default False.
+
         """
         self.mode = mode
         self.model_provider = model_provider
@@ -103,6 +107,7 @@ class RagAgent:
                 schema_config_or_info_dict=self.schema_config_or_info_dict,
                 conversation_factory=conversation_factory,
                 use_reflexion=use_reflexion,
+                use_grounding=use_grounding,
             )
 
             self.agent.connect()

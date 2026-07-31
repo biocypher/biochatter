@@ -18,6 +18,7 @@ class DatabaseAgent:
         schema_config_or_info_dict: dict,
         conversation_factory: Callable,
         use_reflexion: bool,
+        use_grounding: bool = False,
     ) -> None:
         """Create a DatabaseAgent analogous to the VectorDatabaseAgentMilvus class,
         which can return results from a database using a query engine. Currently
@@ -34,6 +35,10 @@ class DatabaseAgent:
             use_reflexion (bool): Whether to use the ReflexionAgent to generate
                 the query.
 
+            use_grounding (bool): Whether to use the grounding agent to resolve
+                ambiguous entity mentions (abbreviations, synonyms, misspellings)
+                before query generation. Default False.
+
         """
         self.conversation_factory = conversation_factory
         self.prompt_engine = BioCypherPromptEngine(
@@ -41,10 +46,15 @@ class DatabaseAgent:
             model_name=model_name,
             schema_config_or_info_dict=schema_config_or_info_dict,
             conversation_factory=conversation_factory,
-        )
+            connection_args=connection_args,
+            use_grounding=use_grounding,
+            )
+        
         self.connection_args = connection_args
+        self.schema_config_or_info_dict = schema_config_or_info_dict
         self.driver = None
         self.use_reflexion = use_reflexion
+        self.use_grounding = use_grounding
 
     def connect(self) -> None:
         """Connect to the database and authenticate."""
@@ -59,6 +69,7 @@ class DatabaseAgent:
         return self.driver is not None
 
     def _generate_query(self, query: str):
+
         if self.use_reflexion:
             agent = KGQueryReflexionAgent(
                 self.conversation_factory,
