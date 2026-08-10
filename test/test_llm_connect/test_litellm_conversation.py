@@ -26,7 +26,7 @@ MOCK_MODEL_COST = {
 
 @patch("biochatter.llm_connect.llmlite.ChatLiteLLM")
 def test_get_litellm_object_valid(mock_chatlite):
-    """Test that get_litellm_object calls ChatLiteLLM with the correct parameters
+    """Test that _get_litellm_object calls ChatLiteLLM with the correct parameters
     for a supported model.
     """
     conv = LiteLLMConversation(model_name="gpt-3.5-turbo", prompts={})
@@ -35,7 +35,7 @@ def test_get_litellm_object_valid(mock_chatlite):
     dummy_api_key = "dummy_key"
     # Patch get_model_max_tokens to return a dummy token limit.
     conv.get_model_max_tokens = MagicMock(return_value=4096)
-    result = conv.get_litellm_object(dummy_api_key, "gpt-3.5-turbo")
+    result = conv._get_litellm_object(dummy_api_key, "gpt-3.5-turbo")
     mock_chatlite.assert_called_with(
         temperature=0, openai_api_key=dummy_api_key, max_token=4096, model_name="gpt-3.5-turbo"
     )
@@ -53,7 +53,7 @@ def test_get_litellm_object_unsupported_model(mock_chatlite, dummy_api_key="dumm
     mock_chatlite.return_value = dummy_instance
     uc.get_model_max_tokens = MagicMock(side_effect=ValueError("Unsupported model: unknown-model"))
 
-    result = uc.get_litellm_object(dummy_api_key, "unknown-model")
+    result = uc._get_litellm_object(dummy_api_key, "unknown-model")
 
     mock_chatlite.assert_called_with(
         temperature=0,
@@ -64,7 +64,33 @@ def test_get_litellm_object_unsupported_model(mock_chatlite, dummy_api_key="dumm
     assert result == dummy_instance
 
 
-@patch.object(LiteLLMConversation, "get_litellm_object")
+def test_get_litellm_object_none_api_key_raises():
+    """Test that _get_litellm_object rejects a None api_key at runtime.
+
+    Real callers can pass one (podcast.py sources it from os.getenv, which
+    returns None when the env var is unset), and the docstring documents
+    this as a ValueError, not a TypeError.
+    """
+    conv = LiteLLMConversation(model_name="gpt-3.5-turbo", prompts={})
+
+    with pytest.raises(ValueError, match="API key must not be None"):
+        conv._get_litellm_object(None, "gpt-3.5-turbo")
+
+
+def test_get_litellm_object_api_key_annotation_allows_none():
+    """Test that the api_key annotation allows None.
+
+    This must match the ValueError-on-None branch the method actually
+    implements (issue #306: the annotation previously declared a plain
+    `str`, which made that branch statically unreachable).
+    """
+    import typing
+
+    hints = typing.get_type_hints(LiteLLMConversation._get_litellm_object)
+    assert type(None) in typing.get_args(hints["api_key"])
+
+
+@patch.object(LiteLLMConversation, "_get_litellm_object")
 def test_set_api_key_success(mock_get_llm):
     """Test that set_api_key assigns chat and ca_chat correctly on success."""
     dummy_api_key = "dummy_key"
@@ -83,9 +109,9 @@ def test_set_api_key_success(mock_get_llm):
     assert uc.user == "test_user"
 
 
-@patch.object(LiteLLMConversation, "get_litellm_object")
+@patch.object(LiteLLMConversation, "_get_litellm_object")
 def test_set_api_key_failure(mock_get_llm, dummy_api_key="dummy_key"):
-    """Test that if get_litellm_object throws an exception, set_api_key returns False
+    """Test that if _get_litellm_object throws an exception, set_api_key returns False
     and does not initialize chat attributes.
     """
     mock_get_llm.side_effect = ValueError("Invalid API key")

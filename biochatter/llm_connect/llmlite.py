@@ -65,12 +65,12 @@ class LiteLLMConversation(Conversation):
         self.ca_model_name = model_name
         self._update_token_usage = update_token_usage
 
-    def get_litellm_object(self, api_key: str, model: str) -> ChatLiteLLM:
+    def _get_litellm_object(self, api_key: str | None, model: str) -> ChatLiteLLM:
         """Get a LiteLLM object for the specified model and API key.
 
         Args:
         ----
-            api_key (str): The API key for the LLM provider.
+            api_key (str | None): The API key for the LLM provider.
             model (str): The name of the model to use.
 
         Returns:
@@ -159,11 +159,11 @@ class LiteLLMConversation(Conversation):
             if self.ca_model_name is None:
                 raise ValueError("Correction Model name is not set.")
 
-            self.chat = self.get_litellm_object(api_key, self.model_name)
+            self.chat = self._get_litellm_object(api_key, self.model_name)
             if self.chat is None:
                 raise TypeError("Failed to intialize primary agent chat object.")
 
-            self.ca_chat = self.get_litellm_object(api_key, self.ca_model_name)
+            self.ca_chat = self._get_litellm_object(api_key, self.ca_model_name)
             if self.ca_chat is None:
                 raise TypeError("Failed to intialize correcting agent chat object.")
 
