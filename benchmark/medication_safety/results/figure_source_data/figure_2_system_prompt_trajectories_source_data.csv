@@ -1,0 +1,73 @@
+model_label,system_prompt,structured_score,communication_score,n,panel,deepseek_communication_score,manual_communication_score
+Llama 3.1 8B Instruct,none,0.1448470018222429,0.4645833333333333,320.0,a_deepseek_full_corpus,,
+Llama 3.1 8B Instruct,minimal,0.254246060120324,0.2067708333333333,320.0,a_deepseek_full_corpus,,
+Llama 3.1 8B Instruct,role_encouraging,0.3127534985270355,0.2609375,320.0,a_deepseek_full_corpus,,
+Llama 3.1 8B Instruct,role_attitude_sensitive,0.3445642046505572,0.4104166666666667,320.0,a_deepseek_full_corpus,,
+Med42-8B,none,0.3687750595831519,0.4328125,320.0,a_deepseek_full_corpus,,
+Med42-8B,minimal,0.4147258382801001,0.3088541666666666,320.0,a_deepseek_full_corpus,,
+Med42-8B,role_encouraging,0.3767026017179985,0.2572916666666666,320.0,a_deepseek_full_corpus,,
+Med42-8B,role_attitude_sensitive,0.3709238887095094,0.4760416666666667,320.0,a_deepseek_full_corpus,,
+Llama 4 Maverick,none,0.4160985488094614,0.7536458333333333,320.0,a_deepseek_full_corpus,,
+Llama 4 Maverick,minimal,0.6312882478127154,0.4875,320.0,a_deepseek_full_corpus,,
+Llama 4 Maverick,role_encouraging,0.6204475125315243,0.6239583333333333,320.0,a_deepseek_full_corpus,,
+Llama 4 Maverick,role_attitude_sensitive,0.6111136899838192,0.7536458333333333,320.0,a_deepseek_full_corpus,,
+GLM 4.5,none,0.4513471719064498,0.9786458333333334,320.0,a_deepseek_full_corpus,,
+GLM 4.5,minimal,0.6366859073106048,0.371875,320.0,a_deepseek_full_corpus,,
+GLM 4.5,role_encouraging,0.6402112668202553,0.4328125,320.0,a_deepseek_full_corpus,,
+GLM 4.5,role_attitude_sensitive,0.6323556677895901,0.6755208333333333,320.0,a_deepseek_full_corpus,,
+GPT-OSS-120B,none,0.47307952742864,0.7015625,320.0,a_deepseek_full_corpus,,
+GPT-OSS-120B,minimal,0.5250394335918287,0.4421875,320.0,a_deepseek_full_corpus,,
+GPT-OSS-120B,role_encouraging,0.5251685441206777,0.4869791666666667,320.0,a_deepseek_full_corpus,,
+GPT-OSS-120B,role_attitude_sensitive,0.5336032988474584,0.7546875,320.0,a_deepseek_full_corpus,,
+Claude Sonnet 4.6,none,0.4754177200557382,0.8901041666666666,320.0,a_deepseek_full_corpus,,
+Claude Sonnet 4.6,minimal,0.6648792350982918,0.615625,320.0,a_deepseek_full_corpus,,
+Claude Sonnet 4.6,role_encouraging,0.6572510789129,0.7286458333333333,320.0,a_deepseek_full_corpus,,
+Claude Sonnet 4.6,role_attitude_sensitive,0.6627002361181423,0.8020833333333334,320.0,a_deepseek_full_corpus,,
+Gemini 3.5 Flash,none,0.4440750407623042,0.9875,320.0,a_deepseek_full_corpus,,
+Gemini 3.5 Flash,minimal,0.679835618680484,0.8973958333333334,320.0,a_deepseek_full_corpus,,
+Gemini 3.5 Flash,role_encouraging,0.6964303252550085,0.9567708333333332,320.0,a_deepseek_full_corpus,,
+Gemini 3.5 Flash,role_attitude_sensitive,0.6841944299289009,0.9651041666666668,320.0,a_deepseek_full_corpus,,
+GPT-5.4,none,0.4733243483651791,0.8994791666666666,320.0,a_deepseek_full_corpus,,
+GPT-5.4,minimal,0.7235706857778056,0.4130208333333333,320.0,a_deepseek_full_corpus,,
+GPT-5.4,role_encouraging,0.7314879710600886,0.4135416666666666,320.0,a_deepseek_full_corpus,,
+GPT-5.4,role_attitude_sensitive,0.7301514062815335,0.6026041666666666,320.0,a_deepseek_full_corpus,,
+GPT-OSS-120B,minimal,0.5939810852467959,,16.0,b_manual_validation_subset,0.40625,0.5625
+Med42-8B,role_encouraging,0.4331641873872783,,16.0,b_manual_validation_subset,0.2187499999999999,0.0625
+Med42-8B,role_attitude_sensitive,0.4100913079368443,,16.0,b_manual_validation_subset,0.4479166666666667,0.4583333333333333
+Claude Sonnet 4.6,minimal,0.7273637687590473,,16.0,b_manual_validation_subset,0.84375,0.3333333333333333
+GPT-OSS-120B,none,0.5369900953534892,,16.0,b_manual_validation_subset,0.6354166666666666,0.6041666666666666
+GPT-OSS-120B,role_attitude_sensitive,0.6050939110044765,,16.0,b_manual_validation_subset,0.7395833333333334,0.9375
+Med42-8B,none,0.473147752902103,,16.0,b_manual_validation_subset,0.3020833333333333,0.4375
+Claude Sonnet 4.6,role_encouraging,0.7461726237946351,,16.0,b_manual_validation_subset,0.8958333333333334,0.625
+Med42-8B,minimal,0.4447255398972137,,16.0,b_manual_validation_subset,0.1979166666666666,0.1249999999999999
+GPT-OSS-120B,role_encouraging,0.5920011596175676,,16.0,b_manual_validation_subset,0.6041666666666666,0.6875
+Claude Sonnet 4.6,role_attitude_sensitive,0.7260192573293095,,16.0,b_manual_validation_subset,0.9375,0.9375
+Claude Sonnet 4.6,none,0.5719708959010736,,16.0,b_manual_validation_subset,0.8333333333333334,0.75
+Gemini 3.5 Flash,minimal,0.7901175645835066,,16.0,b_manual_validation_subset,0.9479166666666666,0.7708333333333333
+Llama 4 Maverick,minimal,0.7270304350859695,,16.0,b_manual_validation_subset,0.5208333333333334,0.1041666666666666
+Llama 3.1 8B Instruct,none,0.1186139479442599,,16.0,b_manual_validation_subset,0.4270833333333333,0.2916666666666666
+GLM 4.5,none,0.5288072801909091,,16.0,b_manual_validation_subset,0.9583333333333334,0.8125
+GLM 4.5,role_encouraging,0.7008602798435862,,16.0,b_manual_validation_subset,0.4895833333333333,0.125
+Llama 4 Maverick,role_encouraging,0.7151661942155154,,16.0,b_manual_validation_subset,0.65625,0.4583333333333333
+Llama 3.1 8B Instruct,role_encouraging,0.319790336801096,,16.0,b_manual_validation_subset,0.2083333333333333,0.375
+Gemini 3.5 Flash,none,0.5246699256678248,,16.0,b_manual_validation_subset,0.9895833333333334,1.0
+GLM 4.5,role_attitude_sensitive,0.7268724302011548,,16.0,b_manual_validation_subset,0.7083333333333333,0.4791666666666666
+GLM 4.5,minimal,0.7102819933736501,,16.0,b_manual_validation_subset,0.375,0.0625
+Llama 3.1 8B Instruct,role_attitude_sensitive,0.3934153543568494,,16.0,b_manual_validation_subset,0.3645833333333333,0.4791666666666666
+Gemini 3.5 Flash,role_encouraging,0.778580938145323,,16.0,b_manual_validation_subset,0.9791666666666666,1.0
+Llama 4 Maverick,role_attitude_sensitive,0.6960536460221636,,16.0,b_manual_validation_subset,0.7916666666666666,0.625
+Llama 4 Maverick,none,0.5139732115674212,,16.0,b_manual_validation_subset,0.7604166666666666,0.5833333333333333
+Llama 3.1 8B Instruct,minimal,0.2573767405364886,,16.0,b_manual_validation_subset,0.1770833333333333,0.2083333333333333
+Gemini 3.5 Flash,role_attitude_sensitive,0.762148959457139,,16.0,b_manual_validation_subset,1.0,1.0
+GPT-5.4,minimal,0.831596089119969,,16.0,b_manual_validation_subset,0.4791666666666666,0.0625
+GPT-5.4,role_attitude_sensitive,0.8255530315004161,,16.0,b_manual_validation_subset,0.59375,0.4375
+GPT-5.4,none,0.5129628421421766,,16.0,b_manual_validation_subset,0.8958333333333334,1.0
+GPT-5.4,role_encouraging,0.8381998660439092,,16.0,b_manual_validation_subset,0.46875,0.1458333333333333
+Average,none,0.40587055234164593,0.7635416666666667,,a_deepseek_average,,
+Average,minimal,0.5662838783340193,0.4679036458333333,,a_deepseek_average,,
+Average,role_encouraging,0.570056599868186,0.5201171874999999,,a_deepseek_average,,
+Average,role_attitude_sensitive,0.5712008527886889,0.6800130208333334,,a_deepseek_average,,
+Average,none,0.47264199395865714,,,b_manual_average,,0.6848958333333333
+Average,minimal,0.6353091520753301,,,b_manual_average,,0.2786458333333333
+Average,role_encouraging,0.6404919482311139,,,b_manual_average,,0.4348958333333333
+Average,role_attitude_sensitive,0.6431559872260442,,,b_manual_average,,0.6692708333333333

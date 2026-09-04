@@ -1,0 +1,25 @@
+Primary judge,Alternative judge,Communication metric,n,Primary positive rate,Alternative positive rate,Agreement,Cohen's kappa,Mean absolute score difference
+DeepSeek V4 Flash,Claude Sonnet 4.6,All metrics pooled,15360,0.798,0.771,0.882,0.652,0.127
+DeepSeek V4 Flash,Claude Sonnet 4.6,Understandability,5120,0.713,0.654,0.837,0.625,0.169
+DeepSeek V4 Flash,Claude Sonnet 4.6,Usefulness,5120,0.863,0.841,0.879,0.524,0.135
+DeepSeek V4 Flash,Claude Sonnet 4.6,Patient-attitude responsiveness,5120,0.820,0.819,0.931,0.766,0.076
+DeepSeek V4 Flash,GPT-5.4-mini,All metrics pooled,15360,0.798,0.716,0.688,0.161,0.330
+DeepSeek V4 Flash,GPT-5.4-mini,Understandability,5120,0.713,0.623,0.596,0.097,0.427
+DeepSeek V4 Flash,GPT-5.4-mini,Usefulness,5120,0.863,0.564,0.663,0.257,0.342
+DeepSeek V4 Flash,GPT-5.4-mini,Patient-attitude responsiveness,5120,0.820,0.960,0.807,0.062,0.219
+DeepSeek V4 Flash,Qwen3-235B,All metrics pooled,15360,0.798,0.930,0.832,0.310,0.204
+DeepSeek V4 Flash,Qwen3-235B,Understandability,5120,0.713,0.908,0.767,0.285,0.301
+DeepSeek V4 Flash,Qwen3-235B,Usefulness,5120,0.863,0.906,0.890,0.465,0.133
+DeepSeek V4 Flash,Qwen3-235B,Patient-attitude responsiveness,5120,0.820,0.977,0.839,0.179,0.179
+DeepSeek V4 Flash,Kimi K2.6,All metrics pooled,15360,0.798,0.823,0.859,0.540,0.157
+DeepSeek V4 Flash,Kimi K2.6,Understandability,5120,0.713,0.732,0.822,0.557,0.189
+DeepSeek V4 Flash,Kimi K2.6,Usefulness,5120,0.863,0.846,0.884,0.535,0.122
+DeepSeek V4 Flash,Kimi K2.6,Patient-attitude responsiveness,5120,0.820,0.893,0.870,0.478,0.159
+DeepSeek V4 Flash,Gemma 4 31B,All metrics pooled,15360,0.798,0.704,0.864,0.639,0.130
+DeepSeek V4 Flash,Gemma 4 31B,Understandability,5120,0.713,0.478,0.736,0.481,0.229
+DeepSeek V4 Flash,Gemma 4 31B,Usefulness,5120,0.863,0.864,0.914,0.635,0.108
+DeepSeek V4 Flash,Gemma 4 31B,Patient-attitude responsiveness,5120,0.820,0.772,0.941,0.820,0.053
+DeepSeek V4 Flash,Mistral Large 3,All metrics pooled,15360,0.798,0.954,0.829,0.255,0.211
+DeepSeek V4 Flash,Mistral Large 3,Understandability,5120,0.713,0.985,0.721,0.049,0.360
+DeepSeek V4 Flash,Mistral Large 3,Usefulness,5120,0.863,0.970,0.887,0.289,0.155
+DeepSeek V4 Flash,Mistral Large 3,Patient-attitude responsiveness,5120,0.820,0.908,0.880,0.501,0.117

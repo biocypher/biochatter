@@ -120,6 +120,9 @@ max-doc-length = 80
 "benchmark/*" = ["ANN001", "ANN201", "D100", "D101", "D102", "D103", "D104", "I001", "S101"]
 
 [tool.pytest.ini_options]
+markers = [
+    "medication_safety: medication safety response-generation benchmark",
+]
 filterwarnings = [
     "ignore::DeprecationWarning:builtins:",
     "ignore::DeprecationWarning:swigvarlink:",

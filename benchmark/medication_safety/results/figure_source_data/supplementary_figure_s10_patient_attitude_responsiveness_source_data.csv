@@ -1,0 +1,5 @@
+patient_attitude,n,manual_positive_rate,judge_positive_rate,both_positive_rate,both_negative_rate,judge_positive_manual_negative_rate,manual_positive_judge_negative_rate,both_positive_n,both_negative_n,judge_positive_manual_negative_n,manual_positive_judge_negative_n
+very_anxious,128,0.6015625,0.59375,0.5546875,0.359375,0.0390625,0.046875,71,46,5,6
+anxious,128,0.578125,0.609375,0.53125,0.34375,0.078125,0.046875,68,44,10,6
+neutral,128,0.5234375,0.7890625,0.46875,0.15625,0.3203125,0.0546875,60,20,41,7
+confident,128,0.53125,0.7734375,0.5078125,0.203125,0.265625,0.0234375,65,26,34,3

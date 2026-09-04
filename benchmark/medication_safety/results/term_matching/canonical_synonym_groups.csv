@@ -1,0 +1,151 @@
+group_id,source,concept_or_note,variants
+G001,current_synonym_group,candida infection,candida infection; candidiasis; mucocutaneous candidiasis; thrush; yeast infection
+G002,current_synonym_group,itch,itch; itching; itchy skin; pruritus
+G003,current_synonym_group,hives,hives; urticaria
+G004,current_synonym_group,dyspnea,dyspnea; shortness of breath
+G005,current_synonym_group,fainting,fainting; syncope
+G006,current_synonym_group,drowsiness,drowsiness; somnolence
+G007,current_synonym_group,hypoglycemia,hypoglycemia; low blood sugar
+G008,current_synonym_group,anorexia,anorexia; decreased appetite; loss of appetite; reduced appetite
+G009,current_synonym_group,blood in the urine,blood in the urine; hematuria
+G010,current_synonym_group,heart attack,heart attack; myocardial infarction
+G011,current_synonym_group,allergy to an ingredient of the product,allergy to an ingredient of the product; allergy to any excipient; allergy to any ingredient; hypersensitivity to an excipient; hypersensitivity to any excipients
+G012,benchmark_internal_equivalent,epistaxis,epistaxis; nosebleed
+G013,benchmark_internal_equivalent,arthralgia,arthralgia; joint pain
+G014,benchmark_internal_equivalent,muscle pain,muscle pain; myalgia
+G015,benchmark_internal_equivalent,fever,fever; pyrexia
+G016,benchmark_internal_equivalent,dyspepsia,dyspepsia; indigestion
+G017,benchmark_internal_equivalent,alopecia,alopecia; hair loss
+G018,benchmark_internal_equivalent,hives,hives; nettle rash; urticaria
+G019,benchmark_internal_equivalent,erectile dysfunction,erectile dysfunction; impotence
+G020,benchmark_internal_equivalent,convulsion,convulsion; seizure
+G021,benchmark_internal_equivalent,altered taste,altered taste; dysgeusia
+G022,benchmark_internal_equivalent,hypotension,hypotension; low blood pressure
+G023,benchmark_internal_equivalent,anemia,anemia; low red blood cell
+G024,benchmark_internal_equivalent,decreased number of white blood cell,decreased number of white blood cell; leukocytopenia; leukopenia; reduced white blood cell
+G025,benchmark_internal_equivalent,decreased number of blood platelet,decreased number of blood platelet; low blood platelet; thrombocytopenia
+G026,benchmark_internal_equivalent,hyperglycemia,hyperglycemia; increased blood sugar
+G027,benchmark_internal_equivalent,hypokalemia,hypokalemia; low blood potassium
+G028,benchmark_internal_equivalent,dysuria,dysuria; painful urination
+G029,benchmark_internal_equivalent,cystitis,cystitis; inflammation of the bladder
+G030,benchmark_internal_equivalent,coughing up blood,coughing up blood; hemoptysis
+G031,benchmark_internal_equivalent,herpes zoster,herpes zoster; shingles
+G032,benchmark_internal_equivalent,protein in urine,protein in urine; proteinuria
+G033,benchmark_internal_equivalent,weight decrease,weight decrease; weight decreased; weight loss
+G034,benchmark_internal_equivalent,weight gain,weight gain; weight increase; weight increased
+G035,benchmark_internal_equivalent,dysphonia,dysphonia; hoarseness
+G036,benchmark_internal_equivalent,bruising,bruising; contusion
+G037,benchmark_internal_equivalent,low neutrophil,low neutrophil; neutropenia
+G038,benchmark_internal_equivalent,passing more urine than usual,passing more urine than usual; polyuria
+G039,benchmark_internal_equivalent,needing to pass urine more often,needing to pass urine more often; pollakiuria
+G040,benchmark_internal_equivalent,awakening at night to pass urine,awakening at night to pass urine; nocturia
+G041,benchmark_internal_equivalent,confusion,confusion; confusional state
+G042,benchmark_internal_equivalent,muscle weakness,muscle weakness; muscular weakness
+G043,benchmark_internal_equivalent,rash,rash; skin rash
+G044,safe_inflection_group,liver disease,liver disease
+G045,safe_inflection_group,photosensitivity reaction,photosensitivity reaction
+G046,safe_inflection_group,bone fracture,bone fracture
+G047,safe_inflection_group,allergic reaction,allergic reaction
+G048,safe_inflection_group,visual disturbance,visual disturbance; visual disturbances
+G049,safe_inflection_group,viral infection,viral infection
+G050,safe_inflection_group,hallucination,hallucination
+G051,safe_inflection_group,nosebleed,nosebleed
+G052,safe_inflection_group,low red blood cell,low red blood cell
+G053,safe_inflection_group,fungal infection,fungal infection
+G054,safe_inflection_group,severe allergic reaction,severe allergic reaction
+G055,safe_inflection_group,palpitation,palpitation
+G056,safe_inflection_group,infection,infection
+G057,safe_inflection_group,mild reduction in red blood cell,mild reduction in red blood cell
+G058,safe_inflection_group,blood in stool,blood in stool
+G059,safe_inflection_group,fall,fall
+G060,safe_inflection_group,changes in blood fat,changes in blood fat
+G061,safe_inflection_group,serious infection,serious infection
+G062,safe_inflection_group,low neutrophil,low neutrophil
+G063,safe_inflection_group,mouth ulcer,mouth ulcer
+G064,safe_inflection_group,hypersensitivity reaction,hypersensitivity reaction
+G065,safe_inflection_group,ovarian cyst,ovarian cyst
+G066,safe_inflection_group,increased red blood cell,increased red blood cell
+G067,safe_inflection_group,gallstone,gallstone
+G068,safe_inflection_group,muscle spasm,muscle spasm
+G069,safe_inflection_group,infusion site reaction,infusion site reaction
+G070,safe_inflection_group,menstrual disorder,menstrual disorder
+G071,safe_inflection_group,abnormal liver function test,abnormal liver function test
+G072,safe_inflection_group,bacterial infection,bacterial infection
+G073,safe_inflection_group,arteriovenous malformation,arteriovenous malformation
+G074,safe_inflection_group,seizure,seizure
+G075,safe_inflection_group,increased triglyceride,increased triglyceride
+G076,safe_inflection_group,sleep disorder,sleep disorder
+G077,expanded_review_safe_symmetric,anaphylaxis,anaphylactic reaction; anaphylaxis
+G078,expanded_review_safe_symmetric,generic hypersensitivity reaction,allergic reaction; hypersensitivity reaction
+G079,expanded_review_safe_symmetric,dry mouth,dry mouth; xerostomia
+G080,expanded_review_safe_symmetric,asthenia,asthenia; general weakness; lack of energy
+G081,expanded_review_safe_symmetric,fatigue,fatigue; feeling tired; generalised tiredness; tiredness
+G082,expanded_review_safe_symmetric,somnolence,drowsiness; sleepiness; somnolence
+G083,expanded_review_safe_symmetric,thrombocytopenia,decreased number of blood platelet; decreased platelet count; low blood platelet; low platelet; low platelet count; reduced platelet count; thrombocytopenia
+G084,expanded_review_safe_symmetric,leukopenia,decreased number of white blood cell; decreased white blood cell count; leukocytopenia; leukopenia; low white blood cell; low white blood cell count; reduced white blood cell; reduced white blood cell count
+G085,expanded_review_safe_symmetric,neutropenia,decreased neutrophil count; low neutrophil; low neutrophil count; neutropenia; reduced neutrophil count
+G086,expanded_review_safe_symmetric,acute kidney injury,acute kidney injury; acute renal failure; acute renal insufficiency; aki
+G087,expanded_review_safe_symmetric,dysphagia,difficulty swallowing; dysphagia; trouble swallowing
+G088,expanded_review_safe_symmetric,oral or oropharyngeal candidiasis,candida infection of the mouth and throat; oral candidiasis; oral thrush; oropharyngeal candidiasis; thrush
+G089,expanded_review_safe_symmetric,gouty arthritis,gout; gouty arthritis
+G090,expanded_review_safe_symmetric,emotional instability,emotional instability; emotional lability; mood swings
+G091,expanded_review_safe_symmetric,pancreatitis,inflammation of the pancreas; pancreatitis
+G092,expanded_review_safe_symmetric,thirst,excessive thirst; increased thirst; polydipsia; thirst
+G093,expanded_review_safe_symmetric,abdominal distension,abdominal bloating; abdominal distension; bloating
+G094,expanded_review_safe_symmetric,insomnia,difficulty sleeping; insomnia; trouble sleeping
+G095,expanded_review_safe_symmetric,urinary tract infection,urinary tract infection; uti; utis
+G096,expanded_review_safe_symmetric,dysphonia,dysphonia; hoarse voice; hoarseness
+G097,expanded_review_safe_symmetric,cholecystitis,cholecystitis; gallbladder inflammation; inflammation of the gallbladder
+G098,expanded_review_safe_symmetric,erythema,erythema; redness of the skin; skin redness
+G099,expanded_review_safe_symmetric,post transplant lymphoproliferative disorder,post transplant lymphoproliferative disorder; ptld
+G100,expanded_review_safe_symmetric,ecchymosis,bruise; bruises; bruising; ecchymosis
+G101,expanded_review_safe_symmetric,eructation,belching; burping; eructation
+G102,expanded_review_safe_symmetric,dyspnea,breathlessness; difficulty breathing; dyspnea; shortness of breath
+G103,expanded_review_safe_symmetric,nasopharyngitis,inflammation of the nose and throat; nasopharyngitis
+G104,expanded_review_safe_symmetric,tinnitus,ringing in ears; ringing in the ears; tinnitus
+G105,expanded_review_safe_symmetric,flatulence,flatulence; intestinal gas
+G106,expanded_review_safe_symmetric,breast pain,breast pain; breast tenderness; mastalgia
+G107,expanded_review_safe_symmetric,dental caries,cavities; dental caries; dental cavities; tooth decay
+G108,expanded_review_safe_symmetric,mydriasis,dilated pupils; enlarged pupils; mydriasis; pupil dilation
+G109,expanded_review_safe_symmetric,gastrointestinal hemorrhage,bleeding in the digestive tract; bleeding in the stomach or intestines; digestive tract bleeding; gastrointestinal bleeding; gastrointestinal hemorrhage
+G110,expanded_review_safe_symmetric,gingival bleeding,bleeding gums; gingival bleeding; gum bleeding
+G111,expanded_review_safe_symmetric,orthostatic hypotension,drop in blood pressure on standing; low blood pressure on standing; orthostatic hypotension; postural hypotension
+G112,expanded_review_safe_symmetric,gynecomastia,breast enlargement in men; breast tissue enlargement in men; gynecomastia; male breast enlargement
+G113,expanded_review_lexical_normalization,increased creatinine,elevated blood creatinine; elevated creatinine; increased blood creatinine; increased creatinine; raised creatinine; raised serum creatinine
+G114,expanded_review_safe_symmetric,photosensitivity reaction,photosensitivity; photosensitivity reaction; sensitivity to sunlight; sun sensitivity
+G115,expanded_review_safe_symmetric,rectal hemorrhage,bleeding from the rectum; rectal bleeding; rectal hemorrhage
+G116,expanded_review_safe_symmetric,eye hemorrhage,bleeding in the eye; blood in the eye; eye bleeding; eye hemorrhage; ocular hemorrhage
+G117,expanded_review_safe_symmetric,urinary frequency,frequent urination; increased urinary frequency; needing to pass urine more often; pollakiuria; urinary frequency
+G118,expanded_review_safe_symmetric,bruxism,bruxism; teeth grinding; tooth grinding
+G119,expanded_review_safe_symmetric,phlebitis,inflammation of a vein; phlebitis; vein inflammation
+G120,expanded_review_safe_symmetric,retroperitoneal bleeding,bleeding behind the abdominal cavity; retroperitoneal bleeding; retroperitoneal hemorrhage
+G121,expanded_review_safe_symmetric,Addison disease,addison disease; addison s disease; primary adrenal insufficiency
+G122,expanded_review_safe_symmetric,polyuria,increased urine volume; passing more urine than usual; polyuria
+G123,expanded_review_safe_symmetric,stomatitis,inflammation of the mouth; inflammation of the oral mucosa; stomatitis
+G124,expanded_review_safe_symmetric_for_first_group_only,sensory symptoms,paresthesia; pins and needles; tingling
+G125,expanded_review_safe_symmetric,renal impairment,impaired kidney function; kidney impairment; renal impairment
+G126,expanded_review_safe_symmetric,palpitations,awareness of heartbeat; palpitation
+G127,expanded_review_safe_symmetric,malaise,feeling generally unwell; general feeling of being unwell; general malaise; malaise
+G128,expanded_review_safe_symmetric,vertigo,sensation of spinning; spinning sensation; vertigo
+G129,expanded_review_safe_symmetric,kidney infection,kidney infection; pyelonephritis
+G130,expanded_review_safe_symmetric,galactorrhea,abnormal milk production; galactorrhea; inappropriate milk production; unexpected milk production
+G131,expanded_review_safe_symmetric,anuria,absence of urine production; anuria; inability to produce urine; no urine output
+G132,expanded_review_safe_symmetric,hypophosphatemia,hypophosphataemia; hypophosphatemia; low blood phosphorus; low phosphate; low phosphate level; low phosphorus
+G133,expanded_review_safe_symmetric,melena,black stool; black tarry stool; melaena; melena; tarry black stool
+G134,expanded_review_safe_symmetric,glycosuria,glucose in urine; glycosuria; sugar in urine; urinary glucose
+G135,expanded_review_safe_symmetric,deep vein thrombosis,blood clot in the leg; blood clots in the legs; deep vein thrombosis; deep venous thrombosis; dvt
+G136,expanded_review_safe_symmetric,pulmonary embolism,blood clot in the lung; blood clots in the lung; blood clots in the lungs; pe; pulmonary emboli; pulmonary embolism; pulmonary embolus
+G137,expanded_review_safe_symmetric,pleural effusion,fluid around the lung; fluid around the lungs; pleural effusion; pleural effusions
+G138,expanded_review_safe_symmetric,pericardial effusion,fluid around the heart; fluid collection around the heart; pericardial effusion
+G139,expanded_review_safe_symmetric,ascites,abdominal fluid accumulation; ascites; fluid collection in the abdomen; fluid in the abdomen
+G140,expanded_review_safe_symmetric,pancytopenia,combined lowering of red blood cell white blood cell and blood platelet; pancytopenia; reduced red cell white cell and platelet
+G141,expanded_review_safe_symmetric,positive direct Coombs test,direct antiglobulin test positive; direct coombs test positive; positive dat; positive direct antiglobulin test; positive direct coombs test
+G142,expanded_review_lexical_normalization,alanine aminotransferase increased,alanine aminotransferase increased; alt increased; elevated alanine aminotransferase; elevated alt; increased alanine aminotransferase; increased alt; raised alt
+G143,expanded_review_lexical_normalization,aspartate aminotransferase increased,aspartate aminotransferase increased; ast increased; elevated aspartate aminotransferase; elevated ast; increased aspartate aminotransferase; increased ast; raised ast
+G144,expanded_review_lexical_normalization,gamma glutamyltransferase increased,elevated gamma glutamyltransferase; elevated ggt; gamma glutamyltransferase increased; gamma gt increased; ggt increased; increased gamma glutamyltransferase; increased ggt
+G145,expanded_review_safe_symmetric,hematochezia,bright red blood in stool; fresh blood in stool; hematochezia
+G146,expanded_review_safe_symmetric,hypercholesterolemia,elevated cholesterol; high cholesterol; hypercholesterolaemia; hypercholesterolemia; increased cholesterol; raised cholesterol
+G147,expanded_review_safe_symmetric,hypertriglyceridemia,elevated triglyceride; high triglyceride; hypertriglyceridaemia; hypertriglyceridemia; increased triglyceride; raised triglyceride
+G148,expanded_review_safe_symmetric,lymphedema,excess tissue fluid due to irregular lymph function; lymphatic edema; lymphedema
+G149,expanded_review_lexical_normalization,bilirubin increased,bilirubin increased; blood bilirubin increased; elevated bilirubin; hyperbilirubinaemia; hyperbilirubinemia; increased bilirubin; raised bilirubin
+G150,expanded_review_lexical_normalization,alkaline phosphatase increased,alkaline phosphatase increased; alp increased; blood alkaline phosphatase increased; elevated alkaline phosphatase; increased alkaline phosphatase; raised alkaline phosphatase

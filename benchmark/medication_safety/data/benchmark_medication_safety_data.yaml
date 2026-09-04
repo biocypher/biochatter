@@ -1,0 +1,1207 @@
+drug_adverse_effect_assessment:
+- general_system_messages:
+    none: []
+    minimal:
+      - You will receive a user question.
+      - The question concerns adverse drug reactions and contraindications.
+      - "Structure the answer with the sections: Very common adverse reactions, Common adverse reactions, Uncommon adverse reactions, Contraindications, and References."
+      - For each requested frequency category, list all adverse reactions you can identify for the benchmark case, not just a few examples.
+      - Do not omit adverse reactions or contraindications that belong to the requested case.
+      - Do not shorten long categories to only representative examples if more adverse reactions are known.
+      - Include all contraindications.
+      - Stay within the requested categories and avoid unrelated additions.
+      - Your challenge is to provide a lot of information, while still keeping your response correct, understandable and useful.
+    role_encouraging:
+      - You will receive a user question.
+      - The question concerns adverse drug reactions and contraindications.
+      - "Structure the answer with the sections: Very common adverse reactions, Common adverse reactions, Uncommon adverse reactions, Contraindications, and References."
+      - For each requested frequency category, list all adverse reactions you can identify for the benchmark case, not just a few examples.
+      - Do not omit adverse reactions or contraindications that belong to the requested case.
+      - Do not shorten long categories to only representative examples if more adverse reactions are known.
+      - Include all contraindications.
+      - Stay within the requested categories and avoid unrelated additions.
+      - Your challenge is to provide a lot of information, while still keeping your response correct, understandable and useful.
+      - You are an expert in pharmacology, toxicology, and drug safety.
+      - You act in the role of a helpful pharmacist asked for advice by a customer.
+      - Your expertise allows you to evaluate adverse drug reactions and contraindications using scientific evidence.
+    role_attitude_sensitive:
+      - You will receive a user question.
+      - The question concerns adverse drug reactions and contraindications.
+      - "Structure the answer with the sections: Very common adverse reactions, Common adverse reactions, Uncommon adverse reactions, Contraindications, and References."
+      - For each requested frequency category, list all adverse reactions you can identify for the benchmark case, not just a few examples.
+      - Do not omit adverse reactions or contraindications that belong to the requested case.
+      - Do not shorten long categories to only representative examples if more adverse reactions are known.
+      - Include all contraindications.
+      - Stay within the requested categories and avoid unrelated additions.
+      - Your challenge is to provide a lot of information, while still keeping your response correct, understandable and useful.
+      - You are an expert in pharmacology, toxicology, and drug safety.
+      - You act in the role of a helpful pharmacist asked for advice by a customer.
+      - Your expertise allows you to evaluate adverse drug reactions and contraindications using scientific evidence.
+      - Pay attention to the patient's stated attitude (if any) as expressed in the user prompt.
+      - Acknowledge or reflect the patient's stated attitude, if any.
+      - Adapt the tone, framing, emphasis, and level of explanation to that attitude when helpful.
+- patient_attitude_templates:
+    very_anxious: I frequently have problems with new medications and feel very worried when my doctor prescribes something new. Before I start treatment, I would like a clear overview of the possible problems.
+    anxious: I sometimes have problems with new medications and feel a bit worried when my doctor prescribes something new. Before I start treatment, I would like a clear overview of the possible problems.
+    neutral: Before I start a new medication prescribed by my doctor, I would like a clear overview of the possible problems.
+    confident: I have never had problems with new medications, so I do not feel worried. Still, before I start a new medication prescribed by my doctor, I would like a clear overview of the possible problems.
+- case: drug:pioglitazone_adult_type2_diabetes_adverse_effects_and_contraindications
+  case_id: '1'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: pioglitazone
+      indication: type 2 diabetes
+      paragraph: My doctor prescribed pioglitazone for type 2 diabetes. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly separate adverse effects from contraindications and should reflect use in an adult patient with type 2 diabetes. Very common adverse effects include oedema, especially when pioglitazone is combined with insulin, and hypoglycaemia when pioglitazone is used in combination with other antidiabetic medicines. Common adverse effects include heart failure in combination with insulin, bone fractures, respiratory tract infection, visual disturbances, weight gain, hypoaesthesia, headache, somnolence, dizziness, arthralgia, impotence, back pain, dyspnoea, mild reduction in red blood cells, and flatulence. Uncommon adverse effects include bladder cancer, sinusitis, insomnia, glycosuria, protein in urine, increased enzyme values, vertigo, sweating, fatigue, and increased appetite. The answer should also mention the contraindications: hypersensitivity to pioglitazone or excipients, heart failure or a history of heart failure, liver disease, prior diabetic ketoacidosis,
+      current or previous bladder cancer, and blood in the urine that has not been investigated. Not known effects such as raised liver enzymes, allergic reactions, male fractures, or macular oedema with blurred vision may be mentioned but are not required for this case.'
+    adverse_effects:
+      very_common:
+      - edema with insulin combination
+      - hypoglycemia with combination antidiabetic treatment
+      common:
+      - arthralgia
+      - back pain
+      - bone fractures
+      - dizziness
+      - dyspnea
+      - flatulence
+      - headache
+      - heart failure with insulin combination
+      - hypoaesthesia
+      - impotence
+      - mild reduction in red blood cells
+      - respiratory tract infection
+      - somnolence
+      - visual disturbances
+      - weight gain
+      uncommon:
+      - bladder cancer
+      - fatigue
+      - glycosuria
+      - increased appetite
+      - increased enzyme values
+      - insomnia
+      - protein in urine
+      - sinusitis
+      - sweating
+      - vertigo
+    contraindications:
+      - current bladder cancer
+      - heart failure
+      - history of heart failure
+      - hypersensitivity to an excipient
+      - hypersensitivity to pioglitazone
+      - liver disease
+      - previous bladder cancer
+      - prior diabetic ketoacidosis
+      - unexplained blood in the urine
+    individual: adult_type2_diabetes_pioglitazone_safety
+- case: drug:zinforo_ceftaroline_fosamil_adult_community_acquired_pneumonia_adverse_effects_and_contraindications
+  case_id: '2'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: Zinforo (ceftaroline fosamil)
+      indication: community-acquired pneumonia
+      paragraph: My doctor prescribed Zinforo (ceftaroline fosamil) for community-acquired pneumonia. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly separate adverse effects from contraindications and should reflect use in an adult patient with community-acquired pneumonia. There are no very common adverse effects listed in the provided information. Common adverse effects include diarrhoea, headache, nausea, pruritus, vomiting, abdominal pain, dizziness, rash, anaemia, leucopenia, neutropenia, thrombocytopenia, prolonged clotting times, phlebitis, increased transaminases, increased blood creatinine, pyrexia, infusion site reactions, and a positive direct Coombs test. Uncommon adverse effects include Clostridium difficile colitis, agranulocytosis, eosinophilia, anaphylaxis or other hypersensitivity reactions such as urticaria or lip and face swelling, encephalopathy, and eosinophilic pneumonia. Rare severe skin reactions such as Stevens-Johnson syndrome, toxic epidermal necrolysis, or DRESS may be mentioned but are not required for this case. The answer should also mention the contraindications: hypersensitivity to ceftaroline fosamil or excipients, hypersensitivity to the cephalosporin class, and immediate or severe hypersensitivity to another beta-lactam antibacterial such as penicillins or carbapenems.'
+    adverse_effects:
+      very_common: []
+      common:
+      - abdominal pain
+      - anemia
+      - diarrhea
+      - direct coombs test positive
+      - dizziness
+      - headache
+      - increased blood creatinine
+      - increased transaminases
+      - infusion site reactions
+      - leucopenia
+      - nausea
+      - neutropenia
+      - phlebitis
+      - prolonged aptt
+      - prolonged inr
+      - prolonged prothrombin time
+      - pruritus
+      - pyrexia
+      - rash
+      - thrombocytopenia
+      - vomiting
+      uncommon:
+      - agranulocytosis
+      - anaphylaxis
+      - clostridium difficile colitis
+      - encephalopathy
+      - eosinophilia
+      - eosinophilic pneumonia
+      - hypersensitivity
+      - lip swelling
+      - urticaria
+    contraindications:
+      - immediate severe hypersensitivity to another beta lactam antibacterial
+      - hypersensitivity to a cephalosporin class antibacterial
+      - hypersensitivity to an excipient
+      - hypersensitivity to ceftaroline fosamil
+    individual: adult_pneumonia_antibiotic_safety
+- case: drug:apixaban_nvaf_adverse_effects_and_contraindications
+  case_id: '3'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: apixaban
+      indication: stroke prevention in non-valvular atrial fibrillation
+      paragraph: My doctor prescribed apixaban for stroke prevention in non-valvular atrial fibrillation. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly distinguish adverse effects from contraindications and should reflect the NVAF indication. In this setting, there are no very common adverse effects in the provided table. Common adverse effects include anaemia, eye haemorrhage including conjunctival haemorrhage, haemorrhage or haematoma, hypotension, epistaxis, nausea, gastrointestinal haemorrhage, rectal haemorrhage or gingival bleeding, gamma-glutamyltransferase increased, haematuria, and contusion. Uncommon adverse effects include thrombocytopenia, hypersensitivity or allergic oedema or anaphylaxis, pruritus, brain haemorrhage, intra-abdominal haemorrhage, haemoptysis, haemorrhoidal haemorrhage, mouth haemorrhage, haematochezia, abnormal liver function tests including bilirubin or alkaline phosphatase increases, alanine aminotransferase increased, skin rash, alopecia, abnormal vaginal or urogenital haemorrhage, application site bleeding, occult blood positive, post-procedural haemorrhage,
+      and traumatic haemorrhage. The answer should also prominently mention the contraindications: hypersensitivity to apixaban or excipients, active clinically significant bleeding, hepatic disease associated with coagulopathy and clinically relevant bleeding risk, lesions or conditions with major bleeding risk, and concomitant treatment with another anticoagulant except in specific switching or procedural situations.'
+    adverse_effects:
+      very_common: []
+      common:
+      - anemia
+      - contusion
+      - epistaxis
+      - eye hemorrhage
+      - gamma glutamyltransferase increased
+      - gastrointestinal hemorrhage
+      - gingival bleeding
+      - hematoma
+      - hematuria
+      - hemorrhage
+      - hypotension
+      - nausea
+      - rectal hemorrhage
+      uncommon:
+      - abnormal vaginal hemorrhage
+      - alanine aminotransferase increased
+      - allergic edema
+      - alopecia
+      - anaphylaxis
+      - application site bleeding
+      - aspartate aminotransferase increased
+      - blood alkaline phosphatase increased
+      - blood bilirubin increased
+      - brain hemorrhage
+      - haemoptysis
+      - haemorrhoidal hemorrhage
+      - hematochezia
+      - hypersensitivity
+      - intra abdominal hemorrhage
+      - liver function test abnormal
+      - mouth hemorrhage
+      - occult blood positive
+      - post procedural hemorrhage
+      - pruritus
+      - skin rash
+      - thrombocytopenia
+      - traumatic hemorrhage
+      - urogenital hemorrhage
+    contraindications:
+      - active clinically significant bleeding
+      - arteriovenous malformations
+      - concomitant treatment with another anticoagulant
+      - esophageal varices
+      - hepatic disease associated with coagulopathy
+      - hypersensitivity to an excipient
+      - hypersensitivity to apixaban
+      - intracerebral vascular abnormalities
+      - lesion with significant risk of major bleeding
+      - major intraspinal vascular abnormalities
+      - malignant neoplasm at high risk of bleeding
+      - recent brain injury
+      - recent brain surgery
+      - recent gastrointestinal ulceration
+      - recent intracranial hemorrhage
+      - recent ophthalmic surgery
+      - recent spinal injury
+      - recent spinal surgery
+      - vascular aneurysms
+    individual: adult_nvaf_stroke_prevention
+- case: drug:duoresp_spiromax_budesonide_formoterol_asthma_adverse_effects_and_contraindications
+  case_id: '4'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: DuoResp Spiromax
+      indication: asthma
+      paragraph: My doctor prescribed DuoResp Spiromax for asthma. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly separate adverse effects from contraindications and should reflect the asthma indication. There are no very common adverse effects listed in the provided table. Common adverse effects include Candida infection of the mouth and throat, headache, tremor, palpitations, and mild throat irritation, cough, or dysphonia including hoarseness. Uncommon adverse effects include aggression, psychomotor hyperactivity, anxiety, sleep disorders, dizziness, blurred vision, tachycardia, nausea, bruising, and muscle cramps. The answer should also state the contraindications: hypersensitivity to budesonide, formoterol, or another excipient.'
+    adverse_effects:
+      very_common: []
+      common:
+      - candida infection of the mouth and throat
+      - cough
+      - dysphonia
+      - headache
+      - hoarseness
+      - palpitations
+      - throat irritation
+      - tremor
+      uncommon:
+      - aggression
+      - anxiety
+      - blurred vision
+      - bruising
+      - dizziness
+      - muscle cramps
+      - nausea
+      - psychomotor hyperactivity
+      - sleep disorders
+      - tachycardia
+    contraindications:
+      - hypersensitivity to an excipient
+      - hypersensitivity to budesonide
+      - hypersensitivity to formoterol
+    individual: adult_asthma_inhaler_safety
+- case: drug:ozempic_semaglutide_adult_type2_diabetes_adverse_effects_and_contraindications
+  case_id: '5'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: Ozempic (semaglutide)
+      indication: type 2 diabetes
+      paragraph: My doctor prescribed Ozempic (semaglutide) for type 2 diabetes. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly separate adverse effects from contraindications and should reflect use in an adult patient with type 2 diabetes. Very common adverse effects include nausea and diarrhoea, and hypoglycaemia when semaglutide is used with insulin or a sulfonylurea. Common adverse effects include vomiting, hypoglycaemia when semaglutide is used with other oral antidiabetics, decreased appetite, dizziness, headache, diabetic retinopathy complications, abdominal pain, abdominal distension, constipation, dyspepsia, gastritis, gastro-oesophageal reflux disease or heartburn, eructation, flatulence, gallstones, fatigue, increased lipase, increased amylase, and weight decreased. Uncommon adverse effects include hypersensitivity, dysgeusia, increased heart rate, acute pancreatitis, delayed gastric emptying, and injection site reactions. The answer should also state the main contraindication: hypersensitivity to semaglutide or to one of the excipients. Rare, very rare, or not known effects such as anaphylactic reaction, NAION, angioedema, intestinal obstruction, or changed skin sensation may be mentioned but are not required for this case.'
+    adverse_effects:
+      very_common:
+      - diarrhea
+      - hypoglycemia with insulin
+      - hypoglycemia with sulfonylurea
+      - nausea
+      common:
+      - abdominal distension
+      - abdominal pain
+      - constipation
+      - decreased appetite
+      - diabetic retinopathy complications
+      - dizziness
+      - dyspepsia
+      - eructation
+      - fatigue
+      - flatulence
+      - gallstones
+      - gastritis
+      - gastroesophageal reflux
+      - heartburn
+      - headache
+      - hypoglycemia with other oral antidiabetics
+      - increased amylase
+      - increased lipase
+      - vomiting
+      - weight decreased
+      uncommon:
+      - acute pancreatitis
+      - delayed gastric emptying
+      - dysgeusia
+      - hypersensitivity
+      - increased heart rate
+      - injection site reactions
+    contraindications:
+      - hypersensitivity to an excipient
+      - hypersensitivity to semaglutide
+    individual: adult_type2_diabetes_glp1_safety
+- case: drug:fluticasone_furoate_avamys_nasal_spray_adverse_effects_and_contraindications
+  case_id: '6'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: Avamys (fluticasone furoate nasal spray)
+      indication: allergic rhinitis
+      paragraph: My doctor prescribed Avamys (fluticasone furoate nasal spray) for allergic rhinitis. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: A strong answer should clearly separate adverse effects from contraindications and should refer specifically to fluticasone furoate nasal spray (Avamys). Very common adverse effects include nosebleeds. Common adverse effects include nasal ulceration, headache, and shortness of breath. Uncommon adverse effects include pain, burning, irritation, soreness, or dryness inside the nose. The main contraindication is hypersensitivity to fluticasone furoate or to any of the other ingredients of the medicine.
+    adverse_effects:
+      very_common:
+      - nosebleeds
+      common:
+      - headache
+      - nasal ulceration
+      - shortness of breath
+      uncommon:
+      - burning inside the nose
+      - dryness inside the nose
+      - irritation inside the nose
+      - pain inside the nose
+      - soreness inside the nose
+    contraindications:
+      - hypersensitivity to an ingredient of the product
+      - hypersensitivity to fluticasone furoate
+    individual: adult_intranasal_corticosteroid_safety
+- case: drug:insulin_glargine_adult_adverse_effects_and_contraindications
+  case_id: '7'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: insulin glargine
+      indication: diabetes
+      paragraph: My doctor prescribed insulin glargine for diabetes. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly separate adverse effects from contraindications and should reflect use in an adult patient. Very common adverse effects include hypoglycaemia. Common adverse effects include lipohypertrophy and skin or allergic reactions at the injection site such as redness, pain, itching, hives, swelling, or inflammation. Uncommon adverse effects include lipoatrophy. The answer should also state the main contraindication: hypersensitivity to insulin glargine or to one of the excipients. Rare and very rare effects such as severe allergic reactions, transient visual disturbance, oedema, dysgeusia, or myalgia may be mentioned but are not required for this case.'
+    adverse_effects:
+      very_common:
+      - hypoglycemia
+      common:
+      - injection site allergic reaction
+      - injection site hives
+      - injection site inflammation
+      - injection site itching
+      - injection site pain
+      - injection site redness
+      - injection site swelling
+      - lipohypertrophy
+      uncommon:
+      - lipoatrophy
+    contraindications:
+      - hypersensitivity to an excipient
+      - hypersensitivity to insulin glargine
+    individual: adult_diabetes_insulin_safety
+- case: drug:levetiracetam_adult_adverse_effects_and_contraindications
+  case_id: '8'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: levetiracetam
+      indication: seizures
+      paragraph: My doctor prescribed levetiracetam for seizures. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly separate adverse effects from contraindications and should reflect use in an adult patient. Very common adverse effects include nasopharyngitis, somnolence, and headache. Common adverse effects include infection, anorexia, depression, hostility or aggression, anxiety, insomnia, nervousness or irritability, convulsion, balance disorder, dizziness, lethargy, tremor, vertigo, cough, abdominal pain, diarrhoea, dyspepsia, vomiting, nausea, rash, and asthenia or fatigue. Uncommon adverse effects include decreased platelets, decreased white blood cells, weight decrease or increase, suicidal ideation or suicide attempt, mental disorder, abnormal behaviour, hallucination, anger, confusion, panic attack, emotional instability or mood swings, agitation, amnesia, memory impairment, abnormal coordination or ataxia, paraesthesia, disturbance in attention, diplopia, blurred vision, abnormal liver function tests, hair loss, eczema, pruritus, muscle weakness, myalgia, and
+      injury. The answer should also state the main contraindication: hypersensitivity to levetiracetam, other pyrrolidone derivatives, or one of the excipients. Serious allergic, dermatologic, psychiatric, neurologic, or renal warning signs may be mentioned but are not required for this case.'
+    adverse_effects:
+      very_common:
+      - headache
+      - nasopharyngitis
+      - somnolence
+      common:
+      - abdominal pain
+      - aggression
+      - anorexia
+      - anxiety
+      - asthenia
+      - balance disorder
+      - convulsion
+      - cough
+      - depression
+      - diarrhea
+      - dizziness
+      - dyspepsia
+      - fatigue
+      - hostility
+      - infection
+      - insomnia
+      - irritability
+      - lethargy
+      - nausea
+      - nervousness
+      - rash
+      - tremor
+      - vertigo
+      - vomiting
+      uncommon:
+      - abnormal behaviour
+      - abnormal coordination
+      - abnormal liver function test
+      - agitation
+      - amnesia
+      - anger
+      - ataxia
+      - blurred vision
+      - confusion
+      - decreased number of blood platelets
+      - decreased number of white blood cells
+      - diplopia
+      - disturbance in attention
+      - eczema
+      - elevated liver function test
+      - emotional instability
+      - hair loss
+      - hallucination
+      - injury
+      - memory impairment
+      - mental disorder
+      - mood swings
+      - muscle weakness
+      - myalgia
+      - panic attack
+      - paraesthesia
+      - pruritus
+      - suicidal ideation
+      - suicide attempt
+      - weight decrease
+      - weight increase
+    contraindications:
+      - hypersensitivity to an excipient
+      - hypersensitivity to levetiracetam
+      - hypersensitivity to other pyrrolidone derivatives
+    individual: adult_antiseizure_medication_safety
+- case: drug:methotrexate_jylamvo_adult_adverse_effects_and_contraindications
+  case_id: '9'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: Jylamvo (methotrexate)
+      indication: rheumatoid arthritis
+      paragraph: My doctor prescribed Jylamvo (methotrexate) for rheumatoid arthritis. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly separate adverse effects from contraindications and should reflect use in an adult patient. Very common adverse effects include loss of appetite, nausea, vomiting, abdominal pain, indigestion, inflammation and ulcers of the mouth and throat, and raised liver enzymes. Common adverse effects include infections, reduced blood cell formation with leucocytopenia, anaemia, or thrombocytopenia, headache, tiredness, lightheadedness, pneumonia with dry cough, shortness of breath and fever, diarrhoea, and skin rash, skin redness, or itching. Uncommon adverse effects include lymphoma, severe allergic reactions, diabetes, depression, dizziness, confusion, seizures, lung damage, ulcers and bleeding in the digestive tract, liver disease, reduced blood proteins, nettle rash, sunburn-like reactions due to photosensitivity, brown skin discoloration, hair loss, increased rheumatic nodules, shingles, painful psoriasis, slow wound healing, joint or muscle pain, osteoporosis,
+      kidney disease, bladder inflammation or ulcers including blood in the urine, painful urination, and inflammation or ulcers of the vagina. The answer should also mention the contraindications: hypersensitivity to methotrexate or excipients, severe kidney impairment, liver impairment, significant blood disorders, excessive alcohol use, weakened immune system, serious infections such as tuberculosis or HIV, stomach or intestinal ulcers, inflammation or ulcers in the mouth, breast-feeding, pregnancy for non-oncologic indications, and recent or planned live vaccination.'
+    adverse_effects:
+      very_common:
+      - abdominal pain
+      - indigestion
+      - inflammation of the mouth
+      - inflammation of the throat
+      - loss of appetite
+      - nausea
+      - raised liver enzymes
+      - ulcers of the mouth
+      - ulcers of the throat
+      - vomiting
+      common:
+      - anemia
+      - diarrhea
+      - dry cough
+      - fever
+      - headache
+      - infections
+      - itching
+      - leucocytopenia
+      - lightheadedness
+      - pneumonia
+      - shortness of breath
+      - skin rash
+      - skin redness
+      - thrombocytopenia
+      - tiredness
+      uncommon:
+      - bleeding in the digestive tract
+      - blood in the urine
+      - brown discoloration of the skin
+      - confusion
+      - depression
+      - diabetes
+      - dizziness
+      - hair loss
+      - increased number of rheumatic nodules
+      - inflammation of the bladder
+      - inflammation of the vagina
+      - joint pain
+      - kidney disease
+      - liver diseases
+      - lung damage
+      - lymphoma
+      - muscle pain
+      - nettle rash
+      - osteoporosis
+      - painful psoriasis
+      - painful urination
+      - reduced blood proteins
+      - seizures
+      - severe allergic reactions
+      - shingles
+      - slow wound healing
+      - sunburn like reactions
+      - ulcers in the digestive tract
+      - ulcers of the bladder
+      - ulcers of the vagina
+    contraindications:
+      - bone marrow hypoplasia
+      - breast feeding
+      - excessive alcohol use
+      - hiv
+      - hypersensitivity to an excipient
+      - hypersensitivity to methotrexate
+      - inflammation of the mucous membrane of the mouth
+      - intestinal ulcer
+      - leukopenia
+      - liver impairment
+      - mouth ulcers
+      - planned live vaccine
+      - pregnancy for non oncologic indications
+      - recent live vaccine
+      - serious infection
+      - severe kidney impairment
+      - significant anemia
+      - stomach ulcer
+      - thrombocytopenia
+      - tuberculosis
+      - weakened immune system
+    individual: adult_methotrexate_safety
+- case: drug:valdoxan_agomelatine_adult_depression_adverse_effects_and_contraindications
+  case_id: '10'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: Valdoxan (agomelatine)
+      indication: depression
+      paragraph: My doctor prescribed Valdoxan (agomelatine) for depression. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly separate adverse effects from contraindications and should reflect use in an adult patient with depression. Very common adverse effects include headache. Common adverse effects include anxiety, abnormal dreams, dizziness, somnolence, insomnia, nausea, diarrhoea, constipation, abdominal pain, vomiting, increased ALT and/or AST, back pain, fatigue, and weight increased. Uncommon adverse effects include suicidal thoughts or behaviour, agitation, irritability, restlessness, aggression, nightmares, mania or hypomania, confusional state, migraine, paraesthesia, restless leg syndrome, blurred vision, tinnitus, increased gamma-glutamyltransferase, hyperhidrosis, eczema, pruritus, urticaria, myalgia, and weight decreased. The answer should also state the contraindications: hypersensitivity to agomelatine or excipients, hepatic impairment including cirrhosis or active liver disease, transaminases exceeding 3 times the upper limit of normal, and concomitant use of potent CYP1A2 inhibitors such as fluvoxamine or ciprofloxacin. Rare hepatic events such as hepatitis, jaundice, hepatic failure, urinary retention, or angioedema may be mentioned but are not required for this case.'
+    adverse_effects:
+      very_common:
+      - headache
+      common:
+      - abnormal dreams
+      - anxiety
+      - abdominal pain
+      - back pain
+      - constipation
+      - diarrhea
+      - dizziness
+      - fatigue
+      - increased alt
+      - increased ast
+      - insomnia
+      - nausea
+      - somnolence
+      - vomiting
+      uncommon:
+      - aggression
+      - agitation
+      - blurred vision
+      - confusional state
+      - eczema
+      - hyperhidrosis
+      - hypomania
+      - increased gamma-glutamyltransferase
+      - irritability
+      - mania
+      - migraine
+      - myalgia
+      - nightmares
+      - paraesthesia
+      - pruritus
+      - restlessness
+      - restless leg syndrome
+      - suicidal behaviour
+      - suicidal thoughts
+      - tinnitus
+      - urticaria
+      - weight decreased
+    contraindications:
+      - hypersensitivity to an excipient
+      - hypersensitivity to agomelatine
+      - hepatic impairment
+      - cirrhosis
+      - active liver disease
+      - transaminases above 3 times upper limit of normal
+      - concomitant use with potent cyp1a2 inhibitors
+      - use with fluvoxamine
+      - use with ciprofloxacin
+    individual: adult_depression_agomelatine_safety
+- case: drug:sacubitril_valsartan_entresto_adult_adverse_effects_and_contraindications
+  case_id: '11'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: Entresto (sacubitril/valsartan)
+      indication: heart failure
+      paragraph: My doctor prescribed Entresto (sacubitril/valsartan) for heart failure. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly separate adverse effects from contraindications and should reflect use in an adult patient with heart failure. Very common adverse effects include hypotension, hyperkalaemia, and renal impairment. Common adverse effects include cough, dizziness, diarrhoea, anaemia, fatigue, renal failure, hypokalaemia, headache, syncope, asthenia, nausea, orthostatic hypotension, gastritis, vertigo, and hypoglycaemia. Uncommon adverse effects include hypersensitivity, postural dizziness, hyponatraemia, and angioedema. The answer should also mention the contraindications: hypersensitivity to sacubitril, valsartan, or excipients; concomitant use with an ACE inhibitor, including the 36-hour washout requirement; prior angioedema with an ACE inhibitor or ARB; hereditary or idiopathic angioedema; diabetes or impaired kidney function together with aliskiren treatment; severe liver disease; and pregnancy beyond 3 months.'
+    adverse_effects:
+      very_common:
+      - hyperkalaemia
+      - hypotension
+      - renal impairment
+      common:
+      - anemia
+      - asthenia
+      - cough
+      - diarrhea
+      - dizziness
+      - fatigue
+      - gastritis
+      - headache
+      - hypoglycemia
+      - hypokalaemia
+      - nausea
+      - orthostatic hypotension
+      - renal failure
+      - syncope
+      - vertigo
+      uncommon:
+      - angioedema
+      - dizziness postural
+      - hypersensitivity
+      - hyponatraemia
+    contraindications:
+      - 36 hour washout after ace inhibitor
+      - concomitant use with an ace inhibitor
+      - diabetes with aliskiren treatment
+      - hereditary angioedema
+      - hypersensitivity to an excipient
+      - hypersensitivity to sacubitril
+      - hypersensitivity to valsartan
+      - idiopathic angioedema
+      - impaired kidney function with aliskiren treatment
+      - pregnancy beyond 3 months
+      - prior angioedema with an ace inhibitor
+      - prior angioedema with an arb
+      - severe liver disease
+    individual: adult_heart_failure_medication_safety
+- case: drug:cymbalta_duloxetine_adult_depression_adverse_effects_and_contraindications
+  case_id: '12'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: Cymbalta (duloxetine)
+      indication: depression
+      paragraph: My doctor prescribed Cymbalta (duloxetine) for depression. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly separate adverse effects from contraindications and should reflect use in an adult patient with depression. Very common adverse effects include nausea, headache, dry mouth, somnolence, and dizziness. Common adverse effects include decreased appetite, insomnia, agitation, decreased libido, anxiety, abnormal orgasm, abnormal dreams, lethargy, tremor, paraesthesia, blurred vision, tinnitus, palpitations, increased blood pressure, flushing, yawning, constipation, diarrhoea, abdominal pain, vomiting, dyspepsia, flatulence, increased sweating, rash, musculoskeletal pain, muscle spasm, dysuria, pollakiuria, erectile dysfunction, ejaculation disorder or delayed ejaculation, sexual dysfunction, falls, fatigue, and weight decrease. Uncommon adverse effects include hypothyroidism, sleep disorder, bruxism, disorientation, apathy, disturbance in attention, dysgeusia, mydriasis, visual impairment, vertigo, ear pain, tachycardia, syncope, orthostatic hypotension, peripheral coldness, throat tightness, epistaxis, gastroenteritis, eructation, gastritis, dysphagia, stomatitis, night sweats, urticaria, contact dermatitis, cold sweat, photosensitivity reactions, increased tendency to bruise, muscle tightness, muscle twitching, urinary retention, urinary hesitation, nocturia, polyuria, urine flow decreased, urine odour abnormal, gynaecological haemorrhage, menstrual disorder, menopausal symptoms, galactorrhoea, testicular pain, thirst, chills, malaise, feeling hot, gait disturbance, and weight increase. The answer should also state the contraindications: hypersensitivity to duloxetine or excipients, concomitant use with nonselective irreversible MAO inhibitors, liver disease resulting in hepatic impairment, use with fluvoxamine, ciprofloxacin, or enoxacin, severe renal impairment, and initiation in uncontrolled hypertension.'
+    adverse_effects:
+      very_common:
+      - dizziness
+      - dry mouth
+      - headache
+      - nausea
+      - somnolence
+      common:
+      - abdominal pain
+      - abnormal dreams
+      - abnormal orgasm
+      - agitation
+      - anxiety
+      - blurred vision
+      - constipation
+      - decreased appetite
+      - decreased libido
+      - diarrhea
+      - dyspepsia
+      - dysuria
+      - ejaculation delayed
+      - ejaculation disorder
+      - erectile dysfunction
+      - fatigue
+      - falls
+      - flatulence
+      - flushing
+      - increased blood pressure
+      - increased sweating
+      - insomnia
+      - lethargy
+      - musculoskeletal pain
+      - muscle spasm
+      - palpitations
+      - paraesthesia
+      - pollakiuria
+      - rash
+      - sexual dysfunction
+      - tinnitus
+      - tremor
+      - vomiting
+      - weight decrease
+      - yawning
+      uncommon:
+      - apathy
+      - bruxism
+      - chills
+      - cold sweat
+      - contact dermatitis
+      - disorientation
+      - disturbance in attention
+      - dysgeusia
+      - dysphagia
+      - ear pain
+      - epistaxis
+      - eructation
+      - feeling hot
+      - gait disturbance
+      - galactorrhoea
+      - gastritis
+      - gastroenteritis
+      - gynaecological haemorrhage
+      - hypothyroidism
+      - increased tendency to bruise
+      - malaise
+      - menopausal symptoms
+      - muscle tightness
+      - muscle twitching
+      - mydriasis
+      - night sweats
+      - nocturia
+      - orthostatic hypotension
+      - peripheral coldness
+      - photosensitivity reactions
+      - polyuria
+      - sleep disorder
+      - stomatitis
+      - syncope
+      - tachycardia
+      - testicular pain
+      - thirst
+      - throat tightness
+      - urine flow decreased
+      - urine odour abnormal
+      - urinary hesitation
+      - urinary retention
+      - urticaria
+      - vertigo
+      - visual impairment
+      - weight increase
+    contraindications:
+      - concomitant use with ciprofloxacin
+      - concomitant use with enoxacin
+      - concomitant use with fluvoxamine
+      - concomitant use with a nonselective irreversible mao inhibitor
+      - hypersensitivity to an excipient
+      - hypersensitivity to duloxetine
+      - liver disease resulting in hepatic impairment
+      - severe renal impairment
+      - uncontrolled hypertension at treatment initiation
+    individual: adult_snri_safety
+- case: drug:spironolactone_qaialdo_adult_adverse_effects_and_contraindications
+  case_id: '13'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: Qaialdo (spironolactone)
+      indication: ascites
+      paragraph: My doctor prescribed Qaialdo (spironolactone) for ascites. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly separate adverse effects from contraindications and should reflect use in an adult patient. Very common adverse effects include hyperkalaemia. Common adverse effects include confusional state, dizziness, nausea, pruritus, rash, muscle spasms, acute kidney injury, gynaecomastia, breast pain, and malaise. Uncommon adverse effects include benign breast neoplasm in males, electrolyte imbalance, abnormal liver function, urticaria, and menstrual disorder. The answer should also mention the contraindications: hypersensitivity to spironolactone or excipients, Addison''s disease, hyperkalaemia, anuria, acute renal insufficiency, severe renal impairment, concomitant eplerenone, and that spironolactone should not be used together with potassium-sparing diuretics or potassium supplements.'
+    adverse_effects:
+      very_common:
+      - hyperkalaemia
+      common:
+      - acute kidney injury
+      - breast pain
+      - confusional state
+      - dizziness
+      - gynecomastia
+      - malaise
+      - muscle spasms
+      - nausea
+      - pruritus
+      - rash
+      uncommon:
+      - abnormal liver function
+      - benign breast neoplasm in males
+      - electrolyte imbalance
+      - menstrual disorder
+      - urticaria
+    contraindications:
+      - addison s disease
+      - acute renal insufficiency
+      - anuria
+      - concomitant eplerenone
+      - concomitant potassium sparing diuretics
+      - concomitant potassium supplements
+      - hyperkalaemia
+      - hypersensitivity to an excipient
+      - hypersensitivity to spironolactone
+      - severe renal impairment
+    individual: adult_mineralocorticoid_receptor_antagonist_safety
+- case: drug:rayvow_lasmiditan_adult_migraine_adverse_effects_and_contraindications
+  case_id: '14'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: Rayvow (lasmiditan)
+      indication: acute migraine attacks
+      paragraph: My doctor prescribed Rayvow (lasmiditan) for acute migraine attacks. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly separate adverse effects from contraindications and should reflect use in an adult patient with acute migraine. The very common adverse effect is dizziness. Common adverse effects include sleep abnormalities, incoordination, paraesthesia, hypoaesthesia, somnolence, lethargy, disturbance in attention, cognitive disorder, mental impairment, tremor, speech abnormalities, visual impairment, vertigo, vomiting, nausea, muscular weakness, muscle spasm, limb discomfort, feeling abnormal, fatigue, and malaise. Uncommon adverse effects include hypersensitivity, confusion, hallucinations, euphoric mood, anxiety, restlessness, palpitations, dyspnoea, chest discomfort, and feeling hot or feeling cold. The answer should also mention the contraindication: hypersensitivity to lasmiditan or excipients. Rare serotonin syndrome may be mentioned but is not required for this case.'
+    adverse_effects:
+      very_common:
+      - dizziness
+      common:
+      - cognitive disorder
+      - disturbance in attention
+      - fatigue
+      - feeling abnormal
+      - hypoaesthesia
+      - incoordination
+      - lethargy
+      - limb discomfort
+      - malaise
+      - mental impairment
+      - muscle spasm
+      - muscular weakness
+      - nausea
+      - paraesthesia
+      - sleep abnormalities
+      - somnolence
+      - speech abnormalities
+      - tremor
+      - vertigo
+      - visual impairment
+      - vomiting
+      uncommon:
+      - anxiety
+      - chest discomfort
+      - confusion
+      - dyspnea
+      - euphoric mood
+      - feeling cold
+      - feeling hot
+      - hallucinations
+      - hypersensitivity
+      - palpitations
+      - restlessness
+    contraindications:
+      - hypersensitivity to an excipient
+      - hypersensitivity to lasmiditan
+    individual: adult_acute_migraine_treatment_safety
+- case: drug:ticagrelor_brilique_adult_adverse_effects_and_contraindications
+  case_id: '15'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: Brilique (ticagrelor)
+      indication: coronary artery disease
+      paragraph: My doctor prescribed Brilique (ticagrelor) for coronary artery disease. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly separate adverse effects from contraindications and should reflect use in an adult patient. There are no very common adverse effects listed in the provided information. Common adverse effects include dyspnoea, dizziness, syncope, headache, low blood pressure, gastrointestinal bleeding such as blood in stools or black stools, diarrhoea, nausea, indigestion, constipation, bruising or other subcutaneous skin bleeding, rash, itching, increased blood creatinine, bleeding after procedures, and traumatic bleeding. Uncommon adverse effects include tumour bleeding, blood disorder bleeding, gout or gouty arthritis, confusion, blood in the eye, vertigo, respiratory system bleeding such as nosebleed or coughing up blood, retroperitoneal bleeding, muscular bleeding, urinary tract bleeding such as blood in the urine, and reproductive system bleeding such as heavier or irregular vaginal bleeding. The answer should also mention the contraindications: hypersensitivity to ticagrelor or excipients, active pathological bleeding, history of intracranial haemorrhage, severe hepatic impairment, and concomitant strong CYP3A4 inhibitors such as ketoconazole, clarithromycin, nefazodone, ritonavir, or atazanavir.'
+    adverse_effects:
+      very_common: []
+      common:
+      - black stools
+      - blood in stools
+      - bruising
+      - constipation
+      - diarrhea
+      - dizziness
+      - headache
+      - indigestion
+      - itching
+      - low blood pressure
+      - nausea
+      - post procedural haemorrhage
+      - rash
+      - shortness of breath
+      - subcutaneous bleeding
+      - syncope
+      - traumatic bleeding
+      - increased blood creatinine
+      uncommon:
+      - blood in the eye
+      - blood in the urine
+      - blood disorder bleeding
+      - coughing up blood
+      - confusion
+      - gout
+      - gouty arthritis
+      - heavier vaginal bleeding
+      - irregular vaginal bleeding
+      - muscular bleeding
+      - nosebleed
+      - retroperitoneal bleeding
+      - tumour bleeding
+      - vertigo
+    contraindications:
+      - concomitant atazanavir
+      - concomitant clarithromycin
+      - concomitant ketoconazole
+      - concomitant nefazodone
+      - concomitant ritonavir
+      - active pathological bleeding
+      - hypersensitivity to an excipient
+      - hypersensitivity to ticagrelor
+      - history of intracranial haemorrhage
+      - severe hepatic impairment
+    individual: adult_antiplatelet_safety
+- case: drug:enurev_breezhaler_glycopyrronium_copd_adverse_effects_and_contraindications
+  case_id: '16'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: Enurev Breezhaler (glycopyrronium)
+      indication: COPD
+      paragraph: My doctor prescribed Enurev Breezhaler (glycopyrronium) for COPD. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly separate adverse effects from contraindications and should reflect use in an adult patient with COPD. There are no very common adverse effects listed in the provided information. Common adverse effects include nasopharyngitis, insomnia, headache, dry mouth, gastroenteritis, musculoskeletal pain, and urinary tract infection. Uncommon adverse effects include rhinitis, cystitis, hypersensitivity, angioedema, hyperglycaemia, hypoaesthesia, atrial fibrillation, palpitations, sinus congestion, productive cough, throat irritation, epistaxis, dysphonia, nausea, vomiting, dyspepsia, dental caries, rash, pruritus, pain in extremity, musculoskeletal chest pain, dysuria, urinary retention, fatigue, and asthenia. The answer should also mention the contraindication: hypersensitivity to glycopyrronium or to any of the excipients. Not known paradoxical bronchospasm may be mentioned but is not required for this case.'
+    adverse_effects:
+      very_common: []
+      common:
+      - dry mouth
+      - gastroenteritis
+      - headache
+      - insomnia
+      - musculoskeletal pain
+      - nasopharyngitis
+      - urinary tract infection
+      uncommon:
+      - angioedema
+      - asthenia
+      - atrial fibrillation
+      - cystitis
+      - dental caries
+      - dyspepsia
+      - dysphonia
+      - dysuria
+      - epistaxis
+      - fatigue
+      - hyperglycaemia
+      - hypoaesthesia
+      - hypersensitivity
+      - musculoskeletal chest pain
+      - nausea
+      - pain in extremity
+      - palpitations
+      - productive cough
+      - pruritus
+      - rash
+      - rhinitis
+      - sinus congestion
+      - throat irritation
+      - urinary retention
+      - vomiting
+    contraindications:
+      - hypersensitivity to an excipient
+      - hypersensitivity to glycopyrronium
+    individual: adult_copd_inhaler_safety
+- case: drug:tirzepatide_mounjaro_adult_type2_diabetes_adverse_effects_and_contraindications
+  case_id: '17'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: Mounjaro (tirzepatide)
+      indication: type 2 diabetes
+      paragraph: My doctor prescribed Mounjaro (tirzepatide) for type 2 diabetes. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly separate adverse effects from contraindications and should reflect use in an adult patient with type 2 diabetes. Very common adverse effects include nausea and diarrhoea. Hypoglycaemia is also very common when tirzepatide is used together with a sulfonylurea or insulin. Common adverse effects in adults with type 2 diabetes include hypoglycaemia when tirzepatide is used with metformin and an SGLT2 inhibitor, hypersensitivity reactions, reduced appetite, abdominal pain, vomiting, constipation, dyspepsia, abdominal distension, eructation, flatulence, gastrooesophageal reflux or heartburn, fatigue, injection site reactions, increased heart rate, and increased pancreatic enzymes. Uncommon adverse effects include hypoglycaemia when tirzepatide is combined with metformin in adults with type 2 diabetes, acute pancreatitis, gallstones, cholecystitis, weight loss, injection site pain, increased calcitonin, altered taste, altered skin sensation, and delayed gastric emptying. The answer should
+      also state the main contraindication: hypersensitivity to tirzepatide or to one of the excipients. Weight-management-specific effects should not be required for this case.'
+    adverse_effects:
+      very_common:
+      - diarrhea
+      - hypoglycemia with insulin
+      - hypoglycemia with sulfonylurea
+      - nausea
+      common:
+      - abdominal distension
+      - abdominal pain
+      - constipation
+      - dyspepsia
+      - eructation
+      - fatigue
+      - flatulence
+      - gastroesophageal reflux
+      - heartburn
+      - hypoglycemia with metformin and sglt2i
+      - hypersensitivity reactions
+      - increased pancreatic enzymes
+      - increased heart rate
+      - injection site reactions
+      - reduced appetite
+      - vomiting
+      uncommon:
+      - acute pancreatitis
+      - altered skin sensation
+      - altered taste
+      - cholecystitis
+      - delayed gastric emptying
+      - gallstones
+      - hypoglycemia with metformin
+      - increased calcitonin
+      - weight loss
+    contraindications:
+      - hypersensitivity to an excipient
+      - hypersensitivity to tirzepatide
+    individual: adult_type2_diabetes_glp1_gip_safety
+- case: drug:dupixent_dupilumab_adult_asthma_adverse_effects_and_contraindications
+  case_id: '18'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: Dupixent (dupilumab)
+      indication: asthma
+      paragraph: My doctor prescribed Dupixent (dupilumab) for asthma. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly separate adverse effects from contraindications and should reflect use in an adult patient with asthma. There are no very common adverse effects listed in the posted Dupixent product information. Common adverse effects include injection site reactions, eosinophilia, arthralgia, conjunctivitis, conjunctivitis allergic, and oral herpes. Uncommon adverse effects include angioedema, keratitis, and facial rash. The answer should also state the main contraindication: hypersensitivity to dupilumab or to one of the excipients. Rare reactions such as anaphylactic reaction, serum sickness, or serum sickness-like reaction may be mentioned but are not required for this case. Eye-related effects and oral herpes are listed in the product information, although some of these were noted as occurring predominantly in atopic dermatitis studies rather than being a major asthma-specific signal.'
+    adverse_effects:
+      very_common: []
+      common:
+      - arthralgia
+      - conjunctivitis
+      - conjunctivitis allergic
+      - eosinophilia
+      - injection site reactions
+      - oral herpes
+      uncommon:
+      - angioedema
+      - facial rash
+      - keratitis
+    contraindications:
+      - hypersensitivity to an excipient
+      - hypersensitivity to dupilumab
+    individual: adult_asthma_biologic_safety
+- case: drug:dapagliflozin_forxiga_adult_type2_diabetes_adverse_effects_and_contraindications
+  case_id: '19'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: Forxiga (dapagliflozin)
+      indication: type 2 diabetes
+      paragraph: My doctor prescribed Forxiga (dapagliflozin) for type 2 diabetes. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: A strong answer should clearly separate adverse effects from contraindications and should reflect use in an adult patient with type 2 diabetes. The main contraindication is hypersensitivity to dapagliflozin or to any of the excipients. Very common adverse effects include hypoglycaemia when dapagliflozin is used together with a sulphonylurea or insulin in patients with diabetes. Common adverse effects include urinary tract infection, genital infection such as vulvovaginitis, balanitis, thrush or related genital fungal infection, back pain, volume depletion such as dehydration or hypotension, increased urination or more frequent urination, changes in blood cholesterol or fats, increased red blood cells, decreased creatinine renal clearance at the beginning of treatment, and dizziness. Uncommon adverse effects include thirst, constipation, waking at night to urinate, dry mouth, weight decreased, increased creatinine at the beginning of treatment, increased urea, fungal infection, and vulvovaginal or genital itching. Rare and very rare serious effects such as diabetic ketoacidosis, necrotising fasciitis of the perineum, angioedema, or tubulointerstitial nephritis may be mentioned but are not required for this case.
+    adverse_effects:
+      very_common:
+      - hypoglycemia with insulin
+      - hypoglycemia with sulphonylurea
+      common:
+      - back pain
+      - changes in blood cholesterol
+      - changes in blood fats
+      - decreased creatinine renal clearance
+      - dizziness
+      - genital infection
+      - increased red blood cells
+      - needing to pass urine more often
+      - passing more urine than usual
+      - thrush
+      - urinary tract infection
+      - volume depletion
+      uncommon:
+      - awakening at night to pass urine
+      - constipation
+      - dry mouth
+      - fungal infection
+      - increased creatinine
+      - increased urea
+      - thirst
+      - itching in the genital area
+      - vulvovaginal itching
+      - weight decreased
+    contraindications:
+      - hypersensitivity to an excipient
+      - hypersensitivity to dapagliflozin
+    individual: adult_type2_diabetes_sglt2_safety
+- case: drug:sirolimus_rapamune_adult_adverse_effects_and_contraindications
+  case_id: '20'
+  type: adverse_effect_and_contraindication_assessment
+  input:
+    medication_context:
+      medicine: Rapamune (sirolimus)
+      indication: immunosuppression after kidney transplantation
+      paragraph: My doctor prescribed Rapamune (sirolimus) for immunosuppression after kidney transplantation. What are the adverse reactions and contraindications?
+  expected:
+    answer:
+    - ''
+    summary: 'A strong answer should clearly separate adverse effects from contraindications and should reflect use in an adult patient. Very common adverse effects include fluid collection around the kidney, swelling including hands and feet, pain, fever, headache, increased blood pressure, abdominal pain, diarrhoea, constipation, nausea, low red blood cells, low blood platelets, increased cholesterol or triglycerides, increased blood sugar, low potassium, low phosphorus, increased lactate dehydrogenase, increased creatinine, joint pain, acne, urinary tract infection, pneumonia and other bacterial, fungal, viral, or herpes simplex infections, reduced white blood cells, diabetes, abnormal liver function tests with elevated AST or ALT, rash, elevated protein in the urine, slow healing, and a general tendency for fluid to collect in tissues. Common adverse effects include serious infections, blood clots in the legs, blood clots in the lung, mouth sores, fluid collection in the abdomen, haemolytic
+      uraemic syndrome, neutropenia, deterioration of bone, inflammatory lung toxicity, fluid around the lung, nosebleeds, skin cancer, kidney infection, ovarian cysts, fluid around the heart, allergic reactions, pancreatitis, shingles, cytomegalovirus infection, menstrual disorders, and rapid heart rate. Uncommon adverse effects include lymphoma or post-transplant lymphoproliferative disorder, combined lowering of red blood cells, white blood cells and platelets, bleeding from the lung, severe proteinuria, scarring in the kidney, excess tissue fluid due to irregular lymph function, thrombocytopaenic purpura, serious allergic reactions with skin peeling, tuberculosis, Epstein-Barr virus infection, infectious diarrhoea due to Clostridium difficile, and serious liver damage. The answer should also state the contraindications: hypersensitivity to sirolimus or excipients, and allergy to peanut or soya. Rare or not known neurologic or pulmonary complications may be mentioned but are not required for this case.'
+    adverse_effects:
+      very_common:
+      - abnormal liver function tests
+      - acne
+      - bacterial infections
+      - constipation
+      - diabetes
+      - diarrhea
+      - elevated alt
+      - elevated ast
+      - elevated protein in the urine
+      - fever
+      - fluid collection around the kidney
+      - fluid collection in tissues
+      - fungal infections
+      - headache
+      - herpes simplex infection
+      - increased blood pressure
+      - increased blood sugar
+      - increased cholesterol
+      - increased creatinine
+      - increased lactate dehydrogenase
+      - increased triglycerides
+      - joint pain
+      - low blood phosphorus
+      - low blood platelets
+      - low blood potassium
+      - low red blood cells
+      - nausea
+      - pain
+      - pneumonia
+      - rash
+      - reduced white blood cells
+      - slow healing
+      - stomach pain
+      - swelling of the body
+      - urinary tract infection
+      - viral infections
+      common:
+      - allergic reactions
+      - blood clots in the legs
+      - blood clots in the lung
+      - cytomegalovirus infection
+      - deterioration of bone
+      - fluid around the lung
+      - fluid collection around the heart
+      - fluid collection in the abdomen
+      - hemolytic uraemic syndrome
+      - inflammation leading to lung damage
+      - kidney infection
+      - low neutrophils
+      - menstrual disorders
+      - mouth sores
+      - nosebleeds
+      - ovarian cysts
+      - pancreatitis
+      - rapid heart rate
+      - serious infections
+      - shingles
+      - skin cancer
+      uncommon:
+      - bleeding from the lung
+      - combined lowering of red blood cells white blood cells and blood platelets
+      - epstein barr virus infection
+      - excess tissue fluid due to irregular lymph function
+      - infectious diarrhea with clostridium difficile
+      - lymphoma
+      - post transplant lymphoproliferative disorder
+      - scarring in the kidney
+      - serious allergic reactions with skin peeling
+      - serious liver damage
+      - severe protein in the urine
+      - thrombocytopaenic purpura
+      - tuberculosis
+    contraindications:
+      - allergy to peanut
+      - allergy to soya
+      - hypersensitivity to an excipient
+      - hypersensitivity to sirolimus
+    individual: adult_mtor_inhibitor_safety

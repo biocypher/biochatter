@@ -1,0 +1,385 @@
+model_label,condition,panel,mean,ci,n,condition_type
+Claude Sonnet 4.6,minimal,adverse_effects_recall,0.7163236889660849,0.014902678602591821,320,system_prompt
+Claude Sonnet 4.6,minimal,adverse_effects_specificity,0.49783895626314906,0.019730630194481773,320,system_prompt
+Claude Sonnet 4.6,minimal,common_adverse_effects_coverage,0.8300679658882784,0.01406512706222252,320,system_prompt
+Claude Sonnet 4.6,minimal,contraindications_recall,0.6593937568279673,0.040387996074114474,320,system_prompt
+Claude Sonnet 4.6,minimal,contraindications_specificity,0.5730349302454082,0.03330872825302554,320,system_prompt
+Claude Sonnet 4.6,minimal,patient_attitude_responsiveness,0.615625,0.04839018558278813,320,system_prompt
+Claude Sonnet 4.6,minimal,uncommon_adverse_effects_coverage,0.5928977251613121,0.027017688875053666,320,system_prompt
+Claude Sonnet 4.6,minimal,understandability,0.6828125,0.04185728860339685,320,system_prompt
+Claude Sonnet 4.6,minimal,usefulness,0.5484375,0.052053463626631,320,system_prompt
+Claude Sonnet 4.6,minimal,very_common_adverse_effects_coverage,0.8212797619047619,0.036430806582308295,224,system_prompt
+Claude Sonnet 4.6,none,adverse_effects_recall,0.36385577783672235,0.013985511040542976,320,system_prompt
+Claude Sonnet 4.6,none,adverse_effects_specificity,0.5141429433044802,0.020581985650551804,320,system_prompt
+Claude Sonnet 4.6,none,common_adverse_effects_coverage,0.4869463999542124,0.026198797817960584,320,system_prompt
+Claude Sonnet 4.6,none,contraindications_recall,0.4776127819548872,0.035154664404666004,320,system_prompt
+Claude Sonnet 4.6,none,contraindications_specificity,0.6144155844155844,0.036139670956279554,320,system_prompt
+Claude Sonnet 4.6,none,patient_attitude_responsiveness,0.984375,0.009546883056640983,320,system_prompt
+Claude Sonnet 4.6,none,uncommon_adverse_effects_coverage,0.178550497660552,0.018830999706636483,320,system_prompt
+Claude Sonnet 4.6,none,understandability,0.7078125,0.0420255287895715,320,system_prompt
+Claude Sonnet 4.6,none,usefulness,0.978125,0.011222910174027708,320,system_prompt
+Claude Sonnet 4.6,none,very_common_adverse_effects_coverage,0.7602182539682539,0.037517430437613936,224,system_prompt
+Claude Sonnet 4.6,role_attitude_sensitive,adverse_effects_recall,0.6966540747376045,0.013800307537980462,320,system_prompt
+Claude Sonnet 4.6,role_attitude_sensitive,adverse_effects_specificity,0.5137368279307897,0.019909258989195242,320,system_prompt
+Claude Sonnet 4.6,role_attitude_sensitive,common_adverse_effects_coverage,0.8121119982448107,0.014229120027068226,320,system_prompt
+Claude Sonnet 4.6,role_attitude_sensitive,contraindications_recall,0.6785775938243044,0.03806386023820647,320,system_prompt
+Claude Sonnet 4.6,role_attitude_sensitive,contraindications_specificity,0.5860719381184262,0.030432835250072395,320,system_prompt
+Claude Sonnet 4.6,role_attitude_sensitive,patient_attitude_responsiveness,1.0,0.0,320,system_prompt
+Claude Sonnet 4.6,role_attitude_sensitive,uncommon_adverse_effects_coverage,0.5764185284069795,0.02586291059065077,320,system_prompt
+Claude Sonnet 4.6,role_attitude_sensitive,understandability,0.7453125,0.04091960501697564,320,system_prompt
+Claude Sonnet 4.6,role_attitude_sensitive,usefulness,0.6609375,0.050011689341860885,320,system_prompt
+Claude Sonnet 4.6,role_attitude_sensitive,very_common_adverse_effects_coverage,0.8122767857142856,0.03670199982498012,224,system_prompt
+Claude Sonnet 4.6,role_encouraging,adverse_effects_recall,0.7091926696307229,0.0141677124326388,320,system_prompt
+Claude Sonnet 4.6,role_encouraging,adverse_effects_specificity,0.49981257668578616,0.019564600969193654,320,system_prompt
+Claude Sonnet 4.6,role_encouraging,common_adverse_effects_coverage,0.8249730044261294,0.015104044182657273,320,system_prompt
+Claude Sonnet 4.6,role_encouraging,contraindications_recall,0.6488129980399717,0.041558500513278376,320,system_prompt
+Claude Sonnet 4.6,role_encouraging,contraindications_specificity,0.5604936907938552,0.03249435523331241,320,system_prompt
+Claude Sonnet 4.6,role_encouraging,patient_attitude_responsiveness,0.9125,0.024576682503625515,320,system_prompt
+Claude Sonnet 4.6,role_encouraging,uncommon_adverse_effects_coverage,0.579896446171582,0.02726364849208348,320,system_prompt
+Claude Sonnet 4.6,role_encouraging,understandability,0.7609375,0.03804521866546822,320,system_prompt
+Claude Sonnet 4.6,role_encouraging,usefulness,0.5125,0.051854548504706506,320,system_prompt
+Claude Sonnet 4.6,role_encouraging,very_common_adverse_effects_coverage,0.8140625,0.036614996675811876,224,system_prompt
+GLM 4.5,minimal,adverse_effects_recall,0.6592807910159179,0.015777368916244303,320,system_prompt
+GLM 4.5,minimal,adverse_effects_specificity,0.41121897542238467,0.01816968930947169,320,system_prompt
+GLM 4.5,minimal,common_adverse_effects_coverage,0.7777011313339439,0.01440846957031578,320,system_prompt
+GLM 4.5,minimal,contraindications_recall,0.6752932611978665,0.03524015102776299,320,system_prompt
+GLM 4.5,minimal,contraindications_specificity,0.6061321669547772,0.030682296792507457,320,system_prompt
+GLM 4.5,minimal,patient_attitude_responsiveness,0.384375,0.047803349437842625,320,system_prompt
+GLM 4.5,minimal,uncommon_adverse_effects_coverage,0.5191105642545859,0.02917322039718033,320,system_prompt
+GLM 4.5,minimal,understandability,0.1328125,0.032231706791724206,320,system_prompt
+GLM 4.5,minimal,usefulness,0.5984375,0.047971267886242445,320,system_prompt
+GLM 4.5,minimal,very_common_adverse_effects_coverage,0.8749255952380952,0.036059895671082025,224,system_prompt
+GLM 4.5,none,adverse_effects_recall,0.4415707045526733,0.014689199991489647,320,system_prompt
+GLM 4.5,none,adverse_effects_specificity,0.40412328960381466,0.016093531921742607,320,system_prompt
+GLM 4.5,none,common_adverse_effects_coverage,0.5503775564713065,0.020249851547635745,320,system_prompt
+GLM 4.5,none,contraindications_recall,0.3856093559218559,0.02114151643962996,320,system_prompt
+GLM 4.5,none,contraindications_specificity,0.45933552660574717,0.029140379518470098,320,system_prompt
+GLM 4.5,none,patient_attitude_responsiveness,0.9875,0.010536509150490493,320,system_prompt
+GLM 4.5,none,uncommon_adverse_effects_coverage,0.28858526633390763,0.02110313199341292,320,system_prompt
+GLM 4.5,none,understandability,1.0,0.0,320,system_prompt
+GLM 4.5,none,usefulness,0.9484375,0.017778912264169087,320,system_prompt
+GLM 4.5,none,very_common_adverse_effects_coverage,0.7129464285714285,0.04701065717851679,224,system_prompt
+GLM 4.5,role_attitude_sensitive,adverse_effects_recall,0.644724885829202,0.016483308102198863,320,system_prompt
+GLM 4.5,role_attitude_sensitive,adverse_effects_specificity,0.421565301987187,0.01793473570982929,320,system_prompt
+GLM 4.5,role_attitude_sensitive,common_adverse_effects_coverage,0.7603664434523809,0.015035770348749226,320,system_prompt
+GLM 4.5,role_attitude_sensitive,contraindications_recall,0.6818484914208598,0.03552734789408889,320,system_prompt
+GLM 4.5,role_attitude_sensitive,contraindications_specificity,0.6208524343921258,0.02988483323669458,320,system_prompt
+GLM 4.5,role_attitude_sensitive,patient_attitude_responsiveness,0.9796875,0.013182908432713084,320,system_prompt
+GLM 4.5,role_attitude_sensitive,uncommon_adverse_effects_coverage,0.5104530769653052,0.030777864779627954,320,system_prompt
+GLM 4.5,role_attitude_sensitive,understandability,0.3015625,0.04387379917687073,320,system_prompt
+GLM 4.5,role_attitude_sensitive,usefulness,0.7453125,0.04444637111695735,320,system_prompt
+GLM 4.5,role_attitude_sensitive,very_common_adverse_effects_coverage,0.8462549603174603,0.037254040213277065,224,system_prompt
+GLM 4.5,role_encouraging,adverse_effects_recall,0.6477702266281979,0.015741842589821916,320,system_prompt
+GLM 4.5,role_encouraging,adverse_effects_specificity,0.42430425480100836,0.017788397969440768,320,system_prompt
+GLM 4.5,role_encouraging,common_adverse_effects_coverage,0.7654012133699634,0.0151344516611259,320,system_prompt
+GLM 4.5,role_encouraging,contraindications_recall,0.7030539288927447,0.03385083051743315,320,system_prompt
+GLM 4.5,role_encouraging,contraindications_specificity,0.6289150282417746,0.02895798580172499,320,system_prompt
+GLM 4.5,role_encouraging,patient_attitude_responsiveness,0.478125,0.04705951458952008,320,system_prompt
+GLM 4.5,role_encouraging,uncommon_adverse_effects_coverage,0.5100253976850444,0.03059510693720789,320,system_prompt
+GLM 4.5,role_encouraging,understandability,0.153125,0.034154245566309346,320,system_prompt
+GLM 4.5,role_encouraging,usefulness,0.6671875,0.04664125248832269,320,system_prompt
+GLM 4.5,role_encouraging,very_common_adverse_effects_coverage,0.8629464285714287,0.03645926804980165,224,system_prompt
+GPT-5.4,minimal,adverse_effects_recall,0.6932812360964817,0.018316564707235264,320,system_prompt
+GPT-5.4,minimal,adverse_effects_specificity,0.6890400448766011,0.016422899503940772,320,system_prompt
+GPT-5.4,minimal,common_adverse_effects_coverage,0.804949490613553,0.019012778685689603,320,system_prompt
+GPT-5.4,minimal,contraindications_recall,0.7338149861834072,0.02969430155569922,320,system_prompt
+GPT-5.4,minimal,contraindications_specificity,0.7561095154845155,0.02784617102525212,320,system_prompt
+GPT-5.4,minimal,patient_attitude_responsiveness,0.3890625,0.048034965830113345,320,system_prompt
+GPT-5.4,minimal,uncommon_adverse_effects_coverage,0.5551786684782608,0.02971579826151138,320,system_prompt
+GPT-5.4,minimal,understandability,0.0140625,0.010951096564630792,320,system_prompt
+GPT-5.4,minimal,usefulness,0.8359375,0.03282822246100235,320,system_prompt
+GPT-5.4,minimal,very_common_adverse_effects_coverage,0.8697668650793651,0.035876213824672314,224,system_prompt
+GPT-5.4,none,adverse_effects_recall,0.41603975932802123,0.015556299383353251,320,system_prompt
+GPT-5.4,none,adverse_effects_specificity,0.45810830080509346,0.017995076728497157,320,system_prompt
+GPT-5.4,none,common_adverse_effects_coverage,0.5350566620879121,0.024680949742247778,320,system_prompt
+GPT-5.4,none,contraindications_recall,0.4503488990906754,0.03127360870844144,320,system_prompt
+GPT-5.4,none,contraindications_specificity,0.55057198010323,0.029820388310497613,320,system_prompt
+GPT-5.4,none,patient_attitude_responsiveness,0.9390625,0.018969405626525774,320,system_prompt
+GPT-5.4,none,uncommon_adverse_effects_coverage,0.24157416662443834,0.018589399956081262,320,system_prompt
+GPT-5.4,none,understandability,0.8046875,0.03657316880755858,320,system_prompt
+GPT-5.4,none,usefulness,0.9546875,0.01900037863372521,320,system_prompt
+GPT-5.4,none,very_common_adverse_effects_coverage,0.7233878968253968,0.042669002540610776,224,system_prompt
+GPT-5.4,role_attitude_sensitive,adverse_effects_recall,0.712100185970886,0.016413109241630426,320,system_prompt
+GPT-5.4,role_attitude_sensitive,adverse_effects_specificity,0.6848889580864258,0.01678498642263692,320,system_prompt
+GPT-5.4,role_attitude_sensitive,common_adverse_effects_coverage,0.8143814388736264,0.015436125782337362,320,system_prompt
+GPT-5.4,role_attitude_sensitive,contraindications_recall,0.7305985416265022,0.030112937218038642,320,system_prompt
+GPT-5.4,role_attitude_sensitive,contraindications_specificity,0.7515333921915288,0.028642147867262827,320,system_prompt
+GPT-5.4,role_attitude_sensitive,patient_attitude_responsiveness,0.9390625,0.019459058667975964,320,system_prompt
+GPT-5.4,role_attitude_sensitive,uncommon_adverse_effects_coverage,0.5812985884133982,0.028250446102432727,320,system_prompt
+GPT-5.4,role_attitude_sensitive,understandability,0.0328125,0.016694061822610674,320,system_prompt
+GPT-5.4,role_attitude_sensitive,usefulness,0.8359375,0.033677025302262784,320,system_prompt
+GPT-5.4,role_attitude_sensitive,very_common_adverse_effects_coverage,0.8726190476190476,0.03618897415988212,224,system_prompt
+GPT-5.4,role_encouraging,adverse_effects_recall,0.716758525414041,0.016426379599530805,320,system_prompt
+GPT-5.4,role_encouraging,adverse_effects_specificity,0.6819375699500239,0.01695120792307036,320,system_prompt
+GPT-5.4,role_encouraging,common_adverse_effects_coverage,0.8220638736263736,0.0175744557616826,320,system_prompt
+GPT-5.4,role_encouraging,contraindications_recall,0.7321413509735878,0.030946632591186466,320,system_prompt
+GPT-5.4,role_encouraging,contraindications_specificity,0.7446233953954542,0.029046448409741764,320,system_prompt
+GPT-5.4,role_encouraging,patient_attitude_responsiveness,0.390625,0.0471892859955975,320,system_prompt
+GPT-5.4,role_encouraging,uncommon_adverse_effects_coverage,0.5822456906016689,0.027961993848859685,320,system_prompt
+GPT-5.4,role_encouraging,understandability,0.034375,0.01637129046977568,320,system_prompt
+GPT-5.4,role_encouraging,usefulness,0.815625,0.03557105165593352,320,system_prompt
+GPT-5.4,role_encouraging,very_common_adverse_effects_coverage,0.8793402777777778,0.035738532653822534,224,system_prompt
+GPT-OSS-120B,minimal,adverse_effects_recall,0.5170233641252426,0.01598465311958519,320,system_prompt
+GPT-OSS-120B,minimal,adverse_effects_specificity,0.33457009288638223,0.01603637499012892,320,system_prompt
+GPT-OSS-120B,minimal,common_adverse_effects_coverage,0.6340979376526251,0.02216748098902655,320,system_prompt
+GPT-OSS-120B,minimal,contraindications_recall,0.6479358251397725,0.033942355621637874,320,system_prompt
+GPT-OSS-120B,minimal,contraindications_specificity,0.4750727571040071,0.024294889320343255,320,system_prompt
+GPT-OSS-120B,minimal,patient_attitude_responsiveness,0.5828125,0.049098005192983664,320,system_prompt
+GPT-OSS-120B,minimal,uncommon_adverse_effects_coverage,0.36150622973041446,0.02487950821525311,320,system_prompt
+GPT-OSS-120B,minimal,understandability,0.1140625,0.030418376241123583,320,system_prompt
+GPT-OSS-120B,minimal,usefulness,0.6296875,0.043320811162315176,320,system_prompt
+GPT-OSS-120B,minimal,very_common_adverse_effects_coverage,0.7739583333333334,0.04262734347642498,224,system_prompt
+GPT-OSS-120B,none,adverse_effects_recall,0.45379771101108546,0.013829121260146607,320,system_prompt
+GPT-OSS-120B,none,adverse_effects_specificity,0.36378547496186747,0.014507130672193494,320,system_prompt
+GPT-OSS-120B,none,common_adverse_effects_coverage,0.5621846859737485,0.02186865162518967,320,system_prompt
+GPT-OSS-120B,none,contraindications_recall,0.582317331791016,0.03675961361516773,320,system_prompt
+GPT-OSS-120B,none,contraindications_specificity,0.41985589573824866,0.02680284929018624,320,system_prompt
+GPT-OSS-120B,none,patient_attitude_responsiveness,0.9875,0.00856649264508203,320,system_prompt
+GPT-OSS-120B,none,uncommon_adverse_effects_coverage,0.28495628578848686,0.02155466734455372,320,system_prompt
+GPT-OSS-120B,none,understandability,0.6703125,0.04443578596970348,320,system_prompt
+GPT-OSS-120B,none,usefulness,0.446875,0.041196371403917714,320,system_prompt
+GPT-OSS-120B,none,very_common_adverse_effects_coverage,0.7183779761904762,0.04397711191214468,224,system_prompt
+GPT-OSS-120B,role_attitude_sensitive,adverse_effects_recall,0.5432003843639043,0.013991070094847324,320,system_prompt
+GPT-OSS-120B,role_attitude_sensitive,adverse_effects_specificity,0.3300555702270357,0.014190867751451916,320,system_prompt
+GPT-OSS-120B,role_attitude_sensitive,common_adverse_effects_coverage,0.6529445207570207,0.02086475474072154,320,system_prompt
+GPT-OSS-120B,role_attitude_sensitive,contraindications_recall,0.6519989376486086,0.0324866597351647,320,system_prompt
+GPT-OSS-120B,role_attitude_sensitive,contraindications_specificity,0.44385817741286493,0.019650668678605838,320,system_prompt
+GPT-OSS-120B,role_attitude_sensitive,patient_attitude_responsiveness,0.9984375,0.0030624999999999997,320,system_prompt
+GPT-OSS-120B,role_attitude_sensitive,uncommon_adverse_effects_coverage,0.4012815218447011,0.022923998329398673,320,system_prompt
+GPT-OSS-120B,role_attitude_sensitive,understandability,0.4359375,0.04886029629039741,320,system_prompt
+GPT-OSS-120B,role_attitude_sensitive,usefulness,0.8296875,0.03301754377603444,320,system_prompt
+GPT-OSS-120B,role_attitude_sensitive,very_common_adverse_effects_coverage,0.7857886904761905,0.04086497992544905,224,system_prompt
+GPT-OSS-120B,role_encouraging,adverse_effects_recall,0.5190451238218354,0.014926762588476741,320,system_prompt
+GPT-OSS-120B,role_encouraging,adverse_effects_specificity,0.3271548850742861,0.014311188663040503,320,system_prompt
+GPT-OSS-120B,role_encouraging,common_adverse_effects_coverage,0.6408160199175824,0.02070701446502323,320,system_prompt
+GPT-OSS-120B,role_encouraging,contraindications_recall,0.6471564628719234,0.03416000503742412,320,system_prompt
+GPT-OSS-120B,role_encouraging,contraindications_specificity,0.46860714806027304,0.023717867941415414,320,system_prompt
+GPT-OSS-120B,role_encouraging,patient_attitude_responsiveness,0.7046875,0.04522279711407216,320,system_prompt
+GPT-OSS-120B,role_encouraging,uncommon_adverse_effects_coverage,0.36231258076162964,0.024009311214024328,320,system_prompt
+GPT-OSS-120B,role_encouraging,understandability,0.0921875,0.027455622634420994,320,system_prompt
+GPT-OSS-120B,role_encouraging,usefulness,0.6640625,0.04144221374674851,320,system_prompt
+GPT-OSS-120B,role_encouraging,very_common_adverse_effects_coverage,0.7916170634920635,0.04070297192479645,224,system_prompt
+Gemini 3.5 Flash,minimal,adverse_effects_recall,0.7633540281885504,0.016144857409009845,320,system_prompt
+Gemini 3.5 Flash,minimal,adverse_effects_specificity,0.5387907528935842,0.0176805038411695,320,system_prompt
+Gemini 3.5 Flash,minimal,common_adverse_effects_coverage,0.8524697611416361,0.017078206844897064,320,system_prompt
+Gemini 3.5 Flash,minimal,contraindications_recall,0.6055251409774436,0.029343738312014356,320,system_prompt
+Gemini 3.5 Flash,minimal,contraindications_specificity,0.5792812941755956,0.030536860467135038,320,system_prompt
+Gemini 3.5 Flash,minimal,patient_attitude_responsiveness,0.903125,0.026024613643282617,320,system_prompt
+Gemini 3.5 Flash,minimal,uncommon_adverse_effects_coverage,0.6786097983387386,0.025410379260990937,320,system_prompt
+Gemini 3.5 Flash,minimal,understandability,0.8390625,0.03357910389159047,320,system_prompt
+Gemini 3.5 Flash,minimal,usefulness,0.95,0.01910608070089772,320,system_prompt
+Gemini 3.5 Flash,minimal,very_common_adverse_effects_coverage,0.7466765873015874,0.046830215056162666,224,system_prompt
+Gemini 3.5 Flash,none,adverse_effects_recall,0.38773792321847483,0.017963844462190643,320,system_prompt
+Gemini 3.5 Flash,none,adverse_effects_specificity,0.4398405549385022,0.01822656724224409,320,system_prompt
+Gemini 3.5 Flash,none,common_adverse_effects_coverage,0.4995885798229548,0.024961232346980125,320,system_prompt
+Gemini 3.5 Flash,none,contraindications_recall,0.3742706927575349,0.020083129196414303,320,system_prompt
+Gemini 3.5 Flash,none,contraindications_specificity,0.5353990800865801,0.03331689683127273,320,system_prompt
+Gemini 3.5 Flash,none,patient_attitude_responsiveness,0.9671875,0.016120641603766413,320,system_prompt
+Gemini 3.5 Flash,none,uncommon_adverse_effects_coverage,0.2425598496461268,0.027329152441542843,320,system_prompt
+Gemini 3.5 Flash,none,understandability,0.9984375,0.0030624999999999997,320,system_prompt
+Gemini 3.5 Flash,none,usefulness,0.996875,0.004324235259550213,320,system_prompt
+Gemini 3.5 Flash,none,very_common_adverse_effects_coverage,0.7107142857142856,0.044811337524882866,224,system_prompt
+Gemini 3.5 Flash,role_attitude_sensitive,adverse_effects_recall,0.7624193337516127,0.015877554193529896,320,system_prompt
+Gemini 3.5 Flash,role_attitude_sensitive,adverse_effects_specificity,0.5426811649078545,0.01826297044548162,320,system_prompt
+Gemini 3.5 Flash,role_attitude_sensitive,common_adverse_effects_coverage,0.844902606074481,0.019452651651684465,320,system_prompt
+Gemini 3.5 Flash,role_attitude_sensitive,contraindications_recall,0.6239845306374912,0.025949889307831032,320,system_prompt
+Gemini 3.5 Flash,role_attitude_sensitive,contraindications_specificity,0.5900980548385009,0.030706545014002475,320,system_prompt
+Gemini 3.5 Flash,role_attitude_sensitive,patient_attitude_responsiveness,0.9671875,0.016120641603766413,320,system_prompt
+Gemini 3.5 Flash,role_attitude_sensitive,uncommon_adverse_effects_coverage,0.6950309961023275,0.02183312686703122,320,system_prompt
+Gemini 3.5 Flash,role_attitude_sensitive,understandability,0.9484375,0.019301284013174096,320,system_prompt
+Gemini 3.5 Flash,role_attitude_sensitive,usefulness,0.9796875,0.011668583714623313,320,system_prompt
+Gemini 3.5 Flash,role_attitude_sensitive,very_common_adverse_effects_coverage,0.7513888888888889,0.04647033417891574,224,system_prompt
+Gemini 3.5 Flash,role_encouraging,adverse_effects_recall,0.7868191869538199,0.013148040560846381,320,system_prompt
+Gemini 3.5 Flash,role_encouraging,adverse_effects_specificity,0.534134390230576,0.016884537734279944,320,system_prompt
+Gemini 3.5 Flash,role_encouraging,common_adverse_effects_coverage,0.866706778464591,0.01600518549019839,320,system_prompt
+Gemini 3.5 Flash,role_encouraging,contraindications_recall,0.6684034204099993,0.02762064803048087,320,system_prompt
+Gemini 3.5 Flash,role_encouraging,contraindications_specificity,0.5675684773414795,0.028707761209287225,320,system_prompt
+Gemini 3.5 Flash,role_encouraging,patient_attitude_responsiveness,0.9828125,0.01172889986259057,320,system_prompt
+Gemini 3.5 Flash,role_encouraging,uncommon_adverse_effects_coverage,0.7150456551298943,0.02101829445236873,320,system_prompt
+Gemini 3.5 Flash,role_encouraging,understandability,0.91875,0.02558022217373571,320,system_prompt
+Gemini 3.5 Flash,role_encouraging,usefulness,0.96875,0.013281783019914447,320,system_prompt
+Gemini 3.5 Flash,role_encouraging,very_common_adverse_effects_coverage,0.7506696428571429,0.04646685420922065,224,system_prompt
+Llama 3.1 8B Instruct,minimal,adverse_effects_recall,0.28162579689289596,0.024084277640060797,320,system_prompt
+Llama 3.1 8B Instruct,minimal,adverse_effects_specificity,0.2136688427918349,0.020201580835824226,320,system_prompt
+Llama 3.1 8B Instruct,minimal,common_adverse_effects_coverage,0.3470328716422466,0.02964291351537885,320,system_prompt
+Llama 3.1 8B Instruct,minimal,contraindications_recall,0.2083519596266307,0.03423497489369653,320,system_prompt
+Llama 3.1 8B Instruct,minimal,contraindications_specificity,0.17703863844488843,0.02623838505839932,320,system_prompt
+Llama 3.1 8B Instruct,minimal,patient_attitude_responsiveness,0.296875,0.04307203939887286,320,system_prompt
+Llama 3.1 8B Instruct,minimal,uncommon_adverse_effects_coverage,0.1827711848839566,0.022853390437632355,320,system_prompt
+Llama 3.1 8B Instruct,minimal,understandability,0.2578125,0.03998346160232435,320,system_prompt
+Llama 3.1 8B Instruct,minimal,usefulness,0.065625,0.024246682181008474,320,system_prompt
+Llama 3.1 8B Instruct,minimal,very_common_adverse_effects_coverage,0.4276537698412698,0.056411405367936526,224,system_prompt
+Llama 3.1 8B Instruct,none,adverse_effects_recall,0.1413588050578051,0.017503307729897406,320,system_prompt
+Llama 3.1 8B Instruct,none,adverse_effects_specificity,0.18628803693456444,0.02485244996980403,320,system_prompt
+Llama 3.1 8B Instruct,none,common_adverse_effects_coverage,0.1790767609126984,0.02313696882176598,320,system_prompt
+Llama 3.1 8B Instruct,none,contraindications_recall,0.08711432025576762,0.020794087491527804,320,system_prompt
+Llama 3.1 8B Instruct,none,contraindications_specificity,0.13780877976190475,0.02959940438569851,320,system_prompt
+Llama 3.1 8B Instruct,none,patient_attitude_responsiveness,0.3359375,0.04657312343307775,320,system_prompt
+Llama 3.1 8B Instruct,none,uncommon_adverse_effects_coverage,0.07882949478058174,0.013395156658995482,320,system_prompt
+Llama 3.1 8B Instruct,none,understandability,0.7140625,0.042095430417675654,320,system_prompt
+Llama 3.1 8B Instruct,none,usefulness,0.34375,0.0485709072688102,320,system_prompt
+Llama 3.1 8B Instruct,none,very_common_adverse_effects_coverage,0.23273809523809524,0.046178305415508686,224,system_prompt
+Llama 3.1 8B Instruct,role_attitude_sensitive,adverse_effects_recall,0.36033547442459085,0.01692023351487086,320,system_prompt
+Llama 3.1 8B Instruct,role_attitude_sensitive,adverse_effects_specificity,0.3050615626297347,0.01909485381181727,320,system_prompt
+Llama 3.1 8B Instruct,role_attitude_sensitive,common_adverse_effects_coverage,0.45164305746336997,0.022457995594584265,320,system_prompt
+Llama 3.1 8B Instruct,role_attitude_sensitive,contraindications_recall,0.281701238271962,0.03288233650607982,320,system_prompt
+Llama 3.1 8B Instruct,role_attitude_sensitive,contraindications_specificity,0.28067042332667336,0.03058646608887004,320,system_prompt
+Llama 3.1 8B Instruct,role_attitude_sensitive,patient_attitude_responsiveness,0.8421875,0.0377067769261171,320,system_prompt
+Llama 3.1 8B Instruct,role_attitude_sensitive,uncommon_adverse_effects_coverage,0.22259977914597479,0.020861707412180342,320,system_prompt
+Llama 3.1 8B Instruct,role_attitude_sensitive,understandability,0.2640625,0.043996929523591966,320,system_prompt
+Llama 3.1 8B Instruct,role_attitude_sensitive,usefulness,0.125,0.030978175146757717,320,system_prompt
+Llama 3.1 8B Instruct,role_attitude_sensitive,very_common_adverse_effects_coverage,0.5934275793650794,0.0516903976933985,224,system_prompt
+Llama 3.1 8B Instruct,role_encouraging,adverse_effects_recall,0.34210946320282515,0.020749252943277605,320,system_prompt
+Llama 3.1 8B Instruct,role_encouraging,adverse_effects_specificity,0.27187897261929267,0.020656287407526792,320,system_prompt
+Llama 3.1 8B Instruct,role_encouraging,common_adverse_effects_coverage,0.42535318414224665,0.02777876929557463,320,system_prompt
+Llama 3.1 8B Instruct,role_encouraging,contraindications_recall,0.23720868678105517,0.03185297157895541,320,system_prompt
+Llama 3.1 8B Instruct,role_encouraging,contraindications_specificity,0.22203023538961036,0.027696737174010496,320,system_prompt
+Llama 3.1 8B Instruct,role_encouraging,patient_attitude_responsiveness,0.4640625,0.050339826639172205,320,system_prompt
+Llama 3.1 8B Instruct,role_encouraging,uncommon_adverse_effects_coverage,0.21698852920931727,0.021008717343832688,320,system_prompt
+Llama 3.1 8B Instruct,role_encouraging,understandability,0.225,0.03942400729374398,320,system_prompt
+Llama 3.1 8B Instruct,role_encouraging,usefulness,0.09375,0.027563033345588638,320,system_prompt
+Llama 3.1 8B Instruct,role_encouraging,very_common_adverse_effects_coverage,0.5526785714285715,0.0555714126286084,224,system_prompt
+Llama 4 Maverick,minimal,adverse_effects_recall,0.5874800340672737,0.01431140093703912,320,system_prompt
+Llama 4 Maverick,minimal,adverse_effects_specificity,0.5807298983618208,0.01757384866307347,320,system_prompt
+Llama 4 Maverick,minimal,common_adverse_effects_coverage,0.716567889575702,0.01646717143548341,320,system_prompt
+Llama 4 Maverick,minimal,contraindications_recall,0.6672030938725018,0.029337974499562297,320,system_prompt
+Llama 4 Maverick,minimal,contraindications_specificity,0.7361973833458209,0.024964708286592474,320,system_prompt
+Llama 4 Maverick,minimal,patient_attitude_responsiveness,0.365625,0.046808943006397555,320,system_prompt
+Llama 4 Maverick,minimal,uncommon_adverse_effects_coverage,0.3941161452526941,0.025285501139559297,320,system_prompt
+Llama 4 Maverick,minimal,understandability,0.3,0.04619311718465328,320,system_prompt
+Llama 4 Maverick,minimal,usefulness,0.796875,0.03869993416011021,320,system_prompt
+Llama 4 Maverick,minimal,very_common_adverse_effects_coverage,0.7693700396825397,0.04002191520796118,224,system_prompt
+Llama 4 Maverick,none,adverse_effects_recall,0.3193523156616797,0.01346376152409058,320,system_prompt
+Llama 4 Maverick,none,adverse_effects_specificity,0.5087482298087427,0.01924362923551481,320,system_prompt
+Llama 4 Maverick,none,common_adverse_effects_coverage,0.42705023275335774,0.019808803623682415,320,system_prompt
+Llama 4 Maverick,none,contraindications_recall,0.38385886591478696,0.03662193434309017,320,system_prompt
+Llama 4 Maverick,none,contraindications_specificity,0.5061811365717616,0.039993872491721476,320,system_prompt
+Llama 4 Maverick,none,patient_attitude_responsiveness,0.7609375,0.040905232383449966,320,system_prompt
+Llama 4 Maverick,none,uncommon_adverse_effects_coverage,0.17549192858771662,0.02093145970578355,320,system_prompt
+Llama 4 Maverick,none,understandability,0.5359375,0.047055453466318294,320,system_prompt
+Llama 4 Maverick,none,usefulness,0.9640625,0.017173264980033687,320,system_prompt
+Llama 4 Maverick,none,very_common_adverse_effects_coverage,0.6584573412698412,0.0479515991770375,224,system_prompt
+Llama 4 Maverick,role_attitude_sensitive,adverse_effects_recall,0.5443850205254234,0.015596889700154057,320,system_prompt
+Llama 4 Maverick,role_attitude_sensitive,adverse_effects_specificity,0.5822943833201224,0.019215807859410454,320,system_prompt
+Llama 4 Maverick,role_attitude_sensitive,common_adverse_effects_coverage,0.6703041056166057,0.017584238810943845,320,system_prompt
+Llama 4 Maverick,role_attitude_sensitive,contraindications_recall,0.6688870212389949,0.030943198138826497,320,system_prompt
+Llama 4 Maverick,role_attitude_sensitive,contraindications_specificity,0.7260668411449662,0.02710923698131733,320,system_prompt
+Llama 4 Maverick,role_attitude_sensitive,patient_attitude_responsiveness,0.959375,0.01676874419089909,320,system_prompt
+Llama 4 Maverick,role_attitude_sensitive,uncommon_adverse_effects_coverage,0.35578579587682846,0.024520269641606914,320,system_prompt
+Llama 4 Maverick,role_attitude_sensitive,understandability,0.396875,0.04795073178056342,320,system_prompt
+Llama 4 Maverick,role_attitude_sensitive,usefulness,0.9046875,0.025547444328853974,320,system_prompt
+Llama 4 Maverick,role_attitude_sensitive,very_common_adverse_effects_coverage,0.767485119047619,0.039497880381001646,224,system_prompt
+Llama 4 Maverick,role_encouraging,adverse_effects_recall,0.5613321985249174,0.015283069713184721,320,system_prompt
+Llama 4 Maverick,role_encouraging,adverse_effects_specificity,0.5866286401356543,0.018296027792032085,320,system_prompt
+Llama 4 Maverick,role_encouraging,common_adverse_effects_coverage,0.6948531936813187,0.017211785652541067,320,system_prompt
+Llama 4 Maverick,role_encouraging,contraindications_recall,0.6736992220133667,0.03209661070461192,320,system_prompt
+Llama 4 Maverick,role_encouraging,contraindications_specificity,0.7304420076961438,0.027458661857688225,320,system_prompt
+Llama 4 Maverick,role_encouraging,patient_attitude_responsiveness,0.6859375,0.04618770679428214,320,system_prompt
+Llama 4 Maverick,role_encouraging,uncommon_adverse_effects_coverage,0.3553340264053579,0.02433801391489087,320,system_prompt
+Llama 4 Maverick,role_encouraging,understandability,0.3171875,0.04510301348611861,320,system_prompt
+Llama 4 Maverick,role_encouraging,usefulness,0.86875,0.03004541690179232,320,system_prompt
+Llama 4 Maverick,role_encouraging,very_common_adverse_effects_coverage,0.7797867063492063,0.03927107774679582,224,system_prompt
+Med42-8B,minimal,adverse_effects_recall,0.3520655720431674,0.01482953510565742,320,system_prompt
+Med42-8B,minimal,adverse_effects_specificity,0.3676597244082419,0.01888783351930661,320,system_prompt
+Med42-8B,minimal,common_adverse_effects_coverage,0.45765562996031744,0.02030130811719218,320,system_prompt
+Med42-8B,minimal,contraindications_recall,0.4583294474166185,0.03973450008090897,320,system_prompt
+Med42-8B,minimal,contraindications_specificity,0.5031125992063492,0.034034183147346124,320,system_prompt
+Med42-8B,minimal,patient_attitude_responsiveness,0.3984375,0.047100418672930716,320,system_prompt
+Med42-8B,minimal,uncommon_adverse_effects_coverage,0.18748219285243742,0.018637580044947945,320,system_prompt
+Med42-8B,minimal,understandability,0.115625,0.03171167666510596,320,system_prompt
+Med42-8B,minimal,usefulness,0.4125,0.04773564712318869,320,system_prompt
+Med42-8B,minimal,very_common_adverse_effects_coverage,0.6570188492063492,0.044140182267744105,224,system_prompt
+Med42-8B,none,adverse_effects_recall,0.2646921764802129,0.01292622532446312,320,system_prompt
+Med42-8B,none,adverse_effects_specificity,0.44615380810124183,0.021428235569098782,320,system_prompt
+Med42-8B,none,common_adverse_effects_coverage,0.35039291437728937,0.0175048198584554,320,system_prompt
+Med42-8B,none,contraindications_recall,0.350886511149669,0.03249808820771853,320,system_prompt
+Med42-8B,none,contraindications_specificity,0.5091237148268398,0.03546353337678377,320,system_prompt
+Med42-8B,none,patient_attitude_responsiveness,0.5734375,0.04850761004490747,320,system_prompt
+Med42-8B,none,uncommon_adverse_effects_coverage,0.1429500956471065,0.01846174220762218,320,system_prompt
+Med42-8B,none,understandability,0.1203125,0.03104974847543746,320,system_prompt
+Med42-8B,none,usefulness,0.6046875,0.04800802701442123,320,system_prompt
+Med42-8B,none,very_common_adverse_effects_coverage,0.5979166666666667,0.04901928805729684,224,system_prompt
+Med42-8B,role_attitude_sensitive,adverse_effects_recall,0.2627546897908911,0.013339306751875286,320,system_prompt
+Med42-8B,role_attitude_sensitive,adverse_effects_specificity,0.45338415029342405,0.023958469607946765,320,system_prompt
+Med42-8B,role_attitude_sensitive,common_adverse_effects_coverage,0.3453585737179487,0.017660591322115383,320,system_prompt
+Med42-8B,role_attitude_sensitive,contraindications_recall,0.3849366304382752,0.03579643709468615,320,system_prompt
+Med42-8B,role_attitude_sensitive,contraindications_specificity,0.518377637987013,0.03528998978651125,320,system_prompt
+Med42-8B,role_attitude_sensitive,patient_attitude_responsiveness,0.959375,0.017320721583117565,320,system_prompt
+Med42-8B,role_attitude_sensitive,uncommon_adverse_effects_coverage,0.1197829486334921,0.01489899334449225,320,system_prompt
+Med42-8B,role_attitude_sensitive,understandability,0.1625,0.03708765986290565,320,system_prompt
+Med42-8B,role_attitude_sensitive,usefulness,0.30625,0.0431552362086654,320,system_prompt
+Med42-8B,role_attitude_sensitive,very_common_adverse_effects_coverage,0.5907242063492063,0.049440426662743196,224,system_prompt
+Med42-8B,role_encouraging,adverse_effects_recall,0.2603343980021743,0.014588309504700414,320,system_prompt
+Med42-8B,role_encouraging,adverse_effects_specificity,0.48315506770774963,0.023317769798453663,320,system_prompt
+Med42-8B,role_encouraging,common_adverse_effects_coverage,0.3393614545177045,0.019870403681100518,320,system_prompt
+Med42-8B,role_encouraging,contraindications_recall,0.36268755823854504,0.03729246095072742,320,system_prompt
+Med42-8B,role_encouraging,contraindications_specificity,0.5337686011904762,0.039999832758886175,320,system_prompt
+Med42-8B,role_encouraging,patient_attitude_responsiveness,0.4296875,0.04856334017460678,320,system_prompt
+Med42-8B,role_encouraging,uncommon_adverse_effects_coverage,0.12723484954055606,0.015955987328976944,320,system_prompt
+Med42-8B,role_encouraging,understandability,0.0671875,0.025519809279349808,320,system_prompt
+Med42-8B,role_encouraging,usefulness,0.275,0.040830773169480326,320,system_prompt
+Med42-8B,role_encouraging,very_common_adverse_effects_coverage,0.6025049603174603,0.047924404985855415,224,system_prompt
+Claude Sonnet 4.6,minimal,aggregate_structured,0.6648792350982918,0.013641194453004745,320,system_prompt
+Claude Sonnet 4.6,none,aggregate_structured,0.47541772005573824,0.013153156842092447,320,system_prompt
+Claude Sonnet 4.6,role_attitude_sensitive,aggregate_structured,0.6627002361181423,0.012834664477964497,320,system_prompt
+Claude Sonnet 4.6,role_encouraging,aggregate_structured,0.6572510789128999,0.013736744279354958,320,system_prompt
+GLM 4.5,minimal,aggregate_structured,0.6366859073106048,0.01347625962743801,320,system_prompt
+GLM 4.5,none,aggregate_structured,0.45134717190644985,0.011333736248473598,320,system_prompt
+GLM 4.5,role_attitude_sensitive,aggregate_structured,0.6323556677895901,0.013739467904743142,320,system_prompt
+GLM 4.5,role_encouraging,aggregate_structured,0.6402112668202553,0.013182659837973081,320,system_prompt
+GPT-5.4,minimal,aggregate_structured,0.7235706857778056,0.01544211496875186,320,system_prompt
+GPT-5.4,none,aggregate_structured,0.4733243483651791,0.011972002941675537,320,system_prompt
+GPT-5.4,role_attitude_sensitive,aggregate_structured,0.7301514062815335,0.013968947077998228,320,system_prompt
+GPT-5.4,role_encouraging,aggregate_structured,0.7314879710600886,0.014061295235564516,320,system_prompt
+GPT-OSS-120B,minimal,aggregate_structured,0.5250394335918287,0.013917614279449118,320,system_prompt
+GPT-OSS-120B,none,aggregate_structured,0.47307952742864,0.012453896013575806,320,system_prompt
+GPT-OSS-120B,role_attitude_sensitive,aggregate_structured,0.5336032988474584,0.011958554883828092,320,system_prompt
+GPT-OSS-120B,role_encouraging,aggregate_structured,0.5251685441206777,0.012729376273787538,320,system_prompt
+Gemini 3.5 Flash,minimal,aggregate_structured,0.679835618680484,0.013688802893117434,320,system_prompt
+Gemini 3.5 Flash,none,aggregate_structured,0.44407504076230425,0.015155843431946769,320,system_prompt
+Gemini 3.5 Flash,role_attitude_sensitive,aggregate_structured,0.6841944299289009,0.011877981602410364,320,system_prompt
+Gemini 3.5 Flash,role_encouraging,aggregate_structured,0.6964303252550085,0.0113211727436396,320,system_prompt
+Llama 3.1 8B Instruct,minimal,aggregate_structured,0.25424606012032397,0.021204549641711708,320,system_prompt
+Llama 3.1 8B Instruct,none,aggregate_structured,0.14484700182224292,0.017690074421919624,320,system_prompt
+Llama 3.1 8B Instruct,role_attitude_sensitive,aggregate_structured,0.34456420465055715,0.014719128035810724,320,system_prompt
+Llama 3.1 8B Instruct,role_encouraging,aggregate_structured,0.31275349852703554,0.017867634584660126,320,system_prompt
+Llama 4 Maverick,minimal,aggregate_structured,0.6312882478127154,0.011292915047990727,320,system_prompt
+Llama 4 Maverick,none,aggregate_structured,0.4160985488094614,0.015145015865179643,320,system_prompt
+Llama 4 Maverick,role_attitude_sensitive,aggregate_structured,0.6111136899838192,0.011445911211471503,320,system_prompt
+Llama 4 Maverick,role_encouraging,aggregate_structured,0.6204475125315243,0.011727453047372298,320,system_prompt
+Med42-8B,minimal,aggregate_structured,0.41472583828010007,0.013255902880330989,320,system_prompt
+Med42-8B,none,aggregate_structured,0.3687750595831518,0.012296419690278603,320,system_prompt
+Med42-8B,role_attitude_sensitive,aggregate_structured,0.37092388870950943,0.012595519551309078,320,system_prompt
+Med42-8B,role_encouraging,aggregate_structured,0.37670260171799846,0.014428181192514263,320,system_prompt
+Claude Sonnet 4.6,minimal,aggregate_communication,0.615625,0.032299592346535136,320,system_prompt
+Claude Sonnet 4.6,none,aggregate_communication,0.8901041666666666,0.015091592701550933,320,system_prompt
+Claude Sonnet 4.6,role_attitude_sensitive,aggregate_communication,0.8020833333333334,0.02563737106973856,320,system_prompt
+Claude Sonnet 4.6,role_encouraging,aggregate_communication,0.7286458333333333,0.02640067219541614,320,system_prompt
+GLM 4.5,minimal,aggregate_communication,0.371875,0.028789907921186797,320,system_prompt
+GLM 4.5,none,aggregate_communication,0.9786458333333334,0.006762511363546337,320,system_prompt
+GLM 4.5,role_attitude_sensitive,aggregate_communication,0.6755208333333333,0.02492086567187244,320,system_prompt
+GLM 4.5,role_encouraging,aggregate_communication,0.4328125,0.028936759924349735,320,system_prompt
+GPT-5.4,minimal,aggregate_communication,0.4130208333333333,0.020949803449546382,320,system_prompt
+GPT-5.4,none,aggregate_communication,0.8994791666666666,0.016694061822610677,320,system_prompt
+GPT-5.4,role_attitude_sensitive,aggregate_communication,0.6026041666666666,0.014303890409890257,320,system_prompt
+GPT-5.4,role_encouraging,aggregate_communication,0.4135416666666666,0.021926044589466072,320,system_prompt
+GPT-OSS-120B,minimal,aggregate_communication,0.4421875,0.028782815210526443,320,system_prompt
+GPT-OSS-120B,none,aggregate_communication,0.7015625,0.021274743537567135,320,system_prompt
+GPT-OSS-120B,role_attitude_sensitive,aggregate_communication,0.7546875,0.020797055633458305,320,system_prompt
+GPT-OSS-120B,role_encouraging,aggregate_communication,0.48697916666666663,0.027263625422759327,320,system_prompt
+Gemini 3.5 Flash,minimal,aggregate_communication,0.8973958333333334,0.01596179561677354,320,system_prompt
+Gemini 3.5 Flash,none,aggregate_communication,0.9875,0.005618727393902829,320,system_prompt
+Gemini 3.5 Flash,role_attitude_sensitive,aggregate_communication,0.9651041666666667,0.00931322172321766,320,system_prompt
+Gemini 3.5 Flash,role_encouraging,aggregate_communication,0.9567708333333333,0.010891272039258855,320,system_prompt
+Llama 3.1 8B Instruct,minimal,aggregate_communication,0.2067708333333333,0.02354863139755531,320,system_prompt
+Llama 3.1 8B Instruct,none,aggregate_communication,0.4645833333333333,0.02708094435247677,320,system_prompt
+Llama 3.1 8B Instruct,role_attitude_sensitive,aggregate_communication,0.4104166666666666,0.02625780100037188,320,system_prompt
+Llama 3.1 8B Instruct,role_encouraging,aggregate_communication,0.2609375,0.027749604396838424,320,system_prompt
+Llama 4 Maverick,minimal,aggregate_communication,0.4875,0.027666189833611698,320,system_prompt
+Llama 4 Maverick,none,aggregate_communication,0.7536458333333333,0.02406186828276879,320,system_prompt
+Llama 4 Maverick,role_attitude_sensitive,aggregate_communication,0.7536458333333333,0.018625303417927844,320,system_prompt
+Llama 4 Maverick,role_encouraging,aggregate_communication,0.6239583333333333,0.02523124493134337,320,system_prompt
+Med42-8B,minimal,aggregate_communication,0.30885416666666665,0.027398450902202238,320,system_prompt
+Med42-8B,none,aggregate_communication,0.4328125,0.02636600271753763,320,system_prompt
+Med42-8B,role_attitude_sensitive,aggregate_communication,0.4760416666666666,0.02205676659014307,320,system_prompt
+Med42-8B,role_encouraging,aggregate_communication,0.25729166666666664,0.024695228559586977,320,system_prompt

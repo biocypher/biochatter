@@ -1,0 +1,8 @@
+{
+  "n_models": 8,
+  "n_model_prompt_points": 32,
+  "pearson_r_model_centered": -0.6272343655209744,
+  "within_model_permutation_p": 0.0006999930000699993,
+  "n_permutations": 100000,
+  "seed": 20260712
+}

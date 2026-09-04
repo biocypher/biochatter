@@ -943,6 +943,11 @@ def pytest_generate_tests(metafunc):
             "test_create_longevity_responses_simultaneously",
             data["longevity_geriatric_case_assessment"],
         )
+    if "test_data_medication_safety" in metafunc.fixturenames:
+        metafunc.parametrize(
+            "test_data_medication_safety",
+            data.get("drug_adverse_effect_assessment", []),
+        )
     if "test_data_mcp_edam_qa" in metafunc.fixturenames:
         metafunc.parametrize(
             "test_data_mcp_edam_qa",

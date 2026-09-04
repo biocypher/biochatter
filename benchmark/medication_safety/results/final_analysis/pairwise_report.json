@@ -1,0 +1,9 @@
+{
+  "structured_tests": 1764,
+  "communication_tests": 756,
+  "structured_within_tests": 112,
+  "communication_within_tests": 48,
+  "structured_holm_family": "All overall and condition-stratified between-model Wilcoxon tests.",
+  "communication_holm_family": "All overall and condition-stratified between-model McNemar tests.",
+  "strict_communication_rule": "Both judge iterations must be positive."
+}

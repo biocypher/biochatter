@@ -1,0 +1,9 @@
+Response model,API model ID,Provider / endpoint,Temperature,Max output tokens,Reasoning / thinking setting,Cohort,Notes
+Claude Sonnet 4.6,claude-sonnet-4-6,Anthropic API,0.0,Not explicitly set,Not enabled or separately configured,Original response-model cohort,Proprietary response model
+GPT-5.4,gpt-5.4,OpenAI API,0.0,Not explicitly set,Provider default,Original response-model cohort,Final run completed 2026-08-18; returned snapshot gpt-5.4-2026-03-05
+GPT-OSS-120B,openai/gpt-oss-120b,Hugging Face Router using OpenAI-compatible endpoint,0.0,4096,Not explicitly configured,Original response-model cohort,General-purpose open-weight response model
+Med42-8B,m42-health/Llama3-Med42-8B,Hugging Face Router using Featherless AI provider endpoint,0.0,4096,Not explicitly configured,Original response-model cohort,Medically oriented open-weight response model
+Gemini 3.5 Flash,google/gemini-3.5-flash,OpenRouter,0.0,4096,Not explicitly configured,Expanded response-model cohort,Generated 2026-07-07
+Llama 4 Maverick,meta-llama/llama-4-maverick,OpenRouter,0.0,4096,Not explicitly configured,Expanded response-model cohort,Generated 2026-07-08
+Llama 3.1 8B Instruct,meta-llama/llama-3.1-8b-instruct,OpenRouter,0.0,4096,Not explicitly configured,Expanded response-model cohort,Generated 2026-07-08
+GLM 4.5,z-ai/glm-4.5,OpenRouter,0.0,4096,"reasoning.effort=none; exclude=true",Expanded response-model cohort,Generated 2026-07-09

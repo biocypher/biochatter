@@ -1,0 +1,75 @@
+{
+  "score_rows": 102400,
+  "models": [
+    "Llama 3.1 8B Instruct",
+    "Med42-8B",
+    "Llama 4 Maverick",
+    "GLM 4.5",
+    "GPT-OSS-120B",
+    "Claude Sonnet 4.6",
+    "Gemini 3.5 Flash",
+    "GPT-5.4"
+  ],
+  "score_range_ok": true,
+  "response_index_values": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "expected_score_rows": 102400,
+  "expected_score_rows_ok": true,
+  "duplicate_score_keys": 0,
+  "per_metric_counts": [
+    {
+      "metric_group": "judge",
+      "metric": "patient_attitude_responsiveness",
+      "n": 10240
+    },
+    {
+      "metric_group": "judge",
+      "metric": "understandability",
+      "n": 10240
+    },
+    {
+      "metric_group": "judge",
+      "metric": "usefulness",
+      "n": 10240
+    },
+    {
+      "metric_group": "structured",
+      "metric": "adverse_effects_recall",
+      "n": 10240
+    },
+    {
+      "metric_group": "structured",
+      "metric": "adverse_effects_specificity",
+      "n": 10240
+    },
+    {
+      "metric_group": "structured",
+      "metric": "common_adverse_effects_coverage",
+      "n": 10240
+    },
+    {
+      "metric_group": "structured",
+      "metric": "contraindications_recall",
+      "n": 10240
+    },
+    {
+      "metric_group": "structured",
+      "metric": "contraindications_specificity",
+      "n": 10240
+    },
+    {
+      "metric_group": "structured",
+      "metric": "uncommon_adverse_effects_coverage",
+      "n": 10240
+    },
+    {
+      "metric_group": "structured",
+      "metric": "very_common_adverse_effects_coverage",
+      "n": 10240
+    }
+  ]
+}
