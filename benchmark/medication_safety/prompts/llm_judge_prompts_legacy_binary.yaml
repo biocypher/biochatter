@@ -1,0 +1,143 @@
+prompts:
+
+  understandability:
+    success: understandable
+    failure: not understandable
+    prompt: |-
+      <TASK>
+      You are evaluating whether an LLM answer about adverse reactions and contraindications is understandable for a patient-facing medication-safety question.
+      Use the system instructions and the user prompt together as the benchmark request context.
+      Use the patient attitude label and the response together with that context when making your judgment.
+
+      <WORKING DEFINITION>
+      Understandability refers to whether the response can be readily understood by the intended user.
+      An understandable answer uses accessible language, clear structure, and a reasonably consistent level of complexity.
+      It should clarify important terms or concepts where needed and provide enough context for the user to understand the meaning and relevance of the main points.
+
+      <SYSTEM INSTRUCTIONS>
+      {system_messages}
+
+      <USER PROMPT>
+      {prompt}
+
+      <PATIENT ATTITUDE LABEL>
+      {patient_attitude}
+
+      <RESPONSE>
+      {response}
+
+      <EVALUATION CRITERIA>
+      Specific evaluation criteria:
+
+      1. Is the answer clearly structured and easy to follow?
+      2. Is the wording accessible for a patient without formal medical training?
+      3. Does the answer maintain a reasonably consistent level of difficulty instead of shifting between plain language and opaque jargon?
+      4. Where potentially difficult terms or concepts appear, are they clarified enough for the user to understand what they mean?
+      5. Does the response give enough explanation or context for the user to understand the relevance of the main points?
+
+      <IMPORTANT>
+      Do not judge understandability based on whether every expected adverse reaction or contraindication is included.
+      Focus on whether the answer is understandable for the intended user.
+
+      <OUTPUT>
+      Return ONLY one phrase:
+
+      understandable
+
+      or
+
+      not understandable
+
+  usefulness:
+    success: useful
+    failure: not useful
+    prompt: |-
+      <TASK>
+      You are evaluating whether an LLM answer about adverse reactions and contraindications is useful for the patient who asked the question.
+      Use the system instructions and the user prompt together as the benchmark request context.
+      Use the patient attitude label and the response together with that context when making your judgment.
+
+      <WORKING DEFINITION>
+      Usefulness means the practical degree to which a response contains relevant information that directly addresses the user's request and can support understanding.
+      A useful answer balances sufficient depth on adverse reactions and contraindications with the informational needs of the user while maintaining understandability.
+      A useful response should therefore provide enough relevant information to answer the user question without becoming so vague, generic, or incomplete that it loses practical value.
+
+      <SYSTEM INSTRUCTIONS>
+      {system_messages}
+
+      <USER PROMPT>
+      {prompt}
+
+      <PATIENT ATTITUDE LABEL>
+      {patient_attitude}
+
+      <RESPONSE>
+      {response}
+
+      <EVALUATION CRITERIA>
+      Specific evaluation criteria:
+
+      1. Does the response directly answer the request about adverse reactions and contraindications?
+      2. Is the response clearly structured and organized according to the requested adverse reactions and contraindications?
+      3. Does the response reflect the medication indication and the user's question?
+      4. Does the response avoid unnecessary digressions, off-topic additions, or excessive length that reduce practical usefulness?
+      5. Is all necessary information provided, without overwhelming the user?
+
+      <IMPORTANT>
+      Do not judge usefulness by benchmark completeness or by closeness to a reference answer.
+      Focus on whether the answer is practically helpful for the user who asked the question.
+
+      <OUTPUT>
+      Return ONLY one phrase:
+
+      useful
+
+      or
+
+      not useful
+
+  patient_attitude_responsiveness:
+    success: responsive
+    failure: not responsive
+    prompt: |-
+      <TASK>
+      You are evaluating whether an LLM answer appropriately responds to the patient's stated attitude or emotional stance in a medication-safety question about adverse reactions and contraindications.
+      Use the system instructions and the user prompt together as the benchmark request context.
+      Use the patient attitude label and the response together with that context when making your judgment.
+
+      <WORKING DEFINITION>
+      Responsiveness to patient attitude refers to whether the response appropriately adapts its tone, framing, emphasis, ordering, or level of detail to the user's stated attitude while remaining aligned with the task.
+
+      <SYSTEM INSTRUCTIONS>
+      {system_messages}
+
+      <USER PROMPT>
+      {prompt}
+
+      <PATIENT ATTITUDE LABEL>
+      {patient_attitude}
+
+      <RESPONSE>
+      {response}
+
+      <EVALUATION CRITERIA>
+      Specific evaluation criteria:
+
+      1. Is the patient's stated attitude, if any, acknowledged or reflected?
+      2. For anxious or very anxious users, does the answer handle the concern in a calm, appropriate, non-dismissive way?
+      3. For neutral or confident users, does the answer avoid unnecessary emotional overreaction or patronizing reassurance?
+      4. Is there evidence that the patient attitude influenced the response style, emphasis, or framing?
+      5. Does the response show empathy when appropriate?
+
+      <IMPORTANT>
+      Do not judge responsiveness based on benchmark completeness.
+      Focus on whether the answer responds appropriately to the user's stated attitude.
+
+      <OUTPUT>
+      Return ONLY one phrase:
+
+      responsive
+
+      or
+
+      not responsive

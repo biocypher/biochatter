@@ -1,0 +1,3 @@
+temperature,cells,mean_unique_exact_responses,cells_with_four_unique_responses,mean_within_input_word_count_sd,mean_within_input_structured_score_sd,mean_within_input_token_jaccard
+0.0,320,3.896875,296,34.58709667125977,0.03521225171606502,0.6548503472120952
+1.0,320,4.0,320,53.225969630363785,0.0417158395883651,0.5702276606315464

@@ -1,0 +1,8 @@
+LLM-judge,Rank 1 response model,Rank 1 score,Rank 2 response model,Rank 2 score,Rank 3 response model,Rank 3 score,Rank 4 response model,Rank 4 score
+DeepSeek V4 Flash,Claude Sonnet 4.6,0.878,GPT-OSS-120B,0.863,GPT-5.4,0.734,Med42-8B,0.514
+Claude Sonnet 4.6,Claude Sonnet 4.6,0.968,GPT-OSS-120B,0.843,GPT-5.4,0.726,Med42-8B,0.527
+GPT-5.4-mini,GPT-5.4,0.963,Claude Sonnet 4.6,0.689,Med42-8B,0.642,GPT-OSS-120B,0.505
+Qwen3-235B,Claude Sonnet 4.6,0.996,GPT-5.4,0.973,GPT-OSS-120B,0.972,Med42-8B,0.758
+Kimi K2.6,Claude Sonnet 4.6,0.957,GPT-OSS-120B,0.877,GPT-5.4,0.848,Med42-8B,0.455
+Gemma 4 31B,Claude Sonnet 4.6,0.861,GPT-OSS-120B,0.768,GPT-5.4,0.659,Med42-8B,0.517
+Mistral Large 3,Claude Sonnet 4.6,0.983,GPT-OSS-120B,0.981,GPT-5.4,0.944,Med42-8B,0.881

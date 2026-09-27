@@ -1,0 +1,385 @@
+model_label,condition,panel,mean,ci,n,condition_type
+Claude Sonnet 4.6,anxious,adverse_effects_recall,0.6283563201513693,0.021517956840303436,320,patient_attitude
+Claude Sonnet 4.6,anxious,adverse_effects_specificity,0.5099514387885649,0.019046055321777715,320,patient_attitude
+Claude Sonnet 4.6,anxious,common_adverse_effects_coverage,0.7476307329822955,0.0231041278552224,320,patient_attitude
+Claude Sonnet 4.6,anxious,contraindications_recall,0.6320157866621682,0.0392342978009437,320,patient_attitude
+Claude Sonnet 4.6,anxious,contraindications_specificity,0.602197516025641,0.032728397800106786,320,patient_attitude
+Claude Sonnet 4.6,anxious,patient_attitude_responsiveness,0.815625,0.04211114229335015,320,patient_attitude
+Claude Sonnet 4.6,anxious,uncommon_adverse_effects_coverage,0.49227894591821225,0.031578398939223616,320,patient_attitude
+Claude Sonnet 4.6,anxious,understandability,0.796875,0.03592634333433025,320,patient_attitude
+Claude Sonnet 4.6,anxious,usefulness,0.6640625,0.049889260081241546,320,patient_attitude
+Claude Sonnet 4.6,anxious,very_common_adverse_effects_coverage,0.7961557539682539,0.03723901753904954,224,patient_attitude
+Claude Sonnet 4.6,confident,adverse_effects_recall,0.6189053241555426,0.022088042787417442,320,patient_attitude
+Claude Sonnet 4.6,confident,adverse_effects_specificity,0.5108677991548232,0.02060561238890951,320,patient_attitude
+Claude Sonnet 4.6,confident,common_adverse_effects_coverage,0.7315305441086691,0.025185688542085794,320,patient_attitude
+Claude Sonnet 4.6,confident,contraindications_recall,0.6199281356435962,0.039492714441460255,320,patient_attitude
+Claude Sonnet 4.6,confident,contraindications_specificity,0.5931894545405575,0.03276546840002716,320,patient_attitude
+Claude Sonnet 4.6,confident,patient_attitude_responsiveness,0.9265625,0.02127228656826709,320,patient_attitude
+Claude Sonnet 4.6,confident,uncommon_adverse_effects_coverage,0.4810436165585622,0.031150864881227737,320,patient_attitude
+Claude Sonnet 4.6,confident,understandability,0.696875,0.043202899747934675,320,patient_attitude
+Claude Sonnet 4.6,confident,usefulness,0.7453125,0.046312303281599645,320,patient_attitude
+Claude Sonnet 4.6,confident,very_common_adverse_effects_coverage,0.8027529761904761,0.036875974222668854,224,patient_attitude
+Claude Sonnet 4.6,neutral,adverse_effects_recall,0.6168800981545381,0.022114912725070622,320,patient_attitude
+Claude Sonnet 4.6,neutral,adverse_effects_specificity,0.5034652214620359,0.020449802843598947,320,patient_attitude
+Claude Sonnet 4.6,neutral,common_adverse_effects_coverage,0.7345940647893773,0.024427526815262574,320,patient_attitude
+Claude Sonnet 4.6,neutral,contraindications_recall,0.6060666690765375,0.04006074952860776,320,patient_attitude
+Claude Sonnet 4.6,neutral,contraindications_specificity,0.5703876740089975,0.032659237451612796,320,patient_attitude
+Claude Sonnet 4.6,neutral,patient_attitude_responsiveness,0.8984375,0.02525576821005637,320,patient_attitude
+Claude Sonnet 4.6,neutral,uncommon_adverse_effects_coverage,0.47768706504847813,0.03228058342934903,320,patient_attitude
+Claude Sonnet 4.6,neutral,understandability,0.5921875,0.04403700628684561,320,patient_attitude
+Claude Sonnet 4.6,neutral,usefulness,0.7015625,0.04820604194411434,320,patient_attitude
+Claude Sonnet 4.6,neutral,very_common_adverse_effects_coverage,0.8075644841269841,0.03702807502660251,224,patient_attitude
+Claude Sonnet 4.6,very_anxious,adverse_effects_recall,0.6218844687096846,0.020887365713314683,320,patient_attitude
+Claude Sonnet 4.6,very_anxious,adverse_effects_specificity,0.5012468447787812,0.019710145436447446,320,patient_attitude
+Claude Sonnet 4.6,very_anxious,common_adverse_effects_coverage,0.7403440266330892,0.0238011579631985,320,patient_attitude
+Claude Sonnet 4.6,very_anxious,contraindications_recall,0.6063865392648287,0.04058315689992166,320,patient_attitude
+Claude Sonnet 4.6,very_anxious,contraindications_specificity,0.568241498998078,0.03457319263919162,320,patient_attitude
+Claude Sonnet 4.6,very_anxious,patient_attitude_responsiveness,0.871875,0.035372125396900364,320,patient_attitude
+Claude Sonnet 4.6,very_anxious,uncommon_adverse_effects_coverage,0.47675356987517314,0.031065939095503425,320,patient_attitude
+Claude Sonnet 4.6,very_anxious,understandability,0.8109375,0.03487110990399531,320,patient_attitude
+Claude Sonnet 4.6,very_anxious,usefulness,0.5890625,0.05029308096007736,320,patient_attitude
+Claude Sonnet 4.6,very_anxious,very_common_adverse_effects_coverage,0.8013640873015874,0.03666687700645815,224,patient_attitude
+GLM 4.5,anxious,adverse_effects_recall,0.5951374611260991,0.01926532299727781,320,patient_attitude
+GLM 4.5,anxious,adverse_effects_specificity,0.41479110100154876,0.017479340117464045,320,patient_attitude
+GLM 4.5,anxious,common_adverse_effects_coverage,0.711043479090354,0.020411409188428046,320,patient_attitude
+GLM 4.5,anxious,contraindications_recall,0.6027120485508644,0.03626175138320535,320,patient_attitude
+GLM 4.5,anxious,contraindications_specificity,0.5615594858894976,0.031157442323441684,320,patient_attitude
+GLM 4.5,anxious,patient_attitude_responsiveness,0.5515625,0.05309142528850926,320,patient_attitude
+GLM 4.5,anxious,uncommon_adverse_effects_coverage,0.4518062702695855,0.030574465304503803,320,patient_attitude
+GLM 4.5,anxious,understandability,0.3875,0.05000728003427434,320,patient_attitude
+GLM 4.5,anxious,usefulness,0.7,0.04537110994404764,320,patient_attitude
+GLM 4.5,anxious,very_common_adverse_effects_coverage,0.8208085317460317,0.040686246750516984,224,patient_attitude
+GLM 4.5,confident,adverse_effects_recall,0.6007987620085332,0.018499918532730458,320,patient_attitude
+GLM 4.5,confident,adverse_effects_specificity,0.4200817621312086,0.017527647917524977,320,patient_attitude
+GLM 4.5,confident,common_adverse_effects_coverage,0.7200925766941392,0.018735722163838908,320,patient_attitude
+GLM 4.5,confident,contraindications_recall,0.6073368718270034,0.03557176576081968,320,patient_attitude
+GLM 4.5,confident,contraindications_specificity,0.5850572943702539,0.031106493647096604,320,patient_attitude
+GLM 4.5,confident,patient_attitude_responsiveness,0.865625,0.028918521869757824,320,patient_attitude
+GLM 4.5,confident,uncommon_adverse_effects_coverage,0.44738532534796127,0.029903188065174686,320,patient_attitude
+GLM 4.5,confident,understandability,0.40625,0.05065684348176513,320,patient_attitude
+GLM 4.5,confident,usefulness,0.8078125,0.040428069074625164,320,patient_attitude
+GLM 4.5,confident,very_common_adverse_effects_coverage,0.8227430555555556,0.04027469222746097,224,patient_attitude
+GLM 4.5,neutral,adverse_effects_recall,0.5986878773252203,0.01836182336651267,320,patient_attitude
+GLM 4.5,neutral,adverse_effects_specificity,0.4140711957548566,0.017535796570372138,320,patient_attitude
+GLM 4.5,neutral,common_adverse_effects_coverage,0.7058909970238095,0.019924699227450087,320,patient_attitude
+GLM 4.5,neutral,contraindications_recall,0.6148337490360516,0.03445675563516917,320,patient_attitude
+GLM 4.5,neutral,contraindications_specificity,0.5804017836201466,0.030034708180656726,320,patient_attitude
+GLM 4.5,neutral,patient_attitude_responsiveness,0.8671875,0.027506975595414696,320,patient_attitude
+GLM 4.5,neutral,uncommon_adverse_effects_coverage,0.47129384089642234,0.02971512046891923,320,patient_attitude
+GLM 4.5,neutral,understandability,0.3828125,0.050533359115763586,320,patient_attitude
+GLM 4.5,neutral,usefulness,0.7890625,0.040697703662073946,320,patient_attitude
+GLM 4.5,neutral,very_common_adverse_effects_coverage,0.8349950396825397,0.039942986829799715,224,patient_attitude
+GLM 4.5,very_anxious,adverse_effects_recall,0.5987225075661383,0.018151386760320215,320,patient_attitude
+GLM 4.5,very_anxious,adverse_effects_specificity,0.4122677629267807,0.017598804600790392,320,patient_attitude
+GLM 4.5,very_anxious,common_adverse_effects_coverage,0.7168192918192918,0.018321670195844682,320,patient_attitude
+GLM 4.5,very_anxious,contraindications_recall,0.6209223680194075,0.03392745004546172,320,patient_attitude
+GLM 4.5,very_anxious,contraindications_specificity,0.5882165923145267,0.03014974600997978,320,patient_attitude
+GLM 4.5,very_anxious,patient_attitude_responsiveness,0.5453125,0.05368836671489758,320,patient_attitude
+GLM 4.5,very_anxious,uncommon_adverse_effects_coverage,0.4576888687248742,0.030334182872303748,320,patient_attitude
+GLM 4.5,very_anxious,understandability,0.4109375,0.05047980395046082,320,patient_attitude
+GLM 4.5,very_anxious,usefulness,0.6625,0.04551603286369433,320,patient_attitude
+GLM 4.5,very_anxious,very_common_adverse_effects_coverage,0.8185267857142857,0.04054122899127368,224,patient_attitude
+GPT-5.4,anxious,adverse_effects_recall,0.6320455473990177,0.021874638711468965,320,patient_attitude
+GPT-5.4,anxious,adverse_effects_specificity,0.6324458923647021,0.01942397106029909,320,patient_attitude
+GPT-5.4,anxious,common_adverse_effects_coverage,0.7456769402472527,0.023874863005008937,320,patient_attitude
+GPT-5.4,anxious,contraindications_recall,0.6621448553274212,0.03327716276515135,320,patient_attitude
+GPT-5.4,anxious,contraindications_specificity,0.7020116811293282,0.030835737544231245,320,patient_attitude
+GPT-5.4,anxious,patient_attitude_responsiveness,0.478125,0.053249846847322695,320,patient_attitude
+GPT-5.4,anxious,uncommon_adverse_effects_coverage,0.48156636336187963,0.03072491120409132,320,patient_attitude
+GPT-5.4,anxious,understandability,0.21875,0.043024230888810404,320,patient_attitude
+GPT-5.4,anxious,usefulness,0.84375,0.03314241793791092,320,patient_attitude
+GPT-5.4,anxious,very_common_adverse_effects_coverage,0.8422371031746031,0.03760424142801141,224,patient_attitude
+GPT-5.4,confident,adverse_effects_recall,0.6448383435432721,0.02121281083339892,320,patient_attitude
+GPT-5.4,confident,adverse_effects_specificity,0.6293983669003366,0.01987208563992622,320,patient_attitude
+GPT-5.4,confident,common_adverse_effects_coverage,0.7488447706807082,0.023160787420013554,320,patient_attitude
+GPT-5.4,confident,contraindications_recall,0.6649641130068762,0.032923962209708495,320,patient_attitude
+GPT-5.4,confident,contraindications_specificity,0.7105174402105032,0.029453439834398458,320,patient_attitude
+GPT-5.4,confident,patient_attitude_responsiveness,0.8703125,0.02664699956312314,320,patient_attitude
+GPT-5.4,confident,uncommon_adverse_effects_coverage,0.5097549454621466,0.03058905696059336,320,patient_attitude
+GPT-5.4,confident,understandability,0.21875,0.0425846358999762,320,patient_attitude
+GPT-5.4,confident,usefulness,0.909375,0.026294352551397396,320,patient_attitude
+GPT-5.4,confident,very_common_adverse_effects_coverage,0.8343005952380952,0.03872966550027588,224,patient_attitude
+GPT-5.4,neutral,adverse_effects_recall,0.6196799929926078,0.02275531151810949,320,patient_attitude
+GPT-5.4,neutral,adverse_effects_specificity,0.6269928511499075,0.021044858226705997,320,patient_attitude
+GPT-5.4,neutral,common_adverse_effects_coverage,0.7250729262057387,0.024341637912532882,320,patient_attitude
+GPT-5.4,neutral,contraindications_recall,0.6543734335839598,0.03342964006995734,320,patient_attitude
+GPT-5.4,neutral,contraindications_specificity,0.7002259836772704,0.03068543697809972,320,patient_attitude
+GPT-5.4,neutral,patient_attitude_responsiveness,0.8125,0.02989630721264715,320,patient_attitude
+GPT-5.4,neutral,uncommon_adverse_effects_coverage,0.4807265738488565,0.031692871926644925,320,patient_attitude
+GPT-5.4,neutral,understandability,0.23125,0.04397587460212638,320,patient_attitude
+GPT-5.4,neutral,usefulness,0.9,0.02659896054725367,320,patient_attitude
+GPT-5.4,neutral,very_common_adverse_effects_coverage,0.8223214285714285,0.040073420160367995,224,patient_attitude
+GPT-5.4,very_anxious,adverse_effects_recall,0.6416158228745322,0.020884368932977595,320,patient_attitude
+GPT-5.4,very_anxious,adverse_effects_specificity,0.6251377633031981,0.020337953777275253,320,patient_attitude
+GPT-5.4,very_anxious,common_adverse_effects_coverage,0.7568568280677656,0.022709678338940487,320,patient_attitude
+GPT-5.4,very_anxious,contraindications_recall,0.6654213759559154,0.033643987368226075,320,patient_attitude
+GPT-5.4,very_anxious,contraindications_specificity,0.6900831781576267,0.030479429427012622,320,patient_attitude
+GPT-5.4,very_anxious,patient_attitude_responsiveness,0.496875,0.0541781713025611,320,patient_attitude
+GPT-5.4,very_anxious,uncommon_adverse_effects_coverage,0.4882492314448836,0.030249105221729355,320,patient_attitude
+GPT-5.4,very_anxious,understandability,0.2171875,0.043228412168762866,320,patient_attitude
+GPT-5.4,very_anxious,usefulness,0.7890625,0.037068232586205764,320,patient_attitude
+GPT-5.4,very_anxious,very_common_adverse_effects_coverage,0.8462549603174603,0.038242586181311114,224,patient_attitude
+GPT-OSS-120B,anxious,adverse_effects_recall,0.5198888883875717,0.0148703190096998,320,patient_attitude
+GPT-OSS-120B,anxious,adverse_effects_specificity,0.3410989696466721,0.01405126840193192,320,patient_attitude
+GPT-OSS-120B,anxious,common_adverse_effects_coverage,0.6335985672313798,0.021801319383766112,320,patient_attitude
+GPT-OSS-120B,anxious,contraindications_recall,0.6397242906946854,0.03469374912506738,320,patient_attitude
+GPT-OSS-120B,anxious,contraindications_specificity,0.4531434884559885,0.023175134400701146,320,patient_attitude
+GPT-OSS-120B,anxious,patient_attitude_responsiveness,0.7140625,0.046350378104721285,320,patient_attitude
+GPT-OSS-120B,anxious,uncommon_adverse_effects_coverage,0.3631490173473869,0.023296582063157347,320,patient_attitude
+GPT-OSS-120B,anxious,understandability,0.3671875,0.048344899603701794,320,patient_attitude
+GPT-OSS-120B,anxious,usefulness,0.5890625,0.04237388382098638,320,patient_attitude
+GPT-OSS-120B,anxious,very_common_adverse_effects_coverage,0.7954861111111111,0.038144981368130035,224,patient_attitude
+GPT-OSS-120B,confident,adverse_effects_recall,0.5072087906190077,0.016163431955357615,320,patient_attitude
+GPT-OSS-120B,confident,adverse_effects_specificity,0.34265007505486766,0.015435029540385416,320,patient_attitude
+GPT-OSS-120B,confident,common_adverse_effects_coverage,0.6254507688492064,0.0225305845697473,320,patient_attitude
+GPT-OSS-120B,confident,contraindications_recall,0.6196867770387506,0.03547865991795445,320,patient_attitude
+GPT-OSS-120B,confident,contraindications_specificity,0.449227339500777,0.024608818270252013,320,patient_attitude
+GPT-OSS-120B,confident,patient_attitude_responsiveness,0.9125,0.024576682503625515,320,patient_attitude
+GPT-OSS-120B,confident,uncommon_adverse_effects_coverage,0.3538255538241951,0.025504254419677835,320,patient_attitude
+GPT-OSS-120B,confident,understandability,0.2921875,0.04484151042844028,320,patient_attitude
+GPT-OSS-120B,confident,usefulness,0.734375,0.0404240690497916,320,patient_attitude
+GPT-OSS-120B,confident,very_common_adverse_effects_coverage,0.7235367063492063,0.045616643915540774,224,patient_attitude
+GPT-OSS-120B,neutral,adverse_effects_recall,0.49991636993832317,0.014882576518720393,320,patient_attitude
+GPT-OSS-120B,neutral,adverse_effects_specificity,0.3406700692604101,0.01578327304717737,320,patient_attitude
+GPT-OSS-120B,neutral,common_adverse_effects_coverage,0.6063570283882783,0.021680943066905992,320,patient_attitude
+GPT-OSS-120B,neutral,contraindications_recall,0.6315452593824304,0.03397328295367336,320,patient_attitude
+GPT-OSS-120B,neutral,contraindications_specificity,0.43925031208579,0.023228839831089785,320,patient_attitude
+GPT-OSS-120B,neutral,patient_attitude_responsiveness,0.946875,0.018502561406600317,320,patient_attitude
+GPT-OSS-120B,neutral,uncommon_adverse_effects_coverage,0.34994122295277186,0.023033714609469666,320,patient_attitude
+GPT-OSS-120B,neutral,understandability,0.278125,0.04476440362494011,320,patient_attitude
+GPT-OSS-120B,neutral,usefulness,0.7453125,0.038060671324932585,320,patient_attitude
+GPT-OSS-120B,neutral,very_common_adverse_effects_coverage,0.7848462301587301,0.04207083739540916,224,patient_attitude
+GPT-OSS-120B,very_anxious,adverse_effects_recall,0.506052534377165,0.014548089196692017,320,patient_attitude
+GPT-OSS-120B,very_anxious,adverse_effects_specificity,0.3311469091876215,0.014082638705637451,320,patient_attitude
+GPT-OSS-120B,very_anxious,common_adverse_effects_coverage,0.6246367998321123,0.02089536345502321,320,patient_attitude
+GPT-OSS-120B,very_anxious,contraindications_recall,0.6384522303354541,0.03385830524985235,320,patient_attitude
+GPT-OSS-120B,very_anxious,contraindications_specificity,0.4657728382728383,0.024365628487243333,320,patient_attitude
+GPT-OSS-120B,very_anxious,patient_attitude_responsiveness,0.7,0.048961583686763926,320,patient_attitude
+GPT-OSS-120B,very_anxious,uncommon_adverse_effects_coverage,0.3431408240008783,0.023345531860606564,320,patient_attitude
+GPT-OSS-120B,very_anxious,understandability,0.375,0.048691820842189704,320,patient_attitude
+GPT-OSS-120B,very_anxious,usefulness,0.5015625,0.04348609373416138,320,patient_attitude
+GPT-OSS-120B,very_anxious,very_common_adverse_effects_coverage,0.7658730158730158,0.04216554573965051,224,patient_attitude
+Gemini 3.5 Flash,anxious,adverse_effects_recall,0.6770416515790548,0.02485107034375446,320,patient_attitude
+Gemini 3.5 Flash,anxious,adverse_effects_specificity,0.5190854606892262,0.01872783791345245,320,patient_attitude
+Gemini 3.5 Flash,anxious,common_adverse_effects_coverage,0.756903331043956,0.026258990897488746,320,patient_attitude
+Gemini 3.5 Flash,anxious,contraindications_recall,0.5673518833140544,0.02790938085643079,320,patient_attitude
+Gemini 3.5 Flash,anxious,contraindications_specificity,0.565956316242452,0.03168391565835928,320,patient_attitude
+Gemini 3.5 Flash,anxious,patient_attitude_responsiveness,1.0,0.0,320,patient_attitude
+Gemini 3.5 Flash,anxious,uncommon_adverse_effects_coverage,0.5964287935796089,0.03329519515523307,320,patient_attitude
+Gemini 3.5 Flash,anxious,understandability,0.9625,0.0184548292054718,320,patient_attitude
+Gemini 3.5 Flash,anxious,usefulness,0.9671875,0.014262722126469984,320,patient_attitude
+Gemini 3.5 Flash,anxious,very_common_adverse_effects_coverage,0.7381200396825397,0.04578586476596764,224,patient_attitude
+Gemini 3.5 Flash,confident,adverse_effects_recall,0.6711706943608393,0.024216940688781063,320,patient_attitude
+Gemini 3.5 Flash,confident,adverse_effects_specificity,0.5127106149555073,0.018836602394862453,320,patient_attitude
+Gemini 3.5 Flash,confident,common_adverse_effects_coverage,0.7699035122863248,0.02655741415808296,320,patient_attitude
+Gemini 3.5 Flash,confident,contraindications_recall,0.5746229957907589,0.02935828757686676,320,patient_attitude
+Gemini 3.5 Flash,confident,contraindications_specificity,0.5690059345109655,0.030590379262859877,320,patient_attitude
+Gemini 3.5 Flash,confident,patient_attitude_responsiveness,0.9421875,0.01957355129169194,320,patient_attitude
+Gemini 3.5 Flash,confident,uncommon_adverse_effects_coverage,0.5695972454477889,0.03227599812372318,320,patient_attitude
+Gemini 3.5 Flash,confident,understandability,0.9,0.027978047821007955,320,patient_attitude
+Gemini 3.5 Flash,confident,usefulness,0.984375,0.01048616185824162,320,patient_attitude
+Gemini 3.5 Flash,confident,very_common_adverse_effects_coverage,0.749578373015873,0.045750728241388476,224,patient_attitude
+Gemini 3.5 Flash,neutral,adverse_effects_recall,0.6766169342057207,0.023496556522471262,320,patient_attitude
+Gemini 3.5 Flash,neutral,adverse_effects_specificity,0.5135492297323172,0.01759536859216415,320,patient_attitude
+Gemini 3.5 Flash,neutral,common_adverse_effects_coverage,0.7752151537698413,0.024429342785299405,320,patient_attitude
+Gemini 3.5 Flash,neutral,contraindications_recall,0.574369547667245,0.03030188020771562,320,patient_attitude
+Gemini 3.5 Flash,neutral,contraindications_specificity,0.560942067596576,0.029918880345559555,320,patient_attitude
+Gemini 3.5 Flash,neutral,patient_attitude_responsiveness,0.878125,0.029577947303570436,320,patient_attitude
+Gemini 3.5 Flash,neutral,uncommon_adverse_effects_coverage,0.575155275581906,0.03230680918339887,320,patient_attitude
+Gemini 3.5 Flash,neutral,understandability,0.8921875,0.028465084884888688,320,patient_attitude
+Gemini 3.5 Flash,neutral,usefulness,0.99375,0.006096131025463922,320,patient_attitude
+Gemini 3.5 Flash,neutral,very_common_adverse_effects_coverage,0.7365575396825397,0.046504966660179274,224,patient_attitude
+Gemini 3.5 Flash,very_anxious,adverse_effects_recall,0.675501191966843,0.024131047966539344,320,patient_attitude
+Gemini 3.5 Flash,very_anxious,adverse_effects_specificity,0.5101015575934662,0.018335423435636006,320,patient_attitude
+Gemini 3.5 Flash,very_anxious,common_adverse_effects_coverage,0.761645728403541,0.026403071990335,320,patient_attitude
+Gemini 3.5 Flash,very_anxious,contraindications_recall,0.5558393580104106,0.02769313568425641,320,patient_attitude
+Gemini 3.5 Flash,very_anxious,contraindications_specificity,0.5764425880921624,0.03151913223866441,320,patient_attitude
+Gemini 3.5 Flash,very_anxious,patient_attitude_responsiveness,1.0,0.0,320,patient_attitude
+Gemini 3.5 Flash,very_anxious,uncommon_adverse_effects_coverage,0.5900649846077834,0.03127697268951889,320,patient_attitude
+Gemini 3.5 Flash,very_anxious,understandability,0.95,0.018607141245477597,320,patient_attitude
+Gemini 3.5 Flash,very_anxious,usefulness,0.95,0.018607141245477594,320,patient_attitude
+Gemini 3.5 Flash,very_anxious,very_common_adverse_effects_coverage,0.7351934523809524,0.04674498624883108,224,patient_attitude
+Llama 3.1 8B Instruct,anxious,adverse_effects_recall,0.2787984599838672,0.021891104234302926,320,patient_attitude
+Llama 3.1 8B Instruct,anxious,adverse_effects_specificity,0.24459950979360195,0.021729402914097525,320,patient_attitude
+Llama 3.1 8B Instruct,anxious,common_adverse_effects_coverage,0.35697210775335775,0.028919544405435038,320,patient_attitude
+Llama 3.1 8B Instruct,anxious,contraindications_recall,0.18687387539361222,0.02877163861675147,320,patient_attitude
+Llama 3.1 8B Instruct,anxious,contraindications_specificity,0.20838902417027416,0.030086456996556064,320,patient_attitude
+Llama 3.1 8B Instruct,anxious,patient_attitude_responsiveness,0.35625,0.04998375715793906,320,patient_attitude
+Llama 3.1 8B Instruct,anxious,uncommon_adverse_effects_coverage,0.16708072362420187,0.01974053563111445,320,patient_attitude
+Llama 3.1 8B Instruct,anxious,understandability,0.3546875,0.046917792771048523,320,patient_attitude
+Llama 3.1 8B Instruct,anxious,usefulness,0.1609375,0.03729596251664654,320,patient_attitude
+Llama 3.1 8B Instruct,anxious,very_common_adverse_effects_coverage,0.4256200396825397,0.05559992242926389,224,patient_attitude
+Llama 3.1 8B Instruct,confident,adverse_effects_recall,0.3206191653707885,0.019923631434564264,320,patient_attitude
+Llama 3.1 8B Instruct,confident,adverse_effects_specificity,0.2936911467034237,0.021392112841022444,320,patient_attitude
+Llama 3.1 8B Instruct,confident,common_adverse_effects_coverage,0.3983816487332112,0.025647935820722924,320,patient_attitude
+Llama 3.1 8B Instruct,confident,contraindications_recall,0.2275979712904055,0.03183413519393324,320,patient_attitude
+Llama 3.1 8B Instruct,confident,contraindications_specificity,0.2303694916194916,0.029699863308735714,320,patient_attitude
+Llama 3.1 8B Instruct,confident,patient_attitude_responsiveness,0.6609375,0.04464437793815823,320,patient_attitude
+Llama 3.1 8B Instruct,confident,uncommon_adverse_effects_coverage,0.19524735122968817,0.020614217993593194,320,patient_attitude
+Llama 3.1 8B Instruct,confident,understandability,0.3671875,0.047361864887182095,320,patient_attitude
+Llama 3.1 8B Instruct,confident,usefulness,0.20625,0.039939685620455426,320,patient_attitude
+Llama 3.1 8B Instruct,confident,very_common_adverse_effects_coverage,0.542609126984127,0.053392645695550016,224,patient_attitude
+Llama 3.1 8B Instruct,neutral,adverse_effects_recall,0.28488200990661505,0.022805133504863226,320,patient_attitude
+Llama 3.1 8B Instruct,neutral,adverse_effects_specificity,0.2315715779478183,0.021535117920973092,320,patient_attitude
+Llama 3.1 8B Instruct,neutral,common_adverse_effects_coverage,0.35029766674297924,0.028855630726301283,320,patient_attitude
+Llama 3.1 8B Instruct,neutral,contraindications_recall,0.22230348507486664,0.03263007678822476,320,patient_attitude
+Llama 3.1 8B Instruct,neutral,contraindications_specificity,0.20669733044733044,0.028673578408480532,320,patient_attitude
+Llama 3.1 8B Instruct,neutral,patient_attitude_responsiveness,0.603125,0.04695944639996539,320,patient_attitude
+Llama 3.1 8B Instruct,neutral,uncommon_adverse_effects_coverage,0.18860844122664774,0.02225702745298303,320,patient_attitude
+Llama 3.1 8B Instruct,neutral,understandability,0.340625,0.04666803526271629,320,patient_attitude
+Llama 3.1 8B Instruct,neutral,usefulness,0.171875,0.0373389009571321,320,patient_attitude
+Llama 3.1 8B Instruct,neutral,very_common_adverse_effects_coverage,0.4544890873015873,0.05620632376564594,224,patient_attitude
+Llama 3.1 8B Instruct,very_anxious,adverse_effects_recall,0.24112990431684628,0.022897894040682362,320,patient_attitude
+Llama 3.1 8B Instruct,very_anxious,adverse_effects_specificity,0.20703518053058284,0.02192915526960539,320,patient_attitude
+Llama 3.1 8B Instruct,very_anxious,common_adverse_effects_coverage,0.2974544509310134,0.029085003667544677,320,patient_attitude
+Llama 3.1 8B Instruct,very_anxious,contraindications_recall,0.17760087317653106,0.03197540353233877,320,patient_attitude
+Llama 3.1 8B Instruct,very_anxious,contraindications_specificity,0.17209223068598067,0.027803518395877483,320,patient_attitude
+Llama 3.1 8B Instruct,very_anxious,patient_attitude_responsiveness,0.31875,0.04945391247664484,320,patient_attitude
+Llama 3.1 8B Instruct,very_anxious,uncommon_adverse_effects_coverage,0.1502524719392926,0.020337177610248336,320,patient_attitude
+Llama 3.1 8B Instruct,very_anxious,understandability,0.3984375,0.04669920995397282,320,patient_attitude
+Llama 3.1 8B Instruct,very_anxious,usefulness,0.0890625,0.027918611200972474,320,patient_attitude
+Llama 3.1 8B Instruct,very_anxious,very_common_adverse_effects_coverage,0.38377976190476193,0.05565405741207122,224,patient_attitude
+Llama 4 Maverick,anxious,adverse_effects_recall,0.4986557229798386,0.01865522072665767,320,patient_attitude
+Llama 4 Maverick,anxious,adverse_effects_specificity,0.5578086784902913,0.019282242366806136,320,patient_attitude
+Llama 4 Maverick,anxious,common_adverse_effects_coverage,0.6243934581043956,0.022371096668384417,320,patient_attitude
+Llama 4 Maverick,anxious,contraindications_recall,0.6009774235267656,0.035323360404572186,320,patient_attitude
+Llama 4 Maverick,anxious,contraindications_specificity,0.6766247251012876,0.03265717555480498,320,patient_attitude
+Llama 4 Maverick,anxious,patient_attitude_responsiveness,0.50625,0.05258870510279479,320,patient_attitude
+Llama 4 Maverick,anxious,uncommon_adverse_effects_coverage,0.3188926778233843,0.025369390637593907,320,patient_attitude
+Llama 4 Maverick,anxious,understandability,0.35,0.04602989011174217,320,patient_attitude
+Llama 4 Maverick,anxious,usefulness,0.8515625,0.032576489257308015,320,patient_attitude
+Llama 4 Maverick,anxious,very_common_adverse_effects_coverage,0.7477678571428571,0.04229270096496528,224,patient_attitude
+Llama 4 Maverick,confident,adverse_effects_recall,0.5036816390241469,0.019134731316134884,320,patient_attitude
+Llama 4 Maverick,confident,adverse_effects_specificity,0.5679558967186027,0.018565091531881014,320,patient_attitude
+Llama 4 Maverick,confident,common_adverse_effects_coverage,0.6318190056471307,0.0221457135825056,320,patient_attitude
+Llama 4 Maverick,confident,contraindications_recall,0.602613364340338,0.035183130983089186,320,patient_attitude
+Llama 4 Maverick,confident,contraindications_specificity,0.6828894412878788,0.03181582856998728,320,patient_attitude
+Llama 4 Maverick,confident,patient_attitude_responsiveness,0.8859375,0.02817022030808621,320,patient_attitude
+Llama 4 Maverick,confident,uncommon_adverse_effects_coverage,0.313789657127293,0.025817609660622774,320,patient_attitude
+Llama 4 Maverick,confident,understandability,0.434375,0.048738895829642984,320,patient_attitude
+Llama 4 Maverick,confident,usefulness,0.925,0.02544192477093973,320,patient_attitude
+Llama 4 Maverick,confident,very_common_adverse_effects_coverage,0.7348710317460317,0.043050406966302794,224,patient_attitude
+Llama 4 Maverick,neutral,adverse_effects_recall,0.5037622334462755,0.018530109987777127,320,patient_attitude
+Llama 4 Maverick,neutral,adverse_effects_specificity,0.5703973019759593,0.018935094511473766,320,patient_attitude
+Llama 4 Maverick,neutral,common_adverse_effects_coverage,0.6277582703754578,0.021826033410787433,320,patient_attitude
+Llama 4 Maverick,neutral,contraindications_recall,0.5930759290052052,0.03485452131935419,320,patient_attitude
+Llama 4 Maverick,neutral,contraindications_specificity,0.6625841866466866,0.03196421658318651,320,patient_attitude
+Llama 4 Maverick,neutral,patient_attitude_responsiveness,0.84375,0.027902283448314653,320,patient_attitude
+Llama 4 Maverick,neutral,uncommon_adverse_effects_coverage,0.31711998750042225,0.02495474377594949,320,patient_attitude
+Llama 4 Maverick,neutral,understandability,0.4375,0.048980795609687613,320,patient_attitude
+Llama 4 Maverick,neutral,usefulness,0.9171875,0.02606694434114752,320,patient_attitude
+Llama 4 Maverick,neutral,very_common_adverse_effects_coverage,0.7436507936507937,0.04288347791869692,224,patient_attitude
+Llama 4 Maverick,very_anxious,adverse_effects_recall,0.5064499733290332,0.01894005431651742,320,patient_attitude
+Llama 4 Maverick,very_anxious,adverse_effects_specificity,0.562239274441487,0.018902237809679843,320,patient_attitude
+Llama 4 Maverick,very_anxious,common_adverse_effects_coverage,0.6248046875,0.02138711809925624,320,patient_attitude
+Llama 4 Maverick,very_anxious,contraindications_recall,0.5969814861673414,0.03504121565289109,320,patient_attitude
+Llama 4 Maverick,very_anxious,contraindications_specificity,0.6767890157228392,0.03263809982773404,320,patient_attitude
+Llama 4 Maverick,very_anxious,patient_attitude_responsiveness,0.5359375,0.05199468891956636,320,patient_attitude
+Llama 4 Maverick,very_anxious,uncommon_adverse_effects_coverage,0.33092557367149755,0.026158085612365534,320,patient_attitude
+Llama 4 Maverick,very_anxious,understandability,0.328125,0.04572098269097942,320,patient_attitude
+Llama 4 Maverick,very_anxious,usefulness,0.840625,0.03267606562146723,320,patient_attitude
+Llama 4 Maverick,very_anxious,very_common_adverse_effects_coverage,0.7488095238095237,0.04109788903847915,224,patient_attitude
+Med42-8B,anxious,adverse_effects_recall,0.2855677237970512,0.014242633274322646,320,patient_attitude
+Med42-8B,anxious,adverse_effects_specificity,0.43118303599658425,0.022288493224729436,320,patient_attitude
+Med42-8B,anxious,common_adverse_effects_coverage,0.374549565018315,0.019659079331226823,320,patient_attitude
+Med42-8B,anxious,contraindications_recall,0.396687160609858,0.037677584893651715,320,patient_attitude
+Med42-8B,anxious,contraindications_specificity,0.5039000496031746,0.036308824828206764,320,patient_attitude
+Med42-8B,anxious,patient_attitude_responsiveness,0.3765625,0.04960083602584906,320,patient_attitude
+Med42-8B,anxious,uncommon_adverse_effects_coverage,0.14431522214198844,0.0169482716869092,320,patient_attitude
+Med42-8B,anxious,understandability,0.1078125,0.029757814354958414,320,patient_attitude
+Med42-8B,anxious,usefulness,0.4046875,0.0470579526605344,320,patient_attitude
+Med42-8B,anxious,very_common_adverse_effects_coverage,0.5985119047619047,0.04814451227041433,224,patient_attitude
+Med42-8B,confident,adverse_effects_recall,0.2786003766743625,0.013769799611261147,320,patient_attitude
+Med42-8B,confident,adverse_effects_specificity,0.4513528913935819,0.02161639837898268,320,patient_attitude
+Med42-8B,confident,common_adverse_effects_coverage,0.37099006028693526,0.019761832710529573,320,patient_attitude
+Med42-8B,confident,contraindications_recall,0.37399069589036693,0.03652204487557031,320,patient_attitude
+Med42-8B,confident,contraindications_specificity,0.5146515376984127,0.036396847774167504,320,patient_attitude
+Med42-8B,confident,patient_attitude_responsiveness,0.825,0.029864820835072355,320,patient_attitude
+Med42-8B,confident,uncommon_adverse_effects_coverage,0.13373042137512245,0.015961884102669993,320,patient_attitude
+Med42-8B,confident,understandability,0.13125,0.034695718864486885,320,patient_attitude
+Med42-8B,confident,usefulness,0.4140625,0.04825968347267964,320,patient_attitude
+Med42-8B,confident,very_common_adverse_effects_coverage,0.6085565476190476,0.047715835674870394,224,patient_attitude
+Med42-8B,neutral,adverse_effects_recall,0.2774592365372662,0.015168688881531434,320,patient_attitude
+Med42-8B,neutral,adverse_effects_specificity,0.441897271437378,0.023345168270834302,320,patient_attitude
+Med42-8B,neutral,common_adverse_effects_coverage,0.36026170444139194,0.019685638920954932,320,patient_attitude
+Med42-8B,neutral,contraindications_recall,0.38365982062528114,0.03497330960177249,320,patient_attitude
+Med42-8B,neutral,contraindications_specificity,0.5378323412698413,0.036671528055733926,320,patient_attitude
+Med42-8B,neutral,patient_attitude_responsiveness,0.8546875,0.028769192304311852,320,patient_attitude
+Med42-8B,neutral,uncommon_adverse_effects_coverage,0.14061174453565756,0.01836472060377603,320,patient_attitude
+Med42-8B,neutral,understandability,0.10625,0.03121266107845894,320,patient_attitude
+Med42-8B,neutral,usefulness,0.3796875,0.04615968992997914,320,patient_attitude
+Med42-8B,neutral,very_common_adverse_effects_coverage,0.6300347222222221,0.04697116833087824,224,patient_attitude
+Med42-8B,very_anxious,adverse_effects_recall,0.29821949930776587,0.014978000762144682,320,patient_attitude
+Med42-8B,very_anxious,adverse_effects_specificity,0.42591955168311324,0.02253321930016129,320,patient_attitude
+Med42-8B,very_anxious,common_adverse_effects_coverage,0.3869672428266178,0.019278580883022426,320,patient_attitude
+Med42-8B,very_anxious,contraindications_recall,0.4025024701176017,0.03752900898670821,320,patient_attitude
+Med42-8B,very_anxious,contraindications_specificity,0.5079986246392496,0.0356600494268608,320,patient_attitude
+Med42-8B,very_anxious,patient_attitude_responsiveness,0.3046875,0.04909321438416667,320,patient_attitude
+Med42-8B,very_anxious,uncommon_adverse_effects_coverage,0.15879269862082362,0.017738805116271728,320,patient_attitude
+Med42-8B,very_anxious,understandability,0.1203125,0.031351291756608585,320,patient_attitude
+Med42-8B,very_anxious,usefulness,0.4,0.047240347905359845,320,patient_attitude
+Med42-8B,very_anxious,very_common_adverse_effects_coverage,0.6110615079365079,0.0482710051103318,224,patient_attitude
+Claude Sonnet 4.6,anxious,aggregate_structured,0.6239981772268112,0.015581829883975062,320,patient_attitude
+Claude Sonnet 4.6,confident,aggregate_structured,0.6163176751051828,0.016032911614538483,320,patient_attitude
+Claude Sonnet 4.6,neutral,aggregate_structured,0.6101695581204161,0.016261167718146737,320,patient_attitude
+Claude Sonnet 4.6,very_anxious,aggregate_structured,0.6097628597326624,0.016128334705401315,320,patient_attitude
+GLM 4.5,anxious,aggregate_structured,0.584424174340342,0.016259841749503137,320,patient_attitude
+GLM 4.5,confident,aggregate_structured,0.5911655033399534,0.015724131579078204,320,patient_attitude
+GLM 4.5,neutral,aggregate_structured,0.5929159369061886,0.01526583953636448,320,patient_attitude
+GLM 4.5,very_anxious,aggregate_structured,0.592094399240416,0.015398857016962631,320,patient_attitude
+GPT-5.4,anxious,aggregate_structured,0.6649991915063574,0.018517961398853026,320,patient_attitude
+GPT-5.4,confident,aggregate_structured,0.6713120890517923,0.01834462136463021,320,patient_attitude
+GPT-5.4,neutral,aggregate_structured,0.6554165514430011,0.018802932800667783,320,patient_attitude
+GPT-5.4,very_anxious,aggregate_structured,0.6668065794834559,0.018114388790151037,320,patient_attitude
+GPT-OSS-120B,anxious,aggregate_structured,0.5233416209385192,0.01194857558553566,320,patient_attitude
+GPT-OSS-120B,confident,aggregate_structured,0.5086263911267639,0.014532737915944765,320,patient_attitude
+GPT-OSS-120B,neutral,aggregate_structured,0.5100711475537131,0.012804439128406472,320,patient_attitude
+GPT-OSS-120B,very_anxious,aggregate_structured,0.5148516443696086,0.012731478629496182,320,patient_attitude
+Gemini 3.5 Flash,anxious,aggregate_structured,0.6270207749105429,0.017593677732673143,320,patient_attitude
+Gemini 3.5 Flash,confident,aggregate_structured,0.6264460636044573,0.017604252857622057,320,patient_attitude
+Gemini 3.5 Flash,neutral,aggregate_structured,0.6265682843816496,0.017379403461939086,320,patient_attitude
+Gemini 3.5 Flash,very_anxious,aggregate_structured,0.624500291730048,0.017285710918711433,320,patient_attitude
+Llama 3.1 8B Instruct,anxious,aggregate_structured,0.26002180577609596,0.01996541016465145,320,patient_attitude
+Llama 3.1 8B Instruct,confident,aggregate_structured,0.30379506720280464,0.017466532209447428,320,patient_attitude
+Llama 3.1 8B Instruct,neutral,aggregate_structured,0.26780769859943787,0.020360227568063324,320,patient_attitude
+Llama 3.1 8B Instruct,very_anxious,aggregate_structured,0.22478619354182117,0.020523013325905514,320,patient_attitude
+Llama 4 Maverick,anxious,aggregate_structured,0.5681664677174969,0.01639777450062069,320,patient_attitude
+Llama 4 Maverick,confident,aggregate_structured,0.5710839893538425,0.01567946481123375,320,patient_attitude
+Llama 4 Maverick,neutral,aggregate_structured,0.5679477352086587,0.015636314912444656,320,patient_attitude
+Llama 4 Maverick,very_anxious,aggregate_structured,0.5717498068575223,0.015733756474978194,320,patient_attitude
+Med42-8B,anxious,aggregate_structured,0.38031347894854217,0.01351846743632097,320,patient_attitude
+Med42-8B,confident,aggregate_structured,0.37935755623779255,0.01264315277420534,320,patient_attitude
+Med42-8B,neutral,aggregate_structured,0.383853398275125,0.013320096198384796,320,patient_attitude
+Med42-8B,very_anxious,aggregate_structured,0.38760295482930013,0.013783991862778427,320,patient_attitude
+Claude Sonnet 4.6,anxious,aggregate_communication,0.7588541666666667,0.030245624547726647,320,patient_attitude
+Claude Sonnet 4.6,confident,aggregate_communication,0.7895833333333333,0.02662154906804459,320,patient_attitude
+Claude Sonnet 4.6,neutral,aggregate_communication,0.7307291666666667,0.026181488040933242,320,patient_attitude
+Claude Sonnet 4.6,very_anxious,aggregate_communication,0.7572916666666667,0.027989021298750864,320,patient_attitude
+GLM 4.5,anxious,aggregate_communication,0.5463541666666667,0.03939014340264579,320,patient_attitude
+GLM 4.5,confident,aggregate_communication,0.6932291666666667,0.030137856456541594,320,patient_attitude
+GLM 4.5,neutral,aggregate_communication,0.6796875,0.028353775486235373,320,patient_attitude
+GLM 4.5,very_anxious,aggregate_communication,0.5395833333333333,0.03959796627730397,320,patient_attitude
+GPT-5.4,anxious,aggregate_communication,0.5135416666666666,0.031677044767937,320,patient_attitude
+GPT-5.4,confident,aggregate_communication,0.6661458333333333,0.02156815375476826,320,patient_attitude
+GPT-5.4,neutral,aggregate_communication,0.6479166666666667,0.022445820348055416,320,patient_attitude
+GPT-5.4,very_anxious,aggregate_communication,0.5010416666666666,0.03258957318180792,320,patient_attitude
+GPT-OSS-120B,anxious,aggregate_communication,0.5567708333333333,0.0330021054437632,320,patient_attitude
+GPT-OSS-120B,confident,aggregate_communication,0.6463541666666667,0.02207712198362087,320,patient_attitude
+GPT-OSS-120B,neutral,aggregate_communication,0.6567708333333333,0.021198445071257763,320,patient_attitude
+GPT-OSS-120B,very_anxious,aggregate_communication,0.5255208333333333,0.03380985151173355,320,patient_attitude
+Gemini 3.5 Flash,anxious,aggregate_communication,0.9765625,0.008094142281295387,320,patient_attitude
+Gemini 3.5 Flash,confident,aggregate_communication,0.9421875,0.012708501367150574,320,patient_attitude
+Gemini 3.5 Flash,neutral,aggregate_communication,0.9213541666666666,0.014231538220068918,320,patient_attitude
+Gemini 3.5 Flash,very_anxious,aggregate_communication,0.9666666666666666,0.009656437134165398,320,patient_attitude
+Llama 3.1 8B Instruct,anxious,aggregate_communication,0.290625,0.029366904736900568,320,patient_attitude
+Llama 3.1 8B Instruct,confident,aggregate_communication,0.4114583333333333,0.02898531984923492,320,patient_attitude
+Llama 3.1 8B Instruct,neutral,aggregate_communication,0.371875,0.027716916945777017,320,patient_attitude
+Llama 3.1 8B Instruct,very_anxious,aggregate_communication,0.26875,0.02545732825044672,320,patient_attitude
+Llama 4 Maverick,anxious,aggregate_communication,0.5692708333333333,0.02876873809633961,320,patient_attitude
+Llama 4 Maverick,confident,aggregate_communication,0.7484375,0.022539281008534,320,patient_attitude
+Llama 4 Maverick,neutral,aggregate_communication,0.7328125,0.021509913399794273,320,patient_attitude
+Llama 4 Maverick,very_anxious,aggregate_communication,0.5682291666666666,0.027498898618543485,320,patient_attitude
+Med42-8B,anxious,aggregate_communication,0.29635416666666664,0.02585049103993644,320,patient_attitude
+Med42-8B,confident,aggregate_communication,0.4567708333333333,0.02473930579919123,320,patient_attitude
+Med42-8B,neutral,aggregate_communication,0.446875,0.022574400843655126,320,patient_attitude
+Med42-8B,very_anxious,aggregate_communication,0.275,0.028238383530640447,320,patient_attitude

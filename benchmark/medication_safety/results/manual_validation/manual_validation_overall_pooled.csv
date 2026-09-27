@@ -1,0 +1,2 @@
+n,manual_positive_rate,manual_positive_ci_low,manual_positive_ci_high,judge_positive_rate,judge_positive_ci_low,judge_positive_ci_high,agreement,agreement_ci_low,agreement_ci_high,cohens_kappa,both_positive,both_negative,judge_positive_manual_negative,manual_positive_judge_negative,exact_mcnemar_p
+1536.0,0.5169270833333334,0.49192559565099864,0.5418441146669875,0.5631510416666666,0.5382194505635862,0.5877675456227465,0.6829427083333334,0.6592399672019608,0.7057326712347355,0.36316239345345336,586.0,463.0,279.0,208.0,0.0014882867394866934

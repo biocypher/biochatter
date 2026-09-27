@@ -35,6 +35,11 @@ jobs:
           poetry run coverage report
         shell: bash
 
+      - name: Validate medication safety release without API calls
+        run: |
+          poetry run pip install statsmodels==0.14.6
+          poetry run pytest benchmark/medication_safety/tests --confcutdir=benchmark/medication_safety
+
       - name: Generate coverage badge
         if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'pull_request' && github.event.action == 'closed' && github.base_ref == 'refs/heads/main' && github.event.pull_request.merged == true)
         run: |

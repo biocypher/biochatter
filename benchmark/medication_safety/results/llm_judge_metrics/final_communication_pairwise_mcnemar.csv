@@ -1,0 +1,757 @@
+stratum_type,stratum,metric,model_a,model_b,n_pairs,strict_positive_rate_a,strict_positive_rate_b,a_positive_b_negative,a_negative_b_positive,discordant_pairs,p_raw,p_holm
+overall,all,understandability,Llama 3.1 8B Instruct,Med42-8B,1280,0.26796875,0.07890625,307,65,372,1.0161313589714543e-38,5.720819551009288e-36
+overall,all,understandability,Llama 3.1 8B Instruct,Llama 4 Maverick,1280,0.26796875,0.290625,214,243,457,0.19021097547847265,1.0
+overall,all,understandability,Llama 3.1 8B Instruct,GLM 4.5,1280,0.26796875,0.340625,132,225,357,9.800231389830984e-07,0.0002440257616067915
+overall,all,understandability,Llama 3.1 8B Instruct,GPT-OSS-120B,1280,0.26796875,0.253125,219,200,419,0.37922925332806073,1.0
+overall,all,understandability,Llama 3.1 8B Instruct,Claude Sonnet 4.6,1280,0.26796875,0.60234375,136,564,700,9.245355707193602e-63,6.268351169477262e-60
+overall,all,understandability,Llama 3.1 8B Instruct,Gemini 3.5 Flash,1280,0.26796875,0.8859375,25,816,841,8.338530969698241e-206,6.245559696303982e-203
+overall,all,understandability,Llama 3.1 8B Instruct,GPT-5.4,1280,0.26796875,0.18671875,207,103,310,3.538038883667548e-09,1.033107354030924e-06
+overall,all,understandability,Med42-8B,Llama 4 Maverick,1280,0.07890625,0.290625,64,335,399,2.0856897349278596e-45,1.2388997025471486e-42
+overall,all,understandability,Med42-8B,GLM 4.5,1280,0.07890625,0.340625,73,408,481,1.71793794596491e-57,1.1183776028231564e-54
+overall,all,understandability,Med42-8B,GPT-OSS-120B,1280,0.07890625,0.253125,79,302,381,7.921432221102404e-32,4.0874590260888403e-29
+overall,all,understandability,Med42-8B,Claude Sonnet 4.6,1280,0.07890625,0.60234375,54,724,778,1.1615949245495223e-150,8.619034340157456e-148
+overall,all,understandability,Med42-8B,Gemini 3.5 Flash,1280,0.07890625,0.8859375,27,1060,1087,7.80607593513115e-274,5.893587331024018e-271
+overall,all,understandability,Med42-8B,GPT-5.4,1280,0.07890625,0.18671875,85,223,308,1.974147729454861e-15,7.738659099463056e-13
+overall,all,understandability,Llama 4 Maverick,GLM 4.5,1280,0.290625,0.340625,204,268,472,0.003688670821033125,0.5569892939760018
+overall,all,understandability,Llama 4 Maverick,GPT-OSS-120B,1280,0.290625,0.253125,254,206,460,0.028314535682332994,1.0
+overall,all,understandability,Llama 4 Maverick,Claude Sonnet 4.6,1280,0.290625,0.60234375,147,546,693,8.25528673634478e-55,5.275128224524314e-52
+overall,all,understandability,Llama 4 Maverick,Gemini 3.5 Flash,1280,0.290625,0.8859375,39,801,840,6.392333350541355e-186,4.775073012854392e-183
+overall,all,understandability,Llama 4 Maverick,GPT-5.4,1280,0.290625,0.18671875,268,135,403,3.241342303468049e-11,1.0955736985722005e-08
+overall,all,understandability,GLM 4.5,GPT-OSS-120B,1280,0.340625,0.253125,224,112,336,9.878963163004935e-10,3.013083764716505e-07
+overall,all,understandability,GLM 4.5,Claude Sonnet 4.6,1280,0.340625,0.60234375,153,488,641,1.1478255342228391e-41,6.577040311096868e-39
+overall,all,understandability,GLM 4.5,Gemini 3.5 Flash,1280,0.340625,0.8859375,10,708,718,1.3861005790464713e-194,1.0368032331267605e-191
+overall,all,understandability,GLM 4.5,GPT-5.4,1280,0.340625,0.18671875,206,9,215,9.062960686912775e-50,5.546531940390619e-47
+overall,all,understandability,GPT-OSS-120B,Claude Sonnet 4.6,1280,0.253125,0.60234375,102,549,651,6.185379869343157e-75,4.4225466065803574e-72
+overall,all,understandability,GPT-OSS-120B,Gemini 3.5 Flash,1280,0.253125,0.8859375,4,814,818,2.129313162498074e-236,1.6012434981985516e-233
+overall,all,understandability,GPT-OSS-120B,GPT-5.4,1280,0.253125,0.18671875,193,108,301,1.1011501991449045e-06,0.0002719840991887914
+overall,all,understandability,Claude Sonnet 4.6,Gemini 3.5 Flash,1280,0.60234375,0.8859375,59,422,481,1.1575991621425182e-68,8.103194134997628e-66
+overall,all,understandability,Claude Sonnet 4.6,GPT-5.4,1280,0.60234375,0.18671875,627,95,722,5.808983896561274e-97,4.2754121478690977e-94
+overall,all,understandability,Gemini 3.5 Flash,GPT-5.4,1280,0.8859375,0.18671875,897,2,899,1.9144197798638195e-265,1.44347251401732e-262
+overall,all,usefulness,Llama 3.1 8B Instruct,Med42-8B,1280,0.11015625,0.28984375,66,296,362,6.779602255933596e-36,3.69488322948381e-33
+overall,all,usefulness,Llama 3.1 8B Instruct,Llama 4 Maverick,1280,0.11015625,0.82421875,19,933,952,1.4450345491084265e-247,1.0881110154786451e-244
+overall,all,usefulness,Llama 3.1 8B Instruct,GLM 4.5,1280,0.11015625,0.6703125,36,753,789,1.5195656326980223e-175,1.1335959619927246e-172
+overall,all,usefulness,Llama 3.1 8B Instruct,GPT-OSS-120B,1280,0.11015625,0.48515625,86,566,652,1.560052168705904e-87,1.1419581874927219e-84
+overall,all,usefulness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,1280,0.11015625,0.63671875,42,716,758,2.769039984804927e-159,2.0629347886796707e-156
+overall,all,usefulness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,1280,0.11015625,0.95234375,7,1085,1092,1.36722498256e-311,1.033622086815388e-308
+overall,all,usefulness,Llama 3.1 8B Instruct,GPT-5.4,1280,0.11015625,0.7859375,23,888,911,4.063368184080197e-229,3.0475261380601476e-226
+overall,all,usefulness,Med42-8B,Llama 4 Maverick,1280,0.28984375,0.82421875,53,737,790,4.875904228400336e-155,3.6227968417014495e-152
+overall,all,usefulness,Med42-8B,GLM 4.5,1280,0.28984375,0.6703125,105,592,697,3.0681106220299533e-83,2.2243802009717162e-80
+overall,all,usefulness,Med42-8B,GPT-OSS-120B,1280,0.28984375,0.48515625,223,473,696,1.3907033014671617e-21,6.285978922631571e-19
+overall,all,usefulness,Med42-8B,Claude Sonnet 4.6,1280,0.28984375,0.63671875,128,572,700,7.862721008697882e-68,5.4881792640711215e-65
+overall,all,usefulness,Med42-8B,Gemini 3.5 Flash,1280,0.28984375,0.95234375,16,864,880,1.3622688783852864e-231,1.0230639276673501e-228
+overall,all,usefulness,Med42-8B,GPT-5.4,1280,0.28984375,0.7859375,89,724,813,1.692691223328201e-124,1.2508988140395405e-121
+overall,all,usefulness,Llama 4 Maverick,GLM 4.5,1280,0.82421875,0.6703125,318,121,439,1.7237328893456733e-21,7.774035330948986e-19
+overall,all,usefulness,Llama 4 Maverick,GPT-OSS-120B,1280,0.82421875,0.48515625,530,96,626,1.2006594054712673e-73,8.524681778845998e-71
+overall,all,usefulness,Llama 4 Maverick,Claude Sonnet 4.6,1280,0.82421875,0.63671875,335,95,430,1.9279682611991842e-32,1.0025434958235757e-29
+overall,all,usefulness,Llama 4 Maverick,Gemini 3.5 Flash,1280,0.82421875,0.95234375,36,200,236,9.44089078280709e-29,4.692122719055124e-26
+overall,all,usefulness,Llama 4 Maverick,GPT-5.4,1280,0.82421875,0.7859375,201,152,353,0.010523468826104132,1.0
+overall,all,usefulness,GLM 4.5,GPT-OSS-120B,1280,0.6703125,0.48515625,436,199,635,2.600732079721153e-21,1.1677287037947978e-18
+overall,all,usefulness,GLM 4.5,Claude Sonnet 4.6,1280,0.6703125,0.63671875,229,186,415,0.03910800037169902,1.0
+overall,all,usefulness,GLM 4.5,Gemini 3.5 Flash,1280,0.6703125,0.95234375,23,384,407,1.3854377903609292e-85,1.0113695869634782e-82
+overall,all,usefulness,GLM 4.5,GPT-5.4,1280,0.6703125,0.7859375,162,310,472,8.997613473353406e-12,3.104176648306925e-09
+overall,all,usefulness,GPT-OSS-120B,Claude Sonnet 4.6,1280,0.48515625,0.63671875,216,410,626,7.481273004034436e-15,2.8877713795572925e-12
+overall,all,usefulness,GPT-OSS-120B,Gemini 3.5 Flash,1280,0.48515625,0.95234375,17,615,632,1.0691719465290318e-157,7.954639282175996e-155
+overall,all,usefulness,GPT-OSS-120B,GPT-5.4,1280,0.48515625,0.7859375,148,533,681,6.880021623341845e-52,4.306893536211995e-49
+overall,all,usefulness,Claude Sonnet 4.6,Gemini 3.5 Flash,1280,0.63671875,0.95234375,9,413,422,2.0260115357341132e-109,1.4931705018360415e-106
+overall,all,usefulness,Claude Sonnet 4.6,GPT-5.4,1280,0.63671875,0.7859375,129,320,449,8.377141726984723e-20,3.6440566512383546e-17
+overall,all,usefulness,Gemini 3.5 Flash,GPT-5.4,1280,0.95234375,0.7859375,242,29,271,5.147928367522356e-43,3.006390166633056e-40
+overall,all,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Med42-8B,1280,0.409375,0.50625,138,262,400,5.686963732999954e-10,1.7572717934969857e-07
+overall,all,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Llama 4 Maverick,1280,0.409375,0.61953125,100,369,469,2.844404835684186e-37,1.5729558741333548e-34
+overall,all,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GLM 4.5,1280,0.409375,0.646875,118,422,540,4.295988542227913e-41,2.4487134690699103e-38
+overall,all,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-OSS-120B,1280,0.409375,0.77421875,71,538,609,9.297206503921699e-90,6.814852367374605e-87
+overall,all,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,1280,0.409375,0.83828125,40,589,629,2.9361475662390622e-126,2.172749199016906e-123
+overall,all,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,1280,0.409375,0.9265625,51,713,764,2.8318506730548474e-150,2.098401348733642e-147
+overall,all,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-5.4,1280,0.409375,0.58828125,128,357,485,4.6247947545831325e-26,2.201402303181571e-23
+overall,all,patient_attitude_responsiveness,Med42-8B,Llama 4 Maverick,1280,0.50625,0.61953125,116,261,377,5.915372619032186e-14,2.224180104756102e-11
+overall,all,patient_attitude_responsiveness,Med42-8B,GLM 4.5,1280,0.50625,0.646875,107,287,394,4.159473335925296e-20,1.826008794471205e-17
+overall,all,patient_attitude_responsiveness,Med42-8B,GPT-OSS-120B,1280,0.50625,0.77421875,60,403,463,1.8709521902556794e-63,1.2741184415641177e-60
+overall,all,patient_attitude_responsiveness,Med42-8B,Claude Sonnet 4.6,1280,0.50625,0.83828125,64,489,553,4.736511233005563e-82,3.424497621463022e-79
+overall,all,patient_attitude_responsiveness,Med42-8B,Gemini 3.5 Flash,1280,0.50625,0.9265625,59,597,656,5.723651937531329e-113,4.2240551298981206e-110
+overall,all,patient_attitude_responsiveness,Med42-8B,GPT-5.4,1280,0.50625,0.58828125,131,236,367,4.631320230858091e-08,1.2365625016391103e-05
+overall,all,patient_attitude_responsiveness,Llama 4 Maverick,GLM 4.5,1280,0.61953125,0.646875,169,204,373,0.07819097834154001,1.0
+overall,all,patient_attitude_responsiveness,Llama 4 Maverick,GPT-OSS-120B,1280,0.61953125,0.77421875,84,282,366,3.9365461963291727e-26,1.8777325356490153e-23
+overall,all,patient_attitude_responsiveness,Llama 4 Maverick,Claude Sonnet 4.6,1280,0.61953125,0.83828125,70,350,420,7.345457616895392e-46,4.385238197286549e-43
+overall,all,patient_attitude_responsiveness,Llama 4 Maverick,Gemini 3.5 Flash,1280,0.61953125,0.9265625,61,454,515,2.7553048174013996e-75,1.9727982492594022e-72
+overall,all,patient_attitude_responsiveness,Llama 4 Maverick,GPT-5.4,1280,0.61953125,0.58828125,222,182,404,0.052205917153291995,1.0
+overall,all,patient_attitude_responsiveness,GLM 4.5,GPT-OSS-120B,1280,0.646875,0.77421875,64,227,291,1.4918764032031084e-22,6.788037634574143e-20
+overall,all,patient_attitude_responsiveness,GLM 4.5,Claude Sonnet 4.6,1280,0.646875,0.83828125,55,300,355,5.806312833073015e-42,3.3386298790169834e-39
+overall,all,patient_attitude_responsiveness,GLM 4.5,Gemini 3.5 Flash,1280,0.646875,0.9265625,66,424,490,4.947913645892327e-65,3.379425020144459e-62
+overall,all,patient_attitude_responsiveness,GLM 4.5,GPT-5.4,1280,0.646875,0.58828125,179,104,283,9.724054347638305e-06,0.0021587400651757035
+overall,all,patient_attitude_responsiveness,GPT-OSS-120B,Claude Sonnet 4.6,1280,0.77421875,0.83828125,116,198,314,4.310294100037403e-06,0.00099567793710864
+overall,all,patient_attitude_responsiveness,GPT-OSS-120B,Gemini 3.5 Flash,1280,0.77421875,0.9265625,80,275,355,3.585948185688098e-26,1.714083232758911e-23
+overall,all,patient_attitude_responsiveness,GPT-OSS-120B,GPT-5.4,1280,0.77421875,0.58828125,285,47,332,1.0772326663884964e-42,6.258721791717164e-40
+overall,all,patient_attitude_responsiveness,Claude Sonnet 4.6,Gemini 3.5 Flash,1280,0.83828125,0.9265625,70,183,253,7.897527656112749e-13,2.858905011512815e-10
+overall,all,patient_attitude_responsiveness,Claude Sonnet 4.6,GPT-5.4,1280,0.83828125,0.58828125,384,64,448,1.1035532009307352e-56,7.151024742031164e-54
+overall,all,patient_attitude_responsiveness,Gemini 3.5 Flash,GPT-5.4,1280,0.9265625,0.58828125,498,65,563,1.1988324586498144e-83,8.703523649797652e-81
+system_prompt,none,understandability,Llama 3.1 8B Instruct,Med42-8B,320,0.6,0.06875,178,8,186,6.508702998883686e-43,3.794573848349189e-40
+system_prompt,none,understandability,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.6,0.40625,120,58,178,3.89940581147928e-06,0.0009124609598861516
+system_prompt,none,understandability,Llama 3.1 8B Instruct,GLM 4.5,320,0.6,1.0,0,128,128,5.877471754111438e-39,3.314894069318851e-36
+system_prompt,none,understandability,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.6,0.55625,89,75,164,0.3100385628034409,1.0
+system_prompt,none,understandability,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.6,0.5875,69,65,134,0.7956287149703877,1.0
+system_prompt,none,understandability,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.6,0.996875,1,128,129,3.820356640172434e-37,2.108836865375184e-34
+system_prompt,none,understandability,Llama 3.1 8B Instruct,GPT-5.4,320,0.6,0.7125,56,92,148,0.0038645812171462426,0.5758226013547901
+system_prompt,none,understandability,Med42-8B,Llama 4 Maverick,320,0.06875,0.40625,9,117,126,4.187573264544842e-25,1.9807221541297102e-22
+system_prompt,none,understandability,Med42-8B,GLM 4.5,320,0.06875,1.0,0,298,298,3.9272747722381812e-90,2.886546957595063e-87
+system_prompt,none,understandability,Med42-8B,GPT-OSS-120B,320,0.06875,0.55625,8,164,172,5.652852912453199e-39,3.193861895536057e-36
+system_prompt,none,understandability,Med42-8B,Claude Sonnet 4.6,320,0.06875,0.5875,5,171,176,2.8574415530930506e-44,1.6830330747718068e-41
+system_prompt,none,understandability,Med42-8B,Gemini 3.5 Flash,320,0.06875,0.996875,0,297,297,7.854549544476363e-90,5.76523936564565e-87
+system_prompt,none,understandability,Med42-8B,GPT-5.4,320,0.06875,0.7125,6,212,218,6.793724406375384e-55,4.354777344486621e-52
+system_prompt,none,understandability,Llama 4 Maverick,GLM 4.5,320,0.40625,1.0,0,190,190,1.2744735289059618e-57,8.309567408466871e-55
+system_prompt,none,understandability,Llama 4 Maverick,GPT-OSS-120B,320,0.40625,0.55625,51,99,150,0.00010978172637063631,0.021078091463162172
+system_prompt,none,understandability,Llama 4 Maverick,Claude Sonnet 4.6,320,0.40625,0.5875,46,104,150,2.4715829058159294e-06,0.0005907083144900071
+system_prompt,none,understandability,Llama 4 Maverick,Gemini 3.5 Flash,320,0.40625,0.996875,0,189,189,2.5489470578119236e-57,1.6542666405199384e-54
+system_prompt,none,understandability,Llama 4 Maverick,GPT-5.4,320,0.40625,0.7125,27,125,152,2.842953625825025e-16,1.1400244039558349e-13
+system_prompt,none,understandability,GLM 4.5,GPT-OSS-120B,320,1.0,0.55625,142,0,142,3.587324068671532e-43,2.1021719042415176e-40
+system_prompt,none,understandability,GLM 4.5,Claude Sonnet 4.6,320,1.0,0.5875,132,0,132,3.6734198463196485e-40,2.0828290528632407e-37
+system_prompt,none,understandability,GLM 4.5,Gemini 3.5 Flash,320,1.0,0.996875,1,0,1,1.0,1.0
+system_prompt,none,understandability,GLM 4.5,GPT-5.4,320,1.0,0.7125,92,0,92,4.0389678347315804e-28,1.983133206853206e-25
+system_prompt,none,understandability,GPT-OSS-120B,Claude Sonnet 4.6,320,0.55625,0.5875,66,76,142,0.45020799234923214,1.0
+system_prompt,none,understandability,GPT-OSS-120B,Gemini 3.5 Flash,320,0.55625,0.996875,1,142,143,2.582873329443503e-41,1.4774035444416836e-38
+system_prompt,none,understandability,GPT-OSS-120B,GPT-5.4,320,0.55625,0.7125,52,102,154,6.865233358189422e-05,0.013524509715633163
+system_prompt,none,understandability,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.5875,0.996875,1,132,133,2.4611912970341645e-38,1.3807283176361663e-35
+system_prompt,none,understandability,Claude Sonnet 4.6,GPT-5.4,320,0.5875,0.7125,51,91,142,0.0009948396502908394,0.16713306124886101
+system_prompt,none,understandability,Gemini 3.5 Flash,GPT-5.4,320,0.996875,0.7125,92,1,93,1.8983148823238428e-26,9.111911435154445e-24
+system_prompt,none,usefulness,Llama 3.1 8B Instruct,Med42-8B,320,0.284375,0.509375,35,107,142,1.1195953306256023e-09,3.392373851795575e-07
+system_prompt,none,usefulness,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.284375,0.94375,3,214,217,1.6173173833881445e-59,1.0722814251863398e-56
+system_prompt,none,usefulness,Llama 3.1 8B Instruct,GLM 4.5,320,0.284375,0.903125,9,207,216,4.727479424671421e-50,2.912127325597595e-47
+system_prompt,none,usefulness,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.284375,0.234375,67,51,118,0.1670511141738021,1.0
+system_prompt,none,usefulness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.284375,0.95625,4,219,223,1.515423665499335e-59,1.0062413138915584e-56
+system_prompt,none,usefulness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.284375,0.99375,1,228,229,5.331983841613168e-67,3.705728769921152e-64
+system_prompt,none,usefulness,Llama 3.1 8B Instruct,GPT-5.4,320,0.284375,0.928125,8,214,222,3.9687725171495105e-53,2.5201705483899393e-50
+system_prompt,none,usefulness,Med42-8B,Llama 4 Maverick,320,0.509375,0.94375,4,143,147,2.1525608033566037e-37,1.194671245862915e-34
+system_prompt,none,usefulness,Med42-8B,GLM 4.5,320,0.509375,0.903125,17,143,160,5.329988801159581e-26,2.5317446805508007e-23
+system_prompt,none,usefulness,Med42-8B,GPT-OSS-120B,320,0.509375,0.234375,116,28,144,6.299032616264296e-14,2.3558381984828468e-11
+system_prompt,none,usefulness,Med42-8B,Claude Sonnet 4.6,320,0.509375,0.95625,8,151,159,2.446328083596189e-35,1.321017165141942e-32
+system_prompt,none,usefulness,Med42-8B,Gemini 3.5 Flash,320,0.509375,0.99375,0,155,155,4.3790577010150533e-47,2.640571793712077e-44
+system_prompt,none,usefulness,Med42-8B,GPT-5.4,320,0.509375,0.928125,19,153,172,3.329424957524123e-27,1.621429954314248e-24
+system_prompt,none,usefulness,Llama 4 Maverick,GLM 4.5,320,0.94375,0.903125,31,18,49,0.08543313315739454,1.0
+system_prompt,none,usefulness,Llama 4 Maverick,GPT-OSS-120B,320,0.94375,0.234375,232,5,237,5.526100070706839e-62,3.730117547727116e-59
+system_prompt,none,usefulness,Llama 4 Maverick,Claude Sonnet 4.6,320,0.94375,0.95625,13,17,30,0.584664711728692,1.0
+system_prompt,none,usefulness,Llama 4 Maverick,Gemini 3.5 Flash,320,0.94375,0.99375,2,18,20,0.0004024505615234375,0.07244110107421875
+system_prompt,none,usefulness,Llama 4 Maverick,GPT-5.4,320,0.94375,0.928125,23,18,41,0.5327092552361137,1.0
+system_prompt,none,usefulness,GLM 4.5,GPT-OSS-120B,320,0.903125,0.234375,221,7,228,2.771823809805701e-56,1.790598181134483e-53
+system_prompt,none,usefulness,GLM 4.5,Claude Sonnet 4.6,320,0.903125,0.95625,12,29,41,0.011507789735333063,1.0
+system_prompt,none,usefulness,GLM 4.5,Gemini 3.5 Flash,320,0.903125,0.99375,1,30,31,2.9802322387695312e-08,8.13603401184082e-06
+system_prompt,none,usefulness,GLM 4.5,GPT-5.4,320,0.903125,0.928125,19,27,46,0.3019956131896606,1.0
+system_prompt,none,usefulness,GPT-OSS-120B,Claude Sonnet 4.6,320,0.234375,0.95625,2,233,235,1.0044921461397742e-66,6.961130572748636e-64
+system_prompt,none,usefulness,GPT-OSS-120B,Gemini 3.5 Flash,320,0.234375,0.99375,0,243,243,1.4149498560666738e-73,1.0031994479512717e-70
+system_prompt,none,usefulness,GPT-OSS-120B,GPT-5.4,320,0.234375,0.928125,8,230,238,1.063122383348146e-57,6.942189163263393e-55
+system_prompt,none,usefulness,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.95625,0.99375,2,14,16,0.004180908203125,0.6187744140625
+system_prompt,none,usefulness,Claude Sonnet 4.6,GPT-5.4,320,0.95625,0.928125,20,11,31,0.14961278438568115,1.0
+system_prompt,none,usefulness,Gemini 3.5 Flash,GPT-5.4,320,0.99375,0.928125,22,1,23,5.7220458984375e-06,0.00130462646484375
+system_prompt,none,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Med42-8B,320,0.25,0.475,21,93,114,5.312398934140964e-12,1.8487148290810554e-09
+system_prompt,none,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.25,0.675,13,149,162,1.9406055016484517e-30,9.858275948374134e-28
+system_prompt,none,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GLM 4.5,320,0.25,0.98125,3,237,240,2.6082630986389487e-66,1.7970932749622356e-63
+system_prompt,none,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.25,0.975,6,238,244,1.998985462781413e-62,1.3533131583030167e-59
+system_prompt,none,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.25,0.96875,0,230,230,1.1591269220898192e-69,8.171844800733225e-67
+system_prompt,none,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.25,0.946875,8,231,239,5.4988601877248915e-58,3.607252283147529e-55
+system_prompt,none,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-5.4,320,0.25,0.884375,7,210,217,4.0034278429293647e-53,2.538173252417217e-50
+system_prompt,none,patient_attitude_responsiveness,Med42-8B,Llama 4 Maverick,320,0.475,0.675,29,93,122,5.2086131450362435e-09,1.4896633594803656e-06
+system_prompt,none,patient_attitude_responsiveness,Med42-8B,GLM 4.5,320,0.475,0.98125,6,168,174,3.0586745552809425e-42,1.7648552183971038e-39
+system_prompt,none,patient_attitude_responsiveness,Med42-8B,GPT-OSS-120B,320,0.475,0.975,5,165,170,1.5360895033403603e-42,8.893958224340686e-40
+system_prompt,none,patient_attitude_responsiveness,Med42-8B,Claude Sonnet 4.6,320,0.475,0.96875,7,165,172,2.7228414394998643e-40,1.546573937635923e-37
+system_prompt,none,patient_attitude_responsiveness,Med42-8B,Gemini 3.5 Flash,320,0.475,0.946875,12,163,175,5.274271474244677e-35,2.8270095101951467e-32
+system_prompt,none,patient_attitude_responsiveness,Med42-8B,GPT-5.4,320,0.475,0.884375,15,146,161,3.76087231863968e-28,1.8503491807707226e-25
+system_prompt,none,patient_attitude_responsiveness,Llama 4 Maverick,GLM 4.5,320,0.675,0.98125,5,103,108,7.213042994342267e-25,3.3901302073408655e-22
+system_prompt,none,patient_attitude_responsiveness,Llama 4 Maverick,GPT-OSS-120B,320,0.675,0.975,6,102,108,1.2514492494239994e-23,5.781695532338877e-21
+system_prompt,none,patient_attitude_responsiveness,Llama 4 Maverick,Claude Sonnet 4.6,320,0.675,0.96875,8,102,110,6.8377855268965755e-22,3.0975168436841487e-19
+system_prompt,none,patient_attitude_responsiveness,Llama 4 Maverick,Gemini 3.5 Flash,320,0.675,0.946875,14,101,115,1.982659948466344e-17,8.208212186650664e-15
+system_prompt,none,patient_attitude_responsiveness,Llama 4 Maverick,GPT-5.4,320,0.675,0.884375,26,93,119,4.937587209011747e-10,1.5355896220026532e-07
+system_prompt,none,patient_attitude_responsiveness,GLM 4.5,GPT-OSS-120B,320,0.98125,0.975,8,6,14,0.79052734375,1.0
+system_prompt,none,patient_attitude_responsiveness,GLM 4.5,Claude Sonnet 4.6,320,0.98125,0.96875,10,6,16,0.454498291015625,1.0
+system_prompt,none,patient_attitude_responsiveness,GLM 4.5,Gemini 3.5 Flash,320,0.98125,0.946875,17,6,23,0.03468966484069824,1.0
+system_prompt,none,patient_attitude_responsiveness,GLM 4.5,GPT-5.4,320,0.98125,0.884375,37,6,43,1.636124125070637e-06,0.00039921428651723545
+system_prompt,none,patient_attitude_responsiveness,GPT-OSS-120B,Claude Sonnet 4.6,320,0.975,0.96875,10,8,18,0.8145294189453125,1.0
+system_prompt,none,patient_attitude_responsiveness,GPT-OSS-120B,Gemini 3.5 Flash,320,0.975,0.946875,17,8,25,0.10775214433670044,1.0
+system_prompt,none,patient_attitude_responsiveness,GPT-OSS-120B,GPT-5.4,320,0.975,0.884375,36,7,43,8.963039363152348e-06,0.002007720817346126
+system_prompt,none,patient_attitude_responsiveness,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.96875,0.946875,15,8,23,0.21003961563110352,1.0
+system_prompt,none,patient_attitude_responsiveness,Claude Sonnet 4.6,GPT-5.4,320,0.96875,0.884375,35,8,43,4.1934157934520044e-05,0.008470699902773049
+system_prompt,none,patient_attitude_responsiveness,Gemini 3.5 Flash,GPT-5.4,320,0.946875,0.884375,34,14,48,0.005515201485501109,0.7831586109411575
+system_prompt,minimal,understandability,Llama 3.1 8B Instruct,Med42-8B,320,0.140625,0.078125,38,18,56,0.010454818321892184,1.0
+system_prompt,minimal,understandability,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.140625,0.234375,31,61,92,0.0023146015214254912,0.3703362434280786
+system_prompt,minimal,understandability,Llama 3.1 8B Instruct,GLM 4.5,320,0.140625,0.075,43,22,65,0.012502546136489849,1.0
+system_prompt,minimal,understandability,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.140625,0.065625,44,20,64,0.0036899642765400487,0.5569892939760018
+system_prompt,minimal,understandability,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.140625,0.540625,23,151,174,2.830941882385813e-24,1.3163879753094031e-21
+system_prompt,minimal,understandability,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.140625,0.75625,13,210,223,5.9932803741370815e-47,3.6079547852305233e-44
+system_prompt,minimal,understandability,Llama 3.1 8B Instruct,GPT-5.4,320,0.140625,0.00625,45,2,47,1.6044054973463062e-11,5.50311085589783e-09
+system_prompt,minimal,understandability,Med42-8B,Llama 4 Maverick,320,0.078125,0.234375,17,67,84,3.495893514797303e-08,9.473871425100691e-06
+system_prompt,minimal,understandability,Med42-8B,GLM 4.5,320,0.078125,0.075,24,23,47,1.0,1.0
+system_prompt,minimal,understandability,Med42-8B,GPT-OSS-120B,320,0.078125,0.065625,25,21,46,0.6587380770236564,1.0
+system_prompt,minimal,understandability,Med42-8B,Claude Sonnet 4.6,320,0.078125,0.540625,18,166,184,3.530927695433124e-31,1.8113659077571928e-28
+system_prompt,minimal,understandability,Med42-8B,Gemini 3.5 Flash,320,0.078125,0.75625,17,234,251,5.993570609824812e-50,3.6860459250422593e-47
+system_prompt,minimal,understandability,Med42-8B,GPT-5.4,320,0.078125,0.00625,25,2,27,5.647540092468262e-06,0.001293286681175232
+system_prompt,minimal,understandability,Llama 4 Maverick,GLM 4.5,320,0.234375,0.075,71,20,91,7.245373680789234e-08,1.912778651728358e-05
+system_prompt,minimal,understandability,Llama 4 Maverick,GPT-OSS-120B,320,0.234375,0.065625,66,12,78,3.485851300097458e-10,1.1050148621308941e-07
+system_prompt,minimal,understandability,Llama 4 Maverick,Claude Sonnet 4.6,320,0.234375,0.540625,36,134,170,1.776046394002724e-14,6.766736761150379e-12
+system_prompt,minimal,understandability,Llama 4 Maverick,Gemini 3.5 Flash,320,0.234375,0.75625,18,185,203,4.2391237470627166e-36,2.331518060884494e-33
+system_prompt,minimal,understandability,Llama 4 Maverick,GPT-5.4,320,0.234375,0.00625,75,2,77,3.975760896174872e-20,1.7493347943169438e-17
+system_prompt,minimal,understandability,GLM 4.5,GPT-OSS-120B,320,0.075,0.065625,21,18,39,0.7492586247608415,1.0
+system_prompt,minimal,understandability,GLM 4.5,Claude Sonnet 4.6,320,0.075,0.540625,5,154,159,2.2471520825647976e-39,1.2718880787316754e-36
+system_prompt,minimal,understandability,GLM 4.5,Gemini 3.5 Flash,320,0.075,0.75625,7,225,232,1.958721968890148e-57,1.2731692797785963e-54
+system_prompt,minimal,understandability,GLM 4.5,GPT-5.4,320,0.075,0.00625,23,1,24,2.9802322387695312e-06,0.0007033348083496094
+system_prompt,minimal,understandability,GPT-OSS-120B,Claude Sonnet 4.6,320,0.065625,0.540625,11,163,174,7.186402318736349e-36,3.909402861392574e-33
+system_prompt,minimal,understandability,GPT-OSS-120B,Gemini 3.5 Flash,320,0.065625,0.75625,1,222,223,3.3234487110159296e-65,2.2798858157569277e-62
+system_prompt,minimal,understandability,GPT-OSS-120B,GPT-5.4,320,0.065625,0.00625,20,1,21,2.09808349609375e-05,0.0044269561767578125
+system_prompt,minimal,understandability,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.540625,0.75625,31,100,131,1.16122748330721e-09,3.506906999587774e-07
+system_prompt,minimal,understandability,Claude Sonnet 4.6,GPT-5.4,320,0.540625,0.00625,172,1,173,2.906631622225263e-50,1.7962983425352124e-47
+system_prompt,minimal,understandability,Gemini 3.5 Flash,GPT-5.4,320,0.75625,0.00625,240,0,240,1.131959884853339e-72,8.01427598476164e-70
+system_prompt,minimal,usefulness,Llama 3.1 8B Instruct,Med42-8B,320,0.040625,0.30625,5,90,95,3.093195048615164e-21,1.3857513817795935e-18
+system_prompt,minimal,usefulness,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.040625,0.721875,4,222,226,1.998517529177831e-60,1.337008227019969e-57
+system_prompt,minimal,usefulness,Llama 3.1 8B Instruct,GLM 4.5,320,0.040625,0.5,10,157,167,4.029970997975849e-35,2.1721543679089828e-32
+system_prompt,minimal,usefulness,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.040625,0.475,6,145,151,1.0875369892924252e-35,5.9053258518578686e-33
+system_prompt,minimal,usefulness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.040625,0.503125,9,157,166,4.79418744671886e-36,2.6272147208019354e-33
+system_prompt,minimal,usefulness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.040625,0.915625,2,282,284,2.6040850400420075e-81,1.8801493989103294e-78
+system_prompt,minimal,usefulness,Llama 3.1 8B Instruct,GPT-5.4,320,0.040625,0.740625,3,227,230,2.3507395352981276e-63,1.5985028840027268e-60
+system_prompt,minimal,usefulness,Med42-8B,Llama 4 Maverick,320,0.30625,0.721875,30,163,193,2.507749701311497e-23,1.1535648626032886e-20
+system_prompt,minimal,usefulness,Med42-8B,GLM 4.5,320,0.30625,0.5,52,114,166,1.6837810633585907e-06,0.00040747501733277895
+system_prompt,minimal,usefulness,Med42-8B,GPT-OSS-120B,320,0.30625,0.475,61,115,176,5.714635683054462e-05,0.011429271366108924
+system_prompt,minimal,usefulness,Med42-8B,Claude Sonnet 4.6,320,0.30625,0.503125,53,116,169,1.4138510751828467e-06,0.00034780736449498026
+system_prompt,minimal,usefulness,Med42-8B,Gemini 3.5 Flash,320,0.30625,0.915625,11,206,217,9.752446667104088e-48,5.909982680265078e-45
+system_prompt,minimal,usefulness,Med42-8B,GPT-5.4,320,0.30625,0.740625,35,174,209,2.301423884843525e-23,1.060956410912865e-20
+system_prompt,minimal,usefulness,Llama 4 Maverick,GLM 4.5,320,0.721875,0.5,110,39,149,5.032155536945556e-09,1.4492607946403202e-06
+system_prompt,minimal,usefulness,Llama 4 Maverick,GPT-OSS-120B,320,0.721875,0.475,111,32,143,2.0738656632953067e-11,7.071881911836996e-09
+system_prompt,minimal,usefulness,Llama 4 Maverick,Claude Sonnet 4.6,320,0.721875,0.503125,99,29,128,3.8418266479836655e-10,1.2063335674668708e-07
+system_prompt,minimal,usefulness,Llama 4 Maverick,Gemini 3.5 Flash,320,0.721875,0.915625,12,74,86,4.6897604919147226e-12,1.641416172170153e-09
+system_prompt,minimal,usefulness,Llama 4 Maverick,GPT-5.4,320,0.721875,0.740625,47,53,100,0.617299413589252,1.0
+system_prompt,minimal,usefulness,GLM 4.5,GPT-OSS-120B,320,0.5,0.475,78,70,148,0.5651719099883437,1.0
+system_prompt,minimal,usefulness,GLM 4.5,Claude Sonnet 4.6,320,0.5,0.503125,59,60,119,1.0,1.0
+system_prompt,minimal,usefulness,GLM 4.5,Gemini 3.5 Flash,320,0.5,0.915625,6,139,145,5.44409368472581e-34,2.8799255592199536e-31
+system_prompt,minimal,usefulness,GLM 4.5,GPT-5.4,320,0.5,0.740625,41,118,159,7.78539861169212e-10,2.390117373789481e-07
+system_prompt,minimal,usefulness,GPT-OSS-120B,Claude Sonnet 4.6,320,0.475,0.503125,59,68,127,0.4779219422067188,1.0
+system_prompt,minimal,usefulness,GPT-OSS-120B,Gemini 3.5 Flash,320,0.475,0.915625,7,148,155,1.7074014022960796e-35,9.254115600444751e-33
+system_prompt,minimal,usefulness,GPT-OSS-120B,GPT-5.4,320,0.475,0.740625,31,116,147,9.394227978955015e-13,3.3819220724238055e-10
+system_prompt,minimal,usefulness,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.503125,0.915625,2,134,136,2.1390782942600103e-37,1.1893275316085657e-34
+system_prompt,minimal,usefulness,Claude Sonnet 4.6,GPT-5.4,320,0.503125,0.740625,28,104,132,1.7738815010358866e-11,6.0666747335427325e-09
+system_prompt,minimal,usefulness,Gemini 3.5 Flash,GPT-5.4,320,0.915625,0.740625,66,10,76,2.960046439225788e-11,1.003455742897542e-08
+system_prompt,minimal,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Med42-8B,320,0.1875,0.2875,26,58,84,0.0006279472715818218,0.11114666706998247
+system_prompt,minimal,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.1875,0.265625,24,49,73,0.004626293921895511,0.6800652065186402
+system_prompt,minimal,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GLM 4.5,320,0.1875,0.290625,30,63,93,0.0008100087738623599,0.1393215091043259
+system_prompt,minimal,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.1875,0.496875,17,116,133,2.643235632987314e-19,1.1392345578175325e-16
+system_prompt,minimal,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.1875,0.53125,20,130,150,5.994729558560897e-21,2.6736493831181604e-18
+system_prompt,minimal,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.1875,0.840625,21,230,251,1.2439571753119179e-45,7.401545193105911e-43
+system_prompt,minimal,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-5.4,320,0.1875,0.296875,16,51,67,2.1689238760717064e-05,0.004554740139750583
+system_prompt,minimal,patient_attitude_responsiveness,Med42-8B,Llama 4 Maverick,320,0.2875,0.265625,44,37,81,0.5052364407669359,1.0
+system_prompt,minimal,patient_attitude_responsiveness,Med42-8B,GLM 4.5,320,0.2875,0.290625,39,40,79,1.0,1.0
+system_prompt,minimal,patient_attitude_responsiveness,Med42-8B,GPT-OSS-120B,320,0.2875,0.496875,28,95,123,1.0165802779652929e-09,3.09040404501449e-07
+system_prompt,minimal,patient_attitude_responsiveness,Med42-8B,Claude Sonnet 4.6,320,0.2875,0.53125,27,105,132,4.65686863837048e-12,1.6345608920680384e-09
+system_prompt,minimal,patient_attitude_responsiveness,Med42-8B,Gemini 3.5 Flash,320,0.2875,0.840625,27,204,231,8.277025629784665e-35,4.428208711934796e-32
+system_prompt,minimal,patient_attitude_responsiveness,Med42-8B,GPT-5.4,320,0.2875,0.296875,35,38,73,0.8151212352249975,1.0
+system_prompt,minimal,patient_attitude_responsiveness,Llama 4 Maverick,GLM 4.5,320,0.265625,0.290625,35,43,78,0.4282070357175808,1.0
+system_prompt,minimal,patient_attitude_responsiveness,Llama 4 Maverick,GPT-OSS-120B,320,0.265625,0.496875,19,93,112,6.74813608304086e-13,2.4495733981438324e-10
+system_prompt,minimal,patient_attitude_responsiveness,Llama 4 Maverick,Claude Sonnet 4.6,320,0.265625,0.53125,27,112,139,1.679250309494468e-13,6.213226145129532e-11
+system_prompt,minimal,patient_attitude_responsiveness,Llama 4 Maverick,Gemini 3.5 Flash,320,0.265625,0.840625,25,209,234,2.3831749414425013e-37,1.3202789175591458e-34
+system_prompt,minimal,patient_attitude_responsiveness,Llama 4 Maverick,GPT-5.4,320,0.265625,0.296875,37,47,84,0.32613417119198296,1.0
+system_prompt,minimal,patient_attitude_responsiveness,GLM 4.5,GPT-OSS-120B,320,0.290625,0.496875,30,96,126,3.044627417985441e-09,8.920758334697342e-07
+system_prompt,minimal,patient_attitude_responsiveness,GLM 4.5,Claude Sonnet 4.6,320,0.290625,0.53125,21,98,119,4.4033126351506443e-13,1.6072091118299852e-10
+system_prompt,minimal,patient_attitude_responsiveness,GLM 4.5,Gemini 3.5 Flash,320,0.290625,0.840625,29,205,234,7.944298414843817e-34,4.194589563037535e-31
+system_prompt,minimal,patient_attitude_responsiveness,GLM 4.5,GPT-5.4,320,0.290625,0.296875,44,46,90,0.9161288770112893,1.0
+system_prompt,minimal,patient_attitude_responsiveness,GPT-OSS-120B,Claude Sonnet 4.6,320,0.496875,0.53125,66,77,143,0.40310390913217026,1.0
+system_prompt,minimal,patient_attitude_responsiveness,GPT-OSS-120B,Gemini 3.5 Flash,320,0.496875,0.840625,38,148,186,1.5640123681933458e-16,6.349890214864985e-14
+system_prompt,minimal,patient_attitude_responsiveness,GPT-OSS-120B,GPT-5.4,320,0.496875,0.296875,88,24,112,8.98832291674751e-10,2.750426812524738e-07
+system_prompt,minimal,patient_attitude_responsiveness,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.53125,0.840625,31,130,161,1.2748134499045282e-15,5.035513127122886e-13
+system_prompt,minimal,patient_attitude_responsiveness,Claude Sonnet 4.6,GPT-5.4,320,0.53125,0.296875,104,29,133,4.119609816013114e-11,1.3800692883643933e-08
+system_prompt,minimal,patient_attitude_responsiveness,Gemini 3.5 Flash,GPT-5.4,320,0.840625,0.296875,206,32,238,2.574633302889451e-32,1.3362346841996252e-29
+system_prompt,role_encouraging,understandability,Llama 3.1 8B Instruct,Med42-8B,320,0.134375,0.05,40,13,53,0.0002685401188191605,0.049411381862725534
+system_prompt,role_encouraging,understandability,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.134375,0.221875,29,57,86,0.003353274658067905,0.5231108466585932
+system_prompt,role_encouraging,understandability,Llama 3.1 8B Instruct,GLM 4.5,320,0.134375,0.0875,40,25,65,0.08168153394154005,1.0
+system_prompt,role_encouraging,understandability,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.134375,0.05,40,13,53,0.0002685401188191605,0.049411381862725534
+system_prompt,role_encouraging,understandability,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.134375,0.6375,18,179,197,1.5483109151480957e-34,8.25249717773935e-32
+system_prompt,role_encouraging,understandability,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.134375,0.878125,7,245,252,3.3482747789784514e-63,2.2734785749263685e-60
+system_prompt,role_encouraging,understandability,Llama 3.1 8B Instruct,GPT-5.4,320,0.134375,0.0125,43,4,47,2.781192165457469e-09,8.232328809754108e-07
+system_prompt,role_encouraging,understandability,Med42-8B,Llama 4 Maverick,320,0.05,0.221875,12,67,79,2.048841172810755e-10,6.597268576450632e-08
+system_prompt,role_encouraging,understandability,Med42-8B,GLM 4.5,320,0.05,0.0875,15,27,42,0.08842954698775429,1.0
+system_prompt,role_encouraging,understandability,Med42-8B,GPT-OSS-120B,320,0.05,0.05,16,16,32,1.0,1.0
+system_prompt,role_encouraging,understandability,Med42-8B,Claude Sonnet 4.6,320,0.05,0.6375,8,196,204,5.2478736988620805e-48,3.1854593352092827e-45
+system_prompt,role_encouraging,understandability,Med42-8B,Gemini 3.5 Flash,320,0.05,0.878125,4,269,273,3.0279732899107433e-74,2.1528890091265385e-71
+system_prompt,role_encouraging,understandability,Med42-8B,GPT-5.4,320,0.05,0.0125,16,4,20,0.01181793212890625,1.0
+system_prompt,role_encouraging,understandability,Llama 4 Maverick,GLM 4.5,320,0.221875,0.0875,62,19,81,1.7730682926908968e-06,0.0004255363902458152
+system_prompt,role_encouraging,understandability,Llama 4 Maverick,GPT-OSS-120B,320,0.221875,0.05,68,13,81,3.8083949050165744e-10,1.199644395080221e-07
+system_prompt,role_encouraging,understandability,Llama 4 Maverick,Claude Sonnet 4.6,320,0.221875,0.6375,26,159,185,1.6865250492959466e-24,7.89293723070503e-22
+system_prompt,role_encouraging,understandability,Llama 4 Maverick,Gemini 3.5 Flash,320,0.221875,0.878125,10,220,230,1.1362933515066207e-52,7.170011048006777e-50
+system_prompt,role_encouraging,understandability,Llama 4 Maverick,GPT-5.4,320,0.221875,0.0125,70,3,73,1.3742686052727396e-17,5.703214711881869e-15
+system_prompt,role_encouraging,understandability,GLM 4.5,GPT-OSS-120B,320,0.0875,0.05,22,10,32,0.050102459732443094,1.0
+system_prompt,role_encouraging,understandability,GLM 4.5,Claude Sonnet 4.6,320,0.0875,0.6375,5,181,186,3.684025878509273e-47,2.225151630619601e-44
+system_prompt,role_encouraging,understandability,GLM 4.5,Gemini 3.5 Flash,320,0.0875,0.878125,1,254,255,8.843436600416711e-75,6.314213732697532e-72
+system_prompt,role_encouraging,understandability,GLM 4.5,GPT-5.4,320,0.0875,0.0125,28,4,32,1.9301194697618484e-05,0.004091853275895119
+system_prompt,role_encouraging,understandability,GPT-OSS-120B,Claude Sonnet 4.6,320,0.05,0.6375,7,195,202,7.907986174526034e-49,4.831779552635407e-46
+system_prompt,role_encouraging,understandability,GPT-OSS-120B,Gemini 3.5 Flash,320,0.05,0.878125,0,265,265,3.3735033418337674e-80,2.4255489027784788e-77
+system_prompt,role_encouraging,understandability,GPT-OSS-120B,GPT-5.4,320,0.05,0.0125,16,4,20,0.01181793212890625,1.0
+system_prompt,role_encouraging,understandability,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.6375,0.878125,19,96,115,1.4467477786679854e-13,5.367434258858226e-11
+system_prompt,role_encouraging,understandability,Claude Sonnet 4.6,GPT-5.4,320,0.6375,0.0125,201,1,202,6.316360507029059e-59,4.168797934639179e-56
+system_prompt,role_encouraging,understandability,Gemini 3.5 Flash,GPT-5.4,320,0.878125,0.0125,277,0,277,8.236092143148846e-84,5.987638988069211e-81
+system_prompt,role_encouraging,usefulness,Llama 3.1 8B Instruct,Med42-8B,320,0.05,0.153125,11,44,55,8.699371704778969e-06,0.001957358633575268
+system_prompt,role_encouraging,usefulness,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.05,0.790625,4,241,245,5.268111979271673e-66,3.6191929297596393e-63
+system_prompt,role_encouraging,usefulness,Llama 3.1 8B Instruct,GLM 4.5,320,0.05,0.584375,8,179,187,3.3989251383330305e-43,1.995169056201489e-40
+system_prompt,role_encouraging,usefulness,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.05,0.503125,10,155,165,1.4253850377971598e-34,7.611556101836833e-32
+system_prompt,role_encouraging,usefulness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.05,0.459375,14,145,159,1.2703140007825326e-28,6.300757443881362e-26
+system_prompt,role_encouraging,usefulness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.05,0.9375,3,287,290,4.0869556280399096e-81,2.946695007816775e-78
+system_prompt,role_encouraging,usefulness,Llama 3.1 8B Instruct,GPT-5.4,320,0.05,0.725,6,222,228,8.698655713430816e-58,5.688920836583754e-55
+system_prompt,role_encouraging,usefulness,Med42-8B,Llama 4 Maverick,320,0.153125,0.790625,10,214,224,5.560315465049651e-51,3.452955903795833e-48
+system_prompt,role_encouraging,usefulness,Med42-8B,GLM 4.5,320,0.153125,0.584375,19,157,176,3.288538545774138e-28,1.6212495030666502e-25
+system_prompt,role_encouraging,usefulness,Med42-8B,GPT-OSS-120B,320,0.153125,0.503125,25,137,162,6.592735518455974e-20,2.88102542156526e-17
+system_prompt,role_encouraging,usefulness,Med42-8B,Claude Sonnet 4.6,320,0.153125,0.459375,29,127,156,7.912444002627414e-16,3.1412402690430834e-13
+system_prompt,role_encouraging,usefulness,Med42-8B,Gemini 3.5 Flash,320,0.153125,0.9375,0,251,251,5.527147875260445e-76,3.962965026561739e-73
+system_prompt,role_encouraging,usefulness,Med42-8B,GPT-5.4,320,0.153125,0.725,14,197,211,1.6729224355531098e-42,9.669491677496975e-40
+system_prompt,role_encouraging,usefulness,Llama 4 Maverick,GLM 4.5,320,0.790625,0.584375,97,31,128,4.155995426933083e-09,1.2093946692375272e-06
+system_prompt,role_encouraging,usefulness,Llama 4 Maverick,GPT-OSS-120B,320,0.790625,0.503125,113,21,134,1.9626845888813064e-16,7.94887258496929e-14
+system_prompt,role_encouraging,usefulness,Llama 4 Maverick,Claude Sonnet 4.6,320,0.790625,0.459375,129,23,152,4.330228320328421e-19,1.8576679494208925e-16
+system_prompt,role_encouraging,usefulness,Llama 4 Maverick,Gemini 3.5 Flash,320,0.790625,0.9375,13,60,73,2.3070738505242644e-08,6.36752382744697e-06
+system_prompt,role_encouraging,usefulness,Llama 4 Maverick,GPT-5.4,320,0.790625,0.725,66,45,111,0.057163645246601856,1.0
+system_prompt,role_encouraging,usefulness,GLM 4.5,GPT-OSS-120B,320,0.584375,0.503125,80,54,134,0.030414804699519814,1.0
+system_prompt,role_encouraging,usefulness,GLM 4.5,Claude Sonnet 4.6,320,0.584375,0.459375,91,51,142,0.0009948396502908394,0.16713306124886101
+system_prompt,role_encouraging,usefulness,GLM 4.5,Gemini 3.5 Flash,320,0.584375,0.9375,9,122,131,1.872620303580562e-26,9.007303660222504e-24
+system_prompt,role_encouraging,usefulness,GLM 4.5,GPT-5.4,320,0.584375,0.725,46,91,137,0.00015041858615999766,0.02827869419807956
+system_prompt,role_encouraging,usefulness,GPT-OSS-120B,Claude Sonnet 4.6,320,0.503125,0.459375,77,63,140,0.27184203624171227,1.0
+system_prompt,role_encouraging,usefulness,GPT-OSS-120B,Gemini 3.5 Flash,320,0.503125,0.9375,3,142,145,2.2789642026558223e-38,1.2807778818925722e-35
+system_prompt,role_encouraging,usefulness,GPT-OSS-120B,GPT-5.4,320,0.503125,0.725,48,119,167,3.8256076556515754e-08,1.0329140670259253e-05
+system_prompt,role_encouraging,usefulness,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.459375,0.9375,2,155,157,1.357945793084768e-43,7.984721263338436e-41
+system_prompt,role_encouraging,usefulness,Claude Sonnet 4.6,GPT-5.4,320,0.459375,0.725,36,121,157,6.014007707837337e-12,2.086860674619556e-09
+system_prompt,role_encouraging,usefulness,Gemini 3.5 Flash,GPT-5.4,320,0.9375,0.725,80,12,92,1.715599535972955e-13,6.330562287740204e-11
+system_prompt,role_encouraging,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Med42-8B,320,0.3875,0.33125,73,55,128,0.13262480132498225,1.0
+system_prompt,role_encouraging,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.3875,0.609375,46,117,163,2.5432025248912428e-08,6.993806943450917e-06
+system_prompt,role_encouraging,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GLM 4.5,320,0.3875,0.346875,76,63,139,0.3087525691928275,1.0
+system_prompt,role_encouraging,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.3875,0.628125,48,125,173,4.220745547903091e-09,1.2240162088918962e-06
+system_prompt,role_encouraging,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.3875,0.853125,20,169,189,1.4157151779133447e-30,7.205990255578925e-28
+system_prompt,role_encouraging,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.3875,0.971875,8,195,203,1.0086302797932262e-47,6.102213192749018e-45
+system_prompt,role_encouraging,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-5.4,320,0.3875,0.284375,81,48,129,0.004649695813417675,0.6800652065186402
+system_prompt,role_encouraging,patient_attitude_responsiveness,Med42-8B,Llama 4 Maverick,320,0.33125,0.609375,22,111,133,1.7102147522338876e-15,6.738246123801517e-13
+system_prompt,role_encouraging,patient_attitude_responsiveness,Med42-8B,GLM 4.5,320,0.33125,0.346875,52,57,109,0.701811182064683,1.0
+system_prompt,role_encouraging,patient_attitude_responsiveness,Med42-8B,GPT-OSS-120B,320,0.33125,0.628125,26,121,147,7.513515312204095e-16,2.99037909425723e-13
+system_prompt,role_encouraging,patient_attitude_responsiveness,Med42-8B,Claude Sonnet 4.6,320,0.33125,0.853125,30,197,227,2.6566935971679147e-31,1.3655405089443082e-28
+system_prompt,role_encouraging,patient_attitude_responsiveness,Med42-8B,Gemini 3.5 Flash,320,0.33125,0.971875,4,209,213,1.2910940085505292e-56,8.353378235321924e-54
+system_prompt,role_encouraging,patient_attitude_responsiveness,Med42-8B,GPT-5.4,320,0.33125,0.284375,50,35,85,0.12839640292640084,1.0
+system_prompt,role_encouraging,patient_attitude_responsiveness,Llama 4 Maverick,GLM 4.5,320,0.609375,0.346875,119,35,154,6.593072789195153e-12,2.2812031850615228e-09
+system_prompt,role_encouraging,patient_attitude_responsiveness,Llama 4 Maverick,GPT-OSS-120B,320,0.609375,0.628125,58,64,122,0.6509598162160707,1.0
+system_prompt,role_encouraging,patient_attitude_responsiveness,Llama 4 Maverick,Claude Sonnet 4.6,320,0.609375,0.853125,35,113,148,8.906893639483257e-11,2.9392749010294746e-08
+system_prompt,role_encouraging,patient_attitude_responsiveness,Llama 4 Maverick,Gemini 3.5 Flash,320,0.609375,0.971875,6,122,128,3.3496859003124053e-29,1.6748429501562026e-26
+system_prompt,role_encouraging,patient_attitude_responsiveness,Llama 4 Maverick,GPT-5.4,320,0.609375,0.284375,130,26,156,7.804103797779608e-18,3.2699194912696556e-15
+system_prompt,role_encouraging,patient_attitude_responsiveness,GLM 4.5,GPT-OSS-120B,320,0.346875,0.628125,25,115,140,5.408176825074869e-15,2.109188961779199e-12
+system_prompt,role_encouraging,patient_attitude_responsiveness,GLM 4.5,Claude Sonnet 4.6,320,0.346875,0.853125,24,186,210,3.0985192077227795e-32,1.6050329496004e-29
+system_prompt,role_encouraging,patient_attitude_responsiveness,GLM 4.5,Gemini 3.5 Flash,320,0.346875,0.971875,3,203,206,2.833692790004106e-56,1.8277318495526485e-53
+system_prompt,role_encouraging,patient_attitude_responsiveness,GLM 4.5,GPT-5.4,320,0.346875,0.284375,62,42,104,0.06192637987862746,1.0
+system_prompt,role_encouraging,patient_attitude_responsiveness,GPT-OSS-120B,Claude Sonnet 4.6,320,0.628125,0.853125,40,112,152,4.372591882668503e-09,1.2636790540911972e-06
+system_prompt,role_encouraging,patient_attitude_responsiveness,GPT-OSS-120B,Gemini 3.5 Flash,320,0.628125,0.971875,8,118,126,3.1633163266191123e-26,1.5152285204505548e-23
+system_prompt,role_encouraging,patient_attitude_responsiveness,GPT-OSS-120B,GPT-5.4,320,0.628125,0.284375,125,15,140,8.894877270372545e-23,4.0649589125602535e-20
+system_prompt,role_encouraging,patient_attitude_responsiveness,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.853125,0.971875,7,45,52,6.973810151578164e-08,1.8480596901682134e-05
+system_prompt,role_encouraging,patient_attitude_responsiveness,Claude Sonnet 4.6,GPT-5.4,320,0.853125,0.284375,209,27,236,4.757953203781407e-36,2.6121163088759924e-33
+system_prompt,role_encouraging,patient_attitude_responsiveness,Gemini 3.5 Flash,GPT-5.4,320,0.971875,0.284375,225,5,230,6.084901604001878e-60,4.0525444682652504e-57
+system_prompt,role_attitude_sensitive,understandability,Llama 3.1 8B Instruct,Med42-8B,320,0.196875,0.11875,51,26,77,0.005870707889737202,0.8277698124529455
+system_prompt,role_attitude_sensitive,understandability,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.196875,0.3,34,67,101,0.0013318251141996125,0.22108296895713567
+system_prompt,role_attitude_sensitive,understandability,Llama 3.1 8B Instruct,GLM 4.5,320,0.196875,0.2,49,50,99,1.0,1.0
+system_prompt,role_attitude_sensitive,understandability,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.196875,0.340625,46,92,138,0.00011174345588505883,0.02134300007404624
+system_prompt,role_attitude_sensitive,understandability,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.196875,0.64375,26,169,195,7.068415322826909e-27,3.4069761856025705e-24
+system_prompt,role_attitude_sensitive,understandability,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.196875,0.9125,4,233,237,1.1806166733857314e-63,8.051805712490688e-61
+system_prompt,role_attitude_sensitive,understandability,Llama 3.1 8B Instruct,GPT-5.4,320,0.196875,0.015625,63,5,68,7.651062942926057e-14,2.8538464777114192e-11
+system_prompt,role_attitude_sensitive,understandability,Med42-8B,Llama 4 Maverick,320,0.11875,0.3,26,84,110,2.6140393458029338e-08,7.1624678075000385e-06
+system_prompt,role_attitude_sensitive,understandability,Med42-8B,GLM 4.5,320,0.11875,0.2,34,60,94,0.009547810466077418,1.0
+system_prompt,role_attitude_sensitive,understandability,Med42-8B,GPT-OSS-120B,320,0.11875,0.340625,30,101,131,3.501924916512223e-10,1.1066082736178626e-07
+system_prompt,role_attitude_sensitive,understandability,Med42-8B,Claude Sonnet 4.6,320,0.11875,0.64375,23,191,214,3.89241268632689e-34,2.0668711364395786e-31
+system_prompt,role_attitude_sensitive,understandability,Med42-8B,Gemini 3.5 Flash,320,0.11875,0.9125,6,260,266,8.024305667392807e-69,5.63306257850975e-66
+system_prompt,role_attitude_sensitive,understandability,Med42-8B,GPT-5.4,320,0.11875,0.015625,38,5,43,2.4995097192004323e-07,6.47373017272912e-05
+system_prompt,role_attitude_sensitive,understandability,Llama 4 Maverick,GLM 4.5,320,0.3,0.2,71,39,110,0.0029436388593452253,0.4650949397765456
+system_prompt,role_attitude_sensitive,understandability,Llama 4 Maverick,GPT-OSS-120B,320,0.3,0.340625,69,82,151,0.32880860932627676,1.0
+system_prompt,role_attitude_sensitive,understandability,Llama 4 Maverick,Claude Sonnet 4.6,320,0.3,0.64375,39,149,188,2.381142680672634e-16,9.61981642991744e-14
+system_prompt,role_attitude_sensitive,understandability,Llama 4 Maverick,Gemini 3.5 Flash,320,0.3,0.9125,11,207,218,5.1339767188364345e-48,3.121457845052552e-45
+system_prompt,role_attitude_sensitive,understandability,Llama 4 Maverick,GPT-5.4,320,0.3,0.015625,96,5,101,6.584107007480857e-23,3.0221051164337135e-20
+system_prompt,role_attitude_sensitive,understandability,GLM 4.5,GPT-OSS-120B,320,0.2,0.340625,39,84,123,6.0996362368444804e-05,0.012077279748952072
+system_prompt,role_attitude_sensitive,understandability,GLM 4.5,Claude Sonnet 4.6,320,0.2,0.64375,11,153,164,3.778490677656028e-33,1.9761506244141027e-30
+system_prompt,role_attitude_sensitive,understandability,GLM 4.5,Gemini 3.5 Flash,320,0.2,0.9125,1,229,230,2.6775831900274823e-67,1.8635979002591277e-64
+system_prompt,role_attitude_sensitive,understandability,GLM 4.5,GPT-5.4,320,0.2,0.015625,63,4,67,1.1067861037383775e-14,4.2500586383553696e-12
+system_prompt,role_attitude_sensitive,understandability,GPT-OSS-120B,Claude Sonnet 4.6,320,0.340625,0.64375,18,115,133,1.7229691910745588e-18,7.339848753977621e-16
+system_prompt,role_attitude_sensitive,understandability,GPT-OSS-120B,Gemini 3.5 Flash,320,0.340625,0.9125,2,185,187,1.7923176131710322e-52,1.1255754610714082e-49
+system_prompt,role_attitude_sensitive,understandability,GPT-OSS-120B,GPT-5.4,320,0.340625,0.015625,105,1,106,2.6377536518327582e-30,1.3347033478273757e-27
+system_prompt,role_attitude_sensitive,understandability,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.64375,0.9125,8,94,102,9.434630025061117e-20,4.094629430876525e-17
+system_prompt,role_attitude_sensitive,understandability,Claude Sonnet 4.6,GPT-5.4,320,0.64375,0.015625,203,2,205,8.212824412957242e-58,5.379399990486993e-55
+system_prompt,role_attitude_sensitive,understandability,Gemini 3.5 Flash,GPT-5.4,320,0.9125,0.015625,288,1,289,5.831217581819252e-85,4.2509576171462343e-82
+system_prompt,role_attitude_sensitive,usefulness,Llama 3.1 8B Instruct,Med42-8B,320,0.065625,0.190625,15,55,70,1.652519847797991e-06,0.0004015623230149118
+system_prompt,role_attitude_sensitive,usefulness,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.065625,0.840625,8,256,264,3.6609580346462215e-65,2.5077562537326615e-62
+system_prompt,role_attitude_sensitive,usefulness,Llama 3.1 8B Instruct,GLM 4.5,320,0.065625,0.69375,9,210,219,6.701853572464762e-51,4.155149214928153e-48
+system_prompt,role_attitude_sensitive,usefulness,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.065625,0.728125,3,215,218,8.198890996669824e-60,5.452262512785433e-57
+system_prompt,role_attitude_sensitive,usefulness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.065625,0.628125,15,195,210,4.107364370200285e-41,2.3453050553843627e-38
+system_prompt,role_attitude_sensitive,usefulness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.065625,0.9625,1,288,289,5.831217581819252e-85,4.2509576171462343e-82
+system_prompt,role_attitude_sensitive,usefulness,Llama 3.1 8B Instruct,GPT-5.4,320,0.065625,0.75,6,225,231,1.1766416259178166e-58,7.742301898539233e-56
+system_prompt,role_attitude_sensitive,usefulness,Med42-8B,Llama 4 Maverick,320,0.190625,0.840625,9,217,226,6.976197397440449e-53,4.415932952579805e-50
+system_prompt,role_attitude_sensitive,usefulness,Med42-8B,GLM 4.5,320,0.190625,0.69375,17,178,195,5.139502333928866e-35,2.759912753319801e-32
+system_prompt,role_attitude_sensitive,usefulness,Med42-8B,GPT-OSS-120B,320,0.190625,0.728125,21,193,214,5.246919702921823e-36,2.870065077498237e-33
+system_prompt,role_attitude_sensitive,usefulness,Med42-8B,Claude Sonnet 4.6,320,0.190625,0.628125,38,178,216,7.391438369015865e-23,3.3852787730092664e-20
+system_prompt,role_attitude_sensitive,usefulness,Med42-8B,Gemini 3.5 Flash,320,0.190625,0.9625,5,252,257,7.91481286015737e-68,5.516624563529687e-65
+system_prompt,role_attitude_sensitive,usefulness,Med42-8B,GPT-5.4,320,0.190625,0.75,21,200,221,8.295622219859801e-38,4.637252820901629e-35
+system_prompt,role_attitude_sensitive,usefulness,Llama 4 Maverick,GLM 4.5,320,0.840625,0.69375,80,33,113,1.1461598747783254e-05,0.002510090125764533
+system_prompt,role_attitude_sensitive,usefulness,Llama 4 Maverick,GPT-OSS-120B,320,0.840625,0.728125,74,38,112,0.0008605684481792974,0.14715720463865986
+system_prompt,role_attitude_sensitive,usefulness,Llama 4 Maverick,Claude Sonnet 4.6,320,0.840625,0.628125,94,26,120,3.139643327629843e-10,9.9840657818629e-08
+system_prompt,role_attitude_sensitive,usefulness,Llama 4 Maverick,Gemini 3.5 Flash,320,0.840625,0.9625,9,48,57,1.520195229143262e-07,3.982911500355346e-05
+system_prompt,role_attitude_sensitive,usefulness,Llama 4 Maverick,GPT-5.4,320,0.840625,0.75,65,36,101,0.005077381119448142,0.7311428812005325
+system_prompt,role_attitude_sensitive,usefulness,GLM 4.5,GPT-OSS-120B,320,0.69375,0.728125,57,68,125,0.3711606948508096,1.0
+system_prompt,role_attitude_sensitive,usefulness,GLM 4.5,Claude Sonnet 4.6,320,0.69375,0.628125,67,46,113,0.05943072721456751,1.0
+system_prompt,role_attitude_sensitive,usefulness,GLM 4.5,Gemini 3.5 Flash,320,0.69375,0.9625,7,93,100,2.726143732806038e-20,1.2022293861674628e-17
+system_prompt,role_attitude_sensitive,usefulness,GLM 4.5,GPT-5.4,320,0.69375,0.75,56,74,130,0.13565556515200133,1.0
+system_prompt,role_attitude_sensitive,usefulness,GPT-OSS-120B,Claude Sonnet 4.6,320,0.728125,0.628125,78,46,124,0.005161224901988027,0.7380551609842878
+system_prompt,role_attitude_sensitive,usefulness,GPT-OSS-120B,Gemini 3.5 Flash,320,0.728125,0.9625,7,82,89,2.428370408743998e-17,1.0029169788112712e-14
+system_prompt,role_attitude_sensitive,usefulness,GPT-OSS-120B,GPT-5.4,320,0.728125,0.75,61,68,129,0.597484999305873,1.0
+system_prompt,role_attitude_sensitive,usefulness,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.628125,0.9625,3,110,113,4.633363741607924e-29,2.3120485070623542e-26
+system_prompt,role_attitude_sensitive,usefulness,Claude Sonnet 4.6,GPT-5.4,320,0.628125,0.75,45,84,129,0.000755890272456333,0.1322807976798583
+system_prompt,role_attitude_sensitive,usefulness,Gemini 3.5 Flash,GPT-5.4,320,0.9625,0.75,74,6,80,5.396645380673323e-16,2.153261506888656e-13
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Med42-8B,320,0.8125,0.93125,18,56,74,1.1091146210557397e-05,0.002451143312533185
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.8125,0.928125,17,54,71,1.2526823964854769e-05,0.0027308476243383395
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GLM 4.5,320,0.8125,0.96875,9,59,68,3.914123197106857e-10,1.2251205606944463e-07
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.8125,0.996875,0,59,59,3.469446951953614e-18,1.4606371667724716e-15
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.8125,1.0,0,60,60,1.734723475976807e-18,7.37257477290143e-16
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.8125,0.946875,14,57,71,2.6659171387086086e-07,6.851407046481125e-05
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-5.4,320,0.8125,0.8875,24,48,72,0.006309827313666047,0.8833758239132465
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Med42-8B,Llama 4 Maverick,320,0.93125,0.928125,21,20,41,1.0,1.0
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Med42-8B,GLM 4.5,320,0.93125,0.96875,10,22,32,0.050102459732443094,1.0
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Med42-8B,GPT-OSS-120B,320,0.93125,0.996875,1,22,23,5.7220458984375e-06,0.00130462646484375
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Med42-8B,Claude Sonnet 4.6,320,0.93125,1.0,0,22,22,4.76837158203125e-07,0.00012063980102539062
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Med42-8B,Gemini 3.5 Flash,320,0.93125,0.946875,16,21,37,0.5113757815852296,1.0
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Med42-8B,GPT-5.4,320,0.93125,0.8875,31,17,48,0.05946337525377032,1.0
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Llama 4 Maverick,GLM 4.5,320,0.928125,0.96875,10,23,33,0.03508203336969018,1.0
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Llama 4 Maverick,GPT-OSS-120B,320,0.928125,0.996875,1,23,24,2.9802322387695312e-06,0.0007033348083496094
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Llama 4 Maverick,Claude Sonnet 4.6,320,0.928125,1.0,0,23,23,2.384185791015625e-07,6.198883056640625e-05
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Llama 4 Maverick,Gemini 3.5 Flash,320,0.928125,0.946875,16,22,38,0.417692190836533,1.0
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Llama 4 Maverick,GPT-5.4,320,0.928125,0.8875,29,16,45,0.07245426016254441,1.0
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,GLM 4.5,GPT-OSS-120B,320,0.96875,0.996875,1,10,11,0.01171875,1.0
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,GLM 4.5,Claude Sonnet 4.6,320,0.96875,1.0,0,10,10,0.001953125,0.318359375
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,GLM 4.5,Gemini 3.5 Flash,320,0.96875,0.946875,17,10,27,0.24778856337070465,1.0
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,GLM 4.5,GPT-5.4,320,0.96875,0.8875,36,10,46,0.00015641720852954677,0.029250017995025246
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,GPT-OSS-120B,Claude Sonnet 4.6,320,0.996875,1.0,0,1,1,1.0,1.0
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,GPT-OSS-120B,Gemini 3.5 Flash,320,0.996875,0.946875,17,1,18,0.00014495849609375,0.02739715576171875
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,GPT-OSS-120B,GPT-5.4,320,0.996875,0.8875,36,1,37,5.529727786779404e-10,1.7142156139016151e-07
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Claude Sonnet 4.6,Gemini 3.5 Flash,320,1.0,0.946875,17,0,17,1.52587890625e-05,0.0032806396484375
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Claude Sonnet 4.6,GPT-5.4,320,1.0,0.8875,36,0,36,2.9103830456733704e-11,9.89530235528946e-09
+system_prompt,role_attitude_sensitive,patient_attitude_responsiveness,Gemini 3.5 Flash,GPT-5.4,320,0.946875,0.8875,33,14,47,0.007942726509483578,1.0
+patient_attitude,very_anxious,understandability,Llama 3.1 8B Instruct,Med42-8B,320,0.28125,0.071875,83,16,99,4.389586499996501e-12,1.5451344479987682e-09
+patient_attitude,very_anxious,understandability,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.28125,0.234375,66,51,117,0.19534905940457867,1.0
+patient_attitude,very_anxious,understandability,Llama 3.1 8B Instruct,GLM 4.5,320,0.28125,0.35,33,55,88,0.02462283158179103,1.0
+patient_attitude,very_anxious,understandability,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.28125,0.3,49,55,104,0.624143515844679,1.0
+patient_attitude,very_anxious,understandability,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.28125,0.70625,20,156,176,2.6023612310285445e-27,1.2699522807419298e-24
+patient_attitude,very_anxious,understandability,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.28125,0.9125,5,207,212,1.0593782498164916e-54,6.758833233829216e-52
+patient_attitude,very_anxious,understandability,Llama 3.1 8B Instruct,GPT-5.4,320,0.28125,0.1875,54,24,78,0.0009010035205219422,0.1531705984887302
+patient_attitude,very_anxious,understandability,Med42-8B,Llama 4 Maverick,320,0.071875,0.234375,18,70,88,2.0783545041774732e-08,5.757041976571601e-06
+patient_attitude,very_anxious,understandability,Med42-8B,GLM 4.5,320,0.071875,0.35,18,107,125,1.3494093113112984e-16,5.505589990150097e-14
+patient_attitude,very_anxious,understandability,Med42-8B,GPT-OSS-120B,320,0.071875,0.3,20,93,113,1.93144963207924e-12,6.914589682843679e-10
+patient_attitude,very_anxious,understandability,Med42-8B,Claude Sonnet 4.6,320,0.071875,0.70625,10,213,223,1.0626570551439892e-50,6.577847171341293e-48
+patient_attitude,very_anxious,understandability,Med42-8B,Gemini 3.5 Flash,320,0.071875,0.9125,5,274,279,2.8496363845397666e-74,2.0289411057923138e-71
+patient_attitude,very_anxious,understandability,Med42-8B,GPT-5.4,320,0.071875,0.1875,21,58,79,3.761512780416608e-05,0.00767348607204988
+patient_attitude,very_anxious,understandability,Llama 4 Maverick,GLM 4.5,320,0.234375,0.35,37,74,111,0.0005701181048309126,0.10148102265990244
+patient_attitude,very_anxious,understandability,Llama 4 Maverick,GPT-OSS-120B,320,0.234375,0.3,42,63,105,0.05044215663996967,1.0
+patient_attitude,very_anxious,understandability,Llama 4 Maverick,Claude Sonnet 4.6,320,0.234375,0.70625,22,173,195,2.8440071443768003e-30,1.436223607910284e-27
+patient_attitude,very_anxious,understandability,Llama 4 Maverick,Gemini 3.5 Flash,320,0.234375,0.9125,8,225,233,2.865406016021646e-56,1.8453214743179402e-53
+patient_attitude,very_anxious,understandability,Llama 4 Maverick,GPT-5.4,320,0.234375,0.1875,51,36,87,0.1329018851954619,1.0
+patient_attitude,very_anxious,understandability,GLM 4.5,GPT-OSS-120B,320,0.35,0.3,47,31,78,0.08878242522208006,1.0
+patient_attitude,very_anxious,understandability,GLM 4.5,Claude Sonnet 4.6,320,0.35,0.70625,26,140,166,4.3379790579300835e-20,1.9000348273733767e-17
+patient_attitude,very_anxious,understandability,GLM 4.5,Gemini 3.5 Flash,320,0.35,0.9125,0,180,180,1.305060893599705e-54,8.31323789223012e-52
+patient_attitude,very_anxious,understandability,GLM 4.5,GPT-5.4,320,0.35,0.1875,54,2,56,4.4325654258159375e-14,1.6799422963842403e-11
+patient_attitude,very_anxious,understandability,GPT-OSS-120B,Claude Sonnet 4.6,320,0.3,0.70625,24,154,178,2.005784607747009e-24,9.367014118178533e-22
+patient_attitude,very_anxious,understandability,GPT-OSS-120B,Gemini 3.5 Flash,320,0.3,0.9125,0,196,196,1.9913648889155653e-59,1.3182835564621043e-56
+patient_attitude,very_anxious,understandability,GPT-OSS-120B,GPT-5.4,320,0.3,0.1875,52,16,68,1.4074155775977473e-05,0.003040017647611134
+patient_attitude,very_anxious,understandability,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.70625,0.9125,12,78,90,5.202430003083186e-13,1.8936845211222796e-10
+patient_attitude,very_anxious,understandability,Claude Sonnet 4.6,GPT-5.4,320,0.70625,0.1875,185,19,204,2.2892526331552156e-35,1.2384856745369718e-32
+patient_attitude,very_anxious,understandability,Gemini 3.5 Flash,GPT-5.4,320,0.9125,0.1875,232,0,232,2.897817305224548e-70,2.045859017488531e-67
+patient_attitude,very_anxious,usefulness,Llama 3.1 8B Instruct,Med42-8B,320,0.05625,0.290625,4,79,83,3.9973254947441296e-19,1.7188499627399757e-16
+patient_attitude,very_anxious,usefulness,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.05625,0.75,5,227,232,1.588816928211105e-60,1.0645073419014404e-57
+patient_attitude,very_anxious,usefulness,Llama 3.1 8B Instruct,GLM 4.5,320,0.05625,0.559375,5,166,171,7.910334321358305e-43,4.603814575030534e-40
+patient_attitude,very_anxious,usefulness,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.05625,0.315625,13,96,109,8.303445016382139e-17,3.404412456716677e-14
+patient_attitude,very_anxious,usefulness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.05625,0.525,7,157,164,4.974741492166966e-38,2.785855235613501e-35
+patient_attitude,very_anxious,usefulness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.05625,0.9125,1,275,276,4.562795047304461e-81,3.285212434059212e-78
+patient_attitude,very_anxious,usefulness,Llama 3.1 8B Instruct,GPT-5.4,320,0.05625,0.684375,7,208,215,1.4999791800383313e-52,9.449868834241487e-50
+patient_attitude,very_anxious,usefulness,Med42-8B,Llama 4 Maverick,320,0.290625,0.75,18,165,183,6.37558348165626e-31,3.2515475756446928e-28
+patient_attitude,very_anxious,usefulness,Med42-8B,GLM 4.5,320,0.290625,0.559375,32,118,150,8.839070431755034e-13,3.190904425863567e-10
+patient_attitude,very_anxious,usefulness,Med42-8B,GPT-OSS-120B,320,0.290625,0.315625,67,75,142,0.5570709871103278,1.0
+patient_attitude,very_anxious,usefulness,Med42-8B,Claude Sonnet 4.6,320,0.290625,0.525,43,118,161,2.846498058913575e-09,8.381721272598952e-07
+patient_attitude,very_anxious,usefulness,Med42-8B,Gemini 3.5 Flash,320,0.290625,0.9125,8,207,215,3.919981624300663e-51,2.4421485519393132e-48
+patient_attitude,very_anxious,usefulness,Med42-8B,GPT-5.4,320,0.290625,0.684375,38,164,202,7.507969007071493e-20,3.273474487083171e-17
+patient_attitude,very_anxious,usefulness,Llama 4 Maverick,GLM 4.5,320,0.75,0.559375,95,34,129,7.340990314237484e-08,1.9306804526444584e-05
+patient_attitude,very_anxious,usefulness,Llama 4 Maverick,GPT-OSS-120B,320,0.75,0.315625,162,23,185,6.149570646485301e-27,2.9702426222524004e-24
+patient_attitude,very_anxious,usefulness,Llama 4 Maverick,Claude Sonnet 4.6,320,0.75,0.525,98,26,124,5.023293083821098e-11,1.6727565969124256e-08
+patient_attitude,very_anxious,usefulness,Llama 4 Maverick,Gemini 3.5 Flash,320,0.75,0.9125,15,67,82,5.257316976900643e-09,1.4983353384166832e-06
+patient_attitude,very_anxious,usefulness,Llama 4 Maverick,GPT-5.4,320,0.75,0.684375,67,46,113,0.05943072721456751,1.0
+patient_attitude,very_anxious,usefulness,GLM 4.5,GPT-OSS-120B,320,0.559375,0.315625,120,42,162,6.797926739267764e-10,2.0937614356944712e-07
+patient_attitude,very_anxious,usefulness,GLM 4.5,Claude Sonnet 4.6,320,0.559375,0.525,65,54,119,0.35935826390511105,1.0
+patient_attitude,very_anxious,usefulness,GLM 4.5,Gemini 3.5 Flash,320,0.559375,0.9125,8,121,129,4.790588028455648e-27,2.3186446057725336e-24
+patient_attitude,very_anxious,usefulness,GLM 4.5,GPT-5.4,320,0.559375,0.684375,50,90,140,0.0009131128740015814,0.15431607570626726
+patient_attitude,very_anxious,usefulness,GPT-OSS-120B,Claude Sonnet 4.6,320,0.315625,0.525,49,116,165,1.9072175895127608e-07,4.977837908628306e-05
+patient_attitude,very_anxious,usefulness,GPT-OSS-120B,Gemini 3.5 Flash,320,0.315625,0.9125,4,195,199,1.610637105298915e-52,1.0130907392330176e-49
+patient_attitude,very_anxious,usefulness,GPT-OSS-120B,GPT-5.4,320,0.315625,0.684375,40,158,198,8.687309292103867e-18,3.631295284099416e-15
+patient_attitude,very_anxious,usefulness,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.525,0.9125,3,127,130,5.381942110522302e-34,2.85242931857682e-31
+patient_attitude,very_anxious,usefulness,Claude Sonnet 4.6,GPT-5.4,320,0.525,0.684375,35,86,121,4.004113903707686e-06,0.000932958539563891
+patient_attitude,very_anxious,usefulness,Gemini 3.5 Flash,GPT-5.4,320,0.9125,0.684375,87,14,101,4.798716712141831e-14,1.813914917189612e-11
+patient_attitude,very_anxious,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Med42-8B,320,0.290625,0.28125,21,18,39,0.7492586247608415,1.0
+patient_attitude,very_anxious,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.290625,0.4875,12,75,87,2.7135450099873083e-12,9.660220235554818e-10
+patient_attitude,very_anxious,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GLM 4.5,320,0.290625,0.528125,22,98,120,1.2161033345676806e-12,4.3658109710979733e-10
+patient_attitude,very_anxious,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.290625,0.678125,12,136,148,8.95281620858886e-28,4.386879942208541e-25
+patient_attitude,very_anxious,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.290625,0.85625,0,181,181,6.525304467998525e-55,4.189245468455053e-52
+patient_attitude,very_anxious,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.290625,1.0,0,227,227,9.273015376718553e-69,6.500383779079706e-66
+patient_attitude,very_anxious,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-5.4,320,0.290625,0.484375,20,82,102,4.2948486907135817e-10,1.3399927915026374e-07
+patient_attitude,very_anxious,patient_attitude_responsiveness,Med42-8B,Llama 4 Maverick,320,0.28125,0.4875,7,73,80,5.79510097338583e-15,2.248499177673702e-12
+patient_attitude,very_anxious,patient_attitude_responsiveness,Med42-8B,GLM 4.5,320,0.28125,0.528125,7,86,93,2.078229307846884e-18,8.790909972192319e-16
+patient_attitude,very_anxious,patient_attitude_responsiveness,Med42-8B,GPT-OSS-120B,320,0.28125,0.678125,2,129,131,6.3528122822252e-36,3.468635506094959e-33
+patient_attitude,very_anxious,patient_attitude_responsiveness,Med42-8B,Claude Sonnet 4.6,320,0.28125,0.85625,2,186,188,9.05742847522889e-53,5.724294796344658e-50
+patient_attitude,very_anxious,patient_attitude_responsiveness,Med42-8B,Gemini 3.5 Flash,320,0.28125,1.0,0,230,230,1.1591269220898192e-69,8.171844800733225e-67
+patient_attitude,very_anxious,patient_attitude_responsiveness,Med42-8B,GPT-5.4,320,0.28125,0.484375,4,69,73,2.4422670374772693e-16,9.842336161033395e-14
+patient_attitude,very_anxious,patient_attitude_responsiveness,Llama 4 Maverick,GLM 4.5,320,0.4875,0.528125,37,50,87,0.1979791406725175,1.0
+patient_attitude,very_anxious,patient_attitude_responsiveness,Llama 4 Maverick,GPT-OSS-120B,320,0.4875,0.678125,22,83,105,1.6179531734249232e-09,4.821500456806271e-07
+patient_attitude,very_anxious,patient_attitude_responsiveness,Llama 4 Maverick,Claude Sonnet 4.6,320,0.4875,0.85625,1,119,120,1.8206056505535589e-34,9.685622060944933e-32
+patient_attitude,very_anxious,patient_attitude_responsiveness,Llama 4 Maverick,Gemini 3.5 Flash,320,0.4875,1.0,0,164,164,8.552847072295026e-50,5.242895255316851e-47
+patient_attitude,very_anxious,patient_attitude_responsiveness,Llama 4 Maverick,GPT-5.4,320,0.4875,0.484375,43,42,85,1.0,1.0
+patient_attitude,very_anxious,patient_attitude_responsiveness,GLM 4.5,GPT-OSS-120B,320,0.528125,0.678125,3,51,54,2.9187763317395365e-12,1.0361655977675355e-09
+patient_attitude,very_anxious,patient_attitude_responsiveness,GLM 4.5,Claude Sonnet 4.6,320,0.528125,0.85625,0,105,105,4.930380657631324e-32,2.5490067999953944e-29
+patient_attitude,very_anxious,patient_attitude_responsiveness,GLM 4.5,Gemini 3.5 Flash,320,0.528125,1.0,0,151,151,7.006492321624085e-46,4.189882408331203e-43
+patient_attitude,very_anxious,patient_attitude_responsiveness,GLM 4.5,GPT-5.4,320,0.528125,0.484375,19,5,24,0.006610751152038574,0.9188944101333618
+patient_attitude,very_anxious,patient_attitude_responsiveness,GPT-OSS-120B,Claude Sonnet 4.6,320,0.678125,0.85625,13,70,83,1.3333193226298718e-10,4.333287798547083e-08
+patient_attitude,very_anxious,patient_attitude_responsiveness,GPT-OSS-120B,Gemini 3.5 Flash,320,0.678125,1.0,0,103,103,1.9721522630525295e-31,1.0156584154720527e-28
+patient_attitude,very_anxious,patient_attitude_responsiveness,GPT-OSS-120B,GPT-5.4,320,0.678125,0.484375,62,0,62,4.336808689942018e-19,1.8576679494208925e-16
+patient_attitude,very_anxious,patient_attitude_responsiveness,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.85625,1.0,0,46,46,2.842170943040401e-14,1.0800249583553523e-11
+patient_attitude,very_anxious,patient_attitude_responsiveness,Claude Sonnet 4.6,GPT-5.4,320,0.85625,0.484375,119,0,119,3.009265538105056e-36,1.658105311495886e-33
+patient_attitude,very_anxious,patient_attitude_responsiveness,Gemini 3.5 Flash,GPT-5.4,320,1.0,0.484375,165,0,165,4.276423536147513e-50,2.6385533218030155e-47
+patient_attitude,anxious,understandability,Llama 3.1 8B Instruct,Med42-8B,320,0.2625,0.0625,77,13,90,3.175275355987434e-12,1.1208722006635642e-09
+patient_attitude,anxious,understandability,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.2625,0.246875,53,48,101,0.6908264239959594,1.0
+patient_attitude,anxious,understandability,Llama 3.1 8B Instruct,GLM 4.5,320,0.2625,0.328125,35,56,91,0.03544959487951911,1.0
+patient_attitude,anxious,understandability,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.2625,0.290625,52,61,113,0.4518532686657422,1.0
+patient_attitude,anxious,understandability,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.2625,0.6875,27,163,190,6.755685915516637e-25,3.1819280662083363e-22
+patient_attitude,anxious,understandability,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.2625,0.946875,4,223,227,1.0171005283705217e-60,6.8247445453662e-58
+patient_attitude,anxious,understandability,Llama 3.1 8B Instruct,GPT-5.4,320,0.2625,0.184375,49,24,73,0.004626293921895511,0.6800652065186402
+patient_attitude,anxious,understandability,Med42-8B,Llama 4 Maverick,320,0.0625,0.246875,16,75,91,2.6517165568743947e-10,8.485492981998063e-08
+patient_attitude,anxious,understandability,Med42-8B,GLM 4.5,320,0.0625,0.328125,15,100,115,1.3522957587316645e-16,5.505589990150097e-14
+patient_attitude,anxious,understandability,Med42-8B,GPT-OSS-120B,320,0.0625,0.290625,14,87,101,4.798716712141831e-14,1.813914917189612e-11
+patient_attitude,anxious,understandability,Med42-8B,Claude Sonnet 4.6,320,0.0625,0.6875,8,208,216,2.0349897711522482e-51,1.271868606970155e-48
+patient_attitude,anxious,understandability,Med42-8B,Gemini 3.5 Flash,320,0.0625,0.946875,0,283,283,1.2868893973670072e-85,9.407161494752823e-83
+patient_attitude,anxious,understandability,Med42-8B,GPT-5.4,320,0.0625,0.184375,17,56,73,5.268675318129165e-06,0.0012117953231697081
+patient_attitude,anxious,understandability,Llama 4 Maverick,GLM 4.5,320,0.246875,0.328125,42,68,110,0.016745021478233812,1.0
+patient_attitude,anxious,understandability,Llama 4 Maverick,GPT-OSS-120B,320,0.246875,0.290625,50,64,114,0.2232303624555456,1.0
+patient_attitude,anxious,understandability,Llama 4 Maverick,Claude Sonnet 4.6,320,0.246875,0.6875,24,165,189,4.505288418814956e-27,2.1850648831252534e-24
+patient_attitude,anxious,understandability,Llama 4 Maverick,Gemini 3.5 Flash,320,0.246875,0.946875,4,228,232,3.4684989272507713e-62,2.3447052748215214e-59
+patient_attitude,anxious,understandability,Llama 4 Maverick,GPT-5.4,320,0.246875,0.184375,54,34,88,0.04221061162240416,1.0
+patient_attitude,anxious,understandability,GLM 4.5,GPT-OSS-120B,320,0.328125,0.290625,50,38,88,0.24079312453900145,1.0
+patient_attitude,anxious,understandability,GLM 4.5,Claude Sonnet 4.6,320,0.328125,0.6875,34,149,183,2.265080764721523e-18,9.558640827124826e-16
+patient_attitude,anxious,understandability,GLM 4.5,Gemini 3.5 Flash,320,0.328125,0.946875,1,199,200,2.501652141700179e-58,1.6435854570970176e-55
+patient_attitude,anxious,understandability,GLM 4.5,GPT-5.4,320,0.328125,0.184375,47,1,48,3.481659405224491e-13,1.2742873423121637e-10
+patient_attitude,anxious,understandability,GPT-OSS-120B,Claude Sonnet 4.6,320,0.290625,0.6875,21,148,169,1.0155320657245023e-24,4.7628453882479155e-22
+patient_attitude,anxious,understandability,GPT-OSS-120B,Gemini 3.5 Flash,320,0.290625,0.946875,3,213,216,3.1901252425248145e-59,2.1086727853089024e-56
+patient_attitude,anxious,understandability,GPT-OSS-120B,GPT-5.4,320,0.290625,0.184375,60,26,86,0.0003169992822776409,0.05737687009225301
+patient_attitude,anxious,understandability,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.6875,0.946875,9,92,101,1.8214526731390266e-18,7.722959334109473e-16
+patient_attitude,anxious,understandability,Claude Sonnet 4.6,GPT-5.4,320,0.6875,0.184375,182,21,203,3.37570840230364e-33,1.772246911209411e-30
+patient_attitude,anxious,understandability,Gemini 3.5 Flash,GPT-5.4,320,0.946875,0.184375,245,1,246,4.3686576806058554e-72,3.08864098018834e-69
+patient_attitude,anxious,usefulness,Llama 3.1 8B Instruct,Med42-8B,320,0.121875,0.290625,17,71,88,5.1539546966008475e-09,1.4791849979244431e-06
+patient_attitude,anxious,usefulness,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.121875,0.775,7,216,223,7.584271917220759e-55,4.853934027021286e-52
+patient_attitude,anxious,usefulness,Llama 3.1 8B Instruct,GLM 4.5,320,0.121875,0.621875,12,172,184,1.9092694128609724e-37,1.0634630629635617e-34
+patient_attitude,anxious,usefulness,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.121875,0.403125,23,113,136,1.818716912352605e-15,7.147557465545738e-13
+patient_attitude,anxious,usefulness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.121875,0.63125,13,176,189,1.136770442793074e-37,6.343179070785353e-35
+patient_attitude,anxious,usefulness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.121875,0.9375,3,264,267,2.6756806815620853e-74,1.907760325953767e-71
+patient_attitude,anxious,usefulness,Llama 3.1 8B Instruct,GPT-5.4,320,0.121875,0.7625,12,217,229,7.943178635896132e-50,4.877111682440225e-47
+patient_attitude,anxious,usefulness,Med42-8B,Llama 4 Maverick,320,0.290625,0.775,19,174,193,1.565208278127499e-32,8.15473512904427e-30
+patient_attitude,anxious,usefulness,Med42-8B,GLM 4.5,320,0.290625,0.621875,33,139,172,1.1137047323553833e-16,4.555052355333518e-14
+patient_attitude,anxious,usefulness,Med42-8B,GPT-OSS-120B,320,0.290625,0.403125,68,104,172,0.007433865113048823,1.0
+patient_attitude,anxious,usefulness,Med42-8B,Claude Sonnet 4.6,320,0.290625,0.63125,33,142,175,2.5999230808004856e-17,1.0711683092898001e-14
+patient_attitude,anxious,usefulness,Med42-8B,Gemini 3.5 Flash,320,0.290625,0.9375,6,213,219,3.492080250446215e-55,2.245407601036916e-52
+patient_attitude,anxious,usefulness,Med42-8B,GPT-5.4,320,0.290625,0.7625,26,177,203,8.37256024728146e-29,4.169535003146167e-26
+patient_attitude,anxious,usefulness,Llama 4 Maverick,GLM 4.5,320,0.775,0.621875,88,39,127,1.6333804091764826e-05,0.0034954340756376727
+patient_attitude,anxious,usefulness,Llama 4 Maverick,GPT-OSS-120B,320,0.775,0.403125,148,29,177,2.0044148326443048e-20,8.859513560287827e-18
+patient_attitude,anxious,usefulness,Llama 4 Maverick,Claude Sonnet 4.6,320,0.775,0.63125,74,28,102,5.907834472853354e-06,0.001335170590864858
+patient_attitude,anxious,usefulness,Llama 4 Maverick,Gemini 3.5 Flash,320,0.775,0.9375,10,62,72,2.6890686575861277e-10,8.578129017699747e-08
+patient_attitude,anxious,usefulness,Llama 4 Maverick,GPT-5.4,320,0.775,0.7625,54,50,104,0.7687918101386728,1.0
+patient_attitude,anxious,usefulness,GLM 4.5,GPT-OSS-120B,320,0.621875,0.403125,117,47,164,4.49677766895134e-08,1.2051364152789591e-05
+patient_attitude,anxious,usefulness,GLM 4.5,Claude Sonnet 4.6,320,0.621875,0.63125,48,51,99,0.8408215252256425,1.0
+patient_attitude,anxious,usefulness,GLM 4.5,Gemini 3.5 Flash,320,0.621875,0.9375,7,108,115,2.2527678876397474e-24,1.0497898356401223e-21
+patient_attitude,anxious,usefulness,GLM 4.5,GPT-5.4,320,0.621875,0.7625,41,86,127,8.06219814539768e-05,0.0156406644020715
+patient_attitude,anxious,usefulness,GPT-OSS-120B,Claude Sonnet 4.6,320,0.403125,0.63125,44,117,161,7.768024590130758e-09,2.1927408380426116e-06
+patient_attitude,anxious,usefulness,GPT-OSS-120B,Gemini 3.5 Flash,320,0.403125,0.9375,5,176,181,1.0279869702654257e-45,6.126802342781937e-43
+patient_attitude,anxious,usefulness,GPT-OSS-120B,GPT-5.4,320,0.403125,0.7625,36,151,187,5.950243717274106e-18,2.4991023612551245e-15
+patient_attitude,anxious,usefulness,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.63125,0.9375,1,99,100,1.5934990285464438e-28,7.887820191304897e-26
+patient_attitude,anxious,usefulness,Claude Sonnet 4.6,GPT-5.4,320,0.63125,0.7625,30,72,102,3.885014426598705e-05,0.007886579285995371
+patient_attitude,anxious,usefulness,Gemini 3.5 Flash,GPT-5.4,320,0.9375,0.7625,63,7,70,2.2750760151658833e-12,8.122021374142203e-10
+patient_attitude,anxious,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Med42-8B,320,0.3125,0.315625,33,34,67,1.0,1.0
+patient_attitude,anxious,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.3125,0.465625,24,73,97,6.40473239867051e-07,0.00016139925644649685
+patient_attitude,anxious,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GLM 4.5,320,0.3125,0.525,30,98,128,1.2905872820555466e-09,3.884667718987195e-07
+patient_attitude,anxious,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.3125,0.6625,20,132,152,1.983984578134213e-21,8.927930601603959e-19
+patient_attitude,anxious,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.3125,0.809375,2,161,163,2.2865181363073523e-45,1.3559052548302599e-42
+patient_attitude,anxious,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.3125,1.0,0,220,220,1.1869459682199748e-66,8.213666100082226e-64
+patient_attitude,anxious,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-5.4,320,0.3125,0.45,31,75,106,2.2954512916817195e-05,0.004797493199614793
+patient_attitude,anxious,patient_attitude_responsiveness,Med42-8B,Llama 4 Maverick,320,0.315625,0.465625,13,61,74,1.3936467518320874e-08,3.888274437611524e-06
+patient_attitude,anxious,patient_attitude_responsiveness,Med42-8B,GLM 4.5,320,0.315625,0.525,10,77,87,5.91755837353286e-14,2.224180104756102e-11
+patient_attitude,anxious,patient_attitude_responsiveness,Med42-8B,GPT-OSS-120B,320,0.315625,0.6625,4,115,119,2.4741311576559258e-29,1.2395397099856188e-26
+patient_attitude,anxious,patient_attitude_responsiveness,Med42-8B,Claude Sonnet 4.6,320,0.315625,0.809375,2,160,162,4.517271709703341e-45,2.674224852144378e-42
+patient_attitude,anxious,patient_attitude_responsiveness,Med42-8B,Gemini 3.5 Flash,320,0.315625,1.0,0,219,219,2.3738919364399497e-66,1.6379854361435653e-63
+patient_attitude,anxious,patient_attitude_responsiveness,Med42-8B,GPT-5.4,320,0.315625,0.45,10,53,63,3.382168502403561e-08,9.199498326537686e-06
+patient_attitude,anxious,patient_attitude_responsiveness,Llama 4 Maverick,GLM 4.5,320,0.465625,0.525,29,48,77,0.039539532877977755,1.0
+patient_attitude,anxious,patient_attitude_responsiveness,Llama 4 Maverick,GPT-OSS-120B,320,0.465625,0.6625,16,79,95,3.467543657796265e-11,1.1685622126773413e-08
+patient_attitude,anxious,patient_attitude_responsiveness,Llama 4 Maverick,Claude Sonnet 4.6,320,0.465625,0.809375,2,112,114,6.313198357701359e-31,3.2260443607853945e-28
+patient_attitude,anxious,patient_attitude_responsiveness,Llama 4 Maverick,Gemini 3.5 Flash,320,0.465625,1.0,0,171,171,6.681911775230489e-52,4.189558683069517e-49
+patient_attitude,anxious,patient_attitude_responsiveness,Llama 4 Maverick,GPT-5.4,320,0.465625,0.45,39,34,73,0.6399729317539424,1.0
+patient_attitude,anxious,patient_attitude_responsiveness,GLM 4.5,GPT-OSS-120B,320,0.525,0.6625,9,53,62,1.0507232717140574e-08,2.942025160799361e-06
+patient_attitude,anxious,patient_attitude_responsiveness,GLM 4.5,Claude Sonnet 4.6,320,0.525,0.809375,2,93,95,2.3027165367763423e-25,1.0914876384319863e-22
+patient_attitude,anxious,patient_attitude_responsiveness,GLM 4.5,Gemini 3.5 Flash,320,0.525,1.0,0,152,152,3.503246160812043e-46,2.1019476964872256e-43
+patient_attitude,anxious,patient_attitude_responsiveness,GLM 4.5,GPT-5.4,320,0.525,0.45,30,6,36,6.960169412195683e-05,0.013641932047903538
+patient_attitude,anxious,patient_attitude_responsiveness,GPT-OSS-120B,Claude Sonnet 4.6,320,0.6625,0.809375,20,67,87,4.3053681250011924e-07,0.00010935635037503029
+patient_attitude,anxious,patient_attitude_responsiveness,GPT-OSS-120B,Gemini 3.5 Flash,320,0.6625,1.0,0,108,108,6.162975822039155e-33,3.217073379104439e-30
+patient_attitude,anxious,patient_attitude_responsiveness,GPT-OSS-120B,GPT-5.4,320,0.6625,0.45,69,1,70,1.2027867851011065e-19,5.208066779487791e-17
+patient_attitude,anxious,patient_attitude_responsiveness,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.809375,1.0,0,61,61,8.673617379884035e-19,3.703634621210483e-16
+patient_attitude,anxious,patient_attitude_responsiveness,Claude Sonnet 4.6,GPT-5.4,320,0.809375,0.45,115,0,115,4.81482486096809e-35,2.590375775200832e-32
+patient_attitude,anxious,patient_attitude_responsiveness,Gemini 3.5 Flash,GPT-5.4,320,1.0,0.45,176,0,176,2.088097429759528e-53,1.3280299653270597e-50
+patient_attitude,neutral,understandability,Llama 3.1 8B Instruct,Med42-8B,320,0.253125,0.078125,73,17,90,1.94823766277557e-09,5.786265858443443e-07
+patient_attitude,neutral,understandability,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.253125,0.34375,46,75,121,0.010611459925338249,1.0
+patient_attitude,neutral,understandability,Llama 3.1 8B Instruct,GLM 4.5,320,0.253125,0.334375,24,50,74,0.0033722333341480717,0.5231108466585932
+patient_attitude,neutral,understandability,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.253125,0.209375,52,38,90,0.17024239504607377,1.0
+patient_attitude,neutral,understandability,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.253125,0.43125,47,104,151,4.034601287916561e-06,0.0009360274987966422
+patient_attitude,neutral,understandability,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.253125,0.834375,7,193,200,2.94834827995298e-48,1.795544102491365e-45
+patient_attitude,neutral,understandability,Llama 3.1 8B Instruct,GPT-5.4,320,0.253125,0.196875,43,25,68,0.038460053348927506,1.0
+patient_attitude,neutral,understandability,Med42-8B,Llama 4 Maverick,320,0.078125,0.34375,12,97,109,1.0984371144539349e-17,4.569498396128369e-15
+patient_attitude,neutral,understandability,Med42-8B,GLM 4.5,320,0.078125,0.334375,18,100,118,5.7250612446912814e-15,2.2270488241849084e-12
+patient_attitude,neutral,understandability,Med42-8B,GPT-OSS-120B,320,0.078125,0.209375,19,61,80,2.7318699228822653e-06,0.0006501850416459792
+patient_attitude,neutral,understandability,Med42-8B,Claude Sonnet 4.6,320,0.078125,0.43125,19,132,151,5.175862923123506e-22,2.3498417670980716e-19
+patient_attitude,neutral,understandability,Med42-8B,Gemini 3.5 Flash,320,0.078125,0.834375,12,254,266,3.604059662796304e-60,2.407511854747931e-57
+patient_attitude,neutral,understandability,Med42-8B,GPT-5.4,320,0.078125,0.196875,22,60,82,3.231712619889761e-05,0.006625010870774009
+patient_attitude,neutral,understandability,Llama 4 Maverick,GLM 4.5,320,0.34375,0.334375,63,60,123,0.8569843282497003,1.0
+patient_attitude,neutral,understandability,Llama 4 Maverick,GPT-OSS-120B,320,0.34375,0.209375,83,40,123,0.0001319598471893272,0.025072370965972167
+patient_attitude,neutral,understandability,Llama 4 Maverick,Claude Sonnet 4.6,320,0.34375,0.43125,64,92,156,0.030310315643800052,1.0
+patient_attitude,neutral,understandability,Llama 4 Maverick,Gemini 3.5 Flash,320,0.34375,0.834375,18,175,193,1.687561678656735e-33,8.893450046520992e-31
+patient_attitude,neutral,understandability,Llama 4 Maverick,GPT-5.4,320,0.34375,0.196875,81,34,115,1.380034491780059e-05,0.0029946748471627277
+patient_attitude,neutral,understandability,GLM 4.5,GPT-OSS-120B,320,0.334375,0.209375,68,28,96,5.4591543577114465e-05,0.010972900259000008
+patient_attitude,neutral,understandability,GLM 4.5,Claude Sonnet 4.6,320,0.334375,0.43125,53,84,137,0.010114170021824305,1.0
+patient_attitude,neutral,understandability,GLM 4.5,Gemini 3.5 Flash,320,0.334375,0.834375,6,166,172,1.1408082446800379e-41,6.548239324463418e-39
+patient_attitude,neutral,understandability,GLM 4.5,GPT-5.4,320,0.334375,0.196875,48,4,52,1.3065282189472782e-10,4.259281993768127e-08
+patient_attitude,neutral,understandability,GPT-OSS-120B,Claude Sonnet 4.6,320,0.209375,0.43125,29,100,129,2.46848631880612e-10,7.923841083367646e-08
+patient_attitude,neutral,understandability,GPT-OSS-120B,Gemini 3.5 Flash,320,0.209375,0.834375,1,201,202,6.316360507029059e-59,4.168797934639179e-56
+patient_attitude,neutral,understandability,GPT-OSS-120B,GPT-5.4,320,0.209375,0.196875,42,38,80,0.7375543089843226,1.0
+patient_attitude,neutral,understandability,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.43125,0.834375,16,145,161,3.460547917825512e-27,1.681826288063199e-24
+patient_attitude,neutral,understandability,Claude Sonnet 4.6,GPT-5.4,320,0.43125,0.196875,108,33,141,1.6862794099851315e-10,5.446682494251975e-08
+patient_attitude,neutral,understandability,Gemini 3.5 Flash,GPT-5.4,320,0.834375,0.196875,205,1,206,4.025513007866426e-60,2.685017176246906e-57
+patient_attitude,neutral,usefulness,Llama 3.1 8B Instruct,Med42-8B,320,0.11875,0.2625,20,66,86,6.669778822829638e-07,0.00016741144845302392
+patient_attitude,neutral,usefulness,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.11875,0.878125,3,246,249,5.689093308005576e-69,3.9994325955279196e-66
+patient_attitude,neutral,usefulness,Llama 3.1 8B Instruct,GLM 4.5,320,0.11875,0.73125,7,203,210,4.0647616339055657e-51,2.5282817362892618e-48
+patient_attitude,neutral,usefulness,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.11875,0.60625,23,179,202,3.954941618826488e-31,2.024930108839162e-28
+patient_attitude,neutral,usefulness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.11875,0.66875,8,184,192,1.315434622901097e-44,7.774218621345484e-42
+patient_attitude,neutral,usefulness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.11875,0.9875,1,279,280,2.892927365281032e-82,2.0944794124634674e-79
+patient_attitude,neutral,usefulness,Llama 3.1 8B Instruct,GPT-5.4,320,0.11875,0.8375,2,232,234,1.9919596156113543e-66,1.3764440943874458e-63
+patient_attitude,neutral,usefulness,Med42-8B,Llama 4 Maverick,320,0.2625,0.878125,7,204,211,2.1017589913735513e-51,1.311497610617096e-48
+patient_attitude,neutral,usefulness,Med42-8B,GLM 4.5,320,0.2625,0.73125,21,171,192,2.02995621176414e-30,1.029187799364419e-27
+patient_attitude,neutral,usefulness,Med42-8B,GPT-OSS-120B,320,0.2625,0.60625,35,145,180,4.132821412730575e-17,1.6985896006322663e-14
+patient_attitude,neutral,usefulness,Med42-8B,Claude Sonnet 4.6,320,0.2625,0.66875,26,156,182,8.57383093074782e-24,3.9782575518669884e-21
+patient_attitude,neutral,usefulness,Med42-8B,Gemini 3.5 Flash,320,0.2625,0.9875,1,233,234,1.702467666819422e-68,1.190024899106776e-65
+patient_attitude,neutral,usefulness,Med42-8B,GPT-5.4,320,0.2625,0.8375,15,199,214,3.434822755172854e-42,1.9784579069795638e-39
+patient_attitude,neutral,usefulness,Llama 4 Maverick,GLM 4.5,320,0.878125,0.73125,71,24,95,1.4640982465812786e-06,0.00035870407041241326
+patient_attitude,neutral,usefulness,Llama 4 Maverick,GPT-OSS-120B,320,0.878125,0.60625,111,24,135,1.432322294872245e-14,5.471471166411976e-12
+patient_attitude,neutral,usefulness,Llama 4 Maverick,Claude Sonnet 4.6,320,0.878125,0.66875,89,22,111,9.63396309074295e-11,3.16957385685443e-08
+patient_attitude,neutral,usefulness,Llama 4 Maverick,Gemini 3.5 Flash,320,0.878125,0.9875,2,37,39,2.841261448338628e-09,8.381721272598952e-07
+patient_attitude,neutral,usefulness,Llama 4 Maverick,GPT-5.4,320,0.878125,0.8375,41,28,69,0.14803218069275836,1.0
+patient_attitude,neutral,usefulness,GLM 4.5,GPT-OSS-120B,320,0.73125,0.60625,102,62,164,0.0022248008359621206,0.3581929345899014
+patient_attitude,neutral,usefulness,GLM 4.5,Claude Sonnet 4.6,320,0.73125,0.66875,67,47,114,0.07469253007976608,1.0
+patient_attitude,neutral,usefulness,GLM 4.5,Gemini 3.5 Flash,320,0.73125,0.9875,4,86,90,4.3245487100412455e-21,1.9330732733884367e-18
+patient_attitude,neutral,usefulness,GLM 4.5,GPT-5.4,320,0.73125,0.8375,39,73,112,0.0016946822547182485,0.27792788977379274
+patient_attitude,neutral,usefulness,GPT-OSS-120B,Claude Sonnet 4.6,320,0.60625,0.66875,65,85,150,0.12052916970948838,1.0
+patient_attitude,neutral,usefulness,GPT-OSS-120B,Gemini 3.5 Flash,320,0.60625,0.9875,3,125,128,2.0549580818052442e-33,1.0809079510295585e-30
+patient_attitude,neutral,usefulness,GPT-OSS-120B,GPT-5.4,320,0.60625,0.8375,39,113,152,1.5210425696473014e-09,4.547917283245431e-07
+patient_attitude,neutral,usefulness,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.66875,0.9875,1,103,104,1.035379938102578e-29,5.207961088655967e-27
+patient_attitude,neutral,usefulness,Claude Sonnet 4.6,GPT-5.4,320,0.66875,0.8375,33,87,120,8.680495331686945e-07,0.00021701238329217362
+patient_attitude,neutral,usefulness,Gemini 3.5 Flash,GPT-5.4,320,0.9875,0.8375,51,3,54,2.9187763317395365e-12,1.0361655977675355e-09
+patient_attitude,neutral,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Med42-8B,320,0.490625,0.74375,41,122,163,1.545031483544498e-10,5.005902006684174e-08
+patient_attitude,neutral,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.490625,0.709375,42,112,154,1.536148923528679e-08,4.270494007409728e-06
+patient_attitude,neutral,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GLM 4.5,320,0.490625,0.7625,38,125,163,4.95559410776739e-12,1.7295023436108191e-09
+patient_attitude,neutral,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.490625,0.903125,17,149,166,1.6009876779183357e-27,7.828829745020661e-25
+patient_attitude,neutral,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.490625,0.821875,22,128,150,2.222091261606936e-19,9.599434250141963e-17
+patient_attitude,neutral,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.490625,0.809375,34,136,170,1.189602036439152e-15,4.710824064299041e-13
+patient_attitude,neutral,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-5.4,320,0.490625,0.65625,51,104,155,2.494889039115188e-05,0.005139471420577287
+patient_attitude,neutral,patient_attitude_responsiveness,Med42-8B,Llama 4 Maverick,320,0.74375,0.709375,62,51,113,0.3468931050953346,1.0
+patient_attitude,neutral,patient_attitude_responsiveness,Med42-8B,GLM 4.5,320,0.74375,0.7625,47,53,100,0.617299413589252,1.0
+patient_attitude,neutral,patient_attitude_responsiveness,Med42-8B,GPT-OSS-120B,320,0.74375,0.903125,24,75,99,2.766572474528545e-07,7.082425534793075e-05
+patient_attitude,neutral,patient_attitude_responsiveness,Med42-8B,Claude Sonnet 4.6,320,0.74375,0.821875,37,62,99,0.015432364507309008,1.0
+patient_attitude,neutral,patient_attitude_responsiveness,Med42-8B,Gemini 3.5 Flash,320,0.74375,0.809375,38,59,97,0.04172932120128598,1.0
+patient_attitude,neutral,patient_attitude_responsiveness,Med42-8B,GPT-5.4,320,0.74375,0.65625,80,52,132,0.018430571670380386,1.0
+patient_attitude,neutral,patient_attitude_responsiveness,Llama 4 Maverick,GLM 4.5,320,0.709375,0.7625,47,64,111,0.12847543208575976,1.0
+patient_attitude,neutral,patient_attitude_responsiveness,Llama 4 Maverick,GPT-OSS-120B,320,0.709375,0.903125,16,78,94,5.7845433783994637e-11,1.920468401628622e-08
+patient_attitude,neutral,patient_attitude_responsiveness,Llama 4 Maverick,Claude Sonnet 4.6,320,0.709375,0.821875,37,73,110,0.0007689850065829599,0.13303722261297823
+patient_attitude,neutral,patient_attitude_responsiveness,Llama 4 Maverick,Gemini 3.5 Flash,320,0.709375,0.809375,40,72,112,0.0032169399516518344,0.505059572409338
+patient_attitude,neutral,patient_attitude_responsiveness,Llama 4 Maverick,GPT-5.4,320,0.709375,0.65625,78,61,139,0.17453244937059034,1.0
+patient_attitude,neutral,patient_attitude_responsiveness,GLM 4.5,GPT-OSS-120B,320,0.7625,0.903125,20,65,85,1.029887431251981e-06,0.0002554120829504913
+patient_attitude,neutral,patient_attitude_responsiveness,GLM 4.5,Claude Sonnet 4.6,320,0.7625,0.821875,30,49,79,0.042165443994951105,1.0
+patient_attitude,neutral,patient_attitude_responsiveness,GLM 4.5,Gemini 3.5 Flash,320,0.7625,0.809375,45,60,105,0.17156469715424208,1.0
+patient_attitude,neutral,patient_attitude_responsiveness,GLM 4.5,GPT-5.4,320,0.7625,0.65625,82,48,130,0.0036340112928066486,0.5523697165066106
+patient_attitude,neutral,patient_attitude_responsiveness,GPT-OSS-120B,Claude Sonnet 4.6,320,0.903125,0.821875,50,24,74,0.0033722333341480717,0.5231108466585932
+patient_attitude,neutral,patient_attitude_responsiveness,GPT-OSS-120B,Gemini 3.5 Flash,320,0.903125,0.809375,52,22,74,0.0006428073490507031,0.11313409343292374
+patient_attitude,neutral,patient_attitude_responsiveness,GPT-OSS-120B,GPT-5.4,320,0.903125,0.65625,95,16,111,7.51963189179686e-15,2.8950582783417913e-12
+patient_attitude,neutral,patient_attitude_responsiveness,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.821875,0.809375,43,39,82,0.7406528413457828,1.0
+patient_attitude,neutral,patient_attitude_responsiveness,Claude Sonnet 4.6,GPT-5.4,320,0.821875,0.65625,90,37,127,2.8720304868072597e-06,0.0006806712253733206
+patient_attitude,neutral,patient_attitude_responsiveness,Gemini 3.5 Flash,GPT-5.4,320,0.809375,0.65625,89,40,129,1.9141845929673944e-05,0.00407721318302055
+patient_attitude,confident,understandability,Llama 3.1 8B Instruct,Med42-8B,320,0.275,0.103125,74,19,93,7.720918443812012e-09,2.1927408380426116e-06
+patient_attitude,confident,understandability,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.275,0.3375,49,69,118,0.07983431282819978,1.0
+patient_attitude,confident,understandability,Llama 3.1 8B Instruct,GLM 4.5,320,0.275,0.35,40,64,104,0.02364563574976815,1.0
+patient_attitude,confident,understandability,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.275,0.2125,66,46,112,0.07212638623517517,1.0
+patient_attitude,confident,understandability,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.275,0.584375,42,141,183,1.0465141488792959e-13,3.893032633830981e-11
+patient_attitude,confident,understandability,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.275,0.85,9,193,202,4.201213205368683e-46,2.516526710015841e-43
+patient_attitude,confident,understandability,Llama 3.1 8B Instruct,GPT-5.4,320,0.275,0.178125,61,30,91,0.0015165131944572215,0.25022467708544155
+patient_attitude,confident,understandability,Med42-8B,Llama 4 Maverick,320,0.103125,0.3375,18,93,111,2.2601502838438823e-13,8.317353044545487e-11
+patient_attitude,confident,understandability,Med42-8B,GLM 4.5,320,0.103125,0.35,22,101,123,2.7383052309526826e-13,1.0049580197596346e-10
+patient_attitude,confident,understandability,Med42-8B,GPT-OSS-120B,320,0.103125,0.2125,26,61,87,0.00022368935609481816,0.04138253087754136
+patient_attitude,confident,understandability,Med42-8B,Claude Sonnet 4.6,320,0.103125,0.584375,17,171,188,3.452115051517894e-33,1.8089082869953762e-30
+patient_attitude,confident,understandability,Med42-8B,Gemini 3.5 Flash,320,0.103125,0.85,10,249,259,7.059122535182414e-61,4.743730343642582e-58
+patient_attitude,confident,understandability,Med42-8B,GPT-5.4,320,0.103125,0.178125,25,49,74,0.007084252673880493,0.9705426163216275
+patient_attitude,confident,understandability,Llama 4 Maverick,GLM 4.5,320,0.3375,0.35,62,66,128,0.7910074494028781,1.0
+patient_attitude,confident,understandability,Llama 4 Maverick,GPT-OSS-120B,320,0.3375,0.2125,79,39,118,0.0002927402227399967,0.053278720538679394
+patient_attitude,confident,understandability,Llama 4 Maverick,Claude Sonnet 4.6,320,0.3375,0.584375,37,116,153,1.092712890992703e-10,3.584098282456066e-08
+patient_attitude,confident,understandability,Llama 4 Maverick,Gemini 3.5 Flash,320,0.3375,0.85,9,173,182,1.6986101931796045e-40,9.66509199919195e-38
+patient_attitude,confident,understandability,Llama 4 Maverick,GPT-5.4,320,0.3375,0.178125,82,31,113,1.730004378500178e-06,0.0004169310552185429
+patient_attitude,confident,understandability,GLM 4.5,GPT-OSS-120B,320,0.35,0.2125,59,15,74,2.553422007441105e-07,6.587828779198051e-05
+patient_attitude,confident,understandability,GLM 4.5,Claude Sonnet 4.6,320,0.35,0.584375,40,115,155,1.329622194827003e-09,3.988866584481009e-07
+patient_attitude,confident,understandability,GLM 4.5,Gemini 3.5 Flash,320,0.35,0.85,3,163,166,1.630433513815137e-44,9.619557731509308e-42
+patient_attitude,confident,understandability,GLM 4.5,GPT-5.4,320,0.35,0.178125,57,2,59,6.144390551909851e-15,2.3778791435891122e-12
+patient_attitude,confident,understandability,GPT-OSS-120B,Claude Sonnet 4.6,320,0.2125,0.584375,28,147,175,1.0973261793866743e-20,4.8831014982707005e-18
+patient_attitude,confident,understandability,GPT-OSS-120B,Gemini 3.5 Flash,320,0.2125,0.85,0,204,204,7.778769097326427e-62,5.2351116025006855e-59
+patient_attitude,confident,understandability,GPT-OSS-120B,GPT-5.4,320,0.2125,0.178125,39,28,67,0.22154872964481115,1.0
+patient_attitude,confident,understandability,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.584375,0.85,22,107,129,1.3271277571530201e-14,5.082899309896067e-12
+patient_attitude,confident,understandability,Claude Sonnet 4.6,GPT-5.4,320,0.584375,0.178125,152,22,174,4.246524322063393e-25,2.0043594800139217e-22
+patient_attitude,confident,understandability,Gemini 3.5 Flash,GPT-5.4,320,0.85,0.178125,215,0,215,3.7982270983039195e-65,2.597987335239881e-62
+patient_attitude,confident,usefulness,Llama 3.1 8B Instruct,Med42-8B,320,0.14375,0.315625,25,80,105,6.880761307711572e-08,1.830282507851278e-05
+patient_attitude,confident,usefulness,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.14375,0.89375,4,244,248,6.914307364461858e-67,4.7985293109365294e-64
+patient_attitude,confident,usefulness,Llama 3.1 8B Instruct,GLM 4.5,320,0.14375,0.76875,12,212,224,1.9399486211776874e-48,1.1833686589183894e-45
+patient_attitude,confident,usefulness,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.14375,0.615625,27,178,205,1.8315059592517907e-28,9.047639438703846e-26
+patient_attitude,confident,usefulness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.14375,0.721875,14,199,213,4.78946293858054e-43,2.801835819069616e-40
+patient_attitude,confident,usefulness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.14375,0.971875,2,267,269,7.657009210127194e-77,5.497732612871325e-74
+patient_attitude,confident,usefulness,Llama 3.1 8B Instruct,GPT-5.4,320,0.14375,0.859375,2,231,233,3.9500147687515813e-66,2.717610160901088e-63
+patient_attitude,confident,usefulness,Med42-8B,Llama 4 Maverick,320,0.315625,0.89375,9,194,203,2.197515637576401e-46,1.320706898183417e-43
+patient_attitude,confident,usefulness,Med42-8B,GLM 4.5,320,0.315625,0.76875,19,164,183,5.578276292658441e-30,2.8114512514998543e-27
+patient_attitude,confident,usefulness,Med42-8B,GPT-OSS-120B,320,0.315625,0.615625,53,149,202,9.394479917390552e-12,3.2317010915823498e-09
+patient_attitude,confident,usefulness,Med42-8B,Claude Sonnet 4.6,320,0.315625,0.721875,26,156,182,8.57383093074782e-24,3.9782575518669884e-21
+patient_attitude,confident,usefulness,Med42-8B,Gemini 3.5 Flash,320,0.315625,0.971875,1,211,212,6.472178975509879e-62,4.362248629493658e-59
+patient_attitude,confident,usefulness,Med42-8B,GPT-5.4,320,0.315625,0.859375,10,184,194,1.3836553561964267e-42,8.025201065939275e-40
+patient_attitude,confident,usefulness,Llama 4 Maverick,GLM 4.5,320,0.89375,0.76875,64,24,88,2.3726590787439643e-05,0.0049114042930000065
+patient_attitude,confident,usefulness,Llama 4 Maverick,GPT-OSS-120B,320,0.89375,0.615625,109,20,129,5.07222863561152e-16,2.0288914542446079e-13
+patient_attitude,confident,usefulness,Llama 4 Maverick,Claude Sonnet 4.6,320,0.89375,0.721875,74,19,93,7.720918443812012e-09,2.1927408380426116e-06
+patient_attitude,confident,usefulness,Llama 4 Maverick,Gemini 3.5 Flash,320,0.89375,0.971875,9,34,43,0.00017015517460094998,0.031648862475776696
+patient_attitude,confident,usefulness,Llama 4 Maverick,GPT-5.4,320,0.89375,0.859375,39,28,67,0.22154872964481115,1.0
+patient_attitude,confident,usefulness,GLM 4.5,GPT-OSS-120B,320,0.76875,0.615625,97,48,145,5.777411800528574e-05,0.011497049483051861
+patient_attitude,confident,usefulness,GLM 4.5,Claude Sonnet 4.6,320,0.76875,0.721875,49,34,83,0.12385305946180145,1.0
+patient_attitude,confident,usefulness,GLM 4.5,Gemini 3.5 Flash,320,0.76875,0.971875,4,69,73,2.4422670374772693e-16,9.842336161033395e-14
+patient_attitude,confident,usefulness,GLM 4.5,GPT-5.4,320,0.76875,0.859375,32,61,93,0.003461853491442379,0.5296635841906839
+patient_attitude,confident,usefulness,GPT-OSS-120B,Claude Sonnet 4.6,320,0.615625,0.721875,58,92,150,0.006851639068173733,0.9455261914079751
+patient_attitude,confident,usefulness,GPT-OSS-120B,Gemini 3.5 Flash,320,0.615625,0.971875,5,119,124,2.2085107929633282e-29,1.1086724180675907e-26
+patient_attitude,confident,usefulness,GPT-OSS-120B,GPT-5.4,320,0.615625,0.859375,33,111,144,4.5803256241732346e-11,1.5298287584738605e-08
+patient_attitude,confident,usefulness,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.721875,0.971875,4,84,88,1.5803951224724757e-20,7.001150392553068e-18
+patient_attitude,confident,usefulness,Claude Sonnet 4.6,GPT-5.4,320,0.721875,0.859375,31,75,106,2.2954512916817195e-05,0.004797493199614793
+patient_attitude,confident,usefulness,Gemini 3.5 Flash,GPT-5.4,320,0.971875,0.859375,41,5,46,4.405936238072172e-08,1.1851968480414143e-05
+patient_attitude,confident,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Med42-8B,320,0.54375,0.684375,43,88,131,0.00010469417286583186,0.02020597536310555
+patient_attitude,confident,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Llama 4 Maverick,320,0.54375,0.815625,22,109,131,4.7782719389200264e-15,1.8683043281177303e-12
+patient_attitude,confident,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GLM 4.5,320,0.54375,0.771875,28,101,129,6.968772941670867e-11,2.3066638436930568e-08
+patient_attitude,confident,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-OSS-120B,320,0.54375,0.853125,22,121,143,9.24750845661319e-18,3.8562110264077004e-15
+patient_attitude,confident,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Claude Sonnet 4.6,320,0.54375,0.865625,16,119,135,1.2201752091266553e-20,5.41757792852235e-18
+patient_attitude,confident,patient_attitude_responsiveness,Llama 3.1 8B Instruct,Gemini 3.5 Flash,320,0.54375,0.896875,17,130,147,9.659578188328624e-23,4.4047676538778526e-20
+patient_attitude,confident,patient_attitude_responsiveness,Llama 3.1 8B Instruct,GPT-5.4,320,0.54375,0.7625,26,96,122,1.261164445962075e-10,4.124007738295985e-08
+patient_attitude,confident,patient_attitude_responsiveness,Med42-8B,Llama 4 Maverick,320,0.684375,0.815625,34,76,110,7.692818848583548e-05,0.015000996754737919
+patient_attitude,confident,patient_attitude_responsiveness,Med42-8B,GLM 4.5,320,0.684375,0.771875,43,71,114,0.011118593448764594,1.0
+patient_attitude,confident,patient_attitude_responsiveness,Med42-8B,GPT-OSS-120B,320,0.684375,0.853125,30,84,114,4.253744081497795e-07,0.00010847047407819377
+patient_attitude,confident,patient_attitude_responsiveness,Med42-8B,Claude Sonnet 4.6,320,0.684375,0.865625,23,81,104,9.344702083080037e-09,2.6258612853454905e-06
+patient_attitude,confident,patient_attitude_responsiveness,Med42-8B,Gemini 3.5 Flash,320,0.684375,0.896875,21,89,110,3.765177336323746e-11,1.2650995850047786e-08
+patient_attitude,confident,patient_attitude_responsiveness,Med42-8B,GPT-5.4,320,0.684375,0.7625,37,62,99,0.015432364507309008,1.0
+patient_attitude,confident,patient_attitude_responsiveness,Llama 4 Maverick,GLM 4.5,320,0.815625,0.771875,56,42,98,0.18884671980890244,1.0
+patient_attitude,confident,patient_attitude_responsiveness,Llama 4 Maverick,GPT-OSS-120B,320,0.815625,0.853125,30,42,72,0.19450516586739908,1.0
+patient_attitude,confident,patient_attitude_responsiveness,Llama 4 Maverick,Claude Sonnet 4.6,320,0.815625,0.865625,30,46,76,0.08464609267083592,1.0
+patient_attitude,confident,patient_attitude_responsiveness,Llama 4 Maverick,Gemini 3.5 Flash,320,0.815625,0.896875,21,47,68,0.0021862431776861705,0.35417139478515963
+patient_attitude,confident,patient_attitude_responsiveness,Llama 4 Maverick,GPT-5.4,320,0.815625,0.7625,62,45,107,0.1215124218762441,1.0
+patient_attitude,confident,patient_attitude_responsiveness,GLM 4.5,GPT-OSS-120B,320,0.771875,0.853125,32,58,90,0.008045928133225098,1.0
+patient_attitude,confident,patient_attitude_responsiveness,GLM 4.5,Claude Sonnet 4.6,320,0.771875,0.865625,23,53,76,0.0007645817391550472,0.13303722261297823
+patient_attitude,confident,patient_attitude_responsiveness,GLM 4.5,Gemini 3.5 Flash,320,0.771875,0.896875,21,61,82,1.1296023055413022e-05,0.0024851250721908648
+patient_attitude,confident,patient_attitude_responsiveness,GLM 4.5,GPT-5.4,320,0.771875,0.7625,48,45,93,0.8358461346314852,1.0
+patient_attitude,confident,patient_attitude_responsiveness,GPT-OSS-120B,Claude Sonnet 4.6,320,0.853125,0.865625,33,37,70,0.7202027723528613,1.0
+patient_attitude,confident,patient_attitude_responsiveness,GPT-OSS-120B,Gemini 3.5 Flash,320,0.853125,0.896875,28,42,70,0.11960933562988493,1.0
+patient_attitude,confident,patient_attitude_responsiveness,GPT-OSS-120B,GPT-5.4,320,0.853125,0.7625,59,30,89,0.0027852689963042145,0.4428577704123701
+patient_attitude,confident,patient_attitude_responsiveness,Claude Sonnet 4.6,Gemini 3.5 Flash,320,0.865625,0.896875,27,37,64,0.2604354765766535,1.0
+patient_attitude,confident,patient_attitude_responsiveness,Claude Sonnet 4.6,GPT-5.4,320,0.865625,0.7625,60,27,87,0.0005243546737950249,0.09385948660930946
+patient_attitude,confident,patient_attitude_responsiveness,Gemini 3.5 Flash,GPT-5.4,320,0.896875,0.7625,68,25,93,9.375635307717017e-06,0.0020907666736208947

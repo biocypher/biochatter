@@ -1,0 +1,16 @@
+judge,response_model,responses,criteria,included_runs,criterion_level_ratings
+GPT-5.4-mini,Claude Sonnet 4.6,1280,3,1,3840
+GPT-5.4-mini,GPT-OSS-120B,1280,3,2,7680
+GPT-5.4-mini,Med42-8B,1280,3,1,3840
+Gemma 4 31B,Claude Sonnet 4.6,1280,3,2,7680
+Gemma 4 31B,GPT-OSS-120B,1280,3,2,7680
+Gemma 4 31B,Med42-8B,1280,3,2,7680
+Kimi K2.6,Claude Sonnet 4.6,1280,3,2,7680
+Kimi K2.6,GPT-OSS-120B,1280,3,2,7680
+Kimi K2.6,Med42-8B,1280,3,2,7680
+Mistral Large 3,Claude Sonnet 4.6,1280,3,2,7680
+Mistral Large 3,GPT-OSS-120B,1280,3,2,7680
+Mistral Large 3,Med42-8B,1280,3,2,7680
+Qwen3-235B,Claude Sonnet 4.6,1280,3,2,7680
+Qwen3-235B,GPT-OSS-120B,1280,3,2,7680
+Qwen3-235B,Med42-8B,1280,3,2,7680

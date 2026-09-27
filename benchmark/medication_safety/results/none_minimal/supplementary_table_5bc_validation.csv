@@ -1,0 +1,17 @@
+outcome,model,n_cases,n_pairs,none_mean,minimal_mean,delta_minimal_minus_none
+manual_communication_score,Claude Sonnet 4.6,4,16,0.75,0.3333333333333333,-0.4166666666666666
+manual_communication_score,GLM 4.5,4,16,0.8125,0.0625,-0.75
+manual_communication_score,GPT-5.4,4,16,1.0,0.0625,-0.9375
+manual_communication_score,GPT-OSS-120B,4,16,0.6041666666666666,0.5625,-0.0416666666666666
+manual_communication_score,Gemini 3.5 Flash,4,16,1.0,0.7708333333333333,-0.2291666666666666
+manual_communication_score,Llama 3.1 8B Instruct,4,16,0.2916666666666666,0.2083333333333333,-0.0833333333333333
+manual_communication_score,Llama 4 Maverick,4,16,0.5833333333333333,0.1041666666666666,-0.4791666666666666
+manual_communication_score,Med42-8B,4,16,0.4375,0.125,-0.3125
+judge_communication_score,Claude Sonnet 4.6,4,16,0.8333333333333334,0.84375,0.0104166666666666
+judge_communication_score,GLM 4.5,4,16,0.9583333333333334,0.375,-0.5833333333333334
+judge_communication_score,GPT-5.4,4,16,0.8958333333333334,0.4791666666666666,-0.4166666666666667
+judge_communication_score,GPT-OSS-120B,4,16,0.6354166666666667,0.40625,-0.2291666666666666
+judge_communication_score,Gemini 3.5 Flash,4,16,0.9895833333333334,0.9479166666666666,-0.0416666666666666
+judge_communication_score,Llama 3.1 8B Instruct,4,16,0.4270833333333333,0.1770833333333333,-0.25
+judge_communication_score,Llama 4 Maverick,4,16,0.7604166666666666,0.5208333333333333,-0.2395833333333333
+judge_communication_score,Med42-8B,4,16,0.3020833333333333,0.1979166666666666,-0.1041666666666666

@@ -18,6 +18,12 @@ import yaml
 from cryptography.fernet import Fernet
 
 
+PUBLIC_BENCHMARK_DATA_DIRECTORIES = (
+    Path("./benchmark/data"),
+    Path("./benchmark/medication_safety/data"),
+)
+
+
 def get_benchmark_dataset() -> dict[str, pd.DataFrame | dict[str, str]]:
     """Get benchmark dataset.
 
@@ -53,7 +59,7 @@ def _load_hold_out_test_dataset() -> dict[str, pd.DataFrame | dict[str, str]]:
     return _decrypt_data(encrypted_test_data, private_key)
 
 
-def _get_all_benchmark_files(directory_path: str) -> list[str]:
+def _get_all_benchmark_files(directory_path: str | Path) -> list[str]:
     """Get all files in the directory ending with _data.yaml.
 
     Args:
@@ -78,8 +84,12 @@ def _load_test_data_from_this_repository() -> dict[str, pd.DataFrame | dict[str,
 
     """
     print("Using public test data from this repository for benchmarking.")
-    directory_path = "./benchmark/data"
-    benchmark_files = _get_all_benchmark_files(directory_path)
+    benchmark_files = [
+        file_path
+        for directory_path in PUBLIC_BENCHMARK_DATA_DIRECTORIES
+        if directory_path.exists()
+        for file_path in _get_all_benchmark_files(directory_path)
+    ]
 
     combined_data = {}
     for file_path in benchmark_files:
@@ -188,6 +198,11 @@ def _expand_multi_instruction(data_dict: dict) -> dict:
 
     """
     for module_key in data_dict:
+        if module_key == "drug_adverse_effect_assessment":
+            data_dict[module_key] = _expand_medication_safety_test_cases(
+                data_dict[module_key],
+            )
+            continue
         if "longevity" in module_key:
             data_dict[module_key] = _expand_longevity_test_cases(data_dict[module_key])
         if "kg_schemas" not in module_key:
@@ -221,6 +236,57 @@ def _expand_multi_instruction(data_dict: dict) -> dict:
             data_dict[module_key] = expanded_test_list
 
     return data_dict
+
+
+def _expand_medication_safety_test_cases(rows: list[dict]) -> list[dict]:
+    """Expand medication cases into system-prompt and attitude combinations."""
+    prompt_definitions = [
+        row["general_system_messages"]
+        for row in rows
+        if "general_system_messages" in row
+    ]
+    attitude_definitions = [
+        row["patient_attitude_templates"]
+        for row in rows
+        if "patient_attitude_templates" in row
+    ]
+    cases = [row for row in rows if "case_id" in row]
+
+    if len(prompt_definitions) != 1 or len(attitude_definitions) != 1:
+        msg = (
+            "Medication safety data must define one system-prompt and one "
+            "patient-attitude mapping."
+        )
+        raise ValueError(msg)
+
+    prompt_labels = {
+        "none": "none",
+        "minimal": "minimal",
+        "role_encouraging": "role_encouraging",
+        "role_attitude_sensitive": "patient_attitude_sensitive",
+    }
+    expanded_cases = []
+    for case in cases:
+        medication_context = case["input"]["medication_context"]
+        for prompt_key, system_messages in prompt_definitions[0].items():
+            prompt_label = prompt_labels.get(prompt_key, prompt_key)
+            for attitude_name, attitude_statement in attitude_definitions[0].items():
+                expanded_case = copy.deepcopy(case)
+                expanded_case["case"] = ":".join(
+                    [case["case"], prompt_label, attitude_name],
+                )
+                expanded_case["input"] = {
+                    "prompt": f"{medication_context['paragraph']}\n\n{attitude_statement}",
+                    "system_messages": list(system_messages),
+                }
+                expanded_case["medication"] = medication_context["medicine"]
+                expanded_case["indication"] = medication_context["indication"]
+                expanded_case["system_prompt"] = prompt_label
+                expanded_case["system_prompt_key"] = prompt_key
+                expanded_case["patient_attitude"] = attitude_name
+                expanded_cases.append(expanded_case)
+
+    return expanded_cases
 
 
 def _expand_longevity_test_cases(data_dict: dict) -> dict:

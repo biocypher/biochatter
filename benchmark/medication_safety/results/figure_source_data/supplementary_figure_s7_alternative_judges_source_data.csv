@@ -1,0 +1,181 @@
+judge,evaluated_model,system_prompt,metric,n,score_sum,score_square_sum,mean_response_score,strict_positive_rate,model_label,structured_score
+GPT-5.4-mini,claude-sonnet-4-6,minimal,patient_attitude_responsiveness,320,294.0,294.0,0.91875,0.91875,Claude Sonnet 4.6,0.6648792350982918
+GPT-5.4-mini,claude-sonnet-4-6,minimal,understandability,320,153.0,153.0,0.478125,0.478125,Claude Sonnet 4.6,0.6648792350982918
+GPT-5.4-mini,claude-sonnet-4-6,minimal,usefulness,320,94.0,94.0,0.29375,0.29375,Claude Sonnet 4.6,0.6648792350982918
+GPT-5.4-mini,claude-sonnet-4-6,none,patient_attitude_responsiveness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.4754177200557382
+GPT-5.4-mini,claude-sonnet-4-6,none,understandability,320,310.0,310.0,0.96875,0.96875,Claude Sonnet 4.6,0.4754177200557382
+GPT-5.4-mini,claude-sonnet-4-6,none,usefulness,320,315.0,315.0,0.984375,0.984375,Claude Sonnet 4.6,0.4754177200557382
+GPT-5.4-mini,claude-sonnet-4-6,role_attitude_sensitive,patient_attitude_responsiveness,320,318.0,318.0,0.99375,0.99375,Claude Sonnet 4.6,0.6627002361181423
+GPT-5.4-mini,claude-sonnet-4-6,role_attitude_sensitive,understandability,320,190.0,190.0,0.59375,0.59375,Claude Sonnet 4.6,0.6627002361181423
+GPT-5.4-mini,claude-sonnet-4-6,role_attitude_sensitive,usefulness,320,139.0,139.0,0.434375,0.434375,Claude Sonnet 4.6,0.6627002361181423
+GPT-5.4-mini,claude-sonnet-4-6,role_encouraging,patient_attitude_responsiveness,320,298.0,298.0,0.93125,0.93125,Claude Sonnet 4.6,0.6572510789129
+GPT-5.4-mini,claude-sonnet-4-6,role_encouraging,understandability,320,136.0,136.0,0.425,0.425,Claude Sonnet 4.6,0.6572510789129
+GPT-5.4-mini,claude-sonnet-4-6,role_encouraging,usefulness,320,80.0,80.0,0.25,0.25,Claude Sonnet 4.6,0.6572510789129
+GPT-5.4-mini,m42-health/Llama3-Med42-8B,minimal,patient_attitude_responsiveness,320,264.0,264.0,0.825,0.825,Med42-8B,0.4147258382801001
+GPT-5.4-mini,m42-health/Llama3-Med42-8B,minimal,understandability,320,129.0,129.0,0.403125,0.403125,Med42-8B,0.4147258382801001
+GPT-5.4-mini,m42-health/Llama3-Med42-8B,minimal,usefulness,320,92.0,92.0,0.2875,0.2875,Med42-8B,0.4147258382801001
+GPT-5.4-mini,m42-health/Llama3-Med42-8B,none,patient_attitude_responsiveness,320,306.0,306.0,0.95625,0.95625,Med42-8B,0.3687750595831519
+GPT-5.4-mini,m42-health/Llama3-Med42-8B,none,understandability,320,180.0,180.0,0.5625,0.5625,Med42-8B,0.3687750595831519
+GPT-5.4-mini,m42-health/Llama3-Med42-8B,none,usefulness,320,243.0,243.0,0.759375,0.759375,Med42-8B,0.3687750595831519
+GPT-5.4-mini,m42-health/Llama3-Med42-8B,role_attitude_sensitive,patient_attitude_responsiveness,320,309.0,309.0,0.965625,0.965625,Med42-8B,0.3709238887095094
+GPT-5.4-mini,m42-health/Llama3-Med42-8B,role_attitude_sensitive,understandability,320,236.0,236.0,0.7375,0.7375,Med42-8B,0.3709238887095094
+GPT-5.4-mini,m42-health/Llama3-Med42-8B,role_attitude_sensitive,usefulness,320,104.0,104.0,0.325,0.325,Med42-8B,0.3709238887095094
+GPT-5.4-mini,m42-health/Llama3-Med42-8B,role_encouraging,patient_attitude_responsiveness,320,278.0,278.0,0.86875,0.86875,Med42-8B,0.3767026017179985
+GPT-5.4-mini,m42-health/Llama3-Med42-8B,role_encouraging,understandability,320,224.0,224.0,0.7,0.7,Med42-8B,0.3767026017179985
+GPT-5.4-mini,m42-health/Llama3-Med42-8B,role_encouraging,usefulness,320,99.0,99.0,0.309375,0.309375,Med42-8B,0.3767026017179985
+GPT-5.4-mini,openai/gpt-oss-120b,minimal,patient_attitude_responsiveness,320,280.5,269.75,0.8765625,0.94375,GPT-OSS-120B,0.5250394335918287
+GPT-5.4-mini,openai/gpt-oss-120b,minimal,understandability,320,29.0,21.5,0.090625,0.1375,GPT-OSS-120B,0.5250394335918287
+GPT-5.4-mini,openai/gpt-oss-120b,minimal,usefulness,320,30.5,21.25,0.0953125,0.153125,GPT-OSS-120B,0.5250394335918287
+GPT-5.4-mini,openai/gpt-oss-120b,none,patient_attitude_responsiveness,320,316.0,315.0,0.9875,0.99375,GPT-OSS-120B,0.47307952742864
+GPT-5.4-mini,openai/gpt-oss-120b,none,understandability,320,167.0,149.5,0.521875,0.63125,GPT-OSS-120B,0.47307952742864
+GPT-5.4-mini,openai/gpt-oss-120b,none,usefulness,320,258.0,248.5,0.80625,0.865625,GPT-OSS-120B,0.47307952742864
+GPT-5.4-mini,openai/gpt-oss-120b,role_attitude_sensitive,patient_attitude_responsiveness,320,315.0,313.0,0.984375,0.996875,GPT-OSS-120B,0.5336032988474584
+GPT-5.4-mini,openai/gpt-oss-120b,role_attitude_sensitive,understandability,320,116.5,98.75,0.3640625,0.475,GPT-OSS-120B,0.5336032988474584
+GPT-5.4-mini,openai/gpt-oss-120b,role_attitude_sensitive,usefulness,320,63.5,46.75,0.1984375,0.303125,GPT-OSS-120B,0.5336032988474584
+GPT-5.4-mini,openai/gpt-oss-120b,role_encouraging,patient_attitude_responsiveness,320,294.0,285.0,0.91875,0.975,GPT-OSS-120B,0.5251685441206777
+GPT-5.4-mini,openai/gpt-oss-120b,role_encouraging,understandability,320,23.5,16.25,0.0734375,0.11875,GPT-OSS-120B,0.5251685441206777
+GPT-5.4-mini,openai/gpt-oss-120b,role_encouraging,usefulness,320,47.5,34.25,0.1484375,0.23125,GPT-OSS-120B,0.5251685441206777
+Gemma 4 31B,claude-sonnet-4-6,minimal,patient_attitude_responsiveness,320,215.0,215.0,0.671875,0.671875,Claude Sonnet 4.6,0.6648792350982918
+Gemma 4 31B,claude-sonnet-4-6,minimal,understandability,320,302.0,301.0,0.94375,0.95,Claude Sonnet 4.6,0.6648792350982918
+Gemma 4 31B,claude-sonnet-4-6,minimal,usefulness,320,213.5,213.25,0.6671875,0.66875,Claude Sonnet 4.6,0.6648792350982918
+Gemma 4 31B,claude-sonnet-4-6,none,patient_attitude_responsiveness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.4754177200557382
+Gemma 4 31B,claude-sonnet-4-6,none,understandability,320,266.5,263.75,0.8328125,0.85,Claude Sonnet 4.6,0.4754177200557382
+Gemma 4 31B,claude-sonnet-4-6,none,usefulness,320,318.5,318.25,0.9953125,0.996875,Claude Sonnet 4.6,0.4754177200557382
+Gemma 4 31B,claude-sonnet-4-6,role_attitude_sensitive,patient_attitude_responsiveness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.6627002361181423
+Gemma 4 31B,claude-sonnet-4-6,role_attitude_sensitive,understandability,320,309.0,308.5,0.965625,0.96875,Claude Sonnet 4.6,0.6627002361181423
+Gemma 4 31B,claude-sonnet-4-6,role_attitude_sensitive,usefulness,320,236.0,236.0,0.7375,0.7375,Claude Sonnet 4.6,0.6627002361181423
+Gemma 4 31B,claude-sonnet-4-6,role_encouraging,patient_attitude_responsiveness,320,312.0,312.0,0.975,0.975,Claude Sonnet 4.6,0.6572510789129
+Gemma 4 31B,claude-sonnet-4-6,role_encouraging,understandability,320,302.5,300.25,0.9453125,0.959375,Claude Sonnet 4.6,0.6572510789129
+Gemma 4 31B,claude-sonnet-4-6,role_encouraging,usefulness,320,192.5,191.75,0.6015625,0.60625,Claude Sonnet 4.6,0.6572510789129
+Gemma 4 31B,m42-health/Llama3-Med42-8B,minimal,patient_attitude_responsiveness,320,162.0,162.0,0.50625,0.50625,Med42-8B,0.4147258382801001
+Gemma 4 31B,m42-health/Llama3-Med42-8B,minimal,understandability,320,82.5,82.25,0.2578125,0.259375,Med42-8B,0.4147258382801001
+Gemma 4 31B,m42-health/Llama3-Med42-8B,minimal,usefulness,320,284.0,284.0,0.8875,0.8875,Med42-8B,0.4147258382801001
+Gemma 4 31B,m42-health/Llama3-Med42-8B,none,patient_attitude_responsiveness,320,186.0,184.5,0.58125,0.590625,Med42-8B,0.3687750595831519
+Gemma 4 31B,m42-health/Llama3-Med42-8B,none,understandability,320,20.0,19.5,0.0625,0.065625,Med42-8B,0.3687750595831519
+Gemma 4 31B,m42-health/Llama3-Med42-8B,none,usefulness,320,288.0,287.5,0.9,0.903125,Med42-8B,0.3687750595831519
+Gemma 4 31B,m42-health/Llama3-Med42-8B,role_attitude_sensitive,patient_attitude_responsiveness,320,293.0,293.0,0.915625,0.915625,Med42-8B,0.3709238887095094
+Gemma 4 31B,m42-health/Llama3-Med42-8B,role_attitude_sensitive,understandability,320,117.5,116.75,0.3671875,0.371875,Med42-8B,0.3709238887095094
+Gemma 4 31B,m42-health/Llama3-Med42-8B,role_attitude_sensitive,usefulness,320,174.0,173.5,0.54375,0.546875,Med42-8B,0.3709238887095094
+Gemma 4 31B,m42-health/Llama3-Med42-8B,role_encouraging,patient_attitude_responsiveness,320,163.5,163.25,0.5109375,0.5125,Med42-8B,0.3767026017179985
+Gemma 4 31B,m42-health/Llama3-Med42-8B,role_encouraging,understandability,320,39.5,39.25,0.1234375,0.125,Med42-8B,0.3767026017179985
+Gemma 4 31B,m42-health/Llama3-Med42-8B,role_encouraging,usefulness,320,174.5,173.25,0.5453125,0.553125,Med42-8B,0.3767026017179985
+Gemma 4 31B,openai/gpt-oss-120b,minimal,patient_attitude_responsiveness,320,201.0,200.5,0.628125,0.63125,GPT-OSS-120B,0.5250394335918287
+Gemma 4 31B,openai/gpt-oss-120b,minimal,understandability,320,110.0,109.5,0.34375,0.346875,GPT-OSS-120B,0.5250394335918287
+Gemma 4 31B,openai/gpt-oss-120b,minimal,usefulness,320,309.0,309.0,0.965625,0.965625,GPT-OSS-120B,0.5250394335918287
+Gemma 4 31B,openai/gpt-oss-120b,none,patient_attitude_responsiveness,320,318.0,318.0,0.99375,0.99375,GPT-OSS-120B,0.47307952742864
+Gemma 4 31B,openai/gpt-oss-120b,none,understandability,320,159.5,155.25,0.4984375,0.525,GPT-OSS-120B,0.47307952742864
+Gemma 4 31B,openai/gpt-oss-120b,none,usefulness,320,317.0,317.0,0.990625,0.990625,GPT-OSS-120B,0.47307952742864
+Gemma 4 31B,openai/gpt-oss-120b,role_attitude_sensitive,patient_attitude_responsiveness,320,310.5,310.25,0.9703125,0.971875,GPT-OSS-120B,0.5336032988474584
+Gemma 4 31B,openai/gpt-oss-120b,role_attitude_sensitive,understandability,320,240.5,239.75,0.7515625,0.75625,GPT-OSS-120B,0.5336032988474584
+Gemma 4 31B,openai/gpt-oss-120b,role_attitude_sensitive,usefulness,320,317.0,317.0,0.990625,0.990625,GPT-OSS-120B,0.5336032988474584
+Gemma 4 31B,openai/gpt-oss-120b,role_encouraging,patient_attitude_responsiveness,320,236.0,235.5,0.7375,0.740625,GPT-OSS-120B,0.5251685441206777
+Gemma 4 31B,openai/gpt-oss-120b,role_encouraging,understandability,320,113.5,111.75,0.3546875,0.365625,GPT-OSS-120B,0.5251685441206777
+Gemma 4 31B,openai/gpt-oss-120b,role_encouraging,usefulness,320,316.0,316.0,0.9875,0.9875,GPT-OSS-120B,0.5251685441206777
+Kimi K2.6,claude-sonnet-4-6,minimal,patient_attitude_responsiveness,320,300.0,292.0,0.9375,0.9875,Claude Sonnet 4.6,0.6648792350982918
+Kimi K2.6,claude-sonnet-4-6,minimal,understandability,320,307.5,304.25,0.9609375,0.98125,Claude Sonnet 4.6,0.6648792350982918
+Kimi K2.6,claude-sonnet-4-6,minimal,usefulness,320,266.5,257.75,0.8328125,0.8875,Claude Sonnet 4.6,0.6648792350982918
+Kimi K2.6,claude-sonnet-4-6,none,patient_attitude_responsiveness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.4754177200557382
+Kimi K2.6,claude-sonnet-4-6,none,understandability,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.4754177200557382
+Kimi K2.6,claude-sonnet-4-6,none,usefulness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.4754177200557382
+Kimi K2.6,claude-sonnet-4-6,role_attitude_sensitive,patient_attitude_responsiveness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.6627002361181423
+Kimi K2.6,claude-sonnet-4-6,role_attitude_sensitive,understandability,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.6627002361181423
+Kimi K2.6,claude-sonnet-4-6,role_attitude_sensitive,usefulness,320,300.5,296.25,0.9390625,0.965625,Claude Sonnet 4.6,0.6627002361181423
+Kimi K2.6,claude-sonnet-4-6,role_encouraging,patient_attitude_responsiveness,320,309.0,304.0,0.965625,0.996875,Claude Sonnet 4.6,0.6572510789129
+Kimi K2.6,claude-sonnet-4-6,role_encouraging,understandability,320,318.5,317.75,0.9953125,1.0,Claude Sonnet 4.6,0.6572510789129
+Kimi K2.6,claude-sonnet-4-6,role_encouraging,usefulness,320,274.0,263.0,0.85625,0.925,Claude Sonnet 4.6,0.6572510789129
+Kimi K2.6,m42-health/Llama3-Med42-8B,minimal,patient_attitude_responsiveness,320,161.5,141.25,0.5046875,0.63125,Med42-8B,0.4147258382801001
+Kimi K2.6,m42-health/Llama3-Med42-8B,minimal,understandability,320,117.0,105.5,0.365625,0.4375,Med42-8B,0.4147258382801001
+Kimi K2.6,m42-health/Llama3-Med42-8B,minimal,usefulness,320,135.5,115.75,0.4234375,0.546875,Med42-8B,0.4147258382801001
+Kimi K2.6,m42-health/Llama3-Med42-8B,none,patient_attitude_responsiveness,320,178.0,167.0,0.55625,0.625,Med42-8B,0.3687750595831519
+Kimi K2.6,m42-health/Llama3-Med42-8B,none,understandability,320,102.5,96.75,0.3203125,0.35625,Med42-8B,0.3687750595831519
+Kimi K2.6,m42-health/Llama3-Med42-8B,none,usefulness,320,294.0,292.0,0.91875,0.93125,Med42-8B,0.3687750595831519
+Kimi K2.6,m42-health/Llama3-Med42-8B,role_attitude_sensitive,patient_attitude_responsiveness,320,261.0,247.5,0.815625,0.9,Med42-8B,0.3709238887095094
+Kimi K2.6,m42-health/Llama3-Med42-8B,role_attitude_sensitive,understandability,320,159.0,145.0,0.496875,0.584375,Med42-8B,0.3709238887095094
+Kimi K2.6,m42-health/Llama3-Med42-8B,role_attitude_sensitive,usefulness,320,75.5,69.75,0.2359375,0.271875,Med42-8B,0.3709238887095094
+Kimi K2.6,m42-health/Llama3-Med42-8B,role_encouraging,patient_attitude_responsiveness,320,126.5,103.25,0.3953125,0.540625,Med42-8B,0.3767026017179985
+Kimi K2.6,m42-health/Llama3-Med42-8B,role_encouraging,understandability,320,102.0,92.0,0.31875,0.38125,Med42-8B,0.3767026017179985
+Kimi K2.6,m42-health/Llama3-Med42-8B,role_encouraging,usefulness,320,36.0,31.5,0.1125,0.140625,Med42-8B,0.3767026017179985
+Kimi K2.6,openai/gpt-oss-120b,minimal,patient_attitude_responsiveness,320,296.0,289.0,0.925,0.96875,GPT-OSS-120B,0.5250394335918287
+Kimi K2.6,openai/gpt-oss-120b,minimal,understandability,320,143.5,134.75,0.4484375,0.503125,GPT-OSS-120B,0.5250394335918287
+Kimi K2.6,openai/gpt-oss-120b,minimal,usefulness,320,297.0,292.5,0.928125,0.95625,GPT-OSS-120B,0.5250394335918287
+Kimi K2.6,openai/gpt-oss-120b,none,patient_attitude_responsiveness,320,310.5,307.25,0.9703125,0.990625,GPT-OSS-120B,0.47307952742864
+Kimi K2.6,openai/gpt-oss-120b,none,understandability,320,257.0,250.5,0.803125,0.84375,GPT-OSS-120B,0.47307952742864
+Kimi K2.6,openai/gpt-oss-120b,none,usefulness,320,319.0,318.5,0.996875,1.0,GPT-OSS-120B,0.47307952742864
+Kimi K2.6,openai/gpt-oss-120b,role_attitude_sensitive,patient_attitude_responsiveness,320,319.0,318.5,0.996875,1.0,GPT-OSS-120B,0.5336032988474584
+Kimi K2.6,openai/gpt-oss-120b,role_attitude_sensitive,understandability,320,309.0,306.5,0.965625,0.98125,GPT-OSS-120B,0.5336032988474584
+Kimi K2.6,openai/gpt-oss-120b,role_attitude_sensitive,usefulness,320,320.0,320.0,1.0,1.0,GPT-OSS-120B,0.5336032988474584
+Kimi K2.6,openai/gpt-oss-120b,role_encouraging,patient_attitude_responsiveness,320,309.0,305.5,0.965625,0.9875,GPT-OSS-120B,0.5251685441206777
+Kimi K2.6,openai/gpt-oss-120b,role_encouraging,understandability,320,172.5,158.25,0.5390625,0.628125,GPT-OSS-120B,0.5251685441206777
+Kimi K2.6,openai/gpt-oss-120b,role_encouraging,usefulness,320,313.5,312.25,0.9796875,0.9875,GPT-OSS-120B,0.5251685441206777
+Mistral Large 3,claude-sonnet-4-6,minimal,patient_attitude_responsiveness,320,259.0,254.5,0.809375,0.8375,Claude Sonnet 4.6,0.6648792350982918
+Mistral Large 3,claude-sonnet-4-6,minimal,understandability,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.6648792350982918
+Mistral Large 3,claude-sonnet-4-6,minimal,usefulness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.6648792350982918
+Mistral Large 3,claude-sonnet-4-6,none,patient_attitude_responsiveness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.4754177200557382
+Mistral Large 3,claude-sonnet-4-6,none,understandability,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.4754177200557382
+Mistral Large 3,claude-sonnet-4-6,none,usefulness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.4754177200557382
+Mistral Large 3,claude-sonnet-4-6,role_attitude_sensitive,patient_attitude_responsiveness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.6627002361181423
+Mistral Large 3,claude-sonnet-4-6,role_attitude_sensitive,understandability,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.6627002361181423
+Mistral Large 3,claude-sonnet-4-6,role_attitude_sensitive,usefulness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.6627002361181423
+Mistral Large 3,claude-sonnet-4-6,role_encouraging,patient_attitude_responsiveness,320,315.5,314.75,0.9859375,0.990625,Claude Sonnet 4.6,0.6572510789129
+Mistral Large 3,claude-sonnet-4-6,role_encouraging,understandability,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.6572510789129
+Mistral Large 3,claude-sonnet-4-6,role_encouraging,usefulness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.6572510789129
+Mistral Large 3,m42-health/Llama3-Med42-8B,minimal,patient_attitude_responsiveness,320,234.5,227.25,0.7328125,0.778125,Med42-8B,0.4147258382801001
+Mistral Large 3,m42-health/Llama3-Med42-8B,minimal,understandability,320,292.0,292.0,0.9125,0.9125,Med42-8B,0.4147258382801001
+Mistral Large 3,m42-health/Llama3-Med42-8B,minimal,usefulness,320,293.0,292.5,0.915625,0.91875,Med42-8B,0.4147258382801001
+Mistral Large 3,m42-health/Llama3-Med42-8B,none,patient_attitude_responsiveness,320,227.0,221.5,0.709375,0.74375,Med42-8B,0.3687750595831519
+Mistral Large 3,m42-health/Llama3-Med42-8B,none,understandability,320,308.0,307.5,0.9625,0.965625,Med42-8B,0.3687750595831519
+Mistral Large 3,m42-health/Llama3-Med42-8B,none,usefulness,320,309.0,309.0,0.965625,0.965625,Med42-8B,0.3687750595831519
+Mistral Large 3,m42-health/Llama3-Med42-8B,role_attitude_sensitive,patient_attitude_responsiveness,320,314.0,313.5,0.98125,0.984375,Med42-8B,0.3709238887095094
+Mistral Large 3,m42-health/Llama3-Med42-8B,role_attitude_sensitive,understandability,320,315.0,315.0,0.984375,0.984375,Med42-8B,0.3709238887095094
+Mistral Large 3,m42-health/Llama3-Med42-8B,role_attitude_sensitive,usefulness,320,280.0,278.5,0.875,0.884375,Med42-8B,0.3709238887095094
+Mistral Large 3,m42-health/Llama3-Med42-8B,role_encouraging,patient_attitude_responsiveness,320,261.5,256.25,0.8171875,0.85,Med42-8B,0.3767026017179985
+Mistral Large 3,m42-health/Llama3-Med42-8B,role_encouraging,understandability,320,307.5,306.75,0.9609375,0.965625,Med42-8B,0.3767026017179985
+Mistral Large 3,m42-health/Llama3-Med42-8B,role_encouraging,usefulness,320,240.0,237.5,0.75,0.765625,Med42-8B,0.3767026017179985
+Mistral Large 3,openai/gpt-oss-120b,minimal,patient_attitude_responsiveness,320,286.5,281.75,0.8953125,0.925,GPT-OSS-120B,0.5250394335918287
+Mistral Large 3,openai/gpt-oss-120b,minimal,understandability,320,320.0,320.0,1.0,1.0,GPT-OSS-120B,0.5250394335918287
+Mistral Large 3,openai/gpt-oss-120b,minimal,usefulness,320,317.0,317.0,0.990625,0.990625,GPT-OSS-120B,0.5250394335918287
+Mistral Large 3,openai/gpt-oss-120b,none,patient_attitude_responsiveness,320,314.5,313.75,0.9828125,0.9875,GPT-OSS-120B,0.47307952742864
+Mistral Large 3,openai/gpt-oss-120b,none,understandability,320,298.5,297.75,0.9328125,0.9375,GPT-OSS-120B,0.47307952742864
+Mistral Large 3,openai/gpt-oss-120b,none,usefulness,320,320.0,320.0,1.0,1.0,GPT-OSS-120B,0.47307952742864
+Mistral Large 3,openai/gpt-oss-120b,role_attitude_sensitive,patient_attitude_responsiveness,320,320.0,320.0,1.0,1.0,GPT-OSS-120B,0.5336032988474584
+Mistral Large 3,openai/gpt-oss-120b,role_attitude_sensitive,understandability,320,320.0,320.0,1.0,1.0,GPT-OSS-120B,0.5336032988474584
+Mistral Large 3,openai/gpt-oss-120b,role_attitude_sensitive,usefulness,320,320.0,320.0,1.0,1.0,GPT-OSS-120B,0.5336032988474584
+Mistral Large 3,openai/gpt-oss-120b,role_encouraging,patient_attitude_responsiveness,320,312.5,310.75,0.9765625,0.9875,GPT-OSS-120B,0.5251685441206777
+Mistral Large 3,openai/gpt-oss-120b,role_encouraging,understandability,320,319.5,319.25,0.9984375,1.0,GPT-OSS-120B,0.5251685441206777
+Mistral Large 3,openai/gpt-oss-120b,role_encouraging,usefulness,320,319.0,319.0,0.996875,0.996875,GPT-OSS-120B,0.5251685441206777
+Qwen3-235B,claude-sonnet-4-6,minimal,patient_attitude_responsiveness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.6648792350982918
+Qwen3-235B,claude-sonnet-4-6,minimal,understandability,320,318.0,318.0,0.99375,0.99375,Claude Sonnet 4.6,0.6648792350982918
+Qwen3-235B,claude-sonnet-4-6,minimal,usefulness,320,318.0,318.0,0.99375,0.99375,Claude Sonnet 4.6,0.6648792350982918
+Qwen3-235B,claude-sonnet-4-6,none,patient_attitude_responsiveness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.4754177200557382
+Qwen3-235B,claude-sonnet-4-6,none,understandability,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.4754177200557382
+Qwen3-235B,claude-sonnet-4-6,none,usefulness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.4754177200557382
+Qwen3-235B,claude-sonnet-4-6,role_attitude_sensitive,patient_attitude_responsiveness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.6627002361181423
+Qwen3-235B,claude-sonnet-4-6,role_attitude_sensitive,understandability,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.6627002361181423
+Qwen3-235B,claude-sonnet-4-6,role_attitude_sensitive,usefulness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.6627002361181423
+Qwen3-235B,claude-sonnet-4-6,role_encouraging,patient_attitude_responsiveness,320,320.0,320.0,1.0,1.0,Claude Sonnet 4.6,0.6572510789129
+Qwen3-235B,claude-sonnet-4-6,role_encouraging,understandability,320,319.0,319.0,0.996875,0.996875,Claude Sonnet 4.6,0.6572510789129
+Qwen3-235B,claude-sonnet-4-6,role_encouraging,usefulness,320,309.0,307.0,0.965625,0.978125,Claude Sonnet 4.6,0.6572510789129
+Qwen3-235B,m42-health/Llama3-Med42-8B,minimal,patient_attitude_responsiveness,320,282.0,279.5,0.88125,0.896875,Med42-8B,0.4147258382801001
+Qwen3-235B,m42-health/Llama3-Med42-8B,minimal,understandability,320,226.5,224.25,0.7078125,0.721875,Med42-8B,0.4147258382801001
+Qwen3-235B,m42-health/Llama3-Med42-8B,minimal,usefulness,320,249.0,246.0,0.778125,0.796875,Med42-8B,0.4147258382801001
+Qwen3-235B,m42-health/Llama3-Med42-8B,none,patient_attitude_responsiveness,320,274.5,272.75,0.8578125,0.86875,Med42-8B,0.3687750595831519
+Qwen3-235B,m42-health/Llama3-Med42-8B,none,understandability,320,156.5,152.75,0.4890625,0.5125,Med42-8B,0.3687750595831519
+Qwen3-235B,m42-health/Llama3-Med42-8B,none,usefulness,320,304.5,304.25,0.9515625,0.953125,Med42-8B,0.3687750595831519
+Qwen3-235B,m42-health/Llama3-Med42-8B,role_attitude_sensitive,patient_attitude_responsiveness,320,318.5,318.25,0.9953125,0.996875,Med42-8B,0.3709238887095094
+Qwen3-235B,m42-health/Llama3-Med42-8B,role_attitude_sensitive,understandability,320,299.0,297.5,0.934375,0.94375,Med42-8B,0.3709238887095094
+Qwen3-235B,m42-health/Llama3-Med42-8B,role_attitude_sensitive,usefulness,320,153.0,150.5,0.478125,0.49375,Med42-8B,0.3709238887095094
+Qwen3-235B,m42-health/Llama3-Med42-8B,role_encouraging,patient_attitude_responsiveness,320,284.5,283.25,0.8890625,0.896875,Med42-8B,0.3767026017179985
+Qwen3-235B,m42-health/Llama3-Med42-8B,role_encouraging,understandability,320,269.5,266.75,0.8421875,0.859375,Med42-8B,0.3767026017179985
+Qwen3-235B,m42-health/Llama3-Med42-8B,role_encouraging,usefulness,320,95.0,91.0,0.296875,0.321875,Med42-8B,0.3767026017179985
+Qwen3-235B,openai/gpt-oss-120b,minimal,patient_attitude_responsiveness,320,320.0,320.0,1.0,1.0,GPT-OSS-120B,0.5250394335918287
+Qwen3-235B,openai/gpt-oss-120b,minimal,understandability,320,276.0,273.0,0.8625,0.88125,GPT-OSS-120B,0.5250394335918287
+Qwen3-235B,openai/gpt-oss-120b,minimal,usefulness,320,313.0,312.5,0.978125,0.98125,GPT-OSS-120B,0.5250394335918287
+Qwen3-235B,openai/gpt-oss-120b,none,patient_attitude_responsiveness,320,320.0,320.0,1.0,1.0,GPT-OSS-120B,0.47307952742864
+Qwen3-235B,openai/gpt-oss-120b,none,understandability,320,281.5,280.25,0.8796875,0.8875,GPT-OSS-120B,0.47307952742864
+Qwen3-235B,openai/gpt-oss-120b,none,usefulness,320,320.0,320.0,1.0,1.0,GPT-OSS-120B,0.47307952742864
+Qwen3-235B,openai/gpt-oss-120b,role_attitude_sensitive,patient_attitude_responsiveness,320,320.0,320.0,1.0,1.0,GPT-OSS-120B,0.5336032988474584
+Qwen3-235B,openai/gpt-oss-120b,role_attitude_sensitive,understandability,320,320.0,320.0,1.0,1.0,GPT-OSS-120B,0.5336032988474584
+Qwen3-235B,openai/gpt-oss-120b,role_attitude_sensitive,usefulness,320,320.0,320.0,1.0,1.0,GPT-OSS-120B,0.5336032988474584
+Qwen3-235B,openai/gpt-oss-120b,role_encouraging,patient_attitude_responsiveness,320,320.0,320.0,1.0,1.0,GPT-OSS-120B,0.5251685441206777
+Qwen3-235B,openai/gpt-oss-120b,role_encouraging,understandability,320,303.5,301.75,0.9484375,0.959375,GPT-OSS-120B,0.5251685441206777
+Qwen3-235B,openai/gpt-oss-120b,role_encouraging,usefulness,320,319.0,319.0,0.996875,0.996875,GPT-OSS-120B,0.5251685441206777

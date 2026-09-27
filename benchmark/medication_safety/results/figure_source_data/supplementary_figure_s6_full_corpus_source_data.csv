@@ -1,0 +1,13 @@
+system_prompt,metric,n,positive_rate,ci_low,ci_high,dataset
+minimal,patient_attitude_responsiveness,2560,0.399609375,0.38079924117066405,0.4187203436961679,full_corpus
+minimal,understandability,2560,0.237109375,0.22103559487674307,0.253970944482704,full_corpus
+minimal,usefulness,2560,0.525390625,0.506023435745596,0.5446817276149328,full_corpus
+none,patient_attitude_responsiveness,2560,0.76953125,0.7528211256280529,0.7854336854298692,full_corpus
+none,understandability,2560,0.616015625,0.5970151197604632,0.634668472825338,full_corpus
+none,usefulness,2560,0.719140625,0.7014130039404305,0.7362115598327497,full_corpus
+role_attitude_sensitive,patient_attitude_responsiveness,2560,0.933984375,0.9237005566753261,0.94296769707156,full_corpus
+role_attitude_sensitive,understandability,2560,0.341015625,0.3229026630582963,0.35960500636116133,full_corpus
+role_attitude_sensitive,usefulness,2560,0.607421875,0.5883581061793958,0.6261637388074573,full_corpus
+role_encouraging,patient_attitude_responsiveness,2560,0.5515625,0.532234196771435,0.5707362888222542,full_corpus
+role_encouraging,understandability,2560,0.258984375,0.24238449483292634,0.27630649296020715,full_corpus
+role_encouraging,usefulness,2560,0.525390625,0.506023435745596,0.5446817276149328,full_corpus
